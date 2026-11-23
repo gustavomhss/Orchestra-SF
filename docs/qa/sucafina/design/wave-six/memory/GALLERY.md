@@ -1,6 +1,6 @@
-# R11 visual evidence
+# Memory, context and administration: visual evidence
 
-These are the unchanged JPEG previews emitted by the original browser run [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885), candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`. The full-page PNGs remain in Playwright artifact `14792609948`. The [manifest](./evidence/manifest.json) records exact image blobs, dimensions and qualification boundaries. The run passed UI63, UI67 and UI69; UI61 and UI62 retain the limits stated below.
+This gallery preserves 30 unchanged JPEG previews across R11, R13, R15 and R17. Each section identifies its actual source revision and qualification boundary. The first fourteen previews were emitted by the original browser run [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885), candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`. The full-page PNGs remain in Playwright artifact `14792609948`. The [manifest](./evidence/manifest.json) records exact image blobs, dimensions and qualification boundaries. The run passed UI63, UI67 and UI69; UI61 and UI62 retain the limits stated below.
 
 ## UI61
 
@@ -179,4 +179,41 @@ Both isolated journeys passed: [run 45122439989](https://github.com/gustavomhss/
 320 × 900 pixels; unchanged original JPEG, 26,457 bytes.
 
 ![br-light-320-signals-local-cancel](./evidence/r15-ui61-br-light-320-signals-local-cancel.jpg)
+
+
+## R17 — UI62 original-source refusal
+
+Run [45126521339](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126521339) passed one journey in 6.3 minutes on candidate `c59e406da0585a5b78f04e0689ba73ef48a3e9fe`. Each locale sent one original private POST and received closed HTTP 503 / `unavailable` / `similarity-source-unavailable`. These images show retained criteria and truthful refusal; they do not qualify successful matches or identify an exclusive source cause. The [R17 manifest](./evidence/r17-ui62-manifest.json) records all six PNG capture dimensions, the original artifact and the five unchanged JPEGs below.
+
+All five were reviewed by the area owner and root; the routine peer also reviewed EN dark desktop and BR light 320. Desktop frames show the complete case, question and refusal. Narrow frames are scrolled to the selected candidates, complete refusal and retry; the title/source selector and complete question above the frame are not claimed visible.
+
+### R17 en-dark-desktop-original-source-unavailable
+
+1440 × 1100 pixels; document width 1440px; unchanged original JPEG, 84,432 bytes. Source job `137531996165`.
+
+![UI62 en-dark-desktop-original-source-unavailable](./evidence/r17-ui62-en-dark-desktop-original-source-unavailable.jpg)
+
+### R17 en-light-desktop-original-source-unavailable
+
+1440 × 1100 pixels; document width 1440px; unchanged original JPEG, 88,180 bytes. Source job `137531996165`.
+
+![UI62 en-light-desktop-original-source-unavailable](./evidence/r17-ui62-en-light-desktop-original-source-unavailable.jpg)
+
+### R17 en-light-320-original-source-unavailable
+
+320 × 900 pixels; document width 320px; unchanged original JPEG, 28,200 bytes. Source job `137531996165`.
+
+![UI62 en-light-320-original-source-unavailable](./evidence/r17-ui62-en-light-320-original-source-unavailable.jpg)
+
+### R17 br-dark-desktop-original-source-unavailable
+
+1440 × 1100 pixels; document width 1440px; unchanged original JPEG, 90,311 bytes. Source job `137531996165`.
+
+![UI62 br-dark-desktop-original-source-unavailable](./evidence/r17-ui62-br-dark-desktop-original-source-unavailable.jpg)
+
+### R17 br-light-320-original-source-unavailable
+
+320 × 900 pixels; document width 320px; unchanged original JPEG, 29,577 bytes. Source job `137531996165`.
+
+![UI62 br-light-320-original-source-unavailable](./evidence/r17-ui62-br-light-320-original-source-unavailable.jpg)
 

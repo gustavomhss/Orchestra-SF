@@ -1,424 +1,404 @@
 {
-  "status": "partial-browser-qualification",
-  "candidate": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
-  "sourceTree": "aedc5483dfde0c83c4b1db49b93b4c048cd1e5f6",
-  "current": {
-    "label": "R11",
-    "run": 45117078885,
-    "job": 137502251987,
-    "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
-    "snapshotTree": "152b4ca72aa299547fe7d605603195ecd3559a49",
-    "branch": "ci-run-linux-sf-final-memory-r11-20261123",
-    "status": "completed",
-    "areas": [
-      "UI61",
-      "UI62",
-      "UI63",
-      "UI67",
-      "UI69"
-    ],
-    "testDeadlineMs": 300000,
-    "httpDeadlineMs": 40000,
-    "domDeadlineMs": 10000,
-    "retries": 0,
-    "conclusion": "failure",
-    "passed": 3,
-    "failed": 2,
-    "durationMinutes": 25.8,
-    "artifact": 14792609948,
-    "completedAt": "2026-11-23T05:47:18Z",
-    "passedAreas": [
-      "UI63",
-      "UI67",
-      "UI69"
-    ],
-    "failedAreas": [
-      "UI61",
-      "UI62"
-    ],
-    "diagnosis": {
-      "UI61": "Conditions returned 200 in 6,046 ms; original materiality exceeded 40 seconds. Subsequent same-host reads failed, and the signal step never issued its GET.",
-      "UI62": "Original POST similar-cases returned 503. The source reason was not emitted in R11 and remains unknown until the focused diagnostic run."
-    },
-    "captures": 19,
-    "previews": 14,
-    "artifactDigest": "sha256:11e1b788ee2c8a4beae575e889c4d9cd3c4dec29e690b7e9e92ecf22a1db5a45"
-  },
-  "gate16": {
-    "run": 45117046888,
-    "job": 137502149296,
-    "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
-    "source": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
-    "checks": 9,
-    "codecTests": 12,
-    "codecAsserts": 243,
-    "guards": 78,
-    "paths": 71,
-    "errors": 0,
-    "approvals": 0,
-    "warnings": 10,
-    "palettes": 7,
-    "regressions": 11,
-    "preexistingSkip": 1
-  },
-  "native69": {
-    "run": 45112013210,
-    "job": 137486273104,
-    "snapshot": "2032885b3d834bbc17a5ee1cdf51a05531ab00ee",
-    "source": "c2794f7fe028f9febd764cddeb094ca959d63088",
-    "testsPassed": 69,
-    "testsFailed": 0,
-    "expectations": 887
-  },
-  "previous": {
-    "R8": {
-      "run": 45104661696,
-      "job": 137463071254,
-      "passed": 2,
-      "failed": 1,
-      "artifact": 14787368136
-    },
-    "R9": {
-      "run": 45107929407,
-      "job": 137473376276,
-      "passed": 1,
-      "failed": 4,
-      "artifact": 14789106497,
-      "actualUI61Capture": {
-        "width": 1440,
-        "height": 1100,
-        "scheme": "dark",
-        "misleadingStateName": "light-320-cancelled-consultation"
-      }
-    },
-    "R10": {
-      "run": 45112934520,
-      "job": 137489157834,
-      "snapshot": "ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9",
-      "passed": 0,
-      "failed": 5,
-      "artifact": 14790834255,
-      "captures": 3,
-      "previews": 2,
-      "onlyCapturedArea": "UI69",
-      "summaryPostStatus": 200,
-      "persistedReadbackQualified": false
+  "schemaVersion": 2,
+  "status": "qualified-presentation-with-preserved-original-source-limits",
+  "areas": [
+    "UI61",
+    "UI62",
+    "UI63",
+    "UI67",
+    "UI69"
+  ],
+  "qualifiedComposition": {
+    "candidate": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+    "sourceTree": "80d9d21f2779c1888efa09e927c408a9aed03763",
+    "upstreamDev": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+    "latestAffectedGate": "Gate20",
+    "browserCheckpoint": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+    "browserCheckpointTree": "f60450569a8cd74e1c84aa56be5ed7e21ad278a1",
+    "sourceParity": {
+      "upstreamPullRequest": 716,
+      "preservedUpstreamBlobs": 22,
+      "overlapWithMemoryOwnedPaths": false,
+      "backendClientSchemaAndGrantsChanged": false,
+      "basis": "Root compared exact Git blobs; Gate20 qualified the composed app-shell and E2E types, original guardrails and palette parity. Browser evidence retains its original per-run candidate."
     }
   },
-  "limits": [
-    "R11 original materiality did not respond within 40 seconds; no materiality result is qualified.",
-    "R11 original recall returned 503; its reason was not emitted in that run and no recall match is qualified.",
-    "No numeric expected/observed comparison qualified; original decision-compare exceeded40s.",
-    "No original signal response200 qualified; R8 request exceeded40s.",
-    "Notifications/backups original I00 reader remains unbound.",
-    "Actual browser zoom not measured."
-  ],
-  "captures": [
-    {
-      "area": "UI61",
-      "state": "dark-desktop-case-selection",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
+  "areaQualification": {
+    "UI61": {
+      "conditions": "passed",
+      "nativeMaterialityCancellation": "passed",
+      "nativeSignalCancellation": "passed",
+      "materialityResult": "unqualified",
+      "signalResult": "unqualified"
     },
-    {
-      "area": "UI61",
-      "state": "dark-desktop-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
+    "UI62": {
+      "authorizedCasesAndCandidates": "passed",
+      "privateRecallResponse": "original HTTP 503; unavailable; similarity-source-unavailable",
+      "unavailablePresentation": "passed in R17",
+      "questionAndAuthorizedCandidatesRetained": "passed",
+      "queryOffUrlAndSingleExplicitPostPerLocale": "passed",
+      "selectionAndRefusalCleanup": "passed",
+      "positiveMatches": "unqualified",
+      "exclusiveInternalCause": "not established"
     },
-    {
-      "area": "UI61",
-      "state": "light-desktop-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
+    "UI63": {
+      "recordedChoicesWithoutCondition": "passed",
+      "originalCoverageRefusal": "passed",
+      "numericComparison": "unqualified"
     },
-    {
-      "area": "UI61",
-      "state": "light-320-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320
-    },
-    {
-      "area": "UI62",
-      "state": "pt-br-dark-desktop-authorized-candidates",
-      "pathname": "/orchestra/sf-memory/cases",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI63",
-      "state": "dark-desktop-recorded-choice-no-condition",
-      "pathname": "/orchestra/sf-memory/outcomes",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI63",
-      "state": "dark-desktop-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI63",
-      "state": "light-desktop-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI63",
-      "state": "light-320-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320
-    },
-    {
-      "area": "UI63",
-      "state": "pt-br-dark-desktop-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI67",
-      "state": "dark-desktop-current-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI67",
-      "state": "light-desktop-refreshed-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI67",
-      "state": "light-320-current-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320
-    },
-    {
-      "area": "UI67",
-      "state": "pt-br-dark-desktop-current-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI69",
-      "state": "dark-desktop-summary-settings",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI69",
-      "state": "light-desktop-summary-review",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI69",
-      "state": "light-320-summary-review-actions",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320
-    },
-    {
-      "area": "UI69",
-      "state": "light-desktop-persisted-summaries",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    },
-    {
-      "area": "UI69",
-      "state": "pt-br-dark-desktop-administration",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440
-    }
-  ],
-  "previews": [
-    {
-      "area": "UI61",
-      "state": "dark-desktop-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 75829
-    },
-    {
-      "area": "UI61",
-      "state": "light-desktop-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 79757
-    },
-    {
-      "area": "UI61",
-      "state": "light-320-recorded-condition",
-      "pathname": "/orchestra/sf-memory/signals",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320,
-      "mimeType": "image/jpeg",
-      "bytes": 26525
-    },
-    {
-      "area": "UI62",
-      "state": "pt-br-dark-desktop-authorized-candidates",
-      "pathname": "/orchestra/sf-memory/cases",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 76393
-    },
-    {
-      "area": "UI63",
-      "state": "dark-desktop-recorded-choice-no-condition",
-      "pathname": "/orchestra/sf-memory/outcomes",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 86163
-    },
-    {
-      "area": "UI63",
-      "state": "light-desktop-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 64178
-    },
-    {
-      "area": "UI63",
-      "state": "light-320-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320,
-      "mimeType": "image/jpeg",
-      "bytes": 19407
-    },
-    {
-      "area": "UI63",
-      "state": "pt-br-dark-desktop-incomplete-coverage",
-      "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 62107
-    },
-    {
-      "area": "UI67",
-      "state": "dark-desktop-current-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 63870
-    },
-    {
-      "area": "UI67",
-      "state": "light-desktop-refreshed-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 67707
-    },
-    {
-      "area": "UI67",
-      "state": "pt-br-dark-desktop-current-context",
-      "pathname": "/orchestra/sf-home/context",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 64554
-    },
-    {
-      "area": "UI69",
-      "state": "dark-desktop-summary-settings",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 80806
-    },
-    {
-      "area": "UI69",
-      "state": "light-320-summary-review-actions",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 320,
-      "height": 900,
-      "documentWidth": 320,
-      "mimeType": "image/jpeg",
-      "bytes": 23181
-    },
-    {
-      "area": "UI69",
-      "state": "pt-br-dark-desktop-administration",
-      "pathname": "/orchestra/sf-home/administration",
-      "width": 1440,
-      "height": 1100,
-      "documentWidth": 1440,
-      "mimeType": "image/jpeg",
-      "bytes": 84293
-    }
-  ],
-  "followups": {
-    "rejectedSelection": {
-      "run": 45120144344,
-      "job": 137511799612,
-      "snapshot": "a46bdc437a248268a4fb13928a7d178966f47cf7",
-      "status": "rejected-before-tests",
-      "reason": "The original request validator rejects --grep as a spec path.",
-      "testsExecuted": 0
+    "UI67": {
+      "contextAndRefresh": "passed"
     },
     "UI69": {
+      "reviewSaveCasPersistedReadback": "passed",
+      "pr715Spacing": "passed",
+      "notificationsAndBackups": "original source unavailable"
+    }
+  },
+  "browserRuns": {
+    "R11": {
+      "label": "R11",
+      "run": 45117078885,
+      "job": 137502251987,
+      "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
+      "snapshotTree": "152b4ca72aa299547fe7d605603195ecd3559a49",
+      "branch": "ci-run-linux-sf-final-memory-r11-20261123",
+      "status": "completed",
+      "areas": [
+        "UI61",
+        "UI62",
+        "UI63",
+        "UI67",
+        "UI69"
+      ],
+      "testDeadlineMs": 300000,
+      "httpDeadlineMs": 40000,
+      "domDeadlineMs": 10000,
+      "retries": 0,
+      "conclusion": "failure",
+      "passed": 3,
+      "failed": 2,
+      "durationMinutes": 25.8,
+      "artifact": 14792609948,
+      "completedAt": "2026-11-23T05:47:18Z",
+      "passedAreas": [
+        "UI63",
+        "UI67",
+        "UI69"
+      ],
+      "failedAreas": [
+        "UI61",
+        "UI62"
+      ],
+      "diagnosis": {
+        "UI61": "Conditions returned 200 in 6,046 ms; original materiality exceeded 40 seconds. Subsequent same-host reads failed, and the signal step never issued its GET.",
+        "UI62": "Original POST similar-cases returned 503. The source reason was not emitted in R11 and remains unknown until the focused diagnostic run."
+      },
+      "captures": 19,
+      "previews": 14,
+      "artifactDigest": "sha256:11e1b788ee2c8a4beae575e889c4d9cd3c4dec29e690b7e9e92ecf22a1db5a45",
+      "candidate": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+      "sourceTree": "aedc5483dfde0c83c4b1db49b93b4c048cd1e5f6",
+      "captureMetadata": [
+        {
+          "area": "UI61",
+          "state": "dark-desktop-case-selection",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI61",
+          "state": "dark-desktop-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI61",
+          "state": "light-desktop-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI61",
+          "state": "light-320-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        {
+          "area": "UI62",
+          "state": "pt-br-dark-desktop-authorized-candidates",
+          "pathname": "/orchestra/sf-memory/cases",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI63",
+          "state": "dark-desktop-recorded-choice-no-condition",
+          "pathname": "/orchestra/sf-memory/outcomes",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI63",
+          "state": "dark-desktop-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI63",
+          "state": "light-desktop-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI63",
+          "state": "light-320-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        {
+          "area": "UI63",
+          "state": "pt-br-dark-desktop-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI67",
+          "state": "dark-desktop-current-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI67",
+          "state": "light-desktop-refreshed-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI67",
+          "state": "light-320-current-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        {
+          "area": "UI67",
+          "state": "pt-br-dark-desktop-current-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI69",
+          "state": "dark-desktop-summary-settings",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI69",
+          "state": "light-desktop-summary-review",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI69",
+          "state": "light-320-summary-review-actions",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        {
+          "area": "UI69",
+          "state": "light-desktop-persisted-summaries",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        {
+          "area": "UI69",
+          "state": "pt-br-dark-desktop-administration",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        }
+      ],
+      "previewMetadata": [
+        {
+          "area": "UI61",
+          "state": "dark-desktop-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 75829
+        },
+        {
+          "area": "UI61",
+          "state": "light-desktop-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 79757
+        },
+        {
+          "area": "UI61",
+          "state": "light-320-recorded-condition",
+          "pathname": "/orchestra/sf-memory/signals",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320,
+          "mimeType": "image/jpeg",
+          "bytes": 26525
+        },
+        {
+          "area": "UI62",
+          "state": "pt-br-dark-desktop-authorized-candidates",
+          "pathname": "/orchestra/sf-memory/cases",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 76393
+        },
+        {
+          "area": "UI63",
+          "state": "dark-desktop-recorded-choice-no-condition",
+          "pathname": "/orchestra/sf-memory/outcomes",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 86163
+        },
+        {
+          "area": "UI63",
+          "state": "light-desktop-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 64178
+        },
+        {
+          "area": "UI63",
+          "state": "light-320-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320,
+          "mimeType": "image/jpeg",
+          "bytes": 19407
+        },
+        {
+          "area": "UI63",
+          "state": "pt-br-dark-desktop-incomplete-coverage",
+          "pathname": "/orchestra/sf-memory/outcomes/r_ZmY2NWMyNjc0YjFmNmRjNDg1Zjk4MzFlYjkyNmM1MGRhMjFkODUwMGVkM2QyNzdjYTJiMzk3NDNmNGYwNWYwNA",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 62107
+        },
+        {
+          "area": "UI67",
+          "state": "dark-desktop-current-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 63870
+        },
+        {
+          "area": "UI67",
+          "state": "light-desktop-refreshed-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 67707
+        },
+        {
+          "area": "UI67",
+          "state": "pt-br-dark-desktop-current-context",
+          "pathname": "/orchestra/sf-home/context",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 64554
+        },
+        {
+          "area": "UI69",
+          "state": "dark-desktop-summary-settings",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 80806
+        },
+        {
+          "area": "UI69",
+          "state": "light-320-summary-review-actions",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320,
+          "mimeType": "image/jpeg",
+          "bytes": 23181
+        },
+        {
+          "area": "UI69",
+          "state": "pt-br-dark-desktop-administration",
+          "pathname": "/orchestra/sf-home/administration",
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440,
+          "mimeType": "image/jpeg",
+          "bytes": 84293
+        }
+      ],
+      "manifest": "evidence/manifest.json"
+    },
+    "R13": {
+      "label": "R13",
       "run": 45121178514,
       "job": 137515072792,
       "snapshot": "4d1aa02cca18a6116933c9a23acf50767fba6271",
@@ -435,9 +415,11 @@
       "captures": 5,
       "previews": 3,
       "bodyExpectations": 30,
-      "preflightExpectations": 1
+      "preflightExpectations": 1,
+      "manifest": "evidence/r13-ui69-manifest.json"
     },
-    "UI62": {
+    "R14": {
+      "label": "R14",
       "run": 45121399352,
       "snapshot": "0729f9e4c3cc0e91956a8c8209c73f80bf06ed3e",
       "source": "722b703b060e5cc578fa8d23568b3f9c56d72077",
@@ -456,7 +438,8 @@
       "brazilianPortugueseCandidates": "passed",
       "recallReason": null
     },
-    "UI61": {
+    "R15": {
+      "label": "R15",
       "run": 45122439989,
       "snapshot": "b0931669e80589776a6ce8a1e63b8957a5e2d280",
       "source": "d62c4b500695d248240a48944461a0d2262a589f",
@@ -498,9 +481,11 @@
       "previews": 8,
       "positiveMaterialityResultQualified": false,
       "positiveSignalResultQualified": false,
-      "lateResponseExercised": false
+      "lateResponseExercised": false,
+      "manifest": "evidence/r15-ui61-manifest.json"
     },
-    "UI62R16": {
+    "R16": {
+      "label": "R16",
       "run": 45123256492,
       "job": 137521673423,
       "snapshot": "de718cd31d6e38a22934274a8d4bba72b108587f",
@@ -525,35 +510,260 @@
       },
       "brazilianPortugueseCandidates": "passed",
       "exclusiveInternalCause": "not established"
+    },
+    "R17": {
+      "label": "R17",
+      "candidate": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "sourceTree": "f60450569a8cd74e1c84aa56be5ed7e21ad278a1",
+      "snapshot": "1fd0a8010947a0e86be5dc2d83e1dda8abe2884e",
+      "snapshotTree": "b16a28a4cd8d20de7c8190f1d2f855795541de5e",
+      "run": 45126521339,
+      "job": 137531996165,
+      "cleanupJob": 137534936925,
+      "artifact": 14796665565,
+      "artifactBytes": 4973273,
+      "artifactDigest": "sha256:daaf2f70e83b468589022e8dbfa12307fd93a1f9290b9d2d140106176359bc50",
+      "status": "completed",
+      "conclusion": "success",
+      "passed": 1,
+      "failed": 0,
+      "durationMinutes": 6.3,
+      "captures": 6,
+      "previews": 5,
+      "testDeadlineMs": 300000,
+      "httpDeadlineMs": 40000,
+      "domDeadlineMs": 10000,
+      "retries": 0,
+      "selection": "permanent final-memory-recall-unavailable.spec.ts",
+      "positiveOriginalSpecPreserved": true,
+      "originalResponses": [
+        {
+          "locale": "en",
+          "status": 503,
+          "reason": "similarity-source-unavailable",
+          "closedSchema": true,
+          "originalPostCount": 1,
+          "queryKeptOffUrl": true,
+          "noInventedMatches": true,
+          "consoleErrors": 1,
+          "sourceCause": "not-attributed"
+        },
+        {
+          "locale": "br",
+          "status": 503,
+          "reason": "similarity-source-unavailable",
+          "closedSchema": true,
+          "originalPostCount": 1,
+          "queryKeptOffUrl": true,
+          "noInventedMatches": true,
+          "consoleErrors": 1,
+          "sourceCause": "not-attributed"
+        }
+      ],
+      "pageErrors": 0,
+      "expectedSourceConsoleDiagnosticsPerLocale": 1,
+      "manifest": "evidence/r17-ui62-manifest.json"
     }
   },
-  "areaQualification": {
-    "UI61": {
-      "conditions": "passed",
-      "nativeMaterialityCancellation": "passed",
-      "nativeSignalCancellation": "passed",
-      "materialityResult": "unqualified",
-      "signalResult": "unqualified"
+  "positiveOracleParity": {
+    "path": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+    "blob": "719e7416e91fb4276236ff6324c8ff3e6e02e57a",
+    "expectationExpressions": 114,
+    "allExistingExpectationsPreserved": true,
+    "negativeJourneySeparate": true,
+    "positiveMaterialityAndRecallNotQualified": true
+  },
+  "technicalGates": {
+    "Gate16": {
+      "run": 45117046888,
+      "job": 137502149296,
+      "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
+      "source": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+      "checks": 9,
+      "codecTests": 12,
+      "codecAsserts": 243,
+      "guards": 78,
+      "paths": 71,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 10,
+      "palettes": 7,
+      "regressions": 11,
+      "preexistingSkip": 1,
+      "conclusion": "success"
     },
-    "UI62": {
-      "authorizedCasesAndCandidates": "passed",
-      "privateRecallResponse": "original 503 similarity-source-unavailable",
-      "positiveMatches": "unqualified",
-      "unavailablePresentationFocal": "not yet executed"
+    "Gate17": {
+      "source": "d62c4b500695d248240a48944461a0d2262a589f",
+      "snapshot": "f76d89f2b6b4791034da108c5a6f80840da2e11e",
+      "run": 45122426354,
+      "job": 137519017208,
+      "checks": 9,
+      "guards": 78,
+      "paths": 105,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 13,
+      "palettes": 7,
+      "regressions": 11,
+      "preexistingSkip": 1,
+      "regressionExpectations": 37,
+      "codecTests": 12,
+      "codecExpectations": 243,
+      "devPin": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "conclusion": "success"
     },
-    "UI63": {
-      "recordedChoicesWithoutCondition": "passed",
-      "originalCoverageRefusal": "passed",
-      "numericComparison": "unqualified"
+    "Gate18": {
+      "source": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+      "snapshot": "9e4a5a13f80b25f260eb2f0e61447de016966dd5",
+      "run": 45123446736,
+      "job": 137522272062,
+      "checks": 2,
+      "checkNames": [
+        "guardrails",
+        "E2E types"
+      ],
+      "guards": 78,
+      "paths": 106,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 12,
+      "devPin": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "conclusion": "success"
     },
-    "UI67": {
-      "contextAndRefresh": "passed"
+    "Gate19": {
+      "source": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+      "snapshot": "ffd074c142b144ed1555bdde0bcbd06865893455",
+      "run": 45126501994,
+      "job": 137531935301,
+      "checks": 3,
+      "checkNames": [
+        "app-shell types",
+        "guardrails",
+        "E2E types"
+      ],
+      "guards": 78,
+      "paths": 140,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 15,
+      "wrapperExpectations": 7,
+      "devPin": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "conclusion": "success"
     },
-    "UI69": {
-      "reviewSaveCasPersistedReadback": "passed",
-      "pr715Spacing": "passed",
-      "notificationsAndBackups": "original source unavailable"
+    "Gate20": {
+      "source": "8b8a9eb153374031d88315195b4af2b1a25eae19",
+      "sourceTree": "80d9d21f2779c1888efa09e927c408a9aed03763",
+      "snapshot": "f8091e294ba66a5fa3c190eb8a422aafe583b88f",
+      "snapshotTree": "26afb06aa81486db9ab3edb3e0b6f79d3a61ca31",
+      "run": 45126798245,
+      "job": 137532884939,
+      "checks": 4,
+      "checkNames": [
+        "app-shell types",
+        "guardrails",
+        "seven regenerated palettes",
+        "E2E types"
+      ],
+      "guards": 78,
+      "paths": 140,
+      "errors": 0,
+      "approvals": 0,
+      "warnings": 15,
+      "warningCategory": "test-timeout-raised",
+      "touchesGuards": false,
+      "palettes": 7,
+      "wrapperExpectations": 11,
+      "devPin": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+      "trees": {
+        "appSrc": "80a1992c0c89e68550e2a88273554f358506298f",
+        "nativeSucafina": "6e3bb88d38e9246d7acb368e2a55af51622c2b9f",
+        "e2e": "d0f1211921434c7dbe24994ec6739e566298a09e"
+      },
+      "conclusion": "success"
+    },
+    "Native69": {
+      "run": 45112013210,
+      "job": 137486273104,
+      "snapshot": "2032885b3d834bbc17a5ee1cdf51a05531ab00ee",
+      "source": "c2794f7fe028f9febd764cddeb094ca959d63088",
+      "testsPassed": 69,
+      "testsFailed": 0,
+      "expectations": 887,
+      "conclusion": "success"
     }
   },
-  "copyAuditCandidate": "d62c4b500695d248240a48944461a0d2262a589f"
+  "earlierRuns": {
+    "R8": {
+      "run": 45104661696,
+      "job": 137463071254,
+      "passed": 2,
+      "failed": 1,
+      "artifact": 14787368136
+    },
+    "R9": {
+      "run": 45107929407,
+      "job": 137473376276,
+      "passed": 1,
+      "failed": 4,
+      "artifact": 14789106497,
+      "actualUI61Capture": {
+        "width": 1440,
+        "height": 1100,
+        "scheme": "dark",
+        "misleadingStateName": "light-320-cancelled-consultation"
+      }
+    },
+    "R10": {
+      "run": 45112934520,
+      "job": 137489157834,
+      "snapshot": "ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9",
+      "passed": 0,
+      "failed": 5,
+      "artifact": 14790834255,
+      "captures": 3,
+      "previews": 2,
+      "onlyCapturedArea": "UI69",
+      "summaryPostStatus": 200,
+      "persistedReadbackQualified": false
+    }
+  },
+  "rejectedRequest": {
+    "run": 45120144344,
+    "job": 137511799612,
+    "snapshot": "a46bdc437a248268a4fb13928a7d178966f47cf7",
+    "status": "rejected-before-tests",
+    "reason": "The original request validator rejects --grep as a spec path.",
+    "testsExecuted": 0
+  },
+  "copyAudit": {
+    "base": "a5eee3584da531d087a419b8f3ef29d3881117c7",
+    "candidate": "c59e406da0585a5b78f04e0689ba73ef48a3e9fe",
+    "file": "copy-audit.json",
+    "existingEnglishLiteralsPreserved": 218,
+    "currentEnglishKeys": 258,
+    "currentBrazilianPortugueseKeys": 258,
+    "missingOrExtraBrazilianPortugueseKeys": 0,
+    "changedExistingEnglishLiterals": 0
+  },
+  "limits": [
+    "The original materiality read did not respond within 40 seconds in R11. No positive materiality result is qualified.",
+    "The original signal request did not complete within 40 seconds in R8. No positive signal response is qualified.",
+    "R15 proves local wait cancellation through one native GET and net::ERR_ABORTED, not cancellation or rollback of source reconciliation. No late response body was received or injected.",
+    "The R16 positive recall test remains failed (expected 200, received the original 503). R17 qualifies that closed refusal and its presentation, not successful recall matches.",
+    "similarity-source-unavailable is a collapsed source category; an outbox, provider or any exclusive internal cause is not established.",
+    "The original nine-component decision-compare attempt exceeded 40 seconds in R3. Numeric expected/observed comparison remains unqualified; UI63 renders the genuine coverage-incomplete refusal.",
+    "Notifications/backups remain unavailable at the original I00 boundary; reviewed summary settings, CAS and persisted readback passed independently.",
+    "Actual browser zoom was not measured. Scrolled 320px previews do not show the title/source selector or complete question above the frame."
+  ],
+  "evidence": {
+    "gallery": "GALLERY.md",
+    "unchangedJpegPreviews": 30,
+    "manifests": [
+      "evidence/manifest.json",
+      "evidence/r13-ui69-manifest.json",
+      "evidence/r15-ui61-manifest.json",
+      "evidence/r17-ui62-manifest.json"
+    ],
+    "fullPagePngCapturesInReferencedRunArtifacts": 42
+  }
 }

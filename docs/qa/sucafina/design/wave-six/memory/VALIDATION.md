@@ -1,6 +1,18 @@
 # Final wave: memory, context and local administration
 
-> UI63 and UI67 passed their complete R11 journeys; UI69 also passed the focused R13 repetition after PR715. UI61's recorded conditions and two isolated native cancellation journeys passed in R15. Original materiality, signal and numerical results remain unqualified. R16 established UI62's exact source refusal: HTTP 503, `unavailable`, `similarity-source-unavailable`; the positive 200 assertion remains a failure. No exclusive internal cause is inferred from that category.
+> The five areas have qualified presentation and interaction paths with the original source limits preserved. UI63 and UI67 passed their R11 journeys; UI69 passed R11 and the post-PR715 R13 repetition. UI61's original conditions and two isolated native cancellation journeys passed in R15. UI62's exact original refusal and retained criteria passed in R17. Positive materiality, signal and recall results, numerical outcome comparison and the absent I00 notifications/backups reader remain unqualified. No failed original assertion was removed or relabeled as a successful source result.
+
+## Final qualification
+
+| Area | Qualified evidence | Preserved source boundary |
+| --- | --- | --- |
+| UI61 Signals | [R15](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989): original conditions in EN/BR; one native materiality or signal request per isolated journey; local cancel, retained condition, no resend, selection cleanup and 320px presentation | Materiality and signal responses did not complete in the original qualification attempts. The cancellation proves that this view stopped waiting, not that source reconciliation stopped. |
+| UI62 Similar cases | [R17](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126521339): one original private POST per locale, exact closed 503 refusal, retained question/candidates, state cleanup and EN/BR dark/light/320px presentation | Positive matches remain unqualified. `similarity-source-unavailable` does not identify an exclusive internal cause. |
+| UI63 Expected and observed | [R11](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885): choice without a condition, original coverage refusal, encoded locator, selection/owner fences and responsive localized presentation | Numerical comparison remains unavailable; missing coverage is never rendered as zero. |
+| UI67 Context and access | [R11](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885): original server/project/installation/principal, refresh and EN/BR responsive layout | Actual browser zoom was not measured. |
+| UI69 Local administration | [R13](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514): review/cancel/revise, exactly one save, original CAS and persisted readback, fresh page, EN/BR and post-PR715 spacing | Notifications and backups remain unavailable at the existing I00 boundary; summaries are independently admitted. |
+
+The final affected technical gate is [Gate20](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126798245) on composed source `8b8a9eb153374031d88315195b4af2b1a25eae19`. Browser screenshots retain the exact candidate on which they were captured. The R17 checkpoint is `c59e406da0585a5b78f04e0689ba73ef48a3e9fe`; the later PR716 composition preserves 22 upstream blobs exactly and has no overlap with these Memory-owned paths. Source parity was reviewed separately; a later head is not silently substituted for the screenshot candidate.
 
 ## Scope and behavior
 
@@ -9,7 +21,7 @@ This change covers UI61 Signals, UI62 Similar cases, UI63 Expected and observed,
 | Area | User-facing change | Source and behavior retained |
 | --- | --- | --- |
 | UI61 | Authorized case chooser, independent conditions, explicit current-signal consultation, local cancellation of materiality and signal waits, selected-condition state and clearer evidence hierarchy | Original case catalogue and condition, signal and materiality reads; source reconciliation, uncertainty and owner fences |
-| UI62 | Authorized case names, orderly candidate selection and evidence disclosure | Explicit candidate set, private POST recall question, Atlas event references, source reauthorization and original-case read |
+| UI62 | Authorized case names, orderly candidate selection, retained criteria and a precise message for the original source refusal | Explicit candidate set, private POST recall question, Atlas event references, source reauthorization and original-case read |
 | UI63 | Recorded choices with original names, reasons and dates, independent of signal conditions; an explicit message for original incomplete coverage | Original case projection and closed-month Planner observation, exact case version, opaque selection locator, baseline references, coverage and limitations. Numeric comparison remains conditional on the original producer. |
 | UI67 | Current-context card, responsive identifiers and explicit refresh | Original F01 provider and exact active server, project, installation and principal |
 | UI69 | Local access status, independent summary settings and an explicit unavailable state for notifications/backups | Original local-operator admission, reviewed summary configuration, CAS version, one-shot intent and persisted readback |
@@ -32,15 +44,16 @@ Typed memory requests materialize only the scalar fields declared by their wire 
 
 Existing English catalogue values are unchanged. New English and Brazilian Portuguese copy follows the repository's case, condition, source, observation and access vocabulary. Local-administration labels are complete in Brazilian Portuguese. Source-owned business text remains as returned.
 
-A full literal comparison of candidate `d62c4b500695d248240a48944461a0d2262a589f`, including the three new materiality-cancel keys, against the fixed base covered every English quoted-string property and both current locale key sets. [copy-audit.json](./copy-audit.json) records the method and exact revisions.
+A full literal comparison of candidate `c59e406da0585a5b78f04e0689ba73ef48a3e9fe`, including the materiality-cancel and exact recall-refusal keys, against the fixed base covered every English quoted-string property and both current locale key sets. [copy-audit.json](./copy-audit.json) records the method and exact revisions.
 
 | Catalog | Existing English literals preserved | Current English / Brazilian Portuguese keys | Missing or extra Portuguese keys |
 | --- | ---: | ---: | ---: |
 | sf-u26.ts | 76 / 76 | 97 / 97 | 0 |
 | sf-u28.ts | 21 / 21 | 26 / 26 | 0 |
 | sf-context.ts | 84 / 84 | 97 / 97 | 0 |
+| similarity-copy.ts | 37 / 37 | 38 / 38 | 0 |
 
-No property line was unparsed and no existing English value changed. Context totals include the root-composed routine-gate copy.
+Across the four files, all 218 existing English string literals are byte-identical. The current key sets contain 258 English and 258 Brazilian Portuguese entries, with no missing or extra Portuguese key. No property line was unparsed. Context totals include the root-composed routine-gate copy.
 
 Copy references:
 
@@ -77,7 +90,7 @@ The journeys retain these required assertions; actual outcomes are reported sepa
 - UI69 Cancel/Revise draft retention, zero commands before confirmation, exactly one save, source CAS increment and a fresh persisted page.
 - Dark and light desktop, 320px reflow and Brazilian Portuguese.
 
-All JavaScript page errors and unexpected browser console errors fail the journeys. The expected Chromium 503 network diagnostic is accepted only when its exact URL has already returned the asserted original `memory-outcome` status and `coverage-incomplete` body. No general status/error suppression is used.
+All JavaScript page errors and unexpected browser console errors fail the journeys. The original five-test spec admits the expected Chromium 503 diagnostic only for the exact `memory-outcome` URL and verified `coverage-incomplete` body. The separate R17 refusal spec admits at most one exact Chromium 503 diagnostic per locale only after verifying the one original recall POST URL and closed `similarity-source-unavailable` response. The positive spec and its error checks remain unchanged. No general status/error suppression is used.
 
 The canonical PNG screenshots are attached to Playwright. Bounded JPEG log records `SF_FINAL14_VISUAL` identify actual area/state pairs for review through GitHub without rewriting the screenshots.
 
@@ -106,7 +119,7 @@ The UI now distinguishes validated local access from that unavailable projection
 
 ## Evidence and gallery
 
-The durable [R11 gallery](./GALLERY.md) contains the actual bounded previews. Its [manifest](./evidence/manifest.json) separates successful journeys from visible states captured within failed journeys.
+The durable [gallery](./GALLERY.md) contains 30 unchanged bounded JPEG previews from R11, R13, R15 and R17. Each run has its own candidate and manifest; the original full-page PNGs remain in the corresponding Playwright artifacts. The [R11 manifest](./evidence/manifest.json) separates successful journeys from visible states captured within failed journeys. Later positive focused results do not relabel those historical failures.
 
 ### Technical gates
 
@@ -117,7 +130,20 @@ The later composed [Gate5 run 45097130282](https://github.com/gustavomhss/Orches
 
 [Gate14 run 45112967729](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112967729), job `137489259871`, snapshot `6229c5c97f194bde0c5c91eda63aa2a7123a85ab` on R10 candidate `c66b9857d86fd2b91fb6c57237a82923c460ed02`, passed the seven original technical checks with the batched observer.
 
-The final [Gate16 run 45117046888](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117046888), job `137502149296`, snapshot `a42eb2adf1e8447c865feba3ea3d30227d9266ac` on exact R11 candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`, passed **nine checks**: app, E2E, Core, CLI and client types; original guardrails; unchanged palettes; original Core regressions; and native/Files codec regressions. The codec suites passed **12 tests and 243 expectations**, including all six new undefined-wire tests. The unchanged 78-rule guard set, pinned to base `27f04c1cc723e42d5010b8f672a640b4792787ff`, checked 71 paths with zero errors, zero approval exemptions and ten declared-timeout warnings. Seven palettes remained byte-identical. Eleven Core regressions passed with the one existing strict-mode skip. Technical qualification does not substitute for browser outcomes.
+The client qualification [Gate16 run 45117046888](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117046888), job `137502149296`, snapshot `a42eb2adf1e8447c865feba3ea3d30227d9266ac` on exact R11 candidate `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`, passed **nine checks**: app, E2E, Core, CLI and client types; original guardrails; unchanged palettes; original Core regressions; and native/Files codec regressions. The codec suites passed **12 tests and 243 expectations**, including all six new undefined-wire tests. The unchanged 78-rule guard set, pinned to base `27f04c1cc723e42d5010b8f672a640b4792787ff`, checked 71 paths with zero errors, zero approval exemptions and ten declared-timeout warnings. Seven palettes remained byte-identical. Eleven Core regressions passed with the one existing strict-mode skip. Technical qualification does not substitute for browser outcomes.
+
+### Final composition gates
+
+The client/backend evidence above is supplemented by the later composed candidates; no gate is assumed to cover source added afterward.
+
+| Gate | Candidate and snapshot | Primary result |
+| --- | --- | --- |
+| [Gate17 / 45122426354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122426354), job `137519017208` | Candidate `d62c4b500695d248240a48944461a0d2262a589f`; snapshot `f76d89f2b6b4791034da108c5a6f80840da2e11e` | 9/9 checks. 78 guard rules, 105 paths, zero errors/approval exemptions, 13 timeout-declaration warnings; seven palettes unchanged. Original regressions: 11 passes, one pre-existing skip, 37 expectations. Client codecs: 12 passes, 243 expectations. |
+| [Gate18 / 45123446736](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123446736), job `137522272062` | Candidate `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7`; snapshot `9e4a5a13f80b25f260eb2f0e61447de016966dd5` | 2/2 affected checks: guardrails and E2E types for the durable recall observer. 78 rules, 106 paths, zero errors/approval exemptions and 12 timeout-declaration warnings. |
+| [Gate19 / 45126501994](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126501994), job `137531935301` | Candidate `c59e406da0585a5b78f04e0689ba73ef48a3e9fe`; snapshot `ffd074c142b144ed1555bdde0bcbd06865893455` | 3/3 affected checks: app-shell types, guardrails and E2E types. 78 rules, 140 paths, zero errors/approval exemptions, 15 timeout-declaration warnings and seven wrapper expectations. |
+| [Gate20 / 45126798245](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126798245), job `137532884939` | Candidate `8b8a9eb153374031d88315195b4af2b1a25eae19`; snapshot `f8091e294ba66a5fa3c190eb8a422aafe583b88f` | 4/4 affected checks after PR716: app-shell types, original guardrails, seven regenerated palettes byte-identical and E2E types. 78 rules, 140 paths, zero errors/approval exemptions, 15 timeout-declaration warnings, eleven wrapper expectations; `touchesGuards: false`. |
+
+Gate17–19 pin dev `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`; Gate20 pins the newer dev `b71ecbcc644ee3363ccd1ce0e149c08c80e6130e`. Declared test deadlines remain 300 seconds per browser journey, 40 seconds per original HTTP observation and 10 seconds per DOM expectation; no warning was waived and no producer deadline was extended. Backend, client, schema and grant source remains unchanged from the separately qualified revisions.
 
 ### Focused browser runs
 
@@ -200,10 +226,25 @@ The positive materiality and signal-result assertions stay in the original spec 
 
 R16 [run 45123256492](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45123256492), job `137521673423`, snapshot `de718cd31d6e38a22934274a8d4bba72b108587f` on `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7`, obtained the original recall body with the durable observer. At 06:26:02 UTC, both the bounded raw marker and the post-decode marker recorded **HTTP 503, status `unavailable`, reason `similarity-source-unavailable`**, without truncation. The original closed output schema accepted the body. The preserved positive assertion then failed with expected 200 / received 503; the run remains a failure. The case read returned 200, Brazilian Portuguese candidates passed, no browser memory command was issued and page errors were empty. Artifact `14795175598` retains the result.
 
-This reason is a collapsed source category. Source review establishes that the fixture records original choices and features but does not attest completed Atlas publication; it does not establish that an outbox, model or any particular internal branch caused this response. No publisher, grant, alternate result or retry was introduced. Positive recall matches remain unqualified. A separate presentation qualification can assert this exact refusal without changing the preserved positive test.
+This reason is a collapsed source category. Source review establishes that the fixture records original choices and features but does not attest completed Atlas publication; it does not establish that an outbox, model or any particular internal branch caused this response. No publisher, grant, alternate result or retry was introduced. Positive recall matches remain unqualified. The separate R17 presentation qualification below asserts this exact refusal without changing the preserved positive test. [RECALL-PRECONDITIONS.md](./RECALL-PRECONDITIONS.md) records the original producer/fixture boundary.
 
-See [qualification.json](./qualification.json) for durable revisions and status. No pending follow-up is recorded as a pass.
+
+### R17: exact original recall refusal qualified
+
+[Run 45126521339](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45126521339), job `137531996165`, snapshot `1fd0a8010947a0e86be5dc2d83e1dda8abe2884e` on candidate `c59e406da0585a5b78f04e0689ba73ef48a3e9fe`, passed **one journey in 6.3 minutes**. The unchanged test-ci workflow selected the permanent `final-memory-recall-unavailable.spec.ts` file; the snapshot adds only its admitted request configuration. The existing positive spec, all 114 expectation expressions and its expected-200 assertion remain intact. The separate refusal spec has 44 expectation expressions and retains the same 300/40/10-second budgets with retries zero. Its test job and cleanup both completed successfully.
+
+The single explicit English POST returned the original HTTP 503, status `unavailable`, reason `similarity-source-unavailable` at 06:54:30 UTC. The Brazilian Portuguese POST returned the same closed result at 06:55:24 UTC. For each locale, the observer forwarded the original request exactly once, preserved its body and headers, used zero retries/redirects, decoded the original output schema and delivered the unchanged APIResponse to the browser. It did not generate a replacement source response. Both `SF_FINAL_MEMORY_REFUSAL_QUALIFIED` markers recorded exactly one POST, a query kept off the URL and no invented matches. No exclusive source cause was inferred.
+
+The browser retained the original selected case, version, period, question and authorized candidate. Editing the question cleared the refusal without an automatic query; changing the source cleared the selection and refusal without a resend. No empty-result or successful-match state appeared. Both pages had zero JavaScript errors. Each had the one expected Chromium 503 diagnostic associated with that exact request and verified body; unrelated errors would still fail.
+
+The message is gated by the existing ready privacy/catalog/source conditions, result state `unavailable` and the exact original reason. Every existing result reset also clears the reason. Generic privacy, owner, catalog or case failures retain their own precedence. The copy says that the memory source did not complete the consultation, that the question and selected authorized cases remain on this screen, and that the user can try again. It does not attribute the refusal to a model, outbox or provider, promise a result or classify an unavailable source as an empty match set.
+
+R17 produced six original full-page PNGs and five unchanged JPEG previews. Artifact `14796665565` is 4,973,273 bytes with digest `sha256:daaf2f70e83b468589022e8dbfa12307fd93a1f9290b9d2d140106176359bc50`. [The R17 manifest](./evidence/r17-ui62-manifest.json) records the exact bytes, image blobs and actual dimensions. All captures had document width equal to viewport width. The area owner and root reviewed all five previews; the routine-area peer independently reviewed English dark desktop and Brazilian Portuguese light 320.
+
+Desktop frames show the complete selected case, version/period, question, selected candidate and refusal. At 320px, the scrolled frame shows the candidates, complete refusal and retry action within the viewport. The title/source selector and complete question above the frame are not claimed as visible. Source-owned fixture text remains in its original language. These images qualify the unavailable presentation, not positive recall matches.
+
+See [qualification.json](./qualification.json) for durable revisions, per-area status and original run provenance. All planned focused presentation journeys are complete; source limits remain explicit.
 
 ## Limits
 
-Actual browser zoom is not measured. Materiality and recall are not qualified by R11; their original timeout and 503 remain recorded. No original signal response has been qualified. Numeric expected/observed comparison is not qualified: the full nine-component attempt exceeded the original 40-second comparison deadline and remains recorded as a failure. The final pending fixture preserves incomplete coverage and renders the source refusal. Notifications and backups remain unavailable at the original I00 boundary; summary settings are independently admitted and tested. An observed difference does not establish causality. Source absence or denial remains visible and cannot be converted into a successful read or recommendation by presentation code.
+Actual browser zoom is not measured. Positive materiality and recall results remain unqualified; R11's materiality timeout and R16's failed expected-200 recall assertion remain recorded. R15 qualifies local cancellation and R17 qualifies the exact original refusal, without converting either into a successful source result. No original signal response has been qualified. Numeric expected/observed comparison is not qualified: the full nine-component attempt exceeded the original 40-second comparison deadline and remains recorded as a failure. The final pending fixture preserves incomplete coverage and renders the source refusal. Notifications and backups remain unavailable at the original I00 boundary; summary settings are independently admitted and tested. An observed difference does not establish causality. Source absence or denial remains visible and cannot be converted into a successful read or recommendation by presentation code.
