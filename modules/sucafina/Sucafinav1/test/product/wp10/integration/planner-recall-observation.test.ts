@@ -48,7 +48,8 @@ async function fixture(deadline: Deadline, withScanner = false) {
   const originalRoot = store.readSnapshotRoot
   if (!originalRoot) throw new Error("The native LocalStore root is required")
   const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
-  const control: { active: boolean; measuring: boolean; roots: RootObservation[]; afterRoot?: (count: number) => Promise<void> } =
+  const control: { active: boolean; measuring: boolean; roots: RootObservation[];
+    afterRoot?: (count: number) => Promise<void>; onEnvironment?: () => Promise<void> } =
     { active: true, measuring: false, roots: [] }
   const sources = createSfSourcePersistence({ persistence: store, createId: randomUUID,
     enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
@@ -90,7 +91,13 @@ async function fixture(deadline: Deadline, withScanner = false) {
       humanActions: [] }],
     authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true,
       roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
-    environment: async () => { deadline.check(); return { at, id: randomUUID, directory: [] } },
+    environment: async () => {
+      deadline.check()
+      const next = control.onEnvironment
+      control.onEnvironment = undefined
+      if (next) await next()
+      return { at, id: randomUUID, directory: [] }
+    },
     createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(), inspectSession: async () => undefined,
     verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1,
     authorizeDocument: async () => undefined })
@@ -160,7 +167,7 @@ async function fixture(deadline: Deadline, withScanner = false) {
     control.roots = []
     control.measuring = true
     try { return { value: await work(), roots: [...control.roots] } }
-    finally { control.measuring = false; control.afterRoot = undefined }
+    finally { control.measuring = false; control.afterRoot = undefined; control.onEnvironment = undefined }
   }
   const snapshot = async () => ok(await authority.state.read(request(), "cases", (state) => structuredClone({
     cases: state.cases, atlas: state.atlas, outbox: state.outbox, versions: state.versions,
@@ -360,6 +367,25 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
     const canonical = f.business.caseRecallSource()?.recall
     if (!canonical) throw new Error("The complete installed Recall reader is required")
 
+    await deadline.phase("malformed-selection-keeps-canonical-pre-admission-refusal", async () => {
+      const before = await f.snapshot()
+      const input = incoming()
+      input.caseRef.id = ""
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, produced: RecallResult | undefined
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          produced = await canonical(input, call)
+          return produced
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        expect(measured.value).toEqual(produced)
+        expect(reads).toBe(1)
+        expect(measured.roots).toEqual([])
+      })
+      expect(await f.snapshot()).toEqual(before)
+    })
+
     await deadline.phase("pending-is-unavailable-and-does-not-publish", async () => {
       const before = await f.snapshot()
       expect(before.outbox[staged.outbox.key]?.state).toBe("pending")
@@ -451,7 +477,7 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
       const input = incoming(), release = gate()
       await f.ui("sf_decision_recall", input, async (call) => {
         const caseInput = { caseRef: encodeCaseRef(f.current) }
-        let children = 0, reads = 0, lateReads = 0
+        let children = 0, reads = 0, lateReads = 0, witnessMutations = 0
         let retained: PortResult<AuthorizedCaseProjection> | undefined
         let capturedChild: PortResult<AuthorizedCaseProjection> | undefined
         let capturedRecall: RecallResult | undefined
@@ -479,6 +505,23 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
             expect(child).toEqual(capturedChild)
             const value = await canonical(input, call)
             capturedRecall = structuredClone(value)
+            const retainedRecall = recallOk(value)
+            // Arm the original environment closure only after the complete
+            // producer returns. Its next await is still inside the work root,
+            // before the root's own result copy can protect this value.
+            f.control.onEnvironment = async () => {
+              witnessMutations++
+              expect(reads).toBe(1)
+              expect(f.control.roots).toHaveLength(1)
+              const native = currentSfPlannerReadonlySnapshotScope(f.persistence)
+              expect(native?.current()).toBe(true)
+              expect(native?.identity).toBe(f.control.roots[0]!.identity)
+              expect(native?.bytesIdentity).toBe(f.control.roots[0]!.bytesIdentity)
+              expect(retainedRecall).toEqual(capturedRecall)
+              expect(Reflect.set(retainedRecall.matches, "length", 0)).toBe(true)
+              expect(Reflect.set(retainedRecall.limitations, 0, "mutated during the witness")).toBe(true)
+              expect(retainedRecall).not.toEqual(capturedRecall)
+            }
             return value
           }))
           expect(recallOk(measured.value)).toEqual(baseline)
@@ -486,12 +529,41 @@ test("Planner Recall preserves published Atlas closure and freshly closes every 
           expectIndependentRoots(measured.roots)
           expect(children).toBe(1)
           expect(reads).toBe(1)
+          expect(witnessMutations).toBe(1)
           if (!late || !capturedChild) throw new Error("The child continuation was not created")
           expect(ok(capturedChild).case).toMatchObject(f.current)
           release.release()
           expect((await late).status).toBe("unavailable")
           expect(lateReads).toBe(0)
         } finally { release.release(); await late }
+      })
+      expect(await f.snapshot()).toEqual(publishedState)
+    })
+
+    await deadline.phase("a-divergent-private-child-selection-refuses-before-its-producer", async () => {
+      const input = incoming()
+      await f.ui("sf_decision_recall", input, async (call) => {
+        let reads = 0, childReads = 0
+        let refused: PortResult<AuthorizedCaseProjection> | undefined
+        let produced: RecallResult | undefined
+        const measured = await f.measure(() => f.observer.recall(input, call, async () => {
+          reads++
+          produced = await canonical(input, call)
+          expect(recallOk(produced)).toEqual(baseline)
+          const caseInput = { caseRef: encodeCaseRef(f.current) }
+          refused = await f.observer.read(caseInput, call, async () => {
+            childReads++
+            return f.business.cases.read(caseInput, call)
+          }, { ref: { ...f.current, version: f.current.version + 1 }, current: () => true })
+          return produced
+        }))
+        expect(measured.value.status).toBe("unavailable")
+        expect(refused?.status).toBe("unavailable")
+        if (!produced) throw new Error("The complete Recall did not reach the private selection attack")
+        expect(recallOk(produced)).toEqual(baseline)
+        expect(childReads).toBe(0)
+        expect(reads).toBe(1)
+        expect(measured.roots).toHaveLength(1)
       })
       expect(await f.snapshot()).toEqual(publishedState)
     })
