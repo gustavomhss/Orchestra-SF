@@ -96,7 +96,8 @@
     "helperCommits": [
       "4f61f409de342f4a00396c9ea985c4f5036d1960",
       "33cf939f9fdbe095b2f87f0b6e3d98381f69c217",
-      "e92a3232dcea5e90da2e5b6b1fc6627dc3b3bbf2"
+      "e92a3232dcea5e90da2e5b6b1fc6627dc3b3bbf2",
+      "76ca34069345c8a1e1620a69f72a2340b54d85ad"
     ],
     "ui55Ui56PermanentCoverageCommit": "168d51a351c203e5c0635dd44398726205c7a100",
     "newNumericTimeouts": 0,
@@ -109,6 +110,26 @@
       "removedWaits": 2,
       "requestReplays": 0,
       "readyAssertionsPreserved": true
+    },
+    "concurrentForwarding": {
+      "diagnosticRun": 45221845895,
+      "artifactId": 14840418421,
+      "productState": "UI35 complete; original no-history and no-alternatives state visible",
+      "observerFailure": "Route is already handled!",
+      "playwrightVersion": "1.59.1",
+      "sourceMechanism": "times:1 removes handlers before async completion; faster handler empties registry and disables interception while slower route is in flight",
+      "change": "Claim one request while retaining handler through delivery; await active callback before explicit removal",
+      "requestReplaysAdded": 0,
+      "fetchRetries": 0,
+      "maxRedirects": 0,
+      "errorToSuccessConversions": 0,
+      "qualification": "Awaiting composed native result",
+      "primarySources": [
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/client/page.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/dispatchers/pageDispatcher.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/page.ts",
+        "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright-core/src/server/network.ts"
+      ]
     }
   },
   "composedTeams": {
@@ -221,9 +242,35 @@
     "source": "98129411128b01cb52278739d781039efd839b6c",
     "snapshot": "52ec529d4bf72e400a02dd5a54067b0927c88128",
     "run": 45221722913,
-    "status": "in_progress",
+    "status": "completed",
     "scope": "Schema-valid event and original event-triggered recent-list GET barrier; then finite EOF",
-    "productFixConfirmed": false
+    "productFixConfirmed": true,
+    "conclusion": "failure",
+    "tests": {
+      "passed": 12,
+      "failed": 1,
+      "retries": 0
+    },
+    "job": 137857455453,
+    "observed": {
+      "state": "ready",
+      "stream": "open",
+      "stoppedNoticeCount": 1,
+      "exactDraft": true,
+      "writes": [],
+      "eofReturnsUnavailable": true
+    },
+    "metrics": {
+      "readyMs": 985.0227779999987,
+      "inputMs": 17.02843600000051,
+      "recoveryReadyMs": 154.39167799999996
+    },
+    "artifact": {
+      "id": 14842575691,
+      "bytes": 23791456,
+      "sha256": "2b3ca6381eea967e78e444f08dee0ac38e835741d3e609befd17d79198c2b6b2"
+    },
+    "defectConfirmed": true
   },
   "importCategoryCopy": {
     "enumSource": "packages/schema/src/sucafina/files/structures.ts",
@@ -256,5 +303,96 @@
     "dataValuesChanged": false,
     "beforeImageRun": 45216741705,
     "qualification": "Awaiting composed Files capture"
+  },
+  "ba02Fix": {
+    "commit": "fefbeed00d88e16b5256b848076afb4fccfbc144",
+    "composedProduct": "2e06c200326882a56ffa8e8c064915cdc47fad95",
+    "qualification": {
+      "browser": {
+        "source": "50bff9ffc4127ea3591e248b815da4c1ddc668bf",
+        "snapshot": "534353b33a4aff338fda4f1da696c9768b9ed3cb",
+        "run": 45223658325,
+        "status": "completed",
+        "sourceCommits": [
+          "50bff9ffc4127ea3591e248b815da4c1ddc668bf",
+          "64091e2afbea0f853aa201e10aea0a2c03034f2b",
+          "fefbeed00d88e16b5256b848076afb4fccfbc144"
+        ],
+        "equivalentProduct": "2e06c200326882a56ffa8e8c064915cdc47fad95",
+        "job": 137864295741,
+        "conclusion": "success",
+        "tests": {
+          "passed": 13,
+          "failed": 0,
+          "retries": 0
+        },
+        "observed": {
+          "state": "ready",
+          "stream": "open",
+          "stoppedNoticeCount": 0,
+          "exactDraft": true,
+          "writes": [],
+          "eofReturnsUnavailable": true,
+          "eofNoticePresent": true
+        },
+        "metrics": {
+          "readyMs": 989.3393369999976,
+          "inputMs": 19.230781999998726,
+          "recoveryReadyMs": 147.5054139999993
+        },
+        "artifact": {
+          "id": 14840793201,
+          "bytes": 17880976,
+          "sha256": "36163bf3250c5d012e7c8b3592dd6acccd11535d9740fc8995205e7326cbe5c5"
+        },
+        "visualReview": {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "reviewers": [
+            "behavior",
+            "system"
+          ],
+          "result": "Recovered OPEN notice absent; exact draft, composer and Submit remain contained"
+        }
+      },
+      "unit": {
+        "snapshot": "374d73fb91f57fc2f35ab47c6c4050bd60c16665",
+        "run": 45223698792,
+        "status": "completed",
+        "job": 137864437204,
+        "conclusion": "success",
+        "tests": {
+          "passed": 33,
+          "failed": 0,
+          "assertions": 300
+        },
+        "groups": {
+          "controller": 24,
+          "page": 9
+        },
+        "newCases": [
+          "transport recovery restores never-submitted draft and clears stopped notice",
+          "open stream with unavailable transcript retains stopped notice until explicit recovery"
+        ]
+      }
+    },
+    "limits": {
+      "samplesPerState": 1,
+      "statisticalPerformanceEquivalence": false,
+      "liveMicrosoft": false,
+      "persistentStream": false,
+      "zoomOrTouchQualification": false,
+      "flakeRateMeasured": false
+    }
+  },
+  "nativeCombinedThirdAttempt": {
+    "source": "98129411128b01cb52278739d781039efd839b6c",
+    "snapshot": "4d69a969f20f7d49011f1e68e22c39e0f0257ca7",
+    "run": 45221243928,
+    "job": 137855760787,
+    "status": "in_progress",
+    "includesConcurrentForwardingFix": false
   }
 }
