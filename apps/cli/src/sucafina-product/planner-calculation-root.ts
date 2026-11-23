@@ -163,12 +163,9 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
   }
   return {
     prepare,
-    proof: (call: TrustedDomainContext): SfPlannerCalculationRootProof | undefined => {
-      try {
-        const owner = roots.getStore(), proof = owner?.proof
-        return proof && readSfPlannerCalculationRootProof(proof, input.host, call)?.current() ? proof : undefined
-      } catch { return undefined }
-    },
+    // An emitted token stays distinguishable from unsupported ownership even
+    // after drift/close. Its consumer must revalidate it and refuse without replay.
+    proof: (_call: TrustedDomainContext): SfPlannerCalculationRootProof | undefined => roots.getStore()?.proof,
     // The consumer consults this before routing, including when a closed
     // ancestral frame would otherwise look ineligible for the optimization.
     allows: (call: TrustedDomainContext) => {
