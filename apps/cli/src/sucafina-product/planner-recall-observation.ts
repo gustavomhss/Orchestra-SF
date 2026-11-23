@@ -96,7 +96,8 @@ export function createSfPlannerRecallObservation(input: {
           if (!snapshots || !sources || !refs.size) return unsupported
           const snapshotDigest = sfRecallCost("owner-digest", () => digestSfValue({ state: stored, snapshots, sources }))
           const before = await sfRecallAsyncCost("owner-environment", () => environment())
-          const principal = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))))
+          const principalValue = await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
+          const principal = sfRecallCost("owner-clone", () => structuredClone(principalValue))
           if (!before || !principal || principal.id !== actor.principalRef || !sfRecallCost("owner-current", () => current())) return undefined
           if (principal.id.startsWith("local:") || ![...refs.values()].every((ref) =>
             sfRecallCost("owner-materialized", () => plannerRecordMaterialized(ref, call, snapshots.planner, principal)))) return unsupported
@@ -187,7 +188,8 @@ export function createSfPlannerRecallObservation(input: {
         let result: PortResult<Value>
         try {
           result = await frames.run(frame, () => sfRecallAsyncCost("record-scope", () => observeRecords(before.refs, call, token, authorize, () => sfRecallCost("owner-frame-current", () => frame.current()), async () => {
-            const detached = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-work", () => work())))
+            const producedValue = await sfRecallAsyncCost("owner-work", () => work())
+            const detached = sfRecallCost("owner-clone", () => structuredClone(producedValue))
             if (selection && !caseResultMatches(detached, selected.cases[0]!)) { frame.invalid = true; return unavailable() }
             return detached
           })))
@@ -236,7 +238,8 @@ export function createSfPlannerRecallObservation(input: {
         }
         const digest = sfRecallCost("owner-digest", () => digestSfValue(incoming)), hint = selected?.ref, hintCurrent = selected?.current
         const hintDigest = hint && sfRecallCost("owner-digest", () => digestSfValue(hint))
-        const result = sfRecallCost("owner-clone", () => structuredClone(await sfRecallAsyncCost("owner-work", () => work())))
+        const caseValue = await sfRecallAsyncCost("owner-work", () => work())
+        const result = sfRecallCost("owner-clone", () => structuredClone(caseValue))
         if (!sfRecallCost("owner-frame-current", () => frame.current()) || sfRecallCost("owner-digest", () => digestSfValue(incoming)) !== digest ||
           selected && (selected.ref !== hint || selected.current !== hintCurrent || sfRecallCost("owner-digest", () => digestSfValue(selected.ref)) !== hintDigest || !hintCurrent?.()) ||
           !caseResultMatches(result, { ...ref, version })) { frame.invalid = true; return unavailable() }

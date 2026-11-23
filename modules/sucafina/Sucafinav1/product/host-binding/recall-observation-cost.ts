@@ -3,7 +3,8 @@ import { types } from "node:util"
 
 // Snapshot-only numeric aggregates. No request, reference, authority value or result is retained.
 // Header: schema, owner, parent, depth, kind, phase, fulfilled, epochMs, elapsedUs, activeAsync.
-// kind: 0 Finance, 1 case read, 2 explicit Recall. phase: 0 settlement, 1/2 first read/rank,
+// kind: 0 Finance, 1 case read, 2 Recall, 3/4 first/second Materiality read.
+// phase: 0 settlement, 1/2 first read/rank,
 // 3 match-memory read, 4/5 second rank/read, 6 child settlement. fulfilled=2 is partial.
 // Count/elapsedUs pairs follow. Partial rows include elapsed time of open async calls;
 // all timings are inclusive, cumulative and cannot be summed across nesting or checkpoints.
@@ -13,7 +14,7 @@ type Profile = {
   id: number
   parent: number
   depth: number
-  kind: 0 | 1 | 2
+  kind: 0 | 1 | 2 | 3 | 4
   started: number
   epoch: number
   closed: boolean
@@ -79,7 +80,7 @@ export function sfRecallReadCost<Value>(bucket: Bucket, read: () => Value | Prom
 }
 
 /** One final row per callback; only existing producer boundaries may publish a partial row. */
-export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2, work: () => Promise<Value>): Promise<Value> {
+export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2 | 3 | 4, work: () => Promise<Value>): Promise<Value> {
   const parent = profiles.getStore()
   const profile: Profile = {
     id: ++sequence, parent: parent?.id ?? 0, depth: parent ? parent.depth + 1 : 0, kind,
@@ -89,7 +90,7 @@ export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2, work: () => Promise<Va
   return profiles.run(profile, () => {
     const finish = (fulfilled: 0 | 1) => {
       emit(profile, 0, fulfilled)
-      if (kind === 1 && parent?.kind === 2) checkpoint(parent, 6)
+      if (parent && (kind === 1 && parent.kind === 2 || parent.kind === 3 || parent.kind === 4)) checkpoint(parent, 6)
     }
     let pending: Promise<Value>
     try { pending = work() } catch (error) { finish(0); throw error }
