@@ -30,6 +30,7 @@ type ViewState = {
   selectedCandidates: readonly string[]
   result: SimilarOutput | null
   resultState: CaseListState
+  resultIssue: "similarity-source-unavailable" | null
   resultFilter: string
   selectedDetail: CaseRef | null
   detail: Original | null
@@ -38,7 +39,7 @@ type ViewState = {
 const INITIAL: ViewState = {
   cases: [], catalogState: "idle", selected: "", source: null, sourceState: "idle",
   query: "", includeHistorical: false, selectedCandidates: [],
-  result: null, resultState: "idle", resultFilter: "",
+  result: null, resultState: "idle", resultIssue: null, resultFilter: "",
   selectedDetail: null, detail: null, detailState: "idle",
 }
 const UNREADABLE_SOURCE = new Set(["revoked", "missing", "unavailable", "invalid"])
@@ -115,7 +116,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     ++detailSerial
     resultAbort?.abort()
     detailAbort?.abort()
-    setView({ result: null, resultState: "idle", resultFilter: "", detail: null, detailState: "idle", selectedDetail: null })
+    setView({ result: null, resultState: "idle", resultIssue: null, resultFilter: "", detail: null, detailState: "idle", selectedDetail: null })
   }
   const eraseOwner = () => {
     ++generationSerial
@@ -218,7 +219,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const next = checked ? [...new Set([...view.selectedCandidates, encoded])] :
       view.selectedCandidates.filter((item) => item !== encoded)
     if (next.length > 50) {
-      setView("resultState", "invalid")
+      setView({ resultState: "invalid", resultIssue: null })
       return
     }
     eraseResults()
@@ -231,7 +232,7 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     const selectedCases = candidates.filter((candidate): candidate is ListedCase => candidate !== undefined)
     if (!ready || !source || !view.query.trim() || !candidates.length || candidates.length > 50 ||
       selectedCases.length !== candidates.length) {
-      setView("resultState", "invalid")
+      setView({ resultState: "invalid", resultIssue: null })
       return
     }
     eraseResults()
@@ -255,7 +256,10 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
           setView("catalogState", "denied")
           return
         }
-        setView("resultState", state)
+        const resultIssue = response.kind === "response" && response.body.status === "unavailable" &&
+          "reason" in response.body && response.body.reason === "similarity-source-unavailable"
+          ? "similarity-source-unavailable" : null
+        setView({ resultState: state, resultIssue })
         return
       }
       const result = response.body
@@ -306,6 +310,9 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     view.resultState === "ready" && readableMatches().length === 0 ? "empty" :
     view.resultState === "ready" && filtered().length === 0 ? "filtered-empty" :
     view.resultState
+  const originalSourceUnavailable = () =>
+    privacy() === "ready" && view.catalogState === "ready" && view.sourceState === "ready" &&
+    view.resultState === "unavailable" && view.resultIssue === "similarity-source-unavailable"
   const resultsMessage = () =>
     resultsState() === "loading" ? "sf.common.loading" :
     resultsState() === "denied" ? "sf.common.noAccess" :
@@ -314,7 +321,8 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
     resultsState() === "filtered-empty" ? "sf.u26.similarFilteredEmpty" :
     resultsState() === "invalid" ? "sf.u26.similarNoSelection" :
     resultsState() === "stale" ? "sf.common.stale" :
-    resultsState() === "ready" ? "sf.u26.similarMatches" : "sf.common.unavailable"
+    resultsState() === "ready" ? "sf.u26.similarMatches" :
+    originalSourceUnavailable() ? "sf.u26.similarSourceUnavailable" : "sf.common.unavailable"
   const openOriginal = async (ref: CaseRef) => {
     const ready = owner.ready()
     if (!ready || !view.result?.matches.some((match) => equivalent(match.caseRef, ref))) return
@@ -355,7 +363,9 @@ export function SfSimilarCasesView(_props: SfSurfaceProps<"UI62">) {
   return (
     <SfPageFrame titleKey={k("sf.ui62.title")} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="reading" onLayoutMode={() => undefined}>
-      <section class="sf-memory sf-memory-similarity" data-sf-wave="six" data-sf-surface="UI62">
+      <section class="sf-memory sf-memory-similarity" data-sf-wave="six" data-sf-surface="UI62"
+        data-sf-memory-recall-state={resultsState()}
+        data-sf-memory-recall-reason={originalSourceUnavailable() ? "similarity-source-unavailable" : undefined}>
         <Show when={privacy() === "ready" && (view.catalogState === "ready" || view.catalogState === "empty")}>
           <form class="sf-memory-similarity-form sf-form" onSubmit={(event) => { event.preventDefault(); void submit() }}>
             <p class="sf-memory-help">{t("sf.u26.similarQueryHelp")}</p>
