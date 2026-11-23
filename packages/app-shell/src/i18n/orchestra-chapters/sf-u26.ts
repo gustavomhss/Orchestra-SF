@@ -1,5 +1,10 @@
 // N30 / U26. Localized leaf keys; registration into orchestra.ts is owned by 125.
 export const SF_U26_COPY = {
+  "sf.u26.readSignals": "Read current signals",
+  "sf.u26.cancelSignals": "Cancel signal consultation",
+  "sf.u26.signalsIdle": "Read current signals to check whether the recorded conditions need reconsideration.",
+  "sf.u26.signalsLoading": "Checking current signals against the authorized source.",
+  "sf.u26.signalsCancelled": "Signal consultation stopped in this view. No current result was received. You can check again.",
   "sf.u26.incompleteOutcome": "Expected and observed values cannot be compared while the recorded cost coverage is incomplete. Review the pending costs in the original decision.",
   "sf.u26.recordedChoices": "Recorded choices",
   "sf.u26.noChoices": "No choices are recorded for this authorized case.",
@@ -92,6 +97,11 @@ export const SF_U26_COPY = {
 } as const
 
 export const SF_U26_COPY_BR: Readonly<Record<keyof typeof SF_U26_COPY, string>> = {
+  "sf.u26.readSignals": "Consultar sinais atuais",
+  "sf.u26.cancelSignals": "Cancelar consulta de sinais",
+  "sf.u26.signalsIdle": "Consulte os sinais atuais para verificar se as condições registradas precisam ser reavaliadas.",
+  "sf.u26.signalsLoading": "Consultando os sinais atuais na fonte autorizada.",
+  "sf.u26.signalsCancelled": "Consulta interrompida nesta tela. Nenhum resultado atual foi recebido. Você pode consultar novamente.",
   "sf.u26.incompleteOutcome": "Não é possível comparar os valores previstos e observados enquanto a cobertura de custos registrada estiver incompleta. Revise os custos pendentes na decisão original.",
   "sf.u26.recordedChoices": "Escolhas registradas",
   "sf.u26.noChoices": "Nenhuma escolha registrada para este caso autorizado.",
