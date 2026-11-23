@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { sfDecisionCategoryKey, sfDecisionGap, sfDecisionIssueKey } from "./presentation"
+import { sfDecisionCategoryKey, sfDecisionGap, sfDecisionGapGroups, sfDecisionIssueKey } from "./presentation"
 
 describe("decision condition presentation", () => {
   test("labels only exact owned codes and retains their source identity", () => {
@@ -48,5 +48,53 @@ describe("decision condition presentation", () => {
       expect(sfDecisionIssueKey(value)).toBeUndefined()
       expect(sfDecisionGap(value)).toEqual({ code: value })
     }
+  })
+  test("reads an identical authored coverage reason once with every category in source order", () => {
+    const reason = "Confirmar custo: migração assistida"
+    const values = Object.freeze([
+      "cost-coverage-unresolved-or-source-mismatch",
+      "coverage:service:" + reason,
+      "unrecognized-condition",
+      "coverage:migration:" + reason,
+      "coverage:taxes:" + reason,
+    ])
+    const original = [...values]
+    expect(sfDecisionGapGroups(values)).toEqual([
+      { kind: "literal", code: values[0], label: "sf.ui36.issue.coverageUnresolved" },
+      { kind: "coverage", reason, reasonKey: undefined, categories: [
+        "sf.ui36.category.service", "sf.ui36.category.migration", "sf.ui36.category.taxes",
+      ] },
+      { kind: "literal", code: "unrecognized-condition" },
+    ])
+    expect(values).toEqual(original)
+  })
+
+  test("keeps differing reasons and unknown category scopes separate", () => {
+    const groups = sfDecisionGapGroups([
+      "coverage:service:Confirmar custo",
+      "coverage:migration:confirmar custo",
+      "coverage:taxes:Confirmar custo ",
+      "coverage:custom:Confirmar custo",
+      "Confirmar custo",
+    ])
+    expect(groups).toEqual([
+      { kind: "coverage", reason: "Confirmar custo", reasonKey: undefined, categories: ["sf.ui36.category.service"] },
+      { kind: "coverage", reason: "confirmar custo", reasonKey: undefined, categories: ["sf.ui36.category.migration"] },
+      { kind: "coverage", reason: "Confirmar custo ", reasonKey: undefined, categories: ["sf.ui36.category.taxes"] },
+      { kind: "literal", code: "coverage:custom:Confirmar custo" },
+      { kind: "literal", code: "Confirmar custo" },
+    ])
+  })
+
+  test("groups a known reason without treating prototype names as category scopes", () => {
+    expect(sfDecisionGapGroups([
+      "coverage:service:missing-category", "coverage:migration:missing-category",
+      "coverage:constructor:missing-category", "constructor",
+    ])).toEqual([
+      { kind: "coverage", reason: "missing-category", reasonKey: "sf.ui36.issue.missingCategory",
+        categories: ["sf.ui36.category.service", "sf.ui36.category.migration"] },
+      { kind: "literal", code: "coverage:constructor:missing-category" },
+      { kind: "literal", code: "constructor" },
+    ])
   })
 })

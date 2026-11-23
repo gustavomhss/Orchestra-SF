@@ -7,7 +7,8 @@ import { SfStatePanel } from "../../shared/states"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfCase } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
-import { sfDecisionCategoryKey, sfDecisionGap } from "./presentation"
+import { sfDecisionCategoryKey } from "./presentation"
+import { SfDecisionGaps } from "./gaps"
 import "../cases/n24.css"
 import "../intent/decision.css"
 import "../../reviews/workflows.css"
@@ -39,17 +40,6 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
     const label = sfDecisionCategoryKey(value)
     return label ? t(label) : value
   }
-  const gapText = (value: string) => {
-    const gap = sfDecisionGap(value)
-    if (gap.label) return t(gap.label)
-    if (gap.category) return t("sf.ui35.coverage") + " · " + t(gap.category) + ": " +
-      (gap.reasonKey ? t(gap.reasonKey) : gap.reason)
-    return value
-  }
-  const hasGapCodes = () => divergences().some((value) => {
-    const gap = sfDecisionGap(value)
-    return !!gap.label || !!gap.category
-  })
   const status = (): SfUiState => caseData.read.state === "ready" && filtered().length === 0
     ? (record()?.assumptions.length ? "filtered-empty" : "empty") : caseData.read.state
 
@@ -150,13 +140,7 @@ export function SfAssumptionsView(props: SfSurfaceProps): JSX.Element {
               <section class="sf-n24-section" aria-labelledby="sf-n24-divergences">
                 <h2 id="sf-n24-divergences">{t("sf.ui36.divergences")}</h2>
                 <Show when={divergences().length} fallback={<p>{t("sf.ui36.noDivergences")}</p>}>
-                  <ul class="sf-n24-list"><For each={divergences()}>{(issue) => <li><bdi>{gapText(issue)}</bdi></li>}</For></ul>
-                  <Show when={hasGapCodes()}>
-                    <details class="sf-decision-source-scope">
-                      <summary>{t("sf.ui36.sourceDetails")}</summary>
-                      <ul class="sf-n24-list"><For each={divergences()}>{(issue) => <li><bdi>{issue}</bdi></li>}</For></ul>
-                    </details>
-                  </Show>
+                  <SfDecisionGaps values={divergences()} />
                 </Show>
               </section>
             </div>
