@@ -467,7 +467,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   plannerHolder.current = planner
   const plannerSources = product.sources
   const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
-  const canonicalPlannerReaders = pinSfPlannerRecordReaders([host, input.authority.state, canonicalCases, cases,
+  const canonicalPlannerReaders = pinSfPlannerRecordReaders([host, host.persistence, input.persistence, input.authority.state, canonicalCases, cases,
     product.scenarios, product.planner, planner, plannerSources, results, context, projectPlannerEvidence])
   let canonicalPlannerAtlas: { value: BusinessContextService; current: () => boolean } | undefined
   const plannerRecordProof = createSfPlannerRecordProofScope({ host, readersCurrent: () => canonicalPlannerReaders() &&
