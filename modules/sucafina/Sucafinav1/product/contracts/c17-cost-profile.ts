@@ -1,7 +1,10 @@
 // Diagnostic snapshot only. Never promote this module or its instrumentation.
 type C17CostBucket = "observe" | "sourceIdentities" | "prepareAclClone" | "prepareFullClone" |
   "observeScopeClone" | "projectorSnapshotClone" | "projectorScopeClone" | "projectScope" |
-  "authorizeFirst" | "authorizeSecond" | "schemaOutputClone" | "digestSfValue"
+  "authorizeFirst" | "authorizeSecond" | "schemaOutputClone" | "digestSfValue" |
+  "canonicalSfValue" | "captureRuntimeCurrent" | "projectionRuntimeCurrent" | "contextIdentityPreparation" |
+  "schemaOutputValidation" | "localMaterializeSnapshot" | "localDecodeSnapshot" | "localCloneSnapshot" |
+  "localAuthorityAclGuard" | "localPhysicalGuard"
 type Cost = { calls: number; milliseconds: number; maximum: number; reportedCalls: number; reportedMilliseconds: number }
 let profile: { fixture: string; started: number; costs: Map<C17CostBucket, Cost> } | undefined
 
@@ -55,7 +58,7 @@ export function reportC17CostPhase(fixture: string, phase: string) {
       maximumMs: Math.round(maximum * 1000) / 1000 }] : []
   })
   console.info("SF_C17_COST_PROFILE", JSON.stringify({
-    schema: "sf-c17-cost-v1", qualification: false, source: "97c921ab0054bd5154227593adcbcca56b0538c3",
+    schema: "sf-c17-cost-v2", qualification: false, source: "97c921ab0054bd5154227593adcbcca56b0538c3",
     sourceTree: "3f04bc2f32be61ea4596b2d8c008c3f944e5841b", fixture, phase,
     runtime: { version: Bun.version, revision: Bun.revision }, clock: "performance.now",
     timing: "inclusive elapsed; nested buckets and awaits overlap; instrumentation overhead is present",

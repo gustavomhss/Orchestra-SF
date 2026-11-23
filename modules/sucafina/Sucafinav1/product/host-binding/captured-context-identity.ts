@@ -1,4 +1,5 @@
 import { digestSfValue, sfCanonicalCaptureRuntime } from "../contracts/canonical.ts"
+import { startC17Cost, finishC17Cost } from "../contracts/c17-cost-profile.ts"
 
 // The helper performs no reflective work while loading. Its earlier canonical
 // anchor decides whether any private-copy operation can run.
@@ -64,16 +65,19 @@ function capture(value: unknown) {
  * Ambiguity performs canonical admission immediately. The admitted path defers
  * only its baseline digest; every comparison still digests the live value. */
 export function prepareSfCapturedContextIdentity(value: unknown): (current: unknown) => boolean {
-  const captured = capture(value)
-  if (!captured) {
-    const expected = digestSfValue(value)
-    return (current) => expected === digestSfValue(current)
-  }
-  let expected: string | undefined
-  return (current) => {
-    if (!captured.runtime.current()) return false
-    expected ??= digestSfValue(captured.value)
-    const actual = digestSfValue(current)
-    return captured.runtime.current() && expected === actual
-  }
+  const started = startC17Cost("contextIdentityPreparation")
+  try {
+    const captured = capture(value)
+    if (!captured) {
+      const expected = digestSfValue(value)
+      return (current) => expected === digestSfValue(current)
+    }
+    let expected: string | undefined
+    return (current) => {
+      if (!captured.runtime.current()) return false
+      expected ??= digestSfValue(captured.value)
+      const actual = digestSfValue(current)
+      return captured.runtime.current() && expected === actual
+    }
+  } finally { finishC17Cost("contextIdentityPreparation", started) }
 }

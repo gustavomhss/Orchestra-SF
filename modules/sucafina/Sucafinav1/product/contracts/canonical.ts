@@ -90,6 +90,7 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
       prototypes[prototypes.length] = { owner, fields }
     }
     const current = () => {
+      const started = startC17Cost("captureRuntimeCurrent")
       try {
         for (let index = 0; index < pins.length; index++) {
           const pin = pins[index]!
@@ -109,6 +110,7 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
         }
         return true
       } catch { return false }
+      finally { finishC17Cost("captureRuntimeCurrent", started) }
     }
     if (!current()) return undefined
     const captured = captureFreeze({ isProxy: proxy.value as (value: unknown) => boolean, current })
@@ -140,13 +142,16 @@ function initializeCaptureRuntime(): SfCanonicalCaptureRuntime | undefined {
             return false
           },
           current: () => {
-            if (!current() || !sameCaptureDescriptor(captureDescriptor(engine, "version"), version) ||
-              !sameCaptureDescriptor(captureDescriptor(engine, "revision"), revision)) return false
-            for (let index = 0; index < predicates.length; index++) {
-              const pin = predicates[index]
-              if (!pin || !sameCaptureDescriptor(captureDescriptor(proxyTypes, pin.key), pin.expected)) return false
-            }
-            return true
+            const started = startC17Cost("projectionRuntimeCurrent")
+            try {
+              if (!current() || !sameCaptureDescriptor(captureDescriptor(engine, "version"), version) ||
+                !sameCaptureDescriptor(captureDescriptor(engine, "revision"), revision)) return false
+              for (let index = 0; index < predicates.length; index++) {
+                const pin = predicates[index]
+                if (!pin || !sameCaptureDescriptor(captureDescriptor(proxyTypes, pin.key), pin.expected)) return false
+              }
+              return true
+            } finally { finishC17Cost("projectionRuntimeCurrent", started) }
           },
         })
       }
@@ -175,9 +180,12 @@ export function sfCanonicalSerializerUnhooked() {
 }
 
 export function canonicalSfValue(value: unknown): string {
-  const tree = sfCanonicalCloneTree(value)
-  if (tree) return JSON.stringify(tree)
-  return JSON.stringify(canonical(value))
+  const started = startC17Cost("canonicalSfValue")
+  try {
+    const tree = sfCanonicalCloneTree(value)
+    if (tree) return JSON.stringify(tree)
+    return JSON.stringify(canonical(value))
+  } finally { finishC17Cost("canonicalSfValue", started) }
 }
 
 export function digestSfValue(value: unknown): string {

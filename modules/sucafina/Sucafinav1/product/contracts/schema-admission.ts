@@ -1,5 +1,5 @@
 import { isSfPeriod } from "./validation.ts"
-import { copyC17Cost } from "./c17-cost-profile.ts"
+import { copyC17Cost, startC17Cost, finishC17Cost } from "./c17-cost-profile.ts"
 import { sfOperationInputSchemas } from "./operations.ts"
 import type { SfOperationInputMap } from "./operations.ts"
 import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas, sfEnvelopeSchemas } from "./output-schemas.ts"
@@ -57,7 +57,10 @@ export function decodeSfContributionOutput<K extends keyof SfContributionOutputM
 export function decodeSfOperationOutput<K extends keyof SfOperationOutputMap>(operation: K, value: unknown): { ok: true; value: SfOperationOutputMap[K] } | { ok: false; reason: "invalid-operation-output" } {
   if (!Object.hasOwn(sfOperationOutputSchemas, operation)) return { ok: false, reason: "invalid-operation-output" }
   const schema = sfOperationOutputSchemas[operation]
-  if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-operation-output" }
+  const started = schema ? startC17Cost("schemaOutputValidation") : undefined
+  try {
+    if (!schema || !valid(schema, value, schema.definitions)) return { ok: false, reason: "invalid-operation-output" }
+  } finally { finishC17Cost("schemaOutputValidation", started) }
   return { ok: true, value: copyC17Cost("schemaOutputClone", structuredClone, value) as SfOperationOutputMap[K] }
 }
 

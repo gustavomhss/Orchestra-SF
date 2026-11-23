@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite"
 import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
+import { startC17Cost, finishC17Cost } from "../product/contracts/c17-cost-profile.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
 import { types } from "node:util"
@@ -129,12 +130,15 @@ export async function openLocalStore(directory: string, options: {
     return { dev: opened.dev, ino: opened.ino, invalid: false }
   }).finally(() => file.close())
   const requireDatabaseFile = () => {
-    const installed = !databaseFile.invalid && lstatSync(path, { bigint: true, throwIfNoEntry: false })
-    if (!installed || !installed.isFile() || installed.uid !== BigInt(uid) || (installed.mode & 0o077n) !== 0n ||
-      installed.dev !== databaseFile.dev || installed.ino !== databaseFile.ino) {
-      databaseFile.invalid = true
-      throw new Error("Local database identity changed; reopen the store")
-    }
+    const started = startC17Cost("localPhysicalGuard")
+    try {
+      const installed = !databaseFile.invalid && lstatSync(path, { bigint: true, throwIfNoEntry: false })
+      if (!installed || !installed.isFile() || installed.uid !== BigInt(uid) || (installed.mode & 0o077n) !== 0n ||
+        installed.dev !== databaseFile.dev || installed.ino !== databaseFile.ino) {
+        databaseFile.invalid = true
+        throw new Error("Local database identity changed; reopen the store")
+      }
+    } finally { finishC17Cost("localPhysicalGuard", started) }
   }
 
   const storageIdentity = createHash("sha256").update(JSON.stringify([path, Number(databaseFile.dev), Number(databaseFile.ino)])).digest("hex")
@@ -1085,15 +1089,20 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 export function decodeSnapshot(payload: string): Snapshot {
-  const envelope: unknown = JSON.parse(payload)
-  if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
-    throw new Error("Unsupported local snapshot encoding")
-  return validateSnapshot(decode(envelope[2]))
+  const started = startC17Cost("localDecodeSnapshot")
+  try {
+    const envelope: unknown = JSON.parse(payload)
+    if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
+      throw new Error("Unsupported local snapshot encoding")
+    return validateSnapshot(decode(envelope[2]))
+  } finally { finishC17Cost("localDecodeSnapshot", started) }
 }
 
 /** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(copyValue(snapshot))
+  const started = startC17Cost("localCloneSnapshot")
+  try { return validateSnapshot(copyValue(snapshot)) }
+  finally { finishC17Cost("localCloneSnapshot", started) }
 }
 
 function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
@@ -1207,6 +1216,7 @@ const readonlyAuthorityAclCodec = (() => {
       }
     }
     return () => {
+      const started = startC17Cost("localAuthorityAclGuard")
       try {
         // Inspect with the original primitives so refusing a changed codec
         // cannot invoke an added accessor before the complete-path fallback.
@@ -1232,6 +1242,7 @@ const readonlyAuthorityAclCodec = (() => {
         return !property(objectPrototype, "sfBlobGenerations") &&
           !property(objectPrototype, "toJSON") && !property(arrayPrototype, "toJSON")
       } catch { return false }
+      finally { finishC17Cost("localAuthorityAclGuard", started) }
     }
   } catch { return undefined }
 })()
@@ -1330,26 +1341,29 @@ function fingerprintSnapshotCopy(plan: SnapshotMaterialization) {
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Snapshot {
-  const copy = plan.copy
-  if (!copy) return decodeSnapshot(payload)
-  const snapshot = JSON.parse(copy.json) as Snapshot
-  // Null placeholders preserve property order and array density. Only these
-  // known own paths need repair; -0 is preserved by its native JSON literal.
-  const restore = (path: string[], value: string | undefined) => {
-    let parent: Record<string, unknown> = snapshot
-    for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
-    Object.defineProperty(parent, path[path.length - 1]!, { value, enumerable: true, writable: true, configurable: true })
-  }
-  if (copy.missing !== "[]") {
-    for (const path of JSON.parse(copy.missing) as string[][]) restore(path, undefined)
-  }
-  if (copy.largeStrings !== "[]") {
-    for (const [offset, length, escaped, path] of JSON.parse(copy.largeStrings) as [number, number, boolean, string[]][]) {
-      const value: string = escaped
-        ? JSON.parse(payload.slice(offset, offset + length))
-        : payload.slice(offset + 1, offset + length - 1)
-      restore(path, value)
+  const started = startC17Cost("localMaterializeSnapshot")
+  try {
+    const copy = plan.copy
+    if (!copy) return decodeSnapshot(payload)
+    const snapshot = JSON.parse(copy.json) as Snapshot
+    // Null placeholders preserve property order and array density. Only these
+    // known own paths need repair; -0 is preserved by its native JSON literal.
+    const restore = (path: string[], value: string | undefined) => {
+      let parent: Record<string, unknown> = snapshot
+      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
+      Object.defineProperty(parent, path[path.length - 1]!, { value, enumerable: true, writable: true, configurable: true })
     }
-  }
-  return snapshot
+    if (copy.missing !== "[]") {
+      for (const path of JSON.parse(copy.missing) as string[][]) restore(path, undefined)
+    }
+    if (copy.largeStrings !== "[]") {
+      for (const [offset, length, escaped, path] of JSON.parse(copy.largeStrings) as [number, number, boolean, string[]][]) {
+        const value: string = escaped
+          ? JSON.parse(payload.slice(offset, offset + length))
+          : payload.slice(offset + 1, offset + length - 1)
+        restore(path, value)
+      }
+    }
+    return snapshot
+  } finally { finishC17Cost("localMaterializeSnapshot", started) }
 }
