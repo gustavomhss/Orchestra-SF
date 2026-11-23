@@ -1,0 +1,62 @@
+{
+  "schema": "sf613-catalog-availability-static-review-v1",
+  "recordedAt": "2026-11-23T20:32:06Z",
+  "reviewer": "/root/audit_catalog",
+  "qualification": false,
+  "status": "PASS_STATIC_FOR_FOCUSED_CI_ONLY",
+  "source": {
+    "branch": "sf613-catalog",
+    "commit": "7d5aa66cd2c57d09e4bda41926c6f07bbd87b72f",
+    "tree": "5047ea10712ed52783a9fb4e16334463e51786c5",
+    "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "isolated": true,
+    "promoted": false
+  },
+  "paths": [
+    {
+      "path": "packages/core/src/catalog.ts",
+      "baseBlob": "e6173ebed406ea4cf3cc77ca1858c4cd1bc492c4",
+      "blob": "46e4a282d3ae22a0faeed848233bf13993ffd87d"
+    },
+    {
+      "path": "packages/core/test/catalog-available.test.ts",
+      "blob": "65ab502abb4f6fd5f4ec30f41327c33139b4d11e"
+    }
+  ],
+  "preserved": [
+    "Original projectModel function byte-exact; all() and get() retain complete projection and validation.",
+    "All 31 yield* sites retained, including fresh credentials and integrations. Provider policy and generation/authorization code are unchanged.",
+    "Available provider models remain schema-validated before model.enabled filtering.",
+    "Original API/request/top-level preparation reads occur for hidden providers."
+  ],
+  "deliberateContractChange": [
+    "available() validates and sorts nested model metadata only after current provider selection. Hidden invalid nested metadata and nested getters no longer block available discovery.",
+    "all()/get() still validate hidden models. Making a provider available restores complete validation without an explicit catalog reload.",
+    "This is not universal observable hook equivalence: the available-path ModelV2.Info.make property lookup now occurs after the model top-level spread; selected sorting getter order/count need not be identical after unavailable items are removed."
+  ],
+  "tests": {
+    "fileCases": 5,
+    "projectionGetterSites": 11,
+    "coverage": [
+      "Fresh credential creation/removal with invalid hidden metadata",
+      "Disabled model under available provider still validates",
+      "API/request/top-level/settings/header/body getter errors",
+      "Hidden nested metadata getter omitted only from available and restored when visible",
+      "Virtual providers, effective IDs, field inheritance, credential changes, reload and release ordering"
+    ],
+    "execution": "NOT_RUN_AT_STATIC_REVIEW",
+    "globalMocks": false,
+    "newAnyOrCasts": false
+  },
+  "plannedValidation": [
+    "Existing source-pinned test-ci Linux strict Omni/prod: original Catalog suite plus new tests and core typecheck",
+    "Original two-test Collaboration campaign using original recipe72fa004e7a7b082941ced37f40acc0df38a1d058 with no diagnostics or deadline changes"
+  ],
+  "rejectedSupersededSource": {
+    "commit": "8dc845b8426a3463c762216885be37469239913c",
+    "reason": "Contained superseded b04744586c304f2feacba7975d0c2054bfac2340 test blob; root reports no branch and no CI launch."
+  },
+  "noFullQualification": true,
+  "noPrPromotion": true,
+  "noMerge": true
+}

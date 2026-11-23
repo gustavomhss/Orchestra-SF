@@ -1,0 +1,7548 @@
+{
+  "schema": "sf613-contextcpu-receipt-v1",
+  "experiment": "ISOLATED_PUBLIC_CONTEXT_JSC_SAMPLING",
+  "qualification": false,
+  "source": {
+    "commit": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "tree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b"
+  },
+  "overlay": {
+    "branch": "sf613-contextcpu",
+    "commit": "4ff2e51040aee6d82e67c295e5f8f7a2894da1e2",
+    "tree": "4d0f864fb27ba33270a0b90fe81cc514e4ff61f2",
+    "paths": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "sha": "d7410ebc3b898d2665022c95665d19c815061471"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "e80b086b376f526262d1633ffafa221d13dc1ad2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "sha": "64be2fe54be85d26607c8fe34a0b3844a79768e9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context-jsc-diagnostic.ts",
+        "sha": "c6cc9184dfb68c5181eb1646ca69ebbc7f3ba0b2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context-jsc-pulse.ts",
+        "sha": "5c54c66129b98cbcff8bbc1ff988376f32d19c34"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "6d4955bad69272ad07108b099ae9c4c2c8363fe6"
+      }
+    ]
+  },
+  "snapshot": {
+    "commit": "d2734576886049ae769ae84d78ec4e69c1289d84",
+    "tree": "6a809bba9a4ed2d77a6b6ee2b626bc5d96e26c84",
+    "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "diagnosticPathCount": 6,
+    "totalPathCount": 7,
+    "recipeBlob": "72fa004e7a7b082941ced37f40acc0df38a1d058",
+    "temporaryBranch": "ci-run-linux-sf613-contextcpu",
+    "temporaryBranchVerified404": true
+  },
+  "ci": {
+    "id": 45254801798,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45254801798",
+    "status": "completed",
+    "conclusion": "failure",
+    "headSha": "d2734576886049ae769ae84d78ec4e69c1289d84",
+    "createdAt": "2026-11-23T20:00:26Z",
+    "startedAt": "2026-11-23T20:00:26Z",
+    "updatedAt": "2026-11-23T20:11:21Z",
+    "jobs": [
+      {
+        "id": 137973686424,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-23T20:00:29Z",
+        "completedAt": "2026-11-23T20:11:08Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-23T20:00:29Z",
+            "completed_at": "2026-11-23T20:00:32Z"
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-23T20:00:32Z",
+            "completed_at": "2026-11-23T20:00:43Z"
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3,
+            "started_at": "2026-11-23T20:00:43Z",
+            "completed_at": "2026-11-23T20:00:43Z"
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4,
+            "started_at": "2026-11-23T20:00:43Z",
+            "completed_at": "2026-11-23T20:00:43Z"
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-11-23T20:00:43Z",
+            "completed_at": "2026-11-23T20:00:47Z"
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-11-23T20:00:47Z",
+            "completed_at": "2026-11-23T20:00:47Z"
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7,
+            "started_at": "2026-11-23T20:00:47Z",
+            "completed_at": "2026-11-23T20:00:47Z"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8,
+            "started_at": "2026-11-23T20:00:47Z",
+            "completed_at": "2026-11-23T20:01:02Z"
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-11-23T20:01:02Z",
+            "completed_at": "2026-11-23T20:01:02Z"
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-11-23T20:01:02Z",
+            "completed_at": "2026-11-23T20:01:02Z"
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-11-23T20:01:02Z",
+            "completed_at": "2026-11-23T20:03:22Z"
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-11-23T20:03:22Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 19,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 20,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:03:34Z"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 21,
+            "started_at": "2026-11-23T20:03:34Z",
+            "completed_at": "2026-11-23T20:11:04Z"
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22,
+            "started_at": "2026-11-23T20:11:04Z",
+            "completed_at": "2026-11-23T20:11:04Z"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 23,
+            "started_at": "2026-11-23T20:11:04Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          },
+          {
+            "name": "Post Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 43,
+            "started_at": "2026-11-23T20:11:06Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44,
+            "started_at": "2026-11-23T20:11:06Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 45,
+            "started_at": "2026-11-23T20:11:06Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 46,
+            "started_at": "2026-11-23T20:11:06Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 47,
+            "started_at": "2026-11-23T20:11:06Z",
+            "completed_at": "2026-11-23T20:11:06Z"
+          }
+        ]
+      },
+      {
+        "id": 137980301583,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-23T20:11:12Z",
+        "completedAt": "2026-11-23T20:11:21Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-11-23T20:11:13Z",
+            "completed_at": "2026-11-23T20:11:13Z"
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-11-23T20:11:13Z",
+            "completed_at": "2026-11-23T20:11:18Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-11-23T20:11:18Z",
+            "completed_at": "2026-11-23T20:11:18Z"
+          }
+        ]
+      }
+    ]
+  },
+  "log": {
+    "bytes": 4222837,
+    "sha256": "98925bec2adf67450c44d96b991751de3cd7b0887b2bcc8502066570f0009cca",
+    "characters": 4216139,
+    "lines": 1902,
+    "utf8BomIncluded": true,
+    "hashImplementationKnownVectors": [
+      "empty SHA256 e3b0c442...b855",
+      "abc SHA256 ba7816bf...15ad"
+    ],
+    "fetchedOnlyAfterMainJobCompleted": true
+  },
+  "artifact": {
+    "id": 14858996064,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 43555202,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14858996064",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14858996064/zip",
+    "expired": false,
+    "created_at": "2026-11-23T20:11:06Z",
+    "expires_at": "2026-11-30T20:11:04Z",
+    "updated_at": "2026-11-23T20:11:06Z",
+    "digest": "sha256:892e4537085d7946fb0b87d01b1d91c746d6ced64a0b045c18285abcd7b85460",
+    "workflow_run": {
+      "id": 45254801798,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-linux-sf613-contextcpu",
+      "head_sha": "d2734576886049ae769ae84d78ec4e69c1289d84"
+    }
+  },
+  "testResult": {
+    "failed": 1,
+    "passed": 1,
+    "duration": "7.4m",
+    "originalAssertionsUnchanged": true,
+    "ui56": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+      "line": 195,
+      "expectedHeading": "Simulation · no domain changes applied",
+      "timeoutMs": 10000,
+      "actual": "element not found; capture shows Loading",
+      "reportedAt": "2026-11-23T20:07:50.7153703Z"
+    },
+    "otherOriginalTest": "passed"
+  },
+  "profileCount": 2,
+  "profiles": [
+    {
+      "profile": 1,
+      "test": "UI55 UI56 original scanned import",
+      "firstRunnerAt": "2026-11-23T20:05:31.6624882Z",
+      "lastRunnerAt": "2026-11-23T20:05:39.9813104Z",
+      "lineCount": 59,
+      "markers": [
+        {
+          "line": 1055,
+          "runnerAt": "2026-11-23T20:05:31.6624882Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "start",
+            "boundary": "first public ctx.context operational phase through original context settled; original calls/deadlines unchanged",
+            "scope": "whole-isolate",
+            "firstPublicContextMayNotBeUi56": true,
+            "concurrentIsolateTasksIncluded": true,
+            "initialAdmissionOutsideProfile": true,
+            "callbackStartMs": 0,
+            "intervalRequestedUs": 10000,
+            "requestedWindowMs": 45000,
+            "stopTriggers": [
+              "45s timer",
+              "every 1024 active digest calls after 45s",
+              "original context settled"
+            ],
+            "pulseEveryDigestCalls": 1024,
+            "inactivePulseReadsClock": false,
+            "diagnosticWindowChangesDomainDeadline": false,
+            "runtime": {
+              "version": "1.3.14",
+              "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+            },
+            "normalRuntimeExact": true,
+            "releaseRuntimeExact": false,
+            "maxTraces": 16384,
+            "maxSources": 4096,
+            "maxFrames": 128,
+            "maxSitesPerView": 4096,
+            "maxCriticalPaths": 2048,
+            "maxCriticalDepth": 12,
+            "maxNativeNearestSites": 4096,
+            "topSelf": 60,
+            "topInclusive": 60,
+            "topNativeNearest": 60,
+            "topCritical": 20,
+            "rowsPerLine": 5,
+            "maxLines": 64,
+            "maxLineBytes": 4096,
+            "nativeReportAllocationBounded": false,
+            "effectiveNativeStopMs": null,
+            "profilerPromiseGatesDomain": false,
+            "clock": "relative-performance-ms",
+            "sampleClock": "separate-monotonic-clock",
+            "selfAttribution": "innermost sampled frame",
+            "inclusiveAttribution": "each distinct repository site once per sample",
+            "nativeNearestAttribution": "native leaf to first repository frame within 128 frames; independent of critical map",
+            "nativeLeafDefinition": "builtin mapping, C/C++, Host, js builtin, or allowlisted non-repository native name",
+            "sourceMappingLimit": "no inferred source maps; bundle names retained but paths remain unknown",
+            "lineBasis": "JSC-reported-no-offset",
+            "sampleFractionsAreNotCpuOrWallFractions": true
+          }
+        },
+        {
+          "line": 1057,
+          "runnerAt": "2026-11-23T20:05:39.8658697Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "signal",
+            "reason": "original-context-settled",
+            "requestedWindowMs": 45000,
+            "signalMs": 8206,
+            "effectiveNativeStopMs": null
+          }
+        },
+        {
+          "line": 1059,
+          "runnerAt": "2026-11-23T20:05:39.9230824Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "delivered",
+            "requestedWindowMs": 45000,
+            "callbackStartMs": 0,
+            "signalMs": 8206,
+            "profileDeliveredMs": 8261,
+            "signalToDeliveryMs": 55,
+            "effectiveNativeStopMs": null,
+            "nativeReportStartMs": null
+          }
+        },
+        {
+          "line": 1061,
+          "runnerAt": "2026-11-23T20:05:39.9445814Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "samples",
+            "intervalRequestedUs": 10000,
+            "intervalObservedUs": 10000,
+            "actualTraces": 639,
+            "inspectedTraces": 639,
+            "parsedNonemptyTraces": 639,
+            "malformedTraces": 0,
+            "emptyTraces": 0,
+            "traceTruncated": 0,
+            "actualSources": 146,
+            "sourceTruncated": 0,
+            "sourceMalformed": 0,
+            "sourceUnknown": 78,
+            "sourceAmbiguous": 0,
+            "malformedFrames": 0,
+            "frameTruncatedSamples": 0,
+            "selfUnknownSamples": 597,
+            "selfOverflowSamples": 0,
+            "inclusiveOverflowAttributions": 0,
+            "criticalPathOverflowSamples": 0,
+            "nativeLeafSamples": 122,
+            "nativeNearestUnknownSamples": 9,
+            "nativeNearestOverflowSamples": 0,
+            "criticalPathTruncatedSamples": 20,
+            "criticalPathUnknownSamples": 49,
+            "timestampCount": 639,
+            "sampleTimestampSpanMs": 8191,
+            "categoryCounts": [
+              [
+                "DFG",
+                52
+              ],
+              [
+                "Unknown Executable",
+                119
+              ],
+              [
+                "Baseline",
+                26
+              ],
+              [
+                "Host",
+                7
+              ],
+              [
+                "FTL",
+                425
+              ],
+              [
+                "RegExp",
+                1
+              ],
+              [
+                "LLInt",
+                9
+              ]
+            ],
+            "noSamples": false,
+            "countBasis": "observed-stack-samples; not CPU or wall-time fractions"
+          }
+        },
+        {
+          "line": 1171,
+          "runnerAt": "2026-11-23T20:05:39.9813104Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "complete",
+            "summaryStartedMs": 8261,
+            "summaryFinishedMs": 8286,
+            "retainedSelfSites": 180,
+            "retainedInclusiveSites": 351,
+            "retainedCriticalPaths": 312,
+            "retainedNativeNearestSites": 46,
+            "exportedSelfSites": 60,
+            "exportedInclusiveSites": 60,
+            "exportedNativeNearestSites": 46,
+            "exportedCriticalPaths": 20,
+            "attemptedSelfSites": 60,
+            "attemptedInclusiveSites": 60,
+            "attemptedNativeNearestSites": 46,
+            "attemptedCriticalPaths": 20,
+            "selfSamplesBeyondTop60": 121,
+            "inclusiveAttributionsBeyondTop60": 444,
+            "nativeNearestSamplesBeyondTop60": 0,
+            "criticalSamplesBeyondTop20": 380,
+            "outputErrors": 0,
+            "dropped": 0,
+            "complete": true
+          }
+        }
+      ],
+      "self": [
+        [
+          3,
+          null,
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "unknown",
+          73
+        ],
+        [
+          21,
+          null,
+          290,
+          25,
+          "unknown",
+          "FTL",
+          "unknown",
+          57
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Unknown Executable",
+          "unknown",
+          38
+        ],
+        [
+          15,
+          null,
+          1896,
+          31,
+          "unknown",
+          "FTL",
+          "unknown",
+          33
+        ],
+        [
+          3,
+          null,
+          1719,
+          66,
+          "unknown",
+          "FTL",
+          "unknown",
+          27
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          26
+        ],
+        [
+          22,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          18
+        ],
+        [
+          15,
+          null,
+          1882,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          18
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          14
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "lstatSync",
+          "Unknown Executable",
+          "unknown",
+          12
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          11
+        ],
+        [
+          19,
+          null,
+          730,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          11
+        ],
+        [
+          28,
+          "packages/core/src/catalog.ts",
+          97,
+          9,
+          "projectModel",
+          "FTL",
+          "repository",
+          9
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          8
+        ],
+        [
+          3,
+          null,
+          2808,
+          23,
+          "unknown",
+          "FTL",
+          "unknown",
+          8
+        ],
+        [
+          3,
+          null,
+          1910,
+          15,
+          "unknown",
+          "FTL",
+          "unknown",
+          8
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          7
+        ],
+        [
+          3,
+          null,
+          1608,
+          23,
+          "unknown",
+          "FTL",
+          "unknown",
+          7
+        ],
+        [
+          15,
+          null,
+          834,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          7
+        ],
+        [
+          15,
+          null,
+          824,
+          10,
+          "unknown",
+          "FTL",
+          "unknown",
+          7
+        ],
+        [
+          15,
+          null,
+          1899,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          6
+        ],
+        [
+          3,
+          null,
+          1655,
+          19,
+          "unknown",
+          "FTL",
+          "unknown",
+          6
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "update",
+          "Unknown Executable",
+          "unknown",
+          5
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          5
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          5
+        ],
+        [
+          3,
+          null,
+          1601,
+          45,
+          "unknown",
+          "FTL",
+          "unknown",
+          5
+        ],
+        [
+          15,
+          null,
+          1892,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          3,
+          null,
+          1602,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          19,
+          null,
+          756,
+          78,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          25,
+          null,
+          1752,
+          96,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          6,
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          67,
+          "unknown",
+          "FTL",
+          "repository",
+          3
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "unknown",
+          "DFG",
+          "unknown",
+          3
+        ],
+        [
+          15,
+          null,
+          1893,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          15,
+          null,
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          3,
+          null,
+          1897,
+          24,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          3,
+          null,
+          1919,
+          47,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          3,
+          null,
+          1984,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          28,
+          "packages/core/src/catalog.ts",
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "repository",
+          3
+        ],
+        [
+          19,
+          null,
+          781,
+          25,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          3,
+          null,
+          1262,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          15,
+          null,
+          838,
+          30,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          6,
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          77,
+          "unknown",
+          "FTL",
+          "repository",
+          2
+        ],
+        [
+          15,
+          null,
+          796,
+          31,
+          "unknown",
+          "DFG",
+          "unknown",
+          2
+        ],
+        [
+          20,
+          "packages/core/src/plugin/models-dev.ts",
+          30,
+          23,
+          "cost",
+          "DFG",
+          "repository",
+          2
+        ],
+        [
+          3,
+          null,
+          1270,
+          19,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          20,
+          "packages/core/src/plugin/models-dev.ts",
+          91,
+          3,
+          "applyModel",
+          "DFG",
+          "repository",
+          2
+        ],
+        [
+          21,
+          null,
+          205,
+          54,
+          "unknown",
+          "Baseline",
+          "unknown",
+          2
+        ],
+        [
+          39,
+          "packages/core/src/tool/edit.ts",
+          98,
+          23,
+          "unknown",
+          "LLInt",
+          "repository",
+          2
+        ],
+        [
+          25,
+          null,
+          1752,
+          108,
+          "unknown",
+          "DFG",
+          "unknown",
+          2
+        ],
+        [
+          3,
+          null,
+          1277,
+          32,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          28,
+          "packages/core/src/catalog.ts",
+          97,
+          9,
+          "projectModel",
+          "DFG",
+          "repository",
+          2
+        ],
+        [
+          3,
+          null,
+          1975,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          3,
+          null,
+          1918,
+          27,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          19,
+          null,
+          783,
+          21,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          52,
+          null,
+          51,
+          35,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          19,
+          null,
+          779,
+          34,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          3,
+          null,
+          1980,
+          13,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "get",
+          "Unknown Executable",
+          "unknown",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          2
+        ],
+        [
+          28,
+          "packages/core/src/catalog.ts",
+          107,
+          18,
+          "projectModel",
+          "FTL",
+          "repository",
+          2
+        ]
+      ],
+      "inclusive": [
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          933,
+          34,
+          "unknown",
+          398
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          391,
+          53,
+          "unknown",
+          398
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          391,
+          85,
+          "routineGeneration",
+          398
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          934,
+          35,
+          "unknown",
+          396
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          385
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          300
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          98,
+          68,
+          "unknown",
+          298
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          98,
+          117,
+          "sameGeneration",
+          298
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          111,
+          86,
+          "unknown",
+          203
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          95,
+          32,
+          "unknown",
+          100
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          116,
+          81,
+          "unknown",
+          95
+        ],
+        [
+          "packages/core/src/plugin/models-dev.ts",
+          172,
+          27,
+          "unknown",
+          34
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          159,
+          61,
+          "update",
+          29
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          577,
+          39,
+          "unknown",
+          27
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          48,
+          "digestSfValue",
+          20
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          128,
+          28,
+          "principal",
+          19
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          166,
+          26,
+          "resolve",
+          19
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          180,
+          25,
+          "canonicalSfValue",
+          19
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          "materializeSnapshot",
+          18
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          248,
+          23,
+          "authorize",
+          17
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          601,
+          49,
+          "unknown",
+          16
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          48,
+          "canonical",
+          16
+        ],
+        [
+          "packages/schema/src/model.ts",
+          91,
+          16,
+          "empty",
+          16
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          611,
+          40,
+          "unknown",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          255,
+          68,
+          "unknown",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          121,
+          34,
+          "unknown",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          118,
+          29,
+          "revalidate",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          67,
+          "unknown",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          138,
+          28,
+          "observe",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          149,
+          49,
+          "unknown",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          598,
+          27,
+          "unknown",
+          12
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          "requireDatabaseFile",
+          12
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          206,
+          52,
+          "canonical",
+          12
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          97,
+          9,
+          "projectModel",
+          11
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/residents.ts",
+          87,
+          5,
+          "current",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          48,
+          26,
+          "session",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          114,
+          100,
+          "authenticate",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          113,
+          24,
+          "authenticate",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          140,
+          33,
+          "unknown",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          280,
+          5,
+          "requireScope",
+          8
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          325,
+          54,
+          "guard",
+          7
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          637,
+          25,
+          "unknown",
+          7
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          368,
+          29,
+          "unknown",
+          7
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/work-health.ts",
+          200,
+          53,
+          "workSourceHealth",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          425,
+          22,
+          "observeAuthority",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          118,
+          32,
+          "observeAuthority",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          567,
+          22,
+          "currentSnapshots",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          350,
+          41,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          349,
+          33,
+          "readAdmittedContext",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          383,
+          35,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          382,
+          55,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          639,
+          32,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          41,
+          "digestSfValue",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          41,
+          "canonical",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          196,
+          27,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          195,
+          23,
+          "authorize",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          476,
+          32,
+          "observeAuthority",
+          5
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          161,
+          15,
+          "update",
+          5
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/residents.ts",
+          102,
+          12,
+          "unknown",
+          4
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          51,
+          30,
+          "unknown",
+          4
+        ]
+      ],
+      "nativeNearest": [
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          "materializeSnapshot",
+          18
+        ],
+        [
+          22,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          14
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "lstatSync",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          "requireDatabaseFile",
+          12
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          8
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "update",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          41,
+          "digestSfValue",
+          5
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          41,
+          "canonical",
+          5
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          468,
+          27,
+          "unknown",
+          3
+        ],
+        [
+          22,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/schema/src/model.ts",
+          91,
+          16,
+          "empty",
+          3
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          3
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          3
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          48,
+          "canonical",
+          2
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1073,
+          51,
+          "decode",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1088,
+          34,
+          "decodeSnapshot",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          135,
+          51,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          21,
+          69,
+          "slot",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "next",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          320,
+          96,
+          "currentScope",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          140,
+          75,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "entries",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/plugin/models-dev.ts",
+          173,
+          50,
+          "unknown",
+          1
+        ],
+        [
+          22,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          159,
+          61,
+          "update",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "packages/core/src/plugin/models-dev.ts",
+          30,
+          23,
+          "cost",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "values",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/database/sqlite.bun.ts",
+          120,
+          67,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "set",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/util/glob.ts",
+          24,
+          12,
+          "scan",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "packages/core/src/skill.ts",
+          189,
+          64,
+          "unknown",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "packages/core/src/skill.ts",
+          137,
+          31,
+          "unknown",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "DFG",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          1
+        ],
+        [
+          50,
+          null,
+          14,
+          5,
+          "set",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          171,
+          49,
+          "operational",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1077,
+          25,
+          "decode",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "stringify",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          48,
+          "digestSfValue",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "get",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          24,
+          37,
+          "handle",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "resolve",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          55,
+          33,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          398,
+          31,
+          "ownValue",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          88,
+          18,
+          "identity",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          469,
+          30,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          424,
+          36,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "digest",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          161,
+          28,
+          "unknown",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          206,
+          52,
+          "canonical",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "digest",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          21,
+          104,
+          "slot",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          "apps/cli/src/sucafina-product/routine-native-private-files.ts",
+          38,
+          36,
+          "requireSfRoutinePrivateDirectory",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "packages/effect-drizzle-sqlite/src/sqlite-core/effect/session.ts",
+          214,
+          22,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          934,
+          35,
+          "unknown",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "next",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          242,
+          24,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "get",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          826,
+          153,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "isFile",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          133,
+          34,
+          "requireDatabaseFile",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1112,
+          56,
+          "copyValue",
+          1
+        ],
+        [
+          7,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          306,
+          37,
+          "unknown",
+          1
+        ]
+      ],
+      "critical": [
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 1,
+          "samples": 32,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 2,
+          "samples": 30,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 3,
+          "samples": 19,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 4,
+          "samples": 11,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1719,
+            66,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 5,
+          "samples": 11,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 6,
+          "samples": 10,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 7,
+          "samples": 9,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 8,
+          "samples": 9,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 9,
+          "samples": 9,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 10,
+          "samples": 8,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            730,
+            9,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 11,
+          "samples": 8,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1882,
+            9,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 12,
+          "samples": 7,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            79,
+            20,
+            "some",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 13,
+          "samples": 7,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            824,
+            10,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 14,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            "packages/core/src/catalog.ts",
+            97,
+            9,
+            "projectModel",
+            "FTL",
+            "repository"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              97,
+              9,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 15,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1,
+            11,
+            "filter",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 16,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1882,
+            9,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 17,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 18,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1719,
+            66,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 19,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 20,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        }
+      ],
+      "maxPayloadLineBytes": 1838
+    },
+    {
+      "profile": 2,
+      "test": "UI51 UI52 UI53 relationships/discussion/confirmation",
+      "firstRunnerAt": "2026-11-23T20:08:41.6751371Z",
+      "lastRunnerAt": "2026-11-23T20:08:49.7604852Z",
+      "lineCount": 58,
+      "markers": [
+        {
+          "line": 1462,
+          "runnerAt": "2026-11-23T20:08:41.6751371Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "start",
+            "boundary": "first public ctx.context operational phase through original context settled; original calls/deadlines unchanged",
+            "scope": "whole-isolate",
+            "firstPublicContextMayNotBeUi56": true,
+            "concurrentIsolateTasksIncluded": true,
+            "initialAdmissionOutsideProfile": true,
+            "callbackStartMs": 0,
+            "intervalRequestedUs": 10000,
+            "requestedWindowMs": 45000,
+            "stopTriggers": [
+              "45s timer",
+              "every 1024 active digest calls after 45s",
+              "original context settled"
+            ],
+            "pulseEveryDigestCalls": 1024,
+            "inactivePulseReadsClock": false,
+            "diagnosticWindowChangesDomainDeadline": false,
+            "runtime": {
+              "version": "1.3.14",
+              "revision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+            },
+            "normalRuntimeExact": true,
+            "releaseRuntimeExact": false,
+            "maxTraces": 16384,
+            "maxSources": 4096,
+            "maxFrames": 128,
+            "maxSitesPerView": 4096,
+            "maxCriticalPaths": 2048,
+            "maxCriticalDepth": 12,
+            "maxNativeNearestSites": 4096,
+            "topSelf": 60,
+            "topInclusive": 60,
+            "topNativeNearest": 60,
+            "topCritical": 20,
+            "rowsPerLine": 5,
+            "maxLines": 64,
+            "maxLineBytes": 4096,
+            "nativeReportAllocationBounded": false,
+            "effectiveNativeStopMs": null,
+            "profilerPromiseGatesDomain": false,
+            "clock": "relative-performance-ms",
+            "sampleClock": "separate-monotonic-clock",
+            "selfAttribution": "innermost sampled frame",
+            "inclusiveAttribution": "each distinct repository site once per sample",
+            "nativeNearestAttribution": "native leaf to first repository frame within 128 frames; independent of critical map",
+            "nativeLeafDefinition": "builtin mapping, C/C++, Host, js builtin, or allowlisted non-repository native name",
+            "sourceMappingLimit": "no inferred source maps; bundle names retained but paths remain unknown",
+            "lineBasis": "JSC-reported-no-offset",
+            "sampleFractionsAreNotCpuOrWallFractions": true
+          }
+        },
+        {
+          "line": 1464,
+          "runnerAt": "2026-11-23T20:08:49.6413177Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "signal",
+            "reason": "original-context-settled",
+            "requestedWindowMs": 45000,
+            "signalMs": 7970,
+            "effectiveNativeStopMs": null
+          }
+        },
+        {
+          "line": 1466,
+          "runnerAt": "2026-11-23T20:08:49.6977203Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "delivered",
+            "requestedWindowMs": 45000,
+            "callbackStartMs": 0,
+            "signalMs": 7970,
+            "profileDeliveredMs": 8026,
+            "signalToDeliveryMs": 56,
+            "effectiveNativeStopMs": null,
+            "nativeReportStartMs": null
+          }
+        },
+        {
+          "line": 1468,
+          "runnerAt": "2026-11-23T20:08:49.7186803Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "samples",
+            "intervalRequestedUs": 10000,
+            "intervalObservedUs": 10000,
+            "actualTraces": 629,
+            "inspectedTraces": 629,
+            "parsedNonemptyTraces": 629,
+            "malformedTraces": 0,
+            "emptyTraces": 0,
+            "traceTruncated": 0,
+            "actualSources": 161,
+            "sourceTruncated": 0,
+            "sourceMalformed": 0,
+            "sourceUnknown": 83,
+            "sourceAmbiguous": 0,
+            "malformedFrames": 0,
+            "frameTruncatedSamples": 0,
+            "selfUnknownSamples": 580,
+            "selfOverflowSamples": 0,
+            "inclusiveOverflowAttributions": 0,
+            "criticalPathOverflowSamples": 0,
+            "nativeLeafSamples": 124,
+            "nativeNearestUnknownSamples": 10,
+            "nativeNearestOverflowSamples": 0,
+            "criticalPathTruncatedSamples": 13,
+            "criticalPathUnknownSamples": 39,
+            "timestampCount": 629,
+            "sampleTimestampSpanMs": 7962,
+            "categoryCounts": [
+              [
+                "Unknown Executable",
+                129
+              ],
+              [
+                "LLInt",
+                10
+              ],
+              [
+                "Baseline",
+                27
+              ],
+              [
+                "DFG",
+                47
+              ],
+              [
+                "Host",
+                11
+              ],
+              [
+                "FTL",
+                405
+              ]
+            ],
+            "noSamples": false,
+            "countBasis": "observed-stack-samples; not CPU or wall-time fractions"
+          }
+        },
+        {
+          "line": 1576,
+          "runnerAt": "2026-11-23T20:08:49.7604852Z",
+          "data": {
+            "schema": "sf-context-jsc-v1",
+            "qualification": false,
+            "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+            "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+            "phase": "complete",
+            "summaryStartedMs": 8026,
+            "summaryFinishedMs": 8047,
+            "retainedSelfSites": 171,
+            "retainedInclusiveSites": 341,
+            "retainedCriticalPaths": 312,
+            "retainedNativeNearestSites": 44,
+            "exportedSelfSites": 60,
+            "exportedInclusiveSites": 60,
+            "exportedNativeNearestSites": 44,
+            "exportedCriticalPaths": 20,
+            "attemptedSelfSites": 60,
+            "attemptedInclusiveSites": 60,
+            "attemptedNativeNearestSites": 44,
+            "attemptedCriticalPaths": 20,
+            "selfSamplesBeyondTop60": 113,
+            "inclusiveAttributionsBeyondTop60": 399,
+            "nativeNearestSamplesBeyondTop60": 0,
+            "criticalSamplesBeyondTop20": 386,
+            "outputErrors": 0,
+            "dropped": 0,
+            "complete": true
+          }
+        }
+      ],
+      "self": [
+        [
+          22,
+          null,
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "unknown",
+          63
+        ],
+        [
+          16,
+          null,
+          290,
+          25,
+          "unknown",
+          "FTL",
+          "unknown",
+          56
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Unknown Executable",
+          "unknown",
+          45
+        ],
+        [
+          18,
+          null,
+          1896,
+          31,
+          "unknown",
+          "FTL",
+          "unknown",
+          38
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "stringify",
+          "Unknown Executable",
+          "unknown",
+          21
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          18
+        ],
+        [
+          22,
+          null,
+          1719,
+          66,
+          "unknown",
+          "FTL",
+          "unknown",
+          18
+        ],
+        [
+          27,
+          "packages/core/src/catalog.ts",
+          97,
+          9,
+          "projectModel",
+          "FTL",
+          "repository",
+          16
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          14
+        ],
+        [
+          18,
+          null,
+          1882,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          12
+        ],
+        [
+          18,
+          null,
+          824,
+          10,
+          "unknown",
+          "FTL",
+          "unknown",
+          12
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          11
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "lstatSync",
+          "Unknown Executable",
+          "unknown",
+          9
+        ],
+        [
+          21,
+          null,
+          756,
+          78,
+          "unknown",
+          "FTL",
+          "unknown",
+          9
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          9
+        ],
+        [
+          18,
+          null,
+          834,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          9
+        ],
+        [
+          22,
+          null,
+          1277,
+          32,
+          "unknown",
+          "FTL",
+          "unknown",
+          8
+        ],
+        [
+          28,
+          null,
+          2733,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          7
+        ],
+        [
+          21,
+          null,
+          730,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          7
+        ],
+        [
+          21,
+          null,
+          781,
+          25,
+          "unknown",
+          "FTL",
+          "unknown",
+          6
+        ],
+        [
+          22,
+          null,
+          1601,
+          45,
+          "unknown",
+          "FTL",
+          "unknown",
+          6
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          5
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          5
+        ],
+        [
+          22,
+          null,
+          1608,
+          23,
+          "unknown",
+          "FTL",
+          "unknown",
+          5
+        ],
+        [
+          28,
+          null,
+          1752,
+          96,
+          "unknown",
+          "FTL",
+          "unknown",
+          5
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          4
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "update",
+          "Unknown Executable",
+          "unknown",
+          4
+        ],
+        [
+          22,
+          null,
+          1270,
+          19,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          22,
+          null,
+          2808,
+          23,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          22,
+          null,
+          1979,
+          26,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          28,
+          null,
+          1752,
+          108,
+          "unknown",
+          "DFG",
+          "unknown",
+          4
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "get",
+          "Unknown Executable",
+          "unknown",
+          4
+        ],
+        [
+          18,
+          null,
+          1893,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          18,
+          null,
+          1899,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          4
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          3
+        ],
+        [
+          16,
+          null,
+          258,
+          25,
+          "unknown",
+          "DFG",
+          "unknown",
+          3
+        ],
+        [
+          18,
+          null,
+          1892,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "DFG",
+          "unknown",
+          3
+        ],
+        [
+          22,
+          null,
+          1261,
+          45,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          22,
+          null,
+          1910,
+          15,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "all",
+          "Unknown Executable",
+          "unknown",
+          3
+        ],
+        [
+          22,
+          null,
+          1916,
+          22,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          43,
+          null,
+          113,
+          7,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          46,
+          null,
+          14,
+          5,
+          "set",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          22,
+          null,
+          1670,
+          21,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          27,
+          "packages/core/src/catalog.ts",
+          107,
+          18,
+          "projectModel",
+          "FTL",
+          "repository",
+          3
+        ],
+        [
+          22,
+          null,
+          1984,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          3
+        ],
+        [
+          19,
+          null,
+          10,
+          21,
+          "unknown",
+          "Baseline",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1719,
+          26,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          23,
+          "packages/core/src/plugin/models-dev.ts",
+          112,
+          25,
+          "applyModel",
+          "DFG",
+          "repository",
+          2
+        ],
+        [
+          22,
+          null,
+          1602,
+          11,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          18,
+          null,
+          838,
+          30,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1919,
+          33,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1333,
+          9,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1919,
+          47,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1664,
+          24,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          28,
+          null,
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          22,
+          null,
+          1926,
+          15,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ],
+        [
+          13,
+          null,
+          null,
+          null,
+          "unknown",
+          "FTL",
+          "unknown",
+          2
+        ]
+      ],
+      "inclusive": [
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          934,
+          35,
+          "unknown",
+          402
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          933,
+          34,
+          "unknown",
+          402
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          391,
+          53,
+          "unknown",
+          402
+        ],
+        [
+          "apps/cli/src/sucafina-product/host-context.ts",
+          391,
+          85,
+          "routineGeneration",
+          402
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          390
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          98,
+          68,
+          "unknown",
+          302
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          98,
+          117,
+          "sameGeneration",
+          302
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          292
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          111,
+          86,
+          "unknown",
+          194
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          116,
+          81,
+          "unknown",
+          108
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          95,
+          32,
+          "unknown",
+          100
+        ],
+        [
+          "packages/core/src/plugin/models-dev.ts",
+          172,
+          27,
+          "unknown",
+          36
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          159,
+          61,
+          "update",
+          33
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          48,
+          "digestSfValue",
+          25
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          577,
+          39,
+          "unknown",
+          24
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          97,
+          9,
+          "projectModel",
+          18
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          601,
+          49,
+          "unknown",
+          17
+        ],
+        [
+          "packages/schema/src/model.ts",
+          91,
+          16,
+          "empty",
+          17
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          611,
+          40,
+          "unknown",
+          16
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          128,
+          28,
+          "principal",
+          15
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          368,
+          29,
+          "unknown",
+          13
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          "materializeSnapshot",
+          10
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          138,
+          28,
+          "observe",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          149,
+          49,
+          "unknown",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          "requireDatabaseFile",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          48,
+          26,
+          "session",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          114,
+          100,
+          "authenticate",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          113,
+          24,
+          "authenticate",
+          9
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          598,
+          27,
+          "unknown",
+          8
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          196,
+          27,
+          "unknown",
+          8
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          195,
+          23,
+          "authorize",
+          8
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          166,
+          26,
+          "resolve",
+          8
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          637,
+          25,
+          "unknown",
+          7
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          248,
+          23,
+          "authorize",
+          7
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          140,
+          33,
+          "unknown",
+          7
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/residents.ts",
+          87,
+          5,
+          "current",
+          7
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          353,
+          22,
+          "unknown",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          399,
+          31,
+          "operation",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          255,
+          68,
+          "unknown",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          121,
+          34,
+          "unknown",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          118,
+          29,
+          "revalidate",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          280,
+          5,
+          "requireScope",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          51,
+          30,
+          "unknown",
+          6
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          107,
+          52,
+          "projectModel",
+          6
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          501,
+          30,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          325,
+          54,
+          "guard",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          387,
+          75,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          609,
+          32,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          639,
+          32,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          67,
+          "unknown",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          48,
+          "canonical",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          180,
+          25,
+          "canonicalSfValue",
+          5
+        ],
+        [
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          161,
+          28,
+          "unknown",
+          5
+        ],
+        [
+          "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+          92,
+          38,
+          "unknown",
+          5
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          161,
+          15,
+          "update",
+          5
+        ],
+        [
+          "packages/core/src/catalog.ts",
+          107,
+          18,
+          "projectModel",
+          5
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+          105,
+          37,
+          "unknown",
+          5
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+          61,
+          30,
+          "unknown",
+          4
+        ],
+        [
+          "apps/cli/src/sucafina-product/native-ui/operational-read-phase.ts",
+          47,
+          52,
+          "unknown",
+          4
+        ],
+        [
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          537,
+          39,
+          "unknown",
+          4
+        ]
+      ],
+      "nativeNearest": [
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "stringify",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          48,
+          "digestSfValue",
+          20
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          13
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "parse",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          1335,
+          25,
+          "materializeSnapshot",
+          10
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "lstatSync",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          132,
+          48,
+          "requireDatabaseFile",
+          9
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          7
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "get",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          826,
+          153,
+          "unknown",
+          4
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "update",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          41,
+          "digestSfValue",
+          3
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          3
+        ],
+        [
+          46,
+          null,
+          14,
+          5,
+          "set",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          111,
+          27,
+          "projectModel",
+          3
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          88,
+          18,
+          "identity",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "sort",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          210,
+          41,
+          "canonical",
+          2
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          476,
+          32,
+          "observeAuthority",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "all",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/database/sqlite.bun.ts",
+          252,
+          30,
+          "all",
+          2
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "DFG",
+          "unknown",
+          "modules/maestro/coordination/src/seat-skill-content.ts",
+          171,
+          8,
+          "nodes",
+          2
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          934,
+          35,
+          "unknown",
+          2
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/planner.ts",
+          420,
+          36,
+          "view",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "isArray",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+          10,
+          32,
+          "publicSfValue",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          39,
+          28,
+          "open",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          49,
+          13,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+          92,
+          38,
+          "unknown",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          140,
+          75,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          624,
+          29,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "update",
+          "Unknown Executable",
+          "unknown",
+          "packages/core/src/util/hash.ts",
+          5,
+          31,
+          "fast",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "DFG",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          159,
+          61,
+          "update",
+          1
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          159,
+          61,
+          "update",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "packages/schema/src/model.ts",
+          91,
+          16,
+          "empty",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "next",
+          "FTL",
+          "unknown",
+          "packages/core/src/plugin/variant.ts",
+          13,
+          20,
+          "unknown",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "filter",
+          "FTL",
+          "unknown",
+          "packages/core/src/integration.ts",
+          314,
+          11,
+          "project",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "unknown",
+          "Host",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          185,
+          18,
+          "digestSfValue",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "run",
+          "Unknown Executable",
+          "unknown",
+          "modules/relay/src/authoring/store.ts",
+          85,
+          10,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          600,
+          55,
+          "transaction",
+          1
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          171,
+          49,
+          "operational",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "stringify",
+          "Unknown Executable",
+          "unknown",
+          "apps/cli/src/sucafina-product/native-ui/dashboard-operational.ts",
+          61,
+          12,
+          "unknown",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          206,
+          52,
+          "canonical",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "getOwnPropertyDescriptor",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          468,
+          27,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "structuredClone",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          416,
+          13,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "all",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          149,
+          36,
+          "unknown",
+          1
+        ],
+        [
+          51,
+          "bun:sqlite",
+          null,
+          null,
+          "query",
+          "DFG",
+          "builtin",
+          "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          826,
+          24,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "slice",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          41,
+          60,
+          "open",
+          1
+        ],
+        [
+          53,
+          "node:crypto",
+          177,
+          20,
+          "unknown",
+          "FTL",
+          "builtin",
+          "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          21,
+          69,
+          "slot",
+          1
+        ],
+        [
+          13,
+          null,
+          1,
+          11,
+          "map",
+          "FTL",
+          "unknown",
+          "packages/core/src/catalog.ts",
+          292,
+          18,
+          "unknown",
+          1
+        ],
+        [
+          4294967295,
+          null,
+          null,
+          null,
+          "isProxy",
+          "Unknown Executable",
+          "unknown",
+          "modules/sucafina/Sucafinav1/runtime/snapshot-sql-read.ts",
+          176,
+          43,
+          "read",
+          1
+        ],
+        [
+          25,
+          null,
+          79,
+          20,
+          "some",
+          "FTL",
+          "unknown",
+          "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+          195,
+          42,
+          "availability",
+          1
+        ]
+      ],
+      "critical": [
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 1,
+          "samples": 33,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 2,
+          "samples": 27,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 3,
+          "samples": 18,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 4,
+          "samples": 15,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 5,
+          "samples": 11,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 6,
+          "samples": 10,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1719,
+            66,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 7,
+          "samples": 9,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 8,
+          "samples": 9,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 9,
+          "samples": 8,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            79,
+            20,
+            "some",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 10,
+          "samples": 8,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            "packages/core/src/catalog.ts",
+            97,
+            9,
+            "projectModel",
+            "FTL",
+            "repository"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              97,
+              9,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 11,
+          "samples": 7,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 12,
+          "samples": 7,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1882,
+            9,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 13,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            824,
+            10,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 14,
+          "samples": 6,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            "packages/core/src/catalog.ts",
+            97,
+            9,
+            "projectModel",
+            "FTL",
+            "repository"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              97,
+              9,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              116,
+              81,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 15,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "stringify",
+            "Unknown Executable",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              185,
+              48,
+              "digestSfValue"
+            ],
+            [
+              "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              161,
+              28,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 16,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1896,
+            31,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 17,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            1277,
+            32,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 18,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            null,
+            null,
+            "unknown",
+            "Unknown Executable",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              107,
+              52,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 19,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            834,
+            22,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              68,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              98,
+              117,
+              "sameGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              111,
+              86,
+              "unknown"
+            ]
+          ]
+        },
+        {
+          "schema": "sf-context-jsc-v1",
+          "qualification": false,
+          "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+          "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+          "phase": "critical",
+          "rank": 20,
+          "samples": 5,
+          "frameOrder": "innermost repository site first; repeated sites collapsed",
+          "leaf": [
+            null,
+            290,
+            25,
+            "unknown",
+            "FTL",
+            "unknown"
+          ],
+          "frameColumns": [
+            "path",
+            "line",
+            "column",
+            "name"
+          ],
+          "frames": [
+            [
+              "packages/core/src/catalog.ts",
+              111,
+              27,
+              "projectModel"
+            ],
+            [
+              "packages/core/src/catalog.ts",
+              292,
+              18,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              934,
+              35,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              933,
+              34,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              53,
+              "unknown"
+            ],
+            [
+              "apps/cli/src/sucafina-product/host-context.ts",
+              391,
+              85,
+              "routineGeneration"
+            ],
+            [
+              "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+              95,
+              32,
+              "unknown"
+            ]
+          ]
+        }
+      ],
+      "maxPayloadLineBytes": 1838
+    }
+  ],
+  "findings": [
+    "Both independent first-public-context windows stop via original-context-settled (8206 ms and 7970 ms), not the 45 s fallback.",
+    "Both windows show repository critical paths from routine-health generation checks through host-context routineGeneration/state.models to catalog.model.available and ModelV2.Info.make. The same routineGeneration site appears inclusively in 398 of 639 observed samples in profile 1 and 402 of 629 in profile 2. These counts are sample attributions, not CPU or wall-time fractions.",
+    "catalog.ts:292 appears inclusively in385/390 samples; projectModel:111 in300/292. The concrete caller chain is retained in the exported critical paths.",
+    "Routine health healthy path invokes generationFor four times per candidate (initial, each of two observations, final); three candidates and two context phases imply up to24 model metadata reads per context. This is static path analysis, not a measured call counter.",
+    "No performance/product correction is applied in this experiment."
+  ],
+  "sourceEvidence": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "81a6d274e054bc1b97dbbd603ad49752eeb03f48",
+      "lines": "391,933-949",
+      "fact": "routineGeneration awaits state.models; state.models reads catalog.model.available and mcp.config, digests public metadata and may invalidate old native generation"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/routine-health.ts",
+      "blob": "08dca65bce0033054842eba114526c8dc4618d4a",
+      "lines": "95-116",
+      "fact": "initial generation and sameGeneration re-observations preserve private generation freshness"
+    },
+    {
+      "path": "packages/core/src/catalog.ts",
+      "blob": "e6173ebed406ea4cf3cc77ca1858c4cd1bc492c4",
+      "lines": "94-115,285-292",
+      "fact": "available projects full virtual model list then filters; projectModel validates/builds with ModelV2.Info.make"
+    }
+  ],
+  "originalImportEvents": [
+    {
+      "line": 1217,
+      "runnerAt": "2026-11-23T20:06:12.9901281Z",
+      "data": {
+        "kind": "original-import-request",
+        "event": "requestfinished",
+        "mode": "import-targets",
+        "method": "GET",
+        "failure": null
+      }
+    },
+    {
+      "line": 1239,
+      "runnerAt": "2026-11-23T20:06:35.0727179Z",
+      "data": {
+        "kind": "original-import-admission",
+        "httpStatus": 200,
+        "producerStatus": "ok",
+        "instrumentation": "CDP response-stage observation; no replay"
+      }
+    },
+    {
+      "line": 1241,
+      "runnerAt": "2026-11-23T20:06:35.0760515Z",
+      "data": {
+        "kind": "original-import-request",
+        "event": "requestfailed",
+        "mode": "import-admit",
+        "method": "POST",
+        "failure": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "line": 1247,
+      "runnerAt": "2026-11-23T20:06:47.0653725Z",
+      "data": {
+        "kind": "original-import-progress",
+        "stage": "preview-producer-response",
+        "httpStatus": 200,
+        "producerStatus": "ok",
+        "codecStatus": "ok",
+        "typed": "Some",
+        "activity": "previewing",
+        "phase": "selecting",
+        "state": "ready"
+      }
+    },
+    {
+      "line": 1251,
+      "runnerAt": "2026-11-23T20:06:47.2229461Z",
+      "data": {
+        "kind": "original-import-request",
+        "event": "requestfinished",
+        "mode": "import-preview",
+        "method": "POST",
+        "failure": null
+      }
+    },
+    {
+      "line": 1253,
+      "runnerAt": "2026-11-23T20:06:47.2274133Z",
+      "data": {
+        "kind": "original-import-progress",
+        "stage": "preview-delivered",
+        "activity": "previewing",
+        "phase": "selecting",
+        "state": "ready"
+      }
+    },
+    {
+      "line": 1255,
+      "runnerAt": "2026-11-23T20:06:56.7216454Z",
+      "data": {
+        "kind": "original-import-progress",
+        "stage": "independent-reference-read",
+        "elapsedMs": 9596,
+        "httpStatus": 200,
+        "producerStatus": "ok",
+        "activity": "reading-source",
+        "phase": "selecting",
+        "state": "ready"
+      }
+    },
+    {
+      "line": 1257,
+      "runnerAt": "2026-11-23T20:07:05.8027076Z",
+      "data": {
+        "kind": "original-import-request",
+        "event": "requestfinished",
+        "mode": "import-reference",
+        "method": "GET",
+        "failure": null
+      }
+    },
+    {
+      "line": 1337,
+      "runnerAt": "2026-11-23T20:07:47.3383463Z",
+      "data": {
+        "kind": "original-import-request",
+        "event": "requestfailed",
+        "mode": "import-reference",
+        "method": "GET",
+        "failure": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "line": 1339,
+      "runnerAt": "2026-11-23T20:07:48.2444440Z",
+      "data": {
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    }
+  ],
+  "captures": {
+    "inventory": [
+      {
+        "name": "UI55-setup-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:05:53.9305832Z",
+        "last": "2026-11-23T20:05:54.0587168Z"
+      },
+      {
+        "name": "UI55-setup-light-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:05:54.5503576Z",
+        "last": "2026-11-23T20:05:54.6793325Z"
+      },
+      {
+        "name": "UI55-setup-light-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:05:54.7045833Z",
+        "last": "2026-11-23T20:05:54.7596280Z"
+      },
+      {
+        "name": "UI55-setup-dark-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:05:55.0889824Z",
+        "last": "2026-11-23T20:05:55.1310553Z"
+      },
+      {
+        "name": "UI55-dark-desktop-selected-file-options",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:06:29.1107867Z",
+        "last": "2026-11-23T20:06:29.2582699Z"
+      },
+      {
+        "name": "UI55-dark-390-selected-file-options",
+        "chunks": 2,
+        "parts": 2,
+        "first": "2026-11-23T20:06:29.2880521Z",
+        "last": "2026-11-23T20:06:29.3243740Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:07:16.1798693Z",
+        "last": "2026-11-23T20:07:16.3021051Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-light-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:07:16.6590600Z",
+        "last": "2026-11-23T20:07:16.7997245Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-light-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:07:16.8317346Z",
+        "last": "2026-11-23T20:07:16.8872036Z"
+      },
+      {
+        "name": "UI55-scanned-simulation-dark-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:07:17.1358742Z",
+        "last": "2026-11-23T20:07:17.1798466Z"
+      },
+      {
+        "name": "UI55-dark-desktop-field-change",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:07:17.7417715Z",
+        "last": "2026-11-23T20:07:17.8482338Z"
+      },
+      {
+        "name": "UI55-dark-desktop-complete-source-impact",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:07:18.2425930Z",
+        "last": "2026-11-23T20:07:18.3863607Z"
+      },
+      {
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:07:18.7439447Z",
+        "last": "2026-11-23T20:07:18.9205410Z"
+      },
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:07:48.5759891Z",
+        "last": "2026-11-23T20:07:48.6719699Z"
+      },
+      {
+        "name": "UI51-relationship-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:14.4749422Z",
+        "last": "2026-11-23T20:09:14.6138229Z"
+      },
+      {
+        "name": "UI51-relationship-light-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:15.1661620Z",
+        "last": "2026-11-23T20:09:15.2962979Z"
+      },
+      {
+        "name": "UI51-relationship-light-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:09:15.3213722Z",
+        "last": "2026-11-23T20:09:15.3806282Z"
+      },
+      {
+        "name": "UI51-relationship-dark-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:09:15.6481774Z",
+        "last": "2026-11-23T20:09:15.6960901Z"
+      },
+      {
+        "name": "UI51-dark-desktop-removal-review",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:09:16.1169729Z",
+        "last": "2026-11-23T20:09:16.2066530Z"
+      },
+      {
+        "name": "UI51-dark-desktop-explicit-editor",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:29.3751559Z",
+        "last": "2026-11-23T20:09:29.4930216Z"
+      },
+      {
+        "name": "UI51-dark-desktop-create-review",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:09:29.7494547Z",
+        "last": "2026-11-23T20:09:29.8476567Z"
+      },
+      {
+        "name": "UI51-dark-desktop-case-alias-empty",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:42.9589746Z",
+        "last": "2026-11-23T20:09:43.1448959Z"
+      },
+      {
+        "name": "UI52-discussion-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:55.4891146Z",
+        "last": "2026-11-23T20:09:55.6132734Z"
+      },
+      {
+        "name": "UI52-discussion-light-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:09:55.9514340Z",
+        "last": "2026-11-23T20:09:56.0744971Z"
+      },
+      {
+        "name": "UI52-discussion-light-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:09:56.0969230Z",
+        "last": "2026-11-23T20:09:56.1482804Z"
+      },
+      {
+        "name": "UI52-discussion-dark-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:09:56.4348595Z",
+        "last": "2026-11-23T20:09:56.4788563Z"
+      },
+      {
+        "name": "UI52-dark-desktop-origin-unsent-draft",
+        "chunks": 7,
+        "parts": 7,
+        "first": "2026-11-23T20:09:57.0380748Z",
+        "last": "2026-11-23T20:09:57.2038143Z"
+      },
+      {
+        "name": "UI52-dark-390-unsent-draft",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:09:57.2253887Z",
+        "last": "2026-11-23T20:09:57.2691042Z"
+      },
+      {
+        "name": "UI53-material-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:10:09.9492038Z",
+        "last": "2026-11-23T20:10:10.0837234Z"
+      },
+      {
+        "name": "UI53-material-light-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:10:10.4696928Z",
+        "last": "2026-11-23T20:10:10.5877984Z"
+      },
+      {
+        "name": "UI53-material-light-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:10:10.6126775Z",
+        "last": "2026-11-23T20:10:10.6505593Z"
+      },
+      {
+        "name": "UI53-material-dark-390",
+        "chunks": 3,
+        "parts": 3,
+        "first": "2026-11-23T20:10:10.9269520Z",
+        "last": "2026-11-23T20:10:10.9630620Z"
+      },
+      {
+        "name": "UI53-dark-desktop-confirmation-review",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:10:11.4108711Z",
+        "last": "2026-11-23T20:10:11.5002653Z"
+      },
+      {
+        "name": "UI53-dark-desktop-original-receipt",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:10:12.6173454Z",
+        "last": "2026-11-23T20:10:12.7433395Z"
+      },
+      {
+        "name": "UI53-dark-desktop-recorded-validity",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:10:25.0994205Z",
+        "last": "2026-11-23T20:10:25.2226162Z"
+      },
+      {
+        "name": "UI51-pt-BR-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:10:38.0113812Z",
+        "last": "2026-11-23T20:10:38.1853104Z"
+      },
+      {
+        "name": "UI52-pt-BR-dark-desktop",
+        "chunks": 6,
+        "parts": 6,
+        "first": "2026-11-23T20:10:50.5497448Z",
+        "last": "2026-11-23T20:10:50.6943777Z"
+      },
+      {
+        "name": "UI53-pt-BR-dark-desktop",
+        "chunks": 5,
+        "parts": 5,
+        "first": "2026-11-23T20:11:03.0975407Z",
+        "last": "2026-11-23T20:11:03.1984308Z"
+      }
+    ],
+    "completeCount": 38,
+    "actuallyViewed": [
+      {
+        "name": "FAILED-native-wave-three-test-data",
+        "observation": "UI56 Import preview screen shows Loading and skeleton; no expected simulation heading."
+      },
+      {
+        "name": "UI55-dark-desktop-cancel-retains-file",
+        "observation": "UI55 selected source/destination, original file and options remain after cancellation; Generate preview available."
+      }
+    ],
+    "inventoryOnlyCount": 36,
+    "noUi56SuccessCapture": true,
+    "noPortugueseImportCapture": true
+  },
+  "limits": [
+    "One capture per VM; two installation VMs observed. Profiles remain separate and counts are never merged.",
+    "Whole-isolate profile may include concurrent tasks. First public context is not UI56 and initial admission is outside the profile.",
+    "Native stop time unknown; signal/delivery clocks and sample clock are separate. Delays signal-to-delivery55/56ms retained.",
+    "Both output summaries complete with outputErrors0/dropped0, no trace/source truncation or counter overflow. Critical-depth truncation affects20/13 samples; source unknown78/83, self unknown597/580; critical path unknown49/39. Unknown leaf names are not mapped speculatively.",
+    "Native allocation is not bounded; export/buffering are bounded at64lines per role/stream and4096ASCII bytes. Actual maximum diagnostic line1838bytes,59/58lines.",
+    "Top60 self/inclusive and top20 critical omit tails recorded in per-profile complete metrics; native-nearest46/44 entries fully exported.",
+    "UI56 ERR_ABORTED is a browser network event only. This overlay has no frontend phase/catch markers and cannot attribute Promise rejection or exact assertion timing.",
+    "No SF_IMPORT_FAULT instrumentation was in this snapshot. Earlier403 variation remains unresolved; independent UI55 reference read in this run was200."
+  ]
+}
