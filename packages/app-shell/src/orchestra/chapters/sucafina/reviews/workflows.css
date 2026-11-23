@@ -20,6 +20,17 @@
   font-size: var(--orchestra-font-size-md);
   line-height: 1.6;
 }
+/* StatePanel stays neutral globally. These leaf-owned wrappers carry stacked
+   sections; nested source panels in portfolio/BI and Work detail need that rhythm too. */
+.sf-page-frame .sf-workflow:not(.sf-files) > .sf-state-panel > .sf-state-content,
+.sf-page-frame .sf-workflow:is(.sf-bi-catalog, .sf-u19-scenarios, .sf-u19-sensitivity) > .sf-state-panel > .sf-state-content > .sf-state-panel > .sf-state-content,
+.sf-page-frame .sf-workflow .sf-work-detail > .sf-state-panel > .sf-state-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--sf-workflow-space-lg);
+  min-inline-size: 0;
+}
 .sf-page-frame .sf-workflow :where(h2, h3, p, dl) { margin-block: 0; }
 .sf-page-frame .sf-workflow :where(h2:not(.sf-s03-review h2)) {
   color: var(--mx-strong);

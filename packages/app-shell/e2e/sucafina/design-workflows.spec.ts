@@ -8,7 +8,8 @@ import { seedWorkflowProposal } from "./design-support/workflow-polish-proposal-
 import { forwardOnce } from "./operations-support/runtime"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
-waveFourTest.use({ designWave: "four-decisions" })
+waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
 waveFourTest.beforeEach(async ({}, info) => {
   expect(info.config.metadata.bundle).toBe("production")
   expect(info.config.workers).toBe(1)
