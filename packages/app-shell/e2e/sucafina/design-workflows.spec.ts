@@ -6,8 +6,12 @@ import { workflowCase, settledSurface, sourceObject, sourceText, sourceArray, ty
 import { seedWorkflowCollab, workflowCollabData } from "./design-support/workflow-polish-collab-seed"
 import { seedWorkflowProposal } from "./design-support/workflow-polish-proposal-seed"
 import { forwardOnce } from "./operations-support/runtime"
+import { readWorkflowAdmission, captureWorkflowRefusal, type WorkflowRequirement } from "./design-support/workflow-polish-admission"
 import { encodeSfRouteRef } from "../../src/orchestra/chapters/sucafina/navigation-state"
 
+// Each case owns a real isolated enrollment, original source readbacks and three
+// captures per checkpoint. These budgets include those multi-page journeys;
+// writes are never retried and a blocked read is recorded with its original reason.
 waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
 waveFourTest.describe.configure({ retries: 0 })
 waveFourTest.beforeEach(async ({}, info) => {
@@ -21,6 +25,12 @@ async function open(page: Page, owner: WorkflowOwner, path: string, title: strin
   await enter(page, owner, owner.publicOrigin + path, title, 40_000)
   return settledSurface(page, surface)
 }
+async function admitted(page: Page, owner: WorkflowOwner, info: TestInfo, path: string, surface: string, required: readonly WorkflowRequirement[]) {
+  const proof = await readWorkflowAdmission(page, owner, info, surface, required)
+  if (proof.ready) return true
+  await captureWorkflowRefusal(page, owner, info, path, surface, proof)
+  return false
+}
 async function record(page: Page, info: TestInfo, surface: string, state: string, evidence: string, focus?: string) {
   await settledSurface(page, surface)
   await captureWorkflowState(page, info, { surface, state, evidence, focus })
@@ -31,25 +41,59 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   const diagnostics = observePage(page)
   const selected = await workflowCase(page, owner)
   const encoded = encodeSfRouteRef(selected.ref)
+  const caseAdmission = await readWorkflowAdmission(page, owner, info, "UI42",
+    [{ operationId: "decisions.controls.read", family: "decisions" }])
+  expect(caseAdmission.ready).toBe(true)
+  // The current portfolio leaf additionally requires one entire resource ready.
+  // Record that stricter prerequisite; this visual test must not promote a partial resource.
+  const caseInputsAdmitted = caseAdmission.requirements[0]!.observations.some((operation) =>
+    operation.resourceState === "ready" && operation.state === "ready" && operation.operational)
   const scenarios = await open(page, owner, "/orchestra/sf-portfolio/scenarios/" + encoded, "Portfolio scenarios", "UI42")
-  await expect(scenarios.getByRole("heading", { name: "Scenario universe", exact: true })).toBeVisible()
-  const candidates = scenarios.getByRole("group", { name: "Candidate scenarios", exact: true }).getByRole("checkbox")
-  expect(await candidates.count()).toBe(sourceArray(selected.selected.alternatives).length)
-  expect(await candidates.count()).toBeGreaterThan(0)
-  await record(page, info, "UI42", "original-case-inputs", "Exact case and candidate identities came from the original decision-controls producer. No evaluation or preview is claimed.")
+  if (caseInputsAdmitted) {
+    await expect(scenarios.getByRole("heading", { name: "Scenario universe", exact: true })).toBeVisible()
+    const candidates = scenarios.getByRole("group", { name: "Candidate scenarios", exact: true }).getByRole("checkbox")
+    expect(await candidates.count()).toBe(sourceArray(selected.selected.alternatives).length)
+    expect(await candidates.count()).toBeGreaterThan(0)
+    await record(page, info, "UI42", "original-case-inputs", "Exact case and candidate identities came from the original decision-controls producer. No evaluation or preview is claimed.")
+  } else {
+    await expect(scenarios.locator('[data-sf-state="denied"]')).toHaveCount(1)
+    await expect(scenarios).toContainText("The case is not available under current authority.")
+    await expect(scenarios.getByRole("group", { name: "Candidate scenarios", exact: true })).toHaveCount(0)
+    await record(page, info, "UI42", "original-resource-prerequisite",
+      "The original case read exists, but neither controls resource is wholly ready in F01. The current portfolio leaf refuses its input read. This captures that refusal only; no portfolio inputs or result were rendered.")
+  }
 
-  const results = await open(page, owner, "/orchestra/sf-portfolio/scenarios/" + encoded + "/results/" +
-    encodeSfRouteRef("design-test-missing-portfolio-result"), "Portfolio results", "UI43")
-  await expect(results.locator(".sf-u19-results")).toHaveCount(0)
-  await expect(results.locator('[data-sf-state="not-found"], [data-sf-state="unavailable"], [data-sf-state="invalid"], [data-sf-state="denied"]')).toHaveCount(1)
-  await record(page, info, "UI43", "missing-result-negative-control", "Deliberately nonexistent result under a real authorized case. This is absence handling, never a completed portfolio result.")
+  const resultPath = "/orchestra/sf-portfolio/scenarios/" + encoded + "/results/" +
+    encodeSfRouteRef("design-test-missing-portfolio-result")
+  if (await admitted(page, owner, info, resultPath, "UI43",
+    [{ operationId: "decisions.controls.read", family: "decisions" },
+      { operationId: "portfolio.decision-portfolio-read", family: "portfolio" }])) {
+    const results = await open(page, owner, resultPath, "Portfolio results", "UI43")
+    await expect(results.locator(".sf-u19-results")).toHaveCount(0)
+    await expect(results.locator('[data-sf-state="not-found"], [data-sf-state="unavailable"], [data-sf-state="invalid"], [data-sf-state="denied"]')).toHaveCount(1)
+    await record(page, info, "UI43", caseInputsAdmitted ? "missing-result-negative-control" : "original-resource-prerequisite",
+      "A deliberately nonexistent result under an original authorized case remains absent. If the input resource is partial, only that prerequisite refusal is rendered. No completed portfolio result is claimed.")
+  }
 
+  const sensitivityAdmission = await readWorkflowAdmission(page, owner, info, "UI44",
+    [{ operationId: "decisions.controls.read", family: "decisions" }])
+  expect(sensitivityAdmission.ready).toBe(true)
+  const sensitivityInputsAdmitted = sensitivityAdmission.requirements[0]!.observations.some((operation) =>
+    operation.resourceState === "ready" && operation.state === "ready" && operation.operational)
   const sensitivity = await open(page, owner, "/orchestra/sf-portfolio/sensitivity", "Sensitivity", "UI44")
-  const chooseCase = sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true })
-  await expect(chooseCase.locator("option").filter({ hasText: sourceText(selected.selected.objective) })).toHaveCount(1)
-  await chooseCase.selectOption(selected.ref)
-  await expect(sensitivity.locator(".sf-u19-sensitivity-form")).toHaveCount(1)
-  await record(page, info, "UI44", "original-case-parameters", "Original authorized scenario, baseline and parameter choices. No sensitivity result or admitted evaluation is fabricated.")
+  if (sensitivityInputsAdmitted) {
+    const chooseCase = sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true })
+    await expect(chooseCase.locator("option").filter({ hasText: sourceText(selected.selected.objective) })).toHaveCount(1)
+    await chooseCase.selectOption(selected.ref)
+    await expect(sensitivity.locator(".sf-u19-sensitivity-form")).toHaveCount(1)
+    await record(page, info, "UI44", "original-case-parameters", "Original authorized scenario, baseline and parameter choices. No sensitivity result or admitted evaluation is fabricated.")
+  } else {
+    await expect(sensitivity.locator('[data-sf-state="denied"]')).toHaveCount(1)
+    await expect(sensitivity.getByRole("combobox", { name: "Authorized cases", exact: true })).toHaveCount(0)
+    await expect(sensitivity.locator(".sf-u19-sensitivity-form")).toHaveCount(0)
+    await record(page, info, "UI44", "original-resource-prerequisite",
+      "The current sensitivity leaf requires the same wholly ready controls resource as UI42. Only the original partial-resource refusal is visible; no parameters or sensitivity result are claimed.")
+  }
 
   const catalog = await open(page, owner, "/orchestra/sf-bi", "Analytics", "UI45")
   await expect(catalog.getByRole("combobox", { name: "Analysis view", exact: true })).toBeEnabled()
@@ -89,7 +133,7 @@ waveFourTest("workflow polish: original portfolio inputs and contextual analytic
   await record(page, info, "UI46", "original-financial-values", "Original contextual BI response, exact selection and period verified before capture.")
   expect(diagnostics.pageErrors).toEqual([])
   await info.attach("portfolio-qualification-limit", { contentType: "text/plain",
-    body: "UI42 inputs and UI44 parameters are visual coverage only. UI43 is a missing-result negative control. Portfolio/sensitivity evaluation remains outside this visual waveFourTest." })
+    body: "UI42/UI44 input capture is conditional on the original resource prerequisite. A partial resource records the actual leaf refusal instead. UI43 may be refused by original F01 or show a missing-result negative control. None of these states qualifies portfolio/sensitivity evaluation." })
 })
 
 waveFourTest("workflow polish: original agenda, preserved review, comparison and report selection", async ({ page, installation, owner }, info) => {
@@ -98,6 +142,8 @@ waveFourTest("workflow polish: original agenda, preserved review, comparison and
   const agendaPath = "/orchestra/sf-reviews/agenda?year=" + installation.year
   const agenda = await open(page, owner, agendaPath, "Meeting agenda", "UI47")
   await expect(agenda.getByLabel("Source dashboard page", { exact: true })).toHaveValue("")
+  await expect(agenda.locator('[data-sf-state="empty"]')).toContainText("Enter a dashboard page published by the source.")
+  await expect(agenda.locator('[aria-busy="true"]')).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Review selected sections", exact: true })).toBeDisabled()
   await record(page, info, "UI47", "initial-selection", "No agenda section has been selected or preserved.")
 
@@ -179,34 +225,43 @@ waveFourTest("workflow polish: original relationships, discussion, confirmation 
     return new Response(new Uint8Array(await response.body()), { status: response.status(), headers: response.headers() })
   }
   const seeded = await seedWorkflowCollab({ actorId: installation.actorId, request: sourceRequest }, installation.year)
-  const relation = await open(page, owner, "/orchestra/sf-work/relations/" + encodeSfRouteRef(seeded.relation.id),
-    "Record relationships", "UI51")
-  await expect(relation.locator("[data-sf-relations-source]")).toHaveValue(seeded.relation.fromRef)
-  await expect(relation).toContainText(seeded.relation.toRef)
-  await record(page, info, "UI51", "original-relationship", "Original handoff relationship, source and target identities; no relationship mutation is submitted.")
-  await relation.getByRole("button", { name: "Remove relationship", exact: true }).click()
-  const removal = relation.locator("[data-sf-relation-remove-review]")
-  await expect(removal).toContainText(seeded.relation.id)
-  await record(page, info, "UI51", "removal-review", "Review of the existing exact relationship before any removal; the review is then cancelled.", "[data-sf-relation-remove-review]")
-  await removal.getByRole("button", { name: "Keep editing", exact: true }).click()
-  await expect(removal).toHaveCount(0)
+  if (await admitted(page, owner, info, "/orchestra/sf-work/relations/" + encodeSfRouteRef(seeded.relation.id), "UI51",
+    [{ operationId: "collaboration.relation-read" }])) {
+    const relation = await open(page, owner, "/orchestra/sf-work/relations/" + encodeSfRouteRef(seeded.relation.id),
+      "Record relationships", "UI51")
+    await expect(relation.locator("[data-sf-relations-source]")).toHaveValue(seeded.relation.fromRef)
+    await expect(relation).toContainText(seeded.relation.toRef)
+    await record(page, info, "UI51", "original-relationship", "Original handoff relationship, source and target identities; no relationship mutation is submitted.")
+    await relation.getByRole("button", { name: "Remove relationship", exact: true }).click()
+    const removal = relation.locator("[data-sf-relation-remove-review]")
+    await expect(removal).toContainText(seeded.relation.id)
+    await record(page, info, "UI51", "removal-review", "Review of the existing exact relationship before any removal; the review is then cancelled.", "[data-sf-relation-remove-review]")
+    await removal.getByRole("button", { name: "Keep editing", exact: true }).click()
+    await expect(removal).toHaveCount(0)
+  }
 
-  const thread = await open(page, owner, "/orchestra/sf-work/threads/" + encodeSfRouteRef(seeded.thread.id),
-    "Discussion", "UI52")
-  await expect(thread.getByText(workflowCollabData.comment, { exact: true })).toBeVisible()
-  await thread.getByRole("textbox", { name: "Comment", exact: true }).fill(workflowCollabData.draft)
-  await thread.getByRole("button", { name: "Open originating record", exact: true }).click()
-  await expect(thread.locator("[data-sf-thread-origin]")).toContainText(seeded.thread.sourceRef)
-  await expect(thread.getByRole("textbox", { name: "Comment", exact: true })).toHaveValue(workflowCollabData.draft)
-  await record(page, info, "UI52", "origin-and-unsent-draft", "Original unaddressed local test comment and source provenance; the new composer text remains unsent.")
+  if (await admitted(page, owner, info, "/orchestra/sf-work/threads/" + encodeSfRouteRef(seeded.thread.id), "UI52",
+    [{ operationId: "collaboration.thread-read" }])) {
+    const thread = await open(page, owner, "/orchestra/sf-work/threads/" + encodeSfRouteRef(seeded.thread.id),
+      "Discussion", "UI52")
+    await expect(thread.getByText(workflowCollabData.comment, { exact: true })).toBeVisible()
+    await thread.getByRole("textbox", { name: "Comment", exact: true }).fill(workflowCollabData.draft)
+    await thread.getByRole("button", { name: "Open originating record", exact: true }).click()
+    await expect(thread.locator("[data-sf-thread-origin]")).toContainText(seeded.thread.sourceRef)
+    await expect(thread.getByRole("textbox", { name: "Comment", exact: true })).toHaveValue(workflowCollabData.draft)
+    await record(page, info, "UI52", "origin-and-unsent-draft", "Original unaddressed local test comment and source provenance; the new composer text remains unsent.")
+  }
 
   const prepared = sourceObject(sourceObject(await seeded.post("collaboration-confirmation-prepare", { scope: seeded.scope })).value)
-  const confirmation = await open(page, owner, "/orchestra/sf-work/confirmations/" + encodeSfRouteRef(sourceText(prepared.selectionRef)),
-    "Confirm no change", "UI53")
-  await expect(confirmation.locator("[data-sf-confirm-material]")).toBeVisible()
-  await expect(confirmation.locator("[data-sf-confirm-fingerprint]")).toHaveText(sourceText(prepared.scopeFingerprint))
-  await expect(confirmation.locator("[data-sf-confirm-receipt]")).toHaveCount(0)
-  await record(page, info, "UI53", "original-material-review", "Current material and exact fingerprint were prepared by the original producer; no no-change confirmation is submitted.")
+  if (await admitted(page, owner, info, "/orchestra/sf-work/confirmations/" + encodeSfRouteRef(sourceText(prepared.selectionRef)), "UI53",
+    [{ operationId: "collaboration.confirmation-project" }])) {
+    const confirmation = await open(page, owner, "/orchestra/sf-work/confirmations/" + encodeSfRouteRef(sourceText(prepared.selectionRef)),
+      "Confirm no change", "UI53")
+    await expect(confirmation.locator("[data-sf-confirm-material]")).toBeVisible()
+    await expect(confirmation.locator("[data-sf-confirm-fingerprint]")).toHaveText(sourceText(prepared.scopeFingerprint))
+    await expect(confirmation.locator("[data-sf-confirm-receipt]")).toHaveCount(0)
+    await record(page, info, "UI53", "original-material-review", "Current material and exact fingerprint were prepared by the original producer; no no-change confirmation is submitted.")
+  }
 
   const workbench = await forwardOnce(page, installation.origin + installation.mount + "/dashboard?sf=dashboard-workbench", "POST")
   const [{ response }] = await Promise.all([
@@ -234,6 +289,8 @@ waveFourTest("workflow polish: original memory inputs and explicit missing obser
     { id: "UI61", path: "/orchestra/sf-memory/signals", title: "Signals" },
     { id: "UI63", path: "/orchestra/sf-memory/outcomes", title: "Expected and observed" },
   ]) {
+    if (!await admitted(page, owner, info, screen.path, screen.id,
+      [{ operationId: "intelligence.memory-catalog" }])) continue
     const memory = await open(page, owner, screen.path, screen.title, screen.id)
     const read = memory.getByRole("button", { name: "Read authorized case", exact: true })
     await expect(read).toBeDisabled()
@@ -261,55 +318,73 @@ waveFourTest("workflow polish: original memory inputs and explicit missing obser
     await record(page, info, screen.id, "original-case-observations",
       "Exact identity and version came from original decision-controls; the native memory read determines the recorded conditions or explicit absence. No signal, outcome or causal attribution is created.")
   }
-  const similar = await open(page, owner, "/orchestra/sf-memory/cases", "Similar cases", "UI62")
-  const selector = similar.locator(".sf-memory-similarity-form").getByRole("combobox")
-  await expect(selector).toHaveCount(1)
-  const option = selector.getByRole("option").filter({ hasText: sourceText(selected.selected.objective) })
-  await expect(option).toHaveCount(1)
-  const optionRef = sourceText(await option.getAttribute("value"))
-  await selector.selectOption(optionRef)
-  await expect(similar.locator(".sf-memory-candidates")).toBeVisible({ timeout: 40_000 })
-  await record(page, info, "UI62", "authorized-source-and-candidates", "Original authorized case and candidate choices; no similarity search result is inferred from another screen.")
+  if (await admitted(page, owner, info, "/orchestra/sf-memory/cases", "UI62",
+    [{ operationId: "projection.cases" }, { operationId: "intelligence.memory-similar-cases" }])) {
+    const similar = await open(page, owner, "/orchestra/sf-memory/cases", "Similar cases", "UI62")
+    const selector = similar.locator(".sf-memory-similarity-form").getByRole("combobox")
+    await expect(selector).toHaveCount(1)
+    const option = selector.getByRole("option").filter({ hasText: sourceText(selected.selected.objective) })
+    await expect(option).toHaveCount(1)
+    const optionRef = sourceText(await option.getAttribute("value"))
+    await selector.selectOption(optionRef)
+    await expect(similar.locator(".sf-memory-candidates")).toBeVisible({ timeout: 40_000 })
+    await record(page, info, "UI62", "authorized-source-and-candidates", "Original authorized case and candidate choices; no similarity search result is inferred from another screen.")
+  }
+
   expect(diagnostics.pageErrors).toEqual([])
 })
 
 waveFourTest("workflow polish: routines, schedules, exports and local context", async ({ page, installation, owner }, info) => {
   waveFourTest.setTimeout(660_000)
   const diagnostics = observePage(page)
-  await open(page, owner, "/orchestra/sf-routines", "Routines", "UI64")
-  await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
-  await record(page, info, "UI64", "original-admission-prerequisites",
-    "Native case/recipe admission state. No routine is prepared or run and a missing producer is recorded as missing.")
-  const runs = await open(page, owner, "/orchestra/sf-routines/runs", "Routine result", "UI65")
-  await expect(runs.getByText("Select an authorized routine run.", { exact: true })).toBeVisible()
-  await expect(runs.locator("[data-sf-native-execution]")).toHaveCount(0)
-  await record(page, info, "UI65", "no-selected-run", "No run reference was selected; no execution or verified result is claimed.")
+  if (await admitted(page, owner, info, "/orchestra/sf-routines", "UI64",
+    [{ operationId: "intelligence.analysis.choices", family: "intelligence" },
+      { operationId: "routines.catalog", family: "intelligence" }])) {
+    await open(page, owner, "/orchestra/sf-routines", "Routines", "UI64")
+    await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
+    await record(page, info, "UI64", "original-admission-prerequisites",
+      "Native case/recipe admission state. No routine is prepared or run and a missing producer is recorded as missing.")
+  }
 
-  const schedules = await open(page, owner, "/orchestra/sf-routines/schedules", "Schedule", "UI66")
-  await expect(schedules.getByRole("heading", { name: "Schedules", exact: true })).toBeVisible()
-  await expect(schedules.getByRole("heading", { name: "Occurrences", exact: true })).toBeVisible()
-  await record(page, info, "UI66", "original-schedule-list", "Original installed schedule list or its explicit unavailable state; no recurrence is synthesized.")
-  const newSchedule = await open(page, owner, "/orchestra/sf-routines/schedules/new", "Schedule", "UI66")
-  await expect(newSchedule.getByLabel("Condition reference", { exact: true })).toHaveValue("")
-  await expect(newSchedule.getByRole("button", { name: "Review proposed changes", exact: true })).toBeDisabled()
-  await record(page, info, "UI66", "new-recurrence-prerequisites", "Empty original condition, recipe, recurrence and timezone fields keep review disabled; no schedule is created.")
+  if (await admitted(page, owner, info, "/orchestra/sf-routines/runs", "UI65",
+    [{ operationId: "projection.routine", family: "intelligence" }])) {
+    const runs = await open(page, owner, "/orchestra/sf-routines/runs", "Routine result", "UI65")
+    await expect(runs.getByText("Select an authorized routine run.", { exact: true })).toBeVisible()
+    await expect(runs.locator("[data-sf-native-execution]")).toHaveCount(0)
+    await record(page, info, "UI65", "no-selected-run", "No run reference was selected; no execution or verified result is claimed.")
+  }
 
-  const residents = await open(page, owner, "/orchestra/sf-routines/residents", "Contributions", "UI70")
-  await expect(residents).toHaveAttribute("data-state", /^(ready|empty|unavailable|denied)$/)
-  await record(page, info, "UI70", "original-resident-inventory",
-    "Installed original resident inventory and its actual access state. Listing is not evidence of execution, contribution or a loaded skill pack.")
+  if (await admitted(page, owner, info, "/orchestra/sf-routines/schedules", "UI66",
+    [{ operationId: "schedules.list", family: "intelligence" }])) {
+    const schedules = await open(page, owner, "/orchestra/sf-routines/schedules", "Schedule", "UI66")
+    await expect(schedules.getByRole("heading", { name: "Schedules", exact: true })).toBeVisible()
+    await expect(schedules.getByRole("heading", { name: "Occurrences", exact: true })).toBeVisible()
+    await record(page, info, "UI66", "original-schedule-list", "Original installed schedule list or its explicit unavailable state; no recurrence is synthesized.")
+    const newSchedule = await open(page, owner, "/orchestra/sf-routines/schedules/new", "Schedule", "UI66")
+    await expect(newSchedule.getByLabel("Condition reference", { exact: true })).toHaveValue("")
+    await expect(newSchedule.getByRole("button", { name: "Review proposed changes", exact: true })).toBeDisabled()
+    await record(page, info, "UI66", "new-recurrence-prerequisites", "Empty original condition, recipe, recurrence and timezone fields keep review disabled; no schedule is created.")
+  }
 
-  const profileTitles = await residents.locator(".sf-n29-resident-list article > h2").allTextContents()
-  if (profileTitles.length) {
-    // Choose the first source-ordered profile by its observed unique identity, never by a guessed resident name.
-    const profile = sourceText(profileTitles[0]).trim()
-    const card = residents.locator(".sf-n29-resident-list article")
-      .filter({ has: page.getByRole("heading", { name: profile, exact: true }) })
-    await expect(card).toHaveCount(1)
-    await card.getByRole("button", { name: "Open resident details", exact: true }).click()
-    await expect(residents.locator(".sf-n29-resident-detail")).toContainText(profile)
-    await record(page, info, "UI70", "original-resident-detail",
-      "Selected original profile, skills and explicit case prerequisite; no verified contribution or run is manufactured.", ".sf-n29-resident-detail")
+  if (await admitted(page, owner, info, "/orchestra/sf-routines/residents", "UI70",
+    [{ operationId: "projection.residents", family: "intelligence" }])) {
+    const residents = await open(page, owner, "/orchestra/sf-routines/residents", "Contributions", "UI70")
+    await expect(residents).toHaveAttribute("data-state", /^(ready|empty|unavailable|denied)$/)
+    await record(page, info, "UI70", "original-resident-inventory",
+      "Installed original resident inventory and its actual access state. Listing is not evidence of execution, contribution or a loaded skill pack.")
+
+    const profileTitles = await residents.locator(".sf-n29-resident-list article > h2").allTextContents()
+    if (profileTitles.length) {
+      // Choose the first source-ordered profile by its observed unique identity, never by a guessed resident name.
+      const profile = sourceText(profileTitles[0]).trim()
+      const card = residents.locator(".sf-n29-resident-list article")
+        .filter({ has: page.getByRole("heading", { name: profile, exact: true }) })
+      await expect(card).toHaveCount(1)
+      await card.getByRole("button", { name: "Open resident details", exact: true }).click()
+      await expect(residents.locator(".sf-n29-resident-detail")).toContainText(profile)
+      await record(page, info, "UI70", "original-resident-detail",
+        "Selected original profile, skills and explicit case prerequisite; no verified contribution or run is manufactured.", ".sf-n29-resident-detail")
+    }
   }
 
   const history = await open(page, owner, "/orchestra/sf-imports", "Import result", "UI57")

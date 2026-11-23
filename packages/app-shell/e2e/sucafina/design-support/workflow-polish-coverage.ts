@@ -127,25 +127,28 @@ export const workflowPolishCoverage = {
       "surface": "UI42",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original case inputs and candidates"
+        "original case inputs and candidates",
+        "original partial-resource refusal when the portfolio leaf cannot admit its input read"
       ],
-      "limits": "Portfolio preview/evaluation not qualified by this visual test."
+      "limits": "Portfolio preview/evaluation not qualified by this visual test. Refusal captures do not qualify the input form or evaluation."
     },
     {
       "surface": "UI43",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "missing-result negative control"
+        "missing-result negative control",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No completed result; deliberate missing reference under a real case."
+      "limits": "No completed result; deliberate missing reference under a real case. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI44",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original case/scenario/baseline/parameter inputs"
+        "original case/scenario/baseline/parameter inputs",
+        "original partial-resource refusal when the portfolio leaf cannot admit its input read"
       ],
-      "limits": "Sensitivity evaluation/result not qualified."
+      "limits": "Sensitivity evaluation/result not qualified. Refusal captures do not qualify the input form or evaluation."
     },
     {
       "surface": "UI45",
@@ -206,9 +209,10 @@ export const workflowPolishCoverage = {
       "spec": "design-workflows.spec.ts",
       "states": [
         "original relationship",
-        "removal review"
+        "removal review",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "Review cancelled without removing the relationship."
+      "limits": "Review cancelled without removing the relationship. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI52",
@@ -216,17 +220,19 @@ export const workflowPolishCoverage = {
       "states": [
         "original internal comment",
         "origin context",
-        "unsent composer draft"
+        "unsent composer draft",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "Local test seed has no recipient; no reply is posted."
+      "limits": "Local test seed has no recipient; no reply is posted. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI53",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original material and fingerprint"
+        "original material and fingerprint",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No no-change confirmation submitted."
+      "limits": "No no-change confirmation submitted. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI54",
@@ -297,50 +303,56 @@ export const workflowPolishCoverage = {
       "surface": "UI61",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original authorized case conditions/signals or explicit absence"
+        "original authorized case conditions/signals or explicit absence",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "Exact identity/version and original memory responses; no materiality signal invented."
+      "limits": "Exact identity/version and original memory responses; no materiality signal invented. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI62",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "authorized source and candidate choices"
+        "authorized source and candidate choices",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No similar-case search result inferred."
+      "limits": "No similar-case search result inferred. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI63",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original authorized case conditions or explicit absence"
+        "original authorized case conditions or explicit absence",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No expected/observed outcome manufactured."
+      "limits": "No expected/observed outcome manufactured. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI64",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "original routine admission prerequisites"
+        "original routine admission prerequisites",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No prepare/run and no fabricated recipe."
+      "limits": "No prepare/run and no fabricated recipe. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI65",
       "spec": "design-workflows.spec.ts",
       "states": [
-        "no selected run"
+        "no selected run",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No verified output or execution claimed."
+      "limits": "No verified output or execution claimed. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI66",
       "spec": "design-workflows.spec.ts",
       "states": [
         "original schedule list or explicit source restriction",
-        "new recurrence prerequisites"
+        "new recurrence prerequisites",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "No recurrence created; missing condition/recipe/timezone keeps review disabled."
+      "limits": "No recurrence created; missing condition/recipe/timezone keeps review disabled. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     },
     {
       "surface": "UI67",
@@ -371,9 +383,10 @@ export const workflowPolishCoverage = {
       "spec": "design-workflows.spec.ts",
       "states": [
         "original resident inventory",
-        "selected original profile when emitted"
+        "selected original profile when emitted",
+        "native host refusal only when original F01 lacks the required ready read"
       ],
-      "limits": "Inventory is not execution, contribution or skill-pack proof."
+      "limits": "Inventory is not execution, contribution or skill-pack proof. Host refusal explicitly records leafRendered=false and is not leaf visual coverage."
     }
   ],
   "fixture": "Original isolated local-operator native installations; operations uses its existing real scanner host.",
@@ -384,6 +397,7 @@ export const workflowPolishCoverage = {
   ],
   "limits": [
     "This inventory enumerates UI30–70, not every input permutation or all 165 registered route aliases.",
-    "Portfolio/sensitivity results, new analyses, routine executions, Office downloads and live Microsoft identity are not inferred from prerequisites."
+    "Portfolio/sensitivity results, new analyses, routine executions, Office downloads and live Microsoft identity are not inferred from prerequisites.",
+    "The matrix derives native refusal expectations from a separately schema-decoded original F01 read. Admitted paths retain their source, identity, content and business assertions. A ready operation followed by an unexpected host refusal still fails."
   ]
 } as const
