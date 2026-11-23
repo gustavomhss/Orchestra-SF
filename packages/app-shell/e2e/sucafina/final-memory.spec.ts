@@ -116,7 +116,8 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     await precedent.check()
     const response = page.waitForResponse((reply) => reply.request().method() === "POST" &&
       new URL(reply.url()).searchParams.get("sf") === "memory-similar-cases", { timeout: 40_000 })
-      .then(async (reply) => ({ status: reply.status(), url: reply.url(), body: reply.request().postDataJSON() as unknown }))
+      .then(async (reply) => ({ status: reply.status(), url: reply.url(), body: reply.request().postDataJSON() as unknown,
+        result: await reply.json() as unknown }))
     await surface.getByRole("button", { name: "Find similar cases", exact: true }).click()
     const original = await response
     expect(original.status).toBe(200)
@@ -124,7 +125,26 @@ waveFourTest("UI61–UI63 · original condition, month outcome and authorized ca
     expect(page.url()).not.toContain(encodeURIComponent(query))
     expect(original.body).toMatchObject({ query, caseId: seeded.caseRef.id, incarnation: seeded.caseRef.incarnation,
       version: seeded.caseRef.version, period: seeded.period, includeHistorical: false })
-    await expect(surface.locator('[data-sf-state="loading"]')).toHaveCount(0)
+    const result = original.result
+    if (!result || typeof result !== "object" || !("status" in result) || result.status !== "ok" ||
+        !("matches" in result) || !Array.isArray(result.matches))
+      throw new Error("Original similar-case response omitted its authorized matches")
+    const matches: readonly unknown[] = result.matches
+    if (matches.length === 0) {
+      await expect(surface.getByText("No authorized matching cases were returned for this selection.", { exact: true })).toBeVisible()
+    } else {
+      await expect(surface.locator("[data-sf-similar-case]")).toHaveCount(matches.length)
+      for (const match of matches) {
+        if (!match || typeof match !== "object" || !("memoryRecordRef" in match) || typeof match.memoryRecordRef !== "string")
+          throw new Error("Original match omitted its evidence event")
+        const row = surface.locator("[data-sf-memory-record]").filter({ has: page.locator("strong", { hasText: waveFourDecisionsData.objective }) })
+        await expect(row).toHaveCount(matches.length)
+        const event = surface.locator('[data-sf-memory-record="' + match.memoryRecordRef + '"]')
+        await event.getByRole("button", { name: "Open original case", exact: true }).click()
+        await expect(surface.locator("[data-sf-similar-detail]")).toContainText(waveFourDecisionsData.objective)
+      }
+    }
+    await info.attach("UI62-original-recall-count", { body: JSON.stringify({ matchingCases: matches.length }), contentType: "application/json" })
     await captureFinalSurface(page, info, "UI62", "dark-desktop-original-recall", { preview: true })
     await scheme(page, "light")
     await captureFinalSurface(page, info, "UI62", "light-desktop-original-recall")
