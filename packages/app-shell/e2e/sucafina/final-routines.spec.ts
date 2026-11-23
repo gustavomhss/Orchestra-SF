@@ -85,6 +85,8 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await scheme(page, "dark")
     const surface = page.locator('[data-sf-surface="UI65"]')
     await expect(surface.getByText("Select an authorized routine run.", { exact: true })).toBeVisible()
+    await expect(surface.getByText("Choose a routine run to inspect its status and result.", { exact: true })).toBeVisible()
+    await expect(surface.getByText("No records yet.", { exact: true })).toHaveCount(0)
     const link = surface.locator("[data-sf-routine-catalog-link]")
     await expect(link).toBeVisible()
     const destination = await link.getAttribute("href")
@@ -221,6 +223,9 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
       }
       await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
       await scheme(localized, "dark")
+      if (screen.id === "UI65") {
+        await expect(localized.getByText("Escolha uma execução de rotina para consultar o estado e o resultado.", { exact: true })).toBeVisible()
+      }
       await localized.setViewportSize({ width: 360, height: 900 })
       await reflow(localized)
       await captureFinalSurface(localized, info, screen.id, "pt-br-dark-360-installed-state", { preview: true })
