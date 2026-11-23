@@ -16,3 +16,5 @@ jobs:
     steps:
       - name: Public admission marker
         run: echo g08-policy-canary-v1
+
+# Admission observation P2: the active policy must refuse this push event.
