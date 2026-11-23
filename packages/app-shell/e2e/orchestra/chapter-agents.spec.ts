@@ -555,7 +555,9 @@ test("Escape closes the dialog while a navigation tooltip still shows behind it"
   await expect(dialog(page).getByRole("button", { name: "Close dialog", exact: true })).toBeFocused()
   // Native modal inertness hides the background from accessibility; the actual tooltip layer still exists.
   await expect(tooltip).toHaveCount(1)
-  await page.screenshot({ path: test.info().outputPath("agents-dialog-over-navigation-tooltip.png"), animations: "disabled" })
+  await page.screenshot({ path: test.info().outputPath("agents-dialog-over-navigation-tooltip.png"), animations: "allow" })
+  // Capturing evidence must not finish an exit animation before the keyboard regression is exercised.
+  await expect(tooltip).toHaveCount(1)
   await page.keyboard.press("Escape")
   await expect(dialog(page)).toHaveCount(0)
   await expect(opener).toBeFocused()
