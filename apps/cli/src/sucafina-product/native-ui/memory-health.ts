@@ -2,6 +2,7 @@ import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-regist
 import type { SfContextStamp, SfOperationAvailability } from "@orchestra/schema/sucafina/context"
 import { digestSfValue } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import type { TrustedUiContext } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { isSfProductStateReader, selectSfNamespaceHealth } from "../../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import type { PlannerScenarioHost } from "../../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import type { createSfMemoryServices } from "../memory-services.ts"
@@ -45,68 +46,111 @@ export async function observeSfMemoryReadingHealth(input: {
     { id: "intelligence.memory-materiality", query: "memory-materiality", needsScenarios: true },
     { id: "intelligence.memory-outcome", query: "memory-outcome", needsScenarios: false },
   ] as const
-  const observed = await Promise.allSettled(candidates.map(async (candidate) => {
-    const metadata = SfOperationRegistry[candidate.id]
-    if (!sfHasOperationalResource(candidate.id) || metadata.method !== "GET" || metadata.effect !== "read" ||
-      metadata.pathTemplate !== "{mount}/dashboard" || metadata.fixedQuery.sf !== candidate.query ||
-      metadata.responseMode !== "json") return undefined
-    const source = sourceFor(candidate.id)
-    if (!source || typeof source.producer !== "function" || typeof source.handler !== "function" ||
-      !source.dependencies.length || source.dependencies.some((entry) => !entry ||
-        typeof entry !== "object" && typeof entry !== "function") ||
-      candidate.needsScenarios && !source.scenarios) return undefined
-    const memory = source.memory, scenarios = source.scenarios, dependencies = [...source.dependencies]
-    if (!memory || !Array.isArray(memory.catalog) || !memory.registry || !memory.outcomeSelections) return undefined
-    const catalog = digestSfValue([...(scenarios ? ["planner-conditions", "planner-materiality", "planner-signals"] : []),
-      "planner-closed-month-outcomes"])
-    if (digestSfValue(memory.catalog) !== catalog) return undefined
-    const installed = bindingFor(candidate.id, source.producer)
-    if (!installed || typeof installed !== "object" && typeof installed !== "function") return undefined
-    const ownDependencies = () => [ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish, state.read,
-      persistence.transaction, memory.conditions, memory.signals, memory.materiality, memory.outcomes,
-      memory.registry, memory.registry?.list, memory.outcomeSelections,
-      memory.outcomeSelections?.select, memory.outcomeSelections?.readReference,
-      ...(scenarios ? [scenarios.resolve, ...(scenarios.resolveMany ? [scenarios.resolveMany] : [])] : [])]
-    const own = ownDependencies()
-    if (own.some((entry) => !entry || typeof entry !== "object" && typeof entry !== "function")) return undefined
-    const current = () => {
-      const next = sourceFor(candidate.id), now = ownDependencies()
-      return !request.signal.aborted && input.source === sourceFor && input.binding === bindingFor &&
-        input.ui === ui && input.state === state && input.persistence === persistence &&
-        isSfProductStateReader(state, persistence) && digestSfValue(stamp) === stampDigest &&
-        next?.producer === source.producer && next.handler === source.handler && next.memory === memory &&
-        next.scenarios === scenarios && digestSfValue(memory.catalog) === catalog &&
-        next.dependencies.length === dependencies.length && dependencies.every((entry, index) => next.dependencies[index] === entry) &&
-        bindingFor(candidate.id, source.producer) === installed && now.length === own.length &&
-        own.every((entry, index) => now[index] === entry)
-    }
-    const operation = "sf-human:analysis.read"
-    const digest = digestSfValue({ purpose: "native-memory-reading-health", operationId: candidate.id })
-    const admitted = await ui.admit(request, operation, digest)
-    if (admitted.status !== "ok") return undefined
-    try {
+  type Lease = {
+    index: number
+    context: TrustedUiContext
+    current: () => boolean
+    active: boolean
+    value: SfOperationAvailability
+  }
+  const leases: Lease[] = []
+  // This batch belongs to one original Request and stamp only. Each operation
+  // keeps its own single-use admission, digest and live mounted-source fence.
+  const live = () => leases.filter((lease) => {
+    if (!lease.active) return false
+    try { lease.active = lease.current() }
+    catch { lease.active = false }
+    return lease.active
+  })
+  const revalidate = async () => {
+    const selected = live()
+    const checked = await Promise.allSettled(selected.map(async (lease) =>
+      lease.current() && await ui.revalidate(lease.context) &&
+      ui.requestFor(lease.context) === request && lease.current()))
+    checked.forEach((result, index) => {
+      if (result.status !== "fulfilled" || !result.value) selected[index]!.active = false
+    })
+    return live().length > 0
+  }
+  let stable = false
+  try {
+    await Promise.allSettled(candidates.map(async (candidate, index) => {
+      const metadata = SfOperationRegistry[candidate.id]
+      if (!sfHasOperationalResource(candidate.id) || metadata.method !== "GET" || metadata.effect !== "read" ||
+        metadata.pathTemplate !== "{mount}/dashboard" || metadata.fixedQuery.sf !== candidate.query ||
+        metadata.responseMode !== "json") return undefined
+      const source = sourceFor(candidate.id)
+      if (!source || typeof source.producer !== "function" || typeof source.handler !== "function" ||
+        !source.dependencies.length || source.dependencies.some((entry) => !entry ||
+          typeof entry !== "object" && typeof entry !== "function") ||
+        candidate.needsScenarios && !source.scenarios) return undefined
+      const memory = source.memory, scenarios = source.scenarios, dependencies = [...source.dependencies]
+      if (!memory || !Array.isArray(memory.catalog) || !memory.registry || !memory.outcomeSelections) return undefined
+      const catalog = digestSfValue([...(scenarios ? ["planner-conditions", "planner-materiality", "planner-signals"] : []),
+        "planner-closed-month-outcomes"])
+      if (digestSfValue(memory.catalog) !== catalog) return undefined
+      const installed = bindingFor(candidate.id, source.producer)
+      if (!installed || typeof installed !== "object" && typeof installed !== "function") return undefined
+      const ownDependencies = () => [ui.admit, ui.validate, ui.revalidate, ui.requestFor, ui.finish, state.read,
+        persistence.transaction, memory.conditions, memory.signals, memory.materiality, memory.outcomes,
+        memory.registry, memory.registry?.list, memory.outcomeSelections,
+        memory.outcomeSelections?.select, memory.outcomeSelections?.readReference,
+        ...(scenarios ? [scenarios.resolve, ...(scenarios.resolveMany ? [scenarios.resolveMany] : [])] : [])]
+      const own = ownDependencies()
+      if (own.some((entry) => !entry || typeof entry !== "object" && typeof entry !== "function")) return undefined
+      const current = () => {
+        const next = sourceFor(candidate.id), now = ownDependencies()
+        return !request.signal.aborted && input.source === sourceFor && input.binding === bindingFor &&
+          input.ui === ui && input.state === state && input.persistence === persistence &&
+          isSfProductStateReader(state, persistence) && digestSfValue(stamp) === stampDigest &&
+          next?.producer === source.producer && next.handler === source.handler && next.memory === memory &&
+          next.scenarios === scenarios && digestSfValue(memory.catalog) === catalog &&
+          next.dependencies.length === dependencies.length && dependencies.every((entry, index) => next.dependencies[index] === entry) &&
+          bindingFor(candidate.id, source.producer) === installed && now.length === own.length &&
+          own.every((entry, index) => now[index] === entry)
+      }
+      const operation = "sf-human:analysis.read"
+      const digest = digestSfValue({ purpose: "native-memory-reading-health", operationId: candidate.id })
+      const admitted = await ui.admit(request, operation, digest)
+      if (admitted.status !== "ok") return
+      const lease: Lease = { index, context: admitted.value, current, active: false,
+        value: { operationId: candidate.id, state: "ready", reason: null, operational: true } }
+      // Register cleanup before validation or any subsequent asynchronous work.
+      leases.push(lease)
       const actor = admitted.value.binding
       if (actor.installationId !== expected.installationId || actor.projectId !== expected.projectId ||
         actor.principalRef !== expected.principalRef || actor.policyVersion !== expected.policyVersion ||
         actor.accessRevision !== expected.accessRevision || !await ui.validate(admitted.value, operation, digest) ||
-        ui.requestFor(admitted.value) !== request || !current()) return undefined
-      const readHealth = async () => {
-        const values: { storageVersion: number; aggregateRevision: number; incarnation: string }[] = []
-        for (const namespace of ["cases", "preferences"] as const) {
-          const result = await state.read(request, namespace, selectSfNamespaceHealth(namespace, expected))
-          if (result.status !== "ok" || !result.value || result.storageVersion !== result.value.storageVersion ||
-            result.aggregateRevision !== result.value.aggregateRevision || result.incarnation !== result.value.incarnation ||
-            !current() || !await ui.revalidate(admitted.value) || ui.requestFor(admitted.value) !== request || !current()) return undefined
-          values.push(result.value)
-        }
-        return values.every((value) => value.aggregateRevision === values[0]!.aggregateRevision &&
-          value.incarnation === values[0]!.incarnation) ? digestSfValue(values) : undefined
+        ui.requestFor(admitted.value) !== request || !current()) return
+      lease.active = true
+    }))
+    const readHealth = async () => {
+      const values: { storageVersion: number; aggregateRevision: number; incarnation: string }[] = []
+      for (const namespace of ["cases", "preferences"] as const) {
+        if (!live().length) return undefined
+        // The original C08 selector is Request/namespace/stamp scoped, not
+        // operation-lease scoped. Share its metadata within this batch, then
+        // revalidate EVERY surviving lease after EACH namespace observation.
+        const result = await state.read(request, namespace, selectSfNamespaceHealth(namespace, expected))
+        if (result.status !== "ok" || !result.value || result.storageVersion !== result.value.storageVersion ||
+          result.aggregateRevision !== result.value.aggregateRevision || result.incarnation !== result.value.incarnation ||
+          !await revalidate()) return undefined
+        values.push(result.value)
       }
-      const first = await readHealth(), second = first ? await readHealth() : undefined
-      if (!first || first !== second || !current() || !await ui.revalidate(admitted.value) ||
-        ui.requestFor(admitted.value) !== request || !current()) return undefined
-    } finally { finish(admitted.value) }
-    return { current, value: { operationId: candidate.id, state: "ready" as const, reason: null, operational: true as const } }
-  }))
-  return observed.flatMap((entry) => entry.status === "fulfilled" && entry.value?.current() ? [entry.value.value] : [])
+      return values.every((value) => value.aggregateRevision === values[0]!.aggregateRevision &&
+        value.incarnation === values[0]!.incarnation) ? digestSfValue(values) : undefined
+    }
+    const first = await readHealth(), second = first ? await readHealth() : undefined
+    stable = !!first && first === second && await revalidate()
+  } catch {
+    // A shared source failure invalidates every result. No earlier snapshot is retained.
+    stable = false
+  } finally {
+    for (const lease of leases) {
+      try { finish(lease.context) }
+      catch { lease.active = false }
+    }
+  }
+  // Cleanup may revoke another binding; nothing is published before this final fence.
+  return stable ? live().sort((left, right) => left.index - right.index).map((lease) => lease.value) : []
 }

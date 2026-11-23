@@ -25,7 +25,12 @@ async function fixture() {
   const controls: { allowed: boolean; revision: string; installed: boolean; calls: number; deniedOperation: string; deniedNamespace: string } = {
     allowed: true, revision: stamp.accessRevision, installed: true, calls: 0, deniedOperation: "", deniedNamespace: "",
   }
-  const hooks: { read?: (surface: Surface, snapshot: Snapshot) => Promise<void>; finish?: () => void } = {}
+  const hooks: {
+    read?: (surface: Surface, snapshot: Snapshot) => Promise<void>
+    admit?: (context: TrustedUiContext) => Promise<void>
+    revalidate?: (context: TrustedUiContext) => Promise<void>
+    finish?: (context: TrustedUiContext) => void
+  } = {}
   const memory = testPersistence({ dashboard: empty(), planner: empty(), procurement: empty() })
   const never = async (): Promise<never> => {
     controls.calls++
@@ -50,21 +55,31 @@ async function fixture() {
     privateCommands: ["sf-human:analysis.read"],
   })
   const admitted: TrustedUiContext[] = [], finished: TrustedUiContext[] = [], validated: TrustedUiContext[] = []
+  const revalidated: TrustedUiContext[] = []
   const ui = {
     ...originalUi,
     admit: async (...args: Parameters<typeof originalUi.admit>) => {
       const result = await originalUi.admit(...args)
-      if (result.status === "ok") admitted.push(result.value)
+      if (result.status === "ok") {
+        admitted.push(result.value)
+        await hooks.admit?.(result.value)
+      }
       return result
     },
     validate: async (...args: Parameters<typeof originalUi.validate>) => {
       validated.push(args[0])
       return originalUi.validate(...args)
     },
+    revalidate: async (context: TrustedUiContext) => {
+      revalidated.push(context)
+      const result = await originalUi.revalidate(context)
+      await hooks.revalidate?.(context)
+      return result
+    },
     finish: (context: TrustedUiContext) => {
       finished.push(context)
       originalUi.finish(context)
-      hooks.finish?.()
+      hooks.finish?.(context)
     },
   }
   const persistence = createSfSourcePersistence({
@@ -118,16 +133,23 @@ async function fixture() {
     for (const lease of admitted) expect(originalUi.requestFor(lease)).toBeUndefined()
     expect(controls.calls).toBe(0)
   }
-  return { observe, controls, hooks, sources, memory, admitted, finished, terminal, request, controller, input, persistence }
+  return { observe, controls, hooks, sources, memory, admitted, finished, revalidated,
+    revokeLease: (context: TrustedUiContext) => originalUi.finish(context),
+    terminal, request, controller, input, persistence }
 }
 
 test("memory health observes five installed GET readers without invoking any memory producer", async () => {
   const context = await fixture()
   const before = digestSfValue(context.memory.state)
+  let reads = 0
+  context.hooks.read = async () => { reads++ }
   expect(await context.observe()).toEqual(operations.map((operationId) => ({
     operationId, state: "ready", reason: null, operational: true,
   })))
   expect(context.admitted.length).toBe(5)
+  expect(reads).toBe(4)
+  expect(context.revalidated).toHaveLength(25)
+  for (const lease of context.admitted) expect(context.revalidated.filter((entry) => entry === lease)).toHaveLength(5)
   expect(digestSfValue(context.memory.state)).toBe(before)
   context.terminal()
 })
@@ -252,5 +274,164 @@ test("memory health closes an admitted lease when the caller aborts", async () =
   const context = await fixture()
   context.hooks.read = async () => { await Promise.resolve(); context.controller.abort() }
   expect(await context.observe(catalog)).toEqual([])
+  context.terminal()
+})
+
+test("memory health observes four C08 reads again on every invocation without a cross-call cache", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async () => { reads++ }
+  const first = await context.observe()
+  expect(first.map((entry) => entry.operationId)).toEqual([...operations])
+  expect(reads).toBe(4)
+  expect(await context.observe()).toEqual(first)
+  expect(reads).toBe(8)
+  expect(context.admitted).toHaveLength(10)
+  expect(context.revalidated).toHaveLength(50)
+  context.terminal()
+})
+
+test("memory health preserves canonical operation order when admissions complete out of order", async () => {
+  const context = await fixture()
+  let releaseFirst!: () => void
+  const first = new Promise<void>((resolve) => { releaseFirst = resolve })
+  const completed: number[] = []
+  context.hooks.admit = async (lease) => {
+    const index = context.admitted.indexOf(lease)
+    if (index === 0) await first
+    if (index === operations.length - 1) releaseFirst()
+    completed.push(index)
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual([...operations])
+  expect(completed.at(-1)).toBe(0)
+  context.terminal()
+})
+
+test("memory health isolates an original lease revoked before single-use validation", async () => {
+  const context = await fixture()
+  context.hooks.admit = async (lease) => {
+    if (context.admitted.indexOf(lease) === 2) context.revokeLease(lease)
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((_, index) => index !== 2))
+  expect(context.admitted).toHaveLength(5)
+  context.terminal()
+})
+
+test("memory health isolates replacement of one mounted source during a shared observation", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async () => {
+    if (++reads !== 1) return
+    const source = context.sources[history]!
+    context.sources[history] = { ...source, dependencies: [...source.dependencies, {}] }
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((id) => id !== history))
+  expect(reads).toBe(4)
+  expect(context.admitted).toHaveLength(5)
+  context.terminal()
+})
+
+test("memory health isolates an original lease revoked after its first namespace observation", async () => {
+  const context = await fixture()
+  let revoked = false
+  context.hooks.revalidate = async (lease) => {
+    if (!revoked && lease === context.admitted[2]) {
+      revoked = true
+      context.revokeLease(lease)
+    }
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((_, index) => index !== 2))
+  expect(revoked).toBe(true)
+  expect(context.revalidated.filter((lease) => lease === context.admitted[2])).toHaveLength(1)
+  context.terminal()
+})
+
+test("memory health isolates a throwing revalidation and still revalidates every other lease", async () => {
+  const context = await fixture()
+  context.hooks.revalidate = async (lease) => {
+    if (lease === context.admitted[2]) throw new Error("One original authority revalidation failed")
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((_, index) => index !== 2))
+  expect(context.revalidated.filter((lease) => lease === context.admitted[2])).toHaveLength(1)
+  for (const lease of context.admitted.filter((_, index) => index !== 2))
+    expect(context.revalidated.filter((entry) => entry === lease)).toHaveLength(5)
+  context.terminal()
+})
+
+for (const failed of [0, 2, 4]) {
+  test("memory health finishes every lease when finish throws for admitted lease " + failed, async () => {
+    const context = await fixture()
+    context.hooks.finish = (lease) => {
+      if (lease === context.admitted[failed]) throw new Error("One lease cleanup failed after original finish")
+    }
+    expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((_, index) => index !== failed))
+    expect(context.finished).toHaveLength(5)
+    context.terminal()
+  })
+}
+
+test("memory health checks every surviving source after all cleanup has completed", async () => {
+  const context = await fixture()
+  context.hooks.finish = (lease) => {
+    if (lease !== context.admitted.at(-1)) return
+    const source = context.sources[catalog]!
+    context.sources[catalog] = { ...source, dependencies: [...source.dependencies, {}] }
+  }
+  expect((await context.observe()).map((entry) => entry.operationId)).toEqual(operations.filter((id) => id !== catalog))
+  expect(context.finished).toHaveLength(5)
+  context.terminal()
+})
+
+test("memory health rejects all readers when C08 metadata changes between the two shared observations", async () => {
+  const context = await fixture()
+  const before = digestSfValue(context.memory.state)
+  let reads = 0
+  context.hooks.read = async (_surface, snapshot) => {
+    if (++reads < 3) return
+    const state = object(snapshot.data.__sfProductV1)
+    state.revision = Number(state.revision) + 1
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBe(4)
+  expect(context.admitted).toHaveLength(5)
+  expect(digestSfValue(context.memory.state)).toBe(before)
+  context.terminal()
+})
+
+test("memory health rejects all readers when the shared namespaces have different aggregate revisions", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async (_surface, snapshot) => {
+    if (++reads !== 2) return
+    const state = object(snapshot.data.__sfProductV1)
+    state.revision = Number(state.revision) + 1
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBe(2)
+  expect(context.finished).toHaveLength(5)
+  context.terminal()
+})
+
+test("memory health finishes all admitted leases when the second shared observation throws", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async () => {
+    if (++reads === 3) throw new Error("Original C08 source failed between observations")
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBe(3)
+  expect(context.finished).toHaveLength(5)
+  context.terminal()
+})
+
+test("memory health finishes all admitted leases when the caller aborts between shared observations", async () => {
+  const context = await fixture()
+  let reads = 0
+  context.hooks.read = async () => {
+    if (++reads === 3) context.controller.abort()
+  }
+  expect(await context.observe()).toEqual([])
+  expect(reads).toBe(3)
+  expect(context.finished).toHaveLength(5)
   context.terminal()
 })
