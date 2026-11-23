@@ -4,6 +4,24 @@ This pass refines the existing native interface across Teams, Agents, MCP, Setti
 
 The issue ledger counts distinct observed defects. Files, commits, viewport variants, screenshot copies and follow-up corrections to the same defect are not additional fixes. Test-fixture maintenance is recorded separately. The machine-readable source, run, artifact and review index is [round-four-runs.json](./round-four-runs.json).
 
+## Current checkpoint after dev reconciliation
+
+The working branch now includes actual `dev` `490a1e1352081d28c0eb22afcd05fffea8b5323f` through the two-parent integration [`34df764`](https://github.com/gustavomhss/Orchestra-SF/commit/34df764a67a3dd540f9066186dc8cab8b30a5aa0). Upstream changed 191 paths, with 16 overlaps in this round; one blob was already identical and all remaining changes were reconciled. Upstream changed no CLI or Sucafina module files. Its five generated-palette changes are preserved, with zero palette-file delta from the new base.
+
+The 18 entries below are tracked findings. Team containment, the richer version identity and the exact approval-column width independently arrived in the new base. They are preserved and rechecked; this is not a claim of 18 additional fixes against `490a`. Procurement's split registrars remain intact, and the complete six-case cohort spans three spec files. New English and Portuguese 768px checks verify the actual 1+2+2 metric rows without changing their original deadlines.
+
+**PR #718 remains a draft and is not merged.** The previous 94 passed browser cases and 64 reviewed original images remain historical evidence on the earlier base. Teams/shared/MCP, Agents and the expanded five-case Documents cohort are being requalified on the reconciled UI. They are not counted as current successes before result and original-image review.
+
+The composed structural [run 45265427046](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265427046) passed all ten gates and 265 nested regressions before reconciliation. The published Recall control [run 45267597134](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45267597134) passed three independent cases and 224 assertions; each retains its original 105-second cooperative and 120-second Bun bounds. The earlier two-case aggregate exceeded its unchanged cooperative bound and remains recorded as a failure. Original native Atlas [run 45265524052](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265524052) also passed, with 24 assertions and the genuine scanner/writer.
+
+Installed-host counters established actual completed-record-proof admission: every observed Finance owner admitted the native proof, with 46 completed-proof hits and two canonical misses per pair. This did **not** resolve the browser deadline. Materiality [run 45263884281](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45263884281) and Recall [run 45265432458](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45265432458) exceeded the unchanged 40-second request guard. The aborted transactions returned no observed headers or body; later condition responses are separate transactions.
+
+The integrated follow-up gives each existing source-validation phase its own original observation owner. All source/coverage reads, criteria phases and egress checks remain. Its full three-case control [run 45274052784](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45274052784) passed 576 assertions. The prior failed control had mistaken the original outer monotonic authorization refusal for the inner comparison result. The revised test observes the real comparison before egress and asserts both exact results: stale internally and denied externally, with no second resolution. That failed attempt remains preserved. Plain Materiality [run 45268191931](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45268191931) still exceeded 40 seconds, so no end-to-end performance success is claimed.
+
+CPU sampling remains in progress. Separate numeric-only Recall [run 45272518555](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45272518555) confirms the English request's original 40-second failure before the later Portuguese 15-second navigation failure. Counters are emitted only when an owner settles; no completed Recall row does not prove that an owner was never admitted. These diagnostics cannot substitute for the complete original Memory qualification.
+
+The full Memory cohort, final producer cohort, affected business journeys and final structural checks against `490a` remain required. The current evidence source is `08e6f7f97d63296b768cdf4120a62f9ed1bdcebe`; the following documentation commit is not a merge receipt.
+
 ## Issue ledger
 
 | ID | Area | Observed defect | Resolution |
@@ -135,9 +153,9 @@ The expanded structural run initially passed eight outer checks and found two st
 
 These are test-setup corrections, not additional product fixes. The failed run is not counted as green qualification. No assertion was skipped, no retry added, and no deadline increased.
 
-The composed structural run [45262866348](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45262866348) passed nine of ten gates and all 265 nested regressions. Sucafina typechecking found two missing callback parameter types and two possibly undefined captured-result variables in the new controls. Explicit types and required-value guards now resolve those findings without removing any complete-value comparison or scenario. The full ten-gate check is being repeated on the final composed control source. This failed run remains separate from green qualification.
+The composed structural run [45262866348](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45262866348) passed nine of ten gates and all 265 nested regressions. Sucafina typechecking found two missing callback parameter types and two possibly undefined captured-result variables in the new controls. Explicit types and required-value guards now resolve those findings without removing any complete-value comparison or scenario. The subsequent full ten-gate run 45265427046 passed. Final structural qualification against the reconciled dev base remains required. This failed run remains separate from green qualification.
 
-## Qualification and evidence boundaries
+## Historical qualification before dev reconciliation
 
 | Retained scope | Run | Cases | Result |
 | --- | --- | ---: | --- |
@@ -148,7 +166,7 @@ The composed structural run [45262866348](https://github.com/gustavomhss/Orchest
 | Planner / Procurement | [45225004108](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45225004108) | 6 | PASS |
 | Memory consultation | [45227929041](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45227929041) | 2 | PASS |
 
-These runs establish 94 distinct passed browser cases and 64 reviewed original images. Planner / Procurement includes the complete original six-case cohort, including CAP23 rename, Back, fresh read, copy/comparison and Portuguese. Memory consultation has been repeated on the composed producer source; its four current images replace the earlier four. It qualifies the original CSS and local cancellation behavior. The complete original five-case Memory spec remains pending. Failed and diagnostic attempts stay separate in the ledger.
+Before dev reconciliation, these runs established 94 distinct passed browser cases and 64 reviewed original images. Changed UI paths now require qualification on the updated base. Planner / Procurement includes the complete original six-case cohort, including CAP23 rename, Back, fresh read, copy/comparison and Portuguese. Memory consultation has been repeated on the composed producer source; its four current images replace the earlier four. It qualifies the original CSS and local cancellation behavior. The complete original five-case Memory spec remains pending. Failed and diagnostic attempts stay separate in the ledger.
 
 The [structural gate 45231648647](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231648647) passed all ten checks on source `0a06f132c53e1a9374c26ab60fb5cd3808395cfc`: app-shell/CLI/Sucafina and E2E types, 78 guardrails against the exact pinned base, generation and byte parity of seven palette outputs, and 265 nested regressions (13 comparison/layout, 103 browser-command/Teams, 145 page/domain/asset and four installed-context/Procurement cases). Strict Omni observed ten declared wrapper tests, twelve spawns and zero delegated executions, with a passing positive control. The subsequent [composed gate 45236453824](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45236453824), source `42abce1949cc1a533f62baab6597896d359f3129`, also passed all ten checks and 265 nested regressions, including the final readonly-array test correction. The guard evaluated 78 rules over 56 snapshot paths, with no findings, errors or approved exceptions; palette parity remained exact. Later fixture-intent, observer-boundary, authentication and native-owner changes remain scheduled for the final structural gate.
 
@@ -156,7 +174,7 @@ The first producer gate passed 11 of 12 internal tests. Its original ancestry fa
 
 This is an intermediate evidence checkpoint, not a merge receipt.
 
-The carried Teams/shared-visual, Agents, MCP and Documents cohorts retain the exact direct UI, theme and spec paths used in their qualified runs. The manifest records the source-to-composition path comparisons. Shared host and producer changes are separately covered by the composed structural, producer and affected installed-browser suites; unchanged direct paths alone are not represented as a complete dependency proof.
+Before dev advanced, the carried cohorts retained the recorded direct UI, theme and spec paths. Reconciliation changes that boundary: new-base results and original images must replace affected qualifications. Earlier path comparisons remain historical evidence, not a current dependency proof.
 
 The retained visual evidence uses default native skins, original source values and the production bundle. Component HTTP fixtures remain distinct from genuine isolated installation journeys. These runs do not establish live Microsoft account, OAuth or external model behavior. CSS viewport reflow is not browser zoom, and reviewer inspection is not owner visual acceptance.
 
