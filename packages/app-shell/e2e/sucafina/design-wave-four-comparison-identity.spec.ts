@@ -108,7 +108,7 @@ waveFourTest("native Planner comparison · fixed labels cover scrolled source va
           expect(cover.opacity).toBe("1")
           expect(cover.left).toBeGreaterThanOrEqual(scrollerBox.x - 1)
         }
-        await expect(table.locator("tbody")).toHaveText(sourceText)
+        await expect(table.locator("tbody")).toHaveText(sourceText, { useInnerText: true })
         measurements.push({ colorScheme, kind, endpoint, covers })
         await capture(page, info, "CAP23-fixed-" + kind + "-" + colorScheme + "-320-" + endpoint + "-test-data")
       }
