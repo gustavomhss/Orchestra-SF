@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Resolve original C17, Portfolio Preview and import-reference failures and observe the BI06 Portuguese failure without changing oracles, deadlines or authority guards. C3 has five failed campaigns and one passed Reviews campaign; no global qualification, acceptance promotion or merge claim."
   },
-  "updatedAt": "2026-11-23T17:18:27Z",
+  "updatedAt": "2026-11-23T17:28:52Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3371,6 +3371,27 @@
       "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false,
       "promoteDiagnosticCode": false
+    },
+    {
+      "recordedAt": "2026-11-23T17:28:52Z",
+      "status": "ISOLATED_PROFILES_COMPLETED_AND_BI_ABORT_DIAGNOSTIC_PREPARED",
+      "profileRuns": [
+        {
+          "run": 45224152680,
+          "result": "failure"
+        },
+        {
+          "run": 45226061143,
+          "result": "failure"
+        },
+        {
+          "run": 45226064829,
+          "result": "success"
+        }
+      ],
+      "diagnosticCommit": "ae2e83b602f2c40e2ba43c45ec44d3bd6b8afc27",
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
     }
   ],
   "sourceCorrections": [
@@ -6277,7 +6298,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T16:52:07Z",
+    "observedAt": "2026-11-23T17:28:52Z",
     "qualification": false,
     "experiments": [
       {
@@ -6488,17 +6509,59 @@
         "snapshotTree": "271055bc7f3930f505c9a5caa6b23102e29b7e18",
         "branch": "ci-run-linux-sf613-profile",
         "testJob": 137866026401,
-        "status": "PENDING",
+        "status": "FAILED",
         "lastParentObservation": {
-          "observedAt": "2026-11-23T17:17:46Z",
-          "status": "in_progress",
-          "testStep": "Run tests"
+          "observedAt": "2026-11-23T17:28:52Z",
+          "status": "completed",
+          "conclusion": "failure"
         },
         "overlayCount": 5,
         "overlaySummary": "Original Analytics .ci-run plus phase/time log instrumentation in product/portfolio/port.ts and analysis.ts, and diagnostic-prefix forwarding in two original fixtures.",
         "scope": "Both original Analytics tests with original assertions and deadlines; instrumentation-only measurement to identify the Preview stage consuming 60 seconds.",
         "qualification": false,
-        "promoteDiagnosticCode": false
+        "promoteDiagnosticCode": false,
+        "result": {
+          "jobs": [
+            {
+              "id": 137866026401,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:19:37Z"
+            },
+            {
+              "id": 137874055236,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:19:47Z"
+            }
+          ],
+          "browserTests": {
+            "passed": 0,
+            "failed": 2
+          },
+          "phaseProfile": {
+            "attribution": "Phase timings reported by /root from original SF_PORTFOLIO phase diagnostics; job status/times confirmed directly by here_github_activity.",
+            "requestAt": "2026-11-23T17:16:12.304Z",
+            "portStartAt": "2026-11-23T17:16:12.757Z",
+            "candidateSeconds": 0.255,
+            "evaluationPreAnalysisSeconds": 1.17,
+            "analysisSelectSeconds": 49.133,
+            "scenarioSeconds": 0.12,
+            "proofSeconds": 0.122,
+            "compareSeconds": 7.909,
+            "persistStartAt": "2026-11-23T17:17:11.487Z",
+            "originalPreviewDeadlineMs": 60000,
+            "persistFinishedBeforeWaiterDeadline": false,
+            "interpretation": "Original 60s waiter elapsed before persistence completed; analysis.select dominated the observed stages."
+          },
+          "secondFailure": {
+            "kind": "native-ready-provider-resolving",
+            "file": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+            "originalLine": 78,
+            "distinctFromA8PortugueseBiAbort": true
+          },
+          "qualification": false
+        }
       },
       {
         "name": "ISOLATED_C17_COST_PROFILE_NORMAL",
@@ -6515,11 +6578,43 @@
         "originalTestDeadlineMs": 120000,
         "assertionsAndDeadlinesUnchanged": true,
         "rootStaticReview": "ACK reported by /root",
-        "evidenceAttribution": "Dispatch identifiers and scope reported by /root; runtime result pending.",
+        "evidenceAttribution": "Run/job completion verified directly by here_github_activity. Cost counters and phase measurements reported by /root from SF_C17_COST_PROFILE logs.",
         "reportedAt": "2026-11-23T17:17:46Z",
-        "status": "PENDING",
+        "status": "FAILED",
         "qualification": false,
-        "promoteDiagnosticCode": false
+        "promoteDiagnosticCode": false,
+        "result": {
+          "jobs": [
+            {
+              "id": 137872747859,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:21:11Z"
+            },
+            {
+              "id": 137875071056,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:21:22Z"
+            }
+          ],
+          "controlGroup": {
+            "passed": 47,
+            "failed": 0
+          },
+          "wrapperScope": "Three original selected focal wrappers",
+          "C17": {
+            "passed": false,
+            "outerPhaseMs": 103559,
+            "businessResultsReadForCalculationCalls": 1928,
+            "digestCallsReportedApproximate": 2269000,
+            "digestElapsedMs": 24703,
+            "originalCooperativeDeadlineMs": 105000,
+            "originalTestDeadlineMs": 120000
+          },
+          "counterInterpretation": "1928 is business.results.readForCalculation calls, not SQL queries or Planner prepares. Digest count supplied as rounded 2.269 million.",
+          "qualification": false
+        }
       },
       {
         "name": "ISOLATED_C17_COST_PROFILE_RELEASE",
@@ -6540,11 +6635,43 @@
           "reportedExactPathCount": 11,
           "explicitDiagnosticQualificationFalse": true
         },
-        "evidenceAttribution": "Dispatch identifiers and scope reported by /root; runtime result pending.",
+        "evidenceAttribution": "Run/job completion verified directly by here_github_activity. C17 timings and controls reported by /root from SF_C17_COST_PROFILE logs.",
         "reportedAt": "2026-11-23T17:17:46Z",
-        "status": "PENDING",
+        "status": "PASSED",
         "qualification": false,
-        "promoteDiagnosticCode": false
+        "promoteDiagnosticCode": false,
+        "result": {
+          "jobs": [
+            {
+              "id": 137872761921,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:22:03Z"
+            },
+            {
+              "id": 137875631273,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:22:14Z"
+            }
+          ],
+          "controlGroup": {
+            "passed": 11,
+            "failed": 0
+          },
+          "wrapperScope": "Three original selected focal wrappers",
+          "C17": {
+            "passed": true,
+            "observedTestDurationMs": 88215.7,
+            "outerPhaseMs": 62980,
+            "businessResultsReadForCalculationCalls": 1952,
+            "ancestryPhaseMs": 23987,
+            "originalCooperativeDeadlineMs": 105000,
+            "originalTestDeadlineMs": 120000
+          },
+          "counterInterpretation": "1952 is business.results.readForCalculation calls, not SQL queries or Planner prepares.",
+          "qualification": false
+        }
       }
     ]
   },
@@ -6899,5 +7026,96 @@
     "mergeReceiptRule": "A future GitHub-generated merge SHA cannot truthfully be prewritten into the pre-merge PR. Persist the55/70 qualified-pending-merge documentation first, then append actual merge metadata and70/70 only after API confirmation.",
     "finalDocumentationVerification": "Keep product/runtime equivalence explicit after documentation-only updates and run any required original documentation guards through the authorized Linux test-ci path; no workflow/check disabling.",
     "modificationsAppliedToTheseFiveFiles": false
+  },
+  "biAbortDiagnosis": {
+    "observedAt": "2026-11-23T17:28:52Z",
+    "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+    "sourceTree": "3f04bc2f32be61ea4596b2d8c008c3f944e5841b",
+    "campaign": "A8",
+    "run": 45222244398,
+    "job": 137859301867,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45222244398/job/137859301867",
+    "status": "CAUSE_NOT_ESTABLISHED_DIAGNOSTIC_OVERLAY_PREPARED",
+    "qualification": false,
+    "evidence": {
+      "originalPortugueseBi06LoadingFailedAt": "2026-11-23T17:09:44.2155277Z",
+      "originalError": "net::ERR_ABORTED",
+      "canceled": true,
+      "playwrightRequestFailedAt": "2026-11-23T17:09:44.2275891Z",
+      "teardownPhaseAtRequestFailed": "detaching",
+      "localizedPageClosedAt": "2026-11-23T17:09:44.4947905Z",
+      "requestStartNotLogged": true,
+      "initiatingUiEventNotLogged": true,
+      "failedScreenshot": "The original English BI11 empty page; not the Portuguese page already closed by withPortuguese finally.",
+      "sameNativeRequestFalseInterpretation": "Existing helper derives this from observed[] length; absent completed body means false and null HTTP status. It does not establish a second request or prove headers never arrived."
+    },
+    "sourceInspection": {
+      "paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+        "packages/client/src/sucafina/transport.ts",
+        "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts"
+      ],
+      "findings": [
+        "The Portuguese sequence has no subsequent navigation or input between original BI06 data click and completion of the original native body oracle.",
+        "Catalog cancellation locations are cleanup, route/fence changes, selector input and preparation of another explicit read. No periodic reload or transport deadline was identified in this path.",
+        "The JSON stream reader can independently cancel if actual bytes exceed the original 32 MiB limit; occurrence is not evidenced by A8 logs.",
+        "CDP Network.loadingFailed precedes helper detach and localized close. Their later occurrence does not identify the initiating event."
+      ]
+    },
+    "historicalReceipt": {
+      "path": "docs/qa/sucafina/design/wave-five/recovery-receipts/c14-bi-buffered.json",
+      "ledgerCommit": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "run": 45118434820,
+      "snapshot": "435073b641454eb86e1bb2627b6c26c1a5d467cd",
+      "result": "BI EN and PT both passed; only EN abort-next-source trace flushed after completed data acquisition. No Portuguese abort reproduced; no product cancellation fix justified."
+    },
+    "overlay": {
+      "branch": "sf613-bi-abort",
+      "commit": "ae2e83b602f2c40e2ba43c45ec44d3bd6b8afc27",
+      "tree": "a169622e58a87cafc80545aa8b08630ca37206b8",
+      "parent": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/ae2e83b602f2c40e2ba43c45ec44d3bd6b8afc27",
+      "files": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c47d42c26b971163d18e32be1d465a4fd61f69f5"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "699f31ca952911c981bee61ce9cc82321144d4ec"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "bcb8cb2652d49add194c9208324d88d7836d70ff"
+        }
+      ],
+      "prefix": "SF_BI_ABORT_PROFILE",
+      "schema": "sf-bi-abort-v1",
+      "qualification": false,
+      "dispatched": false,
+      "promotedToProduct": false,
+      "semantics": "Bounded primitive metadata immediately before the existing UI aborts and JSON size-limit reader.cancel. Preserve all three original activeController.abort calls, guards, native signal reasons, requests, body oracle, 32 MiB limit, assertions, deadlines and retries. untrack contains diagnostic context/store reads to avoid adding reactive dependencies. Existing observePage forwards permitted scalar fields on both English and Portuguese pages.",
+      "forwardingBounds": {
+        "maximumLinesPerPage": 128,
+        "maximumAsciiLineBytesIncludingNewline": 1024
+      },
+      "staticVerification": {
+        "realRefConfirmed": true,
+        "comparisonChangedFiles": 3,
+        "unlabeledAbortCallers": 0,
+        "originalUiAbortSites": 3,
+        "resultUiAbortSites": 3,
+        "testsNotRun": true
+      }
+    }
   }
 }
