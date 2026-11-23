@@ -83,9 +83,12 @@ export function withNativeInstallation(input: {
     }))
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      if (line.startsWith("SF_PORTFOLIO_JSC ")) {
+        try { console.info(line) } catch { /* Diagnostic forwarding cannot alter readiness. */ }
+      }
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
