@@ -1010,6 +1010,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    contextObservation: input.contextObservation,
     // Page reads keep the installation's original observations, including asset
     // readiness, without repeating unrelated native-operation health probes.
     ...(input.operational ? { pageOperational: createSfPageObservations(input.mount, input.operational) } : {}),
