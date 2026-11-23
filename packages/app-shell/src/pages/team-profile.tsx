@@ -1,4 +1,4 @@
-import { createMemo, createSignal, createUniqueId, For, lazy, onCleanup, onMount, Show, Suspense } from "solid-js"
+import { createEffect, createMemo, createSignal, createUniqueId, For, lazy, onCleanup, onMount, Show, Suspense } from "solid-js"
 import { createStore } from "solid-js/store"
 import { syncThemeBackground } from "@orchestra/ui/theme/context"
 import "../orchestra/chapters/kit.css"
@@ -109,6 +109,15 @@ export function SfTeamWebApp() {
       : undefined
     return notice === local ? undefined : notice
   }
+  createEffect(() => {
+    const sessions = chatRuntime()?.sessions.state
+    // Only a recovered current stream resolves an interruption. A failed
+    // transcript read uses the same notice and must remain visible while its
+    // thread is unavailable; CONNECTING and other notices are unchanged.
+    if (chat.notice !== "sf.teams.chatUpdatesStopped" || sessions?.status !== "ready" ||
+        sessions.stream !== "open" || Object.values(sessions.threads).some((thread) => thread.status !== "ready")) return
+    setChat("notice", undefined)
+  })
   const administrationScope = (current: Extract<TeamWebState, { status: "authenticated" }>) =>
     JSON.stringify([current.binding, current.context.profile.principal])
   const teams = () => {
