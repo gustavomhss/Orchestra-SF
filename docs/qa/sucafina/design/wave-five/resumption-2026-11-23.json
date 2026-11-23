@@ -758,9 +758,819 @@
           "qualification": true,
           "scope": "This Reviews campaign on ac470824 only; full composition qualification and acceptance remain false.",
           "visualReview": {
-            "status": "PENDING",
-            "reportedJpegCount": 49,
-            "canonicalPngAndJsonArchiveInspected": false
+            "status": "COMPLETE_NO_BLOCKING_LAYOUT_FINDING_IN_CAPTURED_VIEWS",
+            "reviewedAt": "2026-11-23T16:49:07Z",
+            "reviewedBy": "here_github_activity",
+            "source": "ac4708241b7af3d742c13a5fb5d712ed7ae2557f",
+            "sourceTree": "d736dd1c4507467a26c9fc4fe6b59495211b8a76",
+            "snapshot": "98e6d5700e1b7b90f344d74644a8e3e64d3cc520",
+            "run": 45215769910,
+            "job": 137836359021,
+            "logSha256": "5123939238d8976c801fc5033d2866eca5c171d41a6eb84290a1e96ab63764cb",
+            "acquisition": "Original SF_DESIGN_PREVIEW JSON chunks reconstructed in emission order; exact JPEG bytes rendered with functions.image. No image resampling, editing or generated replacement.",
+            "emittedJpegs": 49,
+            "completeJpegs": 49,
+            "visuallyReviewedJpegs": 49,
+            "uniqueJpegBytes": 42,
+            "incompleteJpegs": 0,
+            "skippedJpegs": 0,
+            "dimensions": [
+              {
+                "width": 1440,
+                "height": 1100,
+                "count": 37
+              },
+              {
+                "width": 320,
+                "height": 800,
+                "count": 2
+              },
+              {
+                "width": 390,
+                "height": 844,
+                "count": 10
+              }
+            ],
+            "coverage": {
+              "surfaces": [
+                "UI47",
+                "UI48",
+                "UI49",
+                "UI50",
+                "UI54"
+              ],
+              "english": [
+                "Dark desktop",
+                "Light desktop",
+                "UI54 dark 320px",
+                "UI47/UI48/UI49/UI50 dark 390px"
+              ],
+              "portuguese": [
+                "Dark desktop UI54 and UI47/UI48/UI49/UI50"
+              ],
+              "notCovered": [
+                "Portuguese narrow viewport",
+                "Light narrow viewport",
+                "Actual browser zoom",
+                "All offscreen rows and columns"
+              ]
+            },
+            "exactDuplicatePairsZeroBased": [
+              [
+                7,
+                11
+              ],
+              [
+                13,
+                14
+              ],
+              [
+                16,
+                17
+              ],
+              [
+                24,
+                25
+              ],
+              [
+                26,
+                27
+              ],
+              [
+                43,
+                44
+              ],
+              [
+                45,
+                46
+              ]
+            ],
+            "observations": [
+              {
+                "indices": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "findings": [
+                  "UI54 desktop dark/light shows readable proposal, source evidence, unavailable apply review and no receipt; unavailable initial source is explicit.",
+                  "UI54 320px reflows proposal into one column with long reference wrapping; lower fields fall below viewport and require vertical scroll.",
+                  "No overlap, horizontal spill or clipped title observed in these four captures."
+                ]
+              },
+              {
+                "indices": [
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "findings": [
+                  "UI54 missing source remains clear at 320px. Portuguese main headings, labels, review-unavailable notice and date are localized; seeded free text, reference and high priority token remain original source values.",
+                  "The long Portuguese UI54 sidebar item is visibly truncated within the fixed shell width, while the main heading is complete; cosmetic shell limitation, not observed loss of the proposal body.",
+                  "UI47 initial and selected agenda states distinguish available sections and ordered agenda; review enablement and disabled move controls are visually coherent for one section."
+                ]
+              },
+              {
+                "indices": [
+                  8,
+                  9,
+                  10,
+                  11
+                ],
+                "findings": [
+                  "UI47 preservation preview preserves explicit source selection, authorized record count and period; confirm/revise actions are fully visible and stack at 390px.",
+                  "Producer-confirmed state shows a distinct preserved reference/version and open action. No visual evidence of a fabricated receipt in these captures.",
+                  "Repeated desktop agenda state is consistent with the earlier selected section view."
+                ]
+              },
+              {
+                "indices": [
+                  12,
+                  13,
+                  14,
+                  15
+                ],
+                "findings": [
+                  "UI48 list-unavailable state explicitly names missing authorized list capability and provides reference entry.",
+                  "UI48 preserved detail shows original reference/version/time and recorded values with explicit unknown currency and evidence labels.",
+                  "Indices 13/14 are byte-identical; the values-named capture adds no new visible pixels.",
+                  "The original stale-update capture is scrolled to lower values and a clear source-changed/re-read warning; no overlap at the warning or source link."
+                ]
+              },
+              {
+                "indices": [
+                  16,
+                  17,
+                  18,
+                  19
+                ],
+                "findings": [
+                  "UI48 presentation separates preserved source content from check-for-updates; expanded source lineage wraps within the card.",
+                  "Indices 16/17 are byte-identical. Lower presentation values need separate scroll coverage; the duplicate does not supply it.",
+                  "UI49 side-by-side references, versions and timestamps remain distinct, with provenance change explicitly separated from value change; lower comparison continues below the viewport."
+                ]
+              },
+              {
+                "indices": [
+                  20,
+                  21,
+                  22,
+                  23
+                ],
+                "findings": [
+                  "UI50 unavailable list explains the required original review reference; report generation remains disabled without source.",
+                  "UI50 report selection exposes owner-re-read coverage, selected count, Office format and explicit source period/records; download area is below viewport.",
+                  "UI47 and UI48 light theme keep readable content and distinct panels. No unintended overlap observed; disabled controls are intentionally subdued."
+                ]
+              },
+              {
+                "indices": [
+                  24,
+                  25,
+                  26,
+                  27
+                ],
+                "findings": [
+                  "UI48 light detail/presentation retain the same hierarchy and evidence fields as dark, with readable text and no overlapping panels.",
+                  "24/25 and 26/27 are exact byte duplicates and add no extra lower-value coverage."
+                ]
+              },
+              {
+                "indices": [
+                  28,
+                  29,
+                  30,
+                  31
+                ],
+                "findings": [
+                  "UI49 comparison and UI50 report states remain coherent in light theme; layout tracks the corresponding dark states.",
+                  "UI48 scrolled discussion explicitly retains the unsent draft, an empty recipient, disabled submission and no confirmed answer; no visual success is fabricated.",
+                  "No content collision observed in these captures."
+                ]
+              },
+              {
+                "indices": [
+                  32,
+                  33,
+                  34,
+                  35
+                ],
+                "findings": [
+                  "UI50 explicitly changes the selected Office format to PowerPoint while retaining the single authorized budget section; screenshot alone does not prove an exported file.",
+                  "At 390px UI47 controls stack within the panel; UI48 reference/version/date and recorded values reflow to one column with wrapped long identifiers.",
+                  "The UI48 values mobile capture scrolls lower than the detail capture, but only the first recorded value is visible in that frame."
+                ]
+              },
+              {
+                "indices": [
+                  36,
+                  37,
+                  38,
+                  39
+                ],
+                "findings": [
+                  "UI48 mobile presentation uses stacked previous/next/update controls and vertically scrollable values without overlapping source text.",
+                  "UI49 mobile comparison inputs stack; the comparison table is wider than its internal viewport. Index 39 visibly shows the left columns with right columns clipped by the table viewport, requiring horizontal scrolling.",
+                  "Do not describe the comparison table as showing every column simultaneously at 390px; the next dedicated current-column capture must provide complementary coverage."
+                ]
+              },
+              {
+                "indices": [
+                  40,
+                  41,
+                  42,
+                  43
+                ],
+                "findings": [
+                  "UI49 dedicated right-column capture changes the horizontal position of the first comparison table. Other tables remain independently scrollable; these frames do not show every current-value column.",
+                  "UI50 390px uses stacked producer coverage, format and section selection with no horizontal content spill observed.",
+                  "Portuguese UI47/UI48 main labels, actions, dates and evidence statuses are localized and wrap cleanly. Original source tokens remain visible, including budget, seeded English data and Moeda: unspecified."
+                ]
+              },
+              {
+                "indices": [
+                  44,
+                  45,
+                  46,
+                  47
+                ],
+                "findings": [
+                  "Portuguese UI48 presentation and UI49 comparison translate actions, explanatory labels, evidence statuses and dates while preserving reference/data identities.",
+                  "43/44 and 45/46 are byte-identical, so they do not expand visible desktop value coverage.",
+                  "UI49 Portuguese main comparison fits desktop without text overlap; long references wrap in their source cards."
+                ]
+              },
+              {
+                "indices": [
+                  48
+                ],
+                "findings": [
+                  "UI50 Portuguese report selection localizes title, actions, producer coverage, selected sections, source counts, preserved period and Office format; the budget identifier remains original producer data.",
+                  "No actual generated file, export success receipt or delivered report is shown by this capture."
+                ]
+              }
+            ],
+            "scopedConclusion": "No blocking overlap or broken reflow observed in the reviewed areas. This is a bounded visual review of the original successful Reviews campaign, not global qualification of the current candidate or acceptance promotion.",
+            "evidenceLimits": [
+              "Seven capture pairs are byte-identical; 49 emitted JPEGs represent 42 unique images.",
+              "The values-named desktop captures often duplicate the detail/presentation viewport and do not show all offscreen values.",
+              "At 390px, UI49 comparison tables scroll horizontally inside their own regions. The dedicated current-column capture scrolls only the first table, as the original test specifies; it does not expose every current-value column.",
+              "The long Portuguese UI54 sidebar label is truncated in the fixed shell; the main heading and proposal body remain complete.",
+              "English producer values/tokens such as budget, high and unspecified remain visible among translated labels; the JPEG review alone does not classify these source tokens as localization defects.",
+              "The original test records no proposal application and no current-choice preparation/application receipt.",
+              "Only one original dashboard section identity is supplied; multi-section agenda ordering is not exercised.",
+              "The original test explicitly generates/publishes no report and sends no collaboration or notification. DOCX/PPTX selection screenshots do not prove file production.",
+              "Canonical PNGs and JSON attachments inside the Actions archive were not directly inspected; the available GitHub MCP is UTF-8 only and does not return the binary ZIP.",
+              "Responsive viewport captures are not actual browser zoom.",
+              "Review performed by here_github_activity; no claim that parent root or the user personally inspected these pixels."
+            ],
+            "canonicalPngAndJsonArchiveInspected": false,
+            "qualificationScope": "Reviews campaign on ac470824 only",
+            "fullCompositionQualification": false,
+            "originalSpec": "https://github.com/gustavomhss/Orchestra-SF/blob/ac4708241b7af3d742c13a5fb5d712ed7ae2557f/packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "imageManifest": [
+              {
+                "index": 0,
+                "name": "UI54-dark-desktop-initial-source-test-data",
+                "parts": 5,
+                "bytes": 73816,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "b9184e167ce692edab55da827872dcd0919d4916aa4a3c43908d7b90d3d850cd",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 1,
+                "name": "UI54-dark-desktop-original-draft-test-data",
+                "parts": 7,
+                "bytes": 109923,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "43544cf7f9bab81fe9b1995950b379fffe6081dfa38d75dcdf8e678763636c5d",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 2,
+                "name": "UI54-light-desktop-original-draft-test-data",
+                "parts": 7,
+                "bytes": 114259,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "9843420582f253c18613a9e4ab0bdcb2a4172dcb9d2588f4f3c648b207a9f9e4",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 3,
+                "name": "UI54-dark-320-original-draft-test-data",
+                "parts": 2,
+                "bytes": 31960,
+                "width": 320,
+                "height": 800,
+                "sha256": "f5a3ccdd574967367e31be48977adb382321a48e7dc3097bf53d8406ba177df6",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 4,
+                "name": "UI54-dark-320-missing-source-test-data",
+                "parts": 2,
+                "bytes": 19412,
+                "width": 320,
+                "height": 800,
+                "sha256": "f3d725b5ed04bad8dea4840e9af7f1c3e91da46d59cf51b68ec813f3c327d95d",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 5,
+                "name": "UI54-pt-BR-dark-desktop-original-draft-test-data",
+                "parts": 7,
+                "bytes": 116687,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "04e300900ede201f45a9d9e79ba2d751f94610332c33de35d810cc35a7f73156",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 6,
+                "name": "UI47-dark-desktop-initial-selection-test-data",
+                "parts": 5,
+                "bytes": 87938,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "4e03e075dcb10e6be46b78cf199c0a0242a5614bd573cde4b8cfdc04557a6692",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 7,
+                "name": "UI47-dark-desktop-ordered-sections-test-data",
+                "parts": 6,
+                "bytes": 98660,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "8fbe17ad6658bcfbba951b89958ce5e115b4138a26e4f7612a28f0b0d0a63bd2",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 8,
+                "name": "UI47-dark-desktop-preservation-review-test-data",
+                "parts": 5,
+                "bytes": 82930,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "e8e7cbe0088ea6861837dc0469ee70189a51d83faeb631c4106cd6871f3c734e",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 9,
+                "name": "UI47-dark-390-preservation-review-test-data",
+                "parts": 2,
+                "bytes": 31918,
+                "width": 390,
+                "height": 844,
+                "sha256": "2536977cbc49e47be41242fb1f849837a57d66e2e0e065e2e59075aaf556acc6",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 10,
+                "name": "UI47-dark-desktop-producer-confirmed-test-data",
+                "parts": 5,
+                "bytes": 76817,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "763a5a4fe533f5834a0add7e5d1f77b592e67f49882229bd1a35e217444d2dce",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 11,
+                "name": "UI47-dark-desktop-sections-test-data",
+                "parts": 6,
+                "bytes": 98660,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "8fbe17ad6658bcfbba951b89958ce5e115b4138a26e4f7612a28f0b0d0a63bd2",
+                "viewed": true,
+                "duplicateOf": 7
+              },
+              {
+                "index": 12,
+                "name": "UI48-list-unavailable-dark-desktop-test-data",
+                "parts": 5,
+                "bytes": 80671,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "fea2e833a240cc8dd1dc2a2eb0cf35b8873f977205c23782101c4999447653cb",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 13,
+                "name": "UI48-detail-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 116209,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "1f880e635735726ee382b0f4c67fa070c996be58496ade647090452b50d336c9",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 14,
+                "name": "UI48-detail-values-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 116209,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "1f880e635735726ee382b0f4c67fa070c996be58496ade647090452b50d336c9",
+                "viewed": true,
+                "duplicateOf": 13
+              },
+              {
+                "index": 15,
+                "name": "UI48-dark-desktop-original-stale-update-test-data",
+                "parts": 7,
+                "bytes": 111267,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "2162e56a24d3de90b2c0a8aebfca8a5a80cac233cc1945965ba042de5b7cae7f",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 16,
+                "name": "UI48-present-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 118972,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "fec3745f0a4516cfa323c5a67e15a97a1a1795c44d413e041fa73a3d43dd1346",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 17,
+                "name": "UI48-present-values-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 118972,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "fec3745f0a4516cfa323c5a67e15a97a1a1795c44d413e041fa73a3d43dd1346",
+                "viewed": true,
+                "duplicateOf": 16
+              },
+              {
+                "index": 18,
+                "name": "UI48-dark-desktop-expanded-original-source-test-data",
+                "parts": 7,
+                "bytes": 122081,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "8428705eae27f34d45cbcc43fc1a940eddc44cb2cb101fdc17a6c02c4c60b069",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 19,
+                "name": "UI49-compare-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 123140,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "0f45f23a451d01f56684c0a91477876e2359068f67491ae9d546b650a56d35bb",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 20,
+                "name": "UI50-list-unavailable-dark-desktop-test-data",
+                "parts": 5,
+                "bytes": 80577,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "c60359d829f88750e6e5f7cde871eb3576c4ec39c0cec31242fe69ffa01f160e",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 21,
+                "name": "UI50-selection-dark-desktop-test-data",
+                "parts": 6,
+                "bytes": 102869,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "1dfa0053d4d8a2568f6ef3e1e711915aadc5c97005ce2f7782b69f9684f506e9",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 22,
+                "name": "UI47-light-desktop-sections-test-data",
+                "parts": 6,
+                "bytes": 103019,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "d35eea8f9ebb34f42a254aefef552fe7eff1b2e47cb3400b0b03619c26cb9bcb",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 23,
+                "name": "UI48-list-unavailable-light-desktop-test-data",
+                "parts": 5,
+                "bytes": 86515,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "88c70043ebce04d9b0ce482a25c11445f024573d8d338f2f18d789e77bda75d8",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 24,
+                "name": "UI48-detail-light-desktop-test-data",
+                "parts": 7,
+                "bytes": 120422,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "9ca2d64e9d5a76ef567bbc14fbd2bc1b25d7098992a0fd1c6afb229c22ed102e",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 25,
+                "name": "UI48-detail-values-light-desktop-test-data",
+                "parts": 7,
+                "bytes": 120422,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "9ca2d64e9d5a76ef567bbc14fbd2bc1b25d7098992a0fd1c6afb229c22ed102e",
+                "viewed": true,
+                "duplicateOf": 24
+              },
+              {
+                "index": 26,
+                "name": "UI48-present-light-desktop-test-data",
+                "parts": 7,
+                "bytes": 121913,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "29d60a5c20d431c1a4665c2fb34ffa2c9e12d9a530728dc6cad89ec8b666d0f9",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 27,
+                "name": "UI48-present-values-light-desktop-test-data",
+                "parts": 7,
+                "bytes": 121913,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "29d60a5c20d431c1a4665c2fb34ffa2c9e12d9a530728dc6cad89ec8b666d0f9",
+                "viewed": true,
+                "duplicateOf": 26
+              },
+              {
+                "index": 28,
+                "name": "UI49-compare-light-desktop-test-data",
+                "parts": 8,
+                "bytes": 128334,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "3dafe5b932898219f12e3fc77d7521d6c0be5c9ac9d255bfc9d328169e5a5fa4",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 29,
+                "name": "UI50-list-unavailable-light-desktop-test-data",
+                "parts": 5,
+                "bytes": 86515,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "8ef775aec1b26d253bdd95223dca90504dc1c2e6468b3639baf94e576ffa47cb",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 30,
+                "name": "UI50-selection-light-desktop-test-data",
+                "parts": 7,
+                "bytes": 108408,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "deda1b482f83b107a9b9c192330e18eb0dfb54f55df4790d4fa9d8e449681dee",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 31,
+                "name": "UI48-dark-desktop-unsent-draft-retained-test-data",
+                "parts": 6,
+                "bytes": 97760,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "f77b804c07c8bcb2e7c2f1854df8b75f411ccdf1cd13dd39a6b50137782c6549",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 32,
+                "name": "UI50-dark-desktop-one-section-pptx-test-data",
+                "parts": 6,
+                "bytes": 102538,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "e7039f2a217877786c23106e2a5612a58e0e21993a16bc69a3f5a883ab600a08",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 33,
+                "name": "UI47-dark-390-sections-test-data",
+                "parts": 2,
+                "bytes": 34055,
+                "width": 390,
+                "height": 844,
+                "sha256": "345dc5114db6f529be403c762be1ed5fb63f341ed58bba336268864143ecae2c",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 34,
+                "name": "UI48-detail-dark-390-test-data",
+                "parts": 2,
+                "bytes": 35334,
+                "width": 390,
+                "height": 844,
+                "sha256": "55bf7a1c8cfa2f50700f41fb6cbd31bc76066051cc03f6b0b915ac872010760c",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 35,
+                "name": "UI48-detail-values-dark-390-test-data",
+                "parts": 2,
+                "bytes": 35134,
+                "width": 390,
+                "height": 844,
+                "sha256": "f03d6034765966f60e89c55c1141980a0b4464c7742bf233237a3a7eb606bc11",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 36,
+                "name": "UI48-present-dark-390-test-data",
+                "parts": 2,
+                "bytes": 33094,
+                "width": 390,
+                "height": 844,
+                "sha256": "b7a1174f9245cc9b0ca4e21f61b4c0ffcc736e5380d2d826b3379edae0543d80",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 37,
+                "name": "UI48-present-values-dark-390-test-data",
+                "parts": 2,
+                "bytes": 32196,
+                "width": 390,
+                "height": 844,
+                "sha256": "a48d4a8f2fd536c2c046bf271489897783fafbe94e117491d2f386ad682c3aee",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 38,
+                "name": "UI49-compare-dark-390-test-data",
+                "parts": 3,
+                "bytes": 40264,
+                "width": 390,
+                "height": 844,
+                "sha256": "dae2bfd4b0c851d97e08d82820446c175aea727417721d473dde22653ace0a20",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 39,
+                "name": "UI49-dark-390-original-comparison-table-test-data",
+                "parts": 2,
+                "bytes": 33501,
+                "width": 390,
+                "height": 844,
+                "sha256": "b043dfac51df065f8eb345773d12f89c51b0c9d3786384d970e918f0ed2ba0c2",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 40,
+                "name": "UI49-dark-390-current-source-column-test-data",
+                "parts": 2,
+                "bytes": 30600,
+                "width": 390,
+                "height": 844,
+                "sha256": "55a5e4f3e5b2028e3a69c6dd0fb67f74c6c14b9bd8d0d7bf627c6562e4e75fef",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 41,
+                "name": "UI50-selection-dark-390-test-data",
+                "parts": 2,
+                "bytes": 31321,
+                "width": 390,
+                "height": 844,
+                "sha256": "8347fa1ccdfd3a3abcbbde18d6fdbbbf5773a70b9457991d5907dc80fb100ca8",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 42,
+                "name": "UI47-pt-BR-dark-desktop-test-data",
+                "parts": 6,
+                "bytes": 103065,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "b1c889aea98a14a706e2bd2ddcf154f183967b9acc1db84901ebf57294bc304a",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 43,
+                "name": "UI48-detail-pt-BR-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 124080,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "9540c05722d731cb7db91be93bf4e32bc9ba6de5859a2201934589d22a9c04c4",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 44,
+                "name": "UI48-detail-values-pt-BR-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 124080,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "9540c05722d731cb7db91be93bf4e32bc9ba6de5859a2201934589d22a9c04c4",
+                "viewed": true,
+                "duplicateOf": 43
+              },
+              {
+                "index": 45,
+                "name": "UI48-present-pt-BR-dark-desktop-test-data",
+                "parts": 8,
+                "bytes": 126164,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "45335b36c701f058240252e3f9b6228b2c20409a11d096c637af75d467581592",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 46,
+                "name": "UI48-present-values-pt-BR-dark-desktop-test-data",
+                "parts": 8,
+                "bytes": 126164,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "45335b36c701f058240252e3f9b6228b2c20409a11d096c637af75d467581592",
+                "viewed": true,
+                "duplicateOf": 45
+              },
+              {
+                "index": 47,
+                "name": "UI49-compare-pt-BR-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 125469,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "3e17bd21003897bb9ee047e137f5b77a881439ed4e815f37dc382a7adae2f1fa",
+                "viewed": true,
+                "duplicateOf": null
+              },
+              {
+                "index": 48,
+                "name": "UI50-selection-pt-BR-dark-desktop-test-data",
+                "parts": 7,
+                "bytes": 109266,
+                "width": 1440,
+                "height": 1100,
+                "sha256": "88ee550c1637226ca87d18cd4d53843ca8446049796581e68be51fa69470d643",
+                "viewed": true,
+                "duplicateOf": null
+              }
+            ]
           },
           "logSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45215769910/job/137836359021"
         }
@@ -775,7 +1585,7 @@
     "mergeCommit": null,
     "nextAction": "Integrate and review the separate producer performance correction and minimal Portuguese copy correction, then qualify the exact final composition through the original Linux test-ci campaigns. Preserve original deadlines, owner/cancellation guards and runtime admission. Retain all five original negative campaigns."
   },
-  "updatedAt": "2026-11-23T16:44:39Z",
+  "updatedAt": "2026-11-23T16:49:07Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -972,6 +1782,14 @@
       "recordedAt": "2026-11-23T16:44:39Z",
       "status": "CURRENT_CANDIDATE_UPDATED_FOCALS_PENDING",
       "candidate": "6e8f9a50bd96818e02a43e6c661aeb4de2f38c2c",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T16:49:07Z",
+      "status": "REVIEWS_R7_VISUAL_REVIEW_COMPLETE",
+      "run": 45215769910,
+      "jpegsReviewed": 49,
+      "uniqueJpegBytes": 42,
       "qualification": false
     }
   ],
