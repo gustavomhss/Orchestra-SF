@@ -3,6 +3,7 @@ import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
 import { waveFourTest, enter, ready, scheme, reflow, scrollPageTop, observePage } from "./design-support/wave-four"
 import { captureFinalSurface } from "./design-support/final-capture"
+import { captureFinalRoutineGate } from "./design-support/final-routines-gate"
 import { waveFourDecisionsData } from "./design-support/wave-four-decisions-data"
 
 waveFourTest.use({ designWave: "four-decisions" })
@@ -59,14 +60,14 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     if (await recipes.isEnabled()) {
       await recipes.click()
       await expect(surface.locator('[aria-busy="true"]')).toHaveCount(0)
-      await expect(surface.getByRole("button", { name: "Prepare admission", exact: true })).toBeDisabled()
+      await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
       limits.push("UI64: the original catalog returned no admissible selected recipe; no preparation or execution was submitted.")
     } else {
       limits.push("UI64: the original context does not currently admit catalog discovery.")
     }
     await captureFinalSurface(page, info, "UI64", "en-dark-desktop-authorized-case", { preview: true })
     await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI64", "en-light-desktop-authorized-case")
+    await captureFinalSurface(page, info, "UI64", "en-light-desktop-authorized-case", { preview: true })
     await page.setViewportSize({ width: 360, height: 900 })
     await reflow(page)
     await scrollPageTop(page)
@@ -92,6 +93,8 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await link.focus()
     await expect(link).toBeFocused()
     await captureFinalSurface(page, info, "UI65", "en-dark-desktop-no-run-return", { preview: true })
+    await scheme(page, "light")
+    await captureFinalSurface(page, info, "UI65", "en-light-desktop-no-run-return", { preview: true })
     await link.press("Enter")
     await ready(page, screens[0].en)
     await expect(page).toHaveURL((url) => url.pathname === screens[0].path &&
@@ -100,29 +103,24 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     expect(writes).toEqual([])
   })
 
-  await waveFourTest.step("UI66 exposes the actual schedule capabilities without a fabricated record", async () => {
-    await enter(page, owner, new URL(screens[2].path, installation.origin).href, screens[2].en)
-    await scheme(page, "dark")
-    const surface = page.locator('[data-sf-surface="UI66"]')
-    await expect(surface).toHaveAttribute("data-sf-wave", "six")
-    await expect(surface.getByRole("heading", { name: "Schedules", exact: true })).toBeVisible()
-    await captureFinalSurface(page, info, "UI66", "en-dark-desktop-installed-capabilities", { preview: true })
-    const create = page.getByRole("button", { name: "New recurrence", exact: true })
-    if (await create.count()) {
-      await create.click()
-      await expect(surface.getByRole("heading", { name: "Create schedule", exact: true })).toBeVisible()
-      await expect(surface.getByRole("button", { name: "Review proposed changes", exact: true })).toBeDisabled()
-      await captureFinalSurface(page, info, "UI66", "en-dark-desktop-empty-editor")
-      limits.push("UI66: the original create capability is visible, but no published recipe and condition are fabricated to confirm a schedule.")
-    } else {
-      limits.push("UI66: the original context has not admitted creation; no schedule list, edit, pause or occurrence success is claimed.")
+  await waveFourTest.step("UI66 preserves the original unavailable Schedule boundary", async () => {
+    const source = availability.find((entry) => entry.resource === "schedules")
+    expect(source?.state).toBe("unavailable")
+    expect(source?.operations.every((entry) => entry.state === "unavailable" && !entry.operational)).toBe(true)
+    const destination = new URL(screens[2].path, installation.origin)
+    const selection = new URL(page.url()).searchParams
+    for (const key of ["server", "project", "installation"]) {
+      const value = selection.get(key)
+      if (!value) throw new Error("The current owner selection is missing " + key)
+      destination.searchParams.set(key, value)
     }
+    await page.goto(destination.href)
+    await scheme(page, "dark")
+    await captureFinalRoutineGate(page, info, "en-dark-desktop")
     await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI66", "en-light-desktop-installed-capabilities")
     await page.setViewportSize({ width: 360, height: 900 })
-    await reflow(page)
-    await scrollPageTop(page)
-    await captureFinalSurface(page, info, "UI66", "en-light-360-installed-capabilities")
+    await captureFinalRoutineGate(page, info, "en-light-360")
+    limits.push("UI66: the real F01 gate refuses this route because no original native Schedule port is installed. These are gate captures; the leaf/editor and create/update/pause/occurrence flows are not qualified.")
     expect(writes).toEqual([])
   })
 
@@ -160,7 +158,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await detail.scrollIntoViewIfNeeded()
     await captureFinalSurface(page, info, "UI70", "en-dark-desktop-resident-case-detail", { preview: true })
     await scheme(page, "light")
-    await captureFinalSurface(page, info, "UI70", "en-light-desktop-resident-case-detail")
+    await captureFinalSurface(page, info, "UI70", "en-light-desktop-resident-case-detail", { preview: true })
     await page.setViewportSize({ width: 360, height: 900 })
     await reflow(page)
     await detail.scrollIntoViewIfNeeded()
@@ -182,6 +180,23 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     localized.setDefaultTimeout(15_000)
     const localizedDiagnostics = observePage(localized)
     for (const screen of screens) {
+      if (screen.id === "UI66") {
+        const destination = new URL(screen.path, installation.origin)
+        const selection = new URL(localized.url()).searchParams
+        for (const key of ["server", "project", "installation"]) {
+          const value = selection.get(key)
+          if (!value) throw new Error("The original localized owner selection is missing " + key)
+          destination.searchParams.set(key, value)
+        }
+        await localized.goto(destination.href)
+        await scheme(localized, "dark")
+        await captureFinalRoutineGate(localized, info, "pt-br-dark-360")
+        await localized.setViewportSize({ width: 1440, height: 1100 })
+        await scheme(localized, "light")
+        await captureFinalRoutineGate(localized, info, "pt-br-light-desktop")
+        await localized.setViewportSize({ width: 360, height: 900 })
+        continue
+      }
       await enter(localized, owner, new URL(screen.path, installation.origin).href, screen.br)
       await scheme(localized, "dark")
       await reflow(localized)
@@ -189,7 +204,7 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
       await localized.setViewportSize({ width: 1440, height: 1100 })
       await scheme(localized, "light")
       await reflow(localized)
-      await captureFinalSurface(localized, info, screen.id, "pt-br-light-desktop-installed-state")
+      await captureFinalSurface(localized, info, screen.id, "pt-br-light-desktop-installed-state", { preview: true })
       await localized.setViewportSize({ width: 360, height: 900 })
     }
     expect(localizedDiagnostics.pageErrors).toEqual([])
