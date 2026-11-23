@@ -465,6 +465,13 @@
   }
 }
 
+/* Phone-width tiles give full state labels and numeric values their own row. */
+@media (max-width: 479px) {
+  .home-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 html[data-color-scheme="light"] .orchestra-home-dashboard {
   color-scheme: light;
 }

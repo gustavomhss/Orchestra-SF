@@ -207,6 +207,7 @@ waveFourTest("native Planner wave four · CAP20 headcount and CAP21 shared alloc
     const entityNames = entities.locator("tbody .sf-s01-cell-value")
     const sourceOrder = await entityNames.allTextContents()
     await expect(nameSort).toHaveCount(1)
+    await page.keyboard.press("Tab")
     await nameSort.focus()
     await expect(nameSort).toBeFocused()
     await expect(nameSort).toHaveCSS("outline-style", "solid")

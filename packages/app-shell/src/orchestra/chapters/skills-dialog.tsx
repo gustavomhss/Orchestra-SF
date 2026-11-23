@@ -41,12 +41,25 @@ export function SkillDialog(props: {
 
   async function run(action: () => Promise<string | undefined>) {
     if (busy()) return
+    const ownerDocument = dialog.ownerDocument
+    const previousFocus = ownerDocument.activeElement
     setBusy(true)
     setError(undefined)
     const failure = await action().catch(() => language.t("orchestra.skills.writeFailed"))
     if (lifetime.disposed) return
     setBusy(false)
     setError(failure)
+    // Disabling the submitted button can move focus to the body. Restore it after a failure,
+    // but keep any focus the person moved to another control while the request was in flight.
+    if (
+      failure &&
+      dialog.open &&
+      ownerDocument.activeElement === ownerDocument.body &&
+      previousFocus instanceof HTMLElement &&
+      dialog.contains(previousFocus)
+    ) {
+      previousFocus.focus({ preventScroll: true })
+    }
   }
 
   function submit(event: SubmitEvent & { currentTarget: HTMLFormElement }) {
