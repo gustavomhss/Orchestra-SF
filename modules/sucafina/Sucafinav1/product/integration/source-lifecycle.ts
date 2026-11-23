@@ -6,6 +6,7 @@ import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, Sna
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+import { currentChoiceReadonlyAuthorityData } from "../decisions/current-choice-preview.ts"
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
@@ -529,7 +530,7 @@ export function createSfSourcePersistence(input: {
           Object.getOwnPropertyDescriptor(input, "persistence")
         const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
           active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
-          currentLocalReadonlyAuthorityData(driver, ["planner"]) : undefined
+          currentLocalReadonlyAuthorityData(driver, ["planner"]) ?? currentChoiceReadonlyAuthorityData(driver, ["planner"]) : undefined
         // Preparation receives an isolated view before source authorization.
         const prepared = await prepare(structuredClone(snapshot))
         if (checking) requireSourceChecks(checking)

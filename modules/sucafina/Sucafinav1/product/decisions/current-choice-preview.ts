@@ -1,5 +1,6 @@
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
-import { hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../contracts/decisions.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
@@ -264,6 +265,13 @@ export type CurrentChoiceFence = {
 }
 const currentChoiceFences = new WeakSet<object>()
 const currentChoiceStorage = new WeakMap<CurrentChoiceFence, () => CurrentChoicePersistence | undefined>()
+type CurrentChoiceAuthorityReader = <S extends Surface>(surfaces: readonly S[]) => ReadonlyAuthorityData<S> | undefined
+const currentChoiceAuthorityReaders = new WeakMap<object, CurrentChoiceAuthorityReader>()
+
+/** Only the factory's exact persistence may forward fresh native readonly ACLs. */
+export function currentChoiceReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  return currentChoiceAuthorityReaders.get(owner)?.(surfaces)
+}
 
 /** Prove that the factory's original wrappers still delegate to this driver. */
 export function currentChoiceOwnsSnapshotTransactions(fence: CurrentChoiceFence, driver: CurrentChoicePersistence) {
@@ -465,5 +473,46 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     })
     return exact ? driver : undefined
   })
+  const readonlyMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+  const readonlyOriginals = readonlyMethods.map((name) => ({
+    base: Object.getOwnPropertyDescriptor(driver, name),
+    wrapped: Object.getOwnPropertyDescriptor(persistence, name),
+  }))
+  const readonlyOwner = () => {
+    if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype ||
+        types.isProxy(driver) || Object.getPrototypeOf(driver) !== Object.prototype ||
+        types.isProxy(persistence) || Object.getPrototypeOf(persistence) !== Object.prototype) return false
+    const provider = Object.getOwnPropertyDescriptor(input, "persistence")
+    if (!provider || !Object.hasOwn(provider, "value") || provider.value !== driver) return false
+    return readonlyMethods.every((name, index) => {
+      const original = readonlyOriginals[index]!
+      const base = Object.getOwnPropertyDescriptor(driver, name)
+      const wrapped = Object.getOwnPropertyDescriptor(persistence, name)
+      return !!original.base && Object.hasOwn(original.base, "value") && typeof original.base.value === "function" &&
+        !!original.wrapped && Object.hasOwn(original.wrapped, "value") && typeof original.wrapped.value === "function" &&
+        (name === "transaction" || name === "transactionAll" || original.wrapped.value === original.base.value) &&
+        !!base && Object.hasOwn(base, "value") && base.value === original.base.value &&
+        !!wrapped && Object.hasOwn(wrapped, "value") && wrapped.value === original.wrapped.value
+    })
+  }
+  if (readonlyOwner()) {
+    currentChoiceAuthorityReaders.set(persistence, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
+      // Preserve LocalStore's readonly-only admission, fresh copies and errors
+      // for an ended/aborted known scope, even when this wrapper has drifted.
+      const observed = currentLocalReadonlyAuthorityData(driver, surfaces)
+      if (!observed || !readonlyOwner()) return undefined
+      const integrity = { failed: false }
+      return {
+        ...observed,
+        current: (requirement) => {
+          // Default poison handling and the unpoisoned requirement belong to the
+          // original reader. Never short-circuit its live-scope validation.
+          const valid = observed.current(requirement)
+          if (!valid || !readonlyOwner()) integrity.failed = true
+          return !integrity.failed
+        },
+      }
+    })
+  }
   return Object.freeze(fence)
 }
