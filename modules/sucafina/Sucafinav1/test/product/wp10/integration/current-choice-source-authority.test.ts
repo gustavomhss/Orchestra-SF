@@ -10,7 +10,8 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../../product
 import { createCurrentChoiceFence, currentChoiceReadonlyAuthorityData } from "../../../../product/decisions/current-choice-preview.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
-import { createSfSourcePersistence, plannerScopeAuthority } from "../../../../product/integration/source-lifecycle.ts"
+import { createSfSourcePersistence, currentSfPlannerReadonlySnapshotScope, currentSfReadonlyAuthorityData,
+  currentSfReadonlySnapshotScope, plannerScopeAuthority } from "../../../../product/integration/source-lifecycle.ts"
 import { createSfSourceScopeProjector, sfPlannerProjectionSelector } from "../../../../product/integration/source-projections.ts"
 import { roleMap } from "../../../../runtime/admin.ts"
 import { object, rows } from "../../../../runtime/contract.ts"
@@ -132,7 +133,7 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>) {
   const observe = (hooks: Hooks = {}, registered = true, source = sources) =>
     withCall((context) => readRoot(() => fence.run(context, () => read(context, hooks, registered, source)), { signal: deadline.signal }))
   const snapshot = () => all(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
-  return { store, readRoot, holdPreimage, control, fenceInput, fence, sourceInput, sources,
+  return { store, readRoot, holdPreimage, control, fenceInput, fence, sourceInput, sources, persistence,
     projectionHooks, withCall, read, observe, snapshot }
 }
 
@@ -183,6 +184,48 @@ test("CurrentChoice prepared sources preserve canonical values and close owner, 
       })
       expect(() => retained.current()).toThrow("Local transaction scope has ended")
       expect(currentChoiceReadonlyAuthorityData(f.fence.persistence, ["planner"])).toBeUndefined()
+    })
+
+    await deadline.phase("planner-scope-uses-only-the-native-source-composition", async () => {
+      const retained = await f.readRoot(async () => {
+        const native = currentLocalReadonlyAuthorityData(f.store, [])?.scope
+        const scope = currentSfPlannerReadonlySnapshotScope(f.persistence)
+        expect(native).toBeDefined()
+        expect(scope?.identity).toBe(native?.identity)
+        expect(scope?.bytesIdentity).toBe(native?.bytesIdentity)
+        expect(scope?.current()).toBe(true)
+        expect(currentSfReadonlyAuthorityData(f.persistence, ["planner"])).toBeUndefined()
+        expect(currentSfReadonlySnapshotScope(f.persistence)).toBeUndefined()
+        expect(currentSfPlannerReadonlySnapshotScope(f.fence.persistence)).toBeUndefined()
+        expect(currentSfPlannerReadonlySnapshotScope({ ...f.fence.persistence })).toBeUndefined()
+        expect(currentSfPlannerReadonlySnapshotScope({})).toBeUndefined()
+        for (const method of ["currentSnapshot", "readSnapshotRoot"] as const) {
+          const original = descriptor(f.persistence, method)
+          const pinned = currentSfPlannerReadonlySnapshotScope(f.persistence)
+          expect(pinned?.current()).toBe(true)
+          Object.defineProperty(f.persistence, method, { ...original, value: () => undefined })
+          try {
+            expect(pinned?.current()).toBe(false)
+            if (method !== "readSnapshotRoot")
+              expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+          } finally { Object.defineProperty(f.persistence, method, original) }
+          expect(pinned?.current()).toBe(false)
+        }
+        const owner = f.sourceInput.persistence
+        const pinned = currentSfPlannerReadonlySnapshotScope(f.persistence)
+        f.sourceInput.persistence = { ...owner }
+        try {
+          expect(pinned?.current()).toBe(false)
+          expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
+        } finally { f.sourceInput.persistence = owner }
+        expect(pinned?.current()).toBe(false)
+        const fresh = currentSfPlannerReadonlySnapshotScope(f.persistence)
+        if (!fresh) throw new Error("Native Planner source scope unavailable")
+        expect(fresh.current()).toBe(true)
+        return fresh
+      })
+      expect(() => retained.current()).toThrow("Local transaction scope has ended")
+      expect(currentSfPlannerReadonlySnapshotScope(f.persistence)).toBeUndefined()
     })
 
     await deadline.phase("fresh-preparation-authorization-and-projector-copies", async () => {
@@ -297,6 +340,8 @@ test("CurrentChoice prepared sources preserve canonical values and close owner, 
             if (invocation !== 1) return
             const ordinary = currentChoiceReadonlyAuthorityData(f.fence.persistence, ["planner"])
             const strict = currentChoiceReadonlyAuthorityData(f.fence.persistence, ["planner"])
+            const planner = currentSfPlannerReadonlySnapshotScope(f.persistence)
+            expect(planner?.current()).toBe(true)
             expect(ordinary?.current()).toBe(true)
             expect(strict?.current("unpoisoned")).toBe(true)
             const attack = f.fence.persistence.transaction("planner", async (snapshot, blobs) => {
@@ -312,6 +357,7 @@ test("CurrentChoice prepared sources preserve canonical values and close owner, 
             await expect(attack).rejects.toThrow(kind === "record" ? "Nested local writes are forbidden" : "Nested local write attempted")
             expect(ordinary?.current()).toBe(true)
             expect(strict?.current("unpoisoned")).toBe(false)
+            expect(planner?.current()).toBe(false)
             expect(strict?.current()).toBe(false)
             expect(currentChoiceReadonlyAuthorityData(f.fence.persistence, ["planner"])?.current()).toBe(true)
           },
