@@ -1,6 +1,8 @@
-import { expect } from "@playwright/test"
+import { expect, type Response as PlaywrightResponse } from "@playwright/test"
 import { Schema } from "effect"
 import { SfContextResult } from "@orchestra/schema/sucafina/context"
+import { SfAnalyses } from "@orchestra/schema/sucafina/analyses"
+import { SfRoutines } from "@orchestra/schema/sucafina/routines"
 import { waveFourTest, enter, ready, scheme, reflow, scrollPageTop, observePage } from "./design-support/wave-four"
 import { captureFinalSurface } from "./design-support/final-capture"
 import { captureFinalRoutineGate } from "./design-support/final-routines-gate"
@@ -21,7 +23,17 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   expect(info.project.metadata.bundle).toBe("production")
   const diagnostics = observePage(page)
   const writes: string[] = []
-  const reads: { path: string; status: number }[] = []
+  const reads: { path: string; status: number; action?: string }[] = []
+  const catalogResponses: { status: number; body: unknown }[] = []
+  const analysisLists: { status: number; body: unknown }[] = []
+  let authorizedCase: { id: string; incarnation: string; version: number } | undefined
+  const analysisAction = (response: PlaywrightResponse): string | undefined => {
+    const url = new URL(response.url())
+    if (url.origin !== installation.origin || url.pathname !== installation.mount + "/dashboard" ||
+      url.searchParams.get("sf") !== "workbench-analysis" || response.request().method() !== "POST") return
+    const body: unknown = response.request().postDataJSON()
+    return body && typeof body === "object" && "action" in body && typeof body.action === "string" ? body.action : undefined
+  }
   const limits: string[] = []
   page.on("request", (request) => {
     const url = new URL(request.url())
@@ -31,8 +43,9 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   })
   page.on("response", (response) => {
     const url = new URL(response.url())
-    if (url.origin === installation.origin && /\/api\/ui\/(routines|schedules|projections\/residents)/.test(url.pathname))
-      reads.push({ path: url.pathname, status: response.status() })
+    const action = analysisAction(response)
+    if (url.origin === installation.origin && (/\/api\/ui\/(routines|schedules|projections\/(residents|case|routine))/.test(url.pathname) || action))
+      reads.push({ path: url.pathname, status: response.status(), ...(action ? { action } : {}) })
   })
   const query = new URLSearchParams({ installationId: owner.installationId, projectId: owner.projectId, hostId: owner.hostId })
   const response = await page.context().request.get(installation.origin + installation.mount + "/api/ui/context?" + query)
@@ -45,7 +58,16 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   console.info("SF_FINAL_ROUTINES_AVAILABILITY " + JSON.stringify(availability))
 
   await waveFourTest.step("UI64 keeps case authority and unpublished admission visibly separate", async () => {
+    const choicesResponse = page.waitForResponse((reply) => analysisAction(reply) === "choices")
     await enter(page, owner, new URL(screens[0].path, installation.origin).href, screens[0].en)
+    const choiceBody = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.choices"].output, { onExcessProperty: "error" })(await (await choicesResponse).json())
+    expect(choiceBody.status).toBe("ok")
+    if (choiceBody.status !== "ok") throw new Error("The original authorized case source is unavailable")
+    const sourceCases = choiceBody.value.cases.filter((entry) => entry.label === waveFourDecisionsData.objective)
+    expect(sourceCases).toHaveLength(1)
+    const sourceCase = sourceCases[0]?.caseRef
+    if (!sourceCase) throw new Error("The original decision case is missing")
+    authorizedCase = { id: sourceCase.id, incarnation: sourceCase.incarnation, version: sourceCase.version }
     const surface = page.locator('[data-sf-surface="UI64"]')
     await expect(surface).toHaveAttribute("data-sf-wave", "six")
     await expect(surface.getByText("No published recipes were returned for this authorized case.", { exact: true })).toHaveCount(0)
@@ -61,14 +83,20 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await expect(cases).toHaveValue(caseValue)
     await surface.getByRole("textbox", { name: "Task / purpose", exact: true }).fill("Design test data · Review the current authorized case")
     const recipes = surface.getByRole("button", { name: "Find published recipes", exact: true })
-    if (await recipes.isEnabled()) {
-      await recipes.click()
-      await expect(surface.locator('[aria-busy="true"]')).toHaveCount(0)
-      await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
-      limits.push("UI64: the original catalog returned no admissible selected recipe; no preparation or execution was submitted.")
-    } else {
-      limits.push("UI64: the original context does not currently admit catalog discovery.")
-    }
+    await expect(recipes).toBeEnabled()
+    const catalogResponse = page.waitForResponse((reply) => new URL(reply.url()).origin === installation.origin &&
+      new URL(reply.url()).pathname === installation.mount + "/api/ui/routines/catalog" && reply.request().method() === "POST")
+    await recipes.click()
+    const original = await catalogResponse
+    const sent = Schema.decodeUnknownSync(SfRoutines.operations["routines.catalog"].input, { onExcessProperty: "error" })(original.request().postDataJSON())
+    expect(sent).toEqual({ caseRef: authorizedCase, input: { purpose: "Design test data · Review the current authorized case" } })
+    const catalogBody = Schema.decodeUnknownSync(SfRoutines.operations["routines.catalog"].output, { onExcessProperty: "error" })(await original.json())
+    catalogResponses.push({ status: original.status(), body: catalogBody })
+    await expect(surface.locator('[aria-busy="true"]')).toHaveCount(0)
+    await expect(page.getByRole("button", { name: "Prepare routine", exact: true })).toBeDisabled()
+    limits.push(catalogBody.status === "ok"
+      ? "UI64: original catalog HTTP " + original.status() + " returned " + catalogBody.value.length + " recipes; no preparation or execution was submitted."
+      : "UI64: original catalog HTTP " + original.status() + " returned " + catalogBody.status + " (" + catalogBody.reason + "); no preparation or execution was submitted.")
     await captureFinalSurface(page, info, "UI64", "en-dark-desktop-authorized-case", { preview: true })
     await scheme(page, "light")
     await captureFinalSurface(page, info, "UI64", "en-light-desktop-authorized-case", { preview: true })
@@ -170,8 +198,23 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
     await expect(chosenCase).toHaveCount(1)
     const caseValue = await chosenCase.getAttribute("value")
     if (!caseValue) throw new Error("The original decision case has no selector value")
+    const analysisAvailable = ["intelligence.analysis.list", "intelligence.analysis.read"].every((operationId) =>
+      context.value.availability.some((entry) => entry.resource === "analysis" &&
+        entry.operations.some((operation) => operation.operationId === operationId && operation.state === "ready" && operation.operational)))
+    const historyResponse = analysisAvailable ? page.waitForResponse((reply) => analysisAction(reply) === "list") : undefined
     await cases.selectOption(caseValue)
     await expect(cases).toHaveValue(caseValue)
+    if (historyResponse) {
+      const original = await historyResponse
+      const sent = original.request().postDataJSON()
+      expect(Object.keys(sent).sort()).toEqual(["action", "caseRef"])
+      expect(sent.action).toBe("list")
+      const input = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.list"].input, { onExcessProperty: "error" })({ caseRef: sent.caseRef })
+      expect(input.caseRef).toEqual(authorizedCase)
+      const history = Schema.decodeUnknownSync(SfAnalyses.operations["intelligence.analysis.list"].output, { onExcessProperty: "error" })(await original.json())
+      expect(history.status).toBe("ok")
+      analysisLists.push({ status: original.status(), body: history })
+    } else limits.push("UI70: the original context does not admit analysis history; no history read is claimed.")
     await expect(detail.locator('[aria-busy="true"]')).toHaveCount(0)
     await expect(detail.locator("[data-sf-contribution-proof]")).not.toHaveAttribute("data-state", "loading")
     await expect(detail.getByText("No currently verified contribution is available.", { exact: true })).toBeVisible()
@@ -242,9 +285,9 @@ waveFourTest("UI64 UI65 UI66 UI70 · installed routine inventory, read boundarie
   expect(diagnostics.pageErrors).toEqual([])
   expect(writes).toEqual([])
   for (const description of limits) info.annotations.push({ type: "producer-boundary", description })
-  console.info("SF_FINAL_ROUTINES_EVIDENCE " + JSON.stringify({ reads, writes, limits, ...diagnostics }))
+  console.info("SF_FINAL_ROUTINES_EVIDENCE " + JSON.stringify({ reads, catalogResponses, analysisLists, writes, limits, ...diagnostics }))
   await info.attach("final-routines-installed-evidence", {
     contentType: "application/json",
-    body: JSON.stringify({ availability, reads, writes, limits, ...diagnostics }, null, 2),
+    body: JSON.stringify({ availability, reads, catalogResponses, analysisLists, writes, limits, ...diagnostics }, null, 2),
   })
 })
