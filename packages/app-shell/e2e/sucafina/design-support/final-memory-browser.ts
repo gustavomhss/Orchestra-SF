@@ -1,28 +1,73 @@
 import { expect } from "@playwright/test"
 import type { Browser, Page } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
-import { enter, observePage, ready, reflow, scrollPageTop } from "./wave-three"
-import { ServerConnection } from "../../../src/context/server-connection"
+import { observePage } from "./wave-three"
+import { navigateFinalSurface, observeFinalGet } from "./final-navigation"
 
+type Owner = Parameters<typeof navigateFinalSurface>[0]["owner"]
+type Area = "UI61" | "UI62" | "UI63" | "UI63-reference" | "UI67" | "UI69"
+
+/** Register the actual initial readers before navigation. Their response bodies
+ * are captured at the Request, then checked before the original 10s DOM gate. */
+export async function enterFinalMemorySurface(
+  page: Page, owner: Owner, installation: DesignInstallation, href: string, title: string, area: Area,
+  beforeReady?: () => Promise<void>,
+) {
+  const readers: { label: string; observed: ReturnType<typeof observeFinalGet> }[] = []
+  if (area === "UI61" || area === "UI62" || area === "UI63")
+    readers.push({ label: "projection.cases", observed: observeFinalGet(page, installation.origin,
+      installation.mount + "/api/ui/projections/cases") })
+  if (area === "UI61" || area === "UI63" || area === "UI63-reference")
+    readers.push({ label: "memory-catalog", observed: observeFinalGet(page, installation.origin,
+      installation.mount + "/dashboard", 1, (url) => url.searchParams.get("sf") === "memory-catalog") })
+  if (area === "UI69")
+    readers.push({ label: "summary-settings", observed: observeFinalGet(page, installation.origin,
+      installation.mount + "/api/ui/local-admin/summary-settings") })
+  try {
+    return await navigateFinalSurface({
+      page, owner, installation, href, title,
+      beforeReady: async (context) => {
+        await Promise.all(readers.map(async ({ label, observed }) => {
+          const original = await observed.next()
+          expect(original.status).toBe(200)
+          expect(original.body).toMatchObject({ status: "ok" })
+          if (label === "summary-settings") expect(original.body).toMatchObject({ context: context.stamp })
+        }))
+        await beforeReady?.()
+      },
+    })
+  } finally {
+    for (const { observed } of readers) observed.close()
+  }
+}
 
 /**
  * A 503 is expected only after its exact original memory-outcome response proves
  * coverage-incomplete. All other browser console errors still fail the test.
  */
-export function observeFinalMemoryOutcomeFailures(page: Page) {
+export function observeFinalMemoryOutcomeFailures(page: Page, installation: Pick<DesignInstallation, "origin" | "mount">) {
   const expected = new Set<string>()
   const consoleErrors: { text: string; url: string }[] = []
   page.on("console", (entry) => {
     if (entry.type() === "error") consoleErrors.push({ text: entry.text(), url: entry.location().url })
   })
   return {
-    expectUnavailable: async (action: () => Promise<unknown>) => {
-      const pending = page.waitForResponse((response) => response.request().method() === "GET" &&
-        new URL(response.url()).searchParams.get("sf") === "memory-outcome", { timeout: 40_000 })
-      const [response] = await Promise.all([pending, action()])
-      expect(response.status()).toBe(503)
-      expect(await response.json()).toMatchObject({ status: "unavailable", reason: "coverage-incomplete" })
-      expected.add(response.url())
+    expectUnavailable: async (action: (waitForOriginal: () => Promise<void>) => Promise<unknown>) => {
+      const observed = observeFinalGet(page, installation.origin, installation.mount + "/dashboard", 1,
+        (url) => url.searchParams.get("sf") === "memory-outcome")
+      let checked: Promise<void> | undefined
+      const waitForOriginal = () => checked ??= (async () => {
+        const original = await observed.next()
+        expect(original.status).toBe(503)
+        expect(original.body).toMatchObject({ status: "unavailable", reason: "coverage-incomplete" })
+        expected.add(original.url)
+      })()
+      try {
+        // During navigation the caller awaits this after its two real F01 reads
+        // and before ready(). A click simply awaits it after the single action.
+        await action(waitForOriginal)
+        await waitForOriginal()
+      } finally { observed.close() }
     },
     assertOnlyExpectedErrors: (recorded: readonly string[]) => {
       const unexpected = consoleErrors.filter((entry) => !expected.has(entry.url) ||
@@ -33,22 +78,13 @@ export function observeFinalMemoryOutcomeFailures(page: Page) {
   }
 }
 
-/** Original owner-bound navigation; data readiness is checked after its bounded source reply. */
+/** The same owner-bound F01 and original coverage refusal, before DOM readiness. */
 export async function enterFinalMemoryOutcome(
-  page: Page, owner: Parameters<typeof enter>[1], href: string, title: string,
+  page: Page, owner: Owner, installation: DesignInstallation, href: string, title: string,
   outcomes: ReturnType<typeof observeFinalMemoryOutcomeFailures>,
 ) {
-  const target = new URL(href)
-  target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
-  target.searchParams.set("project", owner.projectId)
-  target.searchParams.set("installation", owner.installationId)
-  await outcomes.expectUnavailable(() => page.goto(target.href))
-  // These are the same 10-second ready/URL/layout assertions as the original enter helper.
-  await ready(page, title)
-  await expect(page).toHaveURL((url) => url.origin === target.origin && url.pathname === target.pathname &&
-    url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
-  await reflow(page)
-  await scrollPageTop(page)
+  await outcomes.expectUnavailable((waitForOriginal) =>
+    enterFinalMemorySurface(page, owner, installation, href, title, "UI63-reference", waitForOriginal))
 }
 
 /** The same original scoped session; only the supported language preference changes. */
@@ -70,7 +106,7 @@ export async function withFinalMemoryPortuguese(
     const page = await context.newPage()
     page.setDefaultTimeout(15_000)
     const diagnostics = observePage(page)
-    const outcomes = observeFinalMemoryOutcomeFailures(page)
+    const outcomes = observeFinalMemoryOutcomeFailures(page, installation)
     await run(page, outcomes)
     expect(diagnostics.pageErrors).toEqual([])
     outcomes.assertOnlyExpectedErrors(diagnostics.consoleErrors)
