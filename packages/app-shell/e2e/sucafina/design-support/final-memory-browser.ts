@@ -1,7 +1,8 @@
 import { expect } from "@playwright/test"
 import type { Browser, Page } from "@playwright/test"
 import type { DesignInstallation } from "./installation"
-import { observePage } from "./wave-three"
+import { enter, observePage, ready, reflow, scrollPageTop } from "./wave-three"
+import { ServerConnection } from "../../../src/context/server-connection"
 
 
 /**
@@ -30,6 +31,24 @@ export function observeFinalMemoryOutcomeFailures(page: Page) {
       expect(recorded).toEqual([...new Set(consoleErrors.map((entry) => entry.text))])
     },
   }
+}
+
+/** Original owner-bound navigation; data readiness is checked after its bounded source reply. */
+export async function enterFinalMemoryOutcome(
+  page: Page, owner: Parameters<typeof enter>[1], href: string, title: string,
+  outcomes: ReturnType<typeof observeFinalMemoryOutcomeFailures>,
+) {
+  const target = new URL(href)
+  target.searchParams.set("server", ServerConnection.key({ type: "http", http: { url: target.origin } }))
+  target.searchParams.set("project", owner.projectId)
+  target.searchParams.set("installation", owner.installationId)
+  await outcomes.expectUnavailable(() => page.goto(target.href))
+  // These are the same 10-second ready/URL/layout assertions as the original enter helper.
+  await ready(page, title)
+  await expect(page).toHaveURL((url) => url.origin === target.origin && url.pathname === target.pathname &&
+    url.searchParams.get("project") === owner.projectId && url.searchParams.get("installation") === owner.installationId)
+  await reflow(page)
+  await scrollPageTop(page)
 }
 
 /** The same original scoped session; only the supported language preference changes. */
