@@ -1,19 +1,22 @@
 # Validação do sexto lote — UI57–UI70
 
-O escopo contém 14 áreas e25 padrões de rota existentes. Uma área de design, uma captura, uma operação original e uma capacidade operacional são evidências diferentes.
+O escopo contém 14 áreas e 25 padrões de rota existentes. Uma área de design, uma captura, uma operação original e uma capacidade operacional são evidências diferentes.
 
 ## Matriz de qualificação
 
 <!-- FINAL_MATRIX -->
 | Camada | Resultado observado | Fonte |
 | --- | --- | --- |
-| Técnica Gate 16 |9 checks passaram;78 regras,71 paths,0 erros,0 exceções aprovadas;10 avisos de declaração de prazo;7 paletas inalteradas | [45117046888](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117046888) |
-| Codecs do cliente |12 testes e243 asserts;6 novos casos do binding e6 testes existentes de Files | Gate 16 |
-| Regressões existentes de filesystem/processo |11 passaram,1 skip preexistente,0 falhas;37 asserts | Gate 16 |
-| Backend nativo Native 69 |69 testes e887 asserts:66 memória,1 instalação real,2 origem de fase | [45112013210](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112013210) |
-| Rotinas R18 |2 jornadas passaram;19 PNG e19 JPEG;30 GETs originais observados | [45115912342](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45115912342) |
-| Registros R14 | Execução terminou com falha; análise e qualificação final em andamento | [45116737792](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45116737792) |
-| Memória R11 | Execução em andamento; sem aprovação antecipada | [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885) |
+| Técnica Gate17 | 9 checks passaram; 78 regras, 105 paths, zero erros/exceções aprovadas; 13 avisos de declaração de prazo; 7 paletas inalteradas | [45122426354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122426354) |
+| Codecs do cliente | 12 testes e 243 asserts; 6 novos casos do binding e 6 testes existentes de Files | Gate17 |
+| Regressões existentes de filesystem/processo | 11 passaram, 1 skip preexistente, zero falhas; 37 asserts | Gate17 |
+| Backend nativo Native69 | 69 testes e 887 asserts: 66 memória, 1 instalação real, 2 origem de fase | [45112013210](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112013210) |
+| Rotinas R18 | 2 jornadas passaram; 19 PNG e 19 JPEG; 30 GETs originais observados | [45115912342](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45115912342) |
+| Registros R15 | 4 jornadas passaram em 7,7 min; 30 PNG e 10 JPEG; scanner ClamD e revogação originais | [45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778) |
+| Memória R11 | 3/5 jornadas passaram: UI63, UI67 e UI69. Materialidade sem corpo em 40s; recall POST503 sem motivo registrado | [45117078885](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45117078885) |
+| Administração local após #715 | Jornada original passou: único save, CAS/releitura persistida, rascunho conservado, EN/pt-BR e 320px | [45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514) |
+| UI61 cancelamento local | Duas jornadas isoladas em execução; sem aprovação antecipada | [45122439989](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122439989) |
+| Guardrails e tipos E2E após observador POST | Gate18 em execução; somente os dois checks afetados após Gate17 | Snapshot `9e4a5a13f80b25f260eb2f0e61447de016966dd5` |
 <!-- END_FINAL_MATRIX -->
 
 Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION.md](DEV-COMPOSITION.md) e [DEV-COMPOSITION.json](DEV-COMPOSITION.json). O arquivo [technical.json](technical.json) conserva os contadores primários do gate.
@@ -24,8 +27,8 @@ Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION
 | --- | --- | --- |
 | UI57 | Recibo original, diferenças e recuperação por referência; EN/pt-BR | Histórico não reaplica importação |
 | UI58/UI59 | Origem autorizada, anexo, ClamD, extração/trecho/hash, confirmação e revogação | Extração permanece candidata até confirmação; CAS e autoridade intactos |
-| UI60 | Prévia positiva R12 passou 28 asserts: evidência 42 USD, baseline 420 USD preservado e `domainApplied=false`; fixture restrita mantém negativa | Total continua indisponível por cobertura incompleta; vinculação persistente não é afirmada |
-| UI61 | Condições independentes; consulta explícita e cancelamento local de sinais | R8 não recebeu sinais em 40s; nenhuma resposta 200 de sinais é qualificada, nem interrupção remota |
+| UI60 | Prévia positiva R15 passou os 28 asserts originais: evidência 42 USD, baseline 420 USD preservado e `domainApplied=false`; fixture restrita mantém negativa | Total continua indisponível por cobertura incompleta; vinculação persistente não é afirmada |
+| UI61 | Condições independentes; consulta explícita e cancelamento local de sinais | R11 não recebeu materialidade em 40s; resultados positivos de materialidade/sinais e interrupção remota não são qualificados |
 | UI62 | Caso atual, pergunta privada e candidatos da fonte original | Candidatos por si só não comprovam execução do recall; verificar resultado final da jornada |
 | UI63 | Escolha registrada, referência opaca e resposta original `coverage-incomplete` | Sem comparação numérica prevista/observada qualificada |
 | UI64 | Entrada contextual indisponível; F01 negado; zero folhas; retornos reais por teclado | Catálogo/preparo não operacionais; rota histórica de admissão preservada sem jornada positiva |
@@ -33,8 +36,8 @@ Os IDs completos, árvores e diferenças de snapshots estão em [DEV-COMPOSITION
 | UI66 | F01 negado, zero folhas, explicação e retorno | Port Schedule ausente; sem CRUD/ocorrência |
 | UI67 | Identidade e atualização original de contexto | Reflow não é medição de zoom ou contraste numérico |
 | UI68 | Nome/MIME/bytes ZIP do XLSX original | Outros formatos não qualificados |
-| UI69 | Revisão, cancelamento que conserva rascunho, único save e releitura original | Aprovação final depende da jornada; notificações/backups indisponíveis |
-| UI70 | Cinco perfis e25 skills originais; filtro/detalhes; projeção humana 200 de caso v5 e uma escolha | Sem histórico de análises admitido, contribuição ou carga presumida |
+| UI69 | Revisão, cancelamento que conserva rascunho, único save e releitura original | Jornada R13 passou após #715; notificações/backups indisponíveis |
+| UI70 | Cinco perfis e 25 skills originais; filtro/detalhes; projeção humana 200 de caso v5 e uma escolha | Sem histórico de análises admitido, contribuição ou carga presumida |
 
 ## Autoridade e integridade
 

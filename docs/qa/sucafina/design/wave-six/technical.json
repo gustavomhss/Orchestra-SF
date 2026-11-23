@@ -1,26 +1,30 @@
 {
-  "run": 45117046888,
-  "job": 137502149296,
-  "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
-  "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+  "branch": "ci-run-linux-sf-final14-gate17-20261123",
+  "snapshot": "f76d89f2b6b4791034da108c5a6f80840da2e11e",
+  "tree": "7a7ad2b62a65a6cdd5c0380d8ae6bb28e4436262",
+  "product": "d62c4b500695d248240a48944461a0d2262a589f",
+  "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
   "status": "PASSED",
   "checks": 9,
+  "snapshotOnlyPaths": [
+    ".ci-run.json",
+    "apps/cli/test/sucafina-final14-verification.test.ts"
+  ],
+  "run": 45122426354,
+  "conclusion": "success",
+  "job": 137519017208,
+  "cleanupJob": 137519768016,
   "guard": {
-    "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+    "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
     "rules": 78,
-    "files": 71,
+    "files": 105,
     "errors": 0,
     "approved": 0,
-    "warnings": 10,
     "warningRules": [
       "test-timeout-raised"
     ],
-    "touchesGuards": false
-  },
-  "palette": {
-    "gate": "palette byte parity",
-    "files": 7,
-    "changed": []
+    "touchesGuards": false,
+    "warnings": 13
   },
   "commands": [
     {
@@ -44,7 +48,9 @@
       "exitCode": 0
     },
     {
-      "gate": "palette byte parity"
+      "gate": "palette byte parity",
+      "files": 7,
+      "changed": []
     },
     {
       "gate": "app-shell e2e typecheck",
@@ -72,15 +78,133 @@
     }
   ],
   "summaries": [
-    "2026-11-23T05:20:58.4782078Z  11 pass",
-    "2026-11-23T05:20:58.4782263Z  1 skip",
-    "2026-11-23T05:20:58.4782446Z  0 fail",
-    "2026-11-23T05:20:58.4782635Z  37 expect() calls",
-    "2026-11-23T05:21:39.9410771Z  12 pass",
-    "2026-11-23T05:21:39.9410948Z  0 fail",
-    "2026-11-23T05:21:39.9411145Z  243 expect() calls",
-    "2026-11-23T05:21:39.9412347Z  9 pass",
-    "2026-11-23T05:21:39.9412918Z  0 fail",
-    "2026-11-23T05:21:39.9413107Z  16 expect() calls"
-  ]
+    " 11 pass",
+    " 1 skip",
+    " 0 fail",
+    " 37 expect() calls",
+    " 12 pass",
+    " 0 fail",
+    " 243 expect() calls",
+    " 9 pass",
+    " 0 fail",
+    " 16 expect() calls"
+  ],
+  "palette": {
+    "files": 7,
+    "changed": []
+  },
+  "clientCodecs": {
+    "tests": 12,
+    "assertions": 243,
+    "failures": 0
+  },
+  "originalRegressions": {
+    "passed": 11,
+    "preexistingSkip": 1,
+    "assertions": 37,
+    "failures": 0
+  },
+  "previousFullGate": {
+    "run": 45117046888,
+    "job": 137502149296,
+    "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
+    "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "status": "PASSED",
+    "checks": 9,
+    "guard": {
+      "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+      "rules": 78,
+      "files": 71,
+      "errors": 0,
+      "approved": 0,
+      "warnings": 10,
+      "warningRules": [
+        "test-timeout-raised"
+      ],
+      "touchesGuards": false
+    },
+    "palette": {
+      "gate": "palette byte parity",
+      "files": 7,
+      "changed": []
+    },
+    "commands": [
+      {
+        "gate": "app-shell typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "fetch pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "resolve pinned guard base",
+        "exitCode": 0
+      },
+      {
+        "gate": "guardrails",
+        "exitCode": 0
+      },
+      {
+        "gate": "palette generation",
+        "exitCode": 0
+      },
+      {
+        "gate": "palette byte parity"
+      },
+      {
+        "gate": "app-shell e2e typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "core typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "filesystem and strict process regressions",
+        "exitCode": 0
+      },
+      {
+        "gate": "cli typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "client typecheck",
+        "exitCode": 0
+      },
+      {
+        "gate": "native source codec regressions",
+        "exitCode": 0
+      }
+    ],
+    "summaries": [
+      "2026-11-23T05:20:58.4782078Z  11 pass",
+      "2026-11-23T05:20:58.4782263Z  1 skip",
+      "2026-11-23T05:20:58.4782446Z  0 fail",
+      "2026-11-23T05:20:58.4782635Z  37 expect() calls",
+      "2026-11-23T05:21:39.9410771Z  12 pass",
+      "2026-11-23T05:21:39.9410948Z  0 fail",
+      "2026-11-23T05:21:39.9411145Z  243 expect() calls",
+      "2026-11-23T05:21:39.9412347Z  9 pass",
+      "2026-11-23T05:21:39.9412918Z  0 fail",
+      "2026-11-23T05:21:39.9413107Z  16 expect() calls"
+    ]
+  },
+  "affectedE2EFollowup": {
+    "branch": "ci-run-linux-sf-final14-gate18-20261123",
+    "product": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+    "snapshot": "9e4a5a13f80b25f260eb2f0e61447de016966dd5",
+    "tree": "381bbc81bb1707dfe873936d15b25091822d701a",
+    "status": "DISPATCHED",
+    "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "checks": [
+      "guardrails",
+      "app-shell e2e typecheck"
+    ],
+    "reason": "Only two permanent E2E paths changed after Gate17; all product/Core/CLI/client/schema trees unchanged",
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-final14-verification.test.ts"
+    ]
+  }
 }

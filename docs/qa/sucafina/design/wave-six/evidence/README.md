@@ -1,14 +1,14 @@
 # Galeria visual — últimas 14 áreas Sucafina
 
-Esta galeria reúne 24 imagens reais das 14 áreas UI57–UI70, capturadas no app-shell de produção pelo workflow Linux original `test-ci` e inspecionadas visualmente. Os limites funcionais de cada rodada estão identificados junto de cada estado. Uma imagem de estado não transforma uma jornada incompleta em aprovação.
+Esta galeria reúne 27 imagens reais das 14 áreas UI57–UI70, capturadas no app-shell de produção pelo workflow Linux original `test-ci` e inspecionadas visualmente. Cada estado identifica sua rodada, o enquadramento e os limites funcionais. Uma imagem de estado não transforma uma jornada incompleta em aprovação.
 
-A validação final permanece em andamento. Consulte o [relatório central](../VALIDATION.md) e o [manifesto com proveniência](./manifest.json).
+A qualificação final de Memória ainda está em andamento. Consulte o [relatório central](../VALIDATION.md) e o [manifesto com proveniência](./manifest.json).
 
 | Área | Tela | Imagens selecionadas |
 | --- | --- | --- |
 | UI57 | Histórico, recibo e revisão de importação | 2 |
 | UI58 | Documentos | 1 |
-| UI59 | Evidências | 3 |
+| UI59 | Evidências | 4 |
 | UI60 | Documento em cenário | 2 |
 | UI61 | Sinais de memória | 2 |
 | UI62 | Casos semelhantes | 1 |
@@ -17,25 +17,25 @@ A validação final permanece em andamento. Consulte o [relatório central](../V
 | UI65 | Resultado da rotina | 1 |
 | UI66 | Recorrência | 1 |
 | UI67 | Contexto da instalação | 2 |
-| UI68 | Exportações | 1 |
-| UI69 | Administração local | 2 |
+| UI68 | Exportações | 2 |
+| UI69 | Administração local | 3 |
 | UI70 | Contribuições / residentes | 3 |
 
 ## UI57 — Histórico, recibo e revisão de importação
 
 ### recovered-receipt-pt-br-desktop
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
 
 ![UI57 — recovered-receipt-pt-br-desktop](ui57-recovered-receipt-pt-br-desktop.jpg)
 
 ### changed-fields-original-values
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
 
 ![UI57 — changed-fields-original-values](ui57-changed-fields-original-values.jpg)
 
@@ -43,9 +43,9 @@ Actual state reviewed; first3 original Operations journeys passed. Whole R10run3
 
 ### authorized-catalog-dark-desktop
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
 
 ![UI58 — authorized-catalog-dark-desktop](ui58-authorized-catalog-dark-desktop.jpg)
 
@@ -53,17 +53,17 @@ Actual state reviewed; first3 original Operations journeys passed. Whole R10run3
 
 ### review-original-source-dark-desktop
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
 
 ![UI59 — review-original-source-dark-desktop](ui59-review-original-source-dark-desktop.jpg)
 
 ### review-original-source-light-narrow
 
-320×900px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+320×900px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines. Narrow source/candidate/excerpt; lower edge reaches Open original. Content below that edge is not visually qualified by this frame.
 
 ![UI59 — review-original-source-light-narrow](ui59-review-original-source-light-narrow.jpg)
 
@@ -75,21 +75,29 @@ Actual state reviewed; first3 original Operations journeys passed. Whole R10run3
 
 ![UI59 — review-original-source-pt-br-desktop](ui59-review-original-source-pt-br-desktop.jpg)
 
+### review-original-source-light-desktop
+
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
+
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
+
+![UI59 — review-original-source-light-desktop](ui59-review-original-source-light-desktop.jpg)
+
 ## UI60 — Documento em cenário
 
 ### confirmed-source-restricted-simulation-dark-desktop
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12. Restricted simulation; this frame is not a successful preview.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines. Restricted source state only. The refusal lower in the scroller is asserted by the journey, outside this capture.
 
 ![UI60 — confirmed-source-restricted-simulation-dark-desktop](ui60-confirmed-source-restricted-simulation-dark-desktop.jpg)
 
 ### preview-from-confirmed-evidence
 
-1440×1100px. [Run 45112944681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112944681), job `137489189400`, snapshot `1dbb95a44cf22eb1f8db5aa944b3e3da49ef5f74`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Positive UI60 journey passed28original assertions. Whole RecordsR12run3of4.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines. Original subtotal42USD, total unavailable, baseline420 preserved. A persistent evidence link is not exercised.
 
 ![UI60 — preview-from-confirmed-evidence](ui60-preview-from-confirmed-evidence.jpg)
 
@@ -191,29 +199,45 @@ Full area journey passed in R11. Whole run3of5.
 
 ### authorized-format-pt-br-desktop
 
-1440×1100px. [Run 45107932060](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45107932060), job `137473384578`, snapshot `91f3028e0a00f7f8a32b40dcfad845b8cb2d20da`.
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
 
-Actual state reviewed; first3 original Operations journeys passed. Whole R10run3of4; separate positive UI60 is qualified by R12.
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
 
 ![UI68 — authorized-format-pt-br-desktop](ui68-authorized-format-pt-br-desktop.jpg)
+
+### authorized-format-dark-desktop
+
+1440×1100px. [Run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778), job `137517602373`, snapshot `f312587515353b15f59c5c362678d3090e167677`.
+
+Final Records R15 passed all four original production journeys. Original Files reads, ClamD, receipts, source revocation and unchanged deadlines.
+
+![UI68 — authorized-format-dark-desktop](ui68-authorized-format-dark-desktop.jpg)
 
 ## UI69 — Administração local
 
 ### dark-desktop-summary-settings
 
-1440×1100px. [Run 45112934520](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112934520), job `137489157834`, snapshot `ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9`.
+1440×1100px. [Run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514), job `137515072792`, snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`.
 
-Actual desktop dark and320light review states only. Whole R10run0of5; these images do not qualify saved readback.
+Post-PR715 UI69 focal passed the unchanged original journey, including one save, original persisted readback/CAS and pt-BR.
 
 ![UI69 — dark-desktop-summary-settings](ui69-dark-desktop-summary-settings.jpg)
 
 ### light-320-summary-review-actions
 
-320×900px. [Run 45112934520](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112934520), job `137489157834`, snapshot `ee44197dd7ce1d0ba83cd3bacb0b6ca71d7855b9`.
+320×900px. [Run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514), job `137515072792`, snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`.
 
-Actual desktop dark and320light review states only. Whole R10run0of5; these images do not qualify saved readback.
+Post-PR715 UI69 focal passed the unchanged original journey, including one save, original persisted readback/CAS and pt-BR. Scrolled review actions and unavailable notifications section; header and full proposed-value panel outside frame.
 
 ![UI69 — light-320-summary-review-actions](ui69-light-320-summary-review-actions.jpg)
+
+### pt-br-dark-desktop-administration
+
+1440×1100px. [Run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514), job `137515072792`, snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`.
+
+Post-PR715 UI69 focal passed the unchanged original journey, including one save, original persisted readback/CAS and pt-BR.
+
+![UI69 — pt-br-dark-desktop-administration](ui69-pt-br-dark-desktop-administration.jpg)
 
 ## UI70 — Contribuições / residentes
 
@@ -243,4 +267,4 @@ Final R18run passed2of2journeys; original installed/denied states only.
 
 ## Limites da revisão
 
-As imagens foram inspecionadas a partir dos bytes emitidos pelo CI e associadas aos blobs retornados pelo GitHub. Não houve releitura binária independente pelo conector textual. A revisão cobre o enquadramento visível, com estados selecionados claro/escuro, EN/pt-BR e larguras estreitas; não mede zoom real ou contraste numérico.
+As imagens foram inspecionadas a partir dos bytes emitidos pelo CI e associadas aos blobs retornados pelo GitHub. Não houve releitura binária independente pelo conector textual. A revisão cobre os enquadramentos visíveis em estados selecionados, temas claro/escuro, EN/pt-BR e larguras estreitas. Não mede zoom real ou contraste numérico.

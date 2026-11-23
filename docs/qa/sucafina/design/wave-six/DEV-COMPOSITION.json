@@ -1373,39 +1373,45 @@
     "method": "Upstream commit is a direct parent; exact Git tree diff against composition has no intersecting upstream-only paths."
   },
   "currentCandidate": {
-    "code": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
-    "nativeSource": "961aa03e8e444002cdd4060ab158f0d3a9cbe5f9",
+    "code": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+    "nativeSource": "2d887bfe1c116d2fee2748d644dd243de130afa5",
     "cliSource": "00d7f39405ffaf63925f80af355af5267f82d89a",
     "cliTests": "04ba93588dedf41adfd8444b051e6cd13976f183",
-    "appShellSource": "a528dc314d367bbfa6ac414c90c683567fd81d66",
+    "appShellSource": "24c59a46f0dfefb1181e3a4ec2cb7c1a3a225216",
     "core": "2fa2ba3b0cb0346c2b934ca0cdf3081db86fc176",
     "schema": "65ad5f67d9a5f35054f77e78bd475f8c584167ae",
     "client": "0326f30a3a2c6d1437c75508f0ad6ce540f1fd5c",
-    "routeRegistry": "6e1e711e2ff3a95e460026053cb91772693da572"
+    "routeRegistry": "6e1e711e2ff3a95e460026053cb91772693da572",
+    "runtimeTreeSource": "d62c4b500695d248240a48944461a0d2262a589f",
+    "latestDelta": "Only permanent E2E recall helper and caller changed after the runtime tree source"
   },
   "technical": {
-    "run": 45117046888,
-    "job": 137502149296,
-    "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
-    "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "branch": "ci-run-linux-sf-final14-gate17-20261123",
+    "snapshot": "f76d89f2b6b4791034da108c5a6f80840da2e11e",
+    "tree": "7a7ad2b62a65a6cdd5c0380d8ae6bb28e4436262",
+    "product": "d62c4b500695d248240a48944461a0d2262a589f",
+    "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
     "status": "PASSED",
     "checks": 9,
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-final14-verification.test.ts"
+    ],
+    "run": 45122426354,
+    "conclusion": "success",
+    "job": 137519017208,
+    "cleanupJob": 137519768016,
     "guard": {
-      "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+      "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
       "rules": 78,
-      "files": 71,
+      "files": 105,
       "errors": 0,
       "approved": 0,
-      "warnings": 10,
       "warningRules": [
         "test-timeout-raised"
       ],
-      "touchesGuards": false
-    },
-    "palette": {
-      "gate": "palette byte parity",
-      "files": 7,
-      "changed": []
+      "touchesGuards": false,
+      "warnings": 13
     },
     "commands": [
       {
@@ -1429,7 +1435,9 @@
         "exitCode": 0
       },
       {
-        "gate": "palette byte parity"
+        "gate": "palette byte parity",
+        "files": 7,
+        "changed": []
       },
       {
         "gate": "app-shell e2e typecheck",
@@ -1457,16 +1465,16 @@
       }
     ],
     "summaries": [
-      "2026-11-23T05:20:58.4782078Z  11 pass",
-      "2026-11-23T05:20:58.4782263Z  1 skip",
-      "2026-11-23T05:20:58.4782446Z  0 fail",
-      "2026-11-23T05:20:58.4782635Z  37 expect() calls",
-      "2026-11-23T05:21:39.9410771Z  12 pass",
-      "2026-11-23T05:21:39.9410948Z  0 fail",
-      "2026-11-23T05:21:39.9411145Z  243 expect() calls",
-      "2026-11-23T05:21:39.9412347Z  9 pass",
-      "2026-11-23T05:21:39.9412918Z  0 fail",
-      "2026-11-23T05:21:39.9413107Z  16 expect() calls"
+      " 11 pass",
+      " 1 skip",
+      " 0 fail",
+      " 37 expect() calls",
+      " 12 pass",
+      " 0 fail",
+      " 243 expect() calls",
+      " 9 pass",
+      " 0 fail",
+      " 16 expect() calls"
     ]
   },
   "native": {
@@ -1489,16 +1497,89 @@
       "captures": 19
     },
     "records": {
-      "run": 45116737792,
-      "job": 137501190158,
-      "snapshot": "0076fde9ce0349949ff7214fc72bed892c9fb4c6",
-      "product": "3311ce94e3d1c7e9de0a09a6d6c60868c440489c"
+      "run": 45121980778,
+      "snapshot": "f312587515353b15f59c5c362678d3090e167677",
+      "product": "d5f620aeee7a9db0e83d195ffada03c703f3a59d",
+      "tree": "2b9b5e4567c838e552b77cf2e0b8454c98e1965a",
+      "status": "PASSED",
+      "snapshotOnlyPaths": [
+        ".ci-run.json"
+      ],
+      "job": 137517602373,
+      "cleanupJob": 137520897264,
+      "passed": 4,
+      "failed": 0,
+      "minutes": 7.7,
+      "captures": 30,
+      "jpegPreviews": 10,
+      "artifact": {
+        "id": 14794332605,
+        "bytes": 21216198,
+        "sha256": "8ebe1b0dfe9de0b573aecdc49a2b706939df2c723f4cd98934825efbb13c86ed"
+      },
+      "originalClamD": true
     },
     "memory": {
       "run": 45117078885,
       "job": 137502251987,
       "snapshot": "257717aa632d7f029ec27b4d3cb8b9a603bad0a6",
-      "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e"
+      "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+      "latestJobs": [
+        {
+          "id": 137502251987,
+          "status": "in_progress",
+          "conclusion": null,
+          "completed": null,
+          "step": [
+            "Run tests"
+          ]
+        }
+      ],
+      "status": "PARTIAL",
+      "passed": 3,
+      "failed": 2,
+      "passedAreas": [
+        "UI63",
+        "UI67",
+        "UI69"
+      ],
+      "failedAreas": [
+        "UI61",
+        "UI62"
+      ],
+      "captures": 19,
+      "jpegPreviews": 14,
+      "artifact": 14792609948,
+      "limits": [
+        "UI61 materiality exceeded original40s; recorded conditions200",
+        "UI62 recall originalPOST503; reason under investigation"
+      ]
+    },
+    "administration": {
+      "run": 45121178514,
+      "job": 137515072792,
+      "snapshot": "4d1aa02cca18a6116933c9a23acf50767fba6271",
+      "base": "722b703b060e5cc578fa8d23568b3f9c56d72077",
+      "wrapperBlob": "73ca71a1ec23a266ed9f0722b15a87b5bac15a6b",
+      "status": "PASS",
+      "passed": 1,
+      "failed": 0,
+      "minutes": 4.7,
+      "captures": 5,
+      "jpegPreviews": 3,
+      "artifact": {
+        "id": 14794405155,
+        "bytes": 4289649,
+        "sha256": "e96bcbaa3476f06f23e24503b15ccc7de412fe279784f1967e1d4176571cf533"
+      },
+      "sourceReview": "UI61 later delta is isolated; administration production dependencies unchanged"
+    },
+    "consultation": {
+      "run": 45122439989,
+      "job": 137519060570,
+      "snapshot": "b0931669",
+      "product": "d62c4b500695d248240a48944461a0d2262a589f",
+      "status": "IN_PROGRESS"
     }
   },
   "clientChange": {
@@ -1518,5 +1599,308 @@
       "assertions": 243
     },
     "parityBoundary": "Whole client tree differs from Routines18 and Records14. Their defined DTO and dedicated Files codec branches are unchanged; only Memory11 exercises the admitted no-input catalog branch."
+  },
+  "upstream715": {
+    "previousHead": "6c7d51e3288ca40141fd6042e24e70d42aff547c",
+    "previousCodeCandidate": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "upstream": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "head": "722b703b060e5cc578fa8d23568b3f9c56d72077",
+    "tree": "6949be73c3bce882df95ed956685bdbc39f50311",
+    "paths": [
+      {
+        "path": "docs/qa/sucafina/visual-audit/ROUND-TWO.md",
+        "sha": "8dec9c5260a1e58f2cef45ffd754a5ba9a387457",
+        "status": "added"
+      },
+      {
+        "path": "docs/qa/sucafina/visual-audit/round-two-runs.json",
+        "sha": "b414e80ae7c3cab850059464a7172efb70d5462d",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-kpis.spec.ts",
+        "sha": "d5171163b601a9df842aaa1268b4b9fee289a4d5",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-providers.spec.ts",
+        "sha": "be5192a3af5ec002ad530549e2145ecc4786dee6",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/orchestra/chapter-skills.spec.ts",
+        "sha": "2ca74bba846b1fde38987412def43a609d4efec1",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-planner.spec.ts",
+        "sha": "4ec46b7cf7064cffea3d277d05d0a8c239550290",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-four-procurement.spec.ts",
+        "sha": "67613e09a0e9ed7f3ecaf2f866303a1cd7e16ce9",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-workflows.spec.ts",
+        "sha": "6fd460b7fab807c5af806ca90c4f88aeed179bc9",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/DESIGN.md",
+        "sha": "f9a8f7527b3f6249abb49d07587d51e509de86f7",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/kpis.css",
+        "sha": "5d3077ceb2d2f9beb2d4a31552c8a3152b834d98",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/providers-dialogs.tsx",
+        "sha": "b0d50b62a9f7a647bccb97722e28a4e8a779f053",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/skills-dialog.tsx",
+        "sha": "b4ece911bd9c96e31398b63c0b7ea18bb8c32c0d",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/proposals/index.tsx",
+        "sha": "a395f937053764e0c62875450adab4405b9ff495",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/dashboard/hot-topics/u38.css",
+        "sha": "fc0fa09e050574f105e9692f1cef93881f429ff9",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+        "sha": "6321522fbfa5d0179df6c34393e980073c453ffd",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/projects.css",
+        "sha": "1f3de8db7173c0ca493a711d2be243e68ae2e0e2",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+        "sha": "2b121e8d16635ed778c2b2f35774b3af6673c478",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+        "sha": "6fc5a9ddaf42c10121ac37833b625d7e1602e4d6",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+        "sha": "aec5aa200804ac6e1965b10c9293a61f43c9d4dc",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+        "sha": "1f1f1950a596df948fc3b5dd9601866f6b942849",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/reports.css",
+        "sha": "895ebe3cb614ba8e89ee65ba9ce7f05df4497dd7",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/detail.css",
+        "sha": "e543fde224fc86080ea61cce71b9fa6a116787e3",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+        "sha": "d891f1ec9db579dbf4606208013fd1b30da5289c",
+        "status": "modified"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
+        "sha": "9ad346316b8baa7156af81a77e009de5fde34acb",
+        "status": "modified"
+      }
+    ],
+    "exactCopiedPaths": 23,
+    "overlap": {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/local-administration/administration.css",
+      "method": "Insert exact upstream rule after unique existing h2 rule; retain all previous own CSS",
+      "reviewers": [
+        "root",
+        "final_memory"
+      ],
+      "rule": ".sf-u28-summaries > .sf-state-panel > .sf-state-content { display: grid; gap: var(--sf-admin-row-gap); min-inline-size: 0; }"
+    },
+    "functionalBoundary": "No backend/client/schema/registry/transport change. Shared S01 and unrelated chapter changes preserved. UI69 requires focal final visual qualification.",
+    "verification": {
+      "head": "d463d6f84f840d8e7bae69f77b9007c96031e744",
+      "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+      "preservedExactNonoverlapPaths": 23,
+      "original710FinalUnchangedPaths": 238,
+      "intentionalDocumentationFollowup": {
+        "path": "docs/guides/sucafina-native-dashboard.md",
+        "previousTextPreserved": true,
+        "originalCharacters": 11731,
+        "addedCharacters": 6798,
+        "insertionOffset": 9118,
+        "method": "Insert wave-six operational sections before Planner; no original character removed or changed"
+      }
+    }
+  },
+  "pre715Candidate": {
+    "code": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+    "nativeSource": "961aa03e8e444002cdd4060ab158f0d3a9cbe5f9",
+    "cliSource": "00d7f39405ffaf63925f80af355af5267f82d89a",
+    "cliTests": "04ba93588dedf41adfd8444b051e6cd13976f183",
+    "appShellSource": "a528dc314d367bbfa6ac414c90c683567fd81d66",
+    "core": "2fa2ba3b0cb0346c2b934ca0cdf3081db86fc176",
+    "schema": "65ad5f67d9a5f35054f77e78bd475f8c584167ae",
+    "client": "0326f30a3a2c6d1437c75508f0ad6ce540f1fd5c",
+    "routeRegistry": "6e1e711e2ff3a95e460026053cb91772693da572"
+  },
+  "technicalHistory": {
+    "gate16": {
+      "run": 45117046888,
+      "job": 137502149296,
+      "snapshot": "a42eb2adf1e8447c865feba3ea3d30227d9266ac",
+      "product": "cb924bd6cda9bb1fd2ac304618d3a8760b80d94e",
+      "status": "PASSED",
+      "checks": 9,
+      "guard": {
+        "base": "27f04c1cc723e42d5010b8f672a640b4792787ff",
+        "rules": 78,
+        "files": 71,
+        "errors": 0,
+        "approved": 0,
+        "warnings": 10,
+        "warningRules": [
+          "test-timeout-raised"
+        ],
+        "touchesGuards": false
+      },
+      "palette": {
+        "gate": "palette byte parity",
+        "files": 7,
+        "changed": []
+      },
+      "commands": [
+        {
+          "gate": "app-shell typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "fetch pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "resolve pinned guard base",
+          "exitCode": 0
+        },
+        {
+          "gate": "guardrails",
+          "exitCode": 0
+        },
+        {
+          "gate": "palette generation",
+          "exitCode": 0
+        },
+        {
+          "gate": "palette byte parity"
+        },
+        {
+          "gate": "app-shell e2e typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "core typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "filesystem and strict process regressions",
+          "exitCode": 0
+        },
+        {
+          "gate": "cli typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "client typecheck",
+          "exitCode": 0
+        },
+        {
+          "gate": "native source codec regressions",
+          "exitCode": 0
+        }
+      ],
+      "summaries": [
+        "2026-11-23T05:20:58.4782078Z  11 pass",
+        "2026-11-23T05:20:58.4782263Z  1 skip",
+        "2026-11-23T05:20:58.4782446Z  0 fail",
+        "2026-11-23T05:20:58.4782635Z  37 expect() calls",
+        "2026-11-23T05:21:39.9410771Z  12 pass",
+        "2026-11-23T05:21:39.9410948Z  0 fail",
+        "2026-11-23T05:21:39.9411145Z  243 expect() calls",
+        "2026-11-23T05:21:39.9412347Z  9 pass",
+        "2026-11-23T05:21:39.9412918Z  0 fail",
+        "2026-11-23T05:21:39.9413107Z  16 expect() calls"
+      ]
+    }
+  },
+  "technicalFollowup": {
+    "branch": "ci-run-linux-sf-final14-gate18-20261123",
+    "product": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+    "snapshot": "9e4a5a13f80b25f260eb2f0e61447de016966dd5",
+    "tree": "381bbc81bb1707dfe873936d15b25091822d701a",
+    "status": "DISPATCHED",
+    "guardBase": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+    "checks": [
+      "guardrails",
+      "app-shell e2e typecheck"
+    ],
+    "reason": "Only two permanent E2E paths changed after Gate17; all product/Core/CLI/client/schema trees unchanged",
+    "snapshotOnlyPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-final14-verification.test.ts"
+    ]
+  },
+  "materialityUx": {
+    "source": "b25026d70e952c3e80ca10befe2e062d4247966b",
+    "composition": "896d559dc72a0ddc09beb65bf45c4639c735c738",
+    "scope": "Local cancellable detail; no backend or deadline change",
+    "reviewers": [
+      "root",
+      "final_routines"
+    ],
+    "pending": "Original browser cancellation proof",
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/final-memory-consultation.spec.ts",
+      "blob": "f70affa847e9d8a08de8ac6f0c49cd392e4502af",
+      "reviewedBy": [
+        "root",
+        "final_memory"
+      ],
+      "originalPositiveSpecUnchanged": "642d37f11af0bd8c680c369facd838bcbad11007",
+      "nativeBrowserAbort": true,
+      "noServerStopClaim": true
+    }
+  },
+  "recallObserver": {
+    "source": "5eb7dba721746f44a700dff158ca0a04af3e0ee6",
+    "composition": "6a9f4e9768019ceb3a7924523885a9c3ebc51fb7",
+    "reviewers": [
+      "root",
+      "final_routines"
+    ],
+    "positiveAssertionsUnchanged": 114,
+    "originalResponseForwardedOnce": true,
+    "original40s": true,
+    "guardAndE2EFollowupRequired": true
   }
 }

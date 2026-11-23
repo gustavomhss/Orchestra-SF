@@ -46,7 +46,7 @@ Nenhuma branch de outra frente recebeu escrita. A frente UI42–UI56 do [PR #613
 
 ## Paridade de fonte e snapshots
 
-Candidato de código: `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`. Os SHAs abaixo foram consultados na API Git:
+Checkpoint anterior a #715: `cb924bd6cda9bb1fd2ac304618d3a8760b80d94e`. Os SHAs históricos abaixo foram consultados na API Git; a composição posterior aparece em seguida:
 
 | Parte | SHA |
 | --- | --- |
@@ -85,7 +85,25 @@ Os guards originais usam exatamente `dev 27f04c1cc723e42d5010b8f672a640b4792787f
 
 [Native69 — 45112013210](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45112013210), job `137486273104`, passou 69 testes e 887 asserts. O contador `readOperations:4` significa quatro IDs declarados disponíveis; não significa quatro históricos exercitados. O GET original de residentes e negativas originais foram exercitados. Catálogo, Schedule, C07 e saída C08 não recebem uma afirmação positiva por esse contador.
 
+## Integração posterior de dev — PR #715
+
+O merge `722b703b060e5cc578fa8d23568b3f9c56d72077` tem os pais `6c7d51e3288ca40141fd6042e24e70d42aff547c` e `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`. Os 24 arquivos do avanço foram reconciliados: 23 blobs foram copiados exatamente do upstream e uma regra de espaçamento de Administração local foi incorporada junto dos estilos deste lote. A verificação da composição `d463d6f84f840d8e7bae69f77b9007c96031e744` contra o novo `dev` confirma os 23 arquivos sem diferença.
+
+O único cruzamento de produto é `local-administration/administration.css`: a regra original organiza os filhos diretos de `.sf-u28-summaries > .sf-state-panel > .sf-state-content` com grid, espaçamento local e largura mínima zero. O restante do estilo, os controles e a semântica `hidden` foram preservados. A conferência focal UI69 usa o corpo e os oráculos originais, selecionados por arquivo em um snapshot descartável; o resultado efetivo consta da matriz final.
+
+As mudanças em `SfRecordDetail`, `SfTable` e seletores de outros capítulos não são dependências das folhas deste lote, conforme revisão de imports, seletores e estilos compartilhados. Não houve alteração de backend, cliente, schemas, registro de rotas, transporte, frame, estados, tokens ou paleta nesse avanço. A árvore agregada de app-shell mudou pelo upstream; não é apresentada como byte-idêntica à execução R18. A evidência anterior é reaproveitada somente nos caminhos cuja dependência permaneceu intacta.
+
+Dos 239 arquivos originalmente exclusivos de #710, 238 continuam sem diferença final. O guia nativo recebeu uma inserção de 6.798 caracteres antes da seção Planner; a comparação confirma que seus 11.731 caracteres originais permanecem intactos e na mesma ordem. Isso é uma atualização documental intencional posterior, separada da preservação byte a byte comprovada no merge de #710.
+
 ## Revisão e integração
+
+O código composto `6a9f4e9768019ceb3a7924523885a9c3ebc51fb7` conserva CLI fonte/testes, Core, schemas e cliente do checkpoint já qualificado. Sua árvore de app-shell fonte é `24c59a46f0dfefb1181e3a4ec2cb7c1a3a225216` e o subtree nativo é `2d887bfe1c116d2fee2748d644dd243de130afa5`. A mudança posterior a #715 em produto se limita à consulta local de materialidade: cancelamento, bloqueio de clique duplicado, fences de identidade e três pares de copy. Os campos e a semântica de resultados UI63 não mudaram; UI62 retorna seu consumidor separado antes desse estado local.
+
+Gate17 passou nove checks no source `d62c4b500695d248240a48944461a0d2262a589f`, snapshot `f76d89f2b6b4791034da108c5a6f80840da2e11e`, [run 45122426354](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45122426354). O base é `5b48dab52621037168ad4e3a6243c79a4fe5ad6e`: 78 regras, 105 paths, zero erros, zero exceções aprovadas e 13 avisos de declaração de prazo. Gate18 verifica apenas guards e tipos E2E após dois arquivos de observação de recall; os outros caminhos de runtime não foram alterados.
+
+Registros R15 passou as quatro jornadas no source `d5f620aeee7a9db0e83d195ffada03c703f3a59d`, snapshot `f312587515353b15f59c5c362678d3090e167677`, [run 45121980778](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121980778). Isso inclui as precondições CAP23/CAP27 que usam os componentes S01 alterados pelo upstream. O source posterior do Gate17 conserva os quatro helpers de Registros exatos; o único delta foi UI61 e seu spec de cancelamento.
+
+Administração local passou a jornada original depois de #715: source `722b703b060e5cc578fa8d23568b3f9c56d72077`, snapshot `4d1aa02cca18a6116933c9a23acf50767fba6271`, [run 45121178514](https://github.com/gustavomhss/Orchestra-SF/actions/runs/45121178514). O wrapper apenas seleciona por arquivo o corpo original byte-idêntico, conserva todos os oráculos e não entra no produto. A tentativa anterior com `--grep` foi recusada pelo validador do pedido antes de qualquer teste; não é uma falha funcional da tela.
 
 A revisão compartilhada cobriu admissões independentes, revogação, identidade depois da limpeza, origem privada, época de configuração e conservação dos corpos originais. As revisões visuais e seus enquadramentos estão na [galeria](evidence/README.md).
 
