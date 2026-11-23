@@ -19,7 +19,7 @@ import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
 import { compareScenarios } from "./scenario-comparison-port.ts"
-import type { PlannerCriteriaHost, PlannerScenarioHost, PlannerScenarioObservation } from "./scenario-comparison-port.ts"
+import type { PlannerCriteriaHost, PlannerScenarioHost, PlannerScenarioObservation, PlannerSourceObservation } from "./scenario-comparison-port.ts"
 
 // The registry and port hash the same actor-filtered inputs and engine output.
 export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId: string): Record<string, unknown> | undefined {
@@ -57,7 +57,7 @@ export function plannerSourceActor(snapshot: Snapshot, principal: Awaited<Return
   return { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
 }
 
-export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
+export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation; observeSources?: PlannerSourceObservation; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
     simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding, expected) => compareForecast(input, request, binding, expected), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),

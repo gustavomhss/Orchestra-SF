@@ -17,10 +17,13 @@ export type PlannerScenarioHost = {
 /** Own one fresh pair resolution only; criteria and later phases stay outside this observation. */
 export type PlannerScenarioObservation = (references: readonly string[], context: TrustedDomainContext,
   read: () => Promise<PortResult<ResolvedScenario>[]>) => Promise<PortResult<ResolvedScenario>[]>
+/** Own one complete source/coverage check; every later check starts a separate owner. */
+export type PlannerSourceObservation = (references: readonly string[], context: TrustedDomainContext,
+  read: () => Promise<boolean[]>) => Promise<boolean[]>
 export type PlannerCriteriaHost = { evaluate: (request: { scenarioRef: string; baselineRef: string; criterionId: string }, context: TrustedDomainContext) => Promise<PortResult<{ criterionId: string; state: "satisfied" | "failed" | "unknown"; reason: string; ruleRef?: string; evidenceRefs: readonly BusinessEvidenceRef[] }>> }
 
 /** Resolve current, authorized case results and recheck their sources before returning. */
-export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
+export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation; observeSources?: PlannerSourceObservation }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
   const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
   if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
   const request = parsed.value
@@ -42,7 +45,7 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
   if (failed) return failed
   if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
   const values = [resolved[0].value, resolved[1].value]
-  const validateSources = async () => {
+  const readSources = async () => {
     const checks: boolean[] = []
     for (const value of values) {
       if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
@@ -54,6 +57,31 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
       checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
     }
     return checks
+  }
+  const validateSources = async (): Promise<boolean[]> => {
+    const observe = input.observeSources
+    if (!observe) return readSources()
+    const unavailable = () => [false, false]
+    let calls = 0, open = true, invalid = false
+    let completed: boolean[] | undefined
+    const read = async () => {
+      if (!open || ++calls !== 1) { invalid = true; return unavailable() }
+      const checks = await readSources()
+      if (!open || invalid) { invalid = true; return unavailable() }
+      completed = structuredClone(checks)
+      return structuredClone(completed)
+    }
+    try {
+      // Preserve the complete canonical check, then detach the observer's reply.
+      // Missing, repeated, pending or retained callbacks never replay a source.
+      const observed = structuredClone(await observe([...request.scenarioRefs], binding, read))
+      if (invalid || calls !== 1 || !completed || !Array.isArray(observed) || observed.length !== 2 ||
+        !Object.hasOwn(observed, 0) || !Object.hasOwn(observed, 1) ||
+        typeof observed[0] !== "boolean" || typeof observed[1] !== "boolean" ||
+        observed[0] !== completed[0] || observed[1] !== completed[1]) return unavailable()
+      return [observed[0], observed[1]]
+    } catch { return unavailable() }
+    finally { open = false }
   }
   if ((await validateSources()).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
   const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
