@@ -1,0 +1,59 @@
+{
+  "base": "5b48dab52621037168ad4e3a6243c79a4fe5ad6e",
+  "verdict": "NOT_IMPECCABLE",
+  "priorityCounts": {
+    "P2": 23,
+    "P3": 10,
+    "P1": 1
+  },
+  "distinctImagesReviewed": 757,
+  "listedOriginalPaths": 762,
+  "inventorySurfaces": 70,
+  "routePatternsInventoried": 165,
+  "guardOnlySurfaces": [
+    "UI43",
+    "UI51",
+    "UI52",
+    "UI53",
+    "UI61",
+    "UI63",
+    "UI64",
+    "UI65",
+    "UI66",
+    "UI70"
+  ],
+  "partialStateSurfaces": [
+    "UI31",
+    "UI32",
+    "UI37",
+    "UI38",
+    "UI39",
+    "UI40",
+    "UI41",
+    "UI42",
+    "UI44",
+    "UI60",
+    "UI68",
+    "UI69"
+  ],
+  "definitions": {
+    "P1": "Perda de trabalho demonstrada; corrigir antes de considerar a interação confiável.",
+    "P2": "Falha material de UX/UI ou lógica de fonte que exige correção; nível de prova descrito em cada item.",
+    "P3": "Refinamento localizado de composição, densidade, copy ou formatação."
+  },
+  "observationsExcludedFromFindingCounts": [
+    "BA-02: READY/CONNECTING; stream aberto não demonstrado.",
+    "Hipótese de foco por IDs iguais retirada após revisar Solid on(...).",
+    "Races UI42/UI44 continuam hipóteses até prova de transporte controlado."
+  ],
+  "closeout": {
+    "latestDev": "b71ecbcc644ee3363ccd1ce0e149c08c80e6130e",
+    "integratedPR": 716,
+    "baselineCountsUnchanged": true,
+    "observedOccurrenceAddressedAfterBaseline": [
+      "SYS-03"
+    ],
+    "reference": "DELTA.md",
+    "newEvidenceNotAddedToHistoricalImageCounts": true
+  }
+}
