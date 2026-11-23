@@ -28,6 +28,7 @@ import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import { prepareSfCapturedContextIdentity } from "./captured-context-identity.ts"
 import { matchesSfPlannerProjectionSourceRefs } from "./planner-projection-source-refs.ts"
+import { observeSfUiContextIntegrity } from "../integration/ui-authority.ts"
 
 type CaptureSelection = Parameters<BusinessContextService["recall"]>[0]
 type CaptureObservation = {
@@ -141,10 +142,10 @@ function assembleSfBusinessContext(host: {
     async recall(request, call) {
       const selected = structuredClone(request)
       const selectionDigest = digestSfValue(selected)
-      const binding = digestSfValue([call.kind, call.binding])
+      const bindingIntegrity = observeSfUiContextIntegrity(call)
       const lease = call.lease
       const stable = () => selectionDigest === digestSfValue(request) && selectionDigest === digestSfValue(selected) &&
-        binding === digestSfValue([call.kind, call.binding]) && call.lease === lease
+        bindingIntegrity.current() && call.lease === lease
       if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const records = await host.recall(selected, call)
       if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
@@ -344,10 +345,10 @@ export function createSfAtlasBusiness(input: {
   const readOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
     const request = input.host.requestFor(call)
     const lease = call.lease
-    const binding = digestSfValue([call.kind, call.binding])
+    const bindingIntegrity = observeSfUiContextIntegrity(call)
     const headers = request && digestSfValue([...request.headers.entries()])
     const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-      binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()])
+      bindingIntegrity.current() && headers === digestSfValue([...request.headers.entries()])
     if (!stable()) return undefined
     const lookup = { call, digest, active: true, stable }
     const selected = await captureLookup.run(lookup, async () => {
@@ -471,9 +472,9 @@ export function createSfAtlasBusiness(input: {
       if (!observed.groups.length) {
         const request = input.host.requestFor(call)
         if (!request || !stable() || observed.selection.caseRefs.length || records.length) return false
-        const binding = digestSfValue([call.kind, call.binding]), lease = call.lease, headers = digestSfValue([...request.headers.entries()])
+        const bindingIntegrity = observeSfUiContextIntegrity(call), lease = call.lease, headers = digestSfValue([...request.headers.entries()])
         const current = () => stable() && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-          binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()])
+          bindingIntegrity.current() && headers === digestSfValue([...request.headers.entries()])
         const final = await input.state.read(request, "atlas", async () =>
           current() && await input.host.revalidate(call) && current()).catch(() => undefined)
         return final?.status === "ok" && final.value === true && current()
@@ -500,12 +501,12 @@ export function createSfAtlasBusiness(input: {
         }
         const request = input.host.requestFor(call)
         const lease = call.lease
-        const binding = digestSfValue([call.kind, call.binding])
+        const bindingIntegrity = observeSfUiContextIntegrity(call)
         const headers = request && digestSfValue([...request.headers.entries()])
         const observations: { value: unknown; identity: string }[] = []
         const pin = (value: unknown) => { observations.push({ value, identity: digestSfValue(value) }) }
         const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
-          binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
+          bindingIntegrity.current() && headers === digestSfValue([...request.headers.entries()]) &&
           digestSfValue(ref) === digestSfValue(selected) && observations.every((item) => digestSfValue(item.value) === item.identity)
         if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
         const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
@@ -567,12 +568,12 @@ export function createSfAtlasBusiness(input: {
     const selected = structuredClone(selection)
     const selectionDigest = digestSfValue(selected)
     const request = input.host.requestFor(call)
-    const binding = digestSfValue([call.kind, call.binding])
+    const bindingIntegrity = observeSfUiContextIntegrity(call)
     const lease = call.lease
     const headers = request && digestSfValue([...request.headers.entries()])
     const sources = await readContext(selected, call)
     if (!request || request.signal.aborted || input.host.requestFor(call) !== request || call.lease !== lease ||
-      binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
+      !bindingIntegrity.current() || headers !== digestSfValue([...request.headers.entries()]) ||
       selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
       return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
     const sameSources = prepareSfCapturedContextIdentity(sources)
@@ -585,7 +586,7 @@ export function createSfAtlasBusiness(input: {
       const captures: { value: ProtectedEvidenceCapture; identity: string }[] = []
       const stable = () => !!snapshots && !request.signal.aborted && call.lease === lease &&
         input.host.requestFor(call) === request &&
-        binding === digestSfValue([call.kind, call.binding]) &&
+        bindingIntegrity.current() &&
         headers === digestSfValue([...request.headers.entries()]) &&
         selectionIdentity === digestSfValue(requested) && selectionIdentity === digestSfValue(selected) &&
         sameSources(sources) &&

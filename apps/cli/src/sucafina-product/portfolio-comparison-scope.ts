@@ -1,4 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { observeSfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
+import type { SfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -18,7 +20,7 @@ import type { createSfBusinessServices } from "./business-services.ts"
 type Compare = ReturnType<typeof createDecisionComparisonService>
 type Value = Extract<Awaited<ReturnType<Compare>>, { status: "ok" }>["value"]
 type ScenarioValue = Extract<Awaited<ReturnType<PlannerScenarioHost["resolve"]>>, { status: "ok" }>["value"]
-type Scope = { request: Request; binding: string; criteria: boolean; readersCurrent: () => boolean; proofs: Map<string, { fence: string; value: Value }>;
+type Scope = { request: Request; binding: string; bindingIntegrity: SfUiContextIntegrity; criteria: boolean; readersCurrent: () => boolean; proofs: Map<string, { fence: string; value: Value }>;
   scenarios: Map<string, { fence: string; value: ScenarioValue }> }
 export type SfComparisonInvocation = <T>(call: TrustedDomainContext, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
 
@@ -38,7 +40,7 @@ export function createSfPortfolioComparisonScope(input: {
   const execution = new AsyncLocalStorage<Scope>()
   const reading = new AsyncLocalStorage<{ scope: Scope; keys: ReadonlySet<string> }>()
   const current = (call: TrustedDomainContext, scope: Scope) => active.get(call) === scope && execution.getStore() === scope &&
-    scope.readersCurrent() && host.requestFor(call) === scope.request && !scope.request.signal.aborted && scope.binding === digestSfValue([call.kind, call.binding])
+    scope.readersCurrent() && host.requestFor(call) === scope.request && !scope.request.signal.aborted && scope.bindingIntegrity.current()
   const environment = async (request: Request) => {
     const value = await host.environment(request), at = Date.parse(value.at)
     return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
@@ -245,7 +247,8 @@ export function createSfPortfolioComparisonScope(input: {
       input.scenarios === scenarios && scenarios?.resolve === resolve && scenarios?.resolveMany === batch &&
       input.rules === rules && rules?.resolve === resolveRule && input.business.plannerSources === source &&
       source.resolveForecastSource === forecast && source.resolveForecastCoverage === coverage
-    const scope: Scope = { request, binding: digestSfValue([call.kind, call.binding]), criteria, readersCurrent,
+    const bindingIntegrity = observeSfUiContextIntegrity(call)
+    const scope: Scope = { request, binding: bindingIntegrity.digest, bindingIntegrity, criteria, readersCurrent,
       proofs: new Map(), scenarios: new Map() }
     active.set(call, scope)
     return execution.run(scope, async () => {
