@@ -1,4 +1,4 @@
-import { createEffect, For, Show } from "solid-js"
+import { createEffect, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useSDK } from "@/context/sdk"
@@ -67,6 +67,7 @@ export function Maintain(props: ChapterPageProps) {
   })
   const location = () => ({ directory: props.directory })
   let pipelineRead = 0
+  onCleanup(() => { pipelineRead += 1 })
   const reportPipeline = (error: unknown) => {
     console.error(error)
     setRoster("pipelineFailed", true)

@@ -123,3 +123,16 @@
 @media (prefers-reduced-motion: reduce) {
   .sf-files * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
+
+/* Preview gaps use admitted file labels; complete paths stay one disclosure away. */
+.sf-files-gaps { display: grid; gap: 8px; margin-block-start: 20px; }
+.sf-files-gaps > ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.sf-files-gaps > ul > li { display: grid; gap: 8px; min-inline-size: 0; padding-block: 12px; border-block-start: 1px solid var(--mx-line); }
+.sf-files-gap-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.sf-files-gap-heading > span, .sf-files-gap-location { color: var(--mx-dim); font-size: var(--orchestra-font-size-sm); }
+.sf-files-gaps p { margin: 0; }
+.sf-files-gap-source code { font-size: var(--orchestra-font-size-sm); overflow-wrap: anywhere; }
+.sf-files-empty-groups > ul { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
+.sf-files-empty-groups li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; color: var(--mx-dim); }
+.sf-files-change-group > summary, .sf-files-empty-groups > summary, .sf-files-gap-source > summary { min-block-size: 44px; align-content: center; }
+.sf-files-change-label { margin-block: 8px; font-weight: 500; }

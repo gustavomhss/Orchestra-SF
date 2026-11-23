@@ -65,7 +65,7 @@ export function SfProjectEditor(props: Readonly<{
     if ((field === "start" || field === "end") && typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value)))
       return new Intl.DateTimeFormat(language.intl(), { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value + "T00:00:00Z"))
     if ((field === "budget" || field === "spent" || field === "pct") && Number.isFinite(Number(value)))
-      return new Intl.NumberFormat(language.intl(), { maximumFractionDigits: 20 }).format(Number(value)) + (field === "pct" ? "%" : " · " + t("sf.u05.projects.noCurrency"))
+      return new Intl.NumberFormat(language.intl(), { maximumSignificantDigits: 21 }).format(Number(value)) + (field === "pct" ? "%" : " · " + t("sf.u05.projects.noCurrency"))
     return String(value)
   }
   return (

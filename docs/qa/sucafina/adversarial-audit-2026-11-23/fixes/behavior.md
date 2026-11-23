@@ -35,3 +35,13 @@ The first focused Bun request ([45206814417](https://github.com/gustavomhss/Orch
 ## Remaining qualification
 
 Combined production native runs and screenshot review must finish before merge. Existing fixtures exercise original installed producers; no replacement test application, fabricated permission, automatic mutation retry, or production write was added. The horizontal endpoint assertions measure actual browser layout and programmatic endpoints in addition to the existing keyboard gesture; they do not claim touch/wheel or browser-zoom qualification.
+
+## Supplemental SUP-R01: import preview hierarchy
+
+UI55/UI56 now render source gaps through the original public `missing.reason` enum and the admitted change's file metadata. A gap is associated with a change only when exactly one full `change.path + ":before" / ":after"` matches. This convention is read directly in both original producers, `product/imports/planner-preview.ts` and `dashboard-preview.ts`. Unknown or ambiguous associations use a generic source-value heading; the UI does not derive a business identity from a UUID/path.
+
+The source-provided field, sheet, row and column remain data. The Before/Proposed labels and eight closed reason labels use the English/Portuguese catalog. The complete original path and reason code remain available in Source details. No gap is converted into permission to apply.
+
+Only nonempty change categories retain individual disclosures. A single collapsed category summary exposes every empty category and its zero count. Actual changes, before/after values, ignored/rejected entries and full provenance remain available. UI57's receipt, totals and six-category rendering from #713 are preserved. No #613 implementation was copied or merged.
+
+The existing real XLSX journey in `operations-support/imports.ts` now checks the compact category count and exact gap metadata, opens/closes the technical disclosure, rereads the same producer manifest through UI56, and captures the gap presentation. Its existing assertions still prove no preview mutation, one explicit Apply, identical original receipt recovery and unchanged UI57 behavior. A focused pure presentation test rejects ambiguous/similar/financial-only identifiers rather than fabricating file provenance. These new checks require the combined Files CI run before merge.

@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test"
+import { expandAdvanced } from "./compact-navigation.fixture"
 import {
   captureSharedState,
   setupSharedVisual,
   sharedBoardTitle,
   sharedInboxItems,
+  sharedRagSources,
   sharedVisualVariants,
 } from "./shared-visual.fixture"
 
@@ -356,3 +358,75 @@ for (const variant of sharedVisualVariants) {
       "Explicit unreachable health reply, original validation and recovery dialog. No authenticated server was added and no global fatal-boundary coverage is claimed.")
   })
 }
+
+test("Rag Studio keeps the latest file when an earlier read completes later", async ({ page }, info) => {
+  const variant = sharedVisualVariants[0]
+  const state = await setupSharedVisual(page, variant)
+  state.ragSources = sharedRagSources
+  let releaseFirst = () => {}
+  const firstHeld = new Promise<void>((resolve) => { releaseFirst = resolve })
+  const firstPath = "/api/rag-studio/sources/visual-cut-a"
+  state.ragReadWait = (path) => path === firstPath ? firstHeld : Promise.resolve()
+  await page.goto("/orchestra/rag-studio")
+  const studio = page.locator('[data-mx-page="rag-studio"]')
+  const files = studio.locator("section").filter({ has: page.getByRole("heading", { name: "Files", exact: true }) })
+  const first = files.locator(".mx-row").filter({ has: page.getByText("first.txt", { exact: true }) })
+  const second = files.locator(".mx-row").filter({ has: page.getByText("second.txt", { exact: true }) })
+  await expect(first).toHaveCount(1)
+  await expect(second).toHaveCount(1)
+  const firstRequest = page.waitForRequest((request) => new URL(request.url()).pathname === firstPath)
+  await first.getByRole("button", { name: "Show the cut", exact: true }).click()
+  await firstRequest
+  await second.getByRole("button", { name: "Show the cut", exact: true }).click()
+  await expect(second.getByRole("button", { name: "Show the cut", exact: true })).toHaveAttribute("aria-pressed", "true")
+  await expect(files.locator(".rag-follow")).toContainText("Second source original text.")
+  const lateResponse = page.waitForResponse((response) => new URL(response.url()).pathname === firstPath)
+  releaseFirst()
+  await (await lateResponse).finished()
+  await expect(files.locator(".rag-follow")).toContainText("Second source original text.")
+  await expect(files.locator(".rag-follow")).not.toContainText("First source original text.")
+  await expect(second.getByRole("button", { name: "Show the cut", exact: true })).toHaveAttribute("aria-pressed", "true")
+  await expect(first.getByRole("button", { name: "Show the cut", exact: true })).toHaveAttribute("aria-pressed", "false")
+  expect(state.writes).toEqual([])
+  await captureSharedState(page, info, variant, state, "rag-studio", "late-source-keeps-latest-selection",
+    "The first synthetic source GET is released only after the second source is rendered. Its later completion cannot replace the selected file or source text. No source mutation.")
+})
+
+test("Rag Studio ignores reads from an unmounted page instance", async ({ page }, info) => {
+  const variant = sharedVisualVariants[0]
+  const state = await setupSharedVisual(page, variant)
+  state.rag = "error"
+  let releaseOld = () => {}
+  const oldHeld = new Promise<void>((resolve) => { releaseOld = resolve })
+  state.ragReadWait = () => oldHeld
+  const sourceRequest = page.waitForRequest((request) => new URL(request.url()).pathname === "/api/rag-studio/sources")
+  const pipelineRequest = page.waitForRequest((request) => new URL(request.url()).pathname === "/api/rag-studio/pipeline")
+  await page.goto("/orchestra/rag-studio")
+  await Promise.all([sourceRequest, pipelineRequest])
+  const studio = page.locator('[data-mx-page="rag-studio"]')
+  await expect(studio.getByRole("heading", { name: "Rag Studio", exact: true })).toBeVisible()
+  await expandAdvanced(page)
+  const sidebar = page.locator('[data-component="orchestra-sidebar"]')
+  await sidebar.getByRole("button", { name: "Inbox", exact: true }).click()
+  await expect(studio).toHaveCount(0)
+  await expect(page.getByRole("heading", { name: "Inbox", exact: true })).toBeVisible()
+  state.rag = "ready"
+  state.ragReadWait = undefined
+  await sidebar.getByRole("button", { name: "Rag Studio", exact: true }).click()
+  const files = studio.locator("section").filter({ has: page.getByRole("heading", { name: "Files", exact: true }) })
+  await expect(files.getByText("No admitted files.", { exact: true })).toBeVisible()
+  await expect(studio.getByRole("heading", { name: "Pipeline", exact: true })).toBeVisible()
+  await expect(studio.getByText("Embedding is off.", { exact: true })).toBeVisible()
+  const lateSources = page.waitForResponse((response) => response.status() === 503 &&
+    new URL(response.url()).pathname === "/api/rag-studio/sources")
+  const latePipeline = page.waitForResponse((response) => response.status() === 503 &&
+    new URL(response.url()).pathname === "/api/rag-studio/pipeline")
+  releaseOld()
+  await Promise.all([lateSources, latePipeline].map(async (read) => (await read).finished()))
+  await expect(files.getByText("No admitted files.", { exact: true })).toBeVisible()
+  await expect(studio.getByRole("heading", { name: "Pipeline", exact: true })).toBeVisible()
+  await expect(studio.getByRole("alert")).toHaveCount(0)
+  expect(state.writes).toEqual([])
+  await captureSharedState(page, info, variant, state, "rag-studio", "late-reads-ignore-unmounted-page",
+    "Original SPA navigation unmounts the first page while its two synthetic GETs are held. A new instance reads successfully before both old 503 responses are released; those failures cannot replace its ready state.")
+})

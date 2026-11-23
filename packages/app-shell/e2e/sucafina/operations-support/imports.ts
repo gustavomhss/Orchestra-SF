@@ -503,12 +503,13 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   expect(detail.detail.changes.filter((change) => change.path === `/versions/@id=${version}/lines/@id=${renewal}/f/0`)).toEqual([expect.objectContaining({ kind: "changed", before: { state: "present", value: 72000 }, after: { state: "present", value: 84000 }, source: { kind: "file", sheet: "OPEX", row: 2, column: 6, address: "F2", field: "Jan" } })])
   await expect(root).toHaveAttribute("data-sf-phase", "reviewing")
   await expect(root.getByRole("heading", { name: "Simulation · no domain changes applied", exact: true })).toBeVisible()
-  await expect(root.getByRole("region", { name: "Item and field changes", exact: true }).locator(":scope > details > summary")).toHaveCount(6)
+  await assertPreviewPresentation(root, preview, detail.detail)
   const [afterPreview, previewTokens] = await Promise.all([
     exported(reader, account, version), tokens(reader, account, fiscalYear, version, [renewal, fixed], false),
   ])
   expect(afterPreview).toEqual(before)
   expect(previewTokens).toEqual(beforeTokens)
+  await capture?.(page, info, { surface: "UI55", state: "source-gap-context", evidence: "Original source gaps use admitted cell labels and localized reasons; complete paths and reason codes remain in disclosures.", focus: ".sf-files-gaps" })
   await capture?.(page, info, { surface: "UI55", state: "original-preview", evidence: "Original scanned import preview; independent export and version tokens prove no domain changes.", attributes: { "data-sf-phase": "reviewing" }, focus: '.sf-files-section[aria-label="Item and field changes"]' })
   if (capture) {
     const previewPage = await page.context().newPage()
@@ -521,6 +522,7 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
         .getByRole("button", { name: "Refresh receipt", exact: true }).click())
       expect(reread).toEqual(detail)
       await expect(previewRoot.getByRole("region", { name: "Item and field changes", exact: true })).toBeVisible()
+      await assertPreviewPresentation(previewRoot, preview, reread.detail)
       await capture(previewPage, info, { surface: "UI56", state: "original-manifest-preview", evidence: "Independent native preview route re-read the exact original manifest; no Apply was invoked.", focus: '.sf-files-section[aria-label="Item and field changes"]' })
     } finally { await previewPage.close() }
   }
@@ -738,4 +740,43 @@ export async function importJourney(page: Page, info: TestInfo, capture?: Workfl
   page.context().off("request", countApply)
   await observation(info, "operations-import-real-receipt", { version, renewal, fixed, sourceDigest, manifest: recovered.manifest, receipt: recovered.receipt, beforeTokens, afterTokens, applyRequests: applies.length, recovery: "real Apply response delivery lost; explicit Refresh receipt and independent result-route reread", revocation: "cross-tab logout blocked receipt refresh at context preflight; the producer denied the exact reference", isolation: "a separate signed-in viewer could export the committed data but could not read the owner's receipt" })
   await reader.close()
+}
+
+/** Assertions consume the original returned manifest/detail, not a reconstructed import. */
+async function assertPreviewPresentation(root: Locator, preview: ImportManifest, detail: ImportDetail) {
+  const kinds = ["added", "changed", "removed", "unchanged", "ignored", "rejected"] as const
+  const populated = kinds.filter((kind) => detail.changes.some((entry) => entry.kind === kind))
+  const empty = kinds.filter((kind) => !detail.changes.some((entry) => entry.kind === kind))
+  const changes = root.getByRole("region", { name: "Item and field changes", exact: true })
+  await expect(changes.locator(".sf-files-change-group")).toHaveCount(populated.length)
+  expect(await changes.locator(".sf-files-change-group").evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute("data-sf-import-kind")))).toEqual(populated)
+  expect(empty.length, "the original fixture retains empty categories for compact-summary coverage").toBeGreaterThan(0)
+  const emptyGroups = changes.locator(".sf-files-empty-groups")
+  await expect(emptyGroups).toHaveJSProperty("open", false)
+  await expect(emptyGroups.locator("summary")).toHaveText("Categories without entries (" + empty.length + ")")
+  await expect(changes.locator(":scope > details > summary")).toHaveCount(populated.length + 1)
+  await emptyGroups.locator("summary").click()
+  expect(await emptyGroups.locator("[data-sf-import-empty]").evaluateAll((elements) =>
+    elements.map((element) => element.getAttribute("data-sf-import-empty")))).toEqual(empty)
+  await expect(emptyGroups.locator("li > span:first-child")).toHaveText(empty)
+  await expect(emptyGroups.locator("li > span:last-child")).toHaveText(empty.map(() => "No entries · 0"))
+  await emptyGroups.locator("summary").click()
+
+  const missing = preview.commands.flatMap((command) => command.preview.missing)
+  expect(missing.length, "the original fixture retains source gaps").toBeGreaterThan(0)
+  const gaps = root.locator("[data-sf-import-gap]")
+  await expect(gaps).toHaveCount(missing.length)
+  await expect(gaps.locator(".sf-files-gap-source code")).toHaveText(missing.flatMap((gap) => [gap.field, gap.reason]))
+  const missingIndex = missing.findIndex((gap) => gap.reason === "missing")
+  expect(missingIndex).toBeGreaterThanOrEqual(0)
+  const gap = gaps.nth(missingIndex)
+  await expect(gap.getByText("Not provided by the source.", { exact: true })).toBeVisible()
+  await expect(gap.locator(".sf-files-gap-heading")).not.toContainText(missing[missingIndex]!.field)
+  const reference = gap.locator(".sf-files-gap-source")
+  await expect(reference.locator("code").first()).toBeHidden()
+  await reference.locator("summary").click()
+  await expect(reference.locator("code").first()).toBeVisible()
+  await expect(reference.locator("code").first()).toHaveText(missing[missingIndex]!.field)
+  await reference.locator("summary").click()
 }

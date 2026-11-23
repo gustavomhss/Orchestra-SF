@@ -442,11 +442,77 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   }
   const register = root.locator("details.sf-records-register")
   await register.locator("summary").click()
-  await expect(register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })).toBeVisible()
-  await expect(register.getByRole("button", { name: "Scan and attach to record", exact: true })).toBeDisabled()
-  await captureRecord(page, info, "UI58", "register-awaits-source")
-  await register.locator("summary").click()
-  await document.selectOption({ value: selected[0]!.selectionRef })
+  const documentInput = register.getByLabel("Document · PDF, TXT or DOCX (up to 20 MiB)", { exact: true })
+  const attachDocument = register.getByRole("button", { name: "Scan and attach to record", exact: true })
+  await expect(documentInput).toBeVisible()
+  await expect(attachDocument).toBeDisabled()
+  await expect(register.getByLabel("Existing record ID", { exact: true })).toHaveCount(0)
+  await expect(register.getByLabel("Current record version (CAS)", { exact: true })).toHaveCount(0)
+  const targetCatalogURL = new URL(account.baseURL + "/api/ui/pages/CAP27").href
+  const catalogTargets = await observe(page, targetCatalogURL)
+  await register.getByRole("combobox", { name: "Classification", exact: true }).selectOption("supplier")
+  const { response: catalogTargetResponse } = await catalogTargets.completed
+  expect(catalogTargetResponse.status()).toBe(200)
+  const catalogTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await catalogTargetResponse.json())
+  if (catalogTargetBody.status !== "ok") throw new Error("The original supplier upload catalog is unavailable")
+  expect(catalogTargetBody.context).toEqual(fileStamp)
+  expect(catalogTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 1)
+  expect(catalogTargetBody.value.data.suppliers.filter((row) => row.id === supplier)).toHaveLength(1)
+  const targetRecord = register.getByRole("combobox", { name: "Target record", exact: true })
+  const targetLabel = name + " · " + supplierNumber
+  await expect(targetRecord).toBeEnabled()
+  await expect(targetRecord.getByRole("option", { name: targetLabel, exact: true })).toHaveAttribute("value", supplier)
+  await targetRecord.selectOption({ label: targetLabel })
+  await expect(targetRecord).toHaveValue(supplier)
+  await expect(attachDocument).toBeDisabled()
+  await captureRecord(page, info, "UI58", "register-authorized-target")
+  const catalogFilename = "catalog-" + filename
+  await documentInput.setInputFiles({ name: catalogFilename, mimeType: "text/plain", buffer: bytes })
+  await expect(attachDocument).toBeEnabled()
+  // Observe exactly one original scanned upload. Record identity and CAS come
+  // from the authorized catalog, not a manually entered ID or asset revision.
+  const catalogUpload = await observe(page, (url) =>
+    url.origin === account.origin && url.pathname === new URL(account.baseURL).pathname + "/procurement" &&
+      url.searchParams.get("upload") === "supplier" && url.searchParams.get("record") === supplier, "POST")
+  const refreshedTargets = await observe(page, targetCatalogURL)
+  const refreshedSources = await observeFile(page, "files.document-sources", endpoint("document-sources"))
+  await attachDocument.click()
+  const { response: catalogUploadResponse, request: catalogUploadRequest } = await catalogUpload.completed
+  expect(catalogUploadRequest.method()).toBe("POST")
+  expect(catalogUploadResponse.status()).toBe(200)
+  const catalogUploadQuery = new URL(catalogUploadRequest.url()).searchParams
+  expect(catalogUploadQuery.get("record")).toBe(supplier)
+  expect(catalogUploadQuery.get("recordVersion")).toBe(String(beforeVersion + 1))
+  expect(catalogUploadQuery.get("name")).toBe(catalogFilename)
+  expect(await catalogUploadResponse.json()).toMatchObject({ ok: true })
+  const { response: refreshedTargetResponse } = await refreshedTargets.completed
+  expect(refreshedTargetResponse.status()).toBe(200)
+  const refreshedTargetBody = Schema.decodeUnknownSync(SfProcurement.operations["domain.page.CAP27"].output)(await refreshedTargetResponse.json())
+  if (refreshedTargetBody.status !== "ok") throw new Error("The uploaded catalog target could not be read back")
+  expect(refreshedTargetBody.context).toEqual(fileStamp)
+  expect(refreshedTargetBody.value.versions["suppliers:" + supplier]?.version).toBe(beforeVersion + 2)
+  expect(refreshedTargetBody.value.data.suppliers.find((row) => row.id === supplier)?.attachments
+    ?.filter((item) => item.name === catalogFilename)).toHaveLength(1)
+  const refreshedCatalog = await valueOf<Source[]>((await refreshedSources.completed).response)
+  await refreshedSources.finish()
+  expect(refreshedCatalog.filter((source) => source.label === catalogFilename)).toHaveLength(1)
+  const originalSource = refreshedCatalog.filter((source) => source.label === filename)
+  expect(originalSource).toHaveLength(1)
+  const selectedSourceRef = originalSource[0]!.selectionRef
+  await expect(root).toHaveAttribute("data-sf-read-state", "ready")
+  await expect(root.locator("[data-sf-upload-outcome]")).toHaveText(
+    "File accepted by the server scanner and attached to the authorized record. Refresh and choose the newly admitted source for extraction.",
+  )
+  await expect(document.getByRole("option", { name: filename, exact: true })).toHaveAttribute("value", selectedSourceRef)
+  await observation(info, "operations-document-authorized-upload-target", {
+    source: "original CAP27 record catalog and original supplier upload",
+    targetLabel, record: supplier, catalogVersion: beforeVersion + 1,
+    uploadedVersion: beforeVersion + 2, httpStatus: catalogUploadResponse.status(),
+    scannerConfigured: Boolean(process.env.SF_OPERATIONS_CLAMD_PORT),
+    manualRecordId: false, manualVersion: false, responseSubstituted: false, automaticRetries: 0,
+  })
+  if (await register.getAttribute("open") !== null) await register.locator("summary").click()
+  await document.selectOption({ value: selectedSourceRef })
   await captureRecordVariants(page, info, "UI58", "authorized-catalog")
   // Extra locale re-mounts belong to the existing opt-in visual sweep;
   // keep the default lane's original 180s budget for confirmation and revocation.
@@ -475,7 +541,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   ])
   await root.getByRole("button", { name: "Open document", exact: true }).click()
   const admission = await admitted.completed
-  expect(admission.request.postDataJSON()).toEqual({ selectionRef: selected[0]!.selectionRef })
+  expect(admission.request.postDataJSON()).toEqual({ selectionRef: selectedSourceRef })
   const { documentRef } = await valueOf<{ documentRef: string }>(admission.response)
   expect(documentRef).toBe(admittedRef)
   await admitted.finish()
@@ -685,7 +751,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const projectedBody = await projected.json() as { status: string; value?: { versions?: Record<string, { version?: number }> } }
   expect(projectedBody.status).toBe("ok")
   const projectedVersion = projectedBody.value?.versions?.["suppliers:" + supplier]?.version
-  expect(projectedVersion).toBe(beforeVersion + 1)
+  expect(projectedVersion).toBe(beforeVersion + 2)
   const readerRow = reader.locator(`tr[data-sf-row="${supplier}"]`)
   await expect(readerRow).toHaveCount(1)
   await expect(readerRow.locator('button[data-sf-action="edit"]')).toBeEnabled()
@@ -714,7 +780,7 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   const deleted = await captureCommandResponse(reader, account, { action: "delete", id: supplier }, confirmDelete)
   expect(deleted.status).toBe(200)
   expect(deleted.body).toMatchObject({ ok: true })
-  expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} })
+  expect(deleted.command).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 2, values: {} })
   await expect(reader.locator(".sf-u14-layout").getByRole("status").filter({ hasText:
     "Operation accepted.",
   })).toBeVisible()
