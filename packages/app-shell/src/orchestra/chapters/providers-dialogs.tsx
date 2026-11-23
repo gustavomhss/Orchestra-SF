@@ -74,7 +74,7 @@ export function ProviderConfirmDialog(props: {
           <Dialog.CloseButton type="button" class="mx-btn" aria-label={language.t("common.cancel")}>
             {language.t("common.cancel")}
           </Dialog.CloseButton>
-          <button class="mx-btn primary" type="submit" disabled={state.busy}>
+          <button class="mx-btn danger" type="submit" disabled={state.busy}>
             {props.submit}
           </button>
         </footer>

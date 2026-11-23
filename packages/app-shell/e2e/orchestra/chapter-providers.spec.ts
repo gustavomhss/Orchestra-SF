@@ -104,6 +104,7 @@ test("v2: error and retry, server route, confirmed credential removal, key and p
   const dialog = page.locator(".providers-dialog")
   await signedIn.getByRole("button", { name: "Disconnect" }).click()
   await expect(dialog.getByRole("heading", { name: "Disconnect OpenAI?" })).toBeVisible()
+  await page.screenshot({ path: test.info().outputPath("provider-disconnect-confirmation-light.png") })
   await dialog.getByRole("button", { name: "Disconnect" }).click()
   await expect(dialog).toHaveCount(0)
   await expect(page.getByText("OpenAI disconnected", { exact: true })).toBeVisible()
