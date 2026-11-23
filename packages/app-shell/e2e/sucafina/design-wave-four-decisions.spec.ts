@@ -11,7 +11,9 @@ type SfCase = Pick<DecisionCase, "id" | "incarnation" | "version" | "objective" 
     preparedChanges: readonly unknown[]
     receipts: readonly unknown[]
   }
-waveFourTest.use({ designWave: "four-decisions" })
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveFourTest.use({ designWave: "four-decisions", trace: "off", video: "off" })
+waveFourTest.describe.configure({ retries: 0 })
 
 type Owner = Parameters<typeof enter>[1]
 type Screen = { id: string; href: string; title: string; titleBr: string; caseRef?: string }

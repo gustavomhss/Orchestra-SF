@@ -2,6 +2,10 @@ import { expect, type Page } from "@playwright/test"
 import { ServerConnection } from "../../src/context/server-connection"
 import { waveTwoTest, observePage, ready, scheme, scrollPageTop, reflow, reviewActions, capture } from "./design-support/wave-two"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveTwoTest.use({ trace: "off", video: "off" })
+waveTwoTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP02", path: "/orchestra/sf-dashboard/hot-topics", title: "Hot Topics & Actions", br: "Hot Topics e ações" },
   { id: "CAP03", path: "/orchestra/sf-dashboard/budget", title: "Budget Overview", br: "Visão do orçamento" },

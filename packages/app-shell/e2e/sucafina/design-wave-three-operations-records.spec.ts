@@ -2,6 +2,10 @@ import { expect, type Locator, type Page, type TestInfo } from "@playwright/test
 import { waveThreeTest, scheme, capture, reflow, reviewActions, scrollPageTop, observePage, enter } from "./design-support/wave-three"
 import { waveThreeData } from "./design-support/wave-three-data"
 
+// Keep the original enrollment and scoped session out of traces in every test file.
+waveThreeTest.use({ trace: "off", video: "off" })
+waveThreeTest.describe.configure({ retries: 0 })
+
 const screens = [
   { id: "CAP11", path: "/orchestra/sf-operations/service", title: "IT Operations", br: "Serviço de TI" },
   { id: "CAP12", path: "/orchestra/sf-operations/security", title: "IT Security KPIs", br: "Segurança de TI" },
@@ -76,7 +80,7 @@ waveThreeTest("installed native operations · risks source filtering and a real 
     await capture(page, info, "CAP13-editor-dark-desktop-test-data")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
-    await expect(review.locator(".sf-s03-head > p").first()).toHaveText("Edit")
+    await expect(review.getByRole("heading", { name: "Edit", exact: true })).toBeVisible()
     await expect(review).toContainText(riskNotes)
     await scrollPageTop(page)
     await capture(page, info, "CAP13-review-top-dark-desktop-test-data")
@@ -165,7 +169,7 @@ waveThreeTest("installed native operations · relationships source values and a 
     await capture(page, info, "CAP15-editor-dark-desktop-test-data")
     await editor.getByRole("button", { name: "Review changes", exact: true }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
-    await expect(review.locator(".sf-s03-head > p").first()).toHaveText("Edit")
+    await expect(review.getByRole("heading", { name: "Edit", exact: true })).toBeVisible()
     await scrollPageTop(page)
     await capture(page, info, "CAP15-review-top-dark-desktop-test-data")
     await reviewActions(page)
