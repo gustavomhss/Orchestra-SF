@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Continue evidence-based diagnosis of original Preview, C17, Import authority and unexplained request aborts. Preserve all original guards, requests, assertions and deadlines; qualify complete campaigns on any product correction before acceptance or merge."
   },
-  "updatedAt": "2026-11-23T17:54:16Z",
+  "updatedAt": "2026-11-23T18:00:46Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3417,6 +3417,16 @@
       "historyFailureCauseEstablished": false,
       "importTraceV2Run": 45231151064,
       "c17CpuRun": 45231692009,
+      "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "qualification": false
+    },
+    {
+      "recordedAt": "2026-11-23T18:00:46Z",
+      "status": "IMPORT_PROFILE_V2_SERVER_SUCCESS_THEN_BROWSER_ABORT_CPU_PROFILE_PASSED",
+      "importRun": 45231151064,
+      "c17CpuRun": 45231692009,
+      "ui42InputDependencyIdentified": false,
+      "oneOriginalUi42FrameViewedBy": "/root/here_github_activity",
       "productSourceUnchanged": "97c921ab0054bd5154227593adcbcca56b0538c3",
       "qualification": false
     }
@@ -6325,7 +6335,7 @@
     }
   },
   "additionalMeasurements": {
-    "observedAt": "2026-11-23T17:54:16Z",
+    "observedAt": "2026-11-23T18:00:46Z",
     "qualification": false,
     "experiments": [
       {
@@ -8318,7 +8328,7 @@
         "snapshotTree": "05c1c8c0527185911c16d5c95a36f402ab2f52c6",
         "branch": "ci-run-linux-sf613-importtrace",
         "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
-        "status": "PENDING",
+        "status": "FAILED_ORIGINAL_IMPORT_RECEIPT_REFRESH_AFTER_SERVER_SUCCESS",
         "lastObservation": {
           "by": "/root/sf613_candidate",
           "job": 137890706317,
@@ -8348,7 +8358,72 @@
           "identityOrRawErrorLogging": false,
           "originalCollaborationRecipePreserved": true
         },
-        "causeEstablished": false
+        "causeEstablished": false,
+        "result": {
+          "jobs": [
+            {
+              "id": 137890706317,
+              "name": "test (ubuntu-24.04)",
+              "status": "completed",
+              "conclusion": "failure",
+              "completedAt": "2026-11-23T17:56:52Z"
+            },
+            {
+              "id": 137897538843,
+              "name": "cleanup",
+              "status": "completed",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:56:56Z"
+            }
+          ],
+          "browserTests": {
+            "passed": 1,
+            "failed": 1
+          },
+          "qualification": false,
+          "log": {
+            "bytes": 4543118,
+            "sha256": "5402a8b0ea9068d3a112c16fd7bd7e8c639d271feef38737bd29438d516b41e6",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231151064/job/137890706317",
+            "identityReportedBy": "/root/sf613_candidate"
+          },
+          "trace": {
+            "requests": 4,
+            "producerAllGetSuccess": true,
+            "negativeGuardsObserved": 0,
+            "authorityCatchEventsObserved": 0,
+            "resolvesPerGet": 17,
+            "resolveRoute": "dashboard-authority-root",
+            "eventsPerGet": 271,
+            "eventsTotal": 1084,
+            "countsAreNotBenchmark": true
+          },
+          "originalFailure": {
+            "spec": "packages/app-shell/e2e/sucafina/design-wave-five-collaboration.spec.ts",
+            "lineReported": 195,
+            "step": "After original Refresh receipt",
+            "expectedHeading": "Simulation · no domain changes applied",
+            "originalExpectationTimeoutMs": 10000,
+            "observedPanel": "Loading",
+            "hostDiscovery": "ready",
+            "hostProvider": "ready",
+            "hostView": "ready"
+          },
+          "finalOriginalGet": {
+            "contextResponseFinishedAt": "2026-11-23T17:53:37.470Z",
+            "startedAt": "2026-11-23T17:53:37.484Z",
+            "producerOkAt": "2026-11-23T17:53:37.938Z",
+            "httpFinishedAt": "2026-11-23T17:53:37.942Z",
+            "signalAbortedAtProducerFinish": false,
+            "browserRequestFailedAt": "2026-11-23T17:53:38.050Z",
+            "browserError": "net::ERR_ABORTED",
+            "failureDiagnosticsAt": "2026-11-23T17:53:39.373Z",
+            "pageClosedAt": "2026-11-23T17:53:39.808Z"
+          },
+          "causeEstablished": false,
+          "interpretation": "Producer success does not prove original browser body acquisition, decoding or UI acceptance. No authority timeout demonstrated in this run. Browser cancellation follows producer success but its initiator is not identified; UI cleanup is under separate read-only investigation.",
+          "evidenceAttribution": "Job completion confirmed directly by here_github_activity. Complete log hash, trace counts and original-request chronology reported by /root/sf613_candidate. No visual review of this run's captures is claimed."
+        }
       },
       {
         "name": "ISOLATED_C17_JSC_CPU_SAMPLING",
@@ -8359,7 +8434,7 @@
         "snapshotTree": "2e42274ddae1139206fd95e074cb1b146e633c7d",
         "branch": "ci-run-linux-sf613-c17cpu",
         "baseSource": "97c921ab0054bd5154227593adcbcca56b0538c3",
-        "status": "COMPLETED_SUCCESS_DETAILS_PENDING",
+        "status": "PASSED_DIAGNOSTIC_ORIGINAL_C17_WITH_SAMPLE_LIMITS",
         "workflowObservation": {
           "observedAt": "2026-11-23T17:54:16Z",
           "status": "completed",
@@ -8388,7 +8463,95 @@
           "reportingFailuresContained": true,
           "sourceRelativePathsOnly": true
         },
-        "interpretationLimit": "Native whole-isolate JSC sampling is not wall time or CPU percentage. Results and job-level counters remain with session_diagnostic_limits pending original log analysis; workflow success alone does not qualify C3."
+        "interpretationLimit": "Whole-isolate sample counts only. Never CPU percentages or additive wall-time attribution. Critical path capacity/depth truncation and unknown source mapping limit attribution. This passing instrumented original test does not qualify the full C3 candidate.",
+        "result": {
+          "jobs": [
+            {
+              "id": 137892622827,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:52:58Z"
+            },
+            {
+              "id": 137895144442,
+              "name": "cleanup",
+              "conclusion": "success",
+              "completedAt": "2026-11-23T17:53:08Z"
+            }
+          ],
+          "runtime": "Bun1.3.14",
+          "schema": "sf-c17-jsc-v1",
+          "qualification": false,
+          "originalControls": {
+            "passed": 47
+          },
+          "storage": {
+            "passed": 60,
+            "skipped": 2,
+            "failed": 0,
+            "originalSkipsUnchanged": true
+          },
+          "wrappers": {
+            "passed": 3,
+            "failed": 0
+          },
+          "omni": {
+            "spawns": 5,
+            "delegated": 0
+          },
+          "C17": {
+            "observedTestDurationMs": 104685.85,
+            "innerPhaseMs": 984,
+            "outerPhaseMs": 74330,
+            "businessResultsReadForCalculationCalls": 1952,
+            "ancestryPhaseMs": 28411,
+            "cyclePhaseMs": 16,
+            "revocationPhaseMs": 402,
+            "counterInterpretation": "Business readForCalculation calls, not SQL queries or Planner prepares."
+          },
+          "diagnosticTiming": {
+            "signalAfterOriginalDeadlineCloseMs": 104188,
+            "deliveryMs": 104520,
+            "summaryFinishMs": 104682
+          },
+          "samples": {
+            "reported": 10257,
+            "processed": 10257,
+            "malformed": 0,
+            "traceOverflow": 0,
+            "outputDrops": 0,
+            "selfSites": 592,
+            "inclusiveSites": 1497,
+            "topSitesPerCategory": 60,
+            "criticalPathCapacity": 2048,
+            "criticalOverflowSamples": 1244,
+            "depthTruncatedSamples": 1505,
+            "maximumCriticalPathDepth": 12,
+            "unmappedSamples": 79,
+            "leafCounts": {
+              "clone": 1944,
+              "stringify": 1014,
+              "parse": 809,
+              "descriptor": 764,
+              "map": 636,
+              "lstat": 603,
+              "sort": 542,
+              "hashUpdate": 313,
+              "hashDigest": 200
+            },
+            "selfUnknown": 8983,
+            "selfUnknownInterpretation": "Includes native builtins without a URL even when their function name is known."
+          },
+          "interpretation": "Whole-isolate sample counts only. Never CPU percentages or additive wall-time attribution. Critical path capacity/depth truncation and unknown source mapping limit attribution. This passing instrumented original test does not qualify the full C3 candidate.",
+          "evidenceAttribution": "Final job times, log summary, original phase counters and sampling limits reported by /root/session_diagnostic_limits. Workflow-level success independently confirmed by here_github_activity. Complete decoded log SHA256 reported by the same reviewer.",
+          "logUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45231692009/job/137892622827",
+          "log": {
+            "bytes": 137012,
+            "sha256": "f5edce7ca74824e4708e32560aa133d2205098c3014ae254964d1f4079c0c18f",
+            "representation": "Complete decoded job log reencoded as UTF-8; not a compressed/raw artifact hash.",
+            "reportedBy": "/root/session_diagnostic_limits"
+          }
+        }
       }
     ]
   },
@@ -8873,7 +9036,8 @@
             "sha256": "66fea5b1a8e8fb18678755725471cfb8effa2a326ab3debcdf4121b5e4b91c74",
             "jpegNames": 47,
             "completeJpegs": 47,
-            "visualReviewPerformed": false
+            "visualReviewPerformed": true,
+            "visualReviewScope": "Only the original UI42-configure-focused-candidate-test-data frame was inspected after the prior checkpoint; all other diagnostic JPEGs unreviewed."
           },
           "profiles": {
             "count": 59,
@@ -9683,7 +9847,7 @@
             "zipSha256": "e281f3e4dc6f9988090a27260f7ee61f6d8555ec9e9719227a9ddf84e3f7554d",
             "pngAndJsonExclusiveToZipInspected": false
           },
-          "evidenceAttribution": "Original job log and job API read directly by /root/here_github_activity. Structural completeness of 47 original JPEG chunks verified; no visual review of these diagnostic JPEGs claimed."
+          "evidenceAttribution": "Original job log and job API read directly by /root/here_github_activity. Structural completeness of47 original JPEG chunks verified. Subsequently only original UI42-configure frame inspected; see portfolioHistoryAbortInvestigation.synchronousDependencyReview.oneFrameInspection. No PNG/ZIP visual attribution."
         }
       }
     }
@@ -9768,6 +9932,56 @@
       {
         "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts"
       }
-    ]
+    ],
+    "synchronousDependencyReview": {
+      "observedAt": "2026-11-23T18:00:46Z",
+      "status": "INPUT_TO_EFFECT_DEPENDENCY_NOT_IDENTIFIED",
+      "source": "97c921ab0054bd5154227593adcbcca56b0538c3",
+      "synchronousDependencies": [
+        "refresh signal",
+        "owner state/status/context contractRevision, generation and ready-access cache",
+        "route identity/params caseRef and resultRef, selected project/installation",
+        "current context availability entries reached by sfPortfolioReady",
+        "host generation callback and original transport binding/stamp/codecs",
+        "platform fetch selection and original browser fetch"
+      ],
+      "inputDependenciesObserved": [],
+      "firstAwaitBoundary": "sfDecisionControls → createSfDecisionsClient → transport.execute reaches original fetch; later selected case/history reads after await do not subscribe the outer createEffect.",
+      "refreshWriters": [
+        "Successful evaluate handler, absent before first Preview",
+        "Explicit Retry read buttons, absent in original sequence"
+      ],
+      "parentRoutes": "MountedSurface gate/view → SfExtendedPages → SfPortfolioPages; host route derived from location, discovery/provider and original navigation commit. No form input or focus mutation to owner/route found.",
+      "counterExamples": [
+        {
+          "run": 45222244398,
+          "sequence": 2,
+          "at": "2026-11-23T17:04:39.8600855Z",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 548
+        },
+        {
+          "run": 45222246055,
+          "sequence": 2,
+          "at": "2026-11-23T17:05:44.1939171Z",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 411
+        }
+      ],
+      "oneFrameInspection": {
+        "run": 45228925610,
+        "job": 137882866214,
+        "name": "UI42-configure-focused-candidate-test-data",
+        "bytes": 109056,
+        "sha256": "e42998d0ee1b8ec38cae342f0126a85d470cc4cf069fcefae1ffb74ff94d4301",
+        "viewedBy": "/root/here_github_activity",
+        "findings": "Original main-case configuration visible, candidate/constraint checked, limit4 focused, no stale status message visible, history shows no recorded results. Pixels do not prove history body delivery or absence of cleanup."
+      },
+      "nextEvidenceNeeded": "Original effect/cleanup sequence plus boolean changes to owner/route/refresh and history completion/live/signal, alongside original requestfailed errorText. No new request, cancellation or oracle alteration.",
+      "productChangeJustified": false,
+      "qualification": false
+    }
   }
 }
