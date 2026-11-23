@@ -1,0 +1,60 @@
+{
+  "schema": "sf613-consecutive-preserved-groups-independent-review-v1",
+  "recordedAt": "2026-11-23T22:09:02Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "audit_catalog",
+  "verdict": "STATIC_PASS_FOR_ISOLATED_COMPOSITION_AND_CI",
+  "qualification": false,
+  "sourceBase": "6ad989c37c075c9033db50e117d5beb056b82e72",
+  "changes": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/presentation.ts",
+      "original": "3ff647b2511dc10d7226a4d8a3c992c379c96d1d",
+      "draft": "dc86eb6fc2b298a7b5619e5f3d631fd48682c4a4"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-preserved-review-model.test.ts",
+      "original": "f8496531e99c775b27ec8dee5b9acf1dd3381f34",
+      "draft": "ddd8dc968fc2c7929058c72ca9b612c6a3d4f239"
+    }
+  ],
+  "problem": "Current dev globally groups preserved fields by recordRef using a Map. When producer records interleave, later fields of an earlier record move ahead of intervening fields. The original complete Reviews ordered scalar oracle exposed the changed producer order.",
+  "solution": "Append a value to the last group only when its recordRef is identical; otherwise create another group, repeating the same preserved label as needed. Flattening groups retains the original array order exactly.",
+  "verification": {
+    "entirePrefixBeforePreservedValueGroupsByteExact": true,
+    "onlyProductionFunctionChanged": "preservedValueGroups",
+    "fieldAndRecordLabelMapsUnchanged": true,
+    "sourceAndNameLookupsUnchanged": true,
+    "noSortingOrNormalization": true,
+    "valueReferencesRetained": true,
+    "noSourceInputMutation": true,
+    "existingTests": 8,
+    "existingTestBytesExactAfterRemovingOnlyAppendedTest": true,
+    "newTests": 1,
+    "noNewCastsOrSuppressions": true,
+    "noBrowserSpecOrTimeoutChanged": true
+  },
+  "newRegression": {
+    "sequence": "A/A/B/A/A/B/opaque",
+    "checks": [
+      "flattened original value order",
+      "original object identities",
+      "contiguous group sizes2,1,2,1,1",
+      "repeated Finance/Operations record headings",
+      "preserved negative zero",
+      "unmodified original values array",
+      "opaque field remains opaque"
+    ]
+  },
+  "compatibility": {
+    "originalReviewsSpec": "7cda60f820508ac4123693a97cd9ffe2e0eeee56",
+    "mergedDevPreservedReadingSpec": "f3badd348fdbe34970eda355a4e3678a7cd7f8d7",
+    "finding": "Merged dev reading requires nonzero record headings and every original projection value, with raw years and original source guards. It does not impose one global unique group per record. Consecutive grouping retains those readable labels while restoring original sequence."
+  },
+  "limits": [
+    "No local execution, typecheck or browser test performed by this review.",
+    "Static PASS permits isolated CI; the complete original and merged-dev reading specs must still run.",
+    "This repairs an actual ordering regression; it does not waive source/value/authorization assertions.",
+    "No shared product ref promotion, deadline change, workflow edit, qualification or merge."
+  ]
+}

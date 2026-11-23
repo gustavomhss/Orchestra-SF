@@ -3055,7 +3055,7 @@
     "mergeCommit": null,
     "nextAction": "Read the detailed fixed Catalog2 focused and original C10 success receipts with exact source attribution; keep first typecheck failure. Candidate1's six original campaigns completed with four failures/two passes. Continue fixing/qualifying normal C17 and original Analytics Preview on the final candidate without changing deadlines, source fences or original assertions. No global qualification, PR promotion or merge."
   },
-  "updatedAt": "2026-11-23T22:06:24Z",
+  "updatedAt": "2026-11-23T22:10:22Z",
   "promotionInspection": {
     "observedAt": "2026-11-23T16:26:18Z",
     "readOnly": true,
@@ -3856,6 +3856,22 @@
         "receipt": "ccbd21c814b750ca00c9d13e57703e68cf364849",
         "analyticsPending": true
       },
+      "qualification": false,
+      "promoted": false,
+      "merged": false
+    },
+    {
+      "recordedAt": "2026-11-23T22:10:22Z",
+      "status": "DEV717_ORIGINAL_REVIEWS_ORDER_REGRESSION_CONSECUTIVE_GROUP_FIX_STATIC_PASS",
+      "by": "/root/audit_catalog",
+      "priorRecordsCommit": "a85a2766087ca08fc51f2db8fc5bc3c04d774750",
+      "source": "6ad989c37c075c9033db50e117d5beb056b82e72",
+      "review": "a36077f8dc496c4219559d2b2b8e3d1ae3794fd5",
+      "presentationDraft": "dc86eb6fc2b298a7b5619e5f3d631fd48682c4a4",
+      "testDraft": "ddd8dc968fc2c7929058c72ca9b612c6a3d4f239",
+      "existingEightTestsExact": true,
+      "oneInterleavedOrderRegressionAdded": true,
+      "noBrowserOracleOrDeadlineChange": true,
       "qualification": false,
       "promoted": false,
       "merged": false
@@ -13991,7 +14007,33 @@
         "createdAt": "2026-11-23T21:57:02Z",
         "status": "completed",
         "conclusion": "failure",
-        "verificationLevel": "metadata only; detailed closure owned by root"
+        "verificationLevel": "metadata only; detailed closure owned by root",
+        "reportedDiagnosis": {
+          "attribution": "root; completed detailed receipt pending",
+          "passed": 1,
+          "failed": 1,
+          "failingLocale": "pt-BR",
+          "failure": "UI56 .sf-files-preview was not visible within original 10000ms",
+          "specLine": 238,
+          "unchangedSelectorPresentInProduct": true,
+          "englishUI55UI56": "passed including Changed disclosures, original full impact and source fields",
+          "collaborationUI51UI52UI53": "passed",
+          "notClaimed": "Main-page later ready/English diagnostics do not establish PT page state or late PT completion.",
+          "artifact": {
+            "id": 14868390302,
+            "sizeBytes": 53059277,
+            "sha256": "c13f04449cd529d9f77706fac3e69f359ef6a48db4af06aaa8633be156e8544c"
+          },
+          "imageEvidence": {
+            "completeGroups": 45,
+            "rootViewedIndices": [
+              15
+            ],
+            "unviewedGroups": 44,
+            "source": "root attribution; audit_catalog has not independently viewed these new images",
+            "rootReportedImageDescription": "UI56 light390; exact full log label not independently checked by audit_catalog"
+          }
+        }
       },
       {
         "campaign": "Reviews",
@@ -14022,7 +14064,37 @@
       "No runtime or visual pass inferred from static review, DOM/type gates or campaign metadata.",
       "Historical T11/A10 results remain attributed to e788; C10 remains source36cc.",
       "No response wait inserted before original temporal oracles, assertion omitted, deadline raised, workflow changed or product code overlaid."
-    ]
+    ],
+    "orderingCorrection": {
+      "status": "DRAFT_STATIC_PASS_AWAITING_ISOLATED_CI",
+      "sourceBase": "6ad989c37c075c9033db50e117d5beb056b82e72",
+      "reportedFailure": {
+        "campaign": "original Reviews",
+        "run": 45274804857,
+        "originalSpecLine": 289,
+        "renderedScalarNodes": 211,
+        "attribution": "copy_hotpath diagnosis; complete failed-run receipt pending"
+      },
+      "implementation": {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/presentation.ts",
+        "before": "3ff647b2511dc10d7226a4d8a3c992c379c96d1d",
+        "after": "dc86eb6fc2b298a7b5619e5f3d631fd48682c4a4"
+      },
+      "test": {
+        "path": "packages/app-shell/test-browser/sucafina-preserved-review-model.test.ts",
+        "before": "f8496531e99c775b27ec8dee5b9acf1dd3381f34",
+        "after": "ddd8dc968fc2c7929058c72ca9b612c6a3d4f239",
+        "existingTestsPreservedExactly": 8,
+        "addedTests": 1
+      },
+      "review": {
+        "path": "docs/qa/sucafina/design/wave-five/receipts/dev717-consecutive-groups-review-2026-11-23.json",
+        "blob": "a36077f8dc496c4219559d2b2b8e3d1ae3794fd5"
+      },
+      "behavior": "Group contiguous recordRef segments only; preserve every original scalar position and value identity and repeat readable captured labels for returning records.",
+      "qualification": false,
+      "productPromoted": false
+    }
   },
   "isolatedFallbackOnlyCandidate": {
     "status": "ORIGINAL_NORMAL_TECHNICAL_PASS_ANALYTICS_PENDING_UNPROMOTED",
