@@ -488,7 +488,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                         openReview("position-save", selected().id, selected().revision)
                       }}>
                         <div class="sf-u08-fields">
-                          <For each={["name","type","location","domain","rateId"] as const}>{(field) =>
+                          <For each={["name","type","location","domain"] as const}>{(field) =>
                             <label>{t("sf.u08." + field)}
                               <input value={activePosition()?.value[field] ?? ""}
                                 disabled={readOnly()} onInput={(e) => {
@@ -498,6 +498,43 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                                 }} />
                             </label>}
                           </For>
+                          <div class="sf-u08-rate-field">
+                            <label for="sf-u08-position-rate">{t("sf.u08.rateId")}</label>
+                            {/* Labels come only from the authorized catalog; an unknown original ID remains selectable. */}
+                            <Show when={page().data.rates} fallback={
+                              <input id="sf-u08-position-rate" value={activePosition()?.value.rateId ?? ""}
+                                disabled={readOnly()} onInput={(event) => {
+                                  const draft = positionDraft(selected())
+                                  const snapshot = draft?.snapshot()
+                                  if (snapshot?.availability === "active") draft?.edit({ ...snapshot.value, rateId: event.currentTarget.value })
+                                }} />
+                            }>
+                              {(rates) => (
+                                <select id="sf-u08-position-rate" value={activePosition()?.value.rateId ?? ""}
+                                  title={rates().find((item) => item.id === activePosition()?.value.rateId)?.name}
+                                  disabled={readOnly()} onChange={(event) => {
+                                    const draft = positionDraft(selected())
+                                    const snapshot = draft?.snapshot()
+                                    if (snapshot?.availability === "active") draft?.edit({ ...snapshot.value, rateId: event.currentTarget.value })
+                                  }}>
+                                  <option value="">{t("sf.u08.none")}</option>
+                                  <Show when={activePosition()?.value.rateId &&
+                                    !rates().some((item) => item.id === activePosition()?.value.rateId)}>
+                                    <option value={activePosition()?.value.rateId ?? ""}>{activePosition()?.value.rateId}</option>
+                                  </Show>
+                                  <For each={rates()}>{(item) =>
+                                    <option value={item.id}>{item.name || item.id}</option>}
+                                  </For>
+                                </select>
+                              )}
+                            </Show>
+                            <Show when={activePosition()?.value.rateId}>
+                              {(id) => <details class="sf-u08-rate-reference">
+                                <summary>{t("sf.s01.recordIdentity")}</summary>
+                                <bdi>{id()}</bdi>
+                              </details>}
+                            </Show>
+                          </div>
                           <For each={["fte","start","end"] as const}>{(field) =>
                             <label>{t("sf.u08." + field)}
                               <input type="number" step={field === "fte" ? "0.01" : "1"}
