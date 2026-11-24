@@ -77,7 +77,7 @@ async function selectorFixture(deadline: Deadline) {
     calls: { namespace: SfStateNamespace; mode: "read" | "write" }[]
     before?: (snapshot: Snapshot, count: number) => void | Promise<void>
   } = { active: true, actor: { ...actor }, calls: [] }
-  const port = createSfProductState({ persistence: store,
+  const port = createSfProductState({ persistence: store, createId: randomUUID,
     authorize: async (_request, snapshot, namespace, mode) => {
       deadline.check()
       control.calls.push({ namespace, mode })
@@ -166,9 +166,9 @@ test("C08 Atlas projection clones the complete partition and outbox as one fresh
       expect(f.control.calls).toEqual([{ namespace: "atlas", mode: "read" }])
       const graph = partition as Graph
       expect(graph.outbox).toBe(outbox)
-      expect(graph.shared).toBe(Reflect.get(outbox, "shared"))
+      expect<unknown>(graph.shared).toBe(Reflect.get(outbox, "shared"))
       expect(graph.self).toBe(graph)
-      expect(Reflect.get(outbox, "partition")).toBe(graph)
+      expect<unknown>(Reflect.get(outbox, "partition")).toBe(graph)
       expect(Object.keys(outbox).sort()).toEqual(["partition", "shared", "unrelated"])
       retained.push(graph)
       return { partition, outbox, actor: { ...actor } }
@@ -307,7 +307,7 @@ test("C08 capture selectors keep opaque contexts, readers and descriptors on the
           if (shape === "nonplain map") Object.setPrototypeOf(map, { originalMap: true })
           if (shape === "nonplain value") Object.setPrototypeOf(value, { originalValue: true })
           if (shape === "proxy map") Reflect.set(state, kind, proxy(map))
-          if (shape === "proxy value") Reflect.set(map, key, proxy(value))
+          if (shape === "proxy value") Reflect.set(map, key, proxy(value as object))
           if (shape === "proxy state") snapshot.data.__sfProductV1 = proxy(state)
           if (shape === "outbox accessor") {
             const outbox = state.outbox
