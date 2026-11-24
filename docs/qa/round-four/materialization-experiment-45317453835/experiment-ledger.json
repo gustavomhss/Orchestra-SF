@@ -1,0 +1,546 @@
+{
+  "schema": "sf-native-materialization-experiment/v1",
+  "classification": "active_disposable_benchmark_only",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "commit": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b"
+  },
+  "experiment": {
+    "snapshot": "90a0fad9286e67c2f9458b896491c2088da80ef7",
+    "tree": "62d16d496815c27f2744a39f0d8e7bb02df07e44",
+    "source_parent": "697544ecf027f0d1fae4e8730f4f3877d73f1cd2",
+    "branch": "ci-run-r4jscprobe",
+    "disposable": true,
+    "product_integration": false
+  },
+  "run": {
+    "id": 45317453835,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "workflow": ".github/workflows/test-ci.yml",
+    "created_at": "2026-11-24T03:08:59Z",
+    "run_started_at": "2026-11-24T03:08:59Z",
+    "updated_at": "2026-11-24T03:11:16Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45317453835",
+    "jobs": [
+      {
+        "id": 138187613204,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 138188439548,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "artifacts": {
+      "total_count": 0
+    }
+  },
+  "source_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "1923a88d7e2026f4d5fc0d4657f98df561b41aca",
+      "change": "eight-line experimental export seam only; original function bodies intact"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/local-materialization-experiment.test.ts",
+      "sha": "18ade1d7abcf92240db23c8310c171f7d245908b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/materialization-native-fixture.ts",
+      "sha": "604e826962141c8ab80b8c98c0f3bc72ec94008c",
+      "change": "existing native Atlas fixture body preserved with imports"
+    },
+    {
+      "path": "apps/cli/test/sucafina-materialization-experiment.test.ts",
+      "sha": "3e5a647bd6d2ece59098470c9b427be7b9881012"
+    },
+    {
+      "path": ".ci-run.json",
+      "sha": "b776ef14ceef4098f9e75c4cb2ac81e62549e0a6"
+    }
+  ],
+  "execution": {
+    "local_product_execution": false,
+    "ci_platform": "Linux / ubuntu-24.04",
+    "requested_mode": "strict/prod",
+    "retry_count": 0,
+    "cooperative_case_budget_ms": 105000,
+    "bun_case_budget_ms": 120000,
+    "experiment_child_budget_ms": 150000,
+    "experiment_wrapper_budget_ms": 180000,
+    "typecheck_child_budget_ms": 240000,
+    "typecheck_wrapper_budget_ms": 300000,
+    "experiment_case": {
+      "passed": 1,
+      "failed": 0,
+      "bun_expect_calls": 15,
+      "case_duration_ms": 11357.62,
+      "file_duration_seconds_rounded": 12.08
+    },
+    "wrapper": {
+      "passed": 3,
+      "failed": 0,
+      "bun_expect_calls": 3,
+      "file_duration_seconds_rounded": 81.72
+    },
+    "gates": [
+      {
+        "name": "native materialization experiment",
+        "exit_code": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "duration_ms": 12120.21
+      },
+      {
+        "name": "CLI typecheck",
+        "exit_code": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "duration_ms": 35910.01
+      },
+      {
+        "name": "Sucafina typecheck",
+        "exit_code": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "duration_ms": 33392.83
+      }
+    ],
+    "strict_outer_ledger": {
+      "positive_control": true,
+      "declared_tests": 3,
+      "omni_spawns": 3,
+      "delegated_spawns": 0,
+      "scope": "wrapper ledger; not a count of every nested producer operation"
+    }
+  },
+  "method": {
+    "samples_max": 3,
+    "warmup_pairs_per_sample": 1,
+    "measured_pairs_per_sample": 4,
+    "alternation": "AB/BA",
+    "original": "materializeSnapshot with an actual copy plan",
+    "candidate": "fresh Buffer.from(immutable base64 string) plus bun:jsc deserialize for every timed copy",
+    "preparation": "Common original decode; current plan construction and JSC serialize plus base64 conversion measured separately",
+    "validation": "Original validateSnapshot, complete encodeSnapshot byte equality, deep strict equality, and mutation/detachment checks outside copy timers",
+    "retention": "Only immutable base64 between candidate copies; temporary buffers discarded per call and sample references released in finally",
+    "cap": "Current plan units plus extra immutable string units must fit the existing materialization-unit cap; no limit enlarged",
+    "publication": {
+      "canonical_writer": true,
+      "pinned_scanner": true,
+      "receipt_committed": true,
+      "original_capture_readable": true,
+      "evidence": "The successful test reaches sample 3 only after checking committed emitFromLedger and a positive original readOriginalCapture; no receipt payload or independent publication timing is emitted"
+    }
+  },
+  "numeric_evidence": {
+    "prefix": "SF_MATERIALIZE_EXPERIMENT",
+    "row_width": 28,
+    "timing_unit": "microseconds",
+    "columns": [
+      "schema_version",
+      "sample",
+      "status",
+      "references_released",
+      "configured_pairs",
+      "measured_pairs",
+      "decode_count",
+      "decode_us",
+      "plan_count",
+      "plan_us",
+      "serialize_base64_count",
+      "serialize_base64_us",
+      "current_count",
+      "current_total_us",
+      "current_min_us",
+      "current_max_us",
+      "binary_count",
+      "binary_total_us",
+      "binary_min_us",
+      "binary_max_us",
+      "parity_count",
+      "parity_failures",
+      "detachment_count",
+      "detachment_failures",
+      "validation_count",
+      "validation_us",
+      "warmup_pairs",
+      "stage"
+    ],
+    "status_codes": {
+      "1": "completed",
+      "2": "no copy plan: inconclusive",
+      "3": "experimental cap: inconclusive",
+      "4": "failed"
+    },
+    "sample_zero": "outer result and cleanup only",
+    "rows": [
+      {
+        "values": [
+          1,
+          1,
+          1,
+          1,
+          4,
+          4,
+          1,
+          1978,
+          1,
+          2513,
+          1,
+          836,
+          4,
+          1508,
+          348,
+          389,
+          4,
+          1151,
+          268,
+          304,
+          6,
+          0,
+          2,
+          0,
+          14,
+          60,
+          1,
+          7
+        ],
+        "fields": {
+          "schema_version": 1,
+          "sample": 1,
+          "status": 1,
+          "references_released": 1,
+          "configured_pairs": 4,
+          "measured_pairs": 4,
+          "decode_count": 1,
+          "decode_us": 1978,
+          "plan_count": 1,
+          "plan_us": 2513,
+          "serialize_base64_count": 1,
+          "serialize_base64_us": 836,
+          "current_count": 4,
+          "current_total_us": 1508,
+          "current_min_us": 348,
+          "current_max_us": 389,
+          "binary_count": 4,
+          "binary_total_us": 1151,
+          "binary_min_us": 268,
+          "binary_max_us": 304,
+          "parity_count": 6,
+          "parity_failures": 0,
+          "detachment_count": 2,
+          "detachment_failures": 0,
+          "validation_count": 14,
+          "validation_us": 60,
+          "warmup_pairs": 1,
+          "stage": 7
+        }
+      },
+      {
+        "values": [
+          1,
+          2,
+          1,
+          1,
+          4,
+          4,
+          1,
+          134,
+          1,
+          110,
+          1,
+          55,
+          4,
+          78,
+          15,
+          25,
+          4,
+          105,
+          23,
+          33,
+          6,
+          0,
+          2,
+          0,
+          14,
+          22,
+          1,
+          7
+        ],
+        "fields": {
+          "schema_version": 1,
+          "sample": 2,
+          "status": 1,
+          "references_released": 1,
+          "configured_pairs": 4,
+          "measured_pairs": 4,
+          "decode_count": 1,
+          "decode_us": 134,
+          "plan_count": 1,
+          "plan_us": 110,
+          "serialize_base64_count": 1,
+          "serialize_base64_us": 55,
+          "current_count": 4,
+          "current_total_us": 78,
+          "current_min_us": 15,
+          "current_max_us": 25,
+          "binary_count": 4,
+          "binary_total_us": 105,
+          "binary_min_us": 23,
+          "binary_max_us": 33,
+          "parity_count": 6,
+          "parity_failures": 0,
+          "detachment_count": 2,
+          "detachment_failures": 0,
+          "validation_count": 14,
+          "validation_us": 22,
+          "warmup_pairs": 1,
+          "stage": 7
+        }
+      },
+      {
+        "values": [
+          1,
+          3,
+          1,
+          1,
+          4,
+          4,
+          1,
+          4048,
+          1,
+          3183,
+          1,
+          1737,
+          4,
+          3883,
+          918,
+          1042,
+          4,
+          7418,
+          514,
+          5796,
+          6,
+          0,
+          2,
+          0,
+          14,
+          51,
+          1,
+          7
+        ],
+        "fields": {
+          "schema_version": 1,
+          "sample": 3,
+          "status": 1,
+          "references_released": 1,
+          "configured_pairs": 4,
+          "measured_pairs": 4,
+          "decode_count": 1,
+          "decode_us": 4048,
+          "plan_count": 1,
+          "plan_us": 3183,
+          "serialize_base64_count": 1,
+          "serialize_base64_us": 1737,
+          "current_count": 4,
+          "current_total_us": 3883,
+          "current_min_us": 918,
+          "current_max_us": 1042,
+          "binary_count": 4,
+          "binary_total_us": 7418,
+          "binary_min_us": 514,
+          "binary_max_us": 5796,
+          "parity_count": 6,
+          "parity_failures": 0,
+          "detachment_count": 2,
+          "detachment_failures": 0,
+          "validation_count": 14,
+          "validation_us": 51,
+          "warmup_pairs": 1,
+          "stage": 7
+        }
+      },
+      {
+        "values": [
+          1,
+          0,
+          1,
+          1,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8
+        ],
+        "fields": {
+          "schema_version": 1,
+          "sample": 0,
+          "status": 1,
+          "references_released": 1,
+          "configured_pairs": 4,
+          "measured_pairs": 0,
+          "decode_count": 0,
+          "decode_us": 0,
+          "plan_count": 0,
+          "plan_us": 0,
+          "serialize_base64_count": 0,
+          "serialize_base64_us": 0,
+          "current_count": 0,
+          "current_total_us": 0,
+          "current_min_us": 0,
+          "current_max_us": 0,
+          "binary_count": 0,
+          "binary_total_us": 0,
+          "binary_min_us": 0,
+          "binary_max_us": 0,
+          "parity_count": 0,
+          "parity_failures": 0,
+          "detachment_count": 0,
+          "detachment_failures": 0,
+          "validation_count": 0,
+          "validation_us": 0,
+          "warmup_pairs": 0,
+          "stage": 8
+        }
+      }
+    ],
+    "exact_numeric_rows_file": "numeric-rows.txt",
+    "exact_numeric_rows_utf8_sha256": "1b1d99360252dd8548d995103cf8bd5808f99200a3abe8ccc645f2b17ebf5520",
+    "decoded_job_log_utf8_sha256": "946b30e29589a7016aef7a30530303b260c0bcc4c8b0eb86aaf865cbda658f8b",
+    "raw_log_persisted_here": false
+  },
+  "totals": {
+    "eligible_samples": 3,
+    "inconclusive_samples": 0,
+    "failed_samples": 0,
+    "current_timed_copies": 12,
+    "binary_timed_copies": 12,
+    "complete_parity_checks": 18,
+    "parity_failures": 0,
+    "detachment_checks": 6,
+    "detachment_failures": 0,
+    "validations_outside_timers": 42,
+    "sample_reference_release_records": 3,
+    "outer_cleanup_success": true
+  },
+  "derived_per_sample": [
+    {
+      "sample": 1,
+      "shape": "Materiality native dashboard after sensitivity preparation",
+      "measured_copies_per_path": 4,
+      "current_total_us": 1508,
+      "binary_total_us": 1151,
+      "current_mean_us": 377,
+      "binary_mean_us": 287.75,
+      "current_min_us": 348,
+      "current_max_us": 389,
+      "binary_min_us": 268,
+      "binary_max_us": 304,
+      "common_decode_us": 1978,
+      "current_plan_preparation_us": 2513,
+      "binary_serialize_base64_preparation_us": 836,
+      "four_copies_with_preparation_excluding_common_decode_us": {
+        "current": 4021,
+        "binary": 1987
+      },
+      "four_copies_with_preparation_including_common_decode_us": {
+        "current": 5999,
+        "binary": 3965
+      }
+    },
+    {
+      "sample": 2,
+      "shape": "Materiality native Planner after sensitivity preparation",
+      "measured_copies_per_path": 4,
+      "current_total_us": 78,
+      "binary_total_us": 105,
+      "current_mean_us": 19.5,
+      "binary_mean_us": 26.25,
+      "current_min_us": 15,
+      "current_max_us": 25,
+      "binary_min_us": 23,
+      "binary_max_us": 33,
+      "common_decode_us": 134,
+      "current_plan_preparation_us": 110,
+      "binary_serialize_base64_preparation_us": 55,
+      "four_copies_with_preparation_excluding_common_decode_us": {
+        "current": 188,
+        "binary": 160
+      },
+      "four_copies_with_preparation_including_common_decode_us": {
+        "current": 322,
+        "binary": 294
+      }
+    },
+    {
+      "sample": 3,
+      "shape": "Recall native dashboard after canonical Atlas publication",
+      "measured_copies_per_path": 4,
+      "current_total_us": 3883,
+      "binary_total_us": 7418,
+      "current_mean_us": 970.75,
+      "binary_mean_us": 1854.5,
+      "current_min_us": 918,
+      "current_max_us": 1042,
+      "binary_min_us": 514,
+      "binary_max_us": 5796,
+      "common_decode_us": 4048,
+      "current_plan_preparation_us": 3183,
+      "binary_serialize_base64_preparation_us": 1737,
+      "four_copies_with_preparation_excluding_common_decode_us": {
+        "current": 7066,
+        "binary": 9155
+      },
+      "four_copies_with_preparation_including_common_decode_us": {
+        "current": 11114,
+        "binary": 13203
+      }
+    }
+  ],
+  "conclusion": {
+    "decision": "Do not adopt a product codec from this evidence",
+    "experimental_protocol_passed": true,
+    "uniform_materialization_gain_demonstrated": false,
+    "http_or_ui_qualification": false,
+    "product_regression_count_increment": 0,
+    "observations": [
+      "Sample 1 has lower warmed binary-copy time; sample 2 has higher warmed binary-copy time.",
+      "Sample 3 binary copies total 7418 us versus 3883 us for the existing plan, including a 5796 us maximum binary copy. No observed sample or outlier is excluded.",
+      "Preparation differs and is reported for both paths; it does not establish a uniform benefit.",
+      "The experiment is green for parity, detachment, cleanup and typechecks. The export seam, fixture, benchmark and binary representation remain disposable and must not be integrated as product changes."
+    ],
+    "limits": [
+      "Three real native fixture shapes are representative domain examples, not identical browser data volumes.",
+      "Four measured pairs after one warmup are a small active benchmark, not a latency distribution or passive producer profile.",
+      "No HTTP request is timed or qualified here; no inference establishes that the original 40-second UI limit is resolved.",
+      "No claim of GC execution or private-root immutability follows from reference release. No product budget, authority fence, original assertion or deadline is changed."
+    ]
+  }
+}
