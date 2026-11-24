@@ -1,0 +1,427 @@
+{
+  "schema": "sf-round-four-structural-qualification-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+  "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+  "snapshot": "257131acc945a0423a245bd5ec9cfc5bec96f67d",
+  "snapshotTree": "fa87a6d9db2a721097bdfd57aae07b2ad05b519e",
+  "qualification": "failed: guardrails rejected a committed evidence log; the nine other wrapper gates passed",
+  "workflow": {
+    "id": 45305135807,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45305135807",
+    "job": 138147009652,
+    "cleanupJob": 138148917938,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-24T01:27:08Z",
+    "completedAt": "2026-11-24T01:32:00Z",
+    "testStep": {
+      "startedAt": "2026-11-24T01:29:35Z",
+      "completedAt": "2026-11-24T01:31:48Z",
+      "conclusion": "failure"
+    },
+    "jobs": [
+      {
+        "id": 138147009652,
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T01:27:11Z",
+        "completedAt": "2026-11-24T01:31:52Z"
+      },
+      {
+        "id": 138148917938,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:31:54Z",
+        "completedAt": "2026-11-24T01:31:59Z"
+      }
+    ]
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+    "value": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-polish-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    }
+  },
+  "wrapper": {
+    "path": "apps/cli/test/sucafina-polish-verification.test.ts",
+    "blob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+    "snapshotOnly": true,
+    "passed": 9,
+    "failed": 1,
+    "assertions": 16,
+    "durationMs": 133720,
+    "cases": [
+      {
+        "name": "the composed app-shell passes its package typecheck",
+        "status": "pass",
+        "durationMs": 14777.46
+      },
+      {
+        "name": "the composed candidate passes guardrails from the exact dev base",
+        "status": "fail",
+        "durationMs": 2522.1
+      },
+      {
+        "name": "the palette writer preserves the committed generated files exactly",
+        "status": "pass",
+        "durationMs": 255.2
+      },
+      {
+        "name": "the native design capture passes the permanent e2e typecheck",
+        "status": "pass",
+        "durationMs": 3453.88
+      },
+      {
+        "name": "review comparisons preserve typed source values and absence",
+        "status": "pass",
+        "durationMs": 154.36
+      },
+      {
+        "name": "UI commands, MCP and Teams preserve authority and reviewed values",
+        "status": "pass",
+        "durationMs": 5943.11
+      },
+      {
+        "name": "the native host composition passes CLI typechecking",
+        "status": "pass",
+        "durationMs": 26291.86
+      },
+      {
+        "name": "the original Sucafina contracts pass package typechecking",
+        "status": "pass",
+        "durationMs": 27035.78
+      },
+      {
+        "name": "page admission and original domain assets retain their source contracts",
+        "status": "pass",
+        "durationMs": 493.39
+      },
+      {
+        "name": "installed native context and procurement retain original authority",
+        "status": "pass",
+        "durationMs": 52563.22
+      }
+    ]
+  },
+  "gates": [
+    {
+      "at": "2026-11-24T01:29:50.2346804Z",
+      "gate": "app-shell typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:50.7535642Z",
+      "gate": "fetch pinned guard base",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "490a1e1352081d28c0eb22afcd05fffea8b5323f:refs/remotes/origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:50.7564156Z",
+      "gate": "resolve pinned guard base",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:52.7560395Z",
+      "gate": "guardrails",
+      "command": [
+        "bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 1,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:53.0121931Z",
+      "gate": "palette generation",
+      "command": [
+        "bun",
+        "run",
+        "script/orchestra-palettes.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:53.0127764Z",
+      "gate": "palette byte parity",
+      "files": 7,
+      "changed": []
+    },
+    {
+      "at": "2026-11-24T01:29:56.4668099Z",
+      "gate": "app-shell e2e typecheck",
+      "command": [
+        "bun",
+        "run",
+        "typecheck:e2e"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:29:56.6213223Z",
+      "gate": "review comparison",
+      "command": [
+        "bun",
+        "test",
+        "--conditions=solid",
+        "--preload",
+        "./happydom.ts",
+        "./src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts",
+        "./src/context/layout-route.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:30:02.5646855Z",
+      "gate": "browser command and Team regressions",
+      "command": [
+        "bun",
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/mcp-fresh-editor.test.ts",
+        "./test-browser/settings-mcp-action.test.ts",
+        "./test-browser/sucafina-confirmation-payload.test.ts",
+        "./test-browser/sucafina-draft-confirmation.test.ts",
+        "./test-browser/sucafina-decision-command.test.ts",
+        "./test-browser/sucafina-procurement-command.test.ts",
+        "./test-browser/sucafina-saved-view-command.test.ts",
+        "./test-browser/sucafina-vendor-contract-command.test.ts",
+        "./test-browser/sucafina-preserved-review-model.test.ts",
+        "./test-browser/team-profile.test.ts",
+        "./test-browser/team-profile-configuration.test.ts",
+        "./test-browser/team-profile-navigation.test.ts",
+        "./test-browser/team-session-page.test.ts",
+        "./test-browser/sucafina-team-domain.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:30:28.8574615Z",
+      "gate": "CLI typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:30:55.8929890Z",
+      "gate": "Sucafina typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:30:56.3855204Z",
+      "gate": "native page and asset contracts",
+      "command": [
+        "bun",
+        "test",
+        "./test/native-ui-contract/request-context.test.ts",
+        "./test/planner-runtime.test.ts",
+        "./test/procurement-runtime.test.ts",
+        "./test/assets.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "at": "2026-11-24T01:31:48.9487352Z",
+      "gate": "installed context and procurement",
+      "command": [
+        "bun",
+        "test",
+        "./test/sucafina-native-web.test.ts",
+        "./test/sucafina-native-procurement.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "guardrails": {
+    "exitCode": 1,
+    "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 93,
+    "findings": [
+      {
+        "rule": "agent-scratch",
+        "severity": "gate",
+        "path": "docs/qa/round-four/preferences-45301362851/sanitized-job.log",
+        "line": null,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "rule": "ts-double-cast",
+        "severity": "warn",
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "line": 246,
+        "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+      },
+      {
+        "rule": "ts-double-cast",
+        "severity": "warn",
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "line": 253,
+        "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+      }
+    ],
+    "errors": [],
+    "approved": [],
+    "touchesGuards": false,
+    "interpretation": "One gate-level finding caused failure. The two ts-double-cast entries are warnings, not additional failed wrapper tests. No exception or approved bypass was applied."
+  },
+  "testGroups": [
+    {
+      "gate": "review comparison",
+      "path": "packages/app-shell",
+      "passed": 15,
+      "failed": 0,
+      "assertions": 76,
+      "testsReported": 15,
+      "filesReported": 2,
+      "durationMs": 147
+    },
+    {
+      "gate": "browser command and Team regressions",
+      "path": "packages/app-shell",
+      "passed": 109,
+      "failed": 0,
+      "assertions": 1594,
+      "testsReported": 109,
+      "filesReported": 14,
+      "durationMs": 5910
+    },
+    {
+      "gate": "native page and asset contracts",
+      "path": "modules/sucafina/Sucafinav1",
+      "passed": 145,
+      "failed": 0,
+      "assertions": 1161,
+      "testsReported": 145,
+      "filesReported": 4,
+      "durationMs": 483
+    },
+    {
+      "gate": "installed context and procurement",
+      "path": "apps/cli",
+      "passed": 4,
+      "failed": 0,
+      "assertions": 69,
+      "testsReported": 4,
+      "filesReported": 2,
+      "durationMs": 52550
+    }
+  ],
+  "totals": {
+    "internalTestsPassed": 273,
+    "internalTestsFailed": 0,
+    "internalAssertions": 2900,
+    "typechecksPassed": 4,
+    "wrapperGatesPassed": 9,
+    "wrapperGatesFailed": 1,
+    "wrapperAssertions": 16
+  },
+  "palette": {
+    "generatedFiles": 7,
+    "changedFiles": [],
+    "byteParity": true
+  },
+  "executor": {
+    "mode": "strict",
+    "omniPositiveControl": "pass",
+    "declaredTests": 10,
+    "spawns": 12,
+    "delegated": 0,
+    "outputTruncated": false,
+    "additionalSpawns": "Pinned guard-base fetch and commit resolution were separate original commands."
+  },
+  "artifacts": {
+    "apiReturned": 0,
+    "items": [],
+    "downloadAttempted": false
+  },
+  "evidence": {
+    "rawLogCharacters": 116343,
+    "rawLogSha256": "7f8e6803aeabdae9ba34b9d2af4d7b908350dcf2fe243e0cf856904600021d07",
+    "rawLogPersisted": false,
+    "sanitizedLogFilePersisted": false,
+    "policy": "Only this JSON report is committed. No .log, raw tool output, credentials, headers or preview payloads are included."
+  },
+  "limits": [
+    "This run does not qualify a guardrail fix or subsequent type-warning cleanup.",
+    "The passing test/type/palette results are retained separately from the failed overall result.",
+    "No product, original test, deadline, retry or workflow was changed to produce this report."
+  ]
+}
