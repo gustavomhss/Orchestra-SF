@@ -1,0 +1,282 @@
+{
+  "schema": 1,
+  "kind": "snapshot_only_diagnostic_preparation",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+  "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+  "snapshot": "ec379b07ae5e5c09c5c712ec746965aafba438aa",
+  "snapshotTree": "a69bd33846b3ea892baa7b49a2480e1f85c02092",
+  "branch": "diagnose-store-cost",
+  "qualification": false,
+  "ciLaunched": false,
+  "spec": {
+    "path": "packages/app-shell/e2e/sucafina/diagnostic-ui61.spec.ts",
+    "blob": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+    "bytes": 16928,
+    "requestBoundMs": 40000,
+    "testBoundMs": 300000,
+    "retries": 0
+  },
+  "ciRequest": {
+    "blob": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+    "strict": true,
+    "channel": "prod",
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "parity": [
+    {
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "equal": true,
+      "awaitsBase": 26,
+      "awaitsProbe": 26,
+      "baseBlob": "f8e721cd3feb1db49e8be688d4b1ce61db1bd369",
+      "observedBlob": "352f688b9da98a08166db79d0b285b4fbfcd429e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "equal": true,
+      "awaitsBase": 17,
+      "awaitsProbe": 17,
+      "baseBlob": "48d527ec1c2586f2d654796f9060ec7d895732df",
+      "observedBlob": "2fdda91b26c124718f80017f6c952d9937bdc6a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+      "equal": true,
+      "awaitsBase": 28,
+      "awaitsProbe": 28,
+      "baseBlob": "23f50cadf12f18f1757f5d3235c2eefc3f71137a",
+      "observedBlob": "ad6236f45ec82481b8ee3b4651cd0411c99fd231"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-record-proof-scope.ts",
+      "equal": true,
+      "awaitsBase": 7,
+      "awaitsProbe": 7,
+      "baseBlob": "1bfe65063523768b690be28a1a7f6b7d0c6790ab",
+      "observedBlob": "79e68ef5c724248e5dd079ac4cfbf1cb94bbdca8"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "equal": true,
+      "awaitsBase": 14,
+      "awaitsProbe": 14,
+      "baseBlob": "bca30bef5d5a87b1825ff084e09642c5baa951d7",
+      "observedBlob": "ccf2734f9a93ca462d627402759b70f45784c538"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "equal": true,
+      "awaitsBase": 14,
+      "awaitsProbe": 14,
+      "baseBlob": "dfaf141fd6eda6b46828534f01ff65ecef5609a3",
+      "observedBlob": "826a2a72b2f414c84ed0b3accbf894372da15756"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "equal": true,
+      "awaitsBase": 7,
+      "awaitsProbe": 7,
+      "baseBlob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+      "observedBlob": "990cc8d2f79248fcc581c288bd5dc41fa0b8ffde"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "equal": true,
+      "awaitsBase": 62,
+      "awaitsProbe": 62,
+      "baseBlob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "observedBlob": "8f9c8f0a32c2e505afe78f14dac47cdc09d84ced"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "equal": true,
+      "awaitsBase": 76,
+      "awaitsProbe": 76,
+      "baseBlob": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b",
+      "observedBlob": "d4aab9a2b222f146fdf62e35116d9f9b21572697"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "equal": true,
+      "awaitsBase": 108,
+      "awaitsProbe": 108,
+      "baseBlob": "adba07723b43d350193afd1b3d95c1d25260825e",
+      "observedBlob": "bccdc36113b78e53f738e17776c1e1562a797c4e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "equal": true,
+      "awaitsBase": 33,
+      "awaitsProbe": 33,
+      "baseBlob": "c82dcc0d08c27ba35a54d1371b018cab04321646",
+      "observedBlob": "6bcc4fafcdd1395fa96b11ead88353adc0b18fb1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "equal": true,
+      "awaitsBase": 16,
+      "awaitsProbe": 16,
+      "baseBlob": "d871c1a47c56541102e8bc535218a8034ff3db79",
+      "observedBlob": "cfd4a75a7914d9cd073ac0c69733124294283662"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "baseBlob": "dc729bd780614fb48f18ee6c824d591218d9ec53",
+      "observedBlob": "9d39f7fe2ccdc6add55be7c53877cdcda2721bbe",
+      "equal": true,
+      "directObserverRemoval": true,
+      "awaitsBase": 21,
+      "awaitsProbe": 21
+    }
+  ],
+  "markers": {
+    "legacy": {
+      "prefix": "SF_RECALL_COST",
+      "integers": 184,
+      "restoredHelperBlob": "51f98e8debc05ec912bfa7a8612e95b46497b5f2",
+      "unchanged": true
+    },
+    "local": {
+      "prefix": "SF_LOCAL_STORE_COST",
+      "integers": 47,
+      "headers": 10,
+      "buckets": [
+        "current-snapshots",
+        "copy-current",
+        "clone-snapshot",
+        "clone-tree",
+        "validate-snapshot",
+        "observe-snapshot",
+        "payload-fingerprint",
+        "plan-materialization",
+        "materialize-snapshot",
+        "decode-snapshot",
+        "nested-snapshot",
+        "dashboard-source-snapshot",
+        "snapshot-sql",
+        "scope-guard",
+        "file-guard"
+      ],
+      "branches": [
+        "current-materializer",
+        "current-clone",
+        "nested-acl",
+        "nested-source",
+        "nested-materializer",
+        "nested-staged",
+        "nested-load"
+      ],
+      "maxExistingPartialRowsPerOwner": 32
+    }
+  },
+  "limits": [
+    "No local source execution or product tests",
+    "No new await or original hash invocation",
+    "No recursive instrumentation",
+    "No marker per read; only original owner checkpoints/settlements",
+    "Timings inclusive; overlapping buckets cannot be added",
+    "clone-tree excludes direct ACL copyValue call-sites",
+    "observe measures factory creation/cold decode, later lazy materialization is separate",
+    "No payload, reference, SQL text or error text in numeric markers",
+    "Diagnostic overhead prevents using this as an end-to-end benchmark"
+  ],
+  "files": [
+    {
+      "path": ".ci-run.json",
+      "sha": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+      "status": "added",
+      "changes": 14
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "sha": "352f688b9da98a08166db79d0b285b4fbfcd429e",
+      "status": "modified",
+      "changes": 55
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "sha": "2fdda91b26c124718f80017f6c952d9937bdc6a0",
+      "status": "modified",
+      "changes": 53
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+      "sha": "ad6236f45ec82481b8ee3b4651cd0411c99fd231",
+      "status": "modified",
+      "changes": 152
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-record-proof-scope.ts",
+      "sha": "79e68ef5c724248e5dd079ac4cfbf1cb94bbdca8",
+      "status": "modified",
+      "changes": 49
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "sha": "ccf2734f9a93ca462d627402759b70f45784c538",
+      "status": "modified",
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "sha": "826a2a72b2f414c84ed0b3accbf894372da15756",
+      "status": "modified",
+      "changes": 20
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "sha": "990cc8d2f79248fcc581c288bd5dc41fa0b8ffde",
+      "status": "modified",
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "sha": "8f9c8f0a32c2e505afe78f14dac47cdc09d84ced",
+      "status": "modified",
+      "changes": 25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "sha": "d4aab9a2b222f146fdf62e35116d9f9b21572697",
+      "status": "modified",
+      "changes": 127
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sha": "bccdc36113b78e53f738e17776c1e1562a797c4e",
+      "status": "modified",
+      "changes": 69
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts",
+      "sha": "d2bc265ae515309d28b1da9d90101a9d1410d7ce",
+      "status": "added",
+      "changes": 170
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "6bcc4fafcdd1395fa96b11ead88353adc0b18fb1",
+      "status": "modified",
+      "changes": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "9d39f7fe2ccdc6add55be7c53877cdcda2721bbe",
+      "status": "modified",
+      "changes": 45
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "sha": "cfd4a75a7914d9cd073ac0c69733124294283662",
+      "status": "modified",
+      "changes": 2
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/diagnostic-ui61.spec.ts",
+      "sha": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+      "status": "added",
+      "changes": 269
+    }
+  ]
+}

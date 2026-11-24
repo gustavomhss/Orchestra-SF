@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+  "productSource": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
-    "tree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "tree": "3ef9243585d94940d76b258b873418567446184e",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13724,6 +13724,24 @@
         "run": 45298129069,
         "scope": "Fresh case and joint Atlas/outbox capture selections inside original C08 authorization. Six protocol/native controls and both typechecks pass; original UI62 request remains unqualified.",
         "compositionBase": "050b2478ea898b32b38e9eb7d3268f416b08e091"
+      },
+      {
+        "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
+        "tree": "862e3e9c1b56c11e8ef09ef29b0b217970702c64",
+        "parent": "56e8690f0c5229ef61d7d8d14840feee2f7ffae6",
+        "productCandidate": "27e78a8b0cb9a586d45c762f205eb974563ba961",
+        "control": "d6f69a0ffb686b4aa6467925cb455e6a37eb5365",
+        "run": 45301362851,
+        "scope": "Complete preferences projection through original C08 admission; complete preferences graph, bound predicate timing and opaque fallback preserved."
+      },
+      {
+        "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+        "tree": "3ef9243585d94940d76b258b873418567446184e",
+        "parent": "50cee5ba915d086b803f5191598e5a27866c0f3c",
+        "productCandidate": "bc11cccd21db44a0e86013320547dcb3d8eef585",
+        "control": "803c0da77eb65cbff78977d2edc3f491e61bafef",
+        "run": 45303936643,
+        "scope": "Per-invocation pure digest reuse only after inspecting the complete fresh tuple; original acquisitions, authorizations, canonical serializer, error identity and caller awaits preserved."
       }
     ],
     "structural": {
@@ -16118,8 +16136,8 @@
     ]
   },
   "checkpoint": {
-    "productSource": "d008b222e06f803c96966111b4b4419fcdc44eb8",
-    "productTree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+    "productSource": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "productTree": "3ef9243585d94940d76b258b873418567446184e",
     "status": "qualification-in-progress",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
@@ -16130,7 +16148,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-24 00:41:59 UTC"
+    "recordedAt": "2026-11-24 01:28:47 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -23447,6 +23465,32 @@
       "run": 45291133083,
       "result": "failure",
       "ledgerSha256": "a5545c396a8091ee8ee0b954adf9e9b6bdc1518f6e5a4a6526652d496b6fe048"
+    },
+    "preferences": {
+      "path": "docs/qa/round-four/preferences-45301362851/qualification-ledger.json",
+      "blob": "a382de31c431ad3a2ef04bfdbb1bdaa490331197",
+      "sha256": "518aa4f433175a9015793352e5abc77e8f4c6ccb607ba4a4427da0831e64e734",
+      "run": 45301362851
+    },
+    "tuples": {
+      "path": "docs/qa/round-four/tuples-45303936643/qualification-ledger.json",
+      "blob": "af5bbda3680850a818ae4a84855276c62db710de",
+      "sha256": "d35a357c5ba38a75250a1ac3421f7dc149cac70366e30bd1018e66f22c4a1a32",
+      "run": 45303936643
+    },
+    "recallAfterCapture": {
+      "path": "docs/qa/round-four/recall-capture-cost-45298731358/diagnostic-ledger.json",
+      "blob": "c388294763bc26d567548d9d2d1ed586cc2d6adc",
+      "sha256": "583b8a21f942cab332649fe78de3a0f35bc78a51cdcd117621658b3cd3d6b289",
+      "run": 45298731358,
+      "traceSupplement": "docs/qa/round-four/recall-capture-cost-45298731358/http-trace-supplement.json"
+    },
+    "tupleCostRecovery": {
+      "path": "docs/qa/sucafina/round-four/tuple-cost-45297459438/recovery-manifest.json",
+      "blob": "1e1f459d54d2a49f2a6f1ae9801ce22f07d8c6f5",
+      "run": 45297459438,
+      "originalLedgerRecovered": false,
+      "numericOriginalHashesVerified": true
     }
   },
   "contextObservationCandidate": {
@@ -23539,16 +23583,136 @@
       "profilesEach": 127,
       "originalRequestQualified": false
     },
-    "methodology": "Cumulative inclusive buckets and parent/child wall durations are not added. Producer settlement does not establish an HTTP response."
+    "methodology": "Cumulative inclusive buckets and parent/child wall durations are not added. Producer settlement does not establish an HTTP response.",
+    "recallAfterCapture": {
+      "source": "72f8bc83753a2f4a175a086b4bba51ac50059f1b",
+      "run": 45298731358,
+      "owner375Seconds": 43.617653,
+      "fulfilledMeaning": "Promise settlement only; not a successful product/HTTP result",
+      "originalHttpDurationMs": 40002.796,
+      "httpPassed": false,
+      "artifactDownloadVerified": true,
+      "numericLedger": {
+        "path": "docs/qa/round-four/recall-capture-cost-45298731358/diagnostic-ledger.json",
+        "blob": "c388294763bc26d567548d9d2d1ed586cc2d6adc",
+        "sha256": "583b8a21f942cab332649fe78de3a0f35bc78a51cdcd117621658b3cd3d6b289",
+        "run": 45298731358,
+        "traceSupplement": "docs/qa/round-four/recall-capture-cost-45298731358/http-trace-supplement.json"
+      },
+      "remainingCost": "10.460629 seconds transaction residue after callback/auth/readState/selection; not assigned to LocalStore before direct measurement."
+    }
   },
   "finalProducerPreparation": {
-    "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
-    "snapshot": "8a1b0f3ba82b70bba49dc4711a5a0c4d5dd53168",
-    "tree": "170acf52b2d14c6ef0ac475a366c8e0ff7edafb1",
-    "branch": "prepare-full-producers",
-    "files": 16,
-    "cases": 49,
-    "launched": false,
-    "boundary": "Recompose on final source before launch. Original test bodies/bounds unchanged; aggregate wrapper budgets sum original case bounds plus process shutdown."
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+    "snapshot": "90ef2894779a136a9bc0df16261919fe247d62b0",
+    "tree": "a52c2784f589c1d09ab49bcc341beceedf8fa613",
+    "wrapper": "ee9cb91e5568ba2e9afe0f249cf350e961ca9b68",
+    "request": "867de43f04a0d66f3542a753d89ec55c8c2021a1",
+    "files": 18,
+    "cases": 57,
+    "launched": true,
+    "run": 45305561117,
+    "status": "in_progress",
+    "boundary": "All 18 files are complete. Original 16 envelopes are byte-exact; the two new four-case envelopes retain original 12/15-second limits."
+  },
+  "preferencesProjectionCandidate": {
+    "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
+    "tree": "862e3e9c1b56c11e8ef09ef29b0b217970702c64",
+    "parent": "56e8690f0c5229ef61d7d8d14840feee2f7ffae6",
+    "productCandidate": "27e78a8b0cb9a586d45c762f205eb974563ba961",
+    "control": "d6f69a0ffb686b4aa6467925cb455e6a37eb5365",
+    "run": 45301362851,
+    "scope": "Complete preferences projection through original C08 admission; complete preferences graph, bound predicate timing and opaque fallback preserved.",
+    "integrated": true,
+    "native": {
+      "cases": 4,
+      "assertions": 233,
+      "atlasCases": 6,
+      "atlasAssertions": 576,
+      "typechecks": 2,
+      "status": "passed",
+      "strictSpawns": 4,
+      "delegated": 0
+    },
+    "performanceClaim": false
+  },
+  "freshTupleCandidate": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "tree": "3ef9243585d94940d76b258b873418567446184e",
+    "parent": "50cee5ba915d086b803f5191598e5a27866c0f3c",
+    "productCandidate": "bc11cccd21db44a0e86013320547dcb3d8eef585",
+    "control": "803c0da77eb65cbff78977d2edc3f491e61bafef",
+    "run": 45303936643,
+    "scope": "Per-invocation pure digest reuse only after inspecting the complete fresh tuple; original acquisitions, authorizations, canonical serializer, error identity and caller awaits preserved.",
+    "integrated": true,
+    "native": {
+      "helperCases": 4,
+      "helperAssertions": 168,
+      "financeCases": 1,
+      "financeAssertions": 35,
+      "recallCases": 5,
+      "recallAssertions": 477,
+      "typechecks": 2,
+      "status": "passed",
+      "strictSpawns": 5,
+      "delegated": 0
+    },
+    "performanceClaim": false,
+    "activationMeasured": false,
+    "originalSerializerUnchanged": true
+  },
+  "finalMemoryRequalification": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+    "snapshot": "8056e4c927b6b0be7cc7c65f4c686f81a419b3bd",
+    "tree": "f03795d0828b4681f8fe28aee8a90105e52ba38b",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/final-memory.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+    "run": 45304965398,
+    "status": "in_progress",
+    "cases": 5,
+    "originalSpecUnchanged": true,
+    "newQualifiedCases": 0,
+    "newReviewedImages": 0
+  },
+  "finalStructural": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+    "snapshot": "257131acc945a0423a245bd5ec9cfc5bec96f67d",
+    "tree": "fa87a6d9db2a721097bdfd57aae07b2ad05b519e",
+    "wrapper": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+    "request": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+    "run": 45305135807,
+    "status": "in_progress",
+    "outerGates": 10
+  },
+  "localStoreCostDiagnosis": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "snapshot": "ec379b07ae5e5c09c5c712ec746965aafba438aa",
+    "tree": "a69bd33846b3ea892baa7b49a2480e1f85c02092",
+    "run": 45305749252,
+    "status": "in_progress",
+    "markerIntegers": 47,
+    "oldMarkerIntegers": 184,
+    "staticVerification": {
+      "path": "docs/qa/round-four/local-store-cost-ec379/verification-ledger.json",
+      "sha256": "ba9f31f9b9c5c685263b79ba0014826c414d1653baeb17c450ef6b193a52c827"
+    },
+    "qualification": false,
+    "boundary": "Numeric-only diagnostic, original UI61 body and 40/300-second deadlines unchanged. No new fast clone product and no provenance-based eligibility."
   }
 }
