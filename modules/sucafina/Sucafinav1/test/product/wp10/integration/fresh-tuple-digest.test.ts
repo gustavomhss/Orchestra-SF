@@ -445,3 +445,61 @@ test("Fresh tuple inspection keeps own-key cardinality and separates active cycl
     expect(owner.digest(structuredClone(recovered))).toBe(digestSfValue(recovered))
   } finally { owner.close(); await deadline.close() }
 }, 15_000)
+
+test("Fresh tuple digests keep retargeted shared-buffer views on the original digest path", async () => {
+  const deadline = compositionTestDeadline("fresh-tuple-clone-brand", 12_000)
+  const owner = createSfFreshTupleDigest()
+  try {
+    const buffer = new SharedArrayBuffer(3)
+    const writer = new Uint8Array(buffer)
+    writer.set([3, 5, 8])
+    const value = new Uint8Array(buffer)
+    Object.setPrototypeOf(value, Object.prototype)
+    expect(Object.getPrototypeOf(value)).toBe(Object.prototype)
+    expect(ArrayBuffer.isView(value)).toBe(true)
+    const detached = structuredClone(value)
+    expect(Object.getPrototypeOf(detached)).toBe(Uint8Array.prototype)
+    expect(ArrayBuffer.isView(detached)).toBe(true)
+
+    const initial = digestSfValue(value)
+    expect(owner.digest(value)).toBe(initial)
+    expect(owner.digest(value)).toBe(initial)
+    writer[0] = 13
+    expect(detached[0]).toBe(13)
+    const changed = digestSfValue(value)
+    expect(changed).not.toBe(initial)
+    expect(owner.digest(value)).toBe(changed)
+    expect(owner.digest(value)).toBe(changed)
+
+    deadline.check()
+    const nestedBuffer = new SharedArrayBuffer(2)
+    const nestedWriter = new Uint8Array(nestedBuffer)
+    nestedWriter.set([21, 34])
+    const nestedView = new Uint8Array(nestedBuffer)
+    Object.setPrototypeOf(nestedView, Object.prototype)
+    const nested = { state: { view: nestedView }, snapshots: [{ alias: nestedView }], sources: { revision: 1 } }
+    const nestedDetached = structuredClone(nested)
+    expect(nestedDetached.state.view).toBe(nestedDetached.snapshots[0]!.alias)
+    expect(Object.getPrototypeOf(nestedDetached.state.view)).toBe(Uint8Array.prototype)
+    const nestedInitial = digestSfValue(nested)
+    expect(owner.digest(nested)).toBe(nestedInitial)
+    expect(owner.digest(nested)).toBe(nestedInitial)
+    nestedWriter[1] = 55
+    expect(nestedDetached.state.view[1]).toBe(55)
+    const nestedChanged = digestSfValue(nested)
+    expect(nestedChanged).not.toBe(nestedInitial)
+    expect(owner.digest(nested)).toBe(nestedChanged)
+    expect(owner.digest(nested)).toBe(nestedChanged)
+
+    const recovered = tuple()
+    const recoveredDigest = digestSfValue(recovered)
+    expect(owner.digest(recovered)).toBe(recoveredDigest)
+    expect(owner.digest(structuredClone(recovered))).toBe(recoveredDigest)
+    owner.close()
+    writer[2] = 89
+    expect(owner.digest(value)).toBe(digestSfValue(value))
+    nestedWriter[0] = 144
+    expect(owner.digest(nested)).toBe(digestSfValue(nested))
+    expect(owner.digest(recovered)).toBe(recoveredDigest)
+  } finally { owner.close(); await deadline.close() }
+}, 15_000)
