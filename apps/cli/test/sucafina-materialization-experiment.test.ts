@@ -9,7 +9,7 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 
 const repository = path.resolve(import.meta.dir, "../../..")
-const source = "b052acb2f5f6041836402897c415f6ca89a82bac"
+const source = "9ff81408d37ec3900d72f83729e30f63df7b2d06"
 const checks = testEffect(LayerNode.compile(AppProcess.node))
 
 function requireHostedCandidate() {
