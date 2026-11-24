@@ -100,7 +100,7 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
     if (!plan?.copy) { value.status = 2; return }
     value.stage = 3
     binaryString = measure(value.serialize, () => {
-      let temporary: ReturnType<typeof serialize> | undefined
+      let temporary: Buffer | undefined
       try {
         temporary = serialize(normalized, { binaryType: "nodebuffer" })
         return temporary.toString("base64")
@@ -154,8 +154,8 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
     const key = "__sf_materialization_experiment_only__"
     const isolated = a !== b && a.data !== b.data && !Object.hasOwn(a.data, key) && !Object.hasOwn(b.data, key)
     if (!isolated) { value.detachmentFailures++; throw new Error("Materialization copies were not independent") }
-    const nestedA = Object.values(a.data).find((entry) => entry !== null && typeof entry === "object")
-    const nestedB = Object.values(b.data).find((entry) => entry !== null && typeof entry === "object")
+    const nestedA = Object.values(a.data).find((entry): entry is object => entry !== null && typeof entry === "object")
+    const nestedB = Object.values(b.data).find((entry): entry is object => entry !== null && typeof entry === "object")
     if (!nestedA || !nestedB || nestedA === nestedB) {
       value.detachmentFailures++
       throw new Error("Native fixture requires independent nested values")
