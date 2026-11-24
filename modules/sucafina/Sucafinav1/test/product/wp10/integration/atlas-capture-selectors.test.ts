@@ -5,16 +5,36 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import type { Snapshot } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
-import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
-import type { SfProductState, SfStateAuthority, SfStateNamespace, SfStateResult } from "../../../../product/contracts/state.ts"
+import type { CaseLedgerEvent, DecisionCase } from "../../../../product/contracts/decisions.ts"
+import type { SfProductState, SfStateAuthority, SfStateNamespace, SfStateResult, SfProductStatePort } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfProductState, initializeAbsentSfProductState, selectSfAtlasPartition, selectSfCaseProjection } from "../../../../product/host-binding/state-provider.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { Location } from "@orchestra/core/location"
+import { AbsolutePath } from "@orchestra/core/schema"
+import { AppProcess } from "@orchestra/core/process"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { Effect } from "effect"
+import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import type { PortResult } from "../../../../product/contracts/ports.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
+import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
+import { createSfAtlasMemory } from "../../../../product/host-binding/atlas-memory.ts"
+import { createSfAtlasScanner, probeSfAtlasScanner } from "../../../../product/host-binding/atlas-scanner.ts"
+import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
+import { enqueueSfLedgerEvent } from "../../../../product/integration/ledger-outbox.ts"
+import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
+import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
+import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
+import atlasPackage from "../../../../../../atlas/boundary/package.json" with { type: "json" }
+import freeze from "../../../../product/contracts/freeze-v1.json" with { type: "json" }
 
 type Deadline = ReturnType<typeof compositionTestDeadline>
 type Read<Value> = (state: Readonly<SfProductState>, actor: SfStateAuthority) => Value | Promise<Value>
 
-function ok<Value>(result: SfStateResult<Value>): Value {
+function ok<Value>(result: SfStateResult<Value> | PortResult<Value>): Value {
   if (result.status !== "ok") throw new Error(JSON.stringify(result))
   return result.value
 }
@@ -455,3 +475,158 @@ test("C08 capture selectors retain complete state validation and selected clone 
     }
   } finally { await deadline.close() }
 }, 15_000)
+
+test("Native Atlas capture keeps canonical publication, complete payload and all three fresh C08 reads", async () => {
+  expectSpawn(import.meta.path)
+  const deadline = compositionTestDeadline("atlas-capture-native")
+  try {
+    const f = await deadline.phase("native-fixture", () => nativeCaptureFixture(deadline))
+    const atlas = f.business.atlasRecall()
+    if (!atlas) throw new Error("The installed Atlas reader is required")
+    const request = { caseRef: encodeCaseRef(f.ref) }
+    const before = await f.snapshot()
+    expect(before.outbox[f.outbox.key]?.state).toBe("pending")
+    await f.ui("sf_case_read", request, async (call) => {
+      expect(await atlas.memory.readOriginalCapture(f.ref, f.source.refDigest, call)).toBeUndefined()
+    })
+    expect(await f.snapshot()).toEqual(before)
+    const receipt = await deadline.phase("original-atlas-publication", () => f.ui("sf_case_read", request,
+      (call) => f.business.context.emitFromLedger(f.outbox.eventRef, call)))
+    expect(receipt.status).toBe("committed")
+    expect(receipt.scanner).toMatchObject({ name: f.scanner.spec.name, version: f.scanner.version, status: "clean" })
+    const published = await f.snapshot()
+    expect(published.cases).toEqual(before.cases)
+    expect(published.outbox[f.outbox.key]).toMatchObject({ state: "settled", receipt })
+
+    // Both compositions are born around the exact original C08 port. The
+    // opaque control delegates its callback and loses only selector identity;
+    // it does not replace the live port or any authority/producer function.
+    const compose = (opaque: boolean) => {
+      const reads: SfStateNamespace[] = []
+      const state: SfProductStatePort = {
+        read: (incoming, namespace, read) => {
+          reads.push(namespace)
+          return f.authority.state.read(incoming, namespace, opaque ? (stored, actor) => read(stored, actor) : read)
+        },
+        transaction: f.authority.state.transaction,
+      }
+      const memory = createSfAtlasMemory({ state, cases: f.business.cases, authorizeCase: f.business.authorizeCase,
+        host: f.authority.host, evidence: f.business.context, proveContinuity: atlas.proveContinuity,
+        scanner: createSfAtlasScanner({ scanners: [f.scanner.spec] }), scannerVersion: f.scanner.version, now: () => f.at })
+      return { reads, memory }
+    }
+    const canonical = compose(true), selected = compose(false)
+    await deadline.phase("capture-full-parity-and-independent-reads", () => f.ui("sf_case_read", request, async (call) => {
+      const baseline = await canonical.memory.readOriginalCapture(f.ref, f.source.refDigest, call)
+      expect(canonical.reads).toEqual(["cases", "atlas", "cases"])
+      if (!baseline) throw new Error("The real published capture is required")
+      expect(baseline.ref).toEqual(f.source)
+      expect(baseline.projection).toBeDefined()
+
+      const observed = await selected.memory.readOriginalCapture(f.ref, f.source.refDigest, call)
+      expect(selected.reads).toEqual(["cases", "atlas", "cases"])
+      expect(observed).toEqual(baseline)
+      expect(observed).not.toBe(baseline)
+      expect(observed?.ref).not.toBe(baseline.ref)
+      expect(observed?.projection).not.toBe(baseline.projection)
+      expect(await atlas.memory.readOriginalCapture(f.ref, f.source.refDigest, call)).toEqual(baseline)
+      if (!observed) throw new Error("The selected capture must retain the complete value")
+      Reflect.set(observed.projection, "callerOnly", { changed: true })
+      const again = await selected.memory.readOriginalCapture(f.ref, f.source.refDigest, call)
+      expect(again).toEqual(baseline)
+      expect(selected.reads).toEqual(["cases", "atlas", "cases", "cases", "atlas", "cases"])
+      expect(again?.projection).not.toBe(observed.projection)
+      expect(await f.snapshot()).toEqual(published)
+
+      f.control.active = false
+      try {
+        const count = selected.reads.length
+        expect(await selected.memory.readOriginalCapture(f.ref, f.source.refDigest, call)).toBeUndefined()
+        expect(selected.reads).toHaveLength(count)
+      } finally { f.control.active = true }
+    }))
+    expect(await f.snapshot()).toEqual(published)
+  } finally { await deadline.close() }
+}, 120_000)
+
+/** Minimal existing Planner/Atlas publication setup: real C08, source issuer,
+ * case draft, outbox writer, ProductAuthority and pinned gitleaks scanner. */
+async function nativeCaptureFixture(deadline: Deadline) {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-atlas-capture-native-"))
+  deadline.own(() => rm(directory, { recursive: true, force: true }))
+  const store = await openLocalStore(path.join(directory, "store"))
+  deadline.own(() => store.dispose())
+  const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
+  const control = { active: true }
+  const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID,
+    enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
+  const origin = "https://atlas-capture.example.test"
+  const request = () => new Request(origin + "/planner", { method: "POST", signal: deadline.signal,
+    headers: { origin, "idempotency-key": randomUUID() } })
+  const identity = { installationId: "atlas-capture-installation", hostId: "host", projectId: "project",
+    location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
+  const writes = new WeakSet<object>()
+  const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId,
+    origin, policyVersion: "atlas-capture-policy", persistence, proposalCoverageWrites: writes,
+    grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
+      operations: ["sf_case_draft", "sf_case_read", "sf_forecast_compare", "sf_evidence_get"] }],
+    authenticate: async (_incoming, scope) => control.active && scope ? { id: "person", canWrite: true,
+      roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
+    environment: async () => { deadline.check(); return { at, id: randomUUID, directory: [] } },
+    createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(), inspectSession: async () => undefined,
+    verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1,
+    authorizeDocument: async () => undefined })
+  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: writes })
+  deadline.own(() => business.dispose())
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+  await persistence.transaction("planner", async (snapshot) => {
+    snapshot.data = { versions: [{ id: "v0", name: "Observed forecast", year: 2027, closed: 0,
+      lines: [{ id: "line", name: "Service", ownerId: "owner", sec: "opex", el: "licenses", cur: "USD",
+        b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(100) }],
+      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+      officials: { "2027": "v0" }, entities: [], allocations: [], roster: [] }
+    return { commit: true, value: undefined }
+  })
+  const scanner = await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
+    const process = yield* AppProcess.Service
+    return yield* Effect.promise(() => probeSfAtlasScanner(process))
+  })).pipe(Effect.provide(LayerNode.compile(AppProcess.node))), { signal: deadline.signal })
+  if (!scanner) throw new Error("The real pinned Atlas scanner is required")
+  const sourceRoot = path.resolve(import.meta.dir, "../../../../product/ai")
+  const bundle = await createResidentAiBundle({ root: sourceRoot, manifestPath: path.join(sourceRoot, "manifests/resident.json") })
+  business.initializeAtlas(scanner, { boundaryVersion: atlasPackage.version, schemaVersion: freeze.canonicalSha256,
+    manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills
+      .map((entry) => ({ id: entry.id, version: entry.version, sourceDigest: entry.sourceDigest }))) })
+  const ui = async <Value>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<Value>) => {
+    const digest = digestSfValue(payload)
+    const call = ok(await authority.ui.admit(request(), operation, digest))
+    try {
+      expect(await authority.ui.validate(call, operation, digest)).toBe(true)
+      return await work(call)
+    } finally { authority.ui.finish(call) }
+  }
+  const source = await ui("sf_forecast_compare", {}, async (call) => ok(await business.plannerProduct.issueSource("v0", call)).evidence)
+  const input = { objective: "Preserve a real original capture", horizon: period, currency: "USD",
+    criteria: ["Review the observed service cost"], sourceRefs: [source] }
+  const draft = await ui("sf_case_draft", input, async (call) => ok(await business.cases.draft(input, call)))
+  const previous = { id: draft.id, incarnation: draft.incarnation, version: draft.version }
+  const before = ok(await authority.state.read(request(), "cases", (state) => ({
+    value: structuredClone(state.cases[previous.id]), cases: state.versions.cases, outbox: state.versions.outbox,
+  })))
+  if (!before.value || before.value.version !== previous.version) throw new Error("The drafted real case revision is required")
+  const ref = { ...previous, version: previous.version + 1 }
+  const event: CaseLedgerEvent = { id: randomUUID(), caseRef: ref, kind: "reconsideration-accepted", principalRef: "person", at,
+    consideredActions: ["Review the observed service cost"], factualGaps: [], lifecycleState: "investigating",
+    rationale: "Preserve the observed service estimate", evidenceRefs: [source], outputDigest: digestSfValue(source) }
+  const outbox = ok(await authority.state.transaction(request(), { namespace: "cases", expectedStorageVersion: before.cases,
+    additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: before.outbox }],
+    targetRef: previous.id, targetIncarnation: previous.incarnation, idempotencyKey: event.id, commandDigest: digestSfValue(event),
+  }, async (state, actor) => {
+    state.cases[previous.id] = { ...before.value, version: ref.version, state: "investigating", ledger: [...before.value.ledger, event] }
+    return { commit: true, value: ok(enqueueSfLedgerEvent(state, event, {
+      installationId: identity.installationId, projectId: identity.projectId, authority: actor,
+    })) }
+  }))
+  const snapshot = async () => ok(await authority.state.read(request(), "atlas", (state) => structuredClone(state)))
+  return { authority, business, persistence, control, source, ref, outbox, scanner, at, snapshot, ui }
+}
