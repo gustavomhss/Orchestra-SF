@@ -10,6 +10,13 @@ import { types } from "node:util"
 // all timings are inclusive, cumulative and cannot be summed across nesting or checkpoints.
 const buckets = ["owner-current","owner-readers","owner-environment","witness-before","witness-after","witness-egress","owner-state-cases","owner-state-atlas","owner-digest","owner-materialized","owner-authenticate","owner-revalidate","owner-work","owner-clone","root-prepare","record-scope","root-pinned","root-current","root-healthy","root-native-lookup","root-native-current","root-owner-current","root-request-identity","root-binding-digest","proof-frame-current","proof-readers-current","proof-owner-current","proof-unchanged","proof-refs-digest","proof-leaf-current","proof-authorize","proof-work","proof-canonical","proof-clone","canonical-read-first","canonical-read-second","canonical-rank-first","canonical-rank-second","canonical-memory-match","canonical-features","canonical-select","bcs-source","bcs-case-event","bcs-dependencies","bcs-source-maps","bcs-context","bcs-auth","event-read-first","event-read-second","event-state","event-authorize-case","event-authorize-evidence","event-environment","event-auth","event-digest","event-source-maps","atlas-read-records","atlas-state","atlas-case-read","atlas-evidence","atlas-evidence-batch","atlas-continuity","atlas-stable","atlas-authorize","atlas-digest","atlas-source-maps","atlas-map-entry","atlas-features","atlas-rank-authorized","atlas-finalize","atlas-rank-digest","atlas-capture","bcs-capture-integrity","bcs-capture-stable","bcs-context-digest","owner-frame-admitted","owner-frame-current","proof-cache-hit","proof-frame-admitted","finance-closed-pair","finance-snapshot-digest","c08-transaction","c08-authorize","c08-read-state","c08-clone","c08-selection","c08-callback"] as const
 type Bucket = typeof buckets[number]
+
+// LocalStore-only sync costs; counts/timings are inclusive and cumulative.
+// copyValue is measured only at cloneSnapshot's external call, not its recursion or ACL-only copies.
+// Branches: current materializer/clone, then nested ACL/source/materializer/staged/load.
+const localStoreBuckets = ["current-snapshots","copy-current","clone-snapshot","clone-tree","validate-snapshot","observe-snapshot","payload-fingerprint","plan-materialization","materialize-snapshot","decode-snapshot","nested-snapshot","dashboard-source-snapshot","snapshot-sql","scope-guard","file-guard"] as const
+type LocalStoreBucket = typeof localStoreBuckets[number]
+type LocalStoreBranch = 0 | 1 | 2 | 3 | 4 | 5 | 6
 type Profile = {
   id: number
   parent: number
@@ -21,9 +28,41 @@ type Profile = {
   checkpoints: number
   pending: Set<{ bucket: Bucket; started: number }>
   values: Record<Bucket, [number, number]>
+  localStore: Record<LocalStoreBucket, [number, number]>
+  localBranches: [number, number, number, number, number, number, number]
 }
 const profiles = new AsyncLocalStorage<Profile>()
 let sequence = 0
+
+
+/** Observe a synchronous boundary without catching/replaying its original result or error. */
+export function sfLocalStoreCost<Value>(bucket: LocalStoreBucket, read: () => Value): Value {
+  let profile: Profile | undefined
+  let started = 0
+  try {
+    profile = profiles.getStore()
+    if (profile && !profile.closed) {
+      started = performance.now()
+      profile.localStore[bucket][0]++
+    } else profile = undefined
+  } catch { profile = undefined }
+  try { return read() }
+  finally {
+    if (profile) {
+      try { profile.localStore[bucket][1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
+      catch { /* Telemetry cannot replace the original synchronous completion. */ }
+    }
+  }
+}
+
+/** Count only the original selected expression; never evaluate an alternate branch. */
+export function sfLocalStoreBranch<Value>(branch: LocalStoreBranch, read: () => Value): Value {
+  try {
+    const profile = profiles.getStore()
+    if (profile && !profile.closed) profile.localBranches[branch]++
+  } catch { /* Telemetry cannot replace the selected expression. */ }
+  return read()
+}
 
 export function sfRecallCost<Value>(bucket: Bucket, read: () => Value): Value {
   const profile = profiles.getStore()
@@ -86,6 +125,8 @@ export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2 | 3 | 4, work: () => Pr
     id: ++sequence, parent: parent?.id ?? 0, depth: parent ? parent.depth + 1 : 0, kind,
     started: performance.now(), epoch: Date.now(), closed: false, checkpoints: 0, pending: new Set(),
     values: Object.fromEntries(buckets.map((bucket) => [bucket, [0, 0]])) as Record<Bucket, [number, number]>,
+    localStore: Object.fromEntries(localStoreBuckets.map((bucket) => [bucket, [0, 0]])) as Record<LocalStoreBucket, [number, number]>,
+    localBranches: [0, 0, 0, 0, 0, 0, 0],
   }
   return profiles.run(profile, () => {
     const finish = (fulfilled: 0 | 1) => {
@@ -122,5 +163,8 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
       Math.max(0, Math.round((now - profile.started) * 1000)), profile.pending.size,
       ...buckets.flatMap((bucket) => [profile.values[bucket][0], profile.values[bucket][1] + (elapsed.get(bucket) ?? 0)])]
     process.stdout.write("SF_RECALL_COST " + fields.join(" ") + "\n")
+    const localFields = [...fields.slice(0, 10),
+      ...localStoreBuckets.flatMap((bucket) => profile.localStore[bucket]), ...profile.localBranches]
+    process.stdout.write("SF_LOCAL_STORE_COST " + localFields.join(" ") + "\n")
   } catch { /* A diagnostic sink cannot replace the original result or error. */ }
 }

@@ -1,3 +1,4 @@
+import { sfLocalStoreCost, sfLocalStoreBranch } from "../product/host-binding/recall-observation-cost.ts"
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
@@ -128,12 +129,14 @@ export async function openLocalStore(directory: string, options: {
     return { dev: opened.dev, ino: opened.ino, invalid: false }
   }).finally(() => file.close())
   const requireDatabaseFile = () => {
+    return sfLocalStoreCost("file-guard", () => {
     const installed = !databaseFile.invalid && lstatSync(path, { bigint: true, throwIfNoEntry: false })
     if (!installed || !installed.isFile() || installed.uid !== BigInt(uid) || (installed.mode & 0o077n) !== 0n ||
       installed.dev !== databaseFile.dev || installed.ino !== databaseFile.ino) {
       databaseFile.invalid = true
       throw new Error("Local database identity changed; reopen the store")
     }
+    })
   }
 
   const storageIdentity = createHash("sha256").update(JSON.stringify([path, Number(databaseFile.dev), Number(databaseFile.ino)])).digest("hex")
@@ -184,11 +187,12 @@ export async function openLocalStore(directory: string, options: {
     copyAcl?: () => Snapshot["data"] | undefined
     bytesIdentity?: object
   } => {
+    return sfLocalStoreCost("observe-snapshot", () => {
     const prior = materializations.get(surface)
     const codecCurrent = snapshotDecoderCurrent()
     const fingerprint = codecCurrent && payload !== undefined && payload.length > SNAPSHOT_MATERIALIZATION_UNITS &&
       payload.length <= SNAPSHOT_MATERIALIZATION_UNITS * 4
-      ? createHash("sha256").update(payload, "utf16le").digest("hex") : undefined
+      ? sfLocalStoreCost("payload-fingerprint", () => createHash("sha256").update(payload, "utf16le").digest("hex")) : undefined
     if (payload !== undefined && prior && codecCurrent &&
         (prior.payload === payload || fingerprint !== undefined && prior.fingerprint === fingerprint && prior.payloadUnits === payload.length)) {
       const materialize = () => materializeSnapshot(prior, payload)
@@ -216,6 +220,7 @@ export async function openLocalStore(directory: string, options: {
     return { materialize: () => snapshot, bytesIdentity: plan?.identity,
       ...(plan && !plan.fingerprint ? { freshPlan: { units: plan.units, copy: () => materializeSnapshot(plan, payload) } } : {}),
     }
+    })
   }
   const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
 
@@ -249,14 +254,17 @@ export async function openLocalStore(directory: string, options: {
     return preimage?.surface === "dashboard" ? preimage.snapshot() : scope.root.snapshots.dashboard
   }
   const dashboardSourceSnapshot = (scope: ReadScope, identity: object) => {
+    return sfLocalStoreCost("dashboard-source-snapshot", () => {
     const snapshot = requireDashboardSource(scope, identity)
     if (!snapshot || Object.hasOwn(Object.prototype, "__sfProductV1")) throw new Error("Local Dashboard source view unavailable")
     // Persisted v1 data has no getters or aliases. Private product state and
     // audit are outside the installed Dashboard source projector's input.
     return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
       versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
+    })
   }
   const requireScope = (scope: ReadScope) => {
+    return sfLocalStoreCost("scope-guard", () => {
     let current: ReadScope | undefined = scope
     while (current) {
       if (!current.open) throw new Error("Local transaction scope has ended")
@@ -264,16 +272,19 @@ export async function openLocalStore(directory: string, options: {
       current = current.parent
     }
     requireDatabaseFile()
+    })
   }
   const currentCopy = (scope: ReadScope, surface: Surface) =>
     Object.hasOwn(scope.root, "preimage") && scope.root.preimage?.surface === surface && !scope.root.preimage.current()
       ? undefined : scope.root.copies?.[surface]
   const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
+    return sfLocalStoreCost("copy-current", () => {
     const materialize = currentCopy(scope, surface)
-    if (materialize) return materialize()
+    if (materialize) return sfLocalStoreBranch(0, () => materialize())
     const snapshot = scope.root.snapshots[surface]
     if (!snapshot) throw new Error("Local transaction snapshots unavailable")
-    return cloneSnapshot(snapshot)
+    return sfLocalStoreBranch(1, () => cloneSnapshot(snapshot))
+    })
   }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
@@ -492,7 +503,7 @@ export async function openLocalStore(directory: string, options: {
         // budget before taking fresh plans for repeated reads of cold surfaces.
         const budget = { remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0) }
         const read = (surface: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          const row = sfLocalStoreCost("snapshot-sql", () => db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface))
           // Keep the same SQL order and changed-payload admission as mutable
           // roots. No callback receives this root's authoritative graphs.
           const source = observeSnapshot(surface, row?.payload)
@@ -546,11 +557,13 @@ export async function openLocalStore(directory: string, options: {
     },
     hasCurrentSnapshots,
     currentSnapshots: () => {
+      return sfLocalStoreCost("current-snapshots", () => {
       const scope = context.getStore()
       if (!scope) return undefined
       requireScope(scope)
       return { dashboard: copyCurrentSnapshot(scope, "dashboard"), planner: copyCurrentSnapshot(scope, "planner"),
         procurement: copyCurrentSnapshot(scope, "procurement") }
+      })
     },
     currentSnapshot: (surface) => {
       const scope = context.getStore()
@@ -575,13 +588,13 @@ export async function openLocalStore(directory: string, options: {
         if ((sourceRoot || aclRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
         const materialize = sourceRoot || aclRoot ? undefined : currentCopy(parent, surface)
         const staged = sourceRoot || aclRoot || materialize ? undefined : parent.root.snapshots[surface]
-        const row = sourceRoot || aclRoot || materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const row = sourceRoot || aclRoot || materialize || staged ? undefined : sfLocalStoreCost("snapshot-sql", () => parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface))
         if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || rootIdentities.get(parent.root) !== aclRoot))
           throw new Error("Local Dashboard ACL root changed")
         // The callback obtains ACL fields separately via observeAuthority.
-        const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
-          : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
-          : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
+        const snapshot: Snapshot = sfLocalStoreCost("nested-snapshot", () => aclRoot ? sfLocalStoreBranch(2, () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] }))
+          : sourceRoot ? sfLocalStoreBranch(3, () => dashboardSourceSnapshot(parent, sourceRoot))
+          : materialize ? sfLocalStoreBranch(4, () => materialize()) : staged ? sfLocalStoreBranch(5, () => cloneSnapshot(staged)) : sfLocalStoreBranch(6, () => loadSnapshot(surface, row?.payload)))
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -619,7 +632,7 @@ export async function openLocalStore(directory: string, options: {
           remaining: SNAPSHOT_MATERIALIZATION_UNITS - [...materializations.values()].reduce((sum, plan) => sum + plan.units, 0),
         }
         const read = (name: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          const row = sfLocalStoreCost("snapshot-sql", () => db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name))
           // Ordinary single-surface transactions keep dev's lazy observation
           // of unrelated surfaces. A preimage additionally needs a full seal.
           const prior = materializations.get(name)
@@ -757,7 +770,7 @@ export async function openLocalStore(directory: string, options: {
       operation(true, async (db) => {
         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
         const read = (surface: Surface) => {
-          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          const row = sfLocalStoreCost("snapshot-sql", () => db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface))
           return loadSnapshot(surface, row?.payload)
         }
         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
@@ -1061,15 +1074,19 @@ function record(value: unknown): value is Record<string, unknown> {
 }
 
 export function decodeSnapshot(payload: string): Snapshot {
+  return sfLocalStoreCost("decode-snapshot", () => {
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
   return validateSnapshot(decode(envelope[2]))
+  })
 }
 
 /** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(copyValue(snapshot))
+  return sfLocalStoreCost("clone-snapshot", () => {
+  return validateSnapshot(sfLocalStoreCost("clone-tree", () => copyValue(snapshot)))
+  })
 }
 
 function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
@@ -1096,6 +1113,7 @@ function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
 }
 
 function validateSnapshot(value: unknown): Snapshot {
+  return sfLocalStoreCost("validate-snapshot", () => {
   if (!record(value) || !record(value.data) || !record(value.versions) || !record(value.sequences) || !Array.isArray(value.audit) || !Array.isArray(value.notices))
     throw new Error("Corrupt local snapshot shape")
   if (value.sfBlobGenerations !== undefined && (!record(value.sfBlobGenerations) || !Object.values(value.sfBlobGenerations).every((generation) => Number.isSafeInteger(generation) && Number(generation) >= 0)))
@@ -1106,6 +1124,7 @@ function validateSnapshot(value: unknown): Snapshot {
       !value.notices.every((notice: unknown) => record(notice) && ["pending", "approved", "rejected", "supplier-pending"].includes(String(notice.kind)) && typeof notice.record === "string" && typeof notice.at === "string" && Array.isArray(notice.to) && notice.to.every((to: unknown) => typeof to === "string")))
     throw new Error("Corrupt local snapshot contents")
   return value as Snapshot
+  })
 }
 
 export function encodeSnapshot(snapshot: Snapshot): string {
@@ -1152,6 +1171,7 @@ type SnapshotMaterialization = Readonly<{
 }>
 
 function planSnapshotMaterialization(snapshot: Snapshot, payload: string, fingerprint?: string): SnapshotMaterialization | undefined {
+  return sfLocalStoreCost("plan-materialization", () => {
   if (!snapshotDecoderCurrent() || (payload.length > SNAPSHOT_MATERIALIZATION_UNITS && !fingerprint)) return
   const parts: string[] = []
   const missing: string[] = []
@@ -1227,9 +1247,11 @@ function planSnapshotMaterialization(snapshot: Snapshot, payload: string, finger
     ...(acl && units + acl.length <= SNAPSHOT_MATERIALIZATION_UNITS
       ? { acl, units: units + acl.length } : { units }),
   })
+  })
 }
 
 function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Snapshot {
+  return sfLocalStoreCost("materialize-snapshot", () => {
   const copy = plan.copy
   if (!copy) return decodeSnapshot(payload)
   const snapshot = JSON.parse(copy.json) as Snapshot
@@ -1252,4 +1274,5 @@ function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Sn
     }
   }
   return snapshot
+  })
 }
