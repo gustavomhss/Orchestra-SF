@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "37008747c1e2bb76601a55e9411405f81a2118e2",
+  "productSource": "d008b222e06f803c96966111b4b4419fcdc44eb8",
   "status": "qualification-in-progress",
   "distinctIssues": [
     {
@@ -281,7 +281,7 @@
     "pending": [
       "Original Materiality and Recall requests still exceed the unchanged 40-second guard; reviewed numeric diagnostics preserve original bodies and deadlines.",
       "Complete original Memory5 must pass after repairs; pre-horizon run45279587191 returned one pass and four failures.",
-      "Complete final14-file/42-case producer cohort after source freeze.",
+      "Complete final 16-file/49-case producer and Atlas cohort after source freeze.",
       "Final structural gates against exact current dev, documentation and merge."
     ],
     "supersededScopes": [
@@ -436,7 +436,7 @@
         "result": "failure",
         "passed": 1,
         "failed": 4,
-        "detail": "Pre-horizon full original Memory cohort; detailed artifact review in progress."
+        "detail": "Pre-horizon full original Memory cohort; complete trace and image review retained in round-four-memory-five-prehorizon.json. One pass/four failures do not qualify the full cohort."
       }
     ]
   },
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "37008747c1e2bb76601a55e9411405f81a2118e2",
-    "tree": "ec72e6d98259094a65137b396622e4b55710442d",
+    "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+    "tree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13714,6 +13714,15 @@
         "browserRun": 45289867989,
         "integrated": true,
         "scope": "External Context: two complete original operational observations use independent native roots; all three admissions retained. 125 native/regression tests and original isolated UI67 pass."
+      },
+      {
+        "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+        "tree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+        "parent": "050b2478ea898b32b38e9eb7d3268f416b08e091",
+        "productCandidate": "20d7c817172284d6f632db7bb7e760f598a01e63",
+        "control": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+        "run": 45298129069,
+        "scope": "Fresh case and joint Atlas/outbox capture selections inside original C08 authorization. Six protocol/native controls and both typechecks pass; original UI62 request remains unqualified."
       }
     ],
     "structural": {
@@ -16108,8 +16117,8 @@
     ]
   },
   "checkpoint": {
-    "productSource": "37008747c1e2bb76601a55e9411405f81a2118e2",
-    "productTree": "ec72e6d98259094a65137b396622e4b55710442d",
+    "productSource": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+    "productTree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
     "status": "qualification-in-progress",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
@@ -16120,7 +16129,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-23 23:48:31 UTC"
+    "recordedAt": "2026-11-24 00:41:59 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -23407,6 +23416,36 @@
       "result": "success",
       "isolatedOriginal": true,
       "ledgerSha256": "d3c61ae9e48ce18827005f1a0aecd36f88c1c6f54121a068936df2115c0fbc0d"
+    },
+    "atlasCapture": {
+      "file": "round-four-atlas-capture-control.json",
+      "run": 45298129069,
+      "result": "success",
+      "ledgerSha256": "0a2b239797f54716e9054fc3c9784f1c40c0b4e6d83a5a5b5d23965acd72ed87"
+    },
+    "atlasCapturePrevious": {
+      "file": "round-four-atlas-capture-control-previous.json",
+      "run": 45297327229,
+      "result": "failure",
+      "ledgerSha256": "35e15942d6a10493c834b7a35cbd363abbb27b5bab94535e0dbbcaf201073fba"
+    },
+    "atlasUI62": {
+      "file": "round-four-atlas-ui62-diagnostic.json",
+      "run": 45295656483,
+      "result": "failure",
+      "ledgerSha256": "bd1b2c63a1afc6038b901c3868416b214121caf33ee5ca95cb057adc9b0d0e67"
+    },
+    "recallCost": {
+      "file": "round-four-recall-cost-diagnostic.json",
+      "run": 45291117605,
+      "result": "failure",
+      "ledgerSha256": "a0f8228c7e09bcaab7582e601d3b7688a5ed6a1edd5945b59ae11fbbcc8b49bb"
+    },
+    "materialityCost": {
+      "file": "round-four-materiality-cost-diagnostic.json",
+      "run": 45291133083,
+      "result": "failure",
+      "ledgerSha256": "a5545c396a8091ee8ee0b954adf9e9b6bdc1518f6e5a4a6526652d496b6fe048"
     }
   },
   "contextObservationCandidate": {
@@ -23440,5 +23479,75 @@
       "reviewedOriginals": 4,
       "ledgerSha256": "d3c61ae9e48ce18827005f1a0aecd36f88c1c6f54121a068936df2115c0fbc0d"
     }
+  },
+  "atlasCaptureCandidate": {
+    "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+    "tree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+    "productCandidate": "20d7c817172284d6f632db7bb7e760f598a01e63",
+    "integrated": true,
+    "productFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "sha": "9abc3b3ddff2c97d7433767519be8c6b47d477ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "sha": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b"
+      }
+    ],
+    "native": {
+      "run": 45298129069,
+      "passed": 6,
+      "assertions": 576,
+      "typechecks": 2,
+      "ledgerFile": "round-four-atlas-capture-control.json",
+      "ledgerSha256": "0a2b239797f54716e9054fc3c9784f1c40c0b4e6d83a5a5b5d23965acd72ed87"
+    },
+    "previousGate": {
+      "run": 45297327229,
+      "result": "failure",
+      "reason": "Four type/fixture diagnostics in the new control; all six behavioral cases and CLI types passed.",
+      "ledgerFile": "round-four-atlas-capture-control-previous.json"
+    },
+    "browser": {
+      "run": 45295656483,
+      "source": "89f8a8e1c9e561f72f136c10c14430a70b7a7e84",
+      "result": "failure",
+      "originalRequestQualified": false,
+      "ledgerFile": "round-four-atlas-ui62-diagnostic.json"
+    },
+    "performanceClaim": false
+  },
+  "broadCostDiagnostics": {
+    "recall": {
+      "run": 45291117605,
+      "source": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+      "ledgerFile": "round-four-recall-cost-diagnostic.json",
+      "finalSettlementObserved": false,
+      "lastOwnerPartialUs": 54711993,
+      "originalRequestQualified": false
+    },
+    "materiality": {
+      "run": 45291133083,
+      "source": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+      "ledgerFile": "round-four-materiality-cost-diagnostic.json",
+      "completeReadRegionsUs": [
+        35572031,
+        35567264
+      ],
+      "profilesEach": 127,
+      "originalRequestQualified": false
+    },
+    "methodology": "Cumulative inclusive buckets and parent/child wall durations are not added. Producer settlement does not establish an HTTP response."
+  },
+  "finalProducerPreparation": {
+    "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+    "snapshot": "8a1b0f3ba82b70bba49dc4711a5a0c4d5dd53168",
+    "tree": "170acf52b2d14c6ef0ac475a366c8e0ff7edafb1",
+    "branch": "prepare-full-producers",
+    "files": 16,
+    "cases": 49,
+    "launched": false,
+    "boundary": "Recompose on final source before launch. Original test bodies/bounds unchanged; aggregate wrapper budgets sum original case bounds plus process shutdown."
   }
 }
