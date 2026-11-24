@@ -374,7 +374,7 @@ test("C08 capture projections preserve refusal, asynchronous egress and cancella
         }
         const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, project)
           : selectSfAtlasPartition("owner", f.call, (partition, outbox) => project({ partition, outbox }))
-        const pending = f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
+        const pending = f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read).finally(() => entered.resolve())
         try {
           await entered.promise
           expect(projects).toBe(1)
@@ -613,7 +613,8 @@ async function nativeCaptureFixture(deadline: Deadline) {
   const before = ok(await authority.state.read(request(), "cases", (state) => ({
     value: structuredClone(state.cases[previous.id]), cases: state.versions.cases, outbox: state.versions.outbox,
   })))
-  if (!before.value || before.value.version !== previous.version) throw new Error("The drafted real case revision is required")
+  const value = before.value
+  if (!value || value.version !== previous.version) throw new Error("The drafted real case revision is required")
   const ref = { ...previous, version: previous.version + 1 }
   const event: CaseLedgerEvent = { id: randomUUID(), caseRef: ref, kind: "reconsideration-accepted", principalRef: "person", at,
     consideredActions: ["Review the observed service cost"], factualGaps: [], lifecycleState: "investigating",
@@ -622,7 +623,7 @@ async function nativeCaptureFixture(deadline: Deadline) {
     additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: before.outbox }],
     targetRef: previous.id, targetIncarnation: previous.incarnation, idempotencyKey: event.id, commandDigest: digestSfValue(event),
   }, async (state, actor) => {
-    state.cases[previous.id] = { ...before.value, version: ref.version, state: "investigating", ledger: [...before.value.ledger, event] }
+    state.cases[previous.id] = { ...value, version: ref.version, state: "investigating", ledger: [...value.ledger, event] }
     return { commit: true, value: ok(enqueueSfLedgerEvent(state, event, {
       installationId: identity.installationId, projectId: identity.projectId, authority: actor,
     })) }
