@@ -105,7 +105,8 @@ function inspect(value: unknown, expected: unknown, comparable: boolean,
   if (prior) return prior.comparable === comparable && prior.expected === expected ? prior.result : 1
   const array = isArray(value)
   if (prototype(value) !== (array ? arrayPrototype : objectPrototype)) return 0
-  // Only the counterpart is a private clone of an admitted graph; fresh values keep every descriptor check.
+  // A clone can retain an exotic brand and shared memory; require the ordinary object/array prototype.
+  // Fresh values still receive every descriptor check.
   const partner = comparable && expected !== null && typeof expected === "object" &&
     isArray(expected) === array && prototype(expected) === (array ? arrayPrototype : objectPrototype)
     ? expected as Record<string, unknown> : undefined
