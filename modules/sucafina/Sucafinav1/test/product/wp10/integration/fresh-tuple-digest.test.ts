@@ -189,3 +189,176 @@ test("Opaque tuple values retain original getter, Proxy, sparse-array and failur
     } finally { owner.close() }
   } finally { await deadline.close() }
 }, 15_000)
+
+test("Tuple intrinsic drift preserves original serialization and hash calls without replay", async () => {
+  const deadline = compositionTestDeadline("fresh-tuple-intrinsics", 12_000)
+  const owner = createSfFreshTupleDigest()
+  try {
+    const value = { nested: { value: 1 }, items: [1, undefined, 3] }
+    const expected = digestSfValue(value)
+    expect(owner.digest(value)).toBe(expected)
+
+    const jsonCount = { calls: 0 }
+    const json = withDataMethod(JSON, "stringify", function (this: unknown, ...args: unknown[]) {
+      jsonCount.calls++
+      return Reflect.apply(originalStringify, this, args)
+    }, () => ({ value: owner.digest(value), calls: jsonCount.calls }))
+    expect(json).toEqual({ value: expected, calls: 1 })
+
+    for (const method of ["keys", "map"] as const) {
+      deadline.check()
+      const calls = { value: 0 }
+      const target = method === "keys" ? Object : Array.prototype
+      const original = originalDescriptor(target, method)?.value
+      if (typeof original !== "function") throw new Error("Original canonical method unavailable")
+      const observed = withDataMethod(target, method, function (this: unknown, ...args: unknown[]) {
+        calls.value++
+        return Reflect.apply(original, this, args)
+      }, () => {
+        const canonical = digestSfValue(value), canonicalCalls = calls.value
+        calls.value = 0
+        const actual = owner.digest(value)
+        return { canonical, actual, canonicalCalls, actualCalls: calls.value }
+      })
+      expect(observed.actual).toBe(observed.canonical)
+      expect(observed.actualCalls).toBe(observed.canonicalCalls)
+      expect(observed.canonicalCalls).toBeGreaterThan(0)
+    }
+
+    const inheritedCount = { calls: 0 }
+    const inherited = withDataMethod(Object.prototype, "toJSON", function () {
+      inheritedCount.calls++
+      return "Original inherited serializer"
+    }, () => {
+      const canonical = digestSfValue(value), canonicalCalls = inheritedCount.calls
+      inheritedCount.calls = 0
+      const actual = owner.digest(value)
+      return { canonical, actual, canonicalCalls, actualCalls: inheritedCount.calls }
+    })
+    expect(inherited.actual).toBe(inherited.canonical)
+    expect(inherited.actual).not.toBe(expected)
+    expect(inherited.canonicalCalls).toBe(1)
+    expect(inherited.actualCalls).toBe(1)
+
+    const hashPrototype = Bun.CryptoHasher.prototype
+    const hashDescriptor = originalDescriptor(hashPrototype, "digest")
+    if (!hashDescriptor || !("value" in hashDescriptor) || typeof hashDescriptor.value !== "function")
+      throw new Error("Original hash method unavailable")
+    const originalHash = hashDescriptor.value, hashCount = { calls: 0 }
+    const hashed = withDataMethod(hashPrototype, "digest", function (this: unknown, ...args: unknown[]) {
+      hashCount.calls++
+      return Reflect.apply(originalHash, this, args)
+    }, () => ({ value: owner.digest(value), calls: hashCount.calls }))
+    expect(hashed).toEqual({ value: expected, calls: 1 })
+
+    const failure = new Error("Original hash failure"), failedCount = { calls: 0 }
+    const failed = withDataMethod(hashPrototype, "digest", function () {
+      failedCount.calls++
+      throw failure
+    }, () => observe(() => owner.digest(value)))
+    expect(failed.ok).toBe(false)
+    if (failed.ok) throw new Error("Expected the original hash failure")
+    expect(failed.error).toBe(failure)
+    expect(failedCount.calls).toBe(1)
+    expect(owner.digest(value)).toBe(expected)
+
+    const serializerDescriptor = originalDescriptor(JSON, "stringify")
+    if (!serializerDescriptor) throw new Error("Original serializer unavailable")
+    const once = { calls: 0 }
+    const changedHash = digestSfValue("The original serializer changed for one call")
+    const first = withDataMethod(JSON, "stringify", function () {
+      once.calls++
+      originalDefine(JSON, "stringify", serializerDescriptor)
+      return canonicalSfValue("The original serializer changed for one call")
+    }, () => owner.digest(value))
+    expect(once.calls).toBe(1)
+    expect(first).toBe(changedHash)
+    expect(first).not.toBe(expected)
+    expect(owner.digest(value)).toBe(expected)
+
+    const selfRemovingHash = { calls: 0 }
+    const special = withDataMethod(hashPrototype, "digest", function () {
+      selfRemovingHash.calls++
+      originalDefine(hashPrototype, "digest", hashDescriptor)
+      return "The original hash returned this once"
+    }, () => owner.digest(value))
+    expect(special).toBe("The original hash returned this once")
+    expect(selfRemovingHash.calls).toBe(1)
+    expect(owner.digest(value)).toBe(expected)
+
+    const cloneCount = { calls: 0 }
+    const fresh = { changed: "fresh input while clone is opaque" }
+    const native = digestSfValue(fresh)
+    const cloned = withDataMethod(globalThis, "structuredClone", function () {
+      cloneCount.calls++
+      throw new Error("An opaque clone cannot affect the original digest")
+    }, () => owner.digest(fresh))
+    expect(cloned).toBe(native)
+    expect(cloneCount.calls).toBe(0)
+  } finally { owner.close(); await deadline.close() }
+}, 15_000)
+
+test("Tuple owners reject post-hash admission and remain canonical through close and reentrancy", async () => {
+  const deadline = compositionTestDeadline("fresh-tuple-lifecycle", 12_000)
+  const owner = createSfFreshTupleDigest()
+  const closing = createSfFreshTupleDigest()
+  const independent = createSfFreshTupleDigest()
+  try {
+    const value: Record<string, unknown> = { stable: 1 }
+    const postRemoval = digestSfValue({ stable: 2 })
+    const beforeRemoval = digestSfValue({ ephemeral: "observed once", stable: 2 })
+    const reads = { value: 0 }
+    originalDefine(value, "ephemeral", { configurable: true, enumerable: true, get: () => {
+      reads.value++
+      originalDelete(value, "ephemeral")
+      value.stable = 2
+      return "observed once"
+    } })
+    expect(owner.digest(value)).toBe(beforeRemoval)
+    expect(reads.value).toBe(1)
+    expect(value).toEqual({ stable: 2 })
+    expect(owner.digest(value)).toBe(postRemoval)
+    expect(postRemoval).not.toBe(beforeRemoval)
+
+    const counts = { outer: 0, inner: 0 }
+    const inner = { get value() { counts.inner++; return "Original inner value" } }
+    const outer = { get nested() { counts.outer++; return owner.digest(inner) } }
+    const expected = digestSfValue({ nested: digestSfValue({ value: "Original inner value" }) })
+    expect(owner.digest(outer)).toBe(expected)
+    expect(counts).toEqual({ outer: 1, inner: 1 })
+    expect(owner.digest(outer)).toBe(expected)
+    expect(counts).toEqual({ outer: 2, inner: 2 })
+
+    const failure = new Error("Original reentrant getter failed"), errors = { reads: 0 }
+    const failing = { get value() {
+      errors.reads++
+      owner.digest({ fresh: "inner before error" })
+      throw failure
+    } }
+    const failed = observe(() => owner.digest(failing))
+    expect(failed.ok).toBe(false)
+    if (failed.ok) throw new Error("Expected original reentrant getter failure")
+    expect(failed.error).toBe(failure)
+    expect(errors.reads).toBe(1)
+    expect(owner.digest(tuple())).toBe(digestSfValue(tuple()))
+
+    const closeReads = { outer: 0, inner: 0 }
+    const afterClose = { get value() { closeReads.inner++; return "Canonical after close" } }
+    const closes = { get value() {
+      closeReads.outer++
+      closing.close()
+      return closing.digest(afterClose)
+    } }
+    const closedExpected = digestSfValue({ value: digestSfValue({ value: "Canonical after close" }) })
+    expect(closing.digest(closes)).toBe(closedExpected)
+    expect(closeReads).toEqual({ outer: 1, inner: 1 })
+    expect(closing.digest(afterClose)).toBe(digestSfValue({ value: "Canonical after close" }))
+    expect(closeReads.inner).toBe(2)
+    expect(independent.digest(tuple())).toBe(digestSfValue(tuple()))
+    owner.close()
+    owner.close()
+    expect(owner.digest(inner)).toBe(digestSfValue({ value: "Original inner value" }))
+    expect(counts.inner).toBe(3)
+    expect(independent.digest({ changed: true })).toBe(digestSfValue({ changed: true }))
+  } finally { owner.close(); closing.close(); independent.close(); await deadline.close() }
+}, 15_000)
