@@ -71,6 +71,7 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
         if (/^SF_LOCAL_STORE_COST \d+(?: \d+){46}$/.test(line)) console.info(line)
         if (/^SF_FRESH_TUPLE_COST \d+(?: \d+){26}$/.test(line)) console.info(line)
         if (/^SF_MATERIALIZE_COST \d+(?: \d+){21}$/.test(line)) console.info(line)
+        if (/^SF_TUPLE_CROSS_OWNER \d+(?: \d+){26}$/.test(line)) console.info(line)
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))

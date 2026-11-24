@@ -26,6 +26,35 @@ type TupleCostBucket = typeof tupleCostBuckets[number]
 type TupleCounter = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 const materializeCostBuckets = ["json-parse","missing-parse","strings-parse","escaped-decode","plain-slice","restore"] as const
 type MaterializeCostBucket = typeof materializeCostBuckets[number]
+
+/** Snapshot-only cross-owner return counts. Families 0/1/2 retain at most 128
+ * owner samples and hash strings of at most 128 characters inside ONE kind3/4 read.
+ * Hashes never enter output, callbacks, product inputs or a process-wide collection.
+ * Family 3 rows contain drops only; their header is the reporting boundary.
+ * Counters: original returns, first original, first retained original, first same/different/no
+ * other-owner baseline, distinct retained firsts, local hits, hits against different/no shadow,
+ * ineligible observations, invalidations, limit, late, missing ancestry, observer errors. */
+const tupleCrossLimit = 128
+type TupleFamily = 0 | 1 | 2
+type TupleCrossCounts = [number, number, number, number, number, number, number, number,
+  number, number, number, number, number, number, number, number]
+type TupleHashNode = { value: string; next: TupleHashNode | undefined }
+type TupleCrossFamily = {
+  counts: TupleCrossCounts
+  owners: number
+  capped: boolean
+  first: TupleHashNode | undefined
+  last: { owner: number; value: string } | undefined
+}
+type TupleCrossLedger = { open: boolean; families: [TupleCrossFamily, TupleCrossFamily, TupleCrossFamily] }
+function emptyTupleCrossCounts(): TupleCrossCounts { return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+function tupleCrossFamily(): TupleCrossFamily {
+  return { counts: emptyTupleCrossCounts(), owners: 0, capped: false, first: undefined, last: undefined }
+}
+function tupleCrossLedger(): TupleCrossLedger {
+  return { open: true, families: [tupleCrossFamily(), tupleCrossFamily(), tupleCrossFamily()] }
+}
+
 type Profile = {
   id: number
   parent: number
@@ -42,9 +71,15 @@ type Profile = {
   tupleCost: Record<TupleCostBucket, [number, number]>
   tupleCounters: [number, number, number, number, number, number, number, number, number]
   materializeCost: Record<MaterializeCostBucket, [number, number]>
+  tupleCross: TupleCrossLedger | undefined
+  tupleCrossFirst: boolean
+  tupleCrossCounted: boolean
+  tupleCrossDrops: TupleCrossCounts
 }
 const profiles = new AsyncLocalStorage<Profile>()
 let sequence = 0
+// Numeric drops only; no-profile observations cannot retain a hash or a ledger.
+const unscopedTupleDrops = emptyTupleCrossCounts()
 
 
 /** Observe a synchronous boundary without catching/replaying its original result or error. */
@@ -77,6 +112,112 @@ export function sfLocalStoreBranch<Value>(branch: LocalStoreBranch, read: () => 
 }
 
 
+
+function tupleCrossContext(): { profile: Profile; family: TupleCrossFamily } | undefined {
+  const profile = profiles.getStore()
+  if (!profile) { unscopedTupleDrops[14]++; return undefined }
+  const ledger = profile.tupleCross
+  if (profile.kind > 2) { profile.tupleCrossDrops[14]++; return undefined }
+  const familyIndex = profile.kind as TupleFamily
+  if (profile.closed || ledger && !ledger.open) {
+    if (ledger?.open) ledger.families[familyIndex].counts[13]++
+    else if (!profile.closed) profile.tupleCrossDrops[13]++
+    else unscopedTupleDrops[13]++
+    return undefined
+  }
+  if (!ledger) { profile.tupleCrossDrops[14]++; return undefined }
+  const family = ledger.families[familyIndex]
+  if (family.capped) { family.counts[12]++; return undefined }
+  if (!profile.tupleCrossCounted) {
+    profile.tupleCrossCounted = true
+    family.owners++
+    if (family.owners > tupleCrossLimit) {
+      family.capped = true
+      family.first = undefined
+      family.last = undefined
+      family.counts[12]++
+      return undefined
+    }
+  }
+  return { profile, family }
+}
+
+/** Observe an already returned primitive hash and the actual retention branch only. */
+export function sfTupleCrossReturn(kind: 0 | 1, value: unknown, retained: boolean) {
+  try {
+    const context = tupleCrossContext()
+    if (!context) return
+    const family = context.family, profile = context.profile
+    if (typeof value !== "string" || value.length > tupleCrossLimit) {
+      family.capped = true
+      family.first = undefined
+      family.last = undefined
+      family.counts[12]++
+      return
+    }
+    if (kind === 1) {
+      family.counts[7]++
+      if (!family.last) family.counts[9]++
+      else if (family.last.value !== value) family.counts[8]++
+      family.last = { owner: profile.id, value }
+      return
+    }
+    family.counts[0]++
+    const first = !profile.tupleCrossFirst
+    profile.tupleCrossFirst = true
+    if (first) family.counts[1]++
+    if (!retained) {
+      family.counts[10]++
+      family.counts[11]++
+      family.last = undefined
+      return
+    }
+    if (first) {
+      family.counts[2]++
+      if (!family.last || family.last.owner === profile.id) family.counts[5]++
+      else if (family.last.value === value) family.counts[3]++
+      else family.counts[4]++
+      let known = false
+      for (let entry = family.first; entry; entry = entry.next) {
+        if (entry.value === value) { known = true; break }
+      }
+      if (!known) {
+        family.first = { value, next: family.first }
+        family.counts[6]++
+      }
+    }
+    family.last = { owner: profile.id, value }
+  } catch { unscopedTupleDrops[15]++ }
+}
+
+/** No hash is accepted from an opaque, failed or bypassed observation. */
+export function sfTupleCrossDiscard() {
+  try {
+    const context = tupleCrossContext()
+    if (!context) return
+    context.family.counts[11]++
+    context.family.last = undefined
+  } catch { unscopedTupleDrops[15]++ }
+}
+
+export function sfTupleCrossBypass() {
+  try {
+    const context = tupleCrossContext()
+    if (context) context.family.counts[10]++
+  } catch { unscopedTupleDrops[15]++ }
+}
+
+function closeTupleCross(profile: Profile) {
+  try {
+    if (profile.kind !== 3 && profile.kind !== 4 || !profile.tupleCross) return
+    profile.tupleCross.open = false
+    for (let index = 0; index < 3; index++) {
+      profile.tupleCross.families[index]!.first = undefined
+      profile.tupleCross.families[index]!.last = undefined
+    }
+  } catch { unscopedTupleDrops[15]++ }
+}
+
 /** Observe only original helper calls; no input, baseline, hash or error is retained here. */
 export function sfTupleCost<Value>(bucket: TupleCostBucket, read: () => Value): Value {
   let profile: Profile | undefined
@@ -88,8 +229,10 @@ export function sfTupleCost<Value>(bucket: TupleCostBucket, read: () => Value): 
       profile.tupleCost[bucket][0]++
     } else profile = undefined
   } catch { profile = undefined }
-  try { return read() }
+  let returned = false
+  try { const value = read(); returned = true; return value }
   finally {
+    if (bucket === "digest-original" && !returned) sfTupleCrossDiscard()
     if (profile) {
       try { profile.tupleCost[bucket][1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
       catch { /* Telemetry cannot replace the original synchronous completion. */ }
@@ -202,6 +345,8 @@ export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2 | 3 | 4, work: () => Pr
     tupleCost: Object.fromEntries(tupleCostBuckets.map((bucket) => [bucket, [0, 0]])) as Record<TupleCostBucket, [number, number]>,
     tupleCounters: [0, 0, 0, 0, 0, 0, 0, 0, 0],
     materializeCost: Object.fromEntries(materializeCostBuckets.map((bucket) => [bucket, [0, 0]])) as Record<MaterializeCostBucket, [number, number]>,
+    tupleCross: kind === 3 || kind === 4 ? tupleCrossLedger() : parent?.tupleCross,
+    tupleCrossFirst: false, tupleCrossCounted: false, tupleCrossDrops: emptyTupleCrossCounts(),
   }
   return profiles.run(profile, () => {
     const finish = (fulfilled: 0 | 1) => {
@@ -229,6 +374,7 @@ function checkpoint(profile: Profile, phase: number) {
 function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
   if (profile.closed) return
   if (phase === 0) profile.closed = true
+  if (phase === 0) closeTupleCross(profile)
   try {
     const now = performance.now()
     const elapsed = new Map<Bucket, number>()
@@ -247,5 +393,21 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
     const materializeFields = [...fields.slice(0, 10),
       ...materializeCostBuckets.flatMap((bucket) => profile.materializeCost[bucket])]
     process.stdout.write("SF_MATERIALIZE_COST " + materializeFields.join(" ") + "\n")
+    if ((profile.kind === 3 || profile.kind === 4) && profile.tupleCross) {
+      for (let family = 0; family < 3; family++) {
+        const crossFields = [...fields.slice(0, 10), family, ...profile.tupleCross.families[family]!.counts]
+        process.stdout.write("SF_TUPLE_CROSS_OWNER " + crossFields.join(" ") + "\n")
+      }
+    }
+    let drops = false
+    for (let index = 0; index < 16; index++) {
+      profile.tupleCrossDrops[index]! += unscopedTupleDrops[index]!
+      unscopedTupleDrops[index] = 0
+      if (profile.tupleCrossDrops[index]) drops = true
+    }
+    if (drops) {
+      const dropFields = [...fields.slice(0, 10), 3, ...profile.tupleCrossDrops]
+      process.stdout.write("SF_TUPLE_CROSS_OWNER " + dropFields.join(" ") + "\n")
+    }
   } catch { /* A diagnostic sink cannot replace the original result or error. */ }
 }
