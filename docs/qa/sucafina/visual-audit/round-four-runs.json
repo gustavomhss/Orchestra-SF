@@ -3,8 +3,8 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
-  "status": "blocked-original-http-deadlines",
+  "productSource": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+  "status": "qualification-in-progress-original-http-pending",
   "distinctIssues": [
     {
       "id": "R4-01",
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
-    "tree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
+    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13749,6 +13749,14 @@
         "parent": "66e547a132a0d26d21f5df9c33b6c7c993ba1736",
         "scope": "Typed selected state shapes and exact registered callback dispatch; clone timing and single-await branch preserved.",
         "run": 45307709747
+      },
+      {
+        "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+        "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+        "parent": "834468f890915c0af8f73cfe9f50650a83c09ae1",
+        "productCommit": "df8c7d1b45cf68c098e669fecb68f1759617fe15",
+        "scope": "Preserve the complete fresh descriptor walk; use own reads only for the private detached counterpart and one per-call visiting/completed map. All original pins/lifecycle/canonical calls remain.",
+        "run": 45312811007
       }
     ],
     "structural": {
@@ -16143,9 +16151,9 @@
     ]
   },
   "checkpoint": {
-    "productSource": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
-    "productTree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
-    "status": "blocked-original-http-deadlines",
+    "productSource": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "productTree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "status": "qualification-in-progress-original-http-pending",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
     "reviewedOriginals": 133,
@@ -16155,7 +16163,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-24 02:07:40 UTC"
+    "recordedAt": "2026-11-24 02:45:18 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -23637,7 +23645,9 @@
       "path": "docs/qa/sucafina/round-four/producers-final-45305561117/qualification-ledger.json",
       "blob": "36a2d023e892feaf3c275563bd6304222fb0fcd7",
       "commit": "197ddf49823c92e3db601ccd6b0b923214b96f2b"
-    }
+    },
+    "reassessmentAfterInspectionPending": true,
+    "nextExpectedCases": 58
   },
   "preferencesProjectionCandidate": {
     "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
@@ -23686,10 +23696,15 @@
     "originalSerializerUnchanged": true
   },
   "finalMemoryRequalification": {
-    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
-    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
-    "snapshot": "8056e4c927b6b0be7cc7c65f4c686f81a419b3bd",
-    "tree": "f03795d0828b4681f8fe28aee8a90105e52ba38b",
+    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "sourceTree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "snapshot": "5c6332da9bafa7f50dd33ad829a0aca77681e148",
+    "tree": "71e00ec297f1913cdbc6c3725f79cae9b99cb8c9",
+    "run": 45312850453,
+    "status": "in_progress",
+    "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+    "originalSpecUnchanged": true,
+    "cases": 5,
     "request": {
       "package": "app",
       "directory": "packages/app-shell",
@@ -23704,61 +23719,9 @@
       },
       "config": "e2e/playwright.production.config.ts"
     },
-    "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
-    "run": 45304965398,
-    "status": "completed",
-    "cases": 5,
-    "originalSpecUnchanged": true,
     "newQualifiedCases": 0,
     "newReviewedImages": 0,
-    "result": "failure",
-    "passed": 3,
-    "failed": 2,
-    "skipped": 0,
-    "flaky": 0,
-    "retries": 0,
-    "originalImagesReviewed": 19,
-    "fullCohortQualified": false,
-    "casesResult": [
-      {
-        "id": "UI61",
-        "status": "failed",
-        "ms": 222320,
-        "httpMs": 40006.512
-      },
-      {
-        "id": "UI62",
-        "status": "failed",
-        "ms": 232205,
-        "httpMs": 40002.372
-      },
-      {
-        "id": "UI63",
-        "status": "passed",
-        "ms": 274781
-      },
-      {
-        "id": "UI67",
-        "status": "passed",
-        "ms": 49538
-      },
-      {
-        "id": "UI69",
-        "status": "passed",
-        "ms": 140409
-      }
-    ],
-    "artifact": {
-      "id": 14882800335,
-      "bytes": 29801969,
-      "sha256": "2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7"
-    },
-    "qualificationBoundary": "Three passed original cases and nineteen reviewed originals remain partial evidence; no full Memory5 approval or increased global105/133 count.",
-    "ledger": {
-      "path": "docs/qa/round-four/memory5-45304965398/qualification-ledger.json",
-      "blob": "7bf7066784e94ad638ac595d31a70eb67c612722",
-      "sha256": "9b187fe1c585fe839e09cc4f00eb31b32cce364b696c690995408812ddf62c3f"
-    }
+    "fullCohortQualified": false
   },
   "finalStructural": {
     "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
@@ -23792,7 +23755,8 @@
     "ledger": {
       "path": "docs/qa/round-four/typed-structural-45307709747/qualification-ledger.json",
       "sha256": "abeff06eeaa86c96f2f5e3dd576340ad34d28d950ccb800f056bf018c37f822a"
-    }
+    },
+    "reassessmentAfterInspectionPending": true
   },
   "localStoreCostDiagnosis": {
     "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
@@ -23921,11 +23885,49 @@
     "qualification": false,
     "launched": true,
     "run": 45309842507,
-    "status": "in_progress",
+    "status": "completed",
     "countsMeaning": {
       "admittedUnequal": "Includes first admission.",
       "baselineRetained": "Cumulative successful retentions; not live-entry count."
-    }
+    },
+    "result": "failure",
+    "ledger": {
+      "path": "docs/qa/round-four/tuple-detail-45309842507/diagnostic-ledger.json",
+      "blob": "f5daa5b2f384215a385576f91787c498bcbfa374",
+      "sha256": "de17762e3cb6c7eae6b33f19a0e2d2b878087f0d49d4693afec89fb0be2fd5e7"
+    },
+    "metrics": {
+      "owners": [
+        414,
+        541
+      ],
+      "elapsedUs": [
+        32105433,
+        32224685
+      ],
+      "calls": 552,
+      "hits": 460,
+      "originalDigests": 92,
+      "retainedBaselines": 92,
+      "opaque": 0,
+      "pinRefusals": 0,
+      "observationalThrows": 0,
+      "pinsUs": 47081,
+      "inspectionUs": 10642576,
+      "originalDigestUs": 3885211,
+      "cloneUs": 1379966,
+      "materializerJsonCalls": 8408,
+      "materializerJsonUs": 10089620,
+      "largeStringOperations": 0
+    },
+    "http": {
+      "fetchMs": 39999.723,
+      "boundMs": 40000,
+      "headers": 0,
+      "body": false,
+      "late200Observed": false
+    },
+    "interpretation": "Fresh content reuse is actually active; inspection is its largest measured cost. Large escaped-string caching cannot help this measured GET because the relevant branches were unused. Inclusive callback/materializer times are not additive."
   },
   "evidenceLogCleanup": {
     "commit": "66e547a132a0d26d21f5df9c33b6c7c993ba1736",
@@ -23935,5 +23937,109 @@
       "docs/qa/round-four/recall-capture-cost-45298731358/numeric-stages.log"
     ],
     "scope": "Disposable logs are not part of the product branch. Curated JSON ledgers and hashes remain."
+  },
+  "freshTupleInspectionCandidate": {
+    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "productBlob": "374daedc7f9db56df6c5d309dd44f17e4bfd34cc",
+    "controlBlob": "db5e36cdaafcc36a69a87a18726e37ae1ae58ea4",
+    "originalFourCasesLiteral": true,
+    "newCases": 1,
+    "allCaseBounds": {
+      "cooperativeMs": 12000,
+      "bunMs": 15000
+    },
+    "sourcePaths": [
+      "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+    ],
+    "qualification": {
+      "run": 45312811007,
+      "snapshot": "0514022deb02d0a16b26d33937c1df0641a42626",
+      "tree": "4b7114ffd1a0a66fcc2fcee077dc3134e4febc54",
+      "outerGates": 5,
+      "cases": 11,
+      "assertions": 728,
+      "typechecks": 2,
+      "strictSpawns": 5,
+      "delegated": 0,
+      "ledger": "docs/qa/sucafina/round-four/tuple-inspect-45312811007/qualification-ledger.json"
+    },
+    "httpGainQualified": false
+  },
+  "previousFinalMemoryRequalification": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+    "snapshot": "8056e4c927b6b0be7cc7c65f4c686f81a419b3bd",
+    "tree": "f03795d0828b4681f8fe28aee8a90105e52ba38b",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/final-memory.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+    "run": 45304965398,
+    "status": "completed",
+    "cases": 5,
+    "originalSpecUnchanged": true,
+    "newQualifiedCases": 0,
+    "newReviewedImages": 0,
+    "result": "failure",
+    "passed": 3,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "originalImagesReviewed": 19,
+    "fullCohortQualified": false,
+    "casesResult": [
+      {
+        "id": "UI61",
+        "status": "failed",
+        "ms": 222320,
+        "httpMs": 40006.512
+      },
+      {
+        "id": "UI62",
+        "status": "failed",
+        "ms": 232205,
+        "httpMs": 40002.372
+      },
+      {
+        "id": "UI63",
+        "status": "passed",
+        "ms": 274781
+      },
+      {
+        "id": "UI67",
+        "status": "passed",
+        "ms": 49538
+      },
+      {
+        "id": "UI69",
+        "status": "passed",
+        "ms": 140409
+      }
+    ],
+    "artifact": {
+      "id": 14882800335,
+      "bytes": 29801969,
+      "sha256": "2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7"
+    },
+    "qualificationBoundary": "Three passed original cases and nineteen reviewed originals remain partial evidence; no full Memory5 approval or increased global105/133 count.",
+    "ledger": {
+      "path": "docs/qa/round-four/memory5-45304965398/qualification-ledger.json",
+      "blob": "7bf7066784e94ad638ac595d31a70eb67c612722",
+      "sha256": "9b187fe1c585fe839e09cc4f00eb31b32cce364b696c690995408812ddf62c3f"
+    }
   }
 }
