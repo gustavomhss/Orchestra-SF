@@ -16,6 +16,7 @@ import { createSfAtlasDurableMemory } from "./atlas-store.ts"
 import { sfRunSourceFence } from "../ai/run-store.ts"
 import { mapSfEvidenceInOrder } from "./evidence-order.ts"
 import type { SfAtlasReadObservation } from "./atlas-recall-scope.ts"
+import { selectSfAtlasPartition, selectSfCaseProjection } from "./state-provider.ts"
 
 type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
 
@@ -195,12 +196,11 @@ export function createSfAtlasMemory(input: {
     if (!request || !stable() || !/^[a-f0-9]{64}$/.test(digest) || !await input.host.revalidate(call) || !stable()) return undefined
     // A continuity proof must not recursively resolve the same sources through cases.read.
     const readCase = async () => {
-      const found = await input.state.read(request, "cases", (state, actor) => {
-        const value = state.cases[selected.id]
+      const found = await input.state.read(request, "cases", selectSfCaseProjection(selected.id, call, (value, actor) => {
         return value && value.incarnation === selected.incarnation && value.participants.includes(actor.principalRef) &&
           actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
           (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) ? value : undefined
-      }).catch(() => undefined)
+      })).catch(() => undefined)
       if (!found || found.status !== "ok" || !found.value || !stable()) return undefined
       const identity = digestSfValue(found.value)
       const allowed = input.authorizeCase ? await input.authorizeCase(found.value, call) :
@@ -214,8 +214,8 @@ export function createSfAtlasMemory(input: {
     const context: AuthorizedCaseProjection["context"] = call.kind === "ui" ? { ...call.binding, kind: "ui" } : { ...call.binding, kind: "native" }
     const owner = deriveSfMemoryOwner(context, current)
     if (!owner) return undefined
-    const result = await input.state.read(request, "atlas", (state) => {
-      const partition = state.atlas[owner] as AtlasPartition | undefined
+    const result = await input.state.read(request, "atlas", selectSfAtlasPartition(owner, call, (selectedPartition, outbox) => {
+      const partition = selectedPartition as AtlasPartition | undefined
       if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests || createSfAtlasDurableMemory(partition).read().rejected) return undefined
       const capture = partition.originals[digest]
       if (!capture || capture.ref.refDigest !== digest || digestSfEvidenceRef(capture.ref) !== digest) return undefined
@@ -225,12 +225,12 @@ export function createSfAtlasMemory(input: {
         const record = event?.payload as MemoryRecord | undefined
         const boundCase = envelope.caseRef
         if (!record || !boundCase || record.owner !== owner || record.kind !== envelope.kind || envelope.owner !== owner || boundCase.id !== selected.id || boundCase.incarnation !== selected.incarnation || partition.captureDigests[envelope.eventId]?.[digest] !== digestSfValue(capture) ||
-          !sfAtlasPublicationMatches(envelope, record, state.outbox)) return false
+          !sfAtlasPublicationMatches(envelope, record, outbox)) return false
         if (![...envelope.evidenceRefs, ...envelope.dependencies].some((ref) => ref.refDigest === digest)) return false
         return envelope.projectionDigest === digestSfValue({ kind: envelope.kind, owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })
       })
       return linked ? structuredClone(capture) : undefined
-    }).catch(() => undefined)
+    })).catch(() => undefined)
     if (!result || result.status !== "ok" || !stable()) return undefined
     const identity = digestSfValue(result.value)
     if (!await input.host.revalidate(call) || !stable()) return undefined
