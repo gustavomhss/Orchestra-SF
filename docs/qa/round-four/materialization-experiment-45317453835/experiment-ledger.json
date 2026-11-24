@@ -431,10 +431,10 @@
         }
       }
     ],
-    "exact_numeric_rows_file": "numeric-rows.txt",
-    "exact_numeric_rows_utf8_sha256": "1b1d99360252dd8548d995103cf8bd5808f99200a3abe8ccc645f2b17ebf5520",
     "decoded_job_log_utf8_sha256": "946b30e29589a7016aef7a30530303b260c0bcc4c8b0eb86aaf865cbda658f8b",
-    "raw_log_persisted_here": false
+    "raw_log_persisted_here": false,
+    "normalized_numeric_rows_utf8_sha256": "1b1d99360252dd8548d995103cf8bd5808f99200a3abe8ccc645f2b17ebf5520",
+    "normalized_numeric_rows_framing": "For each values array in rows: prefix + one ASCII space + its 28 unsigned decimal integers separated by one ASCII space + LF. No external log file is stored."
   },
   "totals": {
     "eligible_samples": 3,
