@@ -1,0 +1,271 @@
+{
+  "schema": "sf-round-four-tuples-qualification-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+  "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+  "snapshot": "8b31502e2aa194618d5e0ff8338455dc71588a04",
+  "snapshotTree": "b9c2cbcbf9852e78ec2262095ba5850dc831af92",
+  "qualification": "focused helper controls, original Finance and Recall files, and both typechecks passed; full browser qualification remains separate",
+  "workflow": {
+    "id": 45303936643,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45303936643",
+    "job": 138143001126,
+    "cleanupJob": 138145835429,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-24T01:17:29Z",
+    "testStep": {
+      "startedAt": "2026-11-24T01:19:39Z",
+      "completedAt": "2026-11-24T01:24:14Z"
+    },
+    "jobs": [
+      {
+        "id": 138143001126,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:17:32Z",
+        "completedAt": "2026-11-24T01:24:18Z"
+      },
+      {
+        "id": 138145835429,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:24:20Z",
+        "completedAt": "2026-11-24T01:24:25Z"
+      }
+    ]
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "32dadf4ec3a0feb94e780680be72fa7c94cd07ca",
+    "value": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-tuples-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    }
+  },
+  "wrapper": {
+    "path": "apps/cli/test/sucafina-tuples-verification.test.ts",
+    "blob": "b8820ae3cfe0993317d8a130f231a09cb4a5a4db",
+    "snapshotOnly": true,
+    "hostedLinuxAdmission": true
+  },
+  "gates": [
+    {
+      "name": "complete fresh tuple controls",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts",
+      "blob": "5cb07dca1c14daaf4eaae59fe045a5fb8abe4e48",
+      "passed": 4,
+      "failed": 0,
+      "assertions": 168,
+      "childDurationMs": 46,
+      "wrapperDurationMs": 68.61,
+      "limits": {
+        "eachCooperativeMs": 12000,
+        "eachBunMs": 15000,
+        "childAggregateMs": 90000,
+        "wrapperMs": 120000
+      },
+      "cases": [
+        {
+          "name": "Fresh tuple digests preserve canonical bytes across complete fresh and mutated observations",
+          "durationMs": 15.78,
+          "passed": true
+        },
+        {
+          "name": "Opaque tuple values retain original getter, Proxy, sparse-array and failure behaviour",
+          "durationMs": 10.39,
+          "passed": true
+        },
+        {
+          "name": "Tuple intrinsic drift preserves original serialization and hash calls without replay",
+          "durationMs": 1.07,
+          "passed": true
+        },
+        {
+          "name": "Tuple owners reject post-hash admission and remain canonical through close and reentrancy",
+          "durationMs": 0.81,
+          "passed": true
+        }
+      ],
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "original Finance observation regression",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+      "blob": "ef479bdae6916995838270b90f4dc957873f7d31",
+      "passed": 1,
+      "failed": 0,
+      "assertions": 35,
+      "childDurationMs": 4610,
+      "wrapperDurationMs": 4625.33,
+      "limits": {
+        "cooperativeMs": 105000,
+        "bunMs": 120000,
+        "childAggregateMs": 150000,
+        "wrapperMs": 180000
+      },
+      "cases": [
+        {
+          "name": "Finance uses the wired coverage pair and closes on revocation or source change",
+          "durationMs": 4208.45,
+          "passed": true
+        }
+      ],
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "complete original Recall observation regression",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recall-observation.test.ts",
+      "blob": "cce24526efa015ae6a1100308c5483905d7c9ecb",
+      "passed": 5,
+      "failed": 0,
+      "assertions": 477,
+      "childDurationMs": 212120,
+      "wrapperDurationMs": 212145.07,
+      "limits": {
+        "eachCooperativeMs": 105000,
+        "eachBunMs": 120000,
+        "childAggregateMs": 630000,
+        "wrapperMs": 660000
+      },
+      "cases": [
+        {
+          "name": "Planner case preflight uses its private version and closes independent native observations",
+          "durationMs": 649.1,
+          "passed": true
+        },
+        {
+          "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+          "durationMs": 51520.46,
+          "passed": true
+        },
+        {
+          "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+          "durationMs": 50811.51,
+          "passed": true
+        },
+        {
+          "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+          "durationMs": 54585.14,
+          "passed": true
+        },
+        {
+          "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+          "durationMs": 53980.37,
+          "passed": true
+        }
+      ],
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "CLI typecheck",
+      "directory": "apps/cli",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "durationMs": 28170.26,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "Sucafina typecheck",
+      "directory": "modules/sucafina/Sucafinav1",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "durationMs": 29168.84,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "totals": {
+    "productTestsPassed": 10,
+    "productTestsFailed": 0,
+    "productAssertions": 680,
+    "typechecksPassed": 2,
+    "wrapperGatesPassed": 5,
+    "wrapperAssertions": 5,
+    "wrapperDurationMs": 274410
+  },
+  "executor": {
+    "mode": "strict",
+    "channel": "prod",
+    "omniPositiveControl": "pass",
+    "declaredTests": 5,
+    "spawns": 5,
+    "delegated": 0,
+    "outputTruncated": false
+  },
+  "artifacts": {
+    "apiReturned": 0,
+    "items": [],
+    "downloadAttempted": false
+  },
+  "sourceDelta": {
+    "base": "50cee5ba915d086b803f5191598e5a27866c0f3c",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "sha": "f8e721cd3feb1db49e8be688d4b1ce61db1bd369",
+        "status": "modified",
+        "changes": 7
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "sha": "be07cf4ee259998391d21cb3fd2f180d28737199",
+        "status": "added",
+        "changes": 143
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+        "sha": "23f50cadf12f18f1757f5d3235c2eefc3f71137a",
+        "status": "modified",
+        "changes": 9
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts",
+        "sha": "5cb07dca1c14daaf4eaae59fe045a5fb8abe4e48",
+        "status": "added",
+        "changes": 364
+      }
+    ],
+    "originalFinanceAndRecallFilesUnchanged": true
+  },
+  "evidence": {
+    "rawLogCharacters": 88316,
+    "rawLogSha256": "b4d8515002b50ecdaae85a9044fa8bf17354bd2a9ba2f69de4648aefb5cdc379",
+    "sanitizedLogSha256": "2c65fd4def8ffc184c6209e715e89e10e6a0812c0333d6f647776cd2c19609ce",
+    "rawPersisted": false,
+    "sanitizedLines": 42,
+    "redactions": "Omni control identity omitted. Only verified gate metadata, pass/count/duration lines and control outcome retained."
+  },
+  "preservation": {
+    "deadlineHelperBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+    "deadlineHelperDefaultMs": 105000,
+    "noOriginalTestsModified": true,
+    "noInternalDeadlinesIncreased": true,
+    "noRetriesAdded": true,
+    "noSkipsAdded": true
+  }
+}
