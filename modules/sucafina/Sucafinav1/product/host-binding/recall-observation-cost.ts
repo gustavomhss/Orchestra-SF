@@ -173,7 +173,8 @@ const tuplePinKeys: readonly (readonly [object, PropertyKey])[] = [
   [Object, "keys"], [Object, "getPrototypeOf"], [Object, "getOwnPropertyDescriptor"], [Object, "hasOwn"], [Object, "is"],
   [Array, "isArray"], [Array, Symbol.species], [Number, "isFinite"], [Number, "isSafeInteger"],
   [Reflect, "ownKeys"], [JSON, "stringify"], [types, "isProxy"],
-  [Bun, "CryptoHasher"], [tupleHashPrototype, "update"], [tupleHashPrototype, "digest"],
+  [Bun, "CryptoHasher"], [Bun.CryptoHasher, "prototype"], [tupleHashPrototype, "update"], [tupleHashPrototype, "digest"],
+  [WeakSet, "prototype"], [WeakSet.prototype, "constructor"],
   [WeakSet.prototype, "has"], [WeakSet.prototype, "add"], [WeakSet.prototype, "delete"],
 ]
 const tuplePins = tuplePinKeys.map(([owner, key]) => ({ owner, key, descriptor: tupleDescriptor(owner, key) }))
