@@ -17,6 +17,15 @@ type Bucket = typeof buckets[number]
 const localStoreBuckets = ["current-snapshots","copy-current","clone-snapshot","clone-tree","validate-snapshot","observe-snapshot","payload-fingerprint","plan-materialization","materialize-snapshot","decode-snapshot","nested-snapshot","dashboard-source-snapshot","snapshot-sql","scope-guard","file-guard"] as const
 type LocalStoreBucket = typeof localStoreBuckets[number]
 type LocalStoreBranch = 0 | 1 | 2 | 3 | 4 | 5 | 6
+
+// Fresh-tuple detail is diagnostic-only: no value is retained or hashed by the observer.
+// Counters: calls, closed-or-busy, opaque inspect, admitted unequal, equal inspect,
+// actual retained return, initial pin refusal, baseline retained, observational throw.
+const tupleCostBuckets = ["pins","inspect","digest-original","clone"] as const
+type TupleCostBucket = typeof tupleCostBuckets[number]
+type TupleCounter = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+const materializeCostBuckets = ["json-parse","missing-parse","strings-parse","escaped-decode","plain-slice","restore"] as const
+type MaterializeCostBucket = typeof materializeCostBuckets[number]
 type Profile = {
   id: number
   parent: number
@@ -30,6 +39,9 @@ type Profile = {
   values: Record<Bucket, [number, number]>
   localStore: Record<LocalStoreBucket, [number, number]>
   localBranches: [number, number, number, number, number, number, number]
+  tupleCost: Record<TupleCostBucket, [number, number]>
+  tupleCounters: [number, number, number, number, number, number, number, number, number]
+  materializeCost: Record<MaterializeCostBucket, [number, number]>
 }
 const profiles = new AsyncLocalStorage<Profile>()
 let sequence = 0
@@ -62,6 +74,66 @@ export function sfLocalStoreBranch<Value>(branch: LocalStoreBranch, read: () => 
     if (profile && !profile.closed) profile.localBranches[branch]++
   } catch { /* Telemetry cannot replace the selected expression. */ }
   return read()
+}
+
+
+/** Observe only original helper calls; no input, baseline, hash or error is retained here. */
+export function sfTupleCost<Value>(bucket: TupleCostBucket, read: () => Value): Value {
+  let profile: Profile | undefined
+  let started = 0
+  try {
+    profile = profiles.getStore()
+    if (profile && !profile.closed) {
+      started = performance.now()
+      profile.tupleCost[bucket][0]++
+    } else profile = undefined
+  } catch { profile = undefined }
+  try { return read() }
+  finally {
+    if (profile) {
+      try { profile.tupleCost[bucket][1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
+      catch { /* Telemetry cannot replace the original synchronous completion. */ }
+    }
+  }
+}
+
+export function sfTupleCount(counter: TupleCounter) {
+  try {
+    const profile = profiles.getStore()
+    if (profile && !profile.closed) profile.tupleCounters[counter]++
+  } catch { /* A counter cannot change the existing branch. */ }
+}
+
+export function sfTupleInitialPins(read: () => boolean): boolean {
+  const value = sfTupleCost("pins", read)
+  if (!value) sfTupleCount(6)
+  return value
+}
+
+export function sfTupleInspect(read: () => 0 | 1 | 2): 0 | 1 | 2 {
+  const value = sfTupleCost("inspect", read)
+  sfTupleCount(value === 0 ? 2 : value === 1 ? 3 : 4)
+  return value
+}
+
+/** Time only the original materializer expression, without recording content, size or paths. */
+export function sfMaterializeCost<Value>(bucket: MaterializeCostBucket, read: () => Value): Value {
+  let profile: Profile | undefined
+  let started = 0
+  try {
+    profile = profiles.getStore()
+    if (profile && !profile.closed) {
+      started = performance.now()
+      profile.materializeCost[bucket][0]++
+    } else profile = undefined
+  } catch { profile = undefined }
+  try { return read() }
+  finally {
+    if (profile) {
+      try { profile.materializeCost[bucket][1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
+      catch { /* Telemetry cannot replace the original synchronous completion. */ }
+    }
+  }
 }
 
 export function sfRecallCost<Value>(bucket: Bucket, read: () => Value): Value {
@@ -127,6 +199,9 @@ export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2 | 3 | 4, work: () => Pr
     values: Object.fromEntries(buckets.map((bucket) => [bucket, [0, 0]])) as Record<Bucket, [number, number]>,
     localStore: Object.fromEntries(localStoreBuckets.map((bucket) => [bucket, [0, 0]])) as Record<LocalStoreBucket, [number, number]>,
     localBranches: [0, 0, 0, 0, 0, 0, 0],
+    tupleCost: Object.fromEntries(tupleCostBuckets.map((bucket) => [bucket, [0, 0]])) as Record<TupleCostBucket, [number, number]>,
+    tupleCounters: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    materializeCost: Object.fromEntries(materializeCostBuckets.map((bucket) => [bucket, [0, 0]])) as Record<MaterializeCostBucket, [number, number]>,
   }
   return profiles.run(profile, () => {
     const finish = (fulfilled: 0 | 1) => {
@@ -166,5 +241,11 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
     const localFields = [...fields.slice(0, 10),
       ...localStoreBuckets.flatMap((bucket) => profile.localStore[bucket]), ...profile.localBranches]
     process.stdout.write("SF_LOCAL_STORE_COST " + localFields.join(" ") + "\n")
+    const tupleFields = [...fields.slice(0, 10),
+      ...tupleCostBuckets.flatMap((bucket) => profile.tupleCost[bucket]), ...profile.tupleCounters]
+    process.stdout.write("SF_FRESH_TUPLE_COST " + tupleFields.join(" ") + "\n")
+    const materializeFields = [...fields.slice(0, 10),
+      ...materializeCostBuckets.flatMap((bucket) => profile.materializeCost[bucket])]
+    process.stdout.write("SF_MATERIALIZE_COST " + materializeFields.join(" ") + "\n")
   } catch { /* A diagnostic sink cannot replace the original result or error. */ }
 }

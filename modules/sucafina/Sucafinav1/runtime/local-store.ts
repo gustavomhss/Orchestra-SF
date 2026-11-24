@@ -1,4 +1,4 @@
-import { sfLocalStoreCost, sfLocalStoreBranch } from "../product/host-binding/recall-observation-cost.ts"
+import { sfLocalStoreCost, sfLocalStoreBranch, sfMaterializeCost } from "../product/host-binding/recall-observation-cost.ts"
 import { Database } from "bun:sqlite"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
@@ -1254,22 +1254,24 @@ function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Sn
   return sfLocalStoreCost("materialize-snapshot", () => {
   const copy = plan.copy
   if (!copy) return decodeSnapshot(payload)
-  const snapshot = JSON.parse(copy.json) as Snapshot
+  const snapshot = sfMaterializeCost("json-parse", () => JSON.parse(copy.json)) as Snapshot
   // Null placeholders preserve property order and array density. Only these
   // known own paths need repair; -0 is preserved by its native JSON literal.
   const restore = (path: string[], value: string | undefined) => {
+    return sfMaterializeCost("restore", () => {
     let parent: Record<string, unknown> = snapshot
     for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
     Object.defineProperty(parent, path[path.length - 1]!, { value, enumerable: true, writable: true, configurable: true })
+    })
   }
   if (copy.missing !== "[]") {
-    for (const path of JSON.parse(copy.missing) as string[][]) restore(path, undefined)
+    for (const path of sfMaterializeCost("missing-parse", () => JSON.parse(copy.missing)) as string[][]) restore(path, undefined)
   }
   if (copy.largeStrings !== "[]") {
-    for (const [offset, length, escaped, path] of JSON.parse(copy.largeStrings) as [number, number, boolean, string[]][]) {
+    for (const [offset, length, escaped, path] of sfMaterializeCost("strings-parse", () => JSON.parse(copy.largeStrings)) as [number, number, boolean, string[]][]) {
       const value: string = escaped
-        ? JSON.parse(payload.slice(offset, offset + length))
-        : payload.slice(offset + 1, offset + length - 1)
+        ? sfMaterializeCost("escaped-decode", () => JSON.parse(payload.slice(offset, offset + length)))
+        : sfMaterializeCost("plain-slice", () => payload.slice(offset + 1, offset + length - 1))
       restore(path, value)
     }
   }
