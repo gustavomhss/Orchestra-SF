@@ -43,7 +43,7 @@ export function createSfFreshTupleDigest() {
         let admitted = false
         try {
           if (intrinsicsCurrent()) {
-            const result = inspect(value, retained?.value, retained !== undefined, new WeakSet(), new WeakMap())
+            const result = inspect(value, retained?.value, retained !== undefined, new WeakMap())
             admitted = result !== 0
             if (result === 2 && retained && intrinsicsCurrent()) return retained.digest
           }
@@ -89,55 +89,56 @@ function sameDescriptor(left: PropertyDescriptor | undefined, right: PropertyDes
     : left.get === right.get && left.set === right.set
 }
 
-type Seen = { expected: unknown; comparable: boolean; result: 1 | 2 }
+type Seen = { expected: unknown; comparable: boolean; result: 0 | 1 | 2 }
 
 /** 0 opaque, 1 fully admitted but unequal, 2 fully admitted and equal.
  * Objects are always inspected: reference identity alone never proves equality.
  * Repeated aliases may reuse this walk's completed descriptor proof for the SAME private counterpart. */
 function inspect(value: unknown, expected: unknown, comparable: boolean,
-  active: WeakSet<object>, seen: WeakMap<object, Seen>): 0 | 1 | 2 {
+  seen: WeakMap<object, Seen>): 0 | 1 | 2 {
   if (value === null || value === undefined || typeof value === "string" || typeof value === "boolean")
     return comparable && same(value, expected) ? 2 : 1
   if (typeof value === "number") return !finite(value) ? 0 : comparable && same(value, expected) ? 2 : 1
-  if (typeof value !== "object" || isProxy(value) || active.has(value)) return 0
+  if (typeof value !== "object" || isProxy(value)) return 0
   const prior = seen.get(value)
+  if (prior?.result === 0) return 0
   if (prior) return prior.comparable === comparable && prior.expected === expected ? prior.result : 1
   const array = isArray(value)
   if (prototype(value) !== (array ? arrayPrototype : objectPrototype)) return 0
+  // Only the counterpart is a private clone of an admitted graph; fresh values keep every descriptor check.
   const partner = comparable && expected !== null && typeof expected === "object" &&
-    isArray(expected) === array && prototype(expected) === (array ? arrayPrototype : objectPrototype) ? expected : undefined
+    isArray(expected) === array ? expected as Record<string, unknown> : undefined
   const keys = ownKeys(value)
-  let equal = partner !== undefined && ownKeys(partner).length === keys.length
-  active.add(value)
-  try {
-    if (array) {
-      const length = descriptor(value, "length")
-      if (!length || !hasOwn(length, "value") || !safeInteger(length.value) || length.value < 0 ||
-        keys.length !== length.value + 1) return 0
-      const expectedLength = partner ? descriptor(partner, "length") : undefined
-      if (!expectedLength || expectedLength.value !== length.value) equal = false
-      for (let index = 0; index < length.value; index++) {
-        const entry = descriptor(value, index + "")
-        if (!entry || !entry.enumerable || !hasOwn(entry, "value")) return 0
-        const previous = partner ? descriptor(partner, index + "") : undefined
-        const result = inspect(entry.value, previous?.value, partner !== undefined && !!previous, active, seen)
-        if (result === 0) return 0
-        if (result !== 2) equal = false
-      }
-    } else {
-      for (let index = 0; index < keys.length; index++) {
-        const key = keys[index]!
-        if (typeof key !== "string") return 0
-        const entry = descriptor(value, key)
-        if (!entry || !entry.enumerable || !hasOwn(entry, "value")) return 0
-        const previous = partner ? descriptor(partner, key) : undefined
-        const result = inspect(entry.value, previous?.value, partner !== undefined && !!previous, active, seen)
-        if (result === 0) return 0
-        if (result !== 2) equal = false
-      }
+  let equal = partner !== undefined && (array || ownKeys(partner).length === keys.length)
+  // A visiting entry is a cycle even when this visit has a different counterpart.
+  const current: Seen = { expected, comparable, result: 0 }
+  seen.set(value, current)
+  if (array) {
+    const length = descriptor(value, "length")
+    if (!length || !hasOwn(length, "value") || !safeInteger(length.value) || length.value < 0 ||
+      keys.length !== length.value + 1) return 0
+    const expectedLength = partner && hasOwn(partner, "length") ? partner.length : undefined
+    if (expectedLength !== length.value) equal = false
+    for (let index = 0; index < length.value; index++) {
+      const entry = descriptor(value, index + "")
+      if (!entry || !entry.enumerable || !hasOwn(entry, "value")) return 0
+      const present = partner !== undefined && hasOwn(partner, index + "")
+      const result = inspect(entry.value, present ? partner[index] : undefined, present, seen)
+      if (result === 0) return 0
+      if (result !== 2) equal = false
     }
-    const result = equal ? 2 : 1
-    seen.set(value, { expected, comparable, result })
-    return result
-  } finally { active.delete(value) }
+  } else {
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index]!
+      if (typeof key !== "string") return 0
+      const entry = descriptor(value, key)
+      if (!entry || !entry.enumerable || !hasOwn(entry, "value")) return 0
+      const present = partner !== undefined && hasOwn(partner, key)
+      const result = inspect(entry.value, present ? partner[key] : undefined, present, seen)
+      if (result === 0) return 0
+      if (result !== 2) equal = false
+    }
+  }
+  current.result = equal ? 2 : 1
+  return current.result
 }
