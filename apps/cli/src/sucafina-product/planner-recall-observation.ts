@@ -1,3 +1,4 @@
+import { createSfFreshTupleDigest } from "./fresh-tuple-digest.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -47,6 +48,7 @@ export function createSfPlannerRecallObservation(input: {
 
   const observe = async <Value>(plan: Plan, incoming: unknown, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>, selection?: CaseSelection): Promise<PortResult<Value>> => {
+    const tupleDigest = createSfFreshTupleDigest()
     try {
       if (!root.allows(call) || active.has(call)) return unavailable()
       if (call.kind !== "ui" || call.binding.principalRef.startsWith("local:") || !pinned()) return work()
@@ -93,7 +95,7 @@ export function createSfPlannerRecallObservation(input: {
           }
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources || !refs.size) return unsupported
-          const snapshotDigest = digestSfValue({ state: stored, snapshots, sources })
+          const snapshotDigest = tupleDigest.digest({ state: stored, snapshots, sources })
           const before = await environment()
           const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
@@ -103,7 +105,7 @@ export function createSfPlannerRecallObservation(input: {
           const after = await environment()
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+            snapshotDigest !== tupleDigest.digest({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
           return { kind: "current" as const, cases: structuredClone(cases), refs: structuredClone([...refs.values()]),
             snapshotDigest, environment: after, principal, plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
         })
@@ -116,7 +118,7 @@ export function createSfPlannerRecallObservation(input: {
           // namespace admission may inspect its partition for a closed leaf set.
           const atlas = await readState(request, "atlas", async (stored, actor) => {
             if (!current() || !sameActor(actor) || before.snapshotDigest !==
-              digestSfValue({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+              tupleDigest.digest({ state: stored, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
             for (const selectedCase of selected.memory) {
               const value = before.cases.find((item) => caseKey(item) === caseKey(selectedCase))
               if (!value) return undefined
@@ -209,6 +211,7 @@ export function createSfPlannerRecallObservation(input: {
       const closed = await environment()
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
+    finally { tupleDigest.close() }
   }
 
   const read = async (incoming: Parameters<DecisionCasePort["read"]>[0], call: TrustedDomainContext,
