@@ -1253,3 +1253,11 @@ function materializeSnapshot(plan: SnapshotMaterialization, payload: string): Sn
   }
   return snapshot
 }
+
+// Snapshot-only experiment seam. The original materializer bodies remain unchanged.
+export {
+  planSnapshotMaterialization as experimentSnapshotPlan,
+  materializeSnapshot as experimentMaterializeSnapshot,
+  validateSnapshot as experimentValidateSnapshot,
+  SNAPSHOT_MATERIALIZATION_UNITS as experimentMaterializationUnits,
+}
