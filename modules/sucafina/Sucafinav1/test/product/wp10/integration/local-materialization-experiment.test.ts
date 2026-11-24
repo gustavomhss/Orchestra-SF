@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { deserialize, serialize } from "bun:jsc"
+import { Buffer } from "node:buffer"
 import { isDeepStrictEqual } from "node:util"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
@@ -43,11 +44,13 @@ type Observation = ReturnType<typeof observation>
 /** This is active benchmark work, not passive instrumentation or UI qualification.
  * Exactly 28 unsigned integers. No source values, hashes, IDs, paths or sizes.
  * schema, sample, status, released, configuredPairs, measuredPairs,
- * decode count/us, plan count/us, serialize count/us,
+ * decode count/us, plan count/us, serialize-plus-base64 count/us,
  * original count/total/min/max, binary count/total/min/max,
  * parity count/failures, detachment count/failures, validation count/us, warmupPairs, stage.
  * status: 1 complete, 2 no copy plan (inconclusive), 3 experimental cap (inconclusive), 4 failed.
  * sample 0 is only the outer cleanup/result row; its materialization counters remain zero.
+ * JSC preparation includes serialize and base64 encoding. Each binary copy includes
+ * a fresh Buffer.from(base64) and deserialize; no Buffer remains between copies.
  * Validation, encoding for parity, detachment and warmup never enter copy timings.
  */
 function emit(value: Observation) {
@@ -84,7 +87,7 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
   let source: string | undefined = input
   let normalized: Snapshot | undefined
   let plan: ReturnType<typeof experimentSnapshotPlan>
-  let binary: ReturnType<typeof serialize> | undefined
+  let binaryString: string | undefined
   let left: unknown, right: unknown
   try {
     value.stage = 1
@@ -96,12 +99,24 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
     plan = measure(value.plan, () => experimentSnapshotPlan(normalized!, source!))
     if (!plan?.copy) { value.status = 2; return }
     value.stage = 3
-    binary = measure(value.serialize, () => serialize(normalized, { binaryType: "nodebuffer" }))
-    if (binary.byteLength > experimentMaterializationUnits * 2) { value.status = 3; return }
+    binaryString = measure(value.serialize, () => {
+      let temporary: ReturnType<typeof serialize> | undefined
+      try {
+        temporary = serialize(normalized, { binaryType: "nodebuffer" })
+        return temporary.toString("base64")
+      } finally { temporary = undefined }
+    })
+    // The original plan and the additional immutable representation share the
+    // existing content-unit cap. No binary storage is retained by this experiment.
+    if (plan.units + binaryString.length > experimentMaterializationUnits) { value.status = 3; return }
     normalized = undefined
 
     const original = () => experimentMaterializeSnapshot(plan!, source!)
-    const candidate = () => deserialize(binary!)
+    const candidate = () => {
+      let temporary: Buffer | undefined = Buffer.from(binaryString!, "base64")
+      try { return deserialize(temporary) }
+      finally { temporary = undefined }
+    }
     const validate = (observed: unknown) => measure(value.validate, () => experimentValidateSnapshot(observed))
     const parity = (first: unknown, second: unknown) => {
       value.parity++
@@ -139,8 +154,18 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
     const key = "__sf_materialization_experiment_only__"
     const isolated = a !== b && a.data !== b.data && !Object.hasOwn(a.data, key) && !Object.hasOwn(b.data, key)
     if (!isolated) { value.detachmentFailures++; throw new Error("Materialization copies were not independent") }
+    const nestedA = Object.values(a.data).find((entry) => entry !== null && typeof entry === "object")
+    const nestedB = Object.values(b.data).find((entry) => entry !== null && typeof entry === "object")
+    if (!nestedA || !nestedB || nestedA === nestedB) {
+      value.detachmentFailures++
+      throw new Error("Native fixture requires independent nested values")
+    }
     Reflect.set(a.data, key, true)
     Reflect.set(b.data, key, false)
+    if (Array.isArray(nestedA)) nestedA.push(key)
+    else Reflect.set(nestedA, key, true)
+    if (Array.isArray(nestedB)) nestedB.push(key)
+    else Reflect.set(nestedB, key, false)
     left = undefined; right = undefined
     left = original()
     right = candidate()
@@ -157,7 +182,7 @@ function compareMaterialization(input: string, sample: number, deadline: Deadlin
   } finally {
     // No buffer, graph or SQL string is retained across samples. This signals
     // reference release, not a claim that the VM has run garbage collection.
-    source = undefined; normalized = undefined; plan = undefined; binary = undefined
+    source = undefined; normalized = undefined; plan = undefined; binaryString = undefined
     left = undefined; right = undefined
     value.released = 1
     emit(value)
