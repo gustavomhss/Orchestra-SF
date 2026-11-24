@@ -362,3 +362,86 @@ test("Tuple owners reject post-hash admission and remain canonical through close
     expect(independent.digest({ changed: true })).toBe(digestSfValue({ changed: true }))
   } finally { owner.close(); closing.close(); independent.close(); await deadline.close() }
 }, 15_000)
+
+test("Fresh tuple inspection keeps own-key cardinality and separates active cycles from completed aliases", async () => {
+  const deadline = compositionTestDeadline("fresh-tuple-inspection", 12_000)
+  const owner = createSfFreshTupleDigest()
+  try {
+    const changedKeys: readonly (readonly [unknown, unknown])[] = [
+      [{ a: 1, b: 2 }, { a: 1 }],
+      [{ slot: undefined }, {}],
+      [{ slot: undefined }, { other: undefined }],
+      [[undefined], []],
+      [[undefined], [undefined, undefined]],
+    ]
+    for (const [before, after] of changedKeys) {
+      deadline.check()
+      const previous = digestSfValue(before), next = digestSfValue(after)
+      expect(previous).not.toBe(next)
+      expect(owner.digest(before)).toBe(previous)
+      expect(owner.digest(after)).toBe(next)
+      expect(owner.digest(structuredClone(before))).toBe(previous)
+    }
+
+    const namedValue = { amount: 7 }
+    const named: Record<string, unknown> = { constructor: undefined, toJSON: "ordinary data" }
+    originalDefine(named, "__proto__", { value: namedValue, enumerable: true, writable: true, configurable: true })
+    const namedDigest = digestSfValue(named)
+    expect(Object.getPrototypeOf(named)).toBe(Object.prototype)
+    expect(Object.hasOwn(named, "__proto__")).toBe(true)
+    expect(owner.digest(named)).toBe(namedDigest)
+    expect(owner.digest(structuredClone(named))).toBe(namedDigest)
+    namedValue.amount = 8
+    const changedNamedDigest = digestSfValue(named)
+    expect(changedNamedDigest).not.toBe(namedDigest)
+    expect(owner.digest(named)).toBe(changedNamedDigest)
+    expect(Object.getPrototypeOf(named)).toBe(Object.prototype)
+
+    const leaf = { amount: 7 }, branch = { leaf }
+    const diamond = { left: branch, right: branch }
+    const divergent = { left: { leaf: { amount: 7 } }, right: { leaf: { amount: 9 } } }
+    const independent = { left: { leaf: { amount: 7 } }, right: { leaf: { amount: 7 } } }
+    const diamondDigest = digestSfValue(diamond), divergentDigest = digestSfValue(divergent)
+    expect(diamondDigest).not.toBe(divergentDigest)
+    expect(diamondDigest).toBe(digestSfValue(independent))
+    expect(owner.digest(divergent)).toBe(divergentDigest)
+    expect(owner.digest(diamond)).toBe(diamondDigest)
+    expect(owner.digest(structuredClone(diamond))).toBe(diamondDigest)
+    expect(owner.digest(independent)).toBe(diamondDigest)
+    leaf.amount = 8
+    expect(owner.digest(diamond)).toBe(digestSfValue(diamond))
+    expect(owner.digest(independent)).toBe(diamondDigest)
+
+    const shared = { amount: 4 }, bridge: unknown[] = []
+    const cycle = { a: shared, b: shared, z: bridge }
+    bridge.push(cycle)
+    const acyclic = { a: { amount: 4 }, b: { amount: 4 },
+      z: [{ a: { amount: 4 }, b: { amount: 4 }, z: [] }] }
+    expect(owner.digest(acyclic)).toBe(digestSfValue(acyclic))
+    const originalCycle = observe(() => digestSfValue(cycle))
+    const observedCycle = observe(() => owner.digest(cycle))
+    expect(originalCycle.ok).toBe(false)
+    expect(comparable(observedCycle)).toEqual(comparable(originalCycle))
+    expect(owner.digest(acyclic)).toBe(digestSfValue(acyclic))
+
+    const reads = { opaque: 0, failed: 0 }
+    const opaque = { a: shared, b: shared, get z() { reads.opaque++; return "original opaque value" } }
+    const opaqueExpected = digestSfValue({ a: shared, b: shared, z: "original opaque value" })
+    expect(owner.digest(opaque)).toBe(opaqueExpected)
+    expect(reads.opaque).toBe(1)
+    const recovered = { a: shared, b: shared, z: "fresh after opaque" }
+    expect(owner.digest(recovered)).toBe(digestSfValue(recovered))
+    expect(owner.digest(structuredClone(recovered))).toBe(digestSfValue(recovered))
+
+    const failure = new Error("Late original tuple getter failed")
+    const failing = { a: shared, b: shared, get z() { reads.failed++; throw failure } }
+    const failed = observe(() => owner.digest(failing))
+    expect(failed.ok).toBe(false)
+    if (failed.ok) throw new Error("Expected the original late getter error")
+    expect(failed.error).toBe(failure)
+    expect(reads.failed).toBe(1)
+    shared.amount = 5
+    expect(owner.digest(recovered)).toBe(digestSfValue(recovered))
+    expect(owner.digest(structuredClone(recovered))).toBe(digestSfValue(recovered))
+  } finally { owner.close(); await deadline.close() }
+}, 15_000)
