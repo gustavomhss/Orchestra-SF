@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { sfRecallCost, sfRecallAsyncCost } from "./recall-observation-cost.ts"
 import { types } from "node:util"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
@@ -43,7 +44,7 @@ export async function readSfMemoryCaptureIntegrity(
   const observation = captureObservations.get(sources)
   captureObservations.delete(sources)
   if (!observation || observation.call !== call) return false
-  try { return await observation.read(selection) } catch { return false }
+  try { return await sfRecallAsyncCost("bcs-capture-integrity", () => observation.read(selection)) } catch { return false }
 }
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
@@ -99,17 +100,17 @@ function assembleSfBusinessContext(host: {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
     if (ancestors.has(ref.refDigest) || ancestors.size >= 16 || !evidenceWithinBudget([ref])) return unavailable()
     const read = async (): Promise<BusinessEvidenceResolution> => {
-      if (!(await host.revalidate(call))) return unavailable()
+      if (!(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)))) return unavailable()
       if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
       try {
-        sfEvidenceSourceMaps([ref])
+        sfRecallCost("bcs-source-maps", () => sfEvidenceSourceMaps([ref]))
       } catch {
         return { ...unavailable(), state: "invalid" }
       }
-      const result = await host.resolveSource(ref, call, ancestors)
-      if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
+      const result = await sfRecallAsyncCost("bcs-source", () => host.resolveSource(ref, call, ancestors))
+      if (!(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call))) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
       try {
-        sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
+        sfRecallCost("bcs-source-maps", () => sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])]))
       } catch {
         return unavailable()
       }
@@ -117,15 +118,15 @@ function assembleSfBusinessContext(host: {
         if (ref.kind === "case-event" || ref.kind === "calculation") {
           const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
           const next = new Set([...ancestors, ref.refDigest])
-          const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
-          if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
+          const dependencies = await sfRecallAsyncCost("bcs-dependencies", () => mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next)))
+          if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)))) return unavailable()
         }
         return result
       }
       if (result.state === "historical") {
         const current = result.currentRef
         if (!result.authorizedProjection || !current || !result.differences || !sameHistoricalSource(ref, current) || current.installationId !== call.binding.installationId || current.projectId !== call.binding.projectId) return unavailable()
-        if (!(await host.proveContinuity(ref, current, call)) || !(await host.revalidate(call))) return unavailable()
+        if (!(await host.proveContinuity(ref, current, call)) || !(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)))) return unavailable()
         return result
       }
       return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
@@ -144,15 +145,15 @@ function assembleSfBusinessContext(host: {
       const binding = digestSfValue([call.kind, call.binding])
       // Share identical reads only within this one authorization pass. No cross-call cache.
       const reads = new Map<string, Promise<BusinessEvidenceResolution>>()
-      const values = await mapSfEvidenceInOrder(refs, (ref) => {
+      const values = await sfRecallAsyncCost("bcs-dependencies", () => mapSfEvidenceInOrder(refs, (ref) => {
         const key = digestSfValue(ref)
         const existing = reads.get(key)
         if (existing) return existing
         const pending = resolve(ref, call)
         reads.set(key, pending)
         return pending
-      })
-      if (!await host.revalidate(call) || requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding])) return unavailable()
+      }))
+      if (!await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)) || requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding])) return unavailable()
       return values.map((value) => structuredClone(value))
     },
     async recall(request, call) {
@@ -162,24 +163,24 @@ function assembleSfBusinessContext(host: {
       const lease = call.lease
       const stable = () => selectionDigest === digestSfValue(request) && selectionDigest === digestSfValue(selected) &&
         binding === digestSfValue([call.kind, call.binding]) && call.lease === lease
-      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+      if (!(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call))) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const records = await host.recall(selected, call)
       if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
-      const allowed = await mapSfEvidenceInOrder(records, async (record) => {
+      const allowed = await sfRecallAsyncCost("bcs-dependencies", () => mapSfEvidenceInOrder(records, async (record) => {
         const caseRef = record.envelope.caseRef
         if (!caseRef || !selected.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
         const refs = [...record.envelope.evidenceRefs, ...record.envelope.dependencies]
         if (!evidenceWithinBudget(refs)) return false
         try {
-          const maps = sfEvidenceSourceMaps(refs)
+          const maps = sfRecallCost("bcs-source-maps", () => sfEvidenceSourceMaps(refs))
           if (digestSfValue(maps.sourceVersions) !== digestSfValue(record.envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(record.envelope.sourceIncarnations)) return false
         } catch {
           return false
         }
-        const resolved = await service.context({ refs }, call)
+        const resolved = await sfRecallAsyncCost("bcs-context", () => service.context({ refs }, call))
         return refs.length > 0 && resolved.every((item) => item.state === "fresh" || (item.state === "historical" && item.differences !== undefined))
-      })
-      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+      }))
+      if (!(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call))) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       if (allowed.some((value) => !value)) throw new Error("SF_MEMORY_EVIDENCE_UNAVAILABLE")
       if (host.finalizeRecall && !await host.finalizeRecall(records, call)) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
       if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
@@ -187,12 +188,12 @@ function assembleSfBusinessContext(host: {
     },
     async emitFromLedger(ref, call) {
       // The writer checks fresh sources for a new append and separately reauthorizes recovery of a durable receipt.
-      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !(await host.revalidate(call))) {
+      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)))) {
         return { status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "source unavailable" }
       }
-      try { sfEvidenceSourceMaps([ref]) } catch { return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "invalid evidence" } }
+      try { sfRecallCost("bcs-source-maps", () => sfEvidenceSourceMaps([ref])) } catch { return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "invalid evidence" } }
       const receipt = await host.emitFromLedger(ref, call)
-      if (!(await host.revalidate(call))) return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "authority unavailable" }
+      if (!(await sfRecallAsyncCost("bcs-auth", () => host.revalidate(call)))) return { status: "unavailable", sourceEventId: ref.target.eventId, scanner: { name: "", version: "", status: "unavailable" }, reason: "authority unavailable" }
       return receipt
     },
   }
@@ -236,7 +237,7 @@ export function createSfEvidenceRouter(input: {
     resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> {
       if (ref.kind === "record" && ref.target.surface === "dashboard" && ref.target.recordType === "dashboard-page") return input.dashboard(ref, call)
       if (ref.kind === "record" && ref.target.surface === "dashboard" && input.dashboardRecord) return input.dashboardRecord(ref, call)
-      if (ref.kind === "case-event") return input.caseEvent(ref, call, ancestors)
+      if (ref.kind === "case-event") return sfRecallAsyncCost("bcs-case-event", () => input.caseEvent(ref, call, ancestors))
       if (ref.kind === "record" && ref.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(ref.target.recordType)) return input.procurement(ref, call)
       if (ref.kind === "receipt" && ["dashboard", "procurement"].includes(ref.target.surface) && input.receipt) return input.receipt(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
@@ -375,7 +376,7 @@ export function createSfAtlasBusiness(input: {
     if (!stable()) return undefined
     const refs = !selected ? [] : Array.isArray(selected) ? selected : [selected]
     if (!refs.length || refs.length > 500) return undefined
-    const found = await mapSfEvidenceInOrder(refs, (ref) => memory.readOriginalCapture(ref, digest, call))
+    const found = await mapSfEvidenceInOrder(refs, (ref) => sfRecallAsyncCost("atlas-capture", () => memory.readOriginalCapture(ref, digest, call)))
     const originals = found.filter((capture): capture is NonNullable<typeof capture> => !!capture)
     return stable() && originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) &&
       await input.host.revalidate(call) && stable() ? originals[0] : undefined
@@ -423,7 +424,7 @@ export function createSfAtlasBusiness(input: {
       calculation: input.calculation, withCalculationCase: input.withCalculationCase, lockedSourceFences: input.lockedSourceFences, now: input.now }) : undefined
   const currentCalculation = recallScope?.resolve ?? input.calculation
   const historicalCalculation = input.calculationHistorical ? (ref: BusinessEvidenceRef, call: TrustedDomainContext) =>
-    input.calculationHistorical!(ref, call, (caseRef, digest, trusted) => memory.readOriginalCapture(caseRef, digest, trusted)) : undefined
+    input.calculationHistorical!(ref, call, (caseRef, digest, trusted) => sfRecallAsyncCost("atlas-capture", () => memory.readOriginalCapture(caseRef, digest, trusted))) : undefined
   const calculation = currentCalculation ? async (ref: BusinessEvidenceRef, call: TrustedDomainContext, cited?: boolean) => {
     const current = await currentCalculation(ref, call, cited)
     if (current.state === "fresh" || !historicalCalculation) return current
@@ -513,7 +514,7 @@ export function createSfAtlasBusiness(input: {
         const lookup = captureLookup.getStore()
         if (lookup) {
           if (!lookup.active || lookup.call !== call || lookup.digest !== digest || !lookup.stable()) return undefined
-          const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
+          const capture = await sfRecallAsyncCost("atlas-capture", () => canonicalMemory.readOriginalCapture(selected, digest, call))
           return lookup.active && lookup.stable() && digestSfValue(ref) === digestSfValue(selected) ? capture?.ref : undefined
         }
         const request = input.host.requestFor(call)
@@ -526,7 +527,7 @@ export function createSfAtlasBusiness(input: {
           binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
           digestSfValue(ref) === digestSfValue(selected) && observations.every((item) => digestSfValue(item.value) === item.identity)
         if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
-        const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
+        const capture = await sfRecallAsyncCost("atlas-capture", () => canonicalMemory.readOriginalCapture(selected, digest, call))
         if (!capture || !stable()) return undefined
         pin(capture)
         const owner = deriveSfMemoryOwner(call.kind === "ui" ? { ...call.binding, kind: "ui" } : { ...call.binding, kind: "native" }, selected)
@@ -564,7 +565,7 @@ export function createSfAtlasBusiness(input: {
           if (!stable() || identity(again) !== identity(source)) return undefined
           pin(again)
         }
-        const recaptured = await canonicalMemory.readOriginalCapture(selected, digest, call)
+        const recaptured = await sfRecallAsyncCost("atlas-capture", () => canonicalMemory.readOriginalCapture(selected, digest, call))
         if (!recaptured || !stable() || digestSfValue(recaptured) !== digestSfValue(capture)) return undefined
         pin(recaptured)
         const after = await input.state.read(request, "atlas", async (state) => {
@@ -588,12 +589,12 @@ export function createSfAtlasBusiness(input: {
     const binding = digestSfValue([call.kind, call.binding])
     const lease = call.lease
     const headers = request && digestSfValue([...request.headers.entries()])
-    const sources = await readContext(selected, call)
+    const sources = await sfRecallAsyncCost("bcs-context", () => readContext(selected, call))
     if (!request || request.signal.aborted || input.host.requestFor(call) !== request || call.lease !== lease ||
       binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
       selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
       return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
-    const sourceIdentity = digestSfValue(sources)
+    const sourceIdentity = sfRecallCost("bcs-context-digest", () => digestSfValue(sources))
     if (request) captureObservations.set(sources, { call, read: async (requested) => {
       const selected = structuredClone(requested)
       const selectionIdentity = digestSfValue(selected)
@@ -610,7 +611,7 @@ export function createSfAtlasBusiness(input: {
         snapshotIdentity === digestSfValue(input.host.persistence.currentSnapshots?.()) &&
         extras.every((extra) => extra.identity === digestSfValue(extra.values)) &&
         captures.every((capture) => capture.identity === digestSfValue(capture.value))
-      if (!stable() || !await input.host.revalidate(call) || !stable()) return false
+      if (!sfRecallCost("bcs-capture-stable", () => stable()) || !await input.host.revalidate(call) || !sfRecallCost("bcs-capture-stable", () => stable())) return false
 
       const captured: BusinessEvidenceRef[] = []
       const observedCases: { ref: CaptureSelection["caseRefs"][number]; identity: string }[] = []
@@ -706,16 +707,16 @@ export function createSfAtlasBusiness(input: {
         const known = new Map(sources.map((source) => [digestSfValue(source.ref), source]))
         const missing = candidate.refs.filter((ref) => !known.has(digestSfValue(ref)))
         if (missing.length) {
-          const values = await readContext({ refs: structuredClone(missing) }, call)
+          const values = await sfRecallAsyncCost("bcs-context", () => readContext({ refs: structuredClone(missing) }, call))
           if (values.length !== missing.length) return false
           extras.push({ values, identity: digestSfValue(values) })
           values.forEach((value, index) => { if (digestSfValue(value.ref) === digestSfValue(missing[index])) known.set(digestSfValue(value.ref), value) })
         }
         for (const ref of candidate.refs) {
           const source = known.get(digestSfValue(ref))
-          const capture = await memory.readOriginalCapture(caseRef, ref.refDigest, call)
+          const capture = await sfRecallAsyncCost("atlas-capture", () => memory.readOriginalCapture(caseRef, ref.refDigest, call))
           if (capture) captures.push({ value: capture, identity: digestSfValue(capture) })
-          if (!stable()) return false
+          if (!sfRecallCost("bcs-capture-stable", () => stable())) return false
           if (!source || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) ||
             (source.state !== "fresh" && source.state !== "historical") ||
             source.accessRevision !== call.binding.accessRevision || !source.currentRef || !source.authorizedProjection ||
@@ -733,7 +734,7 @@ export function createSfAtlasBusiness(input: {
         if (finalCase.status !== "ok" || digestSfValue(finalCase.value.case) !== observed.identity) return false
       }
       if (sources.some((source) => !captured.some((ref) => digestSfValue(ref) === digestSfValue(source.ref)))) return false
-      return await input.host.revalidate(call) && stable()
+      return await input.host.revalidate(call) && sfRecallCost("bcs-capture-stable", () => stable())
     } })
     return sources
   }

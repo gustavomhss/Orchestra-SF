@@ -1,3 +1,4 @@
+import { sfTupleCost, sfTupleCount, sfTupleInitialPins, sfTupleInspect } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
 import { types } from "node:util"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 
@@ -37,28 +38,29 @@ export function createSfFreshTupleDigest() {
   let busy = false
   return {
     digest(value: unknown): string {
-      if (closed || busy) return digestSfValue(value)
+      sfTupleCount(0)
+      if (closed || busy) { sfTupleCount(1); return sfTupleCost("digest-original", () => digestSfValue(value)) }
       busy = true
       try {
         let admitted = false
         try {
-          if (intrinsicsCurrent()) {
-            const result = inspect(value, retained?.value, retained !== undefined, new WeakMap())
+          if (sfTupleInitialPins(intrinsicsCurrent)) {
+            const result = sfTupleInspect(() => inspect(value, retained?.value, retained !== undefined, new WeakMap()))
             admitted = result !== 0
-            if (result === 2 && retained && intrinsicsCurrent()) return retained.digest
+            if (result === 2 && retained && sfTupleCost("pins", intrinsicsCurrent)) { sfTupleCount(5); return retained.digest }
           }
-        } catch { /* Unprovable inspection keeps the original digest path. */ }
+        } catch { sfTupleCount(8) /* Unprovable inspection keeps the original digest path. */ }
         // An opaque read or original serializer can reenter; no prior baseline is visible to it.
         retained = undefined
         // Deliberately outside the observational catch: propagate the original error without replay.
-        const digest = digestSfValue(value)
+        const digest = sfTupleCost("digest-original", () => digestSfValue(value))
         if (admitted && !closed) {
           try {
-            if (intrinsicsCurrent()) {
-              const detached = clone(value)
-              if (!closed && intrinsicsCurrent()) retained = { value: detached, digest }
+            if (sfTupleCost("pins", intrinsicsCurrent)) {
+              const detached = sfTupleCost("clone", () => clone(value))
+              if (!closed && sfTupleCost("pins", intrinsicsCurrent)) { retained = { value: detached, digest }; sfTupleCount(7) }
             }
-          } catch { retained = undefined }
+          } catch { retained = undefined; sfTupleCount(8) }
         }
         return digest
       } finally { busy = false }

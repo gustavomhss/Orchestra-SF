@@ -1,4 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { sfRecallAsyncCost, sfRecallCheckpoint } from "../host-binding/recall-observation-cost.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
 import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
@@ -57,8 +58,8 @@ export function createSfCaseRecall(input: {
         const current = await input.cases.read({ caseRef: encodeCaseRef(wanted.caseRef) }, call)
         if (current.status !== "ok" || !sameAuthority(current.value, call) || current.value.case.id !== wanted.caseRef.id || current.value.case.incarnation !== wanted.caseRef.incarnation || (wanted.caseRef.version !== undefined && current.value.case.version !== wanted.caseRef.version)) return undefined
         if (wanted.scope && (!wanted.scope.query.trim() || digestSfValue(wanted.scope.recallScope.period) !== digestSfValue(current.value.case.horizon))) return undefined
-        const features = await input.featuresForCase(current.value, call)
-        const refs = await input.selectCandidates(current.value, call, wanted.scope)
+        const features = await sfRecallAsyncCost("canonical-features", () => input.featuresForCase(current.value, call))
+        const refs = await sfRecallAsyncCost("canonical-select", () => input.selectCandidates(current.value, call, wanted.scope))
         if (!features || !refs || refs.some((ref) => !ref.id || !ref.incarnation) || new Set(refs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== refs.length) return undefined
         if (nativeBinding && refs.some((ref) => ref.id !== nativeBinding.caseId || ref.incarnation !== nativeBinding.caseIncarnation)) return undefined
         for (const ref of refs) {
@@ -68,24 +69,29 @@ export function createSfCaseRecall(input: {
         }
         return { case: current.value.case, context: current.value.context, evidenceRefs: current.value.evidenceRefs, events: current.value.events, features, refs }
       }
-      const selected = await read()
+      const selected = await sfRecallAsyncCost("canonical-read-first", read)
+      sfRecallCheckpoint(1)
       if (!selected || source.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" as const }
       const rankInput: RankInput = { memory: input.memory, caseRefs: selected.refs, features: selected.features, featuresForCase: input.featuresForCase, runtimeVersions: input.runtimeVersions, call, proveContinuity: input.proveContinuity, revalidate: input.host.revalidate }
-      const ranked = await input.rank(rankInput)
+      const ranked = await sfRecallAsyncCost("canonical-rank-first", () => input.rank(rankInput))
+      sfRecallCheckpoint(2)
       if (ranked.status !== "ok") return { status: "unavailable" as const }
       const eligible = ranked.cases.filter((item) => wanted.scope?.recallScope.includeHistorical !== false || !item.sourceStates.includes("historical"))
       if (wanted.scope && eligible.length > wanted.limit) return { status: "unavailable" as const }
       const matches = []
       for (const match of eligible.slice(0, wanted.limit)) {
         if (!selected.refs.some((ref) => ref.id === match.candidateCaseRef.id && ref.incarnation === match.candidateCaseRef.incarnation)) return { status: "unavailable" as const }
-        const recalled = await input.memory.recall(match.candidateCaseRef, call)
+        const recalled = await sfRecallAsyncCost("canonical-memory-match", () => input.memory.recall(match.candidateCaseRef, call))
+        sfRecallCheckpoint(3)
         if (recalled.status !== "ok") return { status: "unavailable" as const }
         const records = recalled.records.filter((record) => record.recordDigest === match.atlasTrace.recordDigest)
         if (records.length !== 1) return { status: "unavailable" as const }
         matches.push({ caseRef: match.candidateCaseRef, memoryRecordRef: records[0]!.envelope.eventId, explanation: { candidateCaseRef: match.candidateCaseRef, matchedCriteria: match.matchedCriteria, currentDifferences: match.currentDifferences, sourceStates: match.sourceStates, limitations: match.limitations }, evidenceRefs: records[0]!.envelope.evidenceRefs })
       }
-      const checked = await input.rank(rankInput)
-      const again = await read()
+      const checked = await sfRecallAsyncCost("canonical-rank-second", () => input.rank(rankInput))
+      sfRecallCheckpoint(4)
+      const again = await sfRecallAsyncCost("canonical-read-second", read)
+      sfRecallCheckpoint(5)
       if (!await input.host.revalidate(call) || checked.status !== "ok" || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || !again || digestSfValue(again) !== digestSfValue(selected) || source.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || digestSfValue(wanted) !== requestDigest || digestSfValue(request) !== requestDigest) return { status: "unavailable" as const }
       return { status: "ok" as const, matches, limitations: [...new Set(matches.flatMap((item) => item.explanation.limitations))], accessRevision: call.binding.accessRevision }
     } catch {
