@@ -1,0 +1,1003 @@
+{
+  "schema": 1,
+  "kind": "partial-qualification",
+  "title": "Complete original Memory cohort after fresh tuple refinement",
+  "repository": "gustavomhss/Orchestra-SF",
+  "result": "failure",
+  "summary": "Three original cases passed; UI61 Materiality and UI62 Recall exceeded their unchanged original 40-second reads. Nineteen reached original PNGs were opened individually without a new visual blocker; seven expected captures were not reached.",
+  "source": {
+    "commit": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "tree": "3ef9243585d94940d76b258b873418567446184e"
+  },
+  "snapshot": {
+    "commit": "8056e4c927b6b0be7cc7c65f4c686f81a419b3bd",
+    "tree": "f03795d0828b4681f8fe28aee8a90105e52ba38b",
+    "requestBlob": "3686d5964be4ec8e98a8aeaa7593711606af42d4",
+    "onlyChangedPaths": [
+      ".ci-run.json"
+    ],
+    "instrumented": false
+  },
+  "originalContract": {
+    "specPath": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+    "specBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+    "caseCount": 5,
+    "caseTimeoutMs": 300000,
+    "originalReadTimeoutMs": 40000,
+    "pageDefaultTimeoutMs": 15000,
+    "retries": 0,
+    "workers": 1,
+    "runnerArgumentSource": {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    "traceMode": "retain-on-failure",
+    "bodyAssertionsTimeoutsAndRetriesChanged": false
+  },
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/final-memory.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "run": {
+    "id": 45304965398,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45304965398",
+    "branch": "ci-run-r4memoryfresh",
+    "status": "completed",
+    "conclusion": "failure",
+    "attempt": 1,
+    "createdAt": "2026-11-24T01:25:42Z",
+    "updatedAt": "2026-11-24T01:58:59Z",
+    "jobs": [
+      {
+        "id": 138146431427,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T01:25:46Z",
+        "completedAt": "2026-11-24T01:58:51Z",
+        "steps": [
+          {
+            "name": "Install Chromium",
+            "startedAt": "2026-11-24T01:26:25Z",
+            "completedAt": "2026-11-24T01:34:33Z",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run tests",
+            "startedAt": "2026-11-24T01:34:44Z",
+            "completedAt": "2026-11-24T01:58:44Z",
+            "conclusion": "failure"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "startedAt": "2026-11-24T01:58:44Z",
+            "completedAt": "2026-11-24T01:58:48Z",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 138159672317,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:58:53Z",
+        "completedAt": "2026-11-24T01:58:58Z",
+        "steps": []
+      }
+    ]
+  },
+  "runtime": {
+    "stats": {
+      "startTime": "2026-11-24T01:34:46.054Z",
+      "duration": 1438489.045,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 2,
+      "flaky": 0
+    },
+    "workers": 1,
+    "projectRetries": [
+      0
+    ],
+    "reportErrors": 0,
+    "expectedMeaning": "expected counts passed cases; unexpected counts failed cases"
+  },
+  "cases": [
+    {
+      "area": "UI61",
+      "title": "UI61 · original conditions, independent materiality and explicit signal cancellation",
+      "status": "failed",
+      "durationMs": 222320,
+      "startTime": "2026-11-24T01:35:31.932Z",
+      "retry": 0
+    },
+    {
+      "area": "UI62",
+      "title": "UI62 · private authorized case recall in an isolated installation",
+      "status": "failed",
+      "durationMs": 232205,
+      "startTime": "2026-11-24T01:40:50.148Z",
+      "retry": 0
+    },
+    {
+      "area": "UI63",
+      "title": "UI63 · recorded choices without conditions and original incomplete coverage",
+      "status": "passed",
+      "durationMs": 274781,
+      "startTime": "2026-11-24T01:46:18.378Z",
+      "retry": 0
+    },
+    {
+      "area": "UI67",
+      "title": "UI67 · current owner details and refresh remain scoped to the installed context",
+      "status": "passed",
+      "durationMs": 49538,
+      "startTime": "2026-11-24T01:52:26.858Z",
+      "retry": 0
+    },
+    {
+      "area": "UI69",
+      "title": "UI69 · one reviewed summaries save, retained draft and persisted original readback",
+      "status": "passed",
+      "durationMs": 140409,
+      "startTime": "2026-11-24T01:54:51.325Z",
+      "retry": 0
+    }
+  ],
+  "independentStepResults": [
+    {
+      "name": "UI61 publishes registered conditions without starting signal re-evaluation",
+      "status": "passed"
+    },
+    {
+      "name": "UI61 reads original materiality independently and clears detail on a new selection",
+      "status": "failed",
+      "errorKind": "Error",
+      "summary": "Original GET /sucafina/dashboard exceeded the original 40s read deadline",
+      "location": [
+        "    at Timeout.<anonymous> (file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:10:43)",
+        "    at listOnTimeout (node:internal/timers:605:17)",
+        "    at processTimers (node:internal/timers:541:7)"
+      ]
+    },
+    {
+      "name": "UI61 Portuguese condition",
+      "status": "failed",
+      "errorKind": "TimeoutError",
+      "summary": "page.goto: Timeout 15000ms exceeded.",
+      "location": [
+        "    at Object.action (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:159:57)",
+        "    at observeFinalNavigation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:136:17)",
+        "    at navigateFinalSurface (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:158:19)"
+      ]
+    },
+    {
+      "name": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+      "status": "passed"
+    },
+    {
+      "name": "No memory selection command was issued by the browser",
+      "status": "passed"
+    },
+    {
+      "name": "Memory pages emitted no JavaScript errors",
+      "status": "passed"
+    },
+    {
+      "name": "Memory console contains only verified original coverage refusals",
+      "status": "failed",
+      "errorKind": "Error",
+      "summary": "expect(received).toEqual(expected) // deep equality",
+      "location": [
+        "    at Object.assertOnlyExpectedErrors (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:77:26)",
+        "    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/final-memory.spec.ts:258:21",
+        "    at independently (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+      ]
+    },
+    {
+      "name": "UI62 sends a private recall question and explicit authorized candidates to the original producer",
+      "status": "failed",
+      "errorKind": "Error",
+      "summary": "Original similar-case response exceeded the original 40s read deadline",
+      "location": [
+        "    at Timeout.<anonymous> (file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-memory-recall.ts:11:43)",
+        "    at listOnTimeout (node:internal/timers:605:17)",
+        "    at processTimers (node:internal/timers:541:7)"
+      ]
+    },
+    {
+      "name": "UI62 Portuguese authorized candidates",
+      "status": "failed",
+      "errorKind": "TimeoutError",
+      "summary": "page.goto: Timeout 15000ms exceeded.",
+      "location": [
+        "    at Object.action (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:159:57)",
+        "    at observeFinalNavigation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:136:17)",
+        "    at navigateFinalSurface (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:158:19)"
+      ]
+    },
+    {
+      "name": "No memory selection command was issued by the browser",
+      "status": "passed"
+    },
+    {
+      "name": "Memory pages emitted no JavaScript errors",
+      "status": "passed"
+    },
+    {
+      "name": "Memory console contains only verified original coverage refusals",
+      "status": "failed",
+      "errorKind": "Error",
+      "summary": "expect(received).toEqual(expected) // deep equality",
+      "location": [
+        "    at Object.assertOnlyExpectedErrors (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:77:26)",
+        "    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/final-memory.spec.ts:360:21",
+        "    at independently (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+      ]
+    },
+    {
+      "name": "UI63 opens a recorded choice without a condition and preserves the original coverage refusal",
+      "status": "passed"
+    },
+    {
+      "name": "UI63 Portuguese incomplete coverage",
+      "status": "passed"
+    },
+    {
+      "name": "No memory selection command was issued by the browser",
+      "status": "passed"
+    },
+    {
+      "name": "Memory pages emitted no JavaScript errors",
+      "status": "passed"
+    },
+    {
+      "name": "Memory console contains only verified original coverage refusals",
+      "status": "passed"
+    }
+  ],
+  "http": {
+    "primaryFailures": [
+      {
+        "area": "UI61",
+        "category": "memory-materiality",
+        "method": "GET",
+        "callId": "call@300",
+        "configuredTimeoutMs": 40000,
+        "clientCallElapsedMs": 40006.512,
+        "clientCallCompletedWith": "timeout",
+        "httpStatus": null,
+        "responseHeadersObserved": false,
+        "responseContentObserved": false,
+        "traceRecordedStatuses": [
+          -1,
+          -1
+        ],
+        "networkTransportRecords": 2,
+        "serverProducerSettlementKnown": false
+      },
+      {
+        "area": "UI62",
+        "category": "memory-similar-cases",
+        "method": "POST",
+        "callId": "call@201",
+        "configuredTimeoutMs": 40000,
+        "clientCallElapsedMs": 40002.372,
+        "clientCallCompletedWith": "timeout",
+        "httpStatus": null,
+        "responseHeadersObserved": false,
+        "responseContentObserved": false,
+        "traceRecordedStatuses": [
+          -1,
+          -1
+        ],
+        "networkTransportRecords": 2,
+        "serverProducerSettlementKnown": false
+      }
+    ],
+    "subsequentNavigationFailures": [
+      {
+        "area": "UI61",
+        "file": "0-trace.trace",
+        "callId": "call@324",
+        "operation": "Frame.goto",
+        "durationMs": 15003.662,
+        "configuredTimeoutMs": 15000,
+        "errorKind": "navigation-timeout",
+        "hasHeadersOrProducerSettlementEvidence": false
+      },
+      {
+        "area": "UI62",
+        "file": "0-trace.trace",
+        "callId": "call@225",
+        "operation": "Frame.goto",
+        "durationMs": 15003.848,
+        "configuredTimeoutMs": 15000,
+        "errorKind": "navigation-timeout",
+        "hasHeadersOrProducerSettlementEvidence": false
+      }
+    ],
+    "originalResponseObservations": [
+      {
+        "area": "UI61",
+        "originalGetStatuses": [
+          {
+            "category": "context",
+            "status": 200,
+            "count": 2
+          },
+          {
+            "category": "dashboard",
+            "status": 200,
+            "count": 3
+          },
+          {
+            "category": "cases-projection",
+            "status": 200,
+            "count": 1
+          }
+        ],
+        "boundedReadMarkers": [
+          {
+            "mode": "memory-conditions",
+            "status": 200,
+            "milliseconds": 3303
+          },
+          {
+            "mode": "memory-conditions",
+            "status": 200,
+            "milliseconds": 5821
+          }
+        ]
+      },
+      {
+        "area": "UI62",
+        "originalGetStatuses": [
+          {
+            "category": "context",
+            "status": 200,
+            "count": 2
+          },
+          {
+            "category": "cases-projection",
+            "status": 200,
+            "count": 1
+          },
+          {
+            "category": "case-projection",
+            "status": 200,
+            "count": 1
+          }
+        ],
+        "boundedReadMarkers": [
+          {
+            "mode": "case",
+            "status": 200,
+            "milliseconds": 20570
+          }
+        ]
+      },
+      {
+        "area": "UI63",
+        "originalGetStatuses": [
+          {
+            "category": "context",
+            "status": 200,
+            "count": 6
+          },
+          {
+            "category": "dashboard",
+            "status": 200,
+            "count": 3
+          },
+          {
+            "category": "cases-projection",
+            "status": 200,
+            "count": 1
+          },
+          {
+            "category": "case-projection",
+            "status": 200,
+            "count": 1
+          },
+          {
+            "category": "dashboard",
+            "status": 503,
+            "count": 3
+          }
+        ],
+        "boundedReadMarkers": [
+          {
+            "mode": "case",
+            "status": 200,
+            "milliseconds": 20658
+          }
+        ]
+      },
+      {
+        "area": "UI67",
+        "originalGetStatuses": [
+          {
+            "category": "context",
+            "status": 200,
+            "count": 4
+          }
+        ],
+        "boundedReadMarkers": []
+      },
+      {
+        "area": "UI69",
+        "originalGetStatuses": [
+          {
+            "category": "context",
+            "status": 200,
+            "count": 6
+          },
+          {
+            "category": "summary-settings",
+            "status": 200,
+            "count": 4
+          }
+        ],
+        "boundedReadMarkers": []
+      }
+    ],
+    "interpretation": [
+      "Each primary failure has one browser transport record and its forwarded API request; the two network records are not two producer attempts.",
+      "Recorded status -1 means no HTTP response was captured; it is not an HTTP status code.",
+      "The client fetch completed with a timeout. These uninstrumented traces do not establish server producer completion, proof admission or hit counts.",
+      "UI63's observed 503 responses are the original expected incomplete-coverage refusal, with that full case passing.",
+      "Passing UI63, UI67 and UI69 have no retained trace in this retain-on-failure run. Their available original markers support the recorded statuses; no missing HTTP duration is inferred."
+    ]
+  },
+  "visualReview": {
+    "expectedCaptures": 26,
+    "producedOriginalCaptures": 19,
+    "openedOriginalCaptures": 19,
+    "uniqueOriginalPngHashes": 19,
+    "documentWidthChecksPassed": 19,
+    "newVisualBlockersObserved": 0,
+    "missingOriginalCaptures": [
+      {
+        "area": "UI61",
+        "state": "dark-desktop-materiality",
+        "name": "UI61-dark-desktop-materiality"
+      },
+      {
+        "area": "UI61",
+        "state": "light-320-materiality",
+        "name": "UI61-light-320-materiality"
+      },
+      {
+        "area": "UI61",
+        "state": "pt-br-dark-desktop-condition",
+        "name": "UI61-pt-br-dark-desktop-condition"
+      },
+      {
+        "area": "UI62",
+        "state": "dark-desktop-original-recall",
+        "name": "UI62-dark-desktop-original-recall"
+      },
+      {
+        "area": "UI62",
+        "state": "light-desktop-original-recall",
+        "name": "UI62-light-desktop-original-recall"
+      },
+      {
+        "area": "UI62",
+        "state": "light-320-original-recall",
+        "name": "UI62-light-320-original-recall"
+      },
+      {
+        "area": "UI62",
+        "state": "pt-br-dark-desktop-authorized-candidates",
+        "name": "UI62-pt-br-dark-desktop-authorized-candidates"
+      }
+    ],
+    "originals": [
+      {
+        "name": "UI61-dark-desktop-case-selection",
+        "area": "UI61",
+        "state": "dark-desktop-case-selection",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI61-dark-desktop-case-selection.png",
+        "sha256": "fe94758b9c4cc8f64028356bf595cad24196b6e2f11d3b357a630b8a930bb5fd",
+        "bytes": 429953,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/5fd5c9b5b0bc375fc6b5dd85950cfb3617dce27d.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Heading, authorized-case card, labels and disabled primary action have consistent insets and separation; no overlap observed."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-dark-desktop-recorded-condition",
+        "area": "UI61",
+        "state": "dark-desktop-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI61-dark-desktop-recorded-condition.png",
+        "sha256": "0de98d5c1972122428112a422bddaa6cedc1f50c8ea37288d9dffdd282e986f5",
+        "bytes": 445051,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/b1dbaef3b36714298a305e86b3852221272d86b9.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Condition title, metadata and review action align within the row; signal card follows the same spacing and surface treatment."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-desktop-recorded-condition",
+        "area": "UI61",
+        "state": "light-desktop-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI61-light-desktop-recorded-condition.png",
+        "sha256": "84c12e045a15161b6ce111a633d552e89412f74c5422f956e0812ff94f47c8f3",
+        "bytes": 480248,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/11cfd6c6a6f69a6f41c21059022db859f4ed37f2.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Light surfaces retain readable text, clear card boundaries and the same form, condition-row and action alignment."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-320-recorded-condition",
+        "area": "UI61",
+        "state": "light-320-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI61-light-320-recorded-condition.png",
+        "sha256": "830923fcfc2490be84c275dab7ac7323909cb6ea3b01f6b925a7514a81987de9",
+        "bytes": 57370,
+        "pngWidth": 320,
+        "pngHeight": 900,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/a5f582272d8227653f3bc4251817600900d3ff08.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Single-column form and full-width actions fit at 320px; long reference text wraps. The lower action continues below the internal scroll viewport."
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-320-cancelled-consultation",
+        "area": "UI61",
+        "state": "light-320-cancelled-consultation",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI61-light-320-cancelled-consultation.png",
+        "sha256": "e0ea9dc807d4c9e1f9db214522be7f56a6a5da0808c4338c1be75b8c4815d71c",
+        "bytes": 53349,
+        "pngWidth": 320,
+        "pngHeight": 900,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/b8f16daf05ad6f81379fba796b7d5d644c6e3a45.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "After scrolling, the condition action and cancelled-consultation message remain readable with consistent button width and card spacing."
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-dark-desktop-recorded-choice-no-condition",
+        "area": "UI63",
+        "state": "dark-desktop-recorded-choice-no-condition",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI63-dark-desktop-recorded-choice-no-condition.png",
+        "sha256": "bf8a970dcf212fb9c478d007c4e459b20ad823bb6f9c35f79b0058381326d055",
+        "bytes": 464739,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/32e3e752dfec0796581159fa5a86e72b4b08507b.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Selected choice row has a clear selection border, aligned review action and a separate, readable original coverage-refusal panel."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-dark-desktop-incomplete-coverage",
+        "area": "UI63",
+        "state": "dark-desktop-incomplete-coverage",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI63-dark-desktop-incomplete-coverage.png",
+        "sha256": "c3d992ec3f51cffe3df347bda7640f4322655514e3459014fe37eb700822c990",
+        "bytes": 457025,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/f3dff0efb9dbf87a5245d26c9b84975e6387f801.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "The expected refusal is contained in one card under the page heading, with a clearly separated retry action."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-light-desktop-incomplete-coverage",
+        "area": "UI63",
+        "state": "light-desktop-incomplete-coverage",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI63-light-desktop-incomplete-coverage.png",
+        "sha256": "b52b51a3a553eef40558f9b1ff9cbfdce4c9026bad6fb8fbca8d49951ea1b1b0",
+        "bytes": 516809,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/6056f7e8b8b4ac71a00e7d95b2bdbaad7052ab39.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "The same expected refusal keeps readable contrast, stable card padding and an aligned retry action in the light theme."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-light-320-incomplete-coverage",
+        "area": "UI63",
+        "state": "light-320-incomplete-coverage",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI63-light-320-incomplete-coverage.png",
+        "sha256": "f9b19a902d12dadebd938cb6912e3f0d0f5bf7f556ab2add5434e4f8b4034e7f",
+        "bytes": 39901,
+        "pngWidth": 320,
+        "pngHeight": 900,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/053cd4462fd2013c8b5df517704afba40b4f9290.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "The long refusal wraps inside the mobile card; the full-width retry button fits without horizontal overflow or overlap."
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-pt-br-dark-desktop-incomplete-coverage",
+        "area": "UI63",
+        "state": "pt-br-dark-desktop-incomplete-coverage",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI63-pt-br-dark-desktop-incomplete-coverage.png",
+        "sha256": "d675e45135694e2f62598c5c40607f268d16095b2db2a90e64beab072cf844db",
+        "bytes": 460670,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/6a9f516f27198693fe9002038f45b8a0b4b8b3b9.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Portuguese heading, refusal and retry action fit the original desktop hierarchy and card insets."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-dark-desktop-current-context",
+        "area": "UI67",
+        "state": "dark-desktop-current-context",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI67-dark-desktop-current-context.png",
+        "sha256": "3000e12e88e295ec188294487d8c7fa94b3ccdc72e9fe2cb4ef046eb373fe8d6",
+        "bytes": 456624,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/81b15bca63d2f3aca75ebcdd8f9cf5e60283daf8.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Context labels and monospace values align in a two-column grid; refresh action remains aligned to the card header."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-light-desktop-refreshed-context",
+        "area": "UI67",
+        "state": "light-desktop-refreshed-context",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI67-light-desktop-refreshed-context.png",
+        "sha256": "6ddd24c52875429e8ea284416ecb74411b4935e3849bec2b87c26813afe7102f",
+        "bytes": 514707,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/b5252a1353cbd8be51529db8414700250322990d.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Refreshed values preserve the same grid, spacing and legibility in the light theme."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-light-320-current-context",
+        "area": "UI67",
+        "state": "light-320-current-context",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI67-light-320-current-context.png",
+        "sha256": "13ddf2d8d7682e947976d9fbea684c46559d1ac386999ee4ccc969cdb44c436f",
+        "bytes": 49208,
+        "pngWidth": 320,
+        "pngHeight": 900,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/47ead82fd1d301ae60a2f9818762dad2c071f0c2.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Values reflow to one column and long identifiers wrap within the card; refresh action spans the available width."
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-pt-br-dark-desktop-current-context",
+        "area": "UI67",
+        "state": "pt-br-dark-desktop-current-context",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI67-pt-br-dark-desktop-current-context.png",
+        "sha256": "ace8b86c0e1634d8af6b87b2d90def583d93e00253d3dcae38f3bfcc9cd9edac",
+        "bytes": 459730,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/61fb523c2e2702047f9d1f151b5edc0ded9f7f1d.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Portuguese labels preserve both grid columns, header-action spacing and readable values."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-dark-desktop-summary-settings",
+        "area": "UI69",
+        "state": "dark-desktop-summary-settings",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI69-dark-desktop-summary-settings.png",
+        "sha256": "d3c4850685df0875fa2c8d2c876f524fed79df1c3d9ab58dbcc6f49801a55e94",
+        "bytes": 449967,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/34d3100eced8f773f9a890a2a4ca640cec5d767d.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Checkbox rows use aligned columns and consistent vertical spacing; primary and secondary actions are distinct above the separate notifications panel."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-desktop-summary-review",
+        "area": "UI69",
+        "state": "light-desktop-summary-review",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI69-light-desktop-summary-review.png",
+        "sha256": "3abc67a0b2c368704b4100cd2f07c5d2c9faa965e48475fec5a27dafba3a2c73",
+        "bytes": 442342,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/b3a7462c9815e456b9db9f4e3d2d864c0b3a7bc2.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "The three-column review grid keeps source headings aligned, highlights the changed proposed value and separates effects from the footer actions."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-320-summary-review-actions",
+        "area": "UI69",
+        "state": "light-320-summary-review-actions",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI69-light-320-summary-review-actions.png",
+        "sha256": "339734f977d810674c1b8d78947ee420c9a57034dba2d98f1e33387313c07314",
+        "bytes": 47099,
+        "pngWidth": 320,
+        "pngHeight": 900,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/70af1dd132c4fcbded97102544d247a6eccfa948.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "The review footer stacks cancel, revise and primary save actions with consistent widths and gaps; notification copy wraps within its own panel."
+        },
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-desktop-persisted-summaries",
+        "area": "UI69",
+        "state": "light-desktop-persisted-summaries",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI69-light-desktop-persisted-summaries.png",
+        "sha256": "0b797f1b00faa070104c849bd7026067997df8e090624e71ecffe5a650cf675a",
+        "bytes": 479324,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/5d37d4083d8000a6c114fb35b5fa629fb6221817.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Persisted selection and version are visible without shifting the checkbox grid or action layout."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-pt-br-dark-desktop-administration",
+        "area": "UI69",
+        "state": "pt-br-dark-desktop-administration",
+        "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45304965398/originals/UI69-pt-br-dark-desktop-administration.png",
+        "sha256": "83b34d98c3d8c323aa8d461f7b5a7a6cffe63963803ad7c94c7d76a411ccd54e",
+        "bytes": 459987,
+        "pngWidth": 1440,
+        "pngHeight": 1100,
+        "archivePath": "packages/app-shell/e2e/playwright-report/data/6939a8f7be72a40af656bcaa3be21d46a4da6c2d.png",
+        "opened": true,
+        "review": {
+          "result": "no_new_visual_blocker_observed",
+          "note": "Long Portuguese option labels and the unavailable-notifications paragraph remain contained and readable in the desktop grid."
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      }
+    ],
+    "scopeLimits": [
+      "Review applies only to the nineteen reached original captures; UI62's four target states and three UI61 target states remain unreviewed in this run.",
+      "Mobile screenshots capture the application's scroll viewport; vertical continuation below the viewport is not asserted to be document overflow.",
+      "The two automatic failure images and their archive duplicates are excluded from original capture counts.",
+      "Global qualified counts remain 105/133 as instructed; this failed cohort adds no globally qualified captures."
+    ]
+  },
+  "evidence": {
+    "artifact": {
+      "id": 14882800335,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 29801969,
+      "apiDigest": "sha256:2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7",
+      "downloadedSha256": "2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7",
+      "digestVerified": true
+    },
+    "files": [
+      {
+        "relativePath": "artifact.zip",
+        "bytes": 29801969,
+        "sha256": "2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7"
+      },
+      {
+        "relativePath": "test-ci-evidence/playwright-runtime.json",
+        "bytes": 10399545,
+        "sha256": "b4d744575ac05bd1f2c472a9e67ba1f27a75e7e0a38db824b9dbad673bf97830"
+      },
+      {
+        "relativePath": "test-ci-evidence/playwright-selection.json",
+        "bytes": 4927,
+        "sha256": "53355d071c00c911d794898f332c367f526efadf010d7ceffcc29c9046db3f19"
+      },
+      {
+        "relativePath": "test-ci-evidence/request.json",
+        "bytes": 374,
+        "sha256": "29f89cc5b87a273e2a592acc8cff6e86cde1a23451f9de300dca989b686a6cf0"
+      },
+      {
+        "relativePath": "original-captures.json",
+        "bytes": 17099,
+        "sha256": "8c792c1f834da4d0ad298b6e129d52b8e2690e3eac056325b40b06238b3ed859"
+      },
+      {
+        "relativePath": "http-timeline.json",
+        "bytes": 43908,
+        "sha256": "0fb05c309c09634418a42b31bc5005b6c9d08bba53daf80b7ac993b43ee27524"
+      },
+      {
+        "relativePath": "traces/UI61-trace.zip",
+        "bytes": 3999504,
+        "sha256": "3f5b49e7778143bdefcdc0c6f8cd4d664cb42120a9e53feb96f9ace2676f1e24"
+      },
+      {
+        "relativePath": "traces/UI62-trace.zip",
+        "bytes": 2157798,
+        "sha256": "2c7d8bf3ded2fe708b387af592c2b89c9b3355c87f8bbe50daed79d28298e39c"
+      }
+    ],
+    "rawJobLog": {
+      "job": 138146431427,
+      "characters": 1431581,
+      "sha256": "a73e9e4a8e9edef927ca53e1eedc6c123ced8a6cb599ed33b8e202068627df09",
+      "persisted": false
+    },
+    "originalPngProvenance": "Every decoded image/png attachment hash equals an original PNG in the verified artifact; no resizing, cropping or editing was applied.",
+    "strictMode": "strict",
+    "channel": "prod",
+    "nonceHeadersQueriesPayloadsSignedUrlsOrRawLogCommitted": false
+  },
+  "limits": [
+    "This is a complete original five-case execution with three passes, not a green Memory qualification.",
+    "No CI was repeated and no product, fixture, assertion, timeout or retry was changed while collecting this evidence.",
+    "The 8m08s Chromium installation is runner preparation, separate from the 24-minute Run tests step.",
+    "Screenshots do not establish functionality or performance for states that were not reached."
+  ]
+}
