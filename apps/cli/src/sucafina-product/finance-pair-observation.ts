@@ -1,4 +1,4 @@
-import { sfRecallCost, sfRecallAsyncCost, sfRecallCostOwner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
+import { sfRecallCost, sfRecallAsyncCost, sfRecallCostOwner, sfRecallTupleCost } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -74,7 +74,7 @@ export function createSfFinancePairObservation(input: {
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
-          const snapshotDigest = sfRecallCost("finance-snapshot-digest", () => digestSfValue({ state, snapshots, sources }))
+          const snapshotDigest = sfRecallTupleCost("finance-snapshot-digest", () => ({ state, snapshots, sources }), digestSfValue)
           const before = await sfRecallAsyncCost("owner-environment", environment)
           const principal = structuredClone(await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
@@ -84,7 +84,7 @@ export function createSfFinancePairObservation(input: {
           const after = await sfRecallAsyncCost("owner-environment", environment)
           const again = await sfRecallAsyncCost("owner-authenticate", () => host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== sfRecallCost("finance-snapshot-digest", () => digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }))) return undefined
+            snapshotDigest !== sfRecallTupleCost("finance-snapshot-digest", () => ({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() }), digestSfValue)) return undefined
           return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after,
             refs: structuredClone(refs), principalDigest: digestSfValue(principal), plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
         })

@@ -1,7 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks"
-import { types } from "node:util"
+import { isDeepStrictEqual, types } from "node:util"
 
-// Snapshot-only numeric aggregates. No request, reference, authority value or result is retained.
+// Snapshot-only numeric aggregates. Tuples keep only a private plain-data baseline until owner close;
+// no request, reference, authority value, digest or result is emitted.
 // Header: schema, owner, parent, depth, kind, phase, fulfilled, epochMs, elapsedUs, activeAsync.
 // kind: 0 Finance, 1 case read, 2 Recall, 3/4 first/second Materiality read.
 // phase: 0 settlement, 1/2 first read/rank,
@@ -21,6 +22,7 @@ type Profile = {
   checkpoints: number
   pending: Set<{ bucket: Bucket; started: number }>
   values: Record<Bucket, [number, number]>
+  tuple?: TupleProfile
 }
 const profiles = new AsyncLocalStorage<Profile>()
 let sequence = 0
@@ -123,4 +125,190 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
       ...buckets.flatMap((bucket) => [profile.values[bucket][0], profile.values[bucket][1] + (elapsed.get(bucket) ?? 0)])]
     process.stdout.write("SF_RECALL_COST " + fields.join(" ") + "\n")
   } catch { /* A diagnostic sink cannot replace the original result or error. */ }
+  finally { emitTuple(profile, phase, fulfilled) }
+}
+
+
+// Independent diagnostic only: always execute the original digest once, then measure whether
+// a fresh complete tuple equals a private prior copy. No hash is stored or reused.
+// SF_TUPLE_COST has the same 10 headers as SF_RECALL_COST, then 22 numeric fields:
+// attempts, acquireCount/Us, digestCount/Us, validationCount/Us, eligible, ineligible,
+// compareCount/Us, equal, unequal, cloneCount/Us, originalThrows, observationErrors,
+// intrinsicRefusals, graphRefusals, visitedNodes, maxVisitedNodes, baselineActive.
+type TupleProfile = {
+  baseline: unknown
+  attempts: number
+  acquire: [number, number]
+  digest: [number, number]
+  validation: [number, number]
+  eligible: number
+  ineligible: number
+  compare: [number, number]
+  equal: number
+  unequal: number
+  clone: [number, number]
+  originalThrows: number
+  observationErrors: number
+  intrinsicRefusals: number
+  graphRefusals: number
+  visitedNodes: number
+  maxVisitedNodes: number
+}
+const tupleDescriptor = Object.getOwnPropertyDescriptor
+const tupleOwnKeys = Reflect.ownKeys
+const tuplePrototype = Object.getPrototypeOf
+const tupleHasOwn = Object.hasOwn
+const tupleIsProxy = types.isProxy
+const tupleIsArray = Array.isArray
+const tupleIsFinite = Number.isFinite
+const tupleIsSafeInteger = Number.isSafeInteger
+const tupleClone = structuredClone
+const tupleEqual = isDeepStrictEqual
+const tupleObjectPrototype = Object.prototype
+const tupleArrayPrototype = Array.prototype
+const tupleHashPrototype = Bun.CryptoHasher.prototype
+const tuplePinKeys: readonly (readonly [object, PropertyKey])[] = [
+  [globalThis, "Object"], [globalThis, "Array"], [globalThis, "Number"], [globalThis, "JSON"],
+  [globalThis, "Reflect"], [globalThis, "Bun"], [globalThis, "WeakSet"], [globalThis, "structuredClone"],
+  [Object, "keys"], [Object, "getPrototypeOf"], [Object, "getOwnPropertyDescriptor"], [Object, "hasOwn"], [Object, "is"],
+  [Array, "isArray"], [Array, Symbol.species], [Number, "isFinite"], [Number, "isSafeInteger"],
+  [Reflect, "ownKeys"], [JSON, "stringify"], [types, "isProxy"],
+  [Bun, "CryptoHasher"], [tupleHashPrototype, "update"], [tupleHashPrototype, "digest"],
+  [WeakSet.prototype, "has"], [WeakSet.prototype, "add"], [WeakSet.prototype, "delete"],
+]
+const tuplePins = tuplePinKeys.map(([owner, key]) => ({ owner, key, descriptor: tupleDescriptor(owner, key) }))
+const tuplePrototypePins = [tupleObjectPrototype, tupleArrayPrototype].map((owner) => ({
+  owner, prototype: tuplePrototype(owner), keys: tupleOwnKeys(owner),
+  descriptors: tupleOwnKeys(owner).map((key) => tupleDescriptor(owner, key)),
+}))
+
+/** The existing cost bucket still covers only acquisition plus the original digest, never the comparison. */
+export function sfRecallTupleCost(bucket: Bucket, acquire: () => unknown, read: (value: unknown) => string): string {
+  const profile = profiles.getStore()
+  if (!profile || profile.closed || profile.kind !== 0 && profile.kind !== 1)
+    return sfRecallCost(bucket, () => read(acquire()))
+  const tuple = profile.tuple ??= {
+    baseline: undefined, attempts: 0, acquire: [0, 0], digest: [0, 0], validation: [0, 0],
+    eligible: 0, ineligible: 0, compare: [0, 0], equal: 0, unequal: 0, clone: [0, 0],
+    originalThrows: 0, observationErrors: 0, intrinsicRefusals: 0, graphRefusals: 0, visitedNodes: 0, maxVisitedNodes: 0,
+  }
+  tuple.attempts++
+  let value: unknown
+  let result: string
+  try {
+    result = sfRecallCost(bucket, () => {
+      const acquired = performance.now()
+      tuple.acquire[0]++
+      try { value = acquire() }
+      finally { tuple.acquire[1] += Math.max(0, Math.round((performance.now() - acquired) * 1000)) }
+      const started = performance.now()
+      tuple.digest[0]++
+      try { return read(value) }
+      finally { tuple.digest[1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
+    })
+  } catch (error) { tuple.originalThrows++; throw error }
+  try { observeTuple(tuple, value) }
+  catch { tuple.observationErrors++; tuple.baseline = undefined }
+  return result
+}
+
+function observeTuple(tuple: TupleProfile, value: unknown) {
+  const started = performance.now()
+  tuple.validation[0]++
+  const inspected = { nodes: 0 }
+  let eligible = false
+  try {
+    if (!tupleIntrinsicsCurrent()) { tuple.intrinsicRefusals++; return }
+    eligible = plainTuple(value, new WeakSet(), new WeakSet(), inspected)
+    if (!eligible) { tuple.graphRefusals++; return }
+  } finally {
+    tuple.validation[1] += Math.max(0, Math.round((performance.now() - started) * 1000))
+    tuple.visitedNodes += inspected.nodes
+    tuple.maxVisitedNodes = Math.max(tuple.maxVisitedNodes, inspected.nodes)
+    if (!eligible) { tuple.ineligible++; tuple.baseline = undefined }
+  }
+  tuple.eligible++
+  if (tuple.baseline !== undefined) {
+    const compared = performance.now()
+    tuple.compare[0]++
+    let equal = false
+    try { equal = tupleEqual(value, tuple.baseline) }
+    finally { tuple.compare[1] += Math.max(0, Math.round((performance.now() - compared) * 1000)) }
+    if (equal) { tuple.equal++; return }
+    tuple.unequal++
+  }
+  const cloned = performance.now()
+  tuple.clone[0]++
+  try { tuple.baseline = tupleClone(value) }
+  finally { tuple.clone[1] += Math.max(0, Math.round((performance.now() - cloned) * 1000)) }
+}
+
+function tupleIntrinsicsCurrent() {
+  for (let index = 0; index < tuplePins.length; index++) {
+    const pin = tuplePins[index]!
+    if (!sameTupleDescriptor(pin.descriptor, tupleDescriptor(pin.owner, pin.key))) return false
+  }
+  for (let index = 0; index < tuplePrototypePins.length; index++) {
+    const pin = tuplePrototypePins[index]!, keys = tupleOwnKeys(pin.owner)
+    if (tuplePrototype(pin.owner) !== pin.prototype || keys.length !== pin.keys.length) return false
+    for (let entry = 0; entry < keys.length; entry++)
+      if (keys[entry] !== pin.keys[entry] || !sameTupleDescriptor(pin.descriptors[entry], tupleDescriptor(pin.owner, keys[entry]!))) return false
+  }
+  return true
+}
+
+function sameTupleDescriptor(left: PropertyDescriptor | undefined, right: PropertyDescriptor | undefined) {
+  if (!left || !right) return left === right
+  if (left.enumerable !== right.enumerable || left.configurable !== right.configurable ||
+    tupleHasOwn(left, "value") !== tupleHasOwn(right, "value")) return false
+  return tupleHasOwn(left, "value") ? left.value === right.value && left.writable === right.writable
+    : left.get === right.get && left.set === right.set
+}
+
+/** No value gets or hooks: inspect descriptors only after rejecting proxies. Aliases are allowed; cycles are not. */
+function plainTuple(value: unknown, active: WeakSet<object>, checked: WeakSet<object>, inspected: { nodes: number }): boolean {
+  inspected.nodes++
+  if (value === null || value === undefined || typeof value === "string" || typeof value === "boolean") return true
+  if (typeof value === "number") return tupleIsFinite(value)
+  if (typeof value !== "object" || tupleIsProxy(value) || active.has(value)) return false
+  if (checked.has(value)) return true
+  const array = tupleIsArray(value), prototype = tuplePrototype(value)
+  // The clone/compare experiment deliberately uses the JSON plain subset; null/custom prototypes are ineligible.
+  if (prototype !== (array ? tupleArrayPrototype : tupleObjectPrototype)) return false
+  const keys = tupleOwnKeys(value)
+  active.add(value)
+  try {
+    if (array) {
+      const length = tupleDescriptor(value, "length")
+      if (!length || !tupleHasOwn(length, "value") || !tupleIsSafeInteger(length.value) || length.value < 0 ||
+        keys.length !== length.value + 1) return false
+      for (let index = 0; index < length.value; index++) {
+        const entry = tupleDescriptor(value, index + "")
+        if (!entry || !entry.enumerable || !tupleHasOwn(entry, "value") || !plainTuple(entry.value, active, checked, inspected)) return false
+      }
+    } else {
+      for (let index = 0; index < keys.length; index++) {
+        const key = keys[index]!
+        if (typeof key !== "string") return false
+        const entry = tupleDescriptor(value, key)
+        if (!entry || !entry.enumerable || !tupleHasOwn(entry, "value") || !plainTuple(entry.value, active, checked, inspected)) return false
+      }
+    }
+    checked.add(value)
+    return true
+  } finally { active.delete(value) }
+}
+
+function emitTuple(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
+  const tuple = profile.tuple
+  if (!tuple) return
+  if (phase === 0) tuple.baseline = undefined
+  try {
+    const fields = [1, profile.id, profile.parent, profile.depth, profile.kind, phase, fulfilled, profile.epoch,
+      Math.max(0, Math.round((performance.now() - profile.started) * 1000)), profile.pending.size,
+      tuple.attempts, ...tuple.acquire, ...tuple.digest, ...tuple.validation, tuple.eligible, tuple.ineligible,
+      ...tuple.compare, tuple.equal, tuple.unequal, ...tuple.clone, tuple.originalThrows, tuple.observationErrors,
+      tuple.intrinsicRefusals, tuple.graphRefusals, tuple.visitedNodes, tuple.maxVisitedNodes, tuple.baseline === undefined ? 0 : 1]
+    process.stdout.write("SF_TUPLE_COST " + fields.join(" ") + "\n")
+  } catch { /* Tuple diagnostics cannot replace the original result or retain the baseline after settlement. */ }
 }
