@@ -200,6 +200,18 @@ export function selectSfAtlasPartition<T>(owner: string, context: TrustedDomainC
   return read
 }
 
+// Only constructor-owned callbacks can receive a detached preferences projection.
+const preferencesReads = new WeakSet<object>()
+
+/** Preserve the complete preferences graph and original predicate timing.
+ * Each C08 invocation clones afresh between its two authority checks. */
+export function selectSfPreferencesProjection<T>(context: TrustedDomainContext,
+  project: (preferences: SfProductState["preferences"], authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => project(state.preferences, authority)
+  if (!types.isProxy(project) && frozenSelectionContext(context)) preferencesReads.add(read)
+  return read
+}
+
 function plainSelectionMap(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !types.isProxy(value) && !Array.isArray(value) &&
     [Object.prototype, null].includes(Object.getPrototypeOf(value))
@@ -232,6 +244,13 @@ function projectAtlasRead(state: SfProductState, owner: string): SfProductState 
   // original whole-state clone instead.
   const selected = structuredClone({ partition: partition.value, outbox: outbox.value })
   return { atlas: { [owner]: selected.partition }, outbox: selected.outbox } as unknown as SfProductState
+}
+
+function projectPreferencesRead(state: SfProductState): SfProductState | undefined {
+  if (!plainSelectionMap(state)) return undefined
+  const preferences = Object.getOwnPropertyDescriptor(state, "preferences")
+  if (!preferences?.enumerable || !("value" in preferences) || !plainSelectionMap(preferences.value)) return undefined
+  return { preferences: structuredClone(preferences.value) } as unknown as SfProductState
 }
 
 /** Namespace infrastructure health only; this never observes or authorizes individual cases. */
@@ -456,7 +475,8 @@ export function createSfProductState(input: {
           (!selection.plain || plainSelectionMap(cases.value)) ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const atlasSelection = namespace === "atlas" ? atlasReads.get(read) : undefined
-        const selectedRead = resultSelection ? projectResultRead(state, resultSelection) : atlasSelection ? projectAtlasRead(state, atlasSelection.owner) : undefined
+        const preferencesSelection = namespace === "preferences" && preferencesReads.has(read)
+        const selectedRead = resultSelection ? projectResultRead(state, resultSelection) : atlasSelection ? projectAtlasRead(state, atlasSelection.owner) : preferencesSelection ? projectPreferencesRead(state) : undefined
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
         const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
         const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
