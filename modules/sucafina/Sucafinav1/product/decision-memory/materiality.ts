@@ -1,3 +1,4 @@
+import { runSfFreshTupleRead } from "../host-binding/fresh-tuple-digest.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { Period, SourceRef } from "../contracts/context.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -101,16 +102,18 @@ export function createSfMaterialityAccess(input: {
     try {
       const binding = digestSfValue([call.kind, call.binding])
       if (!conditionId || !await input.revalidate(call)) return { status: "unavailable" as const }
-      const read = async () => {
-        const loaded = await input.load(conditionId, call)
-        const value = loaded ? structuredClone(loaded) : undefined
-        if (!value || value.condition.id !== conditionId || !isSfObservationTime(value.condition.source.observedAt) || !changeSources(value.change).every((source) => isSfObservationTime(source.observedAt))) return undefined
-        const valueDigest = digestSfValue(value)
-        const choice = value.condition.choice
-        const refs = [...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.scenario.assumptions.flatMap((item) => item.evidenceRefs), ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...choice.result.costCoverage.evaluatedSourceRefs, ...choice.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...value.change.before, ...value.change.after, ...(value.change.comparison?.resultAfter.sourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.evaluatedSourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs) ?? [])]
-        if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(structuredClone(refs), call) || digestSfValue(value) !== valueDigest) return undefined
-        return value
-      }
+      const read = () => runSfFreshTupleRead(async (close) => {
+        try {
+          const loaded = await input.load(conditionId, call)
+          const value = loaded ? structuredClone(loaded) : undefined
+          if (!value || value.condition.id !== conditionId || !isSfObservationTime(value.condition.source.observedAt) || !changeSources(value.change).every((source) => isSfObservationTime(source.observedAt))) return undefined
+          const valueDigest = digestSfValue(value)
+          const choice = value.condition.choice
+          const refs = [...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.scenario.assumptions.flatMap((item) => item.evidenceRefs), ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...choice.result.costCoverage.evaluatedSourceRefs, ...choice.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...value.change.before, ...value.change.after, ...(value.change.comparison?.resultAfter.sourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.evaluatedSourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs) ?? [])]
+          if (refs.some((ref) => ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) || !await input.authorizeEvidence(structuredClone(refs), call) || digestSfValue(value) !== valueDigest) return undefined
+          return value
+        } finally { close() }
+      })
       const first = await read()
       const firstDigest = digestSfValue(first)
       if (!first || !await input.revalidate(call) || digestSfValue(first) !== firstDigest) return { status: "unavailable" as const }

@@ -46,9 +46,9 @@ export function createSfPlannerRecallObservation(input: {
   const unsupported = { kind: "unsupported" as const }
   const unavailable = () => ({ status: "unavailable", reason: "planner-recall-observation-changed" } as const)
 
-  const observe = async <Value>(plan: Plan, incoming: unknown, call: TrustedDomainContext,
+  const observe = async <Value>(family: "case" | "recall", plan: Plan, incoming: unknown, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>, selection?: CaseSelection): Promise<PortResult<Value>> => {
-    const tupleDigest = createSfFreshTupleDigest()
+    const tupleDigest = createSfFreshTupleDigest(family)
     try {
       if (!root.allows(call) || active.has(call)) return unavailable()
       if (call.kind !== "ui" || call.binding.principalRef.startsWith("local:") || !pinned()) return work()
@@ -247,7 +247,7 @@ export function createSfPlannerRecallObservation(input: {
     }
     if (!ref || !selected) return work()
     if (caseKey(selected.ref) !== caseKey(ref)) return selection ? unavailable() : work()
-    return observe({ cases: [selected.ref], memory: [] }, incoming, call, work, selected)
+    return observe("case", { cases: [selected.ref], memory: [] }, incoming, call, work, selected)
   }
   const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext,
     work: () => ReturnType<Recall>): ReturnType<Recall> => {
@@ -264,7 +264,7 @@ export function createSfPlannerRecallObservation(input: {
       }
     } catch { /* The original reader owns malformed-input admission. */ }
     if (!plan) return work()
-    const result = await observe(plan, incoming, call, async () => ({ status: "ok" as const, value: await work() }))
+    const result = await observe("recall", plan, incoming, call, async () => ({ status: "ok" as const, value: await work() }))
     return result.status === "ok" ? result.value : { status: "unavailable" }
   }
   return { read, recall }

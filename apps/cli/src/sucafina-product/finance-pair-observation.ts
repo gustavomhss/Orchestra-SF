@@ -36,7 +36,7 @@ export function createSfFinancePairObservation(input: {
 
   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
-    const tupleDigest = createSfFreshTupleDigest()
+    const tupleDigest = createSfFreshTupleDigest("finance")
     try {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
