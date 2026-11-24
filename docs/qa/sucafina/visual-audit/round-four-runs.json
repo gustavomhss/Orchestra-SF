@@ -3,8 +3,8 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
-  "status": "qualification-in-progress",
+  "productSource": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+  "status": "blocked-original-http-deadlines",
   "distinctIssues": [
     {
       "id": "R4-01",
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
-    "tree": "3ef9243585d94940d76b258b873418567446184e",
+    "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+    "tree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13742,6 +13742,13 @@
         "control": "803c0da77eb65cbff78977d2edc3f491e61bafef",
         "run": 45303936643,
         "scope": "Per-invocation pure digest reuse only after inspecting the complete fresh tuple; original acquisitions, authorizations, canonical serializer, error identity and caller awaits preserved."
+      },
+      {
+        "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+        "tree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
+        "parent": "66e547a132a0d26d21f5df9c33b6c7c993ba1736",
+        "scope": "Typed selected state shapes and exact registered callback dispatch; clone timing and single-await branch preserved.",
+        "run": 45307709747
       }
     ],
     "structural": {
@@ -16136,9 +16143,9 @@
     ]
   },
   "checkpoint": {
-    "productSource": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
-    "productTree": "3ef9243585d94940d76b258b873418567446184e",
-    "status": "qualification-in-progress",
+    "productSource": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+    "productTree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
+    "status": "blocked-original-http-deadlines",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
     "reviewedOriginals": 133,
@@ -16148,7 +16155,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-24 01:28:47 UTC"
+    "recordedAt": "2026-11-24 02:07:40 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -23613,8 +23620,24 @@
     "cases": 57,
     "launched": true,
     "run": 45305561117,
-    "status": "in_progress",
-    "boundary": "All 18 files are complete. Original 16 envelopes are byte-exact; the two new four-case envelopes retain original 12/15-second limits."
+    "status": "completed",
+    "boundary": "All 18 files are complete. Original 16 envelopes are byte-exact; the two new four-case envelopes retain original 12/15-second limits.",
+    "result": "success",
+    "passed": 57,
+    "failed": 0,
+    "assertions": 3959,
+    "outerPassed": 18,
+    "outerAssertions": 18,
+    "omni": {
+      "spawns": 18,
+      "delegated": 0
+    },
+    "artifacts": [],
+    "ledger": {
+      "path": "docs/qa/sucafina/round-four/producers-final-45305561117/qualification-ledger.json",
+      "blob": "36a2d023e892feaf3c275563bd6304222fb0fcd7",
+      "commit": "197ddf49823c92e3db601ccd6b0b923214b96f2b"
+    }
   },
   "preferencesProjectionCandidate": {
     "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
@@ -23683,29 +23706,100 @@
     },
     "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
     "run": 45304965398,
-    "status": "in_progress",
+    "status": "completed",
     "cases": 5,
     "originalSpecUnchanged": true,
     "newQualifiedCases": 0,
-    "newReviewedImages": 0
+    "newReviewedImages": 0,
+    "result": "failure",
+    "passed": 3,
+    "failed": 2,
+    "skipped": 0,
+    "flaky": 0,
+    "retries": 0,
+    "originalImagesReviewed": 19,
+    "fullCohortQualified": false,
+    "casesResult": [
+      {
+        "id": "UI61",
+        "status": "failed",
+        "ms": 222320,
+        "httpMs": 40006.512
+      },
+      {
+        "id": "UI62",
+        "status": "failed",
+        "ms": 232205,
+        "httpMs": 40002.372
+      },
+      {
+        "id": "UI63",
+        "status": "passed",
+        "ms": 274781
+      },
+      {
+        "id": "UI67",
+        "status": "passed",
+        "ms": 49538
+      },
+      {
+        "id": "UI69",
+        "status": "passed",
+        "ms": 140409
+      }
+    ],
+    "artifact": {
+      "id": 14882800335,
+      "bytes": 29801969,
+      "sha256": "2b50dcb6d2c6ba577a98a83a6cacd7128da4e9cc9e6bdd212ccdf83f6afcf1f7"
+    },
+    "qualificationBoundary": "Three passed original cases and nineteen reviewed originals remain partial evidence; no full Memory5 approval or increased global105/133 count.",
+    "ledger": {
+      "path": "docs/qa/round-four/memory5-45304965398/qualification-ledger.json",
+      "blob": "7bf7066784e94ad638ac595d31a70eb67c612722",
+      "sha256": "9b187fe1c585fe839e09cc4f00eb31b32cce364b696c690995408812ddf62c3f"
+    }
   },
   "finalStructural": {
-    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
-    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
-    "snapshot": "257131acc945a0423a245bd5ec9cfc5bec96f67d",
-    "tree": "fa87a6d9db2a721097bdfd57aae07b2ad05b519e",
-    "wrapper": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
-    "request": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
-    "run": 45305135807,
-    "status": "in_progress",
-    "outerGates": 10
+    "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+    "sourceTree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
+    "snapshot": "f66fa93937e96104e6d1e702b0fcc50565c22c7c",
+    "tree": "64e429a83c3af64b00eef98c4e253e1debe224d7",
+    "run": 45307709747,
+    "status": "completed",
+    "result": "success",
+    "outerGates": 12,
+    "outerAssertions": 19,
+    "internalCases": 283,
+    "internalAssertions": 3709,
+    "typechecks": 4,
+    "guards": {
+      "rules": 78,
+      "files": 99,
+      "findings": 0,
+      "errors": 0,
+      "approved": 0
+    },
+    "palettes": {
+      "files": 7,
+      "changed": 0
+    },
+    "omni": {
+      "declared": 12,
+      "spawns": 14,
+      "delegated": 0
+    },
+    "ledger": {
+      "path": "docs/qa/round-four/typed-structural-45307709747/qualification-ledger.json",
+      "sha256": "abeff06eeaa86c96f2f5e3dd576340ad34d28d950ccb800f056bf018c37f822a"
+    }
   },
   "localStoreCostDiagnosis": {
     "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
     "snapshot": "ec379b07ae5e5c09c5c712ec746965aafba438aa",
     "tree": "a69bd33846b3ea892baa7b49a2480e1f85c02092",
     "run": 45305749252,
-    "status": "in_progress",
+    "status": "completed",
     "markerIntegers": 47,
     "oldMarkerIntegers": 184,
     "staticVerification": {
@@ -23713,6 +23807,133 @@
       "sha256": "ba9f31f9b9c5c685263b79ba0014826c414d1653baeb17c450ef6b193a52c827"
     },
     "qualification": false,
-    "boundary": "Numeric-only diagnostic, original UI61 body and 40/300-second deadlines unchanged. No new fast clone product and no provenance-based eligibility."
+    "boundary": "Original40-second HTTP guard failed. Completed numeric owners do not prove product/HTTP success. CloneSnapshot, clone-tree, payload fingerprint and plan construction were not invoked in either Materiality region. No product optimization inferred from these measurements.",
+    "result": "failure",
+    "ledger": {
+      "path": "docs/qa/round-four/local-store-cost-45305749252/diagnostic-ledger.json",
+      "sha256": "6ef03153a09e4d2d5789a95acb5f8083c8f7aa08d89ba54ef1a5542f90279d79"
+    },
+    "materiality": {
+      "rootIds": [
+        414,
+        541
+      ],
+      "elapsedUs": [
+        32921768,
+        33042544
+      ],
+      "materializeUs": [
+        5489871,
+        5675561
+      ],
+      "cloneSnapshotCalls": 0
+    },
+    "externalNumericEvidence": {
+      "commit": "e54d3cd3804c74cdc65117929a92194fb2401a2d",
+      "blob": "5b61ceb9f61ec195103c0b4e17d762f88362aa78",
+      "sha256": "97e1fb2f52b9af390bfef0f9c57f0b3e80426ea62b7d605ffea2607299da1c95",
+      "integrated": false
+    }
+  },
+  "finalStructuralFailed": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+    "snapshot": "257131acc945a0423a245bd5ec9cfc5bec96f67d",
+    "tree": "fa87a6d9db2a721097bdfd57aae07b2ad05b519e",
+    "wrapper": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+    "request": "c58fdb289d1a7e3efeb485c4df62753c721704cf",
+    "run": 45305135807,
+    "status": "completed",
+    "outerGates": 10,
+    "result": "failure",
+    "outerPassed": 9,
+    "outerFailed": 1,
+    "internalPassed": 273,
+    "internalAssertions": 2900,
+    "reason": "Agent-scratch rejected a disposable job log; two double-cast warnings were also resolved afterward.",
+    "ledger": {
+      "path": "docs/qa/round-four/structural-45305135807/failure-ledger.json",
+      "sha256": "be2bc682b2d6661883d01edd7c48f64d090e15faafa08b9a6e86c39d20cb1f61"
+    }
+  },
+  "freshTupleDetailDiagnosis": {
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "snapshot": "4888d1a60e3ff11caa877415cce08d837d3dfe38",
+    "tree": "4d6221b23ebbeff7b5e6f57db0486413a9e51c10",
+    "branch": "ci-run-r4tupledetail",
+    "markers": [
+      184,
+      47,
+      27,
+      22
+    ],
+    "rootStrip": [
+      {
+        "path": "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "sha": "4ddc7a57b00dbe2d9c1b36e72458a2435abe273e",
+        "stripRestoresParent": true,
+        "originalChars": 7531,
+        "observedChars": 8018,
+        "awaitBefore": 0,
+        "awaitAfter": 0
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "a99dab61f946eea52266db166a5d4dac966e059b",
+        "stripRestoresParent": true,
+        "originalChars": 8015,
+        "observedChars": 8177,
+        "awaitBefore": 14,
+        "awaitAfter": 14
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts",
+        "sha": "faaff4cff900c2875ce5d67f027964c8243a5d8e",
+        "stripRestoresParent": true,
+        "originalChars": 9410,
+        "observedChars": 13086,
+        "awaitBefore": 1,
+        "awaitAfter": 1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "62d43078a852dd4338a18083414398e0a81949ae",
+        "stripRestoresParent": true,
+        "originalChars": 69272,
+        "observedChars": 69552,
+        "awaitBefore": 21,
+        "awaitAfter": 21
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "675e73a026723a73083cf3bdaf47db5b1e4169ac",
+        "stripRestoresParent": true,
+        "originalChars": 12162,
+        "observedChars": 12328,
+        "awaitBefore": 16,
+        "awaitAfter": 16
+      }
+    ],
+    "peers": [
+      "round_four_shell: tuple27/helper/relays approved",
+      "round_four_business: materialize22 approved"
+    ],
+    "qualification": false,
+    "launched": true,
+    "run": 45309842507,
+    "status": "in_progress",
+    "countsMeaning": {
+      "admittedUnequal": "Includes first admission.",
+      "baselineRetained": "Cumulative successful retentions; not live-entry count."
+    }
+  },
+  "evidenceLogCleanup": {
+    "commit": "66e547a132a0d26d21f5df9c33b6c7c993ba1736",
+    "removedPaths": [
+      "docs/qa/round-four/preferences-45301362851/sanitized-job.log",
+      "docs/qa/round-four/tuples-45303936643/sanitized-job.log",
+      "docs/qa/round-four/recall-capture-cost-45298731358/numeric-stages.log"
+    ],
+    "scope": "Disposable logs are not part of the product branch. Curated JSON ledgers and hashes remain."
   }
 }
