@@ -13,7 +13,9 @@
     "original_ui61_copy_blob": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
     "product_test_inherited_blob": "dee8cd9e9f56e11ed1f66967b2711a4c8b68f3b8",
     "rebase_checkpoint": "b5c6bac0b527e472a7c1f1bc455c826ee528cd6f",
-    "ledger_parent": "82c252229679304e71f480d17780925ce7f5471b"
+    "ledger_parent": "82c252229679304e71f480d17780925ce7f5471b",
+    "playwright_config_blob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+    "base_playwright_config_blob": "d935c68f5b996c0e53195ec832b969c217fcf858"
   },
   "execution": {
     "run_id": 45319878197,
@@ -47,7 +49,28 @@
       "passed": 0,
       "failed": 1,
       "qualification": false
-    }
+    },
+    "runner_overrides_observed": [
+      {
+        "line": 994,
+        "flag": "--workers",
+        "value": 1,
+        "format": "other"
+      },
+      {
+        "line": 994,
+        "flag": "--retries",
+        "value": 0,
+        "format": "other"
+      },
+      {
+        "line": 994,
+        "flag": "--repeat-each",
+        "value": 1,
+        "format": "other"
+      }
+    ],
+    "runner_override_evidence": "Completed job command line explicitly supplied --workers 1, --retries 0 and --repeat-each 1; these override the base Playwright config."
   },
   "collection": {
     "source": "Completed GitHub workflow job logs through GitHub MCP.",
