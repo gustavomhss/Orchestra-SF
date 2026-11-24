@@ -68,8 +68,8 @@ async function selectorFixture(deadline: Deadline) {
   })
   const request = () => new Request("https://selector.example.test/read", { signal: deadline.signal })
   const reset = () => { control.active = true; control.actor = { ...actor }; control.calls = []; control.before = undefined }
-  const observe = async <Value>(namespace: SfStateNamespace, read: Read<Value>) => {
-    try { return { value: await port.read(request(), namespace, read) } }
+  const observe = async <Value>(namespace: SfStateNamespace, read: Read<Value>, incoming = request()) => {
+    try { return { value: await port.read(incoming, namespace, read) } }
     catch (error) { return { error: error instanceof Error ? { name: error.name, message: error.message } : String(error) } }
   }
   return { store, port, control, request, reset, observe, call: frozenContext() }
@@ -221,7 +221,7 @@ test("C08 capture selectors keep opaque contexts, readers and descriptors on the
       { name: "frozen native case getter", context: (counts) => {
         const binding = Object.freeze(Object.defineProperty({ ...f.call.binding }, "caseId",
           { enumerable: true, get: () => { counts.getters++; return "selected" } }))
-        return Object.freeze({ kind: "native", binding, lease: {} }) as TrustedDomainContext
+        return Object.freeze({ kind: "native", binding, lease: {} }) as unknown as TrustedDomainContext
       } },
     ]
     for (const kind of ["cases", "atlas"] as const) for (const entry of contexts) {
@@ -251,7 +251,7 @@ test("C08 capture selectors keep opaque contexts, readers and descriptors on the
             { enumerable: true, get: () => { counts.fullClones++; return "cloneable" } })
         }
         const namespace = entry.wrongNamespace ? kind === "cases" ? "atlas" : "cases" : kind
-        const observed = await f.observe(namespace, opaque || entry.wrap ? (state, actor) => atlasRead(state, actor) : atlasRead)
+        const observed = await f.observe<unknown>(namespace, opaque || entry.wrap ? (state, actor) => atlasRead(state, actor) : atlasRead)
         expect(counts.fullClones).toBe(1)
         expect(counts.projects).toBe(1)
         expect(f.control.calls).toEqual([{ namespace, mode: "read" }, { namespace, mode: "read" }])
@@ -297,12 +297,161 @@ test("C08 capture selectors keep opaque contexts, readers and descriptors on the
         const read = kind === "cases"
           ? selectSfCaseProjection("selected", f.call, (value, actor) => { counts.projects++; return { value, actor } })
           : selectSfAtlasPartition("owner", f.call, (partition, outbox, actor) => { counts.projects++; return { value: { partition, outbox }, actor } })
-        const observed = await f.observe(kind, opaque ? (state, actor) => read(state, actor) : read)
+        const observed = await f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
         return { observed, counts, authorizations: [...f.control.calls] }
       }
       const baseline = await run(true), projected = await run(false)
       expect({ kind, shape, ...projected }).toEqual({ kind, shape, ...baseline })
       if (!shape.startsWith("proxy")) expect(projected.counts.fullClones).toBe(1)
+    }
+  } finally { await deadline.close() }
+}, 15_000)
+
+test("C08 capture projections preserve refusal, asynchronous egress and cancellation without replay", async () => {
+  const deadline = compositionTestDeadline("atlas-selector-authority", 12_000)
+  try {
+    const f = await selectorFixture(deadline)
+    for (const kind of ["cases", "atlas"] as const) {
+      for (const attack of ["admission denied", "revoke in callback", "revision after await", "throw", "abort"] as const) {
+        const run = async (opaque: boolean) => {
+          f.reset()
+          let projects = 0
+          const cancelled = new AbortController()
+          const project = async (value: unknown) => {
+            projects++
+            expect(f.control.calls).toHaveLength(1)
+            if (attack === "throw") throw new Error("Canonical projector failed")
+            if (attack === "revoke in callback") f.control.active = false
+            if (attack === "revision after await") { await Promise.resolve(); f.control.actor.accessRevision = "changed" }
+            if (attack === "abort") cancelled.abort(new Error("Canonical request cancelled"))
+            return value
+          }
+          const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, project)
+            : selectSfAtlasPartition("owner", f.call, (partition, outbox) => project({ partition, outbox }))
+          if (attack === "admission denied") f.control.active = false
+          const observed = await f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read,
+            new Request("https://selector.example.test/read", { signal: attack === "abort" ? cancelled.signal : deadline.signal }))
+          expect(projects).toBe(attack === "admission denied" ? 0 : 1)
+          expect(f.control.calls).toHaveLength(attack === "revoke in callback" || attack === "revision after await" ? 2 : 1)
+          if ("value" in observed) expect(observed.value?.status).not.toBe("ok")
+          if (attack === "admission denied") expect(observed).toEqual({ value: { status: "denied", reason: "product-access-unavailable" } })
+          if (attack === "revoke in callback" || attack === "revision after await")
+            expect(observed).toEqual({ value: { status: "denied", reason: "product-authority-changed" } })
+          return { observed, projects, authorizations: [...f.control.calls] }
+        }
+        expect({ kind, attack, ...await run(false) }).toEqual({ kind, attack, ...await run(true) })
+      }
+
+      for (const opaque of [true, false]) {
+        f.reset()
+        const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+        let projects = 0
+        const project = async (value: unknown) => {
+          projects++
+          entered.resolve()
+          await release.promise
+          return value
+        }
+        const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, project)
+          : selectSfAtlasPartition("owner", f.call, (partition, outbox) => project({ partition, outbox }))
+        const pending = f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
+        try {
+          await entered.promise
+          expect(projects).toBe(1)
+          expect(f.control.calls).toHaveLength(1)
+          f.control.active = false
+          release.resolve()
+          expect(await pending).toEqual({ value: { status: "denied", reason: "product-authority-changed" } })
+          expect(f.control.calls).toHaveLength(2)
+          expect(projects).toBe(1)
+        } finally { release.resolve(); await pending }
+      }
+
+      const runDetached = async (opaque: boolean) => {
+        f.reset()
+        f.control.before = (snapshot, count) => {
+          if (count !== 2) return
+          const stored = snapshot.data.__sfProductV1 as SfProductState
+          expect(stored.cases.selected?.objective).toBe("Complete original case")
+          expect(stored.atlas.owner).toEqual({ marker: "selected", rows: [{ amount: 12 }] })
+          expect(stored.outbox).toEqual({})
+        }
+        const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, async (value) => {
+          await Promise.resolve()
+          if (value) value.objective = "Detached during asynchronous work"
+          return value
+        }) : selectSfAtlasPartition("owner", f.call, async (partition, outbox) => {
+          await Promise.resolve()
+          if (partition && typeof partition === "object") Reflect.set(partition, "marker", "Detached during asynchronous work")
+          Reflect.set(outbox, "detached", { caller: true })
+          return { partition, outbox }
+        })
+        const observed = await f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
+        expect(f.control.calls).toHaveLength(2)
+        return observed
+      }
+      expect(await runDetached(false)).toEqual(await runDetached(true))
+    }
+  } finally { await deadline.close() }
+}, 15_000)
+
+test("C08 capture selectors retain complete state validation and selected clone behaviour", async () => {
+  const deadline = compositionTestDeadline("atlas-selector-state", 12_000)
+  try {
+    const f = await selectorFixture(deadline)
+    const invalid: { name: string; change: (snapshot: Snapshot, state: SfProductState) => void }[] = [
+      { name: "uninitialized", change: (snapshot) => { delete snapshot.data.__sfProductV1 } },
+      { name: "schema", change: (_snapshot, state) => { Reflect.set(state, "schemaVersion", 2) } },
+      { name: "revision", change: (_snapshot, state) => { state.revision = -1 } },
+      { name: "namespace version", change: (_snapshot, state) => { Reflect.set(state.versions, "documents", undefined) } },
+      { name: "unrelated namespace", change: (_snapshot, state) => { Reflect.set(state, "documents", []) } },
+      { name: "outbox", change: (_snapshot, state) => { Reflect.set(state, "outbox", null) } },
+      { name: "additive field", change: (_snapshot, state) => { Reflect.set(state, "biArtifacts", null) } },
+    ]
+    for (const kind of ["cases", "atlas"] as const) {
+      for (const entry of invalid) {
+        const run = async (opaque: boolean) => {
+          f.reset()
+          let projects = 0
+          f.control.before = (snapshot, count) => { if (count === 1) entry.change(snapshot, snapshot.data.__sfProductV1 as SfProductState) }
+          const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, (value) => { projects++; return value })
+            : selectSfAtlasPartition("owner", f.call, (partition, outbox) => { projects++; return { partition, outbox } })
+          const observed = await f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
+          expect(observed).toEqual({ value: { status: "unavailable", reason: entry.name === "uninitialized" ? "product-state-uninitialized" : "invalid-product-state" } })
+          expect(projects).toBe(0)
+          expect(f.control.calls).toHaveLength(1)
+          return observed
+        }
+        expect(await run(false)).toEqual(await run(true))
+      }
+      for (const shape of ["legacy", "getter", "throwing getter", "uncloneable selected"] as const) {
+        const run = async (opaque: boolean) => {
+          f.reset()
+          let getters = 0, projects = 0
+          f.control.before = (snapshot, count) => {
+            if (count !== 1) return
+            const state = snapshot.data.__sfProductV1 as SfProductState
+            if (shape === "legacy") { Reflect.deleteProperty(state.versions, "bi-artifacts"); delete state.biArtifacts; return }
+            const selected = kind === "cases" ? state.cases.selected! : state.atlas.owner as object
+            if (shape === "uncloneable selected") { Reflect.set(selected, "uncloneable", () => undefined); return }
+            Object.defineProperty(selected, "cloneValue", { enumerable: true, get: () => {
+              getters++
+              if (shape === "throwing getter") throw new Error("Selected getter failed")
+              return { original: true }
+            } })
+          }
+          const read = kind === "cases" ? selectSfCaseProjection("selected", f.call, (value) => { projects++; return value })
+            : selectSfAtlasPartition("owner", f.call, (partition, outbox) => { projects++; return { partition, outbox } })
+          const observed = await f.observe<unknown>(kind, opaque ? (state, actor) => read(state, actor) : read)
+          const accepted = shape === "legacy" || shape === "getter"
+          expect(projects).toBe(accepted ? 1 : 0)
+          expect(f.control.calls).toHaveLength(accepted ? 2 : 1)
+          expect(getters).toBe(shape === "getter" || shape === "throwing getter" ? 1 : 0)
+          if (accepted) expect(observed).toMatchObject({ value: { status: "ok", storageVersion: 0, aggregateRevision: 0, incarnation: "selector-state" } })
+          return { observed, getters, projects }
+        }
+        expect({ kind, shape, ...await run(false) }).toEqual({ kind, shape, ...await run(true) })
+      }
     }
   } finally { await deadline.close() }
 }, 15_000)
