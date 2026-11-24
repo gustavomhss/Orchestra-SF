@@ -3,7 +3,7 @@
   "repository": "gustavomhss/Orchestra-SF",
   "pr": 718,
   "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
-  "productSource": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+  "productSource": "118925fc4913fbdf5345cc3999c1b16e53252883",
   "status": "qualification-in-progress-original-http-pending",
   "distinctIssues": [
     {
@@ -279,10 +279,10 @@
       }
     ],
     "pending": [
-      "Original Materiality and Recall requests still exceed the unchanged 40-second guard; reviewed numeric diagnostics preserve original bodies and deadlines.",
-      "Complete original Memory5 must pass after repairs; pre-horizon run45279587191 returned one pass and four failures.",
-      "Complete final 16-file/49-case producer and Atlas cohort after source freeze.",
-      "Final structural gates against exact current dev, documentation and merge."
+      "Original Materiality and Recall requests still exceed the unchanged 40-second guard; the latest full original Memory5 returned two passes and three failures, including a 300000ms UI63 case timeout.",
+      "Complete original Memory5 must pass on the repaired composed product; latest trace and 16 original image review is pending while the local environment is unavailable.",
+      "Complete final 18-file/59-case producer and Atlas cohort after source freeze; previous18/57 qualification is retained on its exact older source.",
+      "Final structural gates against exact current dev, documentation and normal merge."
     ],
     "supersededScopes": [
       {
@@ -13540,8 +13540,8 @@
     "ledgerSha256": "c333a48f89c44641cac663674cbd3a3cf03dced9b26dc5139ae1619d1e127204"
   },
   "currentCandidate": {
-    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
-    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "tree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
     "integrations": [
       {
         "sha": "f6887fe232973d693f26d0394b057f0de4c2ffb2",
@@ -13757,6 +13757,14 @@
         "productCommit": "df8c7d1b45cf68c098e669fecb68f1759617fe15",
         "scope": "Preserve the complete fresh descriptor walk; use own reads only for the private detached counterpart and one per-call visiting/completed map. All original pins/lifecycle/canonical calls remain.",
         "run": 45312811007
+      },
+      {
+        "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+        "tree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
+        "parent": "8b390cebd0c78bbda0b181445e0899a2bfbce1e8",
+        "scope": "Restore the private counterpart prototype guard after a retargeted shared-buffer view counterexample; add one real Bun control while retaining the complete previous five cases.",
+        "qualificationRun": 45319370572,
+        "qualificationStatus": "in_progress"
       }
     ],
     "structural": {
@@ -16151,8 +16159,8 @@
     ]
   },
   "checkpoint": {
-    "productSource": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
-    "productTree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "productSource": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "productTree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
     "status": "qualification-in-progress-original-http-pending",
     "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "browserCases": 105,
@@ -16163,7 +16171,7 @@
     "visualFindings": 16,
     "loadingFindings": 3,
     "automatedSharedCasesAwaitingVisualRepair": 0,
-    "recordedAt": "2026-11-24 02:45:18 UTC"
+    "recordedAt": "2026-11-24 03:26:35 UTC"
   },
   "observerBoundaryRepair": {
     "sha": "81a072807ab48f345862200d4548b4415c055d32",
@@ -23647,7 +23655,8 @@
       "commit": "197ddf49823c92e3db601ccd6b0b923214b96f2b"
     },
     "reassessmentAfterInspectionPending": true,
-    "nextExpectedCases": 58
+    "nextExpectedCases": 59,
+    "reassessmentAfterCloneBrandPending": true
   },
   "preferencesProjectionCandidate": {
     "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
@@ -23701,7 +23710,7 @@
     "snapshot": "5c6332da9bafa7f50dd33ad829a0aca77681e148",
     "tree": "71e00ec297f1913cdbc6c3725f79cae9b99cb8c9",
     "run": 45312850453,
-    "status": "in_progress",
+    "status": "completed",
     "spec": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
     "originalSpecUnchanged": true,
     "cases": 5,
@@ -23721,14 +23730,84 @@
     },
     "newQualifiedCases": 0,
     "newReviewedImages": 0,
-    "fullCohortQualified": false
+    "fullCohortQualified": false,
+    "result": "failure",
+    "passed": 2,
+    "failed": 3,
+    "caseResults": [
+      {
+        "area": "UI61",
+        "status": "failed",
+        "durationMs": 282545,
+        "startTime": "2026-11-24T02:32:17.851Z",
+        "firstObservedFailure": "Original Materiality GET exceeded 40s; later Portuguese navigation exceeded 15s.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI62",
+        "status": "failed",
+        "durationMs": 286636,
+        "startTime": "2026-11-24T02:39:04.084Z",
+        "firstObservedFailure": "Original similar-case response exceeded 40s; later Portuguese navigation exceeded 15s.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI63",
+        "status": "timedOut",
+        "durationMs": 301440,
+        "startTime": "2026-11-24T02:45:58.424Z",
+        "firstObservedFailure": "Run log records an html attribute assertion in scheme() at final-memory.spec.ts:405. Runtime reports the original 300000ms test timeout; subsequent Portuguese work observed a closed context.",
+        "causalAttribution": "No visual regression or helper causation established; trace review pending.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI67",
+        "status": "passed",
+        "durationMs": 69308,
+        "startTime": "2026-11-24T02:53:03.717Z",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI69",
+        "status": "passed",
+        "durationMs": 188294,
+        "startTime": "2026-11-24T02:56:12.487Z",
+        "retry": 0,
+        "timeoutMs": 300000
+      }
+    ],
+    "ledger": {
+      "path": "docs/qa/round-four/memory5-inspect-45312850453/qualification-ledger.json",
+      "blob": "aece5a7ac24d7658a8c81120c1f82e1f7f5564c1",
+      "sha256": "937833c06792bb9b2f2b66ba8dd68b19668d73c326d97ccc1b337027afa442ef"
+    },
+    "artifact": {
+      "id": 14884494464,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 36426918,
+      "sha256": "5cf76deb84d6f2a5b472dfb22b8672774a27812db42b4880eecec5c702a33c1d",
+      "apiDigestMatchedDownloadedArchive": true,
+      "archiveEntries": 61,
+      "apiUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14884494464",
+      "expired": false
+    },
+    "extractedOriginalImages": 16,
+    "reviewedOriginalImages": 0,
+    "traceReview": "pending-environment-unavailable",
+    "qualificationBoundary": "Failed complete cohort. UI63 exceeded its original300000ms case budget; no visual regression or causal attribution is established. No new HTTP latency/body claim is inferred without trace review.",
+    "nextRequiredProduct": "118925fc4913fbdf5345cc3999c1b16e53252883"
   },
   "finalStructural": {
-    "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
-    "sourceTree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
-    "snapshot": "f66fa93937e96104e6d1e702b0fcc50565c22c7c",
-    "tree": "64e429a83c3af64b00eef98c4e253e1debe224d7",
-    "run": 45307709747,
+    "source": "4f1f8d9713f93697e74950d88a8ca84132447eb2",
+    "sourceTree": "51aea46967212b04416178628a7a97098a943594",
+    "productSource": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "snapshot": "6101059efe3078daf95ca4eeef2be64b358c8e21",
+    "tree": "fc5e97a238d9e4662b07bb1bb07f8c893093d1a6",
+    "run": 45315257543,
     "status": "completed",
     "result": "success",
     "outerGates": 12,
@@ -23738,7 +23817,7 @@
     "typechecks": 4,
     "guards": {
       "rules": 78,
-      "files": 99,
+      "files": 108,
       "findings": 0,
       "errors": 0,
       "approved": 0
@@ -23753,10 +23832,12 @@
       "delegated": 0
     },
     "ledger": {
-      "path": "docs/qa/round-four/typed-structural-45307709747/qualification-ledger.json",
-      "sha256": "abeff06eeaa86c96f2f5e3dd576340ad34d28d950ccb800f056bf018c37f822a"
+      "path": "docs/qa/round-four/structural-inspect-45315257543/qualification-ledger.json",
+      "commit": "531bddcee638e2352e418615ba74527c1103cedf"
     },
-    "reassessmentAfterInspectionPending": true
+    "reassessmentAfterInspectionPending": false,
+    "reassessmentAfterCloneBrandPending": true,
+    "nextRequiredProduct": "118925fc4913fbdf5345cc3999c1b16e53252883"
   },
   "localStoreCostDiagnosis": {
     "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
@@ -23965,7 +24046,12 @@
       "delegated": 0,
       "ledger": "docs/qa/sucafina/round-four/tuple-inspect-45312811007/qualification-ledger.json"
     },
-    "httpGainQualified": false
+    "httpGainQualified": false,
+    "reviewLimitation": {
+      "counterexample": "A SharedArrayBuffer-backed TypedArray retargeted to Object.prototype can retain its intrinsic brand and shared backing storage when cloned; comparing its mutable private counterpart without a prototype guard can admit an old digest.",
+      "focusedFiveCasesDidNotCoverCounterexample": true,
+      "repairProduct": "118925fc4913fbdf5345cc3999c1b16e53252883"
+    }
   },
   "previousFinalMemoryRequalification": {
     "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
@@ -24041,5 +24127,90 @@
       "blob": "7bf7066784e94ad638ac595d31a70eb67c612722",
       "sha256": "9b187fe1c585fe839e09cc4f00eb31b32cce364b696c690995408812ddf62c3f"
     }
+  },
+  "previousFinalStructural": {
+    "source": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+    "sourceTree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c",
+    "snapshot": "f66fa93937e96104e6d1e702b0fcc50565c22c7c",
+    "tree": "64e429a83c3af64b00eef98c4e253e1debe224d7",
+    "run": 45307709747,
+    "status": "completed",
+    "result": "success",
+    "outerGates": 12,
+    "outerAssertions": 19,
+    "internalCases": 283,
+    "internalAssertions": 3709,
+    "typechecks": 4,
+    "guards": {
+      "rules": 78,
+      "files": 99,
+      "findings": 0,
+      "errors": 0,
+      "approved": 0
+    },
+    "palettes": {
+      "files": 7,
+      "changed": 0
+    },
+    "omni": {
+      "declared": 12,
+      "spawns": 14,
+      "delegated": 0
+    },
+    "ledger": {
+      "path": "docs/qa/round-four/typed-structural-45307709747/qualification-ledger.json",
+      "sha256": "abeff06eeaa86c96f2f5e3dd576340ad34d28d950ccb800f056bf018c37f822a"
+    },
+    "reassessmentAfterInspectionPending": true
+  },
+  "freshTupleCloneBrandCandidate": {
+    "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "tree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
+    "productBlob": "1e1c38ccb22f89708742de354e97a4f8f73da2df",
+    "controlBlob": "dee8cd9e9f56e11ed1f66967b2711a4c8b68f3b8",
+    "scope": "One counterpart prototype condition and explanatory comment; one real shared-buffer mutation control. No fresh descriptor check, canonical call or lifecycle branch removed.",
+    "originalFiveCasesLiteral": true,
+    "originalFiveCharacters": 21682,
+    "totalHelperCases": 6,
+    "newCases": 1,
+    "caseBounds": {
+      "cooperativeMs": 12000,
+      "bunMs": 15000
+    },
+    "qualification": {
+      "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+      "sourceTree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
+      "snapshot": "fa8942d175f5679f8d154029896cfc597fce5434",
+      "tree": "6c61780c9e9935a51d1528abade178020e4b78cf",
+      "branch": "ci-run-r4brand",
+      "scope": "6 complete tuple, original Finance1/Recall5, both typechecks",
+      "run": 45319370572,
+      "status": "in_progress",
+      "expectedGates": 5,
+      "expectedCases": 12,
+      "typechecks": 2
+    },
+    "performanceQualified": false
+  },
+  "materializationExperiment": {
+    "run": 45317453835,
+    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "snapshot": "90a0fad9286e67c2f9458b896491c2088da80ef7",
+    "result": "success",
+    "classification": "active bounded experiment; not product or UI qualification",
+    "decision": "Do not adopt a product codec: no uniform gain.",
+    "gates": 3,
+    "experimentCases": 1,
+    "assertions": 15,
+    "typechecks": 2,
+    "samples": 3,
+    "completeParityChecks": 18,
+    "detachmentChecks": 6,
+    "ledger": {
+      "path": "docs/qa/round-four/materialization-experiment-45317453835/experiment-ledger.json",
+      "blob": "8fa081ddf439f6b5d176af459795029054e18f2a",
+      "sha256": "860ae4f55b441f28f78d1f7ec1e2e68b6a75341c676679fb9f0ad2a0a7150f99"
+    },
+    "productCodeIntegrated": false
   }
 }
