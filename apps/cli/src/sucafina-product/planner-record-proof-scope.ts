@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { sfRecallCost, sfRecallAsyncCost } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
 import { types } from "node:util"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -53,33 +54,33 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
   const observe = async (ref: BusinessEvidenceRef, call: TrustedDomainContext,
     readCanonical: () => Promise<BusinessEvidenceResolution>): Promise<BusinessEvidenceResolution> => {
     const frame = frames.getStore()
-    if (!frame) return readCanonical()
+    if (!frame) return sfRecallAsyncCost("proof-canonical", () => readCanonical())
     const refused = (): BusinessEvidenceResolution => {
       frame.invalid = true
-      return { state: "unavailable", ref: structuredClone(ref), accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
+      return { state: "unavailable", ref: sfRecallCost("proof-clone", () => structuredClone(ref)), accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
     }
     let key: string | undefined, entered = false
     try {
-      if (frame.call !== call || !frame.current() || !terminal(ref)) return refused()
-      const captured = structuredClone(ref)
-      key = digestSfValue(captured)
+      if (frame.call !== call || !sfRecallCost("proof-frame-current", () => frame.current()) || !terminal(ref)) return refused()
+      const captured = sfRecallCost("proof-clone", () => structuredClone(ref))
+      key = sfRecallCost("proof-refs-digest", () => digestSfValue(captured))
       if (!frame.refs.has(key) || frame.busy.has(key)) return refused()
       frame.busy.add(key)
       entered = true
-      const current = () => frame.current() && frame.call === call && digestSfValue(ref) === key && digestSfValue(captured) === key
-      if (!await frame.authorize() || !current()) return refused()
+      const current = () => sfRecallCost("proof-frame-current", () => frame.current()) && frame.call === call && sfRecallCost("proof-refs-digest", () => digestSfValue(ref)) === key && sfRecallCost("proof-refs-digest", () => digestSfValue(captured)) === key
+      if (!await sfRecallAsyncCost("proof-authorize", () => frame.authorize()) || !sfRecallCost("proof-leaf-current", () => current())) return refused()
       const existing = frame.values.get(key)
-      if (existing) return structuredClone(existing)
-      const result = await readCanonical()
-      if (!current()) return refused()
-      const value = structuredClone(result), resultDigest = digestSfValue(value)
+      if (existing) return sfRecallCost("proof-cache-hit", () => sfRecallCost("proof-clone", () => structuredClone(existing)))
+      const result = await sfRecallAsyncCost("proof-canonical", () => readCanonical())
+      if (!sfRecallCost("proof-leaf-current", () => current())) return refused()
+      const value = sfRecallCost("proof-clone", () => structuredClone(result)), resultDigest = sfRecallCost("proof-refs-digest", () => digestSfValue(value))
       if (value.state !== "fresh" || !value.currentRef || !value.authorizedProjection || value.accessRevision !== call.binding.accessRevision ||
-        digestSfValue(value.ref) !== key || digestSfValue(value.currentRef) !== key) return refused()
-      if (!await frame.authorize() || !current() || resultDigest !== digestSfValue(result)) return refused()
+        sfRecallCost("proof-refs-digest", () => digestSfValue(value.ref)) !== key || sfRecallCost("proof-refs-digest", () => digestSfValue(value.currentRef)) !== key) return refused()
+      if (!await sfRecallAsyncCost("proof-authorize", () => frame.authorize()) || !sfRecallCost("proof-leaf-current", () => current()) || resultDigest !== sfRecallCost("proof-refs-digest", () => digestSfValue(result))) return refused()
       // Keep the producer's timestamps and bytes. Reauthorization is separate
       // from the completed observation and never pretends a new source read ran.
       frame.values.set(key, value)
-      return structuredClone(value)
+      return sfRecallCost("proof-clone", () => structuredClone(value))
     } catch { return refused() }
     finally { if (entered && key !== undefined) frame.busy.delete(key) }
   }
@@ -91,28 +92,28 @@ export function createSfPlannerRecordProofScope(input: { host: DomainPortHost; r
     try {
       // Opaque/older compositions retain every original producer. Once an owner
       // is admitted, failure never replays that producer outside its scope.
-      if (!proof) return await work()
+      if (!proof) return await sfRecallAsyncCost("proof-work", () => work())
       const owner = readSfPlannerCalculationRootProof(proof, host, call)
-      if (!owner || !owner.current() || !unchanged()) return unavailable()
-      if (!readersCurrent()) return await work()
+      if (!owner || !sfRecallCost("proof-owner-current", () => owner.current()) || !sfRecallCost("proof-unchanged", () => unchanged())) return unavailable()
+      if (!sfRecallCost("proof-readers-current", () => readersCurrent())) return await sfRecallAsyncCost("proof-work", () => work())
       if (!refs.length || !refs.every(terminal)) return unavailable()
-      const refsDigest = digestSfValue(refs), admitted = new Set(refs.map((ref) => digestSfValue(ref)))
+      const refsDigest = sfRecallCost("proof-refs-digest", () => digestSfValue(refs)), admitted = new Set(refs.map((ref) => sfRecallCost("proof-refs-digest", () => digestSfValue(ref))))
       const frame: Frame = { open: true, invalid: false, call, refs: admitted, busy: new Set(), values: new Map(), authorize,
         current: () => {
           if (frame.invalid) return false
           try {
             const valid = frame.open && frames.getStore() === frame && input.host === host && input.readersCurrent === readersCurrent &&
-              readersCurrent() && owner.current() && unchanged() && digestSfValue(refs) === refsDigest
+              sfRecallCost("proof-readers-current", () => readersCurrent()) && sfRecallCost("proof-owner-current", () => owner.current()) && sfRecallCost("proof-unchanged", () => unchanged()) && sfRecallCost("proof-refs-digest", () => digestSfValue(refs)) === refsDigest
             if (!valid) frame.invalid = true
             return valid
           } catch { frame.invalid = true; return false }
         } }
       try {
-        return await frames.run(frame, async () => {
-          if (!frame.current()) return unavailable()
-          const result = await work()
-          return frame.current() && frame.busy.size === 0 ? result : unavailable()
-        })
+        return await sfRecallAsyncCost("proof-frame-admitted", () => frames.run(frame, async () => {
+          if (!sfRecallCost("proof-frame-current", () => frame.current())) return unavailable()
+          const result = await sfRecallAsyncCost("proof-work", () => work())
+          return sfRecallCost("proof-frame-current", () => frame.current()) && frame.busy.size === 0 ? result : unavailable()
+        }))
       } finally { frame.open = false; frame.values.clear(); frame.busy.clear() }
     } catch { return unavailable() }
   }

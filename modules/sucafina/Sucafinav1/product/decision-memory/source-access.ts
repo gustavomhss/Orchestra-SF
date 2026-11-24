@@ -1,4 +1,5 @@
 import { roleMap } from "../../runtime/admin.ts"
+import { sfRecallCost, sfRecallAsyncCost } from "../host-binding/recall-observation-cost.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
@@ -179,31 +180,31 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; sta
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
       if (ref.kind !== "case-event" || ancestors.has(ref.refDigest) || ancestors.size > 16 || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
-      sfEvidenceSourceMaps([ref])
+      sfRecallCost("event-source-maps", () => sfEvidenceSourceMaps([ref]))
       if (!Number.isSafeInteger(ref.target.caseVersion) || ref.target.caseVersion < 1 || !ref.target.eventId.trim() || !/^[a-f0-9]{64}$/i.test(ref.target.outputDigest)) return unavailable()
       const request = input.host.requestFor(call)
-      if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
-      const now = await input.host.environment(request)
+      if (!request || request.signal.aborted || !await sfRecallAsyncCost("event-auth", () => input.host.revalidate(call))) return unavailable()
+      const now = await sfRecallAsyncCost("event-environment", () => input.host.environment(request))
       if (!Number.isFinite(Date.parse(now.at))) return unavailable()
-      const binding = digestSfValue([call.kind, call.binding])
+      const binding = sfRecallCost("event-digest", () => digestSfValue([call.kind, call.binding]))
       const target = ref.target
       const ancestry = new Set([...ancestors, ref.refDigest])
       const read = async () => {
-        const result = await input.state.read(request, "cases", (state, authority) => authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision && authority.policyVersion === call.binding.policyVersion ? state.cases[target.caseId] : undefined)
+        const result = await sfRecallAsyncCost("event-state", () => input.state.read(request, "cases", (state, authority) => authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision && authority.policyVersion === call.binding.policyVersion ? state.cases[target.caseId] : undefined))
         if (result.status !== "ok" || !result.value) return undefined
         const value = result.value
-        if (value.id !== target.caseId || value.incarnation !== target.caseIncarnation || value.version < target.caseVersion || !value.participants.includes(call.binding.principalRef) || (call.kind === "native" && (call.binding.caseId !== value.id || call.binding.caseIncarnation !== value.incarnation || call.binding.caseVersion !== value.version)) || !await input.authorizeCase(value, call)) return undefined
+        if (value.id !== target.caseId || value.incarnation !== target.caseIncarnation || value.version < target.caseVersion || !value.participants.includes(call.binding.principalRef) || (call.kind === "native" && (call.binding.caseId !== value.id || call.binding.caseIncarnation !== value.incarnation || call.binding.caseVersion !== value.version)) || !await sfRecallAsyncCost("event-authorize-case", () => input.authorizeCase(value, call))) return undefined
         const ledger = value.ledger.filter((event) => event.id === target.eventId)
         if (ledger.length !== 1) return undefined
         const event = ledger[0]!
-        if (event.caseRef.id !== target.caseId || event.caseRef.incarnation !== target.caseIncarnation || event.caseRef.version !== target.caseVersion || event.outputDigest !== target.outputDigest || digestSfValue(event.evidenceRefs) !== digestSfValue(target.evidenceRefs)) return undefined
-        if (!await input.authorizeEvidence(event.evidenceRefs, call, ancestry)) return undefined
+        if (event.caseRef.id !== target.caseId || event.caseRef.incarnation !== target.caseIncarnation || event.caseRef.version !== target.caseVersion || event.outputDigest !== target.outputDigest || sfRecallCost("event-digest", () => digestSfValue(event.evidenceRefs)) !== sfRecallCost("event-digest", () => digestSfValue(target.evidenceRefs))) return undefined
+        if (!await sfRecallAsyncCost("event-authorize-evidence", () => input.authorizeEvidence(event.evidenceRefs, call, ancestry))) return undefined
         return { event, caseVersion: value.version, storageVersion: result.storageVersion }
       }
-      const event = await read()
-      if (!event || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
-      const again = await read()
-      if (!again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.host.revalidate(call)) return unavailable(now.at)
+      const event = await sfRecallAsyncCost("event-read-first", read)
+      if (!event || request.signal.aborted || !await sfRecallAsyncCost("event-auth", () => input.host.revalidate(call))) return unavailable(now.at)
+      const again = await sfRecallAsyncCost("event-read-second", read)
+      if (!again || sfRecallCost("event-digest", () => digestSfValue(event)) !== sfRecallCost("event-digest", () => digestSfValue(again)) || request.signal.aborted || sfRecallCost("event-digest", () => digestSfValue([call.kind, call.binding])) !== binding || !await sfRecallAsyncCost("event-auth", () => input.host.revalidate(call))) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: ref, authorizedProjection: event.event, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {
       return unavailable()

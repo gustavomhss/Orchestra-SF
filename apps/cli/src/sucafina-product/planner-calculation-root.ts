@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { sfRecallCost, sfRecallAsyncCost } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { currentSfPlannerReadonlySnapshotScope, currentSfReadonlySnapshotScope, hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
@@ -56,22 +57,22 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
       const authenticate = host.authenticate, environment = host.environment
       const request = requestFor.call(host, call), binding = call.binding, lease = call.lease
       if (!request || request.signal.aborted) return undefined
-      const identity = digestSfValue([call.kind, binding]), headers = plannerRequestIdentity(request)
+      const identity = sfRecallCost("root-binding-digest", () => digestSfValue([call.kind, binding])), headers = sfRecallCost("root-request-identity", () => plannerRequestIdentity(request))
       const pinned = () => input.host === host && host.persistence === persistence &&
         persistence.readSnapshotRoot === root && persistence.currentSnapshots === snapshots &&
         persistence.transaction === transaction && persistence.transactionAll === transactionAll &&
         persistence.currentSnapshotScope === snapshotScope && host.requestFor === requestFor &&
         host.revalidate === revalidate && host.authenticate === authenticate && host.environment === environment &&
-        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === identity &&
-        !request.signal.aborted && requestFor.call(host, call) === request && plannerRequestIdentity(request) === headers && ownerCurrent()
-      const current = () => pinned() && unchanged()
+        call.binding === binding && call.lease === lease && sfRecallCost("root-binding-digest", () => digestSfValue([call.kind, call.binding])) === identity &&
+        !request.signal.aborted && requestFor.call(host, call) === request && sfRecallCost("root-request-identity", () => plannerRequestIdentity(request)) === headers && sfRecallCost("root-owner-current", () => ownerCurrent())
+      const current = () => sfRecallCost("root-pinned", () => pinned()) && unchanged()
       const live = () => {
         const local = hasSfLocalSnapshotScope(persistence)
         if (local !== undefined) return local
         const value = snapshots.call(persistence)
         return value !== undefined && value !== null && typeof value === "object"
       }
-      if (!current()) return undefined
+      if (!sfRecallCost("root-current", () => current())) return undefined
       const local = hasSfLocalSnapshotScope(persistence)
       const inherited = local === undefined ? snapshots.call(persistence) : undefined
       const present = () => hasSfLocalSnapshotScope(persistence) ?? snapshots.call(persistence) !== undefined
@@ -83,54 +84,54 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
         // readonly driver operation checks poison at its exit. These extra
         // observations test health now; they do not accept the foreign root.
         const healthy = async () => {
-          if (!current() || !live()) return false
+          if (!sfRecallCost("root-current", () => current()) || !live()) return false
           let callbacks = 0
           const accepted = await transaction.call(persistence, "planner", async () => {
             callbacks++
-            return { commit: false, value: callbacks === 1 && current() && live() }
+            return { commit: false, value: callbacks === 1 && sfRecallCost("root-current", () => current()) && live() }
           }, { signal: request.signal })
-          return accepted === true && callbacks === 1 && current() && live()
+          return accepted === true && callbacks === 1 && sfRecallCost("root-current", () => current()) && live()
         }
-        if (!await healthy()) return undefined
+        if (!await sfRecallAsyncCost("root-healthy", healthy)) return undefined
         return once(async (work) => {
-          if (!await healthy()) return unavailable()
+          if (!await sfRecallAsyncCost("root-healthy", healthy)) return unavailable()
           const result = await work()
-          return await healthy() ? result : unavailable()
+          return await sfRecallAsyncCost("root-healthy", healthy) ? result : unavailable()
         })
       }
-      if (!await revalidate.call(host, call) || !current()) return undefined
+      if (!await revalidate.call(host, call) || !sfRecallCost("root-current", () => current())) return undefined
       const initialized = await initialize()
       if (initialized !== true && initialized !== "unsupported") return undefined
-      if (!current() || present()) return undefined
+      if (!sfRecallCost("root-current", () => current()) || present()) return undefined
       if (initialized === "unsupported") {
         // Eligibility was inspected without opening a root or warming sources.
         // Preserve the full producer only while these exact observations live.
         return once(async (work) => {
-          if (!current() || present() || !await revalidate.call(host, call) || !current() || present()) return unavailable()
+          if (!sfRecallCost("root-current", () => current()) || present() || !await revalidate.call(host, call) || !sfRecallCost("root-current", () => current()) || present()) return unavailable()
           const result = await work()
-          return current() && !present() && await revalidate.call(host, call) && current() && !present() ? result : unavailable()
+          return sfRecallCost("root-current", () => current()) && !present() && await revalidate.call(host, call) && sfRecallCost("root-current", () => current()) && !present() ? result : unavailable()
         })
       }
       // The caller opens its original full C08/source witness only after this
       // preparation returns. No prepared observation is accepted as evidence.
       return once(async <Value>(work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
-        if (!current() || present()) return unavailable()
+        if (!sfRecallCost("root-current", () => current()) || present()) return unavailable()
         let invocations = 0, completed = false
         let staged: PortResult<Value> | undefined
         const accepted = await root.call(persistence, async () => {
           invocations++
-          if (invocations !== 1 || !current()) return false
-          const native = currentSfPlannerReadonlySnapshotScope(persistence)
+          if (invocations !== 1 || !sfRecallCost("root-current", () => current())) return false
+          const native = sfRecallCost("root-native-lookup", () => currentSfPlannerReadonlySnapshotScope(persistence))
           // A C08 descendant has its own logical scope within this same physical
           // root. Use that scope's original strict current, never a parent-scope
           // closure in the child, and require both original physical identities.
           const healthy = native?.bytesIdentity ? () => {
-            const active = currentSfPlannerReadonlySnapshotScope(persistence)
-            return !!active && active.identity === native.identity && active.bytesIdentity === native.bytesIdentity && active.current()
+            const active = sfRecallCost("root-native-lookup", () => currentSfPlannerReadonlySnapshotScope(persistence))
+            return !!active && active.identity === native.identity && active.bytesIdentity === native.bytesIdentity && sfRecallCost("root-native-current", () => active.current())
           } : currentSfReadonlySnapshotScope(persistence)?.current ?? live
-          if (!healthy()) return false
+          if (!sfRecallCost("root-healthy", () => healthy())) return false
           const owner: Root = { open: true, children: 0, current: (candidate) =>
-            candidate === call && owner.open && roots.getStore() === owner && pinned() && healthy() }
+            candidate === call && owner.open && roots.getStore() === owner && sfRecallCost("root-pinned", () => pinned()) && sfRecallCost("root-healthy", () => healthy()) }
           if (native?.bytesIdentity) {
             const proof = Object.freeze({})
             let failed = false
@@ -146,10 +147,10 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
           }
           try {
             return await roots.run(owner, async () => {
-              if (!owner.current(call) || !current() || !await revalidate.call(host, call) || !owner.current(call) || !current()) return false
+              if (!owner.current(call) || !sfRecallCost("root-current", () => current()) || !await revalidate.call(host, call) || !owner.current(call) || !sfRecallCost("root-current", () => current())) return false
               const result = await work()
-              if (!owner.current(call) || !current() || owner.children || !await revalidate.call(host, call) ||
-                !owner.current(call) || !current() || owner.children) return false
+              if (!owner.current(call) || !sfRecallCost("root-current", () => current()) || owner.children || !await revalidate.call(host, call) ||
+                !owner.current(call) || !sfRecallCost("root-current", () => current()) || owner.children) return false
               // The adapter receives only the Boolean. The product value remains
               // private until LocalStore accepts all reads and an unpoisoned root.
               staged = structuredClone(result)
@@ -158,7 +159,7 @@ export function createSfPlannerCalculationRoot(input: { host: DomainPortHost }) 
             })
           } finally { owner.open = false; if (owner.proof) rootProofs.delete(owner.proof) }
         }, { signal: request.signal })
-        if (accepted !== true || !completed || invocations !== 1 || !staged || !current() ||
+        if (accepted !== true || !completed || invocations !== 1 || !staged || !sfRecallCost("root-current", () => current()) ||
           present()) return unavailable()
         return staged
       })
