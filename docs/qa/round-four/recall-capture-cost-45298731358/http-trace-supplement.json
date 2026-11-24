@@ -1,0 +1,70 @@
+{
+  "schema": "sf-round-four-recall-trace-supplement-v1",
+  "purpose": "Verify the previously unavailable archive and add original HTTP timing; supplement does not replace the original numeric ledger.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "72f8bc83753a2f4a175a086b4bba51ac50059f1b",
+  "snapshot": "f937c48d1083ca05d6844688ddf79a9df2f6c53e",
+  "run": 45298731358,
+  "workflowConclusion": "failure",
+  "artifact": {
+    "id": 14878711714,
+    "bytes": 7331410,
+    "sha256": "b9a52c99945f02385421484a5f5d90f072d792fc0a8f192c9daa8074809490b8",
+    "downloadVerified": true,
+    "verifiedOn": "2026-11-24"
+  },
+  "trace": {
+    "sha256": "671f98bc840ac74254586f5e2b06bff04991e6787fed69058cfe03b278212f0d",
+    "original": true
+  },
+  "http": {
+    "method": "POST",
+    "path": "/sucafina/dashboard",
+    "forwardedRequestStartedAt": "2026-11-24T00:49:20.102Z",
+    "fetch": {
+      "callId": "call@201",
+      "startMonotonicMs": 320896.662,
+      "endMonotonicMs": 360899.458,
+      "durationMs": 40002.796,
+      "originalDeadlineMs": 40000,
+      "resultObserved": false,
+      "error": "timeout"
+    },
+    "testApi": {
+      "callId": "pw:api@157",
+      "durationMs": 40007.252
+    },
+    "networkResponse": {
+      "status": -1,
+      "time": -1,
+      "headersOrCompletedResponseObserved": false
+    }
+  },
+  "recallOwner": {
+    "id": 375,
+    "startedAt": "2026-11-24T00:49:21.031Z",
+    "durationUs": 43617653,
+    "phase": "settlement",
+    "fulfilled": 1,
+    "activeAsync": 0,
+    "httpRelativeStartMs": 929,
+    "httpRelativeEndMs": 44546.653,
+    "meaning": "The Promise settled; neither fulfilled=1 nor the owner duration establishes a successful product or HTTP result."
+  },
+  "subsequentNavigation": {
+    "path": "/orchestra/sf-memory/cases",
+    "originalDeadlineMs": 15000,
+    "durationMs": 15005.934,
+    "conclusion": "timeout"
+  },
+  "limitations": [
+    "The routed browser request and forwarded API request are two trace layers of the same observed operation; they are not counted as two successful producer calls.",
+    "No payloads, headers, authorization values or raw error text are retained.",
+    "This diagnostic remains failed and does not add qualified browser cases or reviewed images."
+  ],
+  "originalLedger": {
+    "path": "docs/qa/round-four/recall-capture-cost-45298731358/diagnostic-ledger.json",
+    "blob": "c388294763bc26d567548d9d2d1ed586cc2d6adc",
+    "sha256": "583b8a21f942cab332649fe78de3a0f35bc78a51cdcd117621658b3cd3d6b289"
+  }
+}
