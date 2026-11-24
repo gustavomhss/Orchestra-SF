@@ -1,0 +1,642 @@
+{
+  "schema": 1,
+  "kind": "round-four-memory-original-cohort-qualification",
+  "qualification": "failed",
+  "visualReview": "pending-environment-unavailable",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b"
+  },
+  "snapshot": {
+    "commit": "5c6332da9bafa7f50dd33ad829a0aca77681e148",
+    "tree": "71e00ec297f1913cdbc6c3725f79cae9b99cb8c9",
+    "branch": "ci-run-r4memoryinspect",
+    "onlyChangedPath": ".ci-run.json",
+    "requestBlob": "3686d5964be4ec8e98a8aeaa7593711606af42d4",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/final-memory.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    }
+  },
+  "originalContract": {
+    "specPath": "packages/app-shell/e2e/sucafina/final-memory.spec.ts",
+    "specBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+    "specCharacters": 38005,
+    "originalReadDeadlineMs": 40000,
+    "originalPageNavigationTimeoutMs": 15000,
+    "originalCaseTimeoutMs": 300000,
+    "retries": 0,
+    "workers": 1,
+    "fullyParallel": false,
+    "globalTimeout": 0,
+    "maxFailures": 0,
+    "changedTests": false,
+    "changedDeadlines": false,
+    "additionalCI": false
+  },
+  "run": {
+    "id": 45312850453,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45312850453",
+    "conclusion": "failure",
+    "observedAt": "2026-11-24T03:03:39Z",
+    "createdAt": "2026-11-24T02:30:14Z",
+    "runStartedAt": "2026-11-24T02:30:14Z",
+    "completedUpdatedAt": "2026-11-24T03:01:34Z",
+    "jobs": [
+      {
+        "id": 138172561285,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T02:30:16Z",
+        "completedAt": "2026-11-24T03:01:25Z",
+        "steps": [
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:30:42Z",
+            "completedAt": "2026-11-24T02:31:05Z"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-24T02:31:12Z",
+            "completedAt": "2026-11-24T03:01:20Z"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T03:01:20Z",
+            "completedAt": "2026-11-24T03:01:23Z"
+          }
+        ]
+      },
+      {
+        "id": 138184652408,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T03:01:27Z",
+        "completedAt": "2026-11-24T03:01:34Z",
+        "steps": []
+      }
+    ],
+    "logsFetchedOnlyAfterCompletion": true
+  },
+  "runtime": {
+    "startTime": "2026-11-24T02:31:15.358Z",
+    "durationMs": 1805129.295,
+    "expected": 2,
+    "unexpected": 3,
+    "skipped": 0,
+    "flaky": 0,
+    "cases": [
+      {
+        "area": "UI61",
+        "status": "failed",
+        "durationMs": 282545,
+        "startTime": "2026-11-24T02:32:17.851Z",
+        "firstObservedFailure": "Original Materiality GET exceeded 40s; later Portuguese navigation exceeded 15s.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI62",
+        "status": "failed",
+        "durationMs": 286636,
+        "startTime": "2026-11-24T02:39:04.084Z",
+        "firstObservedFailure": "Original similar-case response exceeded 40s; later Portuguese navigation exceeded 15s.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI63",
+        "status": "timedOut",
+        "durationMs": 301440,
+        "startTime": "2026-11-24T02:45:58.424Z",
+        "firstObservedFailure": "Run log records an html attribute assertion in scheme() at final-memory.spec.ts:405. Runtime reports the original 300000ms test timeout; subsequent Portuguese work observed a closed context.",
+        "causalAttribution": "No visual regression or helper causation established; trace review pending.",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI67",
+        "status": "passed",
+        "durationMs": 69308,
+        "startTime": "2026-11-24T02:53:03.717Z",
+        "retry": 0,
+        "timeoutMs": 300000
+      },
+      {
+        "area": "UI69",
+        "status": "passed",
+        "durationMs": 188294,
+        "startTime": "2026-11-24T02:56:12.487Z",
+        "retry": 0,
+        "timeoutMs": 300000
+      }
+    ]
+  },
+  "evidence": {
+    "artifact": {
+      "id": 14884494464,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 36426918,
+      "sha256": "5cf76deb84d6f2a5b472dfb22b8672774a27812db42b4880eecec5c702a33c1d",
+      "apiDigestMatchedDownloadedArchive": true,
+      "archiveEntries": 61,
+      "apiUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14884494464",
+      "expired": false
+    },
+    "runtimeReport": {
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "sha256": "92e7c15cb0814a9a302cb3ca1aaacc24fcba9e8f7fae1776d343807613499ca5"
+    },
+    "completedJobLog": {
+      "jobId": 138172561285,
+      "characters": 1347906,
+      "sha256": "13fca6e545f5545d01ba1bb2470f7c9d92dfe030bf4b727138609856a05ca118",
+      "rawLogCommitted": false
+    },
+    "traces": [
+      {
+        "area": "UI61",
+        "sha256": "1e45e798263a92e8b7988dc9f90c8abac195411c5fb9ff2d263e2c2a06e37dd4",
+        "bytes": 4115717,
+        "extractedAndHashed": true,
+        "reviewed": false,
+        "httpTimingsReviewed": false,
+        "pendingReason": "Execution environment disconnected before trace parsing."
+      },
+      {
+        "area": "UI62",
+        "sha256": "05ea94dcd008dc5efd09705ae3284ac8fbe8982b29d9956d85885b6fe0b537db",
+        "bytes": 2137939,
+        "extractedAndHashed": true,
+        "reviewed": false,
+        "httpTimingsReviewed": false,
+        "pendingReason": "Execution environment disconnected before trace parsing."
+      },
+      {
+        "area": "UI63",
+        "sha256": "95cd4ca18196de283461e3e9abacfeeaa2ff8bd528b9268543ec8f6d0caa4984",
+        "bytes": 3446862,
+        "extractedAndHashed": true,
+        "reviewed": false,
+        "httpTimingsReviewed": false,
+        "pendingReason": "Execution environment disconnected before trace parsing."
+      }
+    ]
+  },
+  "logEvidence": {
+    "originalReadObservations": [
+      {
+        "mode": "memory-conditions",
+        "status": 200,
+        "milliseconds": 3983
+      },
+      {
+        "mode": "memory-conditions",
+        "status": 200,
+        "milliseconds": 21422
+      },
+      {
+        "mode": "case",
+        "status": 200,
+        "milliseconds": 27979
+      },
+      {
+        "mode": "case",
+        "status": 200,
+        "milliseconds": 28163
+      }
+    ],
+    "originalGetMarkers": {
+      "count": 34,
+      "statusCounts": {
+        "200": 32,
+        "503": 2
+      },
+      "notProducerCompletionProofForTimedOutReads": true
+    },
+    "independentSteps": [
+      {
+        "name": "UI61 publishes registered conditions without starting signal re-evaluation",
+        "status": "passed"
+      },
+      {
+        "name": "UI61 reads original materiality independently and clears detail on a new selection",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "Original GET /sucafina/dashboard exceeded the original 40s read deadline",
+          "assertion": [],
+          "location": [
+            "    at Timeout.<anonymous> (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:10:43)",
+            "    at listOnTimeout (node:internal/timers:605:17)",
+            "    at processTimers (node:internal/timers:541:7)"
+          ]
+        }
+      },
+      {
+        "name": "UI61 Portuguese condition",
+        "status": "failed",
+        "failure": {
+          "kind": "TimeoutError",
+          "summary": "page.goto: Timeout 15000ms exceeded.",
+          "assertion": [],
+          "location": [
+            "    at Object.action (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:159:57)",
+            "    at observeFinalNavigation (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:136:17)",
+            "    at navigateFinalSurface (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:158:19)"
+          ]
+        }
+      },
+      {
+        "name": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+        "status": "passed"
+      },
+      {
+        "name": "No memory selection command was issued by the browser",
+        "status": "passed"
+      },
+      {
+        "name": "Memory pages emitted no JavaScript errors",
+        "status": "passed"
+      },
+      {
+        "name": "Memory console contains only verified original coverage refusals",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "expect(received).toEqual(expected) // deep equality",
+          "assertion": [],
+          "location": [
+            "    at Object.assertOnlyExpectedErrors (packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:77:26)",
+            "    at packages/app-shell/e2e/sucafina/final-memory.spec.ts:258:21",
+            "    at independently (packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+          ]
+        }
+      },
+      {
+        "name": "UI62 sends a private recall question and explicit authorized candidates to the original producer",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "Original similar-case response exceeded the original 40s read deadline",
+          "assertion": [],
+          "location": [
+            "    at Timeout.<anonymous> (packages/app-shell/e2e/sucafina/design-support/final-memory-recall.ts:11:43)",
+            "    at listOnTimeout (node:internal/timers:605:17)",
+            "    at processTimers (node:internal/timers:541:7)"
+          ]
+        }
+      },
+      {
+        "name": "UI62 Portuguese authorized candidates",
+        "status": "failed",
+        "failure": {
+          "kind": "TimeoutError",
+          "summary": "page.goto: Timeout 15000ms exceeded.",
+          "assertion": [],
+          "location": [
+            "    at Object.action (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:159:57)",
+            "    at observeFinalNavigation (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:136:17)",
+            "    at navigateFinalSurface (packages/app-shell/e2e/sucafina/design-support/final-navigation.ts:158:19)"
+          ]
+        }
+      },
+      {
+        "name": "No memory selection command was issued by the browser",
+        "status": "passed"
+      },
+      {
+        "name": "Memory pages emitted no JavaScript errors",
+        "status": "passed"
+      },
+      {
+        "name": "Memory console contains only verified original coverage refusals",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "expect(received).toEqual(expected) // deep equality",
+          "assertion": [],
+          "location": [
+            "    at Object.assertOnlyExpectedErrors (packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:77:26)",
+            "    at packages/app-shell/e2e/sucafina/final-memory.spec.ts:360:21",
+            "    at independently (packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+          ]
+        }
+      },
+      {
+        "name": "UI63 opens a recorded choice without a condition and preserves the original coverage refusal",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "expect(locator).toHaveAttribute(expected) failed",
+          "assertion": [
+            "Locator: locator('html')"
+          ],
+          "location": [
+            "    at scheme (packages/app-shell/e2e/sucafina/design-support/wave-three.ts:124:22)",
+            "    at packages/app-shell/e2e/sucafina/final-memory.spec.ts:405:11",
+            "    at independently (packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+          ]
+        }
+      },
+      {
+        "name": "UI63 Portuguese incomplete coverage",
+        "status": "failed",
+        "failure": {
+          "kind": "Error",
+          "summary": "browserContext.cookies: Target page, context or browser has been closed",
+          "assertion": [],
+          "location": [
+            "    at withFinalMemoryPortuguese (packages/app-shell/e2e/sucafina/design-support/final-memory-browser.ts:99:44)",
+            "    at packages/app-shell/e2e/sucafina/final-memory.spec.ts:412:11",
+            "    at independently (packages/app-shell/e2e/sucafina/final-memory.spec.ts:81:7)"
+          ]
+        }
+      },
+      {
+        "name": "No memory selection command was issued by the browser",
+        "status": "passed"
+      },
+      {
+        "name": "Memory pages emitted no JavaScript errors",
+        "status": "passed"
+      },
+      {
+        "name": "Memory console contains only verified original coverage refusals",
+        "status": "passed"
+      }
+    ]
+  },
+  "captures": {
+    "expected": 26,
+    "generated": 16,
+    "uniqueOriginalPngHashes": 16,
+    "openedAndReviewed": 0,
+    "archiveHashesMatchedAttachments": true,
+    "individualHashesRecordedInLocalManifestButNotCopiedBeforeOutage": true,
+    "localManifest": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/memory5-45312850453/original-captures.json",
+    "items": [
+      {
+        "name": "UI61-dark-desktop-case-selection",
+        "area": "UI61",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-dark-desktop-recorded-condition",
+        "area": "UI61",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-desktop-recorded-condition",
+        "area": "UI61",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-320-recorded-condition",
+        "area": "UI61",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI61-light-320-cancelled-consultation",
+        "area": "UI61",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-dark-desktop-recorded-choice-no-condition",
+        "area": "UI63",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI63-dark-desktop-incomplete-coverage",
+        "area": "UI63",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-dark-desktop-current-context",
+        "area": "UI67",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-light-desktop-refreshed-context",
+        "area": "UI67",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-light-320-current-context",
+        "area": "UI67",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI67-pt-br-dark-desktop-current-context",
+        "area": "UI67",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-dark-desktop-summary-settings",
+        "area": "UI69",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-desktop-summary-review",
+        "area": "UI69",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-320-summary-review-actions",
+        "area": "UI69",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 320,
+          "height": 900,
+          "documentWidth": 320
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-light-desktop-persisted-summaries",
+        "area": "UI69",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      },
+      {
+        "name": "UI69-pt-br-dark-desktop-administration",
+        "area": "UI69",
+        "originalPngExtracted": true,
+        "archiveHashMatched": true,
+        "visuallyReviewed": false,
+        "viewport": {
+          "width": 1440,
+          "height": 1100,
+          "documentWidth": 1440
+        },
+        "documentOverflowCheckPassed": true
+      }
+    ],
+    "missing": [
+      "UI61-dark-desktop-materiality",
+      "UI61-light-320-materiality",
+      "UI61-pt-br-dark-desktop-condition",
+      "UI62-dark-desktop-original-recall",
+      "UI62-light-desktop-original-recall",
+      "UI62-light-320-original-recall",
+      "UI62-pt-br-dark-desktop-authorized-candidates",
+      "UI63-light-desktop-incomplete-coverage",
+      "UI63-light-320-incomplete-coverage",
+      "UI63-pt-br-dark-desktop-incomplete-coverage"
+    ]
+  },
+  "limits": [
+    "The complete cohort failed; the run does not qualify the change or establish an end-to-end improvement.",
+    "UI63 is a 300000ms case timeout. A visual defect and causal regression have not been established.",
+    "No HTTP durations, headers, response status, or backend completion for the timed-out reads were inferred without trace review.",
+    "The archive and extracted runtime/trace/PNG files were verified before the local environment became unavailable. No original PNG was successfully opened.",
+    "Existing reviewed totals remain 105 states and 133 captures; this partial cohort adds zero.",
+    "No raw job log, nonce, signed URL, request payload, private case identity, or image base64 is committed."
+  ],
+  "counts": {
+    "before": {
+      "states": 105,
+      "captures": 133
+    },
+    "added": {
+      "states": 0,
+      "captures": 0
+    },
+    "after": {
+      "states": 105,
+      "captures": 133
+    }
+  }
+}
