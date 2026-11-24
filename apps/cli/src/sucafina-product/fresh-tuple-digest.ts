@@ -107,7 +107,8 @@ function inspect(value: unknown, expected: unknown, comparable: boolean,
   if (prototype(value) !== (array ? arrayPrototype : objectPrototype)) return 0
   // Only the counterpart is a private clone of an admitted graph; fresh values keep every descriptor check.
   const partner = comparable && expected !== null && typeof expected === "object" &&
-    isArray(expected) === array ? expected as Record<string, unknown> : undefined
+    isArray(expected) === array && prototype(expected) === (array ? arrayPrototype : objectPrototype)
+    ? expected as Record<string, unknown> : undefined
   const keys = ownKeys(value)
   let equal = partner !== undefined && (array || ownKeys(partner).length === keys.length)
   // A visiting entry is a cycle even when this visit has a different counterpart.
