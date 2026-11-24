@@ -206,9 +206,13 @@ function plainSelectionMap(value: unknown): value is Record<string, unknown> {
 }
 
 function frozenSelectionContext(context: TrustedDomainContext) {
-  if (!plainSelectionMap(context) || !Object.isFrozen(context)) return false
+  const dataFields = (value: object) => Reflect.ownKeys(value).every((key) => {
+    const field = Object.getOwnPropertyDescriptor(value, key)
+    return !!field && "value" in field
+  })
+  if (!plainSelectionMap(context) || !Object.isFrozen(context) || !dataFields(context)) return false
   const binding = Object.getOwnPropertyDescriptor(context, "binding")
-  return !!binding && "value" in binding && plainSelectionMap(binding.value) && Object.isFrozen(binding.value) &&
+  return !!binding && "value" in binding && plainSelectionMap(binding.value) && Object.isFrozen(binding.value) && dataFields(binding.value) &&
     ["principalRef", "policyVersion", "accessRevision"].every((key) => {
       const field = Object.getOwnPropertyDescriptor(binding.value, key)
       return !!field && "value" in field && typeof field.value === "string"
