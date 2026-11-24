@@ -1,3 +1,4 @@
+import { createSfFreshTupleDigest } from "./fresh-tuple-digest.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -35,6 +36,7 @@ export function createSfFinancePairObservation(input: {
 
   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const tupleDigest = createSfFreshTupleDigest()
     try {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
@@ -72,7 +74,7 @@ export function createSfFinancePairObservation(input: {
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
-          const snapshotDigest = digestSfValue({ state, snapshots, sources })
+          const snapshotDigest = tupleDigest.digest({ state, snapshots, sources })
           const before = await environment()
           const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
@@ -82,7 +84,7 @@ export function createSfFinancePairObservation(input: {
           const after = await environment()
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+            snapshotDigest !== tupleDigest.digest({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
           return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after,
             refs: structuredClone(refs), principalDigest: digestSfValue(principal), plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
         })
@@ -129,6 +131,7 @@ export function createSfFinancePairObservation(input: {
       const closed = await environment()
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
+    finally { tupleDigest.close() }
   }
 }
 
