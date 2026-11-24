@@ -1,0 +1,15 @@
+{
+  "package": "cli",
+  "packageSelector": "@orchestra/cli",
+  "directory": "apps/cli",
+  "runner": "bun",
+  "args": [
+    "./test/sucafina-materialization-experiment.test.ts",
+    "--timeout",
+    "300000"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}
