@@ -1,0 +1,2080 @@
+{
+  "schema_version": 1,
+  "purpose": "Passive diagnostic of repeated original tuple/context hashes; not qualification or a measurement of a sharing implementation.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "provenance": {
+    "functional_source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "functional_helper_blob": "1e1c38ccb22f89708742de354e97a4f8f73da2df",
+    "typed_state_provider_blob": "5210d421f24b91226fa0506d68a0c647886cd777",
+    "snapshot": "649598ed75d2257174674abd4e9418fd9752db96",
+    "snapshot_tree": "817e1f00d50c0bffba7fa5e946fa8e37f2cb0841",
+    "diagnostic_branch": "ci-run-r4cross",
+    "request_blob": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+    "original_ui61_copy_blob": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+    "product_test_inherited_blob": "dee8cd9e9f56e11ed1f66967b2711a4c8b68f3b8",
+    "rebase_checkpoint": "b5c6bac0b527e472a7c1f1bc455c826ee528cd6f",
+    "ledger_parent": "82c252229679304e71f480d17780925ce7f5471b",
+    "playwright_config_blob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+    "base_playwright_config_blob": "d935c68f5b996c0e53195ec832b969c217fcf858"
+  },
+  "execution": {
+    "run_id": 45319878197,
+    "run_attempt": 1,
+    "run_status": "completed",
+    "run_conclusion": "failure",
+    "created_at": "2026-11-24T03:29:34Z",
+    "completed_metadata_at": "2026-11-24T03:44:11Z",
+    "job_id": 138195586894,
+    "runner": "ubuntu-24.04",
+    "run_tests": {
+      "name": "Run tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 21,
+      "started_at": "2026-11-24T03:37:35Z",
+      "completed_at": "2026-11-24T03:43:54Z"
+    },
+    "retry_count": 0,
+    "strict_omni_requested": true,
+    "channel": "prod",
+    "playwright_config": "e2e/playwright.production.config.ts",
+    "omni_positive_control_line_observed": false,
+    "omni_verdict_claimed": false,
+    "original_bounds": {
+      "request_milliseconds": 40000,
+      "page_default_milliseconds": 15000,
+      "test_milliseconds": 300000
+    },
+    "playwright_test_result": {
+      "passed": 0,
+      "failed": 1,
+      "qualification": false
+    },
+    "runner_overrides_observed": [
+      {
+        "line": 994,
+        "flag": "--workers",
+        "value": 1,
+        "format": "other"
+      },
+      {
+        "line": 994,
+        "flag": "--retries",
+        "value": 0,
+        "format": "other"
+      },
+      {
+        "line": 994,
+        "flag": "--repeat-each",
+        "value": 1,
+        "format": "other"
+      }
+    ],
+    "runner_override_evidence": "Completed job command line explicitly supplied --workers 1, --retries 0 and --repeat-each 1; these override the base Playwright config."
+  },
+  "collection": {
+    "source": "Completed GitHub workflow job logs through GitHub MCP.",
+    "decoded_log_characters": 1397033,
+    "raw_log_persisted": false,
+    "raw_log_printed": false,
+    "numeric_rows": {
+      "SF_RECALL_COST": 745,
+      "SF_LOCAL_STORE_COST": 745,
+      "SF_FRESH_TUPLE_COST": 745,
+      "SF_MATERIALIZE_COST": 745,
+      "SF_TUPLE_CROSS_OWNER": 370,
+      "SF_BCS_CONTEXT_HASH": 443
+    },
+    "malformed_numeric_rows": 0,
+    "unique_observed_profiles": 681,
+    "settlement_rows": 681,
+    "partial_rows": 64,
+    "all_observed_profiles_settled": true,
+    "all_observed_profiles_inactive": true,
+    "no_output_truncation_marker_observed": true
+  },
+  "artifact": {
+    "id": 14887154171,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_bytes": 12556140,
+    "sha256_reported_by_github": "cfedec64b4150cb9b6fde1fc8566f7f3eb208fa4a09724693dddcc4592bd5612",
+    "expired": false,
+    "downloaded": false,
+    "independently_hashed": false,
+    "images_or_traces_reviewed": false
+  },
+  "browser_evidence": {
+    "steps": [
+      {
+        "time": "2026-11-24T03:42:47.1481051Z",
+        "name": "UI61 publishes registered conditions without starting signal re-evaluation",
+        "status": "passed",
+        "classification": "passed"
+      },
+      {
+        "time": "2026-11-24T03:43:27.5343439Z",
+        "name": "UI61 reads original materiality independently and clears detail on a new selection",
+        "status": "failed",
+        "kind": "TimeoutError",
+        "classification": "original-40s-request-timeout"
+      },
+      {
+        "time": "2026-11-24T03:43:47.7297687Z",
+        "name": "UI61 Portuguese condition",
+        "status": "failed",
+        "kind": "TimeoutError",
+        "classification": "original-15s-page-timeout"
+      },
+      {
+        "time": "2026-11-24T03:43:53.3807631Z",
+        "name": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+        "status": "passed",
+        "classification": "passed"
+      },
+      {
+        "time": "2026-11-24T03:43:53.3817490Z",
+        "name": "No memory selection command was issued by the browser",
+        "status": "passed",
+        "classification": "passed"
+      },
+      {
+        "time": "2026-11-24T03:43:53.3818563Z",
+        "name": "Memory pages emitted no JavaScript errors",
+        "status": "passed",
+        "classification": "passed"
+      },
+      {
+        "time": "2026-11-24T03:43:53.3898119Z",
+        "name": "Memory console contains only verified original coverage refusals",
+        "status": "failed",
+        "kind": "Error",
+        "classification": "assertion-or-error"
+      }
+    ],
+    "original_read_status_lines": [
+      {
+        "time": "2026-11-24T03:42:46.0564717Z",
+        "mode": "memory-conditions",
+        "status": 200,
+        "milliseconds": 3284
+      },
+      {
+        "time": "2026-11-24T03:43:53.0132341Z",
+        "mode": "memory-conditions",
+        "status": 200,
+        "milliseconds": 5132
+      }
+    ],
+    "materiality_http_status_observed": null,
+    "first_materiality_failure": "Original route-fetch 40000 ms timeout; unchanged assertion.",
+    "later_console_assertion": "The original console-coverage assertion also failed after request/page timeouts; no causal attribution is made.",
+    "alignment_limit": "The second internal read settled after the browser's 40 s failure. Internal callback fulfillment is not evidence of an HTTP 200 or browser success."
+  },
+  "observer_schema": {
+    "version": 1,
+    "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "snapshot": "649598ed75d2257174674abd4e9418fd9752db96",
+    "run": 45319878197,
+    "job": 138195586894,
+    "headers": [
+      "schema",
+      "owner",
+      "parent",
+      "depth",
+      "kind",
+      "phase",
+      "fulfilled",
+      "epochMs",
+      "elapsedUs",
+      "activeAsync"
+    ],
+    "cross": {
+      "marker": "SF_TUPLE_CROSS_OWNER",
+      "fields": 27,
+      "familyIndex": 10,
+      "families": {
+        "0": "Finance",
+        "1": "case",
+        "2": "Recall",
+        "3": "drop reporting boundary"
+      },
+      "counters": [
+        "original_returns",
+        "first_original",
+        "first_original_retained",
+        "first_retained_same_other_owner_shadow",
+        "first_retained_different_other_owner_shadow",
+        "first_retained_without_other_owner_shadow",
+        "distinct_first_retained_hashes",
+        "actual_local_hits",
+        "local_hits_against_different_shadow",
+        "local_hits_without_shadow",
+        "ineligible_observations",
+        "invalidation_attempts",
+        "limit_drops",
+        "late_drops",
+        "missing_ancestry_drops",
+        "observer_errors"
+      ]
+    },
+    "bcs": {
+      "marker": "SF_BCS_CONTEXT_HASH",
+      "fields": 20,
+      "scopeIndex": 10,
+      "scopes": {
+        "0": "one complete Materiality read",
+        "1": "drop reporting boundary"
+      },
+      "counters": [
+        "normal_returns",
+        "no_previous_hash",
+        "equal_to_previous_hash",
+        "different_from_previous_hash",
+        "invalid_return",
+        "cap_drops",
+        "late_drops",
+        "missing_ancestry_drops",
+        "observer_errors"
+      ],
+      "limits": {
+        "maxStringCharacters": 128,
+        "maxReturnsCompared": 4096
+      }
+    },
+    "constraints": {
+      "bcsReturnOnly": true,
+      "bcsTimingEndsBeforeObserver": true,
+      "crossHashReturnsOnly": true,
+      "productHashCloneTraversalUnchanged": true,
+      "initialFirstAndSecondReadsIndependent": true,
+      "noOriginalTestModified": true,
+      "noRetry": true
+    },
+    "interpretation": [
+      "Use final phase 0 row when present; otherwise report the last cumulative partial, never claim settlement.",
+      "Use latest cumulative row per owner/family/scope; do not sum checkpoints.",
+      "BCS sequence follows successful synchronous return order of bcs-context-digest, not capture or authority identity.",
+      "Same hash is observed repetition only, not a full structural equality proof or performance gain.",
+      "Cross eligible first same shadow counts opportunities; local hits against different/no shadow are interleaving counterweights.",
+      "Drop rows identify their reporting boundary; late events after the final emit may lack a row.",
+      "Counts with limit/invalid/error/late drops are incomplete.",
+      "Inclusive timers include diagnostic overhead in parent regions and cannot be summed as exclusive costs."
+    ]
+  },
+  "verification": {
+    "source": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "snapshot": "649598ed75d2257174674abd4e9418fd9752db96",
+    "tree": "817e1f00d50c0bffba7fa5e946fa8e37f2cb0841",
+    "productTestBlob": "dee8cd9e9f56e11ed1f66967b2711a4c8b68f3b8",
+    "productCases": 6,
+    "unchangedArrays": {
+      "buckets": true,
+      "localStoreBuckets": true,
+      "tupleCostBuckets": true,
+      "materializeCostBuckets": true
+    },
+    "fields": {
+      "SF_RECALL_COST": 184,
+      "SF_LOCAL_STORE_COST": 47,
+      "SF_FRESH_TUPLE_COST": 27,
+      "SF_MATERIALIZE_COST": 22,
+      "SF_TUPLE_CROSS_OWNER": 27,
+      "SF_BCS_CONTEXT_HASH": 20
+    },
+    "strip": {
+      "freshTarget": "1e1c38ccb22f89708742de354e97a4f8f73da2df",
+      "freshCharacters": 7670,
+      "freshLiteral": true,
+      "stateTarget": "5210d421f24b91226fa0506d68a0c647886cd777",
+      "stateCharacters": 60442,
+      "stateLiteral": true
+    },
+    "bcsStripExact": true,
+    "bcsNewAwaits": 0,
+    "request": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+    "spec": "d797750fcc9c8cde130f8b771d0cf4d9882652a1"
+  },
+  "materiality_reads": [
+    {
+      "owner": 414,
+      "kind": 3,
+      "start_utc": "2026-11-24T03:42:47.887Z",
+      "computed_end_utc_millisecond_precision": "2026-11-24T03:43:18.587Z",
+      "settlement_log_utc": "2026-11-24T03:43:18.5899349Z",
+      "elapsed_microseconds": 30700778,
+      "phase": 0,
+      "callback_fulfilled": true,
+      "active_async": 0,
+      "observed_profiles": 127,
+      "observed_profile_kinds": {
+        "0": 34,
+        "1": 92,
+        "3": 1
+      },
+      "all_observed_profiles_settled": true,
+      "all_observed_profiles_inactive": true,
+      "cross_owner_families": [
+        {
+          "family": 0,
+          "label": "Finance",
+          "counts": {
+            "original_returns": 34,
+            "first_original": 34,
+            "first_original_retained": 34,
+            "first_retained_same_other_owner_shadow": 33,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 1,
+            "distinct_first_retained_hashes": 1,
+            "actual_local_hits": 170,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        },
+        {
+          "family": 1,
+          "label": "case",
+          "counts": {
+            "original_returns": 12,
+            "first_original": 12,
+            "first_original_retained": 12,
+            "first_retained_same_other_owner_shadow": 11,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 1,
+            "distinct_first_retained_hashes": 1,
+            "actual_local_hits": 60,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        },
+        {
+          "family": 2,
+          "label": "Recall",
+          "counts": {
+            "original_returns": 0,
+            "first_original": 0,
+            "first_original_retained": 0,
+            "first_retained_same_other_owner_shadow": 0,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 0,
+            "distinct_first_retained_hashes": 0,
+            "actual_local_hits": 0,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        }
+      ],
+      "bcs_context_hash_sequence": {
+        "normal_returns": 591,
+        "no_previous_hash": 1,
+        "equal_to_previous_hash": 300,
+        "different_from_previous_hash": 290,
+        "invalid_return": 0,
+        "cap_drops": 0,
+        "late_drops": 0,
+        "missing_ancestry_drops": 0,
+        "observer_errors": 0
+      },
+      "tuple_cost_totals": {
+        "pins": {
+          "count": 598,
+          "us": 20976
+        },
+        "inspect": {
+          "count": 276,
+          "us": 3767611
+        },
+        "originalDigest": {
+          "count": 46,
+          "us": 1995414
+        },
+        "clone": {
+          "count": 46,
+          "us": 665898
+        },
+        "counters": [
+          276,
+          0,
+          0,
+          46,
+          230,
+          230,
+          0,
+          46,
+          0
+        ]
+      },
+      "tuple_cost_by_family": [
+        {
+          "kind": 0,
+          "profiles": 34,
+          "pins": [
+            442,
+            15546
+          ],
+          "inspect": [
+            204,
+            2808214
+          ],
+          "digest": [
+            34,
+            1489065
+          ],
+          "clone": [
+            34,
+            501143
+          ],
+          "calls": 204,
+          "hits": 170,
+          "retained": 34
+        },
+        {
+          "kind": 1,
+          "profiles": 92,
+          "pins": [
+            156,
+            5430
+          ],
+          "inspect": [
+            72,
+            959397
+          ],
+          "digest": [
+            12,
+            506349
+          ],
+          "clone": [
+            12,
+            164755
+          ],
+          "calls": 72,
+          "hits": 60,
+          "retained": 12
+        },
+        {
+          "kind": 2,
+          "profiles": 0,
+          "pins": [
+            0,
+            0
+          ],
+          "inspect": [
+            0,
+            0
+          ],
+          "digest": [
+            0,
+            0
+          ],
+          "clone": [
+            0,
+            0
+          ],
+          "calls": 0,
+          "hits": 0,
+          "retained": 0
+        }
+      ],
+      "inclusive_cost_buckets": {
+        "owner-current": {
+          "calls": 13604,
+          "microseconds": 333751
+        },
+        "owner-readers": {
+          "calls": 14958,
+          "microseconds": 107034
+        },
+        "owner-environment": {
+          "calls": 1672,
+          "microseconds": 113923
+        },
+        "witness-before": {
+          "calls": 46,
+          "microseconds": 5120846
+        },
+        "witness-after": {
+          "calls": 46,
+          "microseconds": 2662904
+        },
+        "witness-egress": {
+          "calls": 46,
+          "microseconds": 2533345
+        },
+        "owner-state-cases": {
+          "calls": 36,
+          "microseconds": 2662846
+        },
+        "owner-state-atlas": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "owner-digest": {
+          "calls": 9972,
+          "microseconds": 1974903
+        },
+        "owner-materialized": {
+          "calls": 276,
+          "microseconds": 91622
+        },
+        "owner-authenticate": {
+          "calls": 1488,
+          "microseconds": 72378
+        },
+        "owner-revalidate": {
+          "calls": 2598,
+          "microseconds": 682540
+        },
+        "owner-work": {
+          "calls": 92,
+          "microseconds": 4481970
+        },
+        "owner-clone": {
+          "calls": 276,
+          "microseconds": 16863
+        },
+        "root-prepare": {
+          "calls": 24,
+          "microseconds": 61082
+        },
+        "record-scope": {
+          "calls": 12,
+          "microseconds": 1013572
+        },
+        "root-pinned": {
+          "calls": 4414,
+          "microseconds": 240605
+        },
+        "root-current": {
+          "calls": 920,
+          "microseconds": 93303
+        },
+        "root-healthy": {
+          "calls": 3586,
+          "microseconds": 69318
+        },
+        "root-native-lookup": {
+          "calls": 3678,
+          "microseconds": 48180
+        },
+        "root-native-current": {
+          "calls": 3586,
+          "microseconds": 21516
+        },
+        "root-owner-current": {
+          "calls": 4414,
+          "microseconds": 165562
+        },
+        "root-request-identity": {
+          "calls": 4506,
+          "microseconds": 48368
+        },
+        "root-binding-digest": {
+          "calls": 4506,
+          "microseconds": 21366
+        },
+        "proof-frame-current": {
+          "calls": 2516,
+          "microseconds": 321401
+        },
+        "proof-readers-current": {
+          "calls": 2562,
+          "microseconds": 34459
+        },
+        "proof-owner-current": {
+          "calls": 2562,
+          "microseconds": 189452
+        },
+        "proof-unchanged": {
+          "calls": 2562,
+          "microseconds": 64229
+        },
+        "proof-refs-digest": {
+          "calls": 6750,
+          "microseconds": 553490
+        },
+        "proof-leaf-current": {
+          "calls": 1304,
+          "microseconds": 167346
+        },
+        "proof-authorize": {
+          "calls": 1212,
+          "microseconds": 923096
+        },
+        "proof-work": {
+          "calls": 46,
+          "microseconds": 14259120
+        },
+        "proof-canonical": {
+          "calls": 148,
+          "microseconds": 4813057
+        },
+        "proof-clone": {
+          "calls": 2332,
+          "microseconds": 412782
+        },
+        "canonical-read-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-read-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-rank-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-rank-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-memory-match": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-features": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-select": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-source": {
+          "calls": 148,
+          "microseconds": 4501008
+        },
+        "bcs-case-event": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-dependencies": {
+          "calls": 591,
+          "microseconds": 6975135
+        },
+        "bcs-source-maps": {
+          "calls": 296,
+          "microseconds": 11657
+        },
+        "bcs-context": {
+          "calls": 591,
+          "microseconds": 7627970
+        },
+        "bcs-auth": {
+          "calls": 887,
+          "microseconds": 539649
+        },
+        "event-read-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-read-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-state": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-authorize-case": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-authorize-evidence": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-environment": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-auth": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-source-maps": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-read-records": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-state": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-case-read": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-evidence": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-evidence-batch": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-continuity": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-stable": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-authorize": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-source-maps": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-map-entry": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-features": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-rank-authorized": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-finalize": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-rank-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-capture": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-capture-integrity": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-capture-stable": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-context-digest": {
+          "calls": 591,
+          "microseconds": 3090028
+        },
+        "owner-frame-admitted": {
+          "calls": 12,
+          "microseconds": 52
+        },
+        "owner-frame-current": {
+          "calls": 540,
+          "microseconds": 59933
+        },
+        "proof-cache-hit": {
+          "calls": 1028,
+          "microseconds": 314424
+        },
+        "proof-frame-admitted": {
+          "calls": 46,
+          "microseconds": 14293426
+        },
+        "finance-closed-pair": {
+          "calls": 102,
+          "microseconds": 76084
+        },
+        "finance-snapshot-digest": {
+          "calls": 204,
+          "microseconds": 5631922
+        },
+        "c08-transaction": {
+          "calls": 1054,
+          "microseconds": 16238456
+        },
+        "c08-authorize": {
+          "calls": 2108,
+          "microseconds": 652250
+        },
+        "c08-read-state": {
+          "calls": 1054,
+          "microseconds": 6912
+        },
+        "c08-clone": {
+          "calls": 922,
+          "microseconds": 3340626
+        },
+        "c08-selection": {
+          "calls": 292,
+          "microseconds": 136250
+        },
+        "c08-callback": {
+          "calls": 1054,
+          "microseconds": 12254279
+        }
+      },
+      "final_primary_numeric_rows": {
+        "recall_cost": [
+          1,
+          414,
+          0,
+          0,
+          3,
+          0,
+          1,
+          1795491767887,
+          30700778,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          56,
+          3797140,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          56,
+          3533323,
+          0,
+          0,
+          31,
+          3798361,
+          112,
+          5353,
+          31,
+          3918093,
+          143,
+          344047,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          31,
+          154927,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          64,
+          657117,
+          128,
+          40228,
+          64,
+          740,
+          52,
+          293178,
+          12,
+          4739,
+          64,
+          294533
+        ],
+        "cross_owner": [
+          [
+            1,
+            414,
+            0,
+            0,
+            3,
+            0,
+            1,
+            1795491767887,
+            30700778,
+            0,
+            0,
+            34,
+            34,
+            34,
+            33,
+            0,
+            1,
+            1,
+            170,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            414,
+            0,
+            0,
+            3,
+            0,
+            1,
+            1795491767887,
+            30700778,
+            0,
+            1,
+            12,
+            12,
+            12,
+            11,
+            0,
+            1,
+            1,
+            60,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            414,
+            0,
+            0,
+            3,
+            0,
+            1,
+            1795491767887,
+            30700778,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "bcs_context_hash": [
+          1,
+          414,
+          0,
+          0,
+          3,
+          0,
+          1,
+          1795491767887,
+          30700778,
+          0,
+          0,
+          591,
+          1,
+          300,
+          290,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "owner": 541,
+      "kind": 4,
+      "start_utc": "2026-11-24T03:43:18.592Z",
+      "computed_end_utc_millisecond_precision": "2026-11-24T03:43:49.862Z",
+      "settlement_log_utc": "2026-11-24T03:43:49.8644171Z",
+      "elapsed_microseconds": 31270100,
+      "phase": 0,
+      "callback_fulfilled": true,
+      "active_async": 0,
+      "observed_profiles": 127,
+      "observed_profile_kinds": {
+        "0": 34,
+        "1": 92,
+        "4": 1
+      },
+      "all_observed_profiles_settled": true,
+      "all_observed_profiles_inactive": true,
+      "cross_owner_families": [
+        {
+          "family": 0,
+          "label": "Finance",
+          "counts": {
+            "original_returns": 34,
+            "first_original": 34,
+            "first_original_retained": 34,
+            "first_retained_same_other_owner_shadow": 33,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 1,
+            "distinct_first_retained_hashes": 1,
+            "actual_local_hits": 170,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        },
+        {
+          "family": 1,
+          "label": "case",
+          "counts": {
+            "original_returns": 12,
+            "first_original": 12,
+            "first_original_retained": 12,
+            "first_retained_same_other_owner_shadow": 11,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 1,
+            "distinct_first_retained_hashes": 1,
+            "actual_local_hits": 60,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        },
+        {
+          "family": 2,
+          "label": "Recall",
+          "counts": {
+            "original_returns": 0,
+            "first_original": 0,
+            "first_original_retained": 0,
+            "first_retained_same_other_owner_shadow": 0,
+            "first_retained_different_other_owner_shadow": 0,
+            "first_retained_without_other_owner_shadow": 0,
+            "distinct_first_retained_hashes": 0,
+            "actual_local_hits": 0,
+            "local_hits_against_different_shadow": 0,
+            "local_hits_without_shadow": 0,
+            "ineligible_observations": 0,
+            "invalidation_attempts": 0,
+            "limit_drops": 0,
+            "late_drops": 0,
+            "missing_ancestry_drops": 0,
+            "observer_errors": 0
+          }
+        }
+      ],
+      "bcs_context_hash_sequence": {
+        "normal_returns": 591,
+        "no_previous_hash": 1,
+        "equal_to_previous_hash": 300,
+        "different_from_previous_hash": 290,
+        "invalid_return": 0,
+        "cap_drops": 0,
+        "late_drops": 0,
+        "missing_ancestry_drops": 0,
+        "observer_errors": 0
+      },
+      "tuple_cost_totals": {
+        "pins": {
+          "count": 598,
+          "us": 23995
+        },
+        "inspect": {
+          "count": 276,
+          "us": 3935200
+        },
+        "originalDigest": {
+          "count": 46,
+          "us": 1988164
+        },
+        "clone": {
+          "count": 46,
+          "us": 674140
+        },
+        "counters": [
+          276,
+          0,
+          0,
+          46,
+          230,
+          230,
+          0,
+          46,
+          0
+        ]
+      },
+      "tuple_cost_by_family": [
+        {
+          "kind": 0,
+          "profiles": 34,
+          "pins": [
+            442,
+            18017
+          ],
+          "inspect": [
+            204,
+            2931735
+          ],
+          "digest": [
+            34,
+            1486431
+          ],
+          "clone": [
+            34,
+            504999
+          ],
+          "calls": 204,
+          "hits": 170,
+          "retained": 34
+        },
+        {
+          "kind": 1,
+          "profiles": 92,
+          "pins": [
+            156,
+            5978
+          ],
+          "inspect": [
+            72,
+            1003465
+          ],
+          "digest": [
+            12,
+            501733
+          ],
+          "clone": [
+            12,
+            169141
+          ],
+          "calls": 72,
+          "hits": 60,
+          "retained": 12
+        },
+        {
+          "kind": 2,
+          "profiles": 0,
+          "pins": [
+            0,
+            0
+          ],
+          "inspect": [
+            0,
+            0
+          ],
+          "digest": [
+            0,
+            0
+          ],
+          "clone": [
+            0,
+            0
+          ],
+          "calls": 0,
+          "hits": 0,
+          "retained": 0
+        }
+      ],
+      "inclusive_cost_buckets": {
+        "owner-current": {
+          "calls": 13604,
+          "microseconds": 337268
+        },
+        "owner-readers": {
+          "calls": 14958,
+          "microseconds": 110870
+        },
+        "owner-environment": {
+          "calls": 1672,
+          "microseconds": 134969
+        },
+        "witness-before": {
+          "calls": 46,
+          "microseconds": 5263617
+        },
+        "witness-after": {
+          "calls": 46,
+          "microseconds": 2724312
+        },
+        "witness-egress": {
+          "calls": 46,
+          "microseconds": 2730788
+        },
+        "owner-state-cases": {
+          "calls": 36,
+          "microseconds": 2727880
+        },
+        "owner-state-atlas": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "owner-digest": {
+          "calls": 9972,
+          "microseconds": 2028126
+        },
+        "owner-materialized": {
+          "calls": 276,
+          "microseconds": 93441
+        },
+        "owner-authenticate": {
+          "calls": 1488,
+          "microseconds": 67261
+        },
+        "owner-revalidate": {
+          "calls": 2598,
+          "microseconds": 694334
+        },
+        "owner-work": {
+          "calls": 92,
+          "microseconds": 4426386
+        },
+        "owner-clone": {
+          "calls": 276,
+          "microseconds": 17885
+        },
+        "root-prepare": {
+          "calls": 24,
+          "microseconds": 76441
+        },
+        "record-scope": {
+          "calls": 12,
+          "microseconds": 1030293
+        },
+        "root-pinned": {
+          "calls": 4414,
+          "microseconds": 250018
+        },
+        "root-current": {
+          "calls": 920,
+          "microseconds": 77438
+        },
+        "root-healthy": {
+          "calls": 3586,
+          "microseconds": 83094
+        },
+        "root-native-lookup": {
+          "calls": 3678,
+          "microseconds": 58960
+        },
+        "root-native-current": {
+          "calls": 3586,
+          "microseconds": 24078
+        },
+        "root-owner-current": {
+          "calls": 4414,
+          "microseconds": 145237
+        },
+        "root-request-identity": {
+          "calls": 4506,
+          "microseconds": 47800
+        },
+        "root-binding-digest": {
+          "calls": 4506,
+          "microseconds": 51216
+        },
+        "proof-frame-current": {
+          "calls": 2516,
+          "microseconds": 358424
+        },
+        "proof-readers-current": {
+          "calls": 2562,
+          "microseconds": 36141
+        },
+        "proof-owner-current": {
+          "calls": 2562,
+          "microseconds": 213396
+        },
+        "proof-unchanged": {
+          "calls": 2562,
+          "microseconds": 74233
+        },
+        "proof-refs-digest": {
+          "calls": 6750,
+          "microseconds": 506817
+        },
+        "proof-leaf-current": {
+          "calls": 1304,
+          "microseconds": 202438
+        },
+        "proof-authorize": {
+          "calls": 1212,
+          "microseconds": 927762
+        },
+        "proof-work": {
+          "calls": 46,
+          "microseconds": 14419645
+        },
+        "proof-canonical": {
+          "calls": 148,
+          "microseconds": 4841017
+        },
+        "proof-clone": {
+          "calls": 2332,
+          "microseconds": 411421
+        },
+        "canonical-read-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-read-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-rank-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-rank-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-memory-match": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-features": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "canonical-select": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-source": {
+          "calls": 148,
+          "microseconds": 4538195
+        },
+        "bcs-case-event": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-dependencies": {
+          "calls": 591,
+          "microseconds": 7013337
+        },
+        "bcs-source-maps": {
+          "calls": 296,
+          "microseconds": 12490
+        },
+        "bcs-context": {
+          "calls": 591,
+          "microseconds": 7701106
+        },
+        "bcs-auth": {
+          "calls": 887,
+          "microseconds": 536568
+        },
+        "event-read-first": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-read-second": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-state": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-authorize-case": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-authorize-evidence": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-environment": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-auth": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "event-source-maps": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-read-records": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-state": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-case-read": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-evidence": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-evidence-batch": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-continuity": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-stable": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-authorize": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-source-maps": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-map-entry": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-features": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-rank-authorized": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-finalize": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-rank-digest": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "atlas-capture": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-capture-integrity": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-capture-stable": {
+          "calls": 0,
+          "microseconds": 0
+        },
+        "bcs-context-digest": {
+          "calls": 591,
+          "microseconds": 3119259
+        },
+        "owner-frame-admitted": {
+          "calls": 12,
+          "microseconds": 41
+        },
+        "owner-frame-current": {
+          "calls": 540,
+          "microseconds": 66656
+        },
+        "proof-cache-hit": {
+          "calls": 1028,
+          "microseconds": 325787
+        },
+        "proof-frame-admitted": {
+          "calls": 46,
+          "microseconds": 14433854
+        },
+        "finance-closed-pair": {
+          "calls": 102,
+          "microseconds": 78735
+        },
+        "finance-snapshot-digest": {
+          "calls": 204,
+          "microseconds": 5822728
+        },
+        "c08-transaction": {
+          "calls": 1054,
+          "microseconds": 16737805
+        },
+        "c08-authorize": {
+          "calls": 2108,
+          "microseconds": 659775
+        },
+        "c08-read-state": {
+          "calls": 1054,
+          "microseconds": 7511
+        },
+        "c08-clone": {
+          "calls": 922,
+          "microseconds": 3504579
+        },
+        "c08-selection": {
+          "calls": 292,
+          "microseconds": 138467
+        },
+        "c08-callback": {
+          "calls": 1054,
+          "microseconds": 12783013
+        }
+      },
+      "final_primary_numeric_rows": {
+        "recall_cost": [
+          1,
+          541,
+          0,
+          0,
+          4,
+          0,
+          1,
+          1795491798592,
+          31270100,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          56,
+          3791135,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          56,
+          3537578,
+          0,
+          0,
+          31,
+          3792567,
+          112,
+          5901,
+          31,
+          3889525,
+          143,
+          314483,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          31,
+          160395,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          64,
+          700449,
+          128,
+          40654,
+          64,
+          719,
+          52,
+          302623,
+          12,
+          5370,
+          64,
+          303906
+        ],
+        "cross_owner": [
+          [
+            1,
+            541,
+            0,
+            0,
+            4,
+            0,
+            1,
+            1795491798592,
+            31270100,
+            0,
+            0,
+            34,
+            34,
+            34,
+            33,
+            0,
+            1,
+            1,
+            170,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            541,
+            0,
+            0,
+            4,
+            0,
+            1,
+            1795491798592,
+            31270100,
+            0,
+            1,
+            12,
+            12,
+            12,
+            11,
+            0,
+            1,
+            1,
+            60,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            541,
+            0,
+            0,
+            4,
+            0,
+            1,
+            1795491798592,
+            31270100,
+            0,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "bcs_context_hash": [
+          1,
+          541,
+          0,
+          0,
+          4,
+          0,
+          1,
+          1795491798592,
+          31270100,
+          0,
+          0,
+          591,
+          1,
+          300,
+          290,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "reported_outside_ancestry_drops": {
+    "cross_report_rows": 172,
+    "bcs_report_rows": 377,
+    "cross_counts": {
+      "original_returns": 0,
+      "first_original": 0,
+      "first_original_retained": 0,
+      "first_retained_same_other_owner_shadow": 0,
+      "first_retained_different_other_owner_shadow": 0,
+      "first_retained_without_other_owner_shadow": 0,
+      "distinct_first_retained_hashes": 0,
+      "actual_local_hits": 0,
+      "local_hits_against_different_shadow": 0,
+      "local_hits_without_shadow": 0,
+      "ineligible_observations": 0,
+      "invalidation_attempts": 0,
+      "limit_drops": 0,
+      "late_drops": 0,
+      "missing_ancestry_drops": 1032,
+      "observer_errors": 0
+    },
+    "bcs_counts": {
+      "normal_returns": 0,
+      "no_previous_hash": 0,
+      "equal_to_previous_hash": 0,
+      "different_from_previous_hash": 0,
+      "invalid_return": 0,
+      "cap_drops": 0,
+      "late_drops": 0,
+      "missing_ancestry_drops": 1867,
+      "observer_errors": 0
+    },
+    "note": "Each latest cumulative drop row is counted once per reporting profile. Its owner is the reporting boundary, not the originating operation. Late events with no later emission can remain unreported."
+  },
+  "interpretation": {
+    "repeated_first_hashes_per_read": {
+      "Finance": {
+        "eligible": 34,
+        "equal_other_owner_shadow": 33,
+        "different": 0,
+        "cold": 1,
+        "distinct": 1,
+        "local_hits": 170,
+        "local_hits_against_different_or_missing_shadow": 0
+      },
+      "case": {
+        "eligible": 12,
+        "equal_other_owner_shadow": 11,
+        "different": 0,
+        "cold": 1,
+        "distinct": 1,
+        "local_hits": 60,
+        "local_hits_against_different_or_missing_shadow": 0
+      },
+      "Recall": {
+        "samples": 0
+      }
+    },
+    "bcs_per_read": {
+      "normal_returns": 591,
+      "equal_transitions": 300,
+      "different_transitions": 290,
+      "no_previous_hash": 1,
+      "nonconsecutive_repetition": "not measured",
+      "distinct_hashes": "not measured"
+    },
+    "two_reads_total_microseconds": 61970878,
+    "helper_totals_microseconds": {
+      "pins": 44971,
+      "inspect": 7702811,
+      "original_digest": 3983578,
+      "clone": 1340038,
+      "original_digest_plus_clone": 5323616
+    },
+    "bcs_context_digest_total_microseconds": 6209287,
+    "no_internal_caps_late_invalid_or_observer_errors": true,
+    "potential": "Within these completed reads the first retained hashes repeat by family. The measurements support evaluating a strictly read-local pure digest lifetime; they do not authorize authority/result reuse.",
+    "limits": [
+      "No sharing implementation ran; there is no measured end-to-end speedup.",
+      "All timings include diagnostic overhead in parent regions and are inclusive, not exclusive.",
+      "Original digest plus clone is only the observed gross cost budget, not guaranteed savings.",
+      "The measured 61.970878 seconds across the two complete reads remains above the original 40 second browser request limit.",
+      "Every production tuple was still freshly acquired, inspected and hashed or compared by the unchanged helper; every authority check and egress remained.",
+      "No conclusions about Recall/UI62 family 2, cross-read reuse, hash collision immunity or result caching follow from these counts.",
+      "The earlier SAB-sharing test premise was refuted in native Bun. This diagnostic uses the restored counterpart prototype guard; the subsequently corrected product test does not alter its runtime source."
+    ]
+  }
+}
