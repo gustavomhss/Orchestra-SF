@@ -1,0 +1,2382 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Snapshot-only attribution of actual fresh-tuple hits and existing LocalStore materialization expressions",
+  "status": "diagnostic-failed-original-UI61-guard",
+  "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+  "sourceTree": "3ef9243585d94940d76b258b873418567446184e",
+  "snapshot": "4888d1a60e3ff11caa877415cce08d837d3dfe38",
+  "snapshotTree": "4d6221b23ebbeff7b5e6f57db0486413a9e51c10",
+  "diagnosticParent": "ec379b07ae5e5c09c5c712ec746965aafba438aa",
+  "run": {
+    "id": 45309842507,
+    "status": "completed",
+    "conclusion": "failure",
+    "branch": "ci-run-r4tupledetail",
+    "createdAt": "2026-11-24T02:05:47Z",
+    "completedAt": "2026-11-24T02:19:27Z",
+    "jobs": [
+      {
+        "id": 138162530229,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T02:05:50Z",
+        "completedAt": "2026-11-24T02:19:16Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:05:51Z",
+            "completedAt": "2026-11-24T02:05:53Z"
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:05:53Z",
+            "completedAt": "2026-11-24T02:06:00Z"
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:06:00Z",
+            "completedAt": "2026-11-24T02:06:00Z"
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:06:00Z",
+            "completedAt": "2026-11-24T02:06:00Z"
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:00Z",
+            "completedAt": "2026-11-24T02:06:04Z"
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:04Z",
+            "completedAt": "2026-11-24T02:06:04Z"
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:06:04Z",
+            "completedAt": "2026-11-24T02:06:04Z"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:04Z",
+            "completedAt": "2026-11-24T02:06:15Z"
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:15Z",
+            "completedAt": "2026-11-24T02:06:15Z"
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:15Z",
+            "completedAt": "2026-11-24T02:06:16Z"
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:06:16Z",
+            "completedAt": "2026-11-24T02:12:53Z"
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:12:53Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Qualify real loopback ClamD for Files uploads",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:01Z"
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:13:01Z",
+            "completedAt": "2026-11-24T02:13:02Z"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "startedAt": "2026-11-24T02:13:02Z",
+            "completedAt": "2026-11-24T02:19:13Z"
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:19:13Z",
+            "completedAt": "2026-11-24T02:19:13Z"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:13Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          },
+          {
+            "name": "Post Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:19:14Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:14Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "startedAt": "2026-11-24T02:19:14Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:14Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:14Z",
+            "completedAt": "2026-11-24T02:19:14Z"
+          }
+        ]
+      },
+      {
+        "id": 138168055000,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T02:19:18Z",
+        "completedAt": "2026-11-24T02:19:27Z",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:19Z",
+            "completedAt": "2026-11-24T02:19:19Z"
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:19Z",
+            "completedAt": "2026-11-24T02:19:25Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "startedAt": "2026-11-24T02:19:25Z",
+            "completedAt": "2026-11-24T02:19:25Z"
+          }
+        ]
+      }
+    ]
+  },
+  "selection": {
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/diagnostic-ui61.spec.ts"
+      ],
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "platform": "linux",
+    "arch": "x64",
+    "snapshot": "4888d1a60e3ff11caa877415cce08d837d3dfe38",
+    "stats": {
+      "startTime": "2026-11-24T02:13:03.842Z",
+      "duration": 369262.05899999995,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "workers": 1,
+    "forbidOnly": true,
+    "projects": [
+      {
+        "name": "chromium",
+        "retries": 0,
+        "repeatEach": 1
+      }
+    ],
+    "cases": [
+      {
+        "title": "UI61 · original conditions, independent materiality and explicit signal cancellation",
+        "file": "sucafina/diagnostic-ui61.spec.ts",
+        "status": "unexpected",
+        "timeout": 300000,
+        "results": [
+          {
+            "status": "failed",
+            "duration": 228725,
+            "retry": 0,
+            "startTime": "2026-11-24T02:13:49.673Z",
+            "errorKinds": [
+              "AggregateError: Independent original-memory steps failed"
+            ],
+            "stdoutEntries": 3079
+          }
+        ]
+      }
+    ],
+    "globalErrors": 0,
+    "originalCopyBlob": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+    "requestBlob": "6310d2c70fca19e5fcc630f552dc5146a7ecd680"
+  },
+  "artifact": {
+    "id": 14882764464,
+    "bytes": 12553385,
+    "sha256": "cf8cd2ca90e3ecc862d4ecf47410ea4293405c9f745987152fb1c4605c0c28ef",
+    "fileCount": 34,
+    "trace": {
+      "path": "packages/app-shell/e2e/test-results/sucafina-diagnostic-ui61-U-dafaa-xplicit-signal-cancellation-chromium/trace.zip",
+      "bytes": 4217972,
+      "sha256": "2774fb98c5e390e691c1f6fde6d3894413c509e9e2fa6f1ee5eacfccb6ea8823"
+    },
+    "pngFiles": 9,
+    "uniquePngs": 6
+  },
+  "numericEvidence": {
+    "records": {
+      "path": "docs/qa/round-four/tuple-detail-45309842507/numeric-records.json",
+      "gitBlobSha1": "0f0198407424303fc925259a611bcde78fd360b0",
+      "sha256": "fcc237f1fe7d486add374b6b727b4e330ee1b9b57c5554d6def8a2a7f7a06927"
+    },
+    "headerPairs": 745,
+    "profiles": 681,
+    "completed": 681,
+    "active": [],
+    "regions": [
+      {
+        "root": {
+          "schema": 1,
+          "owner": 414,
+          "parent": 0,
+          "depth": 0,
+          "kind": 3,
+          "phase": 0,
+          "fulfilled": 1,
+          "epochMs": 1795486684244,
+          "elapsedUs": 32105433,
+          "activeAsync": 0
+        },
+        "ownerCount": 127,
+        "kinds": {
+          "0": 34,
+          "1": 92,
+          "2": 0,
+          "3": 1,
+          "4": 0
+        },
+        "tuple": {
+          "timers": {
+            "pins": {
+              "count": 598,
+              "elapsedUs": 22767
+            },
+            "inspect": {
+              "count": 276,
+              "elapsedUs": 5374100
+            },
+            "digest-original": {
+              "count": 46,
+              "elapsedUs": 1960007
+            },
+            "clone": {
+              "count": 46,
+              "elapsedUs": 657469
+            }
+          },
+          "counters": {
+            "calls": 276,
+            "closed-or-busy": 0,
+            "inspect-opaque": 0,
+            "inspect-admitted-unequal": 46,
+            "inspect-equal": 230,
+            "retained-digest-return": 230,
+            "initial-pins-false": 0,
+            "baseline-retained": 46,
+            "observational-catch": 0
+          }
+        },
+        "tupleFinance": {
+          "timers": {
+            "pins": {
+              "count": 442,
+              "elapsedUs": 16888
+            },
+            "inspect": {
+              "count": 204,
+              "elapsedUs": 3973549
+            },
+            "digest-original": {
+              "count": 34,
+              "elapsedUs": 1439176
+            },
+            "clone": {
+              "count": 34,
+              "elapsedUs": 476170
+            }
+          },
+          "counters": {
+            "calls": 204,
+            "closed-or-busy": 0,
+            "inspect-opaque": 0,
+            "inspect-admitted-unequal": 34,
+            "inspect-equal": 170,
+            "retained-digest-return": 170,
+            "initial-pins-false": 0,
+            "baseline-retained": 34,
+            "observational-catch": 0
+          }
+        },
+        "materialize": {
+          "timers": {
+            "json-parse": {
+              "count": 4204,
+              "elapsedUs": 4894433
+            },
+            "missing-parse": {
+              "count": 4204,
+              "elapsedUs": 15228
+            },
+            "strings-parse": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "escaped-decode": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "plain-slice": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "restore": {
+              "count": 60206,
+              "elapsedUs": 12485
+            }
+          },
+          "counters": {}
+        },
+        "financeSnapshot": {
+          "count": 204,
+          "elapsedUs": 6719732
+        },
+        "materializeInclusive": {
+          "count": 4204,
+          "elapsedUs": 4943098
+        },
+        "ownerDigest": {
+          "count": 9972,
+          "elapsedUs": 2421068
+        },
+        "owners": [
+          415,
+          414,
+          417,
+          418,
+          419,
+          420,
+          416,
+          422,
+          423,
+          424,
+          425,
+          421,
+          426,
+          427,
+          428,
+          430,
+          431,
+          432,
+          433,
+          429,
+          435,
+          436,
+          437,
+          438,
+          434,
+          439,
+          441,
+          442,
+          443,
+          444,
+          440,
+          445,
+          446,
+          448,
+          449,
+          450,
+          451,
+          447,
+          452,
+          454,
+          455,
+          456,
+          457,
+          453,
+          458,
+          459,
+          461,
+          462,
+          463,
+          464,
+          460,
+          465,
+          467,
+          468,
+          469,
+          470,
+          466,
+          471,
+          473,
+          474,
+          475,
+          476,
+          472,
+          477,
+          479,
+          480,
+          481,
+          482,
+          478,
+          484,
+          485,
+          486,
+          487,
+          483,
+          488,
+          490,
+          491,
+          492,
+          493,
+          489,
+          494,
+          495,
+          497,
+          498,
+          499,
+          500,
+          496,
+          501,
+          503,
+          504,
+          505,
+          506,
+          502,
+          507,
+          508,
+          510,
+          511,
+          512,
+          513,
+          509,
+          514,
+          516,
+          517,
+          518,
+          519,
+          515,
+          520,
+          522,
+          523,
+          524,
+          525,
+          521,
+          526,
+          527,
+          528,
+          530,
+          531,
+          532,
+          533,
+          529,
+          535,
+          536,
+          537,
+          538,
+          534,
+          539,
+          540
+        ],
+        "broad": {
+          "timers": {
+            "owner-current": {
+              "count": 13604,
+              "elapsedUs": 307114
+            },
+            "owner-readers": {
+              "count": 14958,
+              "elapsedUs": 105299
+            },
+            "owner-environment": {
+              "count": 1672,
+              "elapsedUs": 142279
+            },
+            "witness-before": {
+              "count": 46,
+              "elapsedUs": 5555200
+            },
+            "witness-after": {
+              "count": 46,
+              "elapsedUs": 3163830
+            },
+            "witness-egress": {
+              "count": 46,
+              "elapsedUs": 3156575
+            },
+            "owner-state-cases": {
+              "count": 36,
+              "elapsedUs": 3100509
+            },
+            "owner-state-atlas": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "owner-digest": {
+              "count": 9972,
+              "elapsedUs": 2421068
+            },
+            "owner-materialized": {
+              "count": 276,
+              "elapsedUs": 91390
+            },
+            "owner-authenticate": {
+              "count": 1488,
+              "elapsedUs": 66433
+            },
+            "owner-revalidate": {
+              "count": 2598,
+              "elapsedUs": 682730
+            },
+            "owner-work": {
+              "count": 92,
+              "elapsedUs": 4241335
+            },
+            "owner-clone": {
+              "count": 276,
+              "elapsedUs": 17682
+            },
+            "root-prepare": {
+              "count": 24,
+              "elapsedUs": 57283
+            },
+            "record-scope": {
+              "count": 12,
+              "elapsedUs": 967012
+            },
+            "root-pinned": {
+              "count": 4414,
+              "elapsedUs": 219163
+            },
+            "root-current": {
+              "count": 920,
+              "elapsedUs": 89273
+            },
+            "root-healthy": {
+              "count": 3586,
+              "elapsedUs": 84109
+            },
+            "root-native-lookup": {
+              "count": 3678,
+              "elapsedUs": 46665
+            },
+            "root-native-current": {
+              "count": 3586,
+              "elapsedUs": 37805
+            },
+            "root-owner-current": {
+              "count": 4414,
+              "elapsedUs": 144462
+            },
+            "root-request-identity": {
+              "count": 4506,
+              "elapsedUs": 47794
+            },
+            "root-binding-digest": {
+              "count": 4506,
+              "elapsedUs": 23440
+            },
+            "proof-frame-current": {
+              "count": 2516,
+              "elapsedUs": 287465
+            },
+            "proof-readers-current": {
+              "count": 2562,
+              "elapsedUs": 35667
+            },
+            "proof-owner-current": {
+              "count": 2562,
+              "elapsedUs": 157760
+            },
+            "proof-unchanged": {
+              "count": 2562,
+              "elapsedUs": 58160
+            },
+            "proof-refs-digest": {
+              "count": 6750,
+              "elapsedUs": 476162
+            },
+            "proof-leaf-current": {
+              "count": 1304,
+              "elapsedUs": 166392
+            },
+            "proof-authorize": {
+              "count": 1212,
+              "elapsedUs": 899809
+            },
+            "proof-work": {
+              "count": 46,
+              "elapsedUs": 14014142
+            },
+            "proof-canonical": {
+              "count": 148,
+              "elapsedUs": 4992718
+            },
+            "proof-clone": {
+              "count": 2332,
+              "elapsedUs": 399753
+            },
+            "canonical-read-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-read-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-rank-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-rank-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-memory-match": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-features": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-select": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-source": {
+              "count": 148,
+              "elapsedUs": 4626579
+            },
+            "bcs-case-event": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-dependencies": {
+              "count": 591,
+              "elapsedUs": 7028170
+            },
+            "bcs-source-maps": {
+              "count": 296,
+              "elapsedUs": 15539
+            },
+            "bcs-context": {
+              "count": 591,
+              "elapsedUs": 7703332
+            },
+            "bcs-auth": {
+              "count": 887,
+              "elapsedUs": 592174
+            },
+            "event-read-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-read-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-state": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-authorize-case": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-authorize-evidence": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-environment": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-auth": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-source-maps": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-read-records": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-state": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-case-read": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-evidence": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-evidence-batch": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-continuity": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-stable": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-authorize": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-source-maps": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-map-entry": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-features": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-rank-authorized": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-finalize": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-rank-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-capture": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-capture-integrity": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-capture-stable": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-context-digest": {
+              "count": 591,
+              "elapsedUs": 3065592
+            },
+            "owner-frame-admitted": {
+              "count": 12,
+              "elapsedUs": 107
+            },
+            "owner-frame-current": {
+              "count": 540,
+              "elapsedUs": 60996
+            },
+            "proof-cache-hit": {
+              "count": 1028,
+              "elapsedUs": 315438
+            },
+            "proof-frame-admitted": {
+              "count": 46,
+              "elapsedUs": 14028249
+            },
+            "finance-closed-pair": {
+              "count": 102,
+              "elapsedUs": 73581
+            },
+            "finance-snapshot-digest": {
+              "count": 204,
+              "elapsedUs": 6719732
+            },
+            "c08-transaction": {
+              "count": 1054,
+              "elapsedUs": 17591358
+            },
+            "c08-authorize": {
+              "count": 2108,
+              "elapsedUs": 670046
+            },
+            "c08-read-state": {
+              "count": 1054,
+              "elapsedUs": 7181
+            },
+            "c08-clone": {
+              "count": 922,
+              "elapsedUs": 3298791
+            },
+            "c08-selection": {
+              "count": 292,
+              "elapsedUs": 133123
+            },
+            "c08-callback": {
+              "count": 1054,
+              "elapsedUs": 13788616
+            }
+          },
+          "counters": {}
+        },
+        "local": {
+          "timers": {
+            "current-snapshots": {
+              "count": 1909,
+              "elapsedUs": 1789512
+            },
+            "copy-current": {
+              "count": 1656,
+              "elapsedUs": 1782107
+            },
+            "clone-snapshot": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "clone-tree": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "validate-snapshot": {
+              "count": 31255,
+              "elapsedUs": 51210
+            },
+            "observe-snapshot": {
+              "count": 5589,
+              "elapsedUs": 839886
+            },
+            "payload-fingerprint": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "plan-materialization": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "materialize-snapshot": {
+              "count": 4204,
+              "elapsedUs": 4943098
+            },
+            "decode-snapshot": {
+              "count": 31255,
+              "elapsedUs": 230276
+            },
+            "nested-snapshot": {
+              "count": 3329,
+              "elapsedUs": 2927889
+            },
+            "dashboard-source-snapshot": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "snapshot-sql": {
+              "count": 5589,
+              "elapsedUs": 2724102
+            },
+            "scope-guard": {
+              "count": 366644,
+              "elapsedUs": 597091
+            },
+            "file-guard": {
+              "count": 609299,
+              "elapsedUs": 867036
+            }
+          },
+          "counters": {
+            "current-materializer": 1656,
+            "current-clone": 0,
+            "nested-acl": 1307,
+            "nested-source": 0,
+            "nested-materializer": 2022,
+            "nested-staged": 0,
+            "nested-load": 0
+          }
+        }
+      },
+      {
+        "root": {
+          "schema": 1,
+          "owner": 541,
+          "parent": 0,
+          "depth": 0,
+          "kind": 4,
+          "phase": 0,
+          "fulfilled": 1,
+          "epochMs": 1795486716354,
+          "elapsedUs": 32224685,
+          "activeAsync": 0
+        },
+        "ownerCount": 127,
+        "kinds": {
+          "0": 34,
+          "1": 92,
+          "2": 0,
+          "3": 0,
+          "4": 1
+        },
+        "tuple": {
+          "timers": {
+            "pins": {
+              "count": 598,
+              "elapsedUs": 24314
+            },
+            "inspect": {
+              "count": 276,
+              "elapsedUs": 5268476
+            },
+            "digest-original": {
+              "count": 46,
+              "elapsedUs": 1925204
+            },
+            "clone": {
+              "count": 46,
+              "elapsedUs": 722497
+            }
+          },
+          "counters": {
+            "calls": 276,
+            "closed-or-busy": 0,
+            "inspect-opaque": 0,
+            "inspect-admitted-unequal": 46,
+            "inspect-equal": 230,
+            "retained-digest-return": 230,
+            "initial-pins-false": 0,
+            "baseline-retained": 46,
+            "observational-catch": 0
+          }
+        },
+        "tupleFinance": {
+          "timers": {
+            "pins": {
+              "count": 442,
+              "elapsedUs": 18128
+            },
+            "inspect": {
+              "count": 204,
+              "elapsedUs": 3852595
+            },
+            "digest-original": {
+              "count": 34,
+              "elapsedUs": 1427998
+            },
+            "clone": {
+              "count": 34,
+              "elapsedUs": 548131
+            }
+          },
+          "counters": {
+            "calls": 204,
+            "closed-or-busy": 0,
+            "inspect-opaque": 0,
+            "inspect-admitted-unequal": 34,
+            "inspect-equal": 170,
+            "retained-digest-return": 170,
+            "initial-pins-false": 0,
+            "baseline-retained": 34,
+            "observational-catch": 0
+          }
+        },
+        "materialize": {
+          "timers": {
+            "json-parse": {
+              "count": 4204,
+              "elapsedUs": 5195187
+            },
+            "missing-parse": {
+              "count": 4204,
+              "elapsedUs": 15196
+            },
+            "strings-parse": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "escaped-decode": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "plain-slice": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "restore": {
+              "count": 60206,
+              "elapsedUs": 13543
+            }
+          },
+          "counters": {}
+        },
+        "financeSnapshot": {
+          "count": 204,
+          "elapsedUs": 6692938
+        },
+        "materializeInclusive": {
+          "count": 4204,
+          "elapsedUs": 5245808
+        },
+        "ownerDigest": {
+          "count": 9972,
+          "elapsedUs": 2451190
+        },
+        "owners": [
+          542,
+          541,
+          544,
+          545,
+          546,
+          547,
+          543,
+          549,
+          550,
+          551,
+          552,
+          548,
+          553,
+          554,
+          555,
+          557,
+          558,
+          559,
+          560,
+          556,
+          562,
+          563,
+          564,
+          565,
+          561,
+          566,
+          568,
+          569,
+          570,
+          571,
+          567,
+          572,
+          573,
+          575,
+          576,
+          577,
+          578,
+          574,
+          579,
+          581,
+          582,
+          583,
+          584,
+          580,
+          585,
+          586,
+          588,
+          589,
+          590,
+          591,
+          587,
+          592,
+          594,
+          595,
+          596,
+          597,
+          593,
+          598,
+          600,
+          601,
+          602,
+          603,
+          599,
+          604,
+          606,
+          607,
+          608,
+          609,
+          605,
+          611,
+          612,
+          613,
+          614,
+          610,
+          615,
+          617,
+          618,
+          619,
+          620,
+          616,
+          621,
+          622,
+          624,
+          625,
+          626,
+          627,
+          623,
+          628,
+          630,
+          631,
+          632,
+          633,
+          629,
+          634,
+          635,
+          637,
+          638,
+          639,
+          640,
+          636,
+          641,
+          643,
+          644,
+          645,
+          646,
+          642,
+          647,
+          649,
+          650,
+          651,
+          652,
+          648,
+          653,
+          654,
+          655,
+          657,
+          658,
+          659,
+          660,
+          656,
+          662,
+          663,
+          664,
+          665,
+          661,
+          666,
+          667
+        ],
+        "broad": {
+          "timers": {
+            "owner-current": {
+              "count": 13604,
+              "elapsedUs": 285868
+            },
+            "owner-readers": {
+              "count": 14958,
+              "elapsedUs": 105243
+            },
+            "owner-environment": {
+              "count": 1672,
+              "elapsedUs": 123253
+            },
+            "witness-before": {
+              "count": 46,
+              "elapsedUs": 5487906
+            },
+            "witness-after": {
+              "count": 46,
+              "elapsedUs": 3417545
+            },
+            "witness-egress": {
+              "count": 46,
+              "elapsedUs": 3025389
+            },
+            "owner-state-cases": {
+              "count": 36,
+              "elapsedUs": 3121010
+            },
+            "owner-state-atlas": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "owner-digest": {
+              "count": 9972,
+              "elapsedUs": 2451190
+            },
+            "owner-materialized": {
+              "count": 276,
+              "elapsedUs": 91114
+            },
+            "owner-authenticate": {
+              "count": 1488,
+              "elapsedUs": 66720
+            },
+            "owner-revalidate": {
+              "count": 2598,
+              "elapsedUs": 685158
+            },
+            "owner-work": {
+              "count": 92,
+              "elapsedUs": 4366173
+            },
+            "owner-clone": {
+              "count": 276,
+              "elapsedUs": 31535
+            },
+            "root-prepare": {
+              "count": 24,
+              "elapsedUs": 57108
+            },
+            "record-scope": {
+              "count": 12,
+              "elapsedUs": 975010
+            },
+            "root-pinned": {
+              "count": 4414,
+              "elapsedUs": 188790
+            },
+            "root-current": {
+              "count": 920,
+              "elapsedUs": 61964
+            },
+            "root-healthy": {
+              "count": 3586,
+              "elapsedUs": 68744
+            },
+            "root-native-lookup": {
+              "count": 3678,
+              "elapsedUs": 45773
+            },
+            "root-native-current": {
+              "count": 3586,
+              "elapsedUs": 23281
+            },
+            "root-owner-current": {
+              "count": 4414,
+              "elapsedUs": 107914
+            },
+            "root-request-identity": {
+              "count": 4506,
+              "elapsedUs": 48125
+            },
+            "root-binding-digest": {
+              "count": 4506,
+              "elapsedUs": 26743
+            },
+            "proof-frame-current": {
+              "count": 2516,
+              "elapsedUs": 302942
+            },
+            "proof-readers-current": {
+              "count": 2562,
+              "elapsedUs": 35424
+            },
+            "proof-owner-current": {
+              "count": 2562,
+              "elapsedUs": 163454
+            },
+            "proof-unchanged": {
+              "count": 2562,
+              "elapsedUs": 66489
+            },
+            "proof-refs-digest": {
+              "count": 6750,
+              "elapsedUs": 514234
+            },
+            "proof-leaf-current": {
+              "count": 1304,
+              "elapsedUs": 166678
+            },
+            "proof-authorize": {
+              "count": 1212,
+              "elapsedUs": 903625
+            },
+            "proof-work": {
+              "count": 46,
+              "elapsedUs": 14288964
+            },
+            "proof-canonical": {
+              "count": 148,
+              "elapsedUs": 4781553
+            },
+            "proof-clone": {
+              "count": 2332,
+              "elapsedUs": 403140
+            },
+            "canonical-read-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-read-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-rank-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-rank-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-memory-match": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-features": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "canonical-select": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-source": {
+              "count": 148,
+              "elapsedUs": 4442231
+            },
+            "bcs-case-event": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-dependencies": {
+              "count": 591,
+              "elapsedUs": 6877423
+            },
+            "bcs-source-maps": {
+              "count": 296,
+              "elapsedUs": 12190
+            },
+            "bcs-context": {
+              "count": 591,
+              "elapsedUs": 7563436
+            },
+            "bcs-auth": {
+              "count": 887,
+              "elapsedUs": 573277
+            },
+            "event-read-first": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-read-second": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-state": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-authorize-case": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-authorize-evidence": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-environment": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-auth": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "event-source-maps": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-read-records": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-state": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-case-read": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-evidence": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-evidence-batch": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-continuity": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-stable": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-authorize": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-source-maps": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-map-entry": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-features": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-rank-authorized": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-finalize": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-rank-digest": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "atlas-capture": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-capture-integrity": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-capture-stable": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "bcs-context-digest": {
+              "count": 591,
+              "elapsedUs": 3037656
+            },
+            "owner-frame-admitted": {
+              "count": 12,
+              "elapsedUs": 38
+            },
+            "owner-frame-current": {
+              "count": 540,
+              "elapsedUs": 60358
+            },
+            "proof-cache-hit": {
+              "count": 1028,
+              "elapsedUs": 319068
+            },
+            "proof-frame-admitted": {
+              "count": 46,
+              "elapsedUs": 14303782
+            },
+            "finance-closed-pair": {
+              "count": 102,
+              "elapsedUs": 119933
+            },
+            "finance-snapshot-digest": {
+              "count": 204,
+              "elapsedUs": 6692938
+            },
+            "c08-transaction": {
+              "count": 1054,
+              "elapsedUs": 17956715
+            },
+            "c08-authorize": {
+              "count": 2108,
+              "elapsedUs": 671825
+            },
+            "c08-read-state": {
+              "count": 1054,
+              "elapsedUs": 7451
+            },
+            "c08-clone": {
+              "count": 922,
+              "elapsedUs": 3371060
+            },
+            "c08-selection": {
+              "count": 292,
+              "elapsedUs": 152596
+            },
+            "c08-callback": {
+              "count": 1054,
+              "elapsedUs": 13882264
+            }
+          },
+          "counters": {}
+        },
+        "local": {
+          "timers": {
+            "current-snapshots": {
+              "count": 1909,
+              "elapsedUs": 1872909
+            },
+            "copy-current": {
+              "count": 1656,
+              "elapsedUs": 1866585
+            },
+            "clone-snapshot": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "clone-tree": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "validate-snapshot": {
+              "count": 31255,
+              "elapsedUs": 11811
+            },
+            "observe-snapshot": {
+              "count": 5589,
+              "elapsedUs": 847109
+            },
+            "payload-fingerprint": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "plan-materialization": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "materialize-snapshot": {
+              "count": 4204,
+              "elapsedUs": 5245808
+            },
+            "decode-snapshot": {
+              "count": 31255,
+              "elapsedUs": 185382
+            },
+            "nested-snapshot": {
+              "count": 3329,
+              "elapsedUs": 3134965
+            },
+            "dashboard-source-snapshot": {
+              "count": 0,
+              "elapsedUs": 0
+            },
+            "snapshot-sql": {
+              "count": 5589,
+              "elapsedUs": 2576661
+            },
+            "scope-guard": {
+              "count": 366644,
+              "elapsedUs": 615660
+            },
+            "file-guard": {
+              "count": 609299,
+              "elapsedUs": 849942
+            }
+          },
+          "counters": {
+            "current-materializer": 1656,
+            "current-clone": 0,
+            "nested-acl": 1307,
+            "nested-source": 0,
+            "nested-materializer": 2022,
+            "nested-staged": 0,
+            "nested-load": 0
+          }
+        }
+      }
+    ],
+    "totals": {
+      "regionElapsedSumUs": 64330118,
+      "epochWindowApproxUs": 64334685,
+      "interRegionGapApproxUs": 4567,
+      "tuple": {
+        "timers": {
+          "pins": {
+            "count": 1196,
+            "elapsedUs": 47081
+          },
+          "inspect": {
+            "count": 552,
+            "elapsedUs": 10642576
+          },
+          "digest-original": {
+            "count": 92,
+            "elapsedUs": 3885211
+          },
+          "clone": {
+            "count": 92,
+            "elapsedUs": 1379966
+          }
+        },
+        "counters": {
+          "calls": 552,
+          "closed-or-busy": 0,
+          "inspect-opaque": 0,
+          "inspect-admitted-unequal": 92,
+          "inspect-equal": 460,
+          "retained-digest-return": 460,
+          "initial-pins-false": 0,
+          "baseline-retained": 92,
+          "observational-catch": 0
+        }
+      },
+      "tupleFinance": {
+        "timers": {
+          "pins": {
+            "count": 884,
+            "elapsedUs": 35016
+          },
+          "inspect": {
+            "count": 408,
+            "elapsedUs": 7826144
+          },
+          "digest-original": {
+            "count": 68,
+            "elapsedUs": 2867174
+          },
+          "clone": {
+            "count": 68,
+            "elapsedUs": 1024301
+          }
+        },
+        "counters": {
+          "calls": 408,
+          "closed-or-busy": 0,
+          "inspect-opaque": 0,
+          "inspect-admitted-unequal": 68,
+          "inspect-equal": 340,
+          "retained-digest-return": 340,
+          "initial-pins-false": 0,
+          "baseline-retained": 68,
+          "observational-catch": 0
+        }
+      },
+      "materialize": {
+        "timers": {
+          "json-parse": {
+            "count": 8408,
+            "elapsedUs": 10089620
+          },
+          "missing-parse": {
+            "count": 8408,
+            "elapsedUs": 30424
+          },
+          "strings-parse": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "escaped-decode": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "plain-slice": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "restore": {
+            "count": 120412,
+            "elapsedUs": 26028
+          }
+        },
+        "counters": {}
+      }
+    },
+    "normalization": "ANSI cursor-control sequences removed; each accepted marker matched its exact numeric cardinality and integer domain. No nonnumeric line retained.",
+    "crossCheck": {
+      "allFourMarkerRowsMatchArtifactExactly": true,
+      "numericRows": 2980,
+      "normalizedSequenceSha256": "2dc84ffcd79ab809bd6f350abb2721eca3845d3dc356b838610f1ec1bef4fc4d",
+      "consoleAssertion": [
+        {
+          "failed": true,
+          "mentionsErrFailed": true,
+          "mentionsFailedResource": true
+        }
+      ]
+    }
+  },
+  "schema": {
+    "schemaVersion": 1,
+    "runId": 45309842507,
+    "jobId": 138162530229,
+    "functionalSource": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "snapshot": "4888d1a60e3ff11caa877415cce08d837d3dfe38",
+    "snapshotTree": "4d6221b23ebbeff7b5e6f57db0486413a9e51c10",
+    "markers": {
+      "SF_FRESH_TUPLE_COST": {
+        "fields": 27,
+        "headers": [
+          "schema",
+          "owner",
+          "parent",
+          "depth",
+          "kind",
+          "phase",
+          "fulfilled",
+          "epochMs",
+          "elapsedUs",
+          "activeAsync"
+        ],
+        "pairs": [
+          "pins",
+          "inspect",
+          "digest-original",
+          "clone"
+        ],
+        "counters": [
+          "calls",
+          "closed-or-busy",
+          "inspect-opaque",
+          "inspect-admitted-unequal",
+          "inspect-equal",
+          "retained-digest-return",
+          "initial-pins-false",
+          "baseline-retained",
+          "observational-catch"
+        ]
+      },
+      "SF_MATERIALIZE_COST": {
+        "fields": 22,
+        "headers": [
+          "schema",
+          "owner",
+          "parent",
+          "depth",
+          "kind",
+          "phase",
+          "fulfilled",
+          "epochMs",
+          "elapsedUs",
+          "activeAsync"
+        ],
+        "pairs": [
+          "json-parse",
+          "missing-parse",
+          "strings-parse",
+          "escaped-decode",
+          "plain-slice",
+          "restore"
+        ]
+      }
+    },
+    "inherited": {
+      "headers": [
+        "schema",
+        "owner",
+        "parent",
+        "depth",
+        "kind",
+        "phase",
+        "fulfilled",
+        "epochMs",
+        "elapsedUs",
+        "activeAsync"
+      ],
+      "broadBuckets": [
+        "owner-current",
+        "owner-readers",
+        "owner-environment",
+        "witness-before",
+        "witness-after",
+        "witness-egress",
+        "owner-state-cases",
+        "owner-state-atlas",
+        "owner-digest",
+        "owner-materialized",
+        "owner-authenticate",
+        "owner-revalidate",
+        "owner-work",
+        "owner-clone",
+        "root-prepare",
+        "record-scope",
+        "root-pinned",
+        "root-current",
+        "root-healthy",
+        "root-native-lookup",
+        "root-native-current",
+        "root-owner-current",
+        "root-request-identity",
+        "root-binding-digest",
+        "proof-frame-current",
+        "proof-readers-current",
+        "proof-owner-current",
+        "proof-unchanged",
+        "proof-refs-digest",
+        "proof-leaf-current",
+        "proof-authorize",
+        "proof-work",
+        "proof-canonical",
+        "proof-clone",
+        "canonical-read-first",
+        "canonical-read-second",
+        "canonical-rank-first",
+        "canonical-rank-second",
+        "canonical-memory-match",
+        "canonical-features",
+        "canonical-select",
+        "bcs-source",
+        "bcs-case-event",
+        "bcs-dependencies",
+        "bcs-source-maps",
+        "bcs-context",
+        "bcs-auth",
+        "event-read-first",
+        "event-read-second",
+        "event-state",
+        "event-authorize-case",
+        "event-authorize-evidence",
+        "event-environment",
+        "event-auth",
+        "event-digest",
+        "event-source-maps",
+        "atlas-read-records",
+        "atlas-state",
+        "atlas-case-read",
+        "atlas-evidence",
+        "atlas-evidence-batch",
+        "atlas-continuity",
+        "atlas-stable",
+        "atlas-authorize",
+        "atlas-digest",
+        "atlas-source-maps",
+        "atlas-map-entry",
+        "atlas-features",
+        "atlas-rank-authorized",
+        "atlas-finalize",
+        "atlas-rank-digest",
+        "atlas-capture",
+        "bcs-capture-integrity",
+        "bcs-capture-stable",
+        "bcs-context-digest",
+        "owner-frame-admitted",
+        "owner-frame-current",
+        "proof-cache-hit",
+        "proof-frame-admitted",
+        "finance-closed-pair",
+        "finance-snapshot-digest",
+        "c08-transaction",
+        "c08-authorize",
+        "c08-read-state",
+        "c08-clone",
+        "c08-selection",
+        "c08-callback"
+      ],
+      "localBuckets": [
+        "current-snapshots",
+        "copy-current",
+        "clone-snapshot",
+        "clone-tree",
+        "validate-snapshot",
+        "observe-snapshot",
+        "payload-fingerprint",
+        "plan-materialization",
+        "materialize-snapshot",
+        "decode-snapshot",
+        "nested-snapshot",
+        "dashboard-source-snapshot",
+        "snapshot-sql",
+        "scope-guard",
+        "file-guard"
+      ],
+      "branches": [
+        "current-materializer",
+        "current-clone",
+        "nested-acl",
+        "nested-source",
+        "nested-materializer",
+        "nested-staged",
+        "nested-load"
+      ]
+    }
+  },
+  "httpEvidence": {
+    "network": [
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:16:46.514Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 1077.0419999999867,
+        "headersCount": 6,
+        "bodyPresent": true,
+        "bodySize": 26,
+        "monotonicTime": 223284.013
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:17:20.508Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 3204.8399999999965,
+        "headersCount": 6,
+        "bodyPresent": true,
+        "bodySize": 318,
+        "monotonicTime": 257277.406
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:17:58.993Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 3235.2430000000168,
+        "headersCount": 6,
+        "bodyPresent": true,
+        "bodySize": 318,
+        "monotonicTime": 295762.372
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:17:58.990Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 3242.675,
+        "headersCount": 6,
+        "bodyPresent": false,
+        "bodySize": -1,
+        "monotonicTime": 295759.881
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:18:03.806Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-materiality",
+        "queryPresent": true,
+        "method": "GET",
+        "status": -1,
+        "timeMs": -1,
+        "headersCount": 0,
+        "bodyPresent": false,
+        "bodySize": -1,
+        "monotonicTime": 300575.507
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:19:04.304Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 7513.127000000037,
+        "headersCount": 6,
+        "bodyPresent": true,
+        "bodySize": 318,
+        "monotonicTime": 361073.872
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:19:04.301Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "queryPresent": true,
+        "method": "GET",
+        "status": 200,
+        "timeMs": 7522.094,
+        "headersCount": 6,
+        "bodyPresent": true,
+        "bodySize": 318,
+        "monotonicTime": 361070.394
+      },
+      {
+        "trace": "1-trace.network",
+        "started": "2026-11-24T02:18:03.809Z",
+        "path": "/sucafina/dashboard",
+        "sf": "memory-materiality",
+        "queryPresent": true,
+        "method": "GET",
+        "status": -1,
+        "timeMs": -1,
+        "headersCount": 0,
+        "bodyPresent": false,
+        "bodySize": -1,
+        "monotonicTime": 300578.262
+      }
+    ],
+    "actions": [
+      {
+        "trace": "1-trace.trace",
+        "method": "fetch",
+        "class": "APIRequestContext",
+        "start": "2026-11-24T02:16:46.513Z",
+        "durationMs": 1079.381000000023,
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "timeout": 40000,
+        "failure": null
+      },
+      {
+        "trace": "1-trace.trace",
+        "method": "fetch",
+        "class": "APIRequestContext",
+        "start": "2026-11-24T02:17:20.507Z",
+        "durationMs": 3206.301999999996,
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "timeout": 40000,
+        "failure": null
+      },
+      {
+        "trace": "1-trace.trace",
+        "method": "fetch",
+        "class": "APIRequestContext",
+        "start": "2026-11-24T02:17:58.992Z",
+        "durationMs": 3236.4380000000237,
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "timeout": 40000,
+        "failure": null
+      },
+      {
+        "trace": "1-trace.trace",
+        "method": "fetch",
+        "class": "APIRequestContext",
+        "start": "2026-11-24T02:18:03.808Z",
+        "durationMs": 39999.723,
+        "path": "/sucafina/dashboard",
+        "sf": "memory-materiality",
+        "timeout": 40000,
+        "failure": "original-fetch-40000-timeout"
+      },
+      {
+        "trace": "1-trace.trace",
+        "method": "fetch",
+        "class": "APIRequestContext",
+        "start": "2026-11-24T02:19:04.303Z",
+        "durationMs": 7514.927000000025,
+        "path": "/sucafina/dashboard",
+        "sf": "memory-conditions",
+        "timeout": 40000,
+        "failure": null
+      },
+      {
+        "trace": "0-trace.trace",
+        "method": "goto",
+        "class": "Frame",
+        "start": "2026-11-24T02:18:43.972Z",
+        "durationMs": 15003.092000000004,
+        "path": "/orchestra/sf-memory/signals",
+        "sf": null,
+        "timeout": 15000,
+        "failure": "original-goto-15000-timeout"
+      }
+    ],
+    "steps": [],
+    "traceSha256": "2774fb98c5e390e691c1f6fde6d3894413c509e9e2fa6f1ee5eacfccb6ea8823"
+  },
+  "steps": [
+    {
+      "title": "UI61 publishes registered conditions without starting signal re-evaluation",
+      "durationMs": 39667.64799999999,
+      "failed": false,
+      "failure": null
+    },
+    {
+      "title": "UI61 reads original materiality independently and clears detail on a new selection",
+      "durationMs": 40441.59899999999,
+      "failed": true,
+      "failure": "original-fetch-40000-timeout"
+    },
+    {
+      "title": "UI61 Portuguese condition",
+      "durationMs": 20185.328000000038,
+      "failed": true,
+      "failure": "original-goto-15000-timeout"
+    },
+    {
+      "title": "UI61 explicitly starts the original signal read and cancels only this view's wait",
+      "durationMs": 8183.625,
+      "failed": false,
+      "failure": null
+    },
+    {
+      "title": "No memory selection command was issued by the browser",
+      "durationMs": 0.7229999999981374,
+      "failed": false,
+      "failure": null
+    },
+    {
+      "title": "Memory pages emitted no JavaScript errors",
+      "durationMs": 0.7670000000507571,
+      "failed": false,
+      "failure": null
+    },
+    {
+      "title": "Memory console contains only verified original coverage refusals",
+      "durationMs": 3.5829999999841675,
+      "failed": true,
+      "failure": "console-expected-refusal-assertion-with-ERR_FAILED"
+    }
+  ],
+  "visualInspection": {
+    "inspected": {
+      "path": "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui61-U-dafaa-xplicit-signal-cancellation-chromium/test-failed-1.png",
+      "width": 320,
+      "height": 900,
+      "sha256": "cca2cce67858ffda04c794e8d24865581872777609e9456d6642eef38de202bb"
+    },
+    "finding": "The original 320x900 failure capture shows the initial authorized-case selection layout. It is diagnostic evidence and adds no final UI qualification or capture count."
+  },
+  "preparation": {
+    "strip": [
+      {
+        "path": "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "baseSha": "be07cf4ee259998391d21cb3fd2f180d28737199",
+        "restoresExactly": true,
+        "awaitTokensBefore": 0,
+        "awaitTokensAfter": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts",
+        "baseSha": "d2bc265ae515309d28b1da9d90101a9d1410d7ce",
+        "restoresExactly": true,
+        "awaitTokensBefore": 1,
+        "awaitTokensAfter": 1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "baseSha": "9d39f7fe2ccdc6add55be7c53877cdcda2721bbe",
+        "restoresExactly": true,
+        "awaitTokensBefore": 21,
+        "awaitTokensAfter": 21
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "baseSha": "ccf2734f9a93ca462d627402759b70f45784c538",
+        "restoresExactly": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "baseSha": "cfd4a75a7914d9cd073ac0c69733124294283662",
+        "restoresExactly": true
+      }
+    ],
+    "readback": [
+      {
+        "path": "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "sha": "4ddc7a57b00dbe2d9c1b36e72458a2435abe273e",
+        "characters": 8018
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts",
+        "sha": "faaff4cff900c2875ce5d67f027964c8243a5d8e",
+        "characters": 13086
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "62d43078a852dd4338a18083414398e0a81949ae",
+        "characters": 69552
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "sha": "a99dab61f946eea52266db166a5d4dac966e059b",
+        "characters": 8177
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "sha": "675e73a026723a73083cf3bdaf47db5b1e4169ac",
+        "characters": 12328
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/diagnostic-ui61.spec.ts",
+        "sha": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+        "unchanged": true
+      },
+      {
+        "path": ".ci-run.json",
+        "sha": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+        "unchanged": true
+      }
+    ]
+  },
+  "localFiles": {
+    "owner-records.json": {
+      "bytes": 650706,
+      "sha256": "f686c9eaf488fc55851d9fbac82676d424ce79f068e2e71ed3590e5417344eac",
+      "gitBlobSha1": "c91bb8c6f03149186b57e80fefeff62722cf7066"
+    },
+    "runtime-verification.json": {
+      "bytes": 1367,
+      "sha256": "556ae28c2efaad45339edbaea932b1c540f9651d9390d2bf982e6c75f4841a9c",
+      "gitBlobSha1": "7af7e21621e71a0cb6d408dd7866d435667b5c27"
+    },
+    "cross-check.json": {
+      "bytes": 306,
+      "sha256": "a7e03ead45cd776f6846115fd510811c9ea45a27b318c27868b7c13778929a9f",
+      "gitBlobSha1": "bfb14186517d6a636bf54be14958e771de1fa9c6"
+    },
+    "numeric-records.json": {
+      "bytes": 849818,
+      "sha256": "fcc237f1fe7d486add374b6b727b4e330ee1b9b57c5554d6def8a2a7f7a06927",
+      "gitBlobSha1": "0f0198407424303fc925259a611bcde78fd360b0"
+    },
+    "numeric-analysis.json": {
+      "bytes": 30464,
+      "sha256": "4c843ae47c3e7fb154725643c202171649dd913d35f65aa716338273d5223d2b",
+      "gitBlobSha1": "6eea1fd153220eaff184503363e9c5d297ef6571"
+    },
+    "http-timeline.json": {
+      "bytes": 4970,
+      "sha256": "c48241d7a14cd1eb3c0508c497b07b26c02b6e614745d3a56fa8f821ce45c48b",
+      "gitBlobSha1": "d64ba593242bb5de3da1e14b056a83bb55d380c5"
+    },
+    "artifact-manifest.json": {
+      "bytes": 7476,
+      "sha256": "6e83697f52502c3898d404fa1c1a064e09dbf60b1ab68b923077ec4610aca6f5",
+      "gitBlobSha1": "3c3f843f2ee2ee2651a6794b88489cb6bb308e7a"
+    },
+    "analysis-config.json": {
+      "bytes": 4447,
+      "sha256": "588093b9784ca899e519cd00a7d41876b70b7c54faa898085ef2ac24fd42b63f",
+      "gitBlobSha1": "97bd5921a2e91295bee437e038d74f3c92507525"
+    },
+    "run-metadata.json": {
+      "bytes": 26308,
+      "sha256": "4c0adee0397db7d9e260291e324eec65e625af2ae9fc7214da3017ababc1f93f",
+      "gitBlobSha1": "19e4933c4fee3aa408c6822a0b64e9ed7d51916f"
+    },
+    "test-steps.json": {
+      "bytes": 2701,
+      "sha256": "3aae00d65845083ecc8df9f6a4faa3dda201b9c422c01b57383b5b917fbfa707",
+      "gitBlobSha1": "aa3ec83bce7fd5de4b0dfc5a90fbaf3bc6bf0f46"
+    }
+  },
+  "interpretation": [
+    "All 681 profiles reached final rows with activeAsync zero; fulfilled describes Promise settlement, not successful typed product data or an HTTP response.",
+    "Each Materiality tree has 34 Finance and 92 case owners plus its own root. All descendants are counted once using final rows; partial checkpoints are never added to final totals.",
+    "The two original Materiality observations remain separate. Their duration sum is 64.330118 s; the epoch-rounded first-start-to-second-end window is approximately 64.334685 s.",
+    "The original 40 s fetch failed without headers or body. Internal region settlement is not evidence of a late 200 response.",
+    "Actual retained-return counters prove 460 hits out of 552 helper calls across both trees. There are 92 first admitted unequal reads, 92 retained baselines and 92 original hashes, with no opaque, closed, busy, pin-refusal or observational-exception fallback.",
+    "Admitted unequal includes a first admissible input with no baseline. Baseline retained is cumulative and is not the number of live retained objects.",
+    "Inspect (10.642576 s) dominates the new helper timers. Pins (0.047081 s) are not a material performance target in this run. All fresh input inspection and original guards remain intact.",
+    "The large-string metadata parse, escaped decode and plain slice spans have zero calls in both trees. A large decoded-string cache is not supported as a fix for this measured Materiality path.",
+    "The materializer spends 10.089620 s in JSON.parse(copy.json). These parses create fresh mutable snapshot graphs; their cost does not authorize reusing those graphs.",
+    "New 27/22 spans are contained within older 184/47 costs. Do not sum parent and child spans or reuse elapsed differences as a controlled benchmark.",
+    "The 40 s API guard, 15 s goto, 300 s case bound, retry 0, workers 1 and all original assertions are unchanged. Conditions, signal cancellation, no browser commands and no JavaScript errors passed; the console-refusal assertion failed on the aborted resource and remains recorded.",
+    "Only numeric observations were added to the diagnostic snapshot. They are not product changes and must not be integrated."
+  ]
+}
