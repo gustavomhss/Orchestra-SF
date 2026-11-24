@@ -131,6 +131,11 @@ test("Pure tuple families preserve fresh values across nested reads, concurrent 
               expect(child.digest(tuple())).toBe(expected)
               child.close()
             }
+            // The still-open parent lease is foreign to this child token.
+            const foreign = tuple(5)
+            expect(sibling.digest(foreign)).toBe(digestSfValue(foreign))
+            foreign.sources.planner = "changed inside the foreign child"
+            expect(sibling.digest(foreign)).toBe(digestSfValue(foreign))
           } finally { closeChild() }
         })
 
@@ -177,6 +182,11 @@ test("Pure tuple families preserve fresh values across nested reads, concurrent 
           changed.sources.planner = "changed while the other read is pending"
           expect(lease.digest(changed)).toBe(digestSfValue(changed))
         }
+        // The first read is still pending: its open lease cannot borrow this token.
+        const foreign = tuple(23)
+        expect(retained.child!.digest(foreign)).toBe(digestSfValue(foreign))
+        foreign.snapshots.planner.amount = 2300
+        expect(retained.child!.digest(foreign)).toBe(digestSfValue(foreign))
         await Promise.resolve()
       } finally { close() }
     })
@@ -214,4 +224,91 @@ test("Pure tuple families preserve fresh values across nested reads, concurrent 
       await deadline.close()
     }
   }
+}, 15_000)
+
+test("Scoped families retain original opaque reads, failures and reentrancy without post-hash admission", async () => {
+  const deadline = compositionTestDeadline("fresh-tuple-scope-opaque", 12_000)
+  const leases: Lease[] = []
+  try {
+    runSfFreshTupleRead((close) => {
+      try {
+        const first = createSfFreshTupleDigest("finance"), second = createSfFreshTupleDigest("finance")
+        leases.push(first, second)
+        const original = tuple()
+        expect(first.digest(original)).toBe(digestSfValue(original))
+        expect(second.digest(structuredClone(original))).toBe(digestSfValue(original))
+
+        const counts = { get: 0, keys: 0, descriptor: 0, prototype: 0 }
+        const proxy = new Proxy({ first: 1, nested: { amount: 2 } }, {
+          get: (target, key, receiver) => { counts.get++; return Reflect.get(target, key, receiver) },
+          ownKeys: (target) => { counts.keys++; return Reflect.ownKeys(target) },
+          getOwnPropertyDescriptor: (target, key) => { counts.descriptor++; return originalDescriptor(target, key) },
+          getPrototypeOf: (target) => { counts.prototype++; return Object.getPrototypeOf(target) },
+        })
+        const canonical = digestSfValue(proxy), expectedCounts = { ...counts }
+        counts.get = 0; counts.keys = 0; counts.descriptor = 0; counts.prototype = 0
+        expect(second.digest(proxy)).toBe(canonical)
+        expect(counts).toEqual(expectedCounts)
+
+        const getterCounts = { alias: 0, error: 0, outer: 0, inner: 0, removal: 0 }
+        const shared = { get amount() { getterCounts.alias++; return 19 } }
+        expect(first.digest({ a: shared, b: shared })).toBe(digestSfValue({ a: { amount: 19 }, b: { amount: 19 } }))
+        expect(getterCounts.alias).toBe(2)
+        const failure = new Error("Original scoped getter failure")
+        const failed = observe(() => second.digest({ get value() { getterCounts.error++; throw failure } }))
+        expect(failed.ok).toBe(false)
+        if (failed.ok) throw new Error("Expected original scoped getter failure")
+        expect(failed.error).toBe(failure)
+        expect(getterCounts.error).toBe(1)
+
+        const inner = { get value() { getterCounts.inner++; return 21 } }
+        const outer = { get value() { getterCounts.outer++; return second.digest(inner) } }
+        expect(first.digest(outer)).toBe(digestSfValue({ value: digestSfValue({ value: 21 }) }))
+        expect(getterCounts.outer).toBe(1)
+        expect(getterCounts.inner).toBe(1)
+
+        const changing: Record<string, unknown> = { stable: 1 }
+        originalDefine(changing, "ephemeral", { enumerable: true, configurable: true, get: () => {
+          getterCounts.removal++
+          originalDelete(changing, "ephemeral")
+          changing.stable = 2
+          return "observed once"
+        } })
+        const before = digestSfValue({ ephemeral: "observed once", stable: 2 }), after = digestSfValue({ stable: 2 })
+        expect(first.digest(changing)).toBe(before)
+        expect(getterCounts.removal).toBe(1)
+        expect(second.digest(changing)).toBe(after)
+        expect(after).not.toBe(before)
+
+        const cycle: { current?: unknown } = {}
+        cycle.current = cycle
+        const canonicalCycle = observe(() => digestSfValue(cycle))
+        const scopedCycle = observe(() => second.digest(cycle))
+        expect(canonicalCycle.ok).toBe(false)
+        expect(scopedCycle.ok).toBe(false)
+        if (canonicalCycle.ok || scopedCycle.ok) throw new Error("Expected original cycle refusal")
+        expect(scopedCycle.error instanceof Error && scopedCycle.error.name)
+          .toBe(canonicalCycle.error instanceof Error && canonicalCycle.error.name)
+        expect(scopedCycle.error instanceof Error && scopedCycle.error.message)
+          .toBe(canonicalCycle.error instanceof Error && canonicalCycle.error.message)
+
+        const different = tuple(40)
+        expect(first.digest(different)).toBe(digestSfValue(different))
+        const closer = { get value() { close(); return second.digest(tuple(41)) } }
+        expect(first.digest(closer)).toBe(digestSfValue({ value: digestSfValue(tuple(41)) }))
+        expect(first.digest(tuple(42))).toBe(digestSfValue(tuple(42)))
+        expect(second.digest(tuple(43))).toBe(digestSfValue(tuple(43)))
+      } finally { close() }
+    })
+    await Promise.resolve()
+    deadline.check()
+    runSfFreshTupleRead((close) => {
+      const recovered = createSfFreshTupleDigest("finance")
+      leases.push(recovered)
+      try {
+        expect(recovered.digest(tuple())).toBe(digestSfValue(tuple()))
+        expect(recovered.digest(tuple(44))).toBe(digestSfValue(tuple(44)))
+      } finally { close() }
+    })
+  } finally { for (const lease of leases) lease.close(); await deadline.close() }
 }, 15_000)
