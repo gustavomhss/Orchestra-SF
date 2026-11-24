@@ -87,8 +87,15 @@ test("C08 case projection retains complete payload, two authorizations and fresh
     })
     const run = async (opaque: boolean) => {
       f.reset()
+      let fullClones = 0
+      f.control.before = (snapshot, count) => {
+        if (count !== 1) return
+        const state = snapshot.data.__sfProductV1 as SfProductState
+        Object.defineProperty(state.preferences, "cloneProbe", { enumerable: true, get: () => { fullClones++; return "cloneable" } })
+      }
       const result = await f.port.read(f.request(), "cases", opaque ? (state, actor) => read(state, actor) : read)
       expect(f.control.calls).toEqual([{ namespace: "cases", mode: "read" }, { namespace: "cases", mode: "read" }])
+      expect(fullClones).toBe(opaque ? 1 : 0)
       return result
     }
     const baseline = await run(true), selected = await run(false)
@@ -148,9 +155,11 @@ test("C08 Atlas projection clones the complete partition and outbox as one fresh
     })
     const run = async (opaque: boolean) => {
       f.reset()
+      let fullClones = 0
       f.control.before = (snapshot, count) => {
         if (count !== 1) return
         const state = snapshot.data.__sfProductV1 as SfProductState
+        Object.defineProperty(state.preferences, "cloneProbe", { enumerable: true, get: () => { fullClones++; return "cloneable" } })
         const graph = state.atlas.owner as Graph
         graph.shared = { amount: 42 }
         graph.outbox = state.outbox
@@ -161,6 +170,7 @@ test("C08 Atlas projection clones the complete partition and outbox as one fresh
       }
       const result = await f.port.read(f.request(), "atlas", opaque ? (state, actor) => read(state, actor) : read)
       expect(f.control.calls).toEqual([{ namespace: "atlas", mode: "read" }, { namespace: "atlas", mode: "read" }])
+      expect(fullClones).toBe(opaque ? 1 : 0)
       return result
     }
     const baseline = await run(true), selected = await run(false)
@@ -180,5 +190,119 @@ test("C08 Atlas projection clones the complete partition and outbox as one fresh
     const durable = ok(await f.port.read(f.request(), "atlas", (state) => ({ atlas: state.atlas, outbox: state.outbox })))
     expect(durable.atlas.owner).toEqual({ marker: "selected", rows: [{ amount: 12 }] })
     expect(durable.outbox).toEqual({})
+  } finally { await deadline.close() }
+}, 15_000)
+
+test("C08 capture selectors keep opaque contexts, readers and descriptors on the original full clone", async () => {
+  const deadline = compositionTestDeadline("atlas-selector-fallback", 12_000)
+  try {
+    const f = await selectorFixture(deadline)
+    type Counts = { fullClones: number; getters: number; traps: number; projects: number }
+    type ContextCase = { name: string; context: (counts: Counts) => TrustedDomainContext; wrap?: boolean; wrongNamespace?: boolean; proxyProject?: boolean }
+    const contexts: ContextCase[] = [
+      { name: "mutable", context: () => ({ ...f.call, binding: { ...f.call.binding } }) },
+      { name: "opaque callback", context: () => f.call, wrap: true },
+      { name: "wrong namespace", context: () => f.call, wrongNamespace: true },
+      { name: "projector Proxy", context: () => f.call, proxyProject: true },
+      { name: "context Proxy", context: (counts) => new Proxy(f.call, {
+        get: (target, key, receiver) => { counts.traps++; return Reflect.get(target, key, receiver) },
+        getOwnPropertyDescriptor: (target, key) => { counts.traps++; return Reflect.getOwnPropertyDescriptor(target, key) },
+        getPrototypeOf: (target) => { counts.traps++; return Reflect.getPrototypeOf(target) },
+      }) },
+      { name: "binding Proxy", context: (counts) => Object.freeze({ ...f.call, binding: new Proxy(f.call.binding, {
+        get: (target, key, receiver) => { counts.traps++; return Reflect.get(target, key, receiver) },
+        getOwnPropertyDescriptor: (target, key) => { counts.traps++; return Reflect.getOwnPropertyDescriptor(target, key) },
+        getPrototypeOf: (target) => { counts.traps++; return Reflect.getPrototypeOf(target) },
+      }) }) },
+      { name: "frozen binding getter", context: (counts) => Object.freeze(Object.defineProperty({ ...f.call }, "binding",
+        { enumerable: true, get: () => { counts.getters++; return f.call.binding } })) },
+      { name: "frozen kind getter", context: (counts) => Object.freeze(Object.defineProperty({ ...f.call }, "kind",
+        { enumerable: true, get: () => { counts.getters++; return "ui" } })) },
+      { name: "frozen native case getter", context: (counts) => {
+        const binding = Object.freeze(Object.defineProperty({ ...f.call.binding }, "caseId",
+          { enumerable: true, get: () => { counts.getters++; return "selected" } }))
+        return Object.freeze({ kind: "native", binding, lease: {} }) as TrustedDomainContext
+      } },
+    ]
+    for (const kind of ["cases", "atlas"] as const) for (const entry of contexts) {
+      const run = async (opaque: boolean) => {
+        f.reset()
+        const counts: Counts = { fullClones: 0, getters: 0, traps: 0, projects: 0 }
+        const call = entry.context(counts)
+        const project = (value: unknown, actor: SfStateAuthority) => {
+          counts.projects++
+          const contextKind = call.kind, binding = call.binding
+          return { value, actor, contextKind, principal: binding.principalRef,
+            nativeCase: contextKind === "native" ? Reflect.get(binding, "caseId") : undefined }
+        }
+        const callback = entry.proxyProject ? new Proxy(project, { apply: (target, receiver, args) => {
+          counts.traps++
+          return Reflect.apply(target, receiver, args)
+        } }) : project
+        const read = kind === "cases" ? selectSfCaseProjection("selected", call, callback)
+          : selectSfAtlasPartition("owner", call, (partition, outbox, actor) => callback({ partition, outbox }, actor))
+        // The Atlas projector itself must be opaque for that particular case.
+        const atlasRead = kind === "atlas" && entry.proxyProject ? selectSfAtlasPartition("owner", call,
+          new Proxy((partition: unknown, outbox: SfProductState["outbox"], actor: SfStateAuthority) => project({ partition, outbox }, actor),
+            { apply: (target, receiver, args) => { counts.traps++; return Reflect.apply(target, receiver, args) } })) : read
+        expect({ getters: counts.getters, traps: counts.traps }).toEqual({ getters: 0, traps: 0 })
+        f.control.before = (snapshot, count) => {
+          if (count === 1) Object.defineProperty((snapshot.data.__sfProductV1 as SfProductState).preferences, "cloneProbe",
+            { enumerable: true, get: () => { counts.fullClones++; return "cloneable" } })
+        }
+        const namespace = entry.wrongNamespace ? kind === "cases" ? "atlas" : "cases" : kind
+        const observed = await f.observe(namespace, opaque || entry.wrap ? (state, actor) => atlasRead(state, actor) : atlasRead)
+        expect(counts.fullClones).toBe(1)
+        expect(counts.projects).toBe(1)
+        expect(f.control.calls).toEqual([{ namespace, mode: "read" }, { namespace, mode: "read" }])
+        return { observed, counts }
+      }
+      const baseline = await run(true), projected = await run(false)
+      expect({ kind, case: entry.name, ...projected }).toEqual({ kind, case: entry.name, ...baseline })
+    }
+
+    const shapes = ["missing", "inherited", "nonenumerable", "accessor", "nonplain map", "nonplain value", "proxy map", "proxy value", "proxy state", "outbox accessor"] as const
+    for (const kind of ["cases", "atlas"] as const) for (const shape of shapes) {
+      if (kind === "cases" && shape === "outbox accessor") continue
+      const run = async (opaque: boolean) => {
+        f.reset()
+        const counts = { fullClones: 0, getters: 0, traps: 0, projects: 0 }
+        f.control.before = (snapshot, count) => {
+          if (count !== 1) return
+          const state = snapshot.data.__sfProductV1 as SfProductState
+          Object.defineProperty(state.preferences, "cloneProbe", { enumerable: true, get: () => { counts.fullClones++; return "cloneable" } })
+          const map = kind === "cases" ? state.cases : state.atlas
+          const key = kind === "cases" ? "selected" : "owner"
+          const value = Reflect.get(map, key)
+          const proxy = <Value extends object>(target: Value) => new Proxy(target, {
+            get: (original, name, receiver) => { counts.traps++; return Reflect.get(original, name, receiver) },
+            getOwnPropertyDescriptor: (original, name) => { counts.traps++; return Reflect.getOwnPropertyDescriptor(original, name) },
+            ownKeys: (original) => { counts.traps++; return Reflect.ownKeys(original) },
+            getPrototypeOf: (original) => { counts.traps++; return Reflect.getPrototypeOf(original) },
+          })
+          if (shape === "missing") Reflect.deleteProperty(map, key)
+          if (shape === "inherited") { Reflect.deleteProperty(map, key); Object.setPrototypeOf(map, { [key]: value }) }
+          if (shape === "nonenumerable") Object.defineProperty(map, key, { enumerable: false, value })
+          if (shape === "accessor") Object.defineProperty(map, key, { enumerable: true, get: () => { counts.getters++; return value } })
+          if (shape === "nonplain map") Object.setPrototypeOf(map, { originalMap: true })
+          if (shape === "nonplain value") Object.setPrototypeOf(value, { originalValue: true })
+          if (shape === "proxy map") Reflect.set(state, kind, proxy(map))
+          if (shape === "proxy value") Reflect.set(map, key, proxy(value))
+          if (shape === "proxy state") snapshot.data.__sfProductV1 = proxy(state)
+          if (shape === "outbox accessor") {
+            const outbox = state.outbox
+            Object.defineProperty(state, "outbox", { enumerable: true, get: () => { counts.getters++; return outbox } })
+          }
+        }
+        const read = kind === "cases"
+          ? selectSfCaseProjection("selected", f.call, (value, actor) => { counts.projects++; return { value, actor } })
+          : selectSfAtlasPartition("owner", f.call, (partition, outbox, actor) => { counts.projects++; return { value: { partition, outbox }, actor } })
+        const observed = await f.observe(kind, opaque ? (state, actor) => read(state, actor) : read)
+        return { observed, counts, authorizations: [...f.control.calls] }
+      }
+      const baseline = await run(true), projected = await run(false)
+      expect({ kind, shape, ...projected }).toEqual({ kind, shape, ...baseline })
+      if (!shape.startsWith("proxy")) expect(projected.counts.fullClones).toBe(1)
+    }
   } finally { await deadline.close() }
 }, 15_000)
