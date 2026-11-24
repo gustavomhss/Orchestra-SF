@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks"
 import { types } from "node:util"
 
-// Snapshot-only numeric aggregates. No request, reference, authority value or result is retained.
+// Snapshot-only numeric aggregates. No request, reference, authority value or result graph is retained.
 // Header: schema, owner, parent, depth, kind, phase, fulfilled, epochMs, elapsedUs, activeAsync.
 // kind: 0 Finance, 1 case read, 2 Recall, 3/4 first/second Materiality read.
 // phase: 0 settlement, 1/2 first read/rank,
@@ -55,6 +55,18 @@ function tupleCrossLedger(): TupleCrossLedger {
   return { open: true, families: [tupleCrossFamily(), tupleCrossFamily(), tupleCrossFamily()] }
 }
 
+/** One bounded sequence of original BCS context hashes per complete Materiality read.
+ * Counters: returns, no previous hash, equal, different, invalid return, cap, late,
+ * missing ancestry, observer errors. Scope 1 output is a drop-report boundary only. */
+const bcsHashReturnLimit = 4096
+const bcsHashLengthLimit = 128
+type BcsHashCounts = [number, number, number, number, number, number, number, number, number]
+type BcsHashLedger = { open: boolean; capped: boolean; last: string | undefined; counts: BcsHashCounts }
+function emptyBcsHashCounts(): BcsHashCounts { return [0, 0, 0, 0, 0, 0, 0, 0, 0] }
+function bcsHashLedger(): BcsHashLedger {
+  return { open: true, capped: false, last: undefined, counts: emptyBcsHashCounts() }
+}
+
 type Profile = {
   id: number
   parent: number
@@ -75,11 +87,14 @@ type Profile = {
   tupleCrossFirst: boolean
   tupleCrossCounted: boolean
   tupleCrossDrops: TupleCrossCounts
+  bcsHash: BcsHashLedger | undefined
+  bcsHashDrops: BcsHashCounts
 }
 const profiles = new AsyncLocalStorage<Profile>()
 let sequence = 0
 // Numeric drops only; no-profile observations cannot retain a hash or a ledger.
 const unscopedTupleDrops = emptyTupleCrossCounts()
+const unscopedBcsDrops = emptyBcsHashCounts()
 
 
 /** Observe a synchronous boundary without catching/replaying its original result or error. */
@@ -279,13 +294,60 @@ export function sfMaterializeCost<Value>(bucket: MaterializeCostBucket, read: ()
   }
 }
 
+/** Observe the already produced primitive only, after its original cost timer has closed. */
+function observeBcsContextHash(value: unknown) {
+  try {
+    const profile = profiles.getStore()
+    if (!profile) { unscopedBcsDrops[7]++; return }
+    const ledger = profile.bcsHash
+    if (profile.closed || ledger && !ledger.open) {
+      if (ledger?.open) { ledger.counts[6]++; ledger.last = undefined }
+      else if (!profile.closed) profile.bcsHashDrops[6]++
+      else unscopedBcsDrops[6]++
+      return
+    }
+    if (!ledger) { profile.bcsHashDrops[7]++; return }
+    ledger.counts[0]++
+    if (ledger.capped || ledger.counts[0] > bcsHashReturnLimit) {
+      ledger.capped = true
+      ledger.last = undefined
+      ledger.counts[5]++
+      return
+    }
+    if (typeof value !== "string" || value.length > bcsHashLengthLimit) {
+      ledger.last = undefined
+      ledger.counts[4]++
+      return
+    }
+    if (ledger.last === undefined) ledger.counts[1]++
+    else if (ledger.last === value) ledger.counts[2]++
+    else ledger.counts[3]++
+    ledger.last = value
+  } catch { unscopedBcsDrops[8]++ }
+}
+
+function closeBcsHashes(profile: Profile) {
+  try {
+    if (profile.kind !== 3 && profile.kind !== 4 || !profile.bcsHash) return
+    profile.bcsHash.open = false
+    profile.bcsHash.last = undefined
+  } catch { unscopedBcsDrops[8]++ }
+}
+
 export function sfRecallCost<Value>(bucket: Bucket, read: () => Value): Value {
   const profile = profiles.getStore()
-  if (!profile || profile.closed) return read()
+  if (!profile || profile.closed) {
+    const value = read()
+    if (bucket === "bcs-context-digest") observeBcsContextHash(value)
+    return value
+  }
   const started = performance.now()
   profile.values[bucket][0]++
-  try { return read() }
+  let value: Value
+  try { value = read() }
   finally { profile.values[bucket][1] += Math.max(0, Math.round((performance.now() - started) * 1000)) }
+  if (bucket === "bcs-context-digest") observeBcsContextHash(value)
+  return value
 }
 
 /** Attach a passive settlement observer and return the exact original Promise. */
@@ -347,6 +409,7 @@ export function sfRecallCostOwner<Value>(kind: 0 | 1 | 2 | 3 | 4, work: () => Pr
     materializeCost: Object.fromEntries(materializeCostBuckets.map((bucket) => [bucket, [0, 0]])) as Record<MaterializeCostBucket, [number, number]>,
     tupleCross: kind === 3 || kind === 4 ? tupleCrossLedger() : parent?.tupleCross,
     tupleCrossFirst: false, tupleCrossCounted: false, tupleCrossDrops: emptyTupleCrossCounts(),
+    bcsHash: kind === 3 || kind === 4 ? bcsHashLedger() : parent?.bcsHash, bcsHashDrops: emptyBcsHashCounts(),
   }
   return profiles.run(profile, () => {
     const finish = (fulfilled: 0 | 1) => {
@@ -375,6 +438,7 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
   if (profile.closed) return
   if (phase === 0) profile.closed = true
   if (phase === 0) closeTupleCross(profile)
+  if (phase === 0) closeBcsHashes(profile)
   try {
     const now = performance.now()
     const elapsed = new Map<Bucket, number>()
@@ -408,6 +472,20 @@ function emit(profile: Profile, phase: number, fulfilled: 0 | 1 | 2) {
     if (drops) {
       const dropFields = [...fields.slice(0, 10), 3, ...profile.tupleCrossDrops]
       process.stdout.write("SF_TUPLE_CROSS_OWNER " + dropFields.join(" ") + "\n")
+    }
+    if ((profile.kind === 3 || profile.kind === 4) && profile.bcsHash) {
+      const bcsFields = [...fields.slice(0, 10), 0, ...profile.bcsHash.counts]
+      process.stdout.write("SF_BCS_CONTEXT_HASH " + bcsFields.join(" ") + "\n")
+    }
+    let bcsDrops = false
+    for (let index = 0; index < 9; index++) {
+      profile.bcsHashDrops[index]! += unscopedBcsDrops[index]!
+      unscopedBcsDrops[index] = 0
+      if (profile.bcsHashDrops[index]) bcsDrops = true
+    }
+    if (bcsDrops) {
+      const dropFields = [...fields.slice(0, 10), 1, ...profile.bcsHashDrops]
+      process.stdout.write("SF_BCS_CONTEXT_HASH " + dropFields.join(" ") + "\n")
     }
   } catch { /* A diagnostic sink cannot replace the original result or error. */ }
 }
