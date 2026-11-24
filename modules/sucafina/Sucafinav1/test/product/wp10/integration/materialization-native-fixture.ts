@@ -1,3 +1,4 @@
+import { expect } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
