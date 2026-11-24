@@ -124,7 +124,8 @@ test("C08 preferences projection keeps the complete fresh graph and detaches eve
     expect(retained).toHaveLength(2)
     expect(retained[0]).not.toBe(retained[1])
     expect(retained[0]!.private).not.toBe(retained[1]!.private)
-    ;(retained[1]!.private as Graph).amount = 999
+    const changed = retained[1]!.private as Graph
+    changed.amount = 999
     retained[1]!.callerOnly = { changed: true }
     expect((retained[0]!.private as Graph).amount).toBe(12)
     expect(await run(false)).toEqual(baseline)
@@ -299,3 +300,139 @@ test("C08 preferences projection keeps both authority checks around asynchronous
     expect(await detached(false)).toEqual(await detached(true))
   } finally { await deadline.close() }
 }, 15_000)
+
+test("Baseline coverage reads the complete preference graph and observes selection at original C08 admission", async () => {
+  const deadline = compositionTestDeadline("preferences-baseline-composition", 12_000)
+  try {
+    const f = await preferencesFixture(deadline)
+    const c = await registeredCoverage(f)
+    const persisted = await c.snapshot()
+    const run = async (opaque: boolean, classified: boolean, drift?: "first" | "second") => {
+      f.reset()
+      c.select("selected")
+      c.observed.length = 0
+      let fullClones = 0
+      f.control.before = (snapshot, count) => {
+        if (f.control.calls.at(-1)?.namespace !== "preferences" || count % 2 !== 1) return
+        if (count === (drift === "first" ? 3 : drift === "second" ? 7 : -1)) c.select("other")
+        Object.defineProperty((snapshot.data.__sfProductV1 as SfProductState).cases.other!, "cloneProbe",
+          { enumerable: true, get: () => { fullClones++; return "cloneable" } })
+      }
+      const coverage = opaque ? c.opaque : c.selected
+      const result = classified ? await coverage.resolveClassifiedCoverage(c.source.refId, f.call)
+        : await coverage.resolveForecastCoverage(c.source.refId, f.call)
+      const calls = [...f.control.calls]
+      if (!drift) {
+        expect(result.status).toBe("ok")
+        expect(calls.map((call) => call.namespace)).toEqual(["cases", "cases", "preferences", "preferences",
+          "cases", "cases", "preferences", "preferences"])
+        expect(calls.every((call) => call.mode === "read")).toBe(true)
+        expect(fullClones).toBe(opaque ? 2 : 0)
+        expect(ok(result)).toMatchObject({ coverageRef: c.references.selected,
+          basis: { id: "basis-selected", version: 1 }, assessment: { coverageState: "pending" } })
+        if (classified) expect(ok(result)).toHaveProperty("classification")
+      } else {
+        expect(result).toEqual({ status: drift === "first" ? "unavailable" : "stale",
+          reason: drift === "first" ? "baseline-coverage-evidence-unavailable" : "baseline-coverage-changed" })
+        const index = drift === "first" ? 3 : 7
+        const observed = c.observed.filter((entry) => entry.read === index)
+        expect(observed.length).toBeGreaterThan(0)
+        expect(observed.every((entry) => entry.id === "other")).toBe(true)
+        expect(calls).toHaveLength(drift === "first" ? 4 : 8)
+        expect(fullClones).toBe(opaque ? drift === "first" ? 1 : 2 : 0)
+      }
+      return { result, calls, observed: [...c.observed] }
+    }
+    for (const classified of [false, true]) {
+      const baseline = await run(true, classified), selected = await run(false, classified)
+      expect(selected).toEqual(baseline)
+      const result = ok(selected.result)
+      Reflect.set(result.basis, "id", "Caller changed its own detached basis")
+      expect(ok(baseline.result).basis.id).toBe("basis-selected")
+      expect(await run(false, classified)).toEqual(baseline)
+    }
+    for (const drift of ["first", "second"] as const)
+      expect(await run(false, true, drift)).toEqual(await run(true, true, drift))
+    f.reset()
+    expect(await c.snapshot()).toEqual(persisted)
+  } finally { await deadline.close() }
+}, 15_000)
+
+/** Deterministic source ports exercise the original coverage register/reader
+ * over real LocalStore/C08. This is a producer protocol control, not a browser
+ * or native installation qualification. No coverage result is fabricated. */
+async function registeredCoverage(f: Awaited<ReturnType<typeof preferencesFixture>>) {
+  const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
+  const projection: DomainProjection = {
+    context: { installationId: f.call.binding.installationId, projectId: f.call.binding.projectId,
+      principalRef: f.call.binding.principalRef, accessRevision: f.call.binding.accessRevision,
+      policyVersion: f.call.binding.policyVersion, surface: "planner", period, currency: "USD",
+      capabilities: [], sourceRefs: [{ surface: "planner", type: "version", id: "forecast", incarnation: "forecast-inc",
+        version: 1, fields: ["forecast"], period, observedAt: at }] },
+    version: 1, engineVersion: "deterministic-source-port", components: [], values: [],
+    missing: [{ field: "training", reason: "missing" }],
+  }
+  const incoming: Extract<BusinessEvidenceRef, { kind: "record" }> = {
+    schema: "sf-evidence-v1", kind: "record", refId: "planner:forecast",
+    installationId: f.call.binding.installationId, projectId: f.call.binding.projectId,
+    evidenceLevel: "observed", refDigest: "", target: { surface: "planner", recordType: "version",
+      recordId: "forecast", incarnation: "forecast-inc", version: 1, fields: ["forecast"], period,
+      projectionDigest: digestSfValue(projection) },
+  }
+  const source = { ...incoming, refDigest: digestSfEvidenceRef(incoming) }
+  let selected = { id: "selected", incarnation: "selected-inc", version: 1 }
+  const observed: { read: number; id: string }[] = []
+  const bound = {
+    get id() {
+      const read = f.control.calls.length
+      if (read % 2 === 1 && f.control.calls.at(-1)?.namespace === "preferences") observed.push({ read, id: selected.id })
+      return selected.id
+    },
+    get incarnation() { return selected.incarnation },
+    get version() { return selected.version },
+  }
+  const select = (id: "selected" | "other") => { selected = { id, incarnation: id + "-inc", version: 1 } }
+  const request = f.request()
+  const build = (opaque: boolean) => {
+    const state: SfProductStatePort = {
+      read: (incomingRequest, namespace, read) => f.port.read(incomingRequest, namespace,
+        opaque ? (value, actor) => read(value, actor) : read),
+      transaction: f.port.transaction,
+    }
+    return createDecisionBaselineCoverage({
+      state, host: { requestFor: () => request, revalidate: async () => f.control.active },
+      resolveCase: async () => ({ status: "ok", value: bound }),
+      authorizeCase: async (value, context) => f.control.active && value.participants.includes(context.binding.principalRef),
+      authorizeCoverage: async (value, context) => f.control.active && value.caseRef.id === bound.id &&
+        value.caseRef.incarnation === bound.incarnation && value.source.refDigest === source.refDigest &&
+        context.binding.principalRef === f.call.binding.principalRef,
+      projectForecast: async (ref) => ref === source.refId ? { status: "ok", value: structuredClone(projection) }
+        : { status: "unavailable", reason: "fixture-source-unavailable" },
+      resolveEvidence: async (refs, context): Promise<readonly BusinessEvidenceResolution[]> => refs.map((ref) => ({
+        state: ref.refDigest === source.refDigest && digestSfEvidenceRef(ref) === source.refDigest ? "fresh" : "invalid",
+        ref: structuredClone(ref), currentRef: structuredClone(ref), authorizedProjection: structuredClone(projection),
+        accessRevision: context.binding.accessRevision, checkedAt: at,
+      })),
+      supports: () => false, verifySnapshot: () => true, operationIdentity: () => "original-coverage-registration",
+      proposalCoverageWrites: f.writes, now: () => at,
+    })
+  }
+  const selectedCoverage = build(false), opaque = build(true)
+  const references: Record<"selected" | "other", string> = { selected: "", other: "" }
+  for (const id of ["selected", "other"] as const) {
+    select(id)
+    const basis: CostCoverageBasis = { id: "basis-" + id, version: 1, decisionType: "renewal-transition-v1",
+      categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] }
+    const registration = { caseRef: { ...selected }, source, basis, expectedVersion: 0,
+      entries: [{ status: "pending" as const, categoryId: "training", reason: "The source supplies no training evidence" }] }
+    const registered = ok(await selectedCoverage.register(registration, f.call))
+    references[id] = registered.coverageRef
+    expect(registered.version).toBe(1)
+    const produced = ok(await selectedCoverage.resolveClassifiedCoverage(registered.coverageRef, f.call))
+    expect(produced).toMatchObject({ coverageRef: registered.coverageRef, basis,
+      assessment: { coverageState: "pending" }, classification: { caseRef: registration.caseRef, source } })
+  }
+  f.reset()
+  const snapshot = async () => ok(await f.port.read(f.request(), "preferences", (state) => structuredClone(state)))
+  return { selected: selectedCoverage, opaque, source, select, references, observed, snapshot }
+}
