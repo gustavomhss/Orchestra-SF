@@ -446,7 +446,7 @@ test("Fresh tuple inspection keeps own-key cardinality and separates active cycl
   } finally { owner.close(); await deadline.close() }
 }, 15_000)
 
-test("Fresh tuple digests keep retargeted shared-buffer views on the original digest path", async () => {
+test("Fresh tuple digests reject branded clones that discard ordinary own properties", async () => {
   const deadline = compositionTestDeadline("fresh-tuple-clone-brand", 12_000)
   const owner = createSfFreshTupleDigest()
   try {
@@ -455,19 +455,35 @@ test("Fresh tuple digests keep retargeted shared-buffer views on the original di
     writer.set([3, 5, 8])
     const value = new Uint8Array(buffer)
     Object.setPrototypeOf(value, Object.prototype)
+    const extra = { value: "present in the original digest", enumerable: true, writable: true, configurable: true }
+    originalDefine(value, "freshOnly", extra)
     expect(Object.getPrototypeOf(value)).toBe(Object.prototype)
     expect(ArrayBuffer.isView(value)).toBe(true)
+    expect(Object.hasOwn(value, "freshOnly")).toBe(true)
     const detached = structuredClone(value)
     expect(Object.getPrototypeOf(detached)).toBe(Uint8Array.prototype)
     expect(ArrayBuffer.isView(detached)).toBe(true)
+    expect(Object.hasOwn(detached, "freshOnly")).toBe(false)
 
     const initial = digestSfValue(value)
     expect(owner.digest(value)).toBe(initial)
     expect(owner.digest(value)).toBe(initial)
+    expect(originalDelete(value, "freshOnly")).toBe(true)
+    const withoutExtra = digestSfValue(value)
+    expect(withoutExtra).not.toBe(initial)
+    expect(owner.digest(value)).toBe(withoutExtra)
+    expect(owner.digest(value)).toBe(withoutExtra)
+    const ordinary = { "0": 3, "1": 5, "2": 8 }
+    expect(digestSfValue(ordinary)).toBe(withoutExtra)
+    originalDefine(value, "freshOnly", extra)
+    expect(owner.digest(value)).toBe(initial)
+    expect(owner.digest(ordinary)).toBe(withoutExtra)
+
+    expect(originalDelete(value, "freshOnly")).toBe(true)
+    expect(owner.digest(value)).toBe(withoutExtra)
     writer[0] = 13
-    expect(detached[0]).toBe(13)
     const changed = digestSfValue(value)
-    expect(changed).not.toBe(initial)
+    expect(changed).not.toBe(withoutExtra)
     expect(owner.digest(value)).toBe(changed)
     expect(owner.digest(value)).toBe(changed)
 
@@ -477,17 +493,31 @@ test("Fresh tuple digests keep retargeted shared-buffer views on the original di
     nestedWriter.set([21, 34])
     const nestedView = new Uint8Array(nestedBuffer)
     Object.setPrototypeOf(nestedView, Object.prototype)
+    originalDefine(nestedView, "freshOnly", extra)
     const nested = { state: { view: nestedView }, snapshots: [{ alias: nestedView }], sources: { revision: 1 } }
     const nestedDetached = structuredClone(nested)
     expect(nestedDetached.state.view).toBe(nestedDetached.snapshots[0]!.alias)
     expect(Object.getPrototypeOf(nestedDetached.state.view)).toBe(Uint8Array.prototype)
+    expect(Object.hasOwn(nestedDetached.state.view, "freshOnly")).toBe(false)
     const nestedInitial = digestSfValue(nested)
     expect(owner.digest(nested)).toBe(nestedInitial)
     expect(owner.digest(nested)).toBe(nestedInitial)
+    expect(originalDelete(nestedView, "freshOnly")).toBe(true)
+    const nestedWithoutExtra = digestSfValue(nested)
+    expect(nestedWithoutExtra).not.toBe(nestedInitial)
+    expect(owner.digest(nested)).toBe(nestedWithoutExtra)
+    const ordinaryView = { "0": 21, "1": 34 }
+    const nestedOrdinary = { state: { view: ordinaryView }, snapshots: [{ alias: ordinaryView }], sources: { revision: 1 } }
+    expect(digestSfValue(nestedOrdinary)).toBe(nestedWithoutExtra)
+    originalDefine(nestedView, "freshOnly", extra)
+    expect(owner.digest(nested)).toBe(nestedInitial)
+    expect(owner.digest(nestedOrdinary)).toBe(nestedWithoutExtra)
+
+    expect(originalDelete(nestedView, "freshOnly")).toBe(true)
+    expect(owner.digest(nested)).toBe(nestedWithoutExtra)
     nestedWriter[1] = 55
-    expect(nestedDetached.state.view[1]).toBe(55)
     const nestedChanged = digestSfValue(nested)
-    expect(nestedChanged).not.toBe(nestedInitial)
+    expect(nestedChanged).not.toBe(nestedWithoutExtra)
     expect(owner.digest(nested)).toBe(nestedChanged)
     expect(owner.digest(nested)).toBe(nestedChanged)
 
