@@ -6,6 +6,7 @@ import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { SfProductState } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { closedPlannerScenarios } from "./finance-pair-observation.ts"
+import { createSfFreshTupleDigest } from "./fresh-tuple-digest.ts"
 import { criterionRuleKey } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
 import type { CriterionRule, createCriterionRuleRegistry } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -21,7 +22,7 @@ type Compare = ReturnType<typeof createDecisionComparisonService>
 type Value = Extract<Awaited<ReturnType<Compare>>, { status: "ok" }>["value"]
 type ScenarioValue = Extract<Awaited<ReturnType<PlannerScenarioHost["resolve"]>>, { status: "ok" }>["value"]
 type Scope = { request: Request; binding: string; bindingIntegrity: SfUiContextIntegrity; criteria: boolean; readersCurrent: () => boolean; proofs: Map<string, { fence: string; value: Value }>;
-  scenarios: Map<string, { fence: string; value: ScenarioValue }> }
+  scenarios: Map<string, { fence: string; value: ScenarioValue }>; tupleDigest: ReturnType<typeof createSfFreshTupleDigest> }
 export type SfComparisonInvocation = <T>(call: TrustedDomainContext, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
 
 /** Completed canonical comparisons may be reused only inside one lexical invocation.
@@ -82,7 +83,7 @@ export function createSfPortfolioComparisonScope(input: {
       // The complete state, including preferences, audit, transactions and
       // native runs, participates. Only synchronous checks follow this await.
       return sources && afterEnvironment === beforeEnvironment && authorized && current(call, scope)
-        ? { refs, scenarios, digest: digestSfValue({ state, sources, environment: afterEnvironment, caseRef: selected.value, binding: scope.binding, actor }) } : undefined
+        ? { refs, scenarios, digest: scope.tupleDigest.digest({ state, sources, environment: afterEnvironment, caseRef: selected.value, binding: scope.binding, actor }) } : undefined
     })
     return found.status === "ok" && found.value && current(call, scope) ? found.value : undefined
   }
@@ -249,7 +250,7 @@ export function createSfPortfolioComparisonScope(input: {
       source.resolveForecastSource === forecast && source.resolveForecastCoverage === coverage
     const bindingIntegrity = observeSfUiContextIntegrity(call)
     const scope: Scope = { request, binding: bindingIntegrity.digest, bindingIntegrity, criteria, readersCurrent,
-      proofs: new Map(), scenarios: new Map() }
+      proofs: new Map(), scenarios: new Map(), tupleDigest: createSfFreshTupleDigest() }
     active.set(call, scope)
     return execution.run(scope, async () => {
       try {
@@ -257,7 +258,7 @@ export function createSfPortfolioComparisonScope(input: {
         // The producer/consumer owns its final awaited authority boundary.
         // Do not add another await after that boundary releases its snapshot.
         return current(call, scope) ? result : denied()
-      } finally { if (active.get(call) === scope) active.delete(call) }
+      } finally { scope.tupleDigest.close(); if (active.get(call) === scope) active.delete(call) }
     })
   }
   const run: SfComparisonInvocation = (call, work) => invoke(call, work, false)
