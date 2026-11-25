@@ -741,7 +741,10 @@ test("Planner record proofs preserve original observations outside their retaine
             expect(values[1]).toBe(returned[1])
             return { status: "ok", value: values }
           }))
-        expect(sensitivityOk(observed)).toEqual(returned)
+        if (returned.length !== 2 || returned[0] === undefined || returned[1] === undefined)
+          throw new Error("Both original concurrent observations must complete")
+        const expected: [BusinessEvidenceResolution, BusinessEvidenceResolution] = [returned[0], returned[1]]
+        expect(sensitivityOk(observed)).toEqual(expected)
         expect(calls).toBe(2)
       } finally {
         release.release()
@@ -796,12 +799,14 @@ test("Planner record proofs preserve original observations outside their retaine
         const observed = await withRoot(f, call, (proof) => f.scope.run([reference], call, proof,
           () => f.host.revalidate(call), () => true, async () => {
             const first = await f.scope.observe(other, call, canonical)
+            if (original === undefined) throw new Error("The original non-fresh observation did not complete")
             expect(first).toBe(original)
             const second = await f.scope.observe(other, call, canonical)
             expect(second).toBe(original)
             expect(calls).toBe(2)
             return { status: "ok", value: second }
           }))
+        if (original === undefined) throw new Error("The non-fresh control did not reach its original producer")
         expect(sensitivityOk(observed)).toEqual(original)
         expect(sensitivityOk(observed)).not.toBe(original)
         expect(calls).toBe(2)

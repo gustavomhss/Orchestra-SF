@@ -24,6 +24,7 @@ const canonicalPlannerProjectors = (() => {
   try {
     const runtime = sfCanonicalCaptureRuntime()
     if (!runtime || !sfOriginalStructuredCloneCurrent()) return undefined
+    const capturedGlobal = globalThis
     const descriptor = Object.getOwnPropertyDescriptor, prototype = Object.getPrototypeOf
     const own = Object.hasOwn, same = Object.is, keys = Reflect.ownKeys
     const pins: { owner: object; key: PropertyKey; expected: PropertyDescriptor }[] = []
@@ -33,7 +34,7 @@ const canonicalPlannerProjectors = (() => {
     const objectLike = (value: unknown): value is object => !!value &&
       (typeof value === "object" || typeof value === "function") && !runtime.isProxy(value)
     const pin = (owner: object, key: PropertyKey) => {
-      if (!objectLike(owner)) throw 0
+      if (owner !== capturedGlobal && !objectLike(owner)) throw 0
       const expected = descriptor(owner, key)
       if (!expected) throw 0
       pins[pins.length] = { owner, key, expected }

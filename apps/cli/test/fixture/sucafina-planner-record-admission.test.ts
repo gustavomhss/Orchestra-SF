@@ -28,6 +28,8 @@ type Receipt = {
   lateInputs: { name: string; proofInvalidBeforeFrame: boolean; noReplayAfterFrame: boolean; replacementCalls: number }[]
   portCases: string[]
   intrinsicCases: string[]
+  globalBindingCases: { name: string; current: boolean; marked: boolean; traps: number; getterCalls: number;
+    restoredCurrent: boolean; restoredMarked: boolean }[]
 }
 
 /** Only process orchestration is imported in the parent. Each child owns its
@@ -121,7 +123,7 @@ async function admission(mode: Mode) {
     canonicalReads: 0, coldAndHit: false, opaqueWork: 0, opaqueOriginalIdentity: false, statefulCallsAfterChange: 0,
     statefulThrowsAfterChange: 0, phases: { entered: false, cold: false, assertions: false }, rootEgress: "not-entered", directRootEgress: "not-applicable",
     originalOutcome: { rejected: false, state: "not-observed", sameSentinel: false },
-    directRootParity: false, lateViewCompleted: false, lateInputs: [], portCases: [], intrinsicCases: [] }
+    directRootParity: false, lateViewCompleted: false, lateInputs: [], portCases: [], intrinsicCases: [], globalBindingCases: [] }
   try {
     const native = await deadline.phase("native-fixture", () => sensitivityObservationFixture(deadline, "all", "lte", { plannerRecordProof: true }))
     order.push("native-fixture-ready")
@@ -168,6 +170,7 @@ async function admission(mode: Mode) {
           let original: BusinessEvidenceResolution | undefined
           const canonical = async () => { receipt.canonicalReads++; return original = await native.business.context.resolve(reference, call) }
           const first = await scope.observe(reference, call, canonical)
+          if (original === undefined) throw new Error("The original resolver did not return the first observation")
           expect(first.state).toBe("fresh")
           expect(receipt.canonicalReads).toBe(1)
           receipt.phases.cold = true
@@ -249,6 +252,7 @@ async function admission(mode: Mode) {
         receipt.directRootParity = true
       }
       expect(receipt.opaqueWork).toBe(1)
+      return result
     }))
 
     if (mode === "canonical") {
@@ -313,6 +317,7 @@ async function admission(mode: Mode) {
           expect(sensitivityOk(result)).toBe(true)
           expect(readersCurrent()).toBe(true)
           receipt.lateInputs.push({ name, proofInvalidBeforeFrame: true, noReplayAfterFrame: false, replacementCalls })
+          return result
         }))
         await deadline.phase("late-" + name + "-latches-after-cold", () => native.business.withCase(call, native.caseRef, {}, async () => {
           const currentDescriptor = descriptor(source.input, name)!
@@ -343,6 +348,7 @@ async function admission(mode: Mode) {
           expect(result.status).toBe("unavailable")
           expect(replacementCalls).toBe(0)
           receipt.lateInputs.find((entry) => entry.name === name)!.noReplayAfterFrame = true
+          return result
         }))
       }
 
@@ -390,6 +396,39 @@ async function admission(mode: Mode) {
         receipt.intrinsicCases.push("PLANNER_TABS.literal")
       })
 
+      await deadline.phase("captured-global-binding-refuses-proxy-and-accessor-without-effects", async () => {
+        const realm = globalThis, original = descriptor(realm, "globalThis")
+        if (!original || !("value" in original) || original.value !== realm)
+          throw new Error("The clean realm must expose its original data globalThis binding")
+        for (const kind of ["data-proxy", "accessor"] as const) {
+          let traps = 0, getterCalls = 0, current = true, marked = true
+          const trapped = () => { traps++; throw sentinel }
+          const replacement: PropertyDescriptor = kind === "data-proxy"
+            ? { ...original, value: new Proxy(realm, {
+              get: trapped, getOwnPropertyDescriptor: trapped, getPrototypeOf: trapped, ownKeys: trapped,
+              has: trapped, isExtensible: trapped, set: trapped, defineProperty: trapped,
+              deleteProperty: trapped, setPrototypeOf: trapped, preventExtensions: trapped,
+            }) }
+            : { configurable: original.configurable, enumerable: original.enumerable,
+              get: () => { getterCalls++; return realm } }
+          define(realm, "globalThis", replacement)
+          try {
+            current = projection.sfCanonicalPlannerSourceRuntimeCurrent()
+            marked = projection.isSfCanonicalPlannerSourceProjector(source.input.projectScope)
+          } finally { define(realm, "globalThis", original) }
+          const restoredCurrent = projection.sfCanonicalPlannerSourceRuntimeCurrent()
+          const restoredMarked = projection.isSfCanonicalPlannerSourceProjector(source.input.projectScope)
+          expect(current).toBe(false)
+          expect(marked).toBe(false)
+          expect(traps).toBe(0)
+          expect(getterCalls).toBe(0)
+          expect(restoredCurrent).toBe(true)
+          expect(restoredMarked).toBe(true)
+          receipt.globalBindingCases.push({ name: "globalThis." + kind, current, marked, traps, getterCalls,
+            restoredCurrent, restoredMarked })
+        }
+      })
+
       await deadline.phase("late-producer-view-closes-already-admitted-frame", () => native.business.withCase(call, native.caseRef, {}, async () => {
         const scope = createSfPlannerRecordProofScope({ host, readersCurrent })
         let reads = 0, hooks = 0
@@ -411,6 +450,7 @@ async function admission(mode: Mode) {
         })
         expect(receipt.lateViewCompleted).toBe(true)
         expect(result.status).toBe("unavailable")
+        return result
       }))
     }
     // withCase may refuse without invoking action. These execution flags live
@@ -422,6 +462,7 @@ async function admission(mode: Mode) {
         { name: "projectScope", proofInvalidBeforeFrame: true, noReplayAfterFrame: true, replacementCalls: 0 },
       ])
       expect(receipt.lateViewCompleted).toBe(true)
+      expect(receipt.globalBindingCases).toHaveLength(2)
     }
     if (mode !== "canonical") expect(receipt.directRootParity).toBe(true)
     order.push("all-admission-assertions-completed")

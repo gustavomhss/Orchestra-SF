@@ -226,7 +226,8 @@ async function nativeWiring() {
         try { result = await portfolio.planner.compareScenarios(pair, call) }
         finally { recording = false }
         const value = sensitivityOk(result)
-        expect(value.request).toEqual(pair)
+        expect({ scenarioRefs: [value.baselineResultRef, value.alternativeResultRef],
+          criteria: value.criterionResults.map((entry) => entry.criterionId) }).toEqual(pair)
         expect(value.baselineResultRef).toBe(pair.scenarioRefs[0])
         expect(value.alternativeResultRef).toBe(pair.scenarioRefs[1])
         expect(value.knownDifference).toBe(-10)
@@ -268,6 +269,7 @@ async function nativeWiring() {
           expect(root.owner.current()).toBe(false)
           expect(readProof(root.proof, host, call)).toBeUndefined()
         }
+        return result
       }))
 
       await deadline.phase("valid-period-optional-ref-keeps-original-bcs-and-owner", () => native.business.withCase(call, candidate.caseRef, {}, async () => {
@@ -303,6 +305,7 @@ async function nativeWiring() {
         })
         expect(sensitivityOk(observed)).toEqual(before)
         expect(root.proof(call)).toBeUndefined()
+        return observed
       }))
 
       await deadline.phase("source-policy-before-frame-keeps-two-original-producers", () => native.business.withCase(call, candidate.caseRef, {}, async () => {
@@ -343,6 +346,7 @@ async function nativeWiring() {
           expect(policyCalls).toBeGreaterThan(0)
           if (!emitted) throw new Error("The fallback phase did not enter its real physical owner")
           expect(readProof(emitted, host, call)).toBeUndefined()
+          return result
         } finally { sourceScopeStage = undefined }
       }))
 
@@ -394,6 +398,7 @@ async function nativeWiring() {
           expect(policyCalls).toBeGreaterThan(0)
           if (!emitted) throw new Error("The latch phase did not enter its real physical owner")
           expect(readProof(emitted, host, call)).toBeUndefined()
+          return result
         } finally { sourceScopeStage = undefined; live = true }
       }))
     } finally { recording = false; countNoPeriod = false; sourceScopeStage = undefined; native.authority.ui.finish(call) }

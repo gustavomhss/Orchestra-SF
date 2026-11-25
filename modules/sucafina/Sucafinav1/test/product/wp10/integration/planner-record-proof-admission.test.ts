@@ -38,6 +38,12 @@ for (const mode of plannerRecordAdmissionModes) {
         "Math.round", "String.normalize", "RegExp.replace", "Map.get", "Set.has", "Array.iterator.next", "Set.iterator.next", "JSON.parse",
         "Promise.catch", "structuredClone", "producer.domain.view", "PLANNER_TABS.literal"])
     }
+    expect(receipt.globalBindingCases).toEqual(mode === "canonical" ? [
+      { name: "globalThis.data-proxy", current: false, marked: false, traps: 0, getterCalls: 0,
+        restoredCurrent: true, restoredMarked: true },
+      { name: "globalThis.accessor", current: false, marked: false, traps: 0, getterCalls: 0,
+        restoredCurrent: true, restoredMarked: true },
+    ] : [])
     console.info("SF_PLANNER_RECORD_ADMISSION_PARENT " + JSON.stringify(receipt))
   }, 150_000)
 }
