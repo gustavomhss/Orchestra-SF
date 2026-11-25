@@ -1,3 +1,63 @@
+# Preparação do go-live — retomada coordenada
+
+**Os cinco gates finais permanecem abertos: 0/5, NOT_READY.** A execução do restante do #613 foi reassociada a um único writer, **Astra / close_pr613**, em `sf613-astra-finish`. O caminho de fechamento é **#613 qualificado e integrado → composição única e qualificação #673 → mesmo SHA/árvore com ACKs originais de Migração e Release → G05/G06 → tar G07 → G08 → G10**. A virada de produção depende do aval explícito de Gustavo após a apresentação dos recibos e da janela.
+
+Corte documental: **2026-11-25T00:53:53Z — 24/11/2026, 21:53:53 BRT**. Dev observado: **`490a1e1352081d28c0eb22afcd05fffea8b5323f` / árvore `8980cfaa6ab8f552b31f391fa4b30df1931a0569`**, merge #717. É uma referência integrada; C/T final, ACKs, tar final e reservas continuam sem confirmação.
+
+Fontes correntes: [coordenação](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148515584), [atribuição do writer #613](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148499111), [recebimento dos cinco runs](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148592871), [revisão de composição da Migração](https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7148649687), [impacto da infraestrutura](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148613773) e [handoff operacional](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7092768151). O [status estruturado](status.json) conserva os campos finais e as observações históricas; o [registro de execução](execution-2026-11-22.md) detalha os recebimentos.
+
+## Estado recebido
+
+| Frente | Evidência recebida | Trabalho restante |
+| --- | --- | --- |
+| Dev / visual | #715, #716, #713 e #717 estão integrados, depois de #710/#714. Árvores de merge e pais foram conferidos. | Preservar essas mudanças na composição efetiva; nenhum segundo merge de #710. #718 mantém autoria própria e não entra automaticamente como gate adicional. |
+| #613 — técnico | Fallback `f1ad4140…`: run45274255184, 15/15 grupos; C17 original PASS em93.964ms, limite105.000ms; Bun1.3.14. | Esse snapshot antecede a composição220. Qualificar a composição e o runtime Release efetivos, sem transferir o PASS. |
+| #613 — Analytics | Fallback: run45274263652, 1/2. O primeiro preview manteve timeout original60s; BI passou. | UI42 negativa nesse snapshot; UI43/UI44 não alcançadas. Preservar a verificação completa do estado e as autorizações na correção. |
+| #613 — recebimento anterior Collaboration / Reviews | Fonte220: runs45277320358 e45277324015 terminaram1/2 e2/2. Ordering45277314045 passou7/7 grupos,7DOM e9model. | Os dois snapshots browser sobrepuseram quatro helpers históricos. O negativoUI56 de10s e os positivos conservam essa origem; qualificar com helpers correntes. ZIPs/imagens desses runs não foram recebidos por completo neste corte. |
+| #613 — Collaboration corrente | [Run45518709860](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148962539), snapshot com somente request sobre220 e helpers correntes: **2/2**, sem skip/retry/flaky; ZIP140membros e HTML interno2membros com CRC íntegros; seis PNGs originais revisados. | UI56 passou em9.902ms/10.000ms, margem98ms. Preservar o ERR_ABORTED original e a ausência de causalidade; esse positivo não qualifica UI42–UI44 ou uma fonte posterior. |
+| Migração / #673 | Pai `b2f97817…` preservado. Comparação estática com dev490 encontrou8 caminhos sobrepostos,2 conflitos textuais, Operations com8 casos projetados e APP-SRC280 versus276 arquivos. | Depois de #613, compor uma vez; reconciliar seleções e baselines por evidência autêntica; executar20+1 e obter ACK no C/T efetivo. |
+| G05/G06/G07/G08/G10 — componentes |13 subárvores, pins e componentes essenciais permaneceram idênticos entre dev27f e dev490. A revisão leu os deltas relevantes dos consumidores. | Não repetir isoladamente CI de componentes idênticos apenas por esses merges. Executar todos os gates finais sobre o candidato e os bytes efetivos. |
+| G08 — preparação administrativa | Inventário atribuído ao operador em23/11 05:24UTC:126 workflows, nenhum runner, policy17045Disabled e environment retido. | Receber decisão efetiva de disparo/revisão/configuração, reserva QA, quatro contextos Microsoft/grants, ref/tar; observar a janela e admitir o runner. |
+| G10 — operação | Operador guest único preservado; inventário e staging vazio históricos recebidos. | Complemento privado de raízes/R, canal utilizável, destino independente existente e reserva dos responsáveis antes do ensaio. |
+
+**As12 áreas históricas do #613 permanecem preservadas.** A nova autoria começa na composição `22093149a9aa7abefa7ee1dbeab14eead9984ba2` / T `9a050a3f54938876c11233557001ff6162d5b2a6`. As refs anteriores `sf613-finish`, `sf613-resume`, `sf613-composed` e o head público `sf-design-next@0a1247db…` foram preservadas durante a preparação. Ausência de run ativo no inventário não foi usada para afirmar encerramento de outra sessão; a reassociação foi explícita sob o mandato renovado.
+
+### Precisão do harness e dos recibos
+
+O primeiro caso Collaboration também usa `forwardOnce` indiretamente por `captureOriginalImportPreview`. A revisão inicial baseada somente nas chamadas diretas foi corrigida no recibo público, com o intake original e um adendo separado preservados. O helper histórico removia a espera pela entrega antes de `unroute`; os eventos disponíveis não estabelecem a causa do timeout posteriorUI56. A retomada conserva os helpers correntes, todos os limites e a revalidação anterior à publicação da resposta.
+
+O intake recebeu dez logs originais e conferiu seus hashes e os três blobs de composição/revisão/recibo. Os três ZIPs antigos foram apenas enumerados; esse recebimento não é inspeção visual. Os15 grupos do técnico fallback são separados dos testes internos e dos casos browser. O recibo técnico registra78guards,825paths,40avisos,zero erros e nenhuma exceção aprovada; não foi descrito como zero findings.
+
+### Recorte de correção UI42 e sobreposição com #718
+
+A [revisão do componente](https://github.com/gustavomhss/Orchestra-SF/pull/718#pullrequestreview-6049865166) identificou uma lacuna na admissão de intrínsecos quando o helper de digest é carregado depois do canônico. A [rota explícita](https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043) atribui o algoritmo e seus seis controles ao writer do #613, com correção da admissão anterior e prova adicional antes de integrar. #718 consumirá esses dois caminhos de dev; o restante do PR continua separado.
+
+A adaptação preserva o tuple completo do Portfolio, todas as leituras, cópias, autorizações, awaits e fences. O seletor reduzido de preferences não representa esse contrato. A proposta não é qualificação do componente nem promessa de ganho de HTTP; sua correção e utilidade serão verificadas no caller real.
+
+## Reconciliação exigida da Migração
+
+Os dois conflitos textuais estão em `operations-support/documents.ts` e `imports.ts`. O upload deve ter um único observador dos bytes originais, preservando as verificações de request e entrega assinada. Imports deve conservar a navegação corrente, revisão/proveniência e logout no menu nativo, o waiter original de15s armado antes do clique e as negativas401/403.
+
+Operations terá **oito casos na união projetada: dois ancestrais, três Procurement e três acrescentados em dev**. O verificador exige o hash exato de casos; a baseline histórica de cinco não qualifica oito. Em APP-SRC, os quatro novos arquivos e os dois históricos alterados foram enumerados por árvores completas, sem remoção. Os adicionais e seus hashes precisam de conciliação antes da execução; `PENDING` sozinho não admite novas folhas. São inventários estáticos, não resultados de testes.
+
+O20+1 permanece como topologia de execução. Os testes CLI/Client do #713 e browser do #717 que ficam fora dessas seleções mantêm recibos próprios explícitos. Nenhum verificador, assertion, deadline ou condição de aprovação será reduzido para acomodar o inventário.
+
+## Entradas operacionais ainda necessárias
+
+1. **Integração / Migração / Release:** candidato efetivo, dois ACKs originais no mesmo SHA/árvore e tar Linux original verificado. O pacote será usado sem reconstrução entre G07, G08 e G10.
+2. **Owner / coordenação G08:** identidade real de dispatch, responsável pela revisão e configuração de retenção admitida para a janela. O environment observado tem reviewer `gustavomhss`, prevenção de autoaprovação e bypass administrativo desabilitado; essa configuração permanece como observada até uma decisão admitida. O contrato não cria automaticamente a obrigação de cadastrar outro humano GitHub, e apps instalados não são atores independentes automaticamente admitidos.
+3. **Entra / QA:** quatro contextos Microsoft e grants reais, responsáveis e reserva confirmada. A preparação administrativa não preenche essa reserva.
+4. **Executor guest / recuperação:** reconciliar executable/cwd/current e R; confirmar canal privado, destino independente autorizado, responsáveis por execução/chaves/backup/observação e janela. O staging vazio não é backup ou restore.
+
+O host `orchsf-vm` já está autorizado para a sequência instalada. A execução preserva o piloto e suas evidências, com G10 depois de G08. Claw, a outra VM e a rede compartilhada permanecem fora dessas mudanças; nenhuma nova VM é solicitada por esta retomada. G08/G10 seguem sem execução operacional admitida.
+
+## Histórico preservado
+
+A edição abaixo registra o corte anterior. Suas indicações de writer, head corrente e pendência refletem aquele momento; a retomada acima é a referência desta edição.
+
+<details>
+<summary>Edição integral anterior — corte2026-11-23T03:38:53Z</summary>
+
 # Preparação do go-live — G05, G06, G07, G08 e G10
 
 **#710 já está integrado em dev; a próxima composição é a do #613 existente. Os cinco gates finais permanecem abertos: 0/5, NOT_READY.** A rota corrente é **dev com #710 → composição e qualificação de #613 → #673 e qualificação integrada 20+1 → C/T e ACKs de Migração/Release → G05/G06 → G07 → G08 → G10**. A virada para produção continua dependendo do aval explícito de Gustavo, depois dos recibos finais e da janela proposta.
@@ -219,5 +279,8 @@ O environment existir, uma label constar no workflow ou uma API de metadata reto
 8. Reunir os recibos finais e apresentar a decisão go/no-go e a janela proposta a Gustavo.
 
 O estado permanece **0/5 gates finais; NOT_READY**. As implementações integradas e os recibos de preparação estão entregues. C/T final, tar, reservas confirmadas, provas instaladas e decisão de produção permanecem ausentes. O backlink de Compras 222 (2) continua pendente para qualquer vínculo além de seu QA original.
+
+</details>
+
 
 </details>
