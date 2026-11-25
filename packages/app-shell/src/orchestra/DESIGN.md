@@ -404,3 +404,18 @@ PR #716 refines Settings, provider dialogs, Planner native selects and Decisions
 - Decisions keeps Back to case at the start of its grid on Alternatives, Assumptions and Questions. Assumptions distinguishes the all-state choice and filtered-empty result through existing keys. Prepared changes and Receipts label the already-selected case with the existing Current case key.
 
 These changes preserve native role colors, quiet glass, typography, source identities and command owners. The final composed structural gate and merge receipt will be indexed in PR #716 after completion.
+
+
+## 16. Fourth interface refinement pass
+
+PR #718 continues the native refinement from dev e115b667d845822a1df5f523bbfd828ab57ca978, including the final-area implementation merged by #713. Qualification and the merge receipt are indexed in that PR; the fourth-pass audit records the distinct defects and original-capture evidence.
+
+- Teams keeps the raised chat surface around expanded administration instead of shrinking it to the initial viewport. Active field edges use a local 68% mix of the existing dim role; hover uses the dim role itself. The 1px stroke and native 2px keyboard outline remain. Wide, compact desktop and narrow views preserve the original composer and administration scroll paths.
+- Versions repeats each actual source name beside its action group only below 640px. The original identity and accessible labels remain; the extra visual name is hidden from assistive technology. Procurement metrics share label/value/note tracks, with the existing stacked mobile arrangement. PR approvals reserve 180px for the identity and open-record action.
+- Evidence candidates fill their available column and align source value/revision to the same padded start edge. Candidate and confirmation occupy full rows below 620px. Memory selects reserve 32px at the logical end for the arrow. Summary settings use one visible section title, also naming the fieldset.
+- Add server targets DialogV2's actual Content/container relationship: 480px maximum width, 16px viewport inset, 24px body padding, native 16px radius and 20px title, with 44px narrow controls. Errors retain their linked field description and the dialog returns focus to its opener.
+- MCP removal uses the existing danger treatment. Long redacted endpoints wrap inside a shrinkable header so title, tools, close and cancel remain inside the modal. The full source endpoint and its existing redaction remain authoritative.
+- Agents adopts the shared mx-inner geometry: 16px narrow gutters and 28px/40px vertical padding. Compact metric insets keep complete labels inside their cells; mobile tabs retain 44px targets. Prompt metadata and Reset may reflow without compressing the full counter into several lines. The existing savebar composition remains.
+- The warning token aliases the existing warm role, including its theme and generated-palette value. This pass adds no new material, blur layer, shadow family or palette.
+
+Original commands, source values, draft ownership, authorization, CAS and recovery assertions remain part of qualification. Component HTTP fixtures remain distinct from genuine isolated installation journeys and from Microsoft live integration.

@@ -10,7 +10,7 @@ import { createDecisionComparisonService } from "../../../../modules/sucafina/Su
 import { createDecisionIntentFences } from "../../../../modules/sucafina/Sucafinav1/product/decisions/intent-fences.ts"
 import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
 import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
-import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+import { compareScenarios, resolvePlannerScenarioBatch } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
@@ -50,10 +50,14 @@ export function createSfPortfolioAuthority(input: {
     // reopens both scenarios and validates these final snapshots before return.
     // No observation serves a resolve call or survives this metric invocation.
     const observed = new Map<string, Awaited<ReturnType<typeof scenarios.resolve>>>()
-    const result = await compareScenarios({ host, sources: business.plannerSources, scenarios: { resolve: async (reference, context) => {
+    const result = await compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios, observeSources: business.observePlannerSources, scenarios: { resolve: async (reference, context) => {
       const observation = structuredClone(await scenarios.resolve(reference, context))
       observed.set(reference, observation)
       return observation
+    }, resolveMany: async (references, context) => {
+      const values = await resolvePlannerScenarioBatch(scenarios, references, context)
+      for (const [index, reference] of references.entries()) observed.set(reference, structuredClone(values[index]!))
+      return values
     } } }, { scenarioRefs: [captured.baselineRef!, captured.scenarioRef], criteria: [] }, call)
     if (result.status !== "ok") return result
     const baseline = observed.get(captured.baselineRef!)
@@ -81,10 +85,10 @@ export function createSfPortfolioAuthority(input: {
     },
   })
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
-    compareScenarios({ host, sources: business.plannerSources,
-      // A selected criterion is outside the planner-only comparison cache. Its
-      // scope probe always declines and performs redundant full C08 reads;
-      // preserve the canonical scenario producer and all comparison checks.
+    compareScenarios({ host, sources: business.plannerSources, observeScenarios: business.observePlannerScenarios, observeSources: business.observePlannerSources,
+      // The outer Portfolio cache excludes selected criteria. Each canonical
+      // scenario pair may own a separate read root; the criterion producer
+      // and every later comparison phase still perform their original reads.
       scenarios: request.criteria.length ? scenarios : (comparisons.scenarios ?? scenarios),
       criteria: { evaluate: async (criterion, binding) => {
       const selected = await business.resolveCase(binding)

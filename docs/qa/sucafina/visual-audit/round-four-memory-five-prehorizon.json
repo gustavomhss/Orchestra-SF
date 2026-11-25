@@ -1,0 +1,491 @@
+{
+  "recordedArtifactLedgerSha256": "5c9f1ea10b6d611e4f834bbef4f0c2a34da1984f9b98c24d4832feb3f17f468b",
+  "schema": 1,
+  "run": 45279587191,
+  "job": 138060198780,
+  "branch": "ci-run-r4memory5",
+  "snapshot": "141bf61d247b94c9dbbed4a1fa22a1c070b568b6",
+  "functional_source": "fc71dd42a704d97a54ae2e5f3fa0ee6717a150ef",
+  "source_scope": "Original Memory5 complete spec, pre-horizon eligibility fix; product equivalent to ae70 (parent verified).",
+  "conclusion": "failure",
+  "qualification": "partial; onlyUI69passed; no globalgreen",
+  "platform": "linux",
+  "arch": "x64",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/final-memory.spec.ts"
+    ],
+    "config": "e2e/playwright.production.config.ts",
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "stats": {
+    "startTime": "2026-11-23T22:26:43.978Z",
+    "duration": 1876396.259,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "workers": 1,
+  "artifact": {
+    "run": 45279587191,
+    "snapshot": "141bf61d247b94c9dbbed4a1fa22a1c070b568b6",
+    "artifact_id": 14870134463,
+    "size": 37947998,
+    "sha256": "f06b1dac5b46cfdc37aa4d97da66fac0af422dd86a4360464c54a5b247d3ede1",
+    "zip": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact.zip",
+    "traces": [
+      "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/test-results/sucafina-final-memory-UI67-edd91-ed-to-the-installed-context-chromium/trace.zip",
+      "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/test-results/sucafina-final-memory-UI63-bb971-riginal-incomplete-coverage-chromium/trace.zip",
+      "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/test-results/sucafina-final-memory-UI62-eb9e7-in-an-isolated-installation-chromium/trace.zip",
+      "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/test-results/sucafina-final-memory-UI61-e5e2e-xplicit-signal-cancellation-chromium/trace.zip"
+    ]
+  },
+  "cases": [
+    {
+      "ui": "UI61",
+      "title": "UI61 · original conditions, independent materiality and explicit signal cancellation",
+      "status": "timedOut",
+      "duration_ms": 300404,
+      "timeout_ms": 300000,
+      "retry": 0,
+      "native_capture_count": 3,
+      "classification": "failed-original-producer-bound-and-total-test-bound",
+      "original_http_guard_ms": 40000,
+      "notes": [
+        "Materiality received no headers/body within original40s.",
+        "Subsequent PT navigation failed at original15s and cancellation was interrupted by original300s test closure.",
+        "Recorded conditions screenshots are partial-state evidence."
+      ]
+    },
+    {
+      "ui": "UI62",
+      "title": "UI62 · private authorized case recall in an isolated installation",
+      "status": "timedOut",
+      "duration_ms": 301336,
+      "timeout_ms": 300000,
+      "retry": 0,
+      "native_capture_count": 0,
+      "classification": "failed-on-pre-horizon-source",
+      "original_http_guard_ms": 40000,
+      "notes": [
+        "Similar-cases POST received no headers/body within original40s.",
+        "This source precedes horizon eligibility fix; later admitted diagnostic45281735842 is a separate execution.",
+        "Original300s total test bound reached."
+      ]
+    },
+    {
+      "ui": "UI63",
+      "title": "UI63 · recorded choices without conditions and original incomplete coverage",
+      "status": "timedOut",
+      "duration_ms": 301069,
+      "timeout_ms": 300000,
+      "retry": 0,
+      "native_capture_count": 1,
+      "classification": "failed-original-total-test-bound",
+      "notes": [
+        "Original incomplete-coverage state is present in the desktop capture.",
+        "An intercepted request was closed by the original300s test deadline.",
+        "No isolated producer latency beyond that bounded observation is inferred."
+      ]
+    },
+    {
+      "ui": "UI67",
+      "title": "UI67 · current owner details and refresh remain scoped to the installed context",
+      "status": "failed",
+      "duration_ms": 66119,
+      "timeout_ms": 300000,
+      "retry": 0,
+      "native_capture_count": 1,
+      "classification": "failed-second-fresh-context-read-original-ready-bound",
+      "original_ready_guard_ms": 10000,
+      "notes": [
+        "First Refresh context GET returned200 after12607.968ms.",
+        "Second F01 context GET started at22:52:09.614Z; no headers/body before ready assertion ended.",
+        "Provider-ready assertion passed in5.159ms; view-ready assertion failed after10002.542ms with resolving.",
+        "Both fresh context reads remain required; no eventual response or duration inferred."
+      ]
+    },
+    {
+      "ui": "UI69",
+      "title": "UI69 · one reviewed summaries save, retained draft and persisted original readback",
+      "status": "passed",
+      "duration_ms": 213696,
+      "timeout_ms": 300000,
+      "retry": 0,
+      "native_capture_count": 3,
+      "classification": "passed-original-complete-case",
+      "notes": [
+        "One reviewed summaries save, retained draft, persisted original readback and Portuguese state passed.",
+        "Five original PNGs visually reviewed."
+      ]
+    }
+  ],
+  "visual_review": {
+    "original_pngs_reviewed": 11,
+    "images": [
+      {
+        "name": "UI61-dark-desktop-case-selection",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI61-dark-desktop-case-selection.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/b3042ae95386d805fcade20e5d2832b1208351b0.png",
+        "sha256": "564a967470419e792dea17518574a0db4be10b7d0eb439f2ae9349f9cbfa2508",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Four original PNGs manually opened separately: case selection and recorded-condition states have clear hierarchy and spacing in both themes; at320px select text is clipped within its own field with chevron reserve, full-width stacked actions, readable wrapped metadata. Materiality/cancellation journey remains failed; these are partial-state visual evidence only."
+      },
+      {
+        "name": "UI61-dark-desktop-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI61-dark-desktop-recorded-condition.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/d1f7644284dddf8f3a29b2cf8b8ee655cc5b3018.png",
+        "sha256": "8db6ab049cc06f93345e301afb479a8b051cf26b9ab0e2db868e8ded16a3e341",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Four original PNGs manually opened separately: case selection and recorded-condition states have clear hierarchy and spacing in both themes; at320px select text is clipped within its own field with chevron reserve, full-width stacked actions, readable wrapped metadata. Materiality/cancellation journey remains failed; these are partial-state visual evidence only."
+      },
+      {
+        "name": "UI61-light-desktop-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI61-light-desktop-recorded-condition.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/fc18e8602b39f3b2938cd7edb1c5663d5303fe8e.png",
+        "sha256": "18bd657516a2133706e922d69651b1f7b242e229a48cef8024518212364b450a",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Four original PNGs manually opened separately: case selection and recorded-condition states have clear hierarchy and spacing in both themes; at320px select text is clipped within its own field with chevron reserve, full-width stacked actions, readable wrapped metadata. Materiality/cancellation journey remains failed; these are partial-state visual evidence only."
+      },
+      {
+        "name": "UI61-light-320-recorded-condition",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI61-light-320-recorded-condition.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/fa95127830a6df1539d9d37d28438d7db30a75d1.png",
+        "sha256": "e6acc3c80ba89d998fb3bee5373d394b02e26166e3b578f4cd5a83c465820af8",
+        "size": [
+          320,
+          900
+        ],
+        "reviewed": true,
+        "review": "Four original PNGs manually opened separately: case selection and recorded-condition states have clear hierarchy and spacing in both themes; at320px select text is clipped within its own field with chevron reserve, full-width stacked actions, readable wrapped metadata. Materiality/cancellation journey remains failed; these are partial-state visual evidence only."
+      },
+      {
+        "name": "UI63-dark-desktop-recorded-choice-no-condition",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI63-dark-desktop-recorded-choice-no-condition.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/ff82d79a0d767ac8e8cb3d36755c297da9fa6781.png",
+        "sha256": "23765d3eaa98936178cf2d926436bcb6b99f617b27984afd835bbed054a49f50",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "One original dark desktop PNG manually opened: recorded choice card and action aligned; real incomplete-coverage refusal visible in separate panel with Try again. Case timed out later; no full journey qualification."
+      },
+      {
+        "name": "UI67-dark-desktop-current-context",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI67-dark-desktop-current-context.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/24d238bfab3ea74ca7f89b1b77ee23761394f2ac.png",
+        "sha256": "531d064b5fb538cec2de3ac9e0ec85e5dcfd172126449273579890fe61cc21b7",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Only initial original dark desktop state reviewed: context fields and Refresh access action aligned and readable. Refresh case failed at original view-ready10s; no refreshed/mobile/PT visual qualification."
+      },
+      {
+        "name": "UI69-dark-desktop-summary-settings",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI69-dark-desktop-summary-settings.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/314db926f4dc62b971091dc30194c51b270314fe.png",
+        "sha256": "ea9ba39676510ff78f8a1506789974f0b5a9986d15b3bb93cd666322faf0ac8a",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Original case passed. Five original PNGs manually opened separately: balanced desktop two-column checkbox grid, single page heading, aligned review table and action footer, full-width stacked actions at320px, persisted selection and PT-BR layout intact. No overlap or clipping observed in these captures."
+      },
+      {
+        "name": "UI69-light-desktop-summary-review",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI69-light-desktop-summary-review.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/d7f5b03fc589239dcff77c3a0ce32cf154de9544.png",
+        "sha256": "16db28823e9dc339806653314ae957d5bb99597e882512543d1880e3221c0597",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Original case passed. Five original PNGs manually opened separately: balanced desktop two-column checkbox grid, single page heading, aligned review table and action footer, full-width stacked actions at320px, persisted selection and PT-BR layout intact. No overlap or clipping observed in these captures."
+      },
+      {
+        "name": "UI69-light-320-summary-review-actions",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI69-light-320-summary-review-actions.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/70af1dd132c4fcbded97102544d247a6eccfa948.png",
+        "sha256": "339734f977d810674c1b8d78947ee420c9a57034dba2d98f1e33387313c07314",
+        "size": [
+          320,
+          900
+        ],
+        "reviewed": true,
+        "review": "Original case passed. Five original PNGs manually opened separately: balanced desktop two-column checkbox grid, single page heading, aligned review table and action footer, full-width stacked actions at320px, persisted selection and PT-BR layout intact. No overlap or clipping observed in these captures."
+      },
+      {
+        "name": "UI69-light-desktop-persisted-summaries",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI69-light-desktop-persisted-summaries.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/9535a8e9920869ff31c68f66b0bd9aa8988b0e78.png",
+        "sha256": "f4b344244463bb3679728204de4f83d3cf3054b5d8c8ec50937c4c2eca9954e3",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Original case passed. Five original PNGs manually opened separately: balanced desktop two-column checkbox grid, single page heading, aligned review table and action footer, full-width stacked actions at320px, persisted selection and PT-BR layout intact. No overlap or clipping observed in these captures."
+      },
+      {
+        "name": "UI69-pt-br-dark-desktop-administration",
+        "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/UI69-pt-br-dark-desktop-administration.png",
+        "original": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/packages/app-shell/e2e/playwright-report/data/9b3e335bed4eca8a7e46aff22acbd077d54cfff8.png",
+        "sha256": "aa50e47765209ba3cf2485d505845f115f670bfa78b7ca079e8ded18f4c13818",
+        "size": [
+          1440,
+          1100
+        ],
+        "reviewed": true,
+        "review": "Original case passed. Five original PNGs manually opened separately: balanced desktop two-column checkbox grid, single page heading, aligned review table and action footer, full-width stacked actions at320px, persisted selection and PT-BR layout intact. No overlap or clipping observed in these captures."
+      }
+    ]
+  },
+  "ui67": {
+    "network": [
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:14.574Z",
+        "duration_ms": 18.25399999995716,
+        "status": 401,
+        "resource": null,
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:14.595Z",
+        "duration_ms": 8.297000000020489,
+        "status": 200,
+        "resource": "eb3371796c62ae41ba1f2d2788f9f37cb2c313e0.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:14.611Z",
+        "duration_ms": 13.701000000117347,
+        "status": 401,
+        "resource": "0af23e27818ada29d7dc073a004529dbce96a53b.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:14.656Z",
+        "duration_ms": 14170.09899999993,
+        "status": 200,
+        "resource": "02ed56b66b87d25dd099a8cb00dcd75e51f46829.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:30.091Z",
+        "duration_ms": 39.933,
+        "status": 200,
+        "resource": "eb3371796c62ae41ba1f2d2788f9f37cb2c313e0.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:30.484Z",
+        "duration_ms": 12678.597999999998,
+        "status": 200,
+        "resource": "02ed56b66b87d25dd099a8cb00dcd75e51f46829.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:30.478Z",
+        "duration_ms": 12693.474,
+        "status": 200,
+        "resource": null,
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:43.229Z",
+        "duration_ms": 44.734,
+        "status": 200,
+        "resource": "eb3371796c62ae41ba1f2d2788f9f37cb2c313e0.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:43.271Z",
+        "duration_ms": 12543.933999999892,
+        "status": 200,
+        "resource": "02ed56b66b87d25dd099a8cb00dcd75e51f46829.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:43.266Z",
+        "duration_ms": 12555.469,
+        "status": 200,
+        "resource": "02ed56b66b87d25dd099a8cb00dcd75e51f46829.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:56.732Z",
+        "duration_ms": 191.12199999999999,
+        "status": 200,
+        "resource": "eb3371796c62ae41ba1f2d2788f9f37cb2c313e0.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:51:56.924Z",
+        "duration_ms": 12607.968,
+        "status": 200,
+        "resource": "02ed56b66b87d25dd099a8cb00dcd75e51f46829.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/sucafina/installations",
+        "query_present": true,
+        "started_at": "2026-11-23T22:52:09.587Z",
+        "duration_ms": 25.058,
+        "status": 200,
+        "resource": "eb3371796c62ae41ba1f2d2788f9f37cb2c313e0.json",
+        "method": "GET"
+      },
+      {
+        "trace": "0-trace.network",
+        "path": "/api/ui/context",
+        "query_present": true,
+        "started_at": "2026-11-23T22:52:09.614Z",
+        "duration_ms": -1,
+        "status": -1,
+        "resource": null,
+        "method": "GET"
+      }
+    ],
+    "assert_timeline": [
+      {
+        "action": "data-sf-provider-state",
+        "start": "2026-11-23T22:51:56.002130+00:00",
+        "duration_ms": 7.812999999849126,
+        "failed": false
+      },
+      {
+        "action": "data-sf-view-state",
+        "start": "2026-11-23T22:51:56.023633+00:00",
+        "duration_ms": 24.66400000010617,
+        "failed": false
+      },
+      {
+        "action": "Refresh access click",
+        "start": "2026-11-23T22:51:56.689512+00:00",
+        "duration_ms": 51.398999999975786,
+        "failed": false
+      },
+      {
+        "action": "data-sf-provider-state",
+        "start": "2026-11-23T22:52:09.625957+00:00",
+        "duration_ms": 5.158999999985099,
+        "failed": false
+      },
+      {
+        "action": "data-sf-view-state",
+        "start": "2026-11-23T22:52:09.637188+00:00",
+        "duration_ms": 10002.5419999999,
+        "failed": true
+      }
+    ],
+    "source_paths": {
+      "route_owner": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "route_owner_blob": "29b223479e4861a208326850b8f2845e962cecbb",
+      "provider": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "provider_blob": "76d1df3a5acec67f85db553e9b5c7ce933022759"
+    }
+  },
+  "supporting_files": {
+    "artifact-ledger.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact-ledger.json",
+      "sha256": "035ccca2868ce7ca000fcd6a508414e816c130436e19c02c876a3bb7f7f6cb52"
+    },
+    "case-outcomes.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/case-outcomes.json",
+      "sha256": "cf339c1a8d8fee73e4d95c81f46723952cc40a7cb6ca77421b2f06353618a080"
+    },
+    "ui67-network.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/ui67-network.json",
+      "sha256": "8fce2432819a8e2d024be4827509bbda82f4ea4003eb7a6c4329451e109bd339"
+    },
+    "ui67-assert-timeline.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/ui67-assert-timeline.json",
+      "sha256": "def273b75cf23496cf9db8a97253496637838172653fe653866746cffb256a30"
+    },
+    "review/original-images.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/review/original-images.json",
+      "sha256": "00d3dfa97400e54e05072223ae2ceb798ba0fb0cc76d71cca83d1ae20cc2a2e0"
+    },
+    "artifact/test-ci-evidence/request.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/test-ci-evidence/request.json",
+      "sha256": "7dbce7234db3419556e98aaf125be9885b7420d6efcb85862e50fa33c029b432"
+    },
+    "artifact/test-ci-evidence/playwright-runtime.json": {
+      "path": "/workspace/scratch/e460075886fd/round-four-final-after/memory5-prehorizon-45279587191/artifact/test-ci-evidence/playwright-runtime.json",
+      "sha256": "1a8b6c3d8c0ba1dab2514e1c911df873f3e98028285245f23296e18abc6e10bb"
+    }
+  },
+  "preserved": [
+    "originalfivecases",
+    "workers1",
+    "retry0",
+    "300stestbudget",
+    "40sHTTPguard",
+    "15sgoto",
+    "10sready",
+    "originalassertions",
+    "realunavailablecoverage"
+  ]
+}

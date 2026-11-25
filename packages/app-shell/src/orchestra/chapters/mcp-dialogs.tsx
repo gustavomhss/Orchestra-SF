@@ -23,6 +23,7 @@ function McpDialog(props: {
   error?: string
   busy?: boolean
   save?: string
+  destructive?: boolean
   // Receives the native close, so a finished write returns focus to the opener like Cancel does.
   onSubmit?: (close: () => void) => void
   onClose: () => void
@@ -99,7 +100,12 @@ function McpDialog(props: {
             {language.t("orchestra.mcp.cancel")}
           </button>
           <Show when={props.save}>
-            <button class="mx-btn primary" type="submit" disabled={props.busy}>
+            <button
+              class="mx-btn"
+              classList={{ primary: !props.destructive, danger: !!props.destructive }}
+              type="submit"
+              disabled={props.busy}
+            >
               {props.save}
             </button>
           </Show>
@@ -403,6 +409,7 @@ export function McpRemoveDialog(props: {
       error={state.error}
       busy={state.busy}
       save={language.t("orchestra.mcp.confirm")}
+      destructive
       onSubmit={(close) => {
         setState({ busy: true, error: "" })
         void (state.running ? Promise.resolve(0) : props.running())

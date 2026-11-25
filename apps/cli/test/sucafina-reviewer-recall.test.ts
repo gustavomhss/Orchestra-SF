@@ -251,6 +251,22 @@ test.skipIf(process.platform === "win32")("native sf_reviewer recalls a selected
               projectId: identity.projectId, authority: actor }), "canonical ledger outbox") }
           }), "persist ledger fixture")
           const payload = { caseRef: encodeCaseRef(precedent) }
+          // The ledger event exists before Atlas publication. A pending receipt
+          // must remain unavailable; this read cannot settle or consume the outbox.
+          const memory = business.atlasRecall()?.memory
+          if (!memory) throw new Error("The canonical Atlas reader was not initialized")
+          const pendingState = () => services.state.read(request(), "cases", (state) => structuredClone({
+            cases: state.cases, atlas: state.atlas, outbox: state.outbox,
+            versions: { cases: state.versions.cases, atlas: state.versions.atlas, outbox: state.versions.outbox },
+          }))
+          const pendingBefore = value(await pendingState(), "unpublished business state")
+          expect(pendingBefore.outbox[staged.key]?.state).toBe("pending")
+          const unavailable = await ui("sf_case_read", payload, async (call) => {
+            expect((await business.cases.read(payload, call)).status).toBe("ok")
+            return memory.recall(precedent, call)
+          })
+          expect(unavailable.status).toBe("unavailable")
+          expect(value(await pendingState(), "business state after pending recall")).toEqual(pendingBefore)
           const archived = await ui("sf_case_read", payload, (call) => business.context.emitFromLedger(staged.eventRef, call))
           if (archived.status !== "committed") throw new Error(`Archive fixture: ${archived.status} (${archived.reason ?? "unknown"})`)
           const analysis = { caseRef: current, objective: "Read the authorized precedent", profileId: selected.profile.id,

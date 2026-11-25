@@ -797,6 +797,36 @@ async function observeDocumentJourney(page: Page, info: TestInfo, releases: (() 
   await expect(rejection.getByRole("button", { name: "Reject candidate; save reason and page", exact: true })).toBeDisabled()
   await captureRecord(page, info, "UI59", "rejection-requires-reason")
   await rejection.locator("summary").click()
+  const reviewViewport = page.viewportSize()
+  for (const width of [1440, 320]) {
+    await page.setViewportSize({ width, height: width === 320 ? 900 : 1100 })
+    await expect.poll(() => extractedCard.evaluate((row, stacked) => {
+      const candidate = row.querySelector<HTMLButtonElement>('button[aria-pressed="true"]')
+      const confirm = row.querySelector<HTMLButtonElement>("button:not([aria-pressed])")
+      const value = candidate?.querySelector<HTMLElement>(".sf-records-candidate-value")
+      const meta = candidate?.querySelector<HTMLElement>(".sf-records-candidate-meta")
+      if (!candidate || !confirm || !value || !meta) return Number.POSITIVE_INFINITY
+      const style = getComputedStyle(row)
+      const candidateStyle = getComputedStyle(candidate)
+      const bounds = row.getBoundingClientRect()
+      const choice = candidate.getBoundingClientRect()
+      const textStart = choice.left + parseFloat(candidateStyle.borderLeftWidth) + parseFloat(candidateStyle.paddingLeft)
+      const action = confirm.getBoundingClientRect()
+      const start = bounds.left + parseFloat(style.borderLeftWidth) + parseFloat(style.paddingLeft)
+      const end = bounds.right - parseFloat(style.borderRightWidth) - parseFloat(style.paddingRight)
+      return Math.max(
+        Math.abs(choice.left - start),
+        Math.abs(value.getBoundingClientRect().left - textStart),
+        Math.abs(meta.getBoundingClientRect().left - textStart),
+        Math.abs(choice.right - (stacked ? end : action.left - parseFloat(style.columnGap))),
+        Math.abs(action.right - end),
+        stacked ? Math.abs(action.left - start) : 0,
+        stacked ? Math.max(0, choice.bottom - action.top) : Math.max(0, choice.right - action.left),
+        Math.max(0, 44 - choice.height, 44 - action.height),
+      )
+    }, width === 320), { message: "Evidence selection fills its row, aligns source text and keeps confirmation separate at " + width + "px" }).toBeLessThanOrEqual(1)
+  }
+  if (reviewViewport) await page.setViewportSize(reviewViewport)
   await captureRecordVariants(page, info, "UI59", "review-original-source", true, { lightDesktop: true, lightNarrow: true })
   // Reopening the same review in another locale belongs to the existing optional
   // visual sweep; keep the original functional journey inside its 180s budget.

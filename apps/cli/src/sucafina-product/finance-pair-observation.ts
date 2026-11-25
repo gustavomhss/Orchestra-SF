@@ -1,3 +1,4 @@
+import { createSfFreshTupleDigest } from "./fresh-tuple-digest.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -12,19 +13,22 @@ import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/su
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
+import type { createSfPlannerRecordProofScope } from "./planner-record-proof-scope.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Principal = NonNullable<Awaited<ReturnType<DomainPortHost["authenticate"]>>>
-type Witness = { kind: "current"; digest: string; environment: string } | { kind: "unsupported" }
+type Witness = { kind: "current"; digest: string; environment: string; refs: readonly PlannerRecord[];
+  principalDigest: string; plannerRoleMap: ReturnType<typeof roleMap> } | { kind: "unsupported" }
 
-/** Own one physical read of a closed Finance pair, while every canonical reader runs normally. */
+/** Own a closed Finance pair and its completed terminal facts, without crossing a phase. */
 export function createSfFinancePairObservation(input: {
   host: DomainPortHost
   state: SfProductStatePort
   selectedScope: (call: TrustedDomainContext) => { ref: CaseRef; current: () => boolean } | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   readerIdentities: () => readonly unknown[]
+  recordProof?: ReturnType<typeof createSfPlannerRecordProofScope>
 }) {
   const root = createSfPlannerCalculationRoot({ host: input.host })
   const unsupported = { kind: "unsupported" as const }
@@ -32,6 +36,7 @@ export function createSfFinancePairObservation(input: {
 
   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const tupleDigest = createSfFreshTupleDigest()
     try {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
@@ -47,11 +52,12 @@ export function createSfFinancePairObservation(input: {
 
       const pairDigest = digestSfValue(incoming), caseDigest = digestSfValue(selection.ref)
       const readState = input.state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
-      const identities = [...readers()]
+      const identities = [...readers()], recordProof = input.recordProof, observeRecords = recordProof?.run
       const current = () => selection.current() && digestSfValue(selection.ref) === caseDigest &&
         input.host === host && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted &&
         digestSfValue(incoming) === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
-        input.readerIdentities === readers && sameReaders(readers(), identities)
+        input.readerIdentities === readers && sameReaders(readers(), identities) &&
+        input.recordProof === recordProof && recordProof?.run === observeRecords
       const environment = async () => {
         const value = await host.environment(request), at = Date.parse(value.at)
         return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
@@ -68,7 +74,7 @@ export function createSfFinancePairObservation(input: {
           const snapshots = persistence.currentSnapshots?.(), sources = lockedFences()
           if (!snapshots || !sources) return undefined
           if (!refs) return unsupported
-          const snapshotDigest = digestSfValue({ state, snapshots, sources })
+          const snapshotDigest = tupleDigest.digest({ state, snapshots, sources })
           const before = await environment()
           const principal = structuredClone(await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") }))
           if (!before || !principal || principal.id !== actor.principalRef || !current()) return undefined
@@ -78,8 +84,9 @@ export function createSfFinancePairObservation(input: {
           const after = await environment()
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
-            snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
-          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after }
+            snapshotDigest !== tupleDigest.digest({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
+          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after,
+            refs: structuredClone(refs), principalDigest: digestSfValue(principal), plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) }
         })
         if (!current() || observed.status !== "ok" || !observed.value) return undefined
         if (observed.value.kind === "unsupported") return observed.value
@@ -95,7 +102,19 @@ export function createSfFinancePairObservation(input: {
         const before = await witness()
         if (!before) return unavailable()
         if (before.kind === "unsupported") return { status: "ok", value: unsupported }
-        const result = await work()
+        // The private root seals these ACL/source bytes. Authentication and the
+        // environment are still freshly observed for every terminal proof read.
+        const authorizeRecords = async () => {
+          if (!current() || !await host.revalidate(call) || !current()) return false
+          const environmentNow = await environment()
+          if (!current() || environmentNow !== before.environment) return false
+          const principalNow = await host.authenticate(request, { surface: "planner", roleMap: structuredClone(before.plannerRoleMap) })
+          return current() && digestSfValue(principalNow) === before.principalDigest &&
+            await host.revalidate(call) && current()
+        }
+        const result = observeRecords
+          ? await observeRecords(before.refs, call, root.proof(call), authorizeRecords, current, work)
+          : await work()
         const after = await witness()
         return after?.kind === "current" && after.digest === before.digest
           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } }
@@ -112,6 +131,7 @@ export function createSfFinancePairObservation(input: {
       const closed = await environment()
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
+    finally { tupleDigest.close() }
   }
 }
 
@@ -153,7 +173,7 @@ function closedPair(decision: DecisionCase, state: Readonly<SfProductState>, ref
   return pair[0]?.length === 1 && pair[1]?.length === 1 && pair[0][0]!.id !== pair[1][0]!.id ? [...found.values()] : undefined
 }
 
-function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {
+export function plannerRecordMaterialized(ref: PlannerRecord, call: TrustedDomainContext, snapshot: Snapshot, principal: Principal) {
   const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
   const selector = sfPlannerProjectionSelector(snapshot, { id: principal.id, roles,
     canWrite: principal.canWrite && roles.some((role) => role !== "viewer") })

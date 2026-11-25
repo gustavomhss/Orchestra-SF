@@ -6,6 +6,7 @@ import { installTeamsVisual, teamsVisualBinding, teamsVisualOrigin, teamsVisualT
 test.use({ serviceWorkers: "block" })
 const modes = [
   { name: "desktop", viewport: { width: 1440, height: 1000 } },
+  { name: "compact-desktop", viewport: { width: 1280, height: 800 } },
   { name: "mobile", viewport: { width: 390, height: 844 } },
   { name: "small-mobile", viewport: { width: 320, height: 900 } },
 ] as const
@@ -33,9 +34,7 @@ async function layoutEvidence(page: Page) {
       const value = channel / 255
       return sum + (value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4) * [0.2126, 0.7152, 0.0722][index]!
     }, 0)
-    const samples = [...document.querySelectorAll<HTMLElement>(
-      ".sf-team-heading h1, .sf-team-surface > p[role], .sf-team-configuration-form label, .sf-team-surface .mx-btn.primary",
-    )].filter((element) => element.getBoundingClientRect().width > 0).map((element) => {
+    const backgroundAt = (element: HTMLElement | null) => {
       const ancestors: HTMLElement[] = []
       for (let current: HTMLElement | null = element; current; current = current.parentElement) ancestors.unshift(current)
       let background = [255, 255, 255, 255]
@@ -45,6 +44,47 @@ async function layoutEvidence(page: Page) {
         background = over(color(style.backgroundColor), background)
         backgroundImages ||= style.backgroundImage !== "none"
       }
+      return { background, backgroundImages }
+    }
+    const contrast = (a: number[], b: number[]) => {
+      const first = luminance(a), second = luminance(b)
+      return (Math.max(first, second) + .05) / (Math.min(first, second) + .05)
+    }
+    const inputEdges = [...document.querySelectorAll<HTMLElement>(".sf-team-input:enabled")]
+      .filter((element) => element.getBoundingClientRect().width > 0).map((element) => {
+        const style = getComputedStyle(element)
+        const inside = backgroundAt(element).background
+        const outside = backgroundAt(element.parentElement).background
+        const border = over(color(style.borderTopColor), inside)
+        return {
+          name: element.id || element.getAttribute("aria-label") || element.tagName,
+          color: style.borderTopColor,
+          minimumBorderWidth: Math.min(...[style.borderTopWidth, style.borderRightWidth,
+            style.borderBottomWidth, style.borderLeftWidth].map(Number.parseFloat)),
+          paintedBorder: [style.borderTopStyle, style.borderRightStyle, style.borderBottomStyle,
+            style.borderLeftStyle].every((value) => value !== "none" && value !== "hidden"),
+          insideRatio: contrast(border, inside),
+          outsideRatio: contrast(border, outside),
+          focusVisible: element.matches(":focus-visible"),
+          outlineWidth: Number.parseFloat(style.outlineWidth),
+          outlineRatio: contrast(over(color(style.outlineColor), outside), outside),
+        }
+      })
+    const surface = document.querySelector<HTMLElement>("main.sf-team-surface")
+    if (!surface) throw new Error("Native Team surface missing")
+    const surfaceStyle = getComputedStyle(surface)
+    const children = [...surface.children].filter((element): element is HTMLElement =>
+      element instanceof HTMLElement && element.getBoundingClientRect().height > 0 &&
+      !["absolute", "fixed"].includes(getComputedStyle(element).position))
+    const containment = {
+      bottom: surface.getBoundingClientRect().bottom,
+      contentBottom: Math.max(...children.map((element) => element.getBoundingClientRect().bottom)),
+      bottomPadding: Number.parseFloat(surfaceStyle.paddingBottom) + Number.parseFloat(surfaceStyle.borderBottomWidth),
+    }
+    const samples = [...document.querySelectorAll<HTMLElement>(
+      ".sf-team-heading h1, .sf-team-surface > p[role], .sf-team-configuration-form label, .sf-team-surface .mx-btn.primary",
+    )].filter((element) => element.getBoundingClientRect().width > 0).map((element) => {
+      const { background, backgroundImages } = backgroundAt(element)
       const style = getComputedStyle(element)
       const foreground = over(color(style.color), background)
       const a = luminance(foreground), b = luminance(background)
@@ -61,7 +101,7 @@ async function layoutEvidence(page: Page) {
       fontSize: getComputedStyle(shell).fontSize,
       pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       shellOverflow: shell.scrollWidth - shell.clientWidth,
-      samples,
+      samples, inputEdges, containment,
       contrastScope: "Computed solid-color layers; decorative image pixels, glass and blur also require screenshot review.",
     }
   })
@@ -96,6 +136,19 @@ async function capture(page: Page, info: TestInfo, state: string, scheme: "dark"
   for (const [name, value] of Object.entries(evidence.tokens)) expect(value, "Body exposes " + name).not.toBe("")
   expect(evidence.samples.length).toBeGreaterThan(0)
   for (const sample of evidence.samples) expect(sample.ratio, "Solid-layer text contrast: " + sample.text).toBeGreaterThanOrEqual(4.5)
+  expect(evidence.containment.bottom - evidence.containment.contentBottom,
+    state + " keeps content inside the raised surface with its bottom padding")
+    .toBeGreaterThanOrEqual(evidence.containment.bottomPadding - 1)
+  for (const edge of evidence.inputEdges) {
+    expect(edge.paintedBorder, state + " field boundary is painted on every side: " + edge.name).toBe(true)
+    expect(edge.minimumBorderWidth, state + " field boundary has a visible stroke: " + edge.name).toBeGreaterThanOrEqual(1)
+    expect(edge.insideRatio, state + " field boundary against its fill: " + edge.name).toBeGreaterThanOrEqual(3)
+    expect(edge.outsideRatio, state + " field boundary against its surrounding surface: " + edge.name).toBeGreaterThanOrEqual(3)
+    if (edge.focusVisible) {
+      expect(edge.outlineWidth, "Keyboard focus has a visible outline").toBeGreaterThanOrEqual(2)
+      expect(edge.outlineRatio, "Keyboard focus contrasts with its surrounding surface").toBeGreaterThanOrEqual(3)
+    }
+  }
   const viewport = page.viewportSize()
   const name = "COMPONENT-VISUAL-Teams-" + state + "-" + scheme + "-" + viewport!.width
   await page.screenshot({ path: info.outputPath(name + ".png"), fullPage: true, animations: "disabled" })
@@ -265,6 +318,21 @@ for (const scheme of ["dark", "light"] as const) for (const mode of modes) {
         await expect(administration.locator("[data-sf-admin-team]")).toHaveCount(8)
         await expect(administration.locator('[data-sf-admin-team="' + teamsVisualTeams[0].id + '"]')).toContainText(teamsVisualTeams[0].name)
         await capture(page, info, "administration-expanded", scheme)
+        const teamID = administration.getByRole("textbox", { name: "Microsoft Team ID", exact: true })
+        await expect(teamID).toBeEditable()
+        await expect(teamID).toHaveValue("")
+        await teamID.hover()
+        await capture(page, info, "administration-input-hover", scheme)
+        await page.mouse.move(0, 0)
+        const read = administration.getByRole("button", { name: "Read current configuration", exact: true })
+        await read.focus()
+        await expect(read).toBeFocused()
+        await page.keyboard.press("Tab")
+        await expect(teamID).toBeFocused()
+        await expect.poll(() => teamID.evaluate((input) => input.matches(":focus-visible")),
+          { message: "Keyboard navigation exposes the Team ID focus indicator" }).toBe(true)
+        await expect(teamID).toHaveValue("")
+        await capture(page, info, "administration-input-keyboard", scheme)
         const tail = administration.locator('[data-sf-admin-team="' + teamsVisualTeams[7].id + '"]')
         await expect(tail).toContainText(teamsVisualTeams[7].id)
         const tailRemove = tail.getByRole("button", { name: "Remove", exact: true })

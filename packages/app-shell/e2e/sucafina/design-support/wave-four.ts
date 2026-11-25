@@ -3,7 +3,7 @@ import { withDesignInstallation } from "./installation"
 
 // Reuse the same original enrollment, owner fences, capture and diagnostic
 // lifecycle. Only the isolated producer seed changes for this wave.
-export const waveFourTest = waveThreeTest.extend<{ designWave: "four" | "four-decisions" }>({
+export const waveFourTest = waveThreeTest.extend<{ designWave: "four" | "four-decisions" | "four-memory" }>({
   designWave: ["four", { option: true }],
   installation: [async ({ designWave }, use) => { await withDesignInstallation(use, designWave) }, { scope: "test", timeout: 190_000 }],
 })

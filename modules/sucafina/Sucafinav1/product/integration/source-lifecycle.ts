@@ -6,6 +6,7 @@ import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, Sna
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+import { currentChoiceReadonlyAuthorityData } from "../decisions/current-choice-preview.ts"
 
 // An identity reservation exists only while the source producer owns this snapshot.
 const creationBinders = new WeakMap<Snapshot, (recordType: string, recordId: string) => string>()
@@ -117,7 +118,7 @@ export function canonicalScopedSourceCheck(port: SfScopedSourcePort): CanonicalS
 }
 
 const authorityMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "currentSnapshotScope"] as const
-const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean }>()
+const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean; plannerCurrent: () => boolean }>()
 
 /** Read lexical presence without copying data for a registered local adapter. */
 export function hasSfLocalSnapshotScope(owner: object) {
@@ -140,22 +141,28 @@ export function currentSfSiblingSnapshots(owner: Pick<Persistence, "currentSnaps
 
 /** Recognize only factory-owned forwarders, including their canonical spread composition. */
 export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
+  return readSfReadonlyAuthorityData(owner, surfaces)
+}
+
+function readSfReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[], plannerOwner = false): ReadonlyAuthorityData<S> | undefined {
   if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype) return undefined
   const descriptor = Object.getOwnPropertyDescriptor(owner, "currentSnapshots")
   const registered = descriptor && Object.hasOwn(descriptor, "value") && typeof descriptor.value === "function" ?
     sourceAuthorityReaders.get(descriptor.value) : undefined
   if (!registered) return currentLocalReadonlyAuthorityData(owner, surfaces)
   const root = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
-  if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner)) return undefined
+  if (!root || !Object.hasOwn(root, "value") || typeof root.value !== "function" || !registered.current(owner) ||
+    plannerOwner && !registered.plannerCurrent()) return undefined
   // A caller may bracket the root callback. The admitted snapshot methods
   // and the actual underlying LocalStore scope still determine its data.
-  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces)
+  const observation = currentLocalReadonlyAuthorityData(registered.base, surfaces) ??
+    (plannerOwner ? currentChoiceReadonlyAuthorityData(registered.base, surfaces) : undefined)
   if (!observation) return undefined
   const integrity = { failed: false }
   return { snapshots: observation.snapshots, scope: observation.scope, current: (requirement) => {
     const method = Object.getOwnPropertyDescriptor(owner, "readSnapshotRoot")
     const valid = observation.current(requirement) && !integrity.failed && registered.current(owner) &&
-      !!method && Object.hasOwn(method, "value") && method.value === root.value
+      (!plannerOwner || registered.plannerCurrent()) && !!method && Object.hasOwn(method, "value") && method.value === root.value
     if (!valid) integrity.failed = true
     return valid
   } }
@@ -163,9 +170,18 @@ export function currentSfReadonlyAuthorityData<S extends Surface>(owner: object,
 
 /** A known read root seals the full snapshot set while its live callbacks run. */
 export function currentSfReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">) {
+  return readSfReadonlySnapshotScope(owner)
+}
+
+/** Planner may traverse the exact native CurrentChoice owner behind this factory. */
+export function currentSfPlannerReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">) {
+  return readSfReadonlySnapshotScope(owner, true)
+}
+
+function readSfReadonlySnapshotScope(owner: Pick<Persistence, "currentSnapshotScope">, plannerOwner = false) {
   const method = !types.isProxy(owner) && Object.getOwnPropertyDescriptor(owner, "currentSnapshotScope")
   if (!method || !Object.hasOwn(method, "value") || typeof method.value !== "function") return undefined
-  const observed = currentSfReadonlyAuthorityData(owner, [])
+  const observed = readSfReadonlyAuthorityData(owner, [], plannerOwner)
   if (!observed?.scope) return undefined
   const optionalFields = ["sfSources", "sfBlobGenerations"]
   const plain = () => sfCanonicalSerializerUnhooked() && sealedDigestsCurrent() &&
@@ -178,6 +194,33 @@ export function currentSfReadonlySnapshotScope(owner: Pick<Persistence, "current
 export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
 
 type SourceDriver = AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots" | "currentSnapshot" | "hasCurrentSnapshots" | "readSnapshotRoot" | "currentSnapshotScope">
+
+/** The Planner proof opts in only while this factory's declared inputs retain
+ * their birth identities. Descriptor inspection never runs an accessor or Proxy. */
+function pinPlannerSourceInputs(input: object) {
+  if (types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return () => false
+  const names = ["persistence", "enumerate", "createId", "purpose", "bootstrapOnWrite", "projectScope",
+    "observeAuthority", "hasSnapshotRoot", "holdTargetPreimage", "installedDashboardProjector"] as const
+  const required = new Set<string>(["persistence", "enumerate", "createId", "projectScope"])
+  const callbacks = new Set<string>(["enumerate", "createId", "projectScope", "observeAuthority",
+    "hasSnapshotRoot", "holdTargetPreimage", "installedDashboardProjector"])
+  const pins = names.map((name) => ({ name, descriptor: Object.getOwnPropertyDescriptor(input, name) }))
+  if (pins.some(({ name, descriptor }) => {
+    if (!descriptor) return required.has(name) || !!Object.getOwnPropertyDescriptor(Object.prototype, name)
+    if (!Object.hasOwn(descriptor, "value")) return true
+    const value: unknown = descriptor.value
+    if (value && (typeof value === "object" || typeof value === "function") && types.isProxy(value)) return true
+    if (name === "persistence") return !value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype
+    if (callbacks.has(name)) return value === undefined ? required.has(name) : typeof value !== "function"
+    return false
+  })) return () => false
+  return () => !types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype && pins.every(({ name, descriptor }) => {
+    const current = Object.getOwnPropertyDescriptor(input, name)
+    return descriptor ? !!current && Object.hasOwn(current, "value") && current.value === descriptor.value &&
+      current.enumerable === descriptor.enumerable && current.configurable === descriptor.configurable && current.writable === descriptor.writable
+      : !current && !Object.getOwnPropertyDescriptor(Object.prototype, name)
+  })
+}
 
 /** Wrap the installation's existing driver once, shared by HTTP, jobs and restore. No new store. */
 export function createSfSourcePersistence(input: {
@@ -199,6 +242,7 @@ export function createSfSourcePersistence(input: {
   initializeSources: (surface: Surface) => Promise<void>
   readSealed?: SealedSnapshotRead
 } {
+  const plannerInputsCurrent = pinPlannerSourceInputs(input)
   const dashboardSourceProofs = new WeakSet<object>()
   const requireObservationSources = (snapshot: Snapshot, sourceRoot?: object) => {
     // Root identities are minted by LocalStore only for validated durable
@@ -529,7 +573,7 @@ export function createSfSourcePersistence(input: {
           Object.getOwnPropertyDescriptor(input, "persistence")
         const owned = method && Object.hasOwn(method, "value") && active && Object.hasOwn(active, "value") &&
           active.value === method.value && provider && Object.hasOwn(provider, "value") && provider.value === driver ?
-          currentLocalReadonlyAuthorityData(driver, ["planner"]) : undefined
+          currentLocalReadonlyAuthorityData(driver, ["planner"]) ?? currentChoiceReadonlyAuthorityData(driver, ["planner"]) : undefined
         // Preparation receives an isolated view before source authorization.
         const prepared = await prepare(structuredClone(snapshot))
         if (checking) requireSourceChecks(checking)
@@ -649,15 +693,15 @@ export function createSfSourcePersistence(input: {
   }
   if (persistence.checkScopedSource) canonicalSourceChecks.set(persistence, persistence.checkScopedSource)
   // Registration accepts no external callback. Only these freshly constructed
-  // forwarders can identify this factory, and their base remains independently
-  // recognized by LocalStore. Inspecting a custom input must not call a getter.
+  // forwarders can identify this factory; the native readonly owner is proved
+  // separately. Inspecting a custom input must not call a getter.
   if (!types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype) {
     const descriptor = Object.getOwnPropertyDescriptor(input, "persistence")
     const key = Object.getOwnPropertyDescriptor(persistence, "currentSnapshots")?.value
     if (descriptor && Object.hasOwn(descriptor, "value") && descriptor.value && typeof descriptor.value === "object" && typeof key === "function") {
       const base = descriptor.value
       const original = authorityMethods.map((name) => Object.getOwnPropertyDescriptor(persistence, name)?.value)
-      sourceAuthorityReaders.set(key, { base, current: (owner) => {
+      sourceAuthorityReaders.set(key, { base, plannerCurrent: plannerInputsCurrent, current: (owner) => {
         if (types.isProxy(owner) || Object.getPrototypeOf(owner) !== Object.prototype ||
           types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype) return false
         const current = Object.getOwnPropertyDescriptor(input, "persistence")

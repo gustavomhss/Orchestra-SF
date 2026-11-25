@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "kind": "round-four-focused-native-qualification",
+  "qualification": "passed-focused-only",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "b2aa46e7768a1a318729853c148a384317eabaf3",
+    "tree": "7c9c6f8043ed0a829b5608f04bb6faa412ba6cd3",
+    "parent": "360dc42baf5f34bbe5706693034bf2f13d55ee97",
+    "productCommit": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "productChangedBySource": false,
+    "changedPaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+    ],
+    "testBlob": "ce478f0a6c09aea9a956b2b8ed8338ec2f736c29",
+    "helperBlob": "1e1c38ccb22f89708742de354e97a4f8f73da2df"
+  },
+  "snapshot": {
+    "commit": "98fb882e152e56e8450656bfcf0ddbfe7d50824c",
+    "tree": "a741fd81e0d6fd7f43b5f6416bbf268830705f58",
+    "branch": "ci-run-r4brandcase",
+    "parent": "b2aa46e7768a1a318729853c148a384317eabaf3",
+    "changedPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-clone-brand-verification.test.ts"
+    ],
+    "requestBlob": "6f10c39d768b5535a19db62fe8207e0dd5d888fd",
+    "wrapperBlob": "cced0c51158f42811bc3fa9cec529c73bab0b738",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-clone-brand-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "snapshotFilesAreExcludedFromProduct": true
+  },
+  "contract": {
+    "originalFiveCasesLiteral": true,
+    "originalFiveCasePrefixCharacters": 21682,
+    "originalFiveCaseBlob": "db5e36cdaafcc36a69a87a18726e37ae1ae58ea4",
+    "completeSixCaseFileExecuted": true,
+    "helperUnchangedFromPreviousGate": true,
+    "cooperativeDeadlineMsEach": 12000,
+    "bunDeadlineMsEach": 15000,
+    "helperAggregateChildTimeoutMs": 120000,
+    "helperAggregateOuterTimeoutMs": 150000,
+    "typecheckChildTimeoutMsEach": 240000,
+    "typecheckOuterTimeoutMsEach": 300000,
+    "retriesAdded": 0,
+    "skipsAdded": 0,
+    "assertionsRemoved": 0,
+    "localProductExecution": false
+  },
+  "run": {
+    "id": 45321199828,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45321199828",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-24T03:41:02Z",
+    "updatedAt": "2026-11-24T03:43:11Z",
+    "observedAtUtc": "2026-11-24 03:52:16 UTC",
+    "headSha": "98fb882e152e56e8450656bfcf0ddbfe7d50824c",
+    "headBranch": "ci-run-r4brandcase",
+    "testJob": {
+      "id": 138199895054,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-24T03:41:05Z",
+      "completedAt": "2026-11-24T03:43:01Z",
+      "runTestsStep": {
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T03:41:51Z",
+        "completedAt": "2026-11-24T03:42:57Z"
+      }
+    },
+    "cleanupJob": {
+      "id": 138200606185,
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-24T03:43:03Z",
+      "completedAt": "2026-11-24T03:43:11Z"
+    }
+  },
+  "result": {
+    "gatesPassed": 3,
+    "gatesFailed": 0,
+    "outerAssertions": 3,
+    "outerDurationSeconds": 65.6,
+    "internalCasesPassed": 6,
+    "internalCasesFailed": 0,
+    "internalAssertions": 257,
+    "internalFileDurationMs": 74,
+    "cases": [
+      {
+        "name": "Fresh tuple digests preserve canonical bytes across complete fresh and mutated observations",
+        "status": "passed",
+        "durationMs": 15.39
+      },
+      {
+        "name": "Opaque tuple values retain original getter, Proxy, sparse-array and failure behaviour",
+        "status": "passed",
+        "durationMs": 11.87
+      },
+      {
+        "name": "Tuple intrinsic drift preserves original serialization and hash calls without replay",
+        "status": "passed",
+        "durationMs": 1.19
+      },
+      {
+        "name": "Tuple owners reject post-hash admission and remain canonical through close and reentrancy",
+        "status": "passed",
+        "durationMs": 0.82
+      },
+      {
+        "name": "Fresh tuple inspection keeps own-key cardinality and separates active cycles from completed aliases",
+        "status": "passed",
+        "durationMs": 22.9
+      },
+      {
+        "name": "Fresh tuple digests reject branded clones that discard ordinary own properties",
+        "status": "passed",
+        "durationMs": 1.73
+      }
+    ],
+    "gates": [
+      {
+        "name": "complete fresh tuple controls",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "wrapperDurationMs": 100.51
+      },
+      {
+        "name": "CLI typecheck",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "wrapperDurationMs": 34049.54
+      },
+      {
+        "name": "Sucafina typecheck",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "wrapperDurationMs": 31193.24
+      }
+    ]
+  },
+  "nativeCounterexample": {
+    "provedByNewCase": "Native structuredClone preserves the branded TypedArray prototype while dropping the added enumerable own field; complete canonical digest parity remains correct after removing that field, comparing an ordinary object, and traversing nested aliases.",
+    "newCaseExpectCalls": 41,
+    "sharedArrayBufferCloneSharingRequired": false,
+    "baselineReinstalledBeforeEachRelevantComparison": true,
+    "retainsInputByteMutationParity": true,
+    "retainsRecoveryAndCloseChecks": true
+  },
+  "previousQualification": {
+    "runId": 45319370572,
+    "conclusion": "failure",
+    "ledgerPath": "docs/qa/round-four/tuple-brand-45319370572/qualification-ledger.json",
+    "failureClassification": "The former sixth-case premise that the cloned SharedArrayBuffer-backed view observed the changed source byte was not confirmed by this Bun runtime: expected 13, received 3.",
+    "notReclassifiedByThisRun": true,
+    "previousOriginalFivePassed": 5,
+    "previousFinance": {
+      "passed": 1,
+      "assertions": 35
+    },
+    "previousRecall": {
+      "passed": 5,
+      "assertions": 477
+    },
+    "financeAndRecallRepeatedInThisRun": false,
+    "reasonForFocusedScope": "Only the sixth test body changed after the prior run; the product helper and the previously passing Finance and Recall files are unchanged."
+  },
+  "omni": {
+    "mode": "strict",
+    "positiveControl": "passed",
+    "declaredTests": 3,
+    "spawns": 3,
+    "delegatedSpawns": 0,
+    "controlIdentifierRetained": false
+  },
+  "evidence": {
+    "jobLog": {
+      "acquiredOnlyAfterJobCompleted": true,
+      "sha256": "7ca3a9d1622f8bc05829d81d9d75f7a3d9d467b739baaadb90177e1cbaa87c1b",
+      "characters": 67022,
+      "hashEncoding": "UTF-8 of the decoded job-log content returned by GitHub MCP",
+      "rawLogCommitted": false
+    },
+    "artifactApi": {
+      "endpoint": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/45321199828/artifacts",
+      "artifacts": [],
+      "downloadAttempted": false
+    },
+    "sourceAndSnapshotVerifiedViaGitHubMcp": true,
+    "sourceCompareOnlySixthTest": true,
+    "snapshotCompareOnlyRequestAndWrapper": true,
+    "rawLogsEnvironmentSignedUrlsAndControlIdentifiersExcluded": true
+  },
+  "limits": {
+    "claim": "Focused helper and type qualification only.",
+    "fullFinalCohortRequired": {
+      "files": 18,
+      "cases": 59,
+      "status": "pending"
+    },
+    "browserQualificationNotPerformed": true,
+    "performanceClaimMade": false
+  },
+  "visualCounts": {
+    "qualifiedStates": 105,
+    "qualifiedCaptures": 133,
+    "addedByThisRun": 0
+  }
+}

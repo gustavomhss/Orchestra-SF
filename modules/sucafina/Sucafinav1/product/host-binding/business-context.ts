@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import { types } from "node:util"
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -69,10 +70,26 @@ function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
   return true
 }
 
+/** Eligibility never evaluates a selector's accessors or proxy traps. Those
+ * inputs retain the original canonical admission and its invalid/refusal result. */
+function terminalPlannerRecord(ref: BusinessEvidenceRef) {
+  if (types.isProxy(ref)) return false
+  const kind = Object.getOwnPropertyDescriptor(ref, "kind"), selected = Object.getOwnPropertyDescriptor(ref, "target")
+  if (!kind || !Object.hasOwn(kind, "value") || kind.value !== "record" ||
+    !selected || !Object.hasOwn(selected, "value") || !selected.value || typeof selected.value !== "object" || types.isProxy(selected.value)) return false
+  const surface = Object.getOwnPropertyDescriptor(selected.value, "surface"), recordType = Object.getOwnPropertyDescriptor(selected.value, "recordType")
+  return !!surface && Object.hasOwn(surface, "value") && surface.value === "planner" &&
+    !!recordType && Object.hasOwn(recordType, "value") && recordType.value === "planner-version"
+}
+
+export type SfPlannerRecordObservation = (ref: BusinessEvidenceRef, call: TrustedDomainContext,
+  readCanonical: () => Promise<BusinessEvidenceResolution>) => Promise<BusinessEvidenceResolution>
+
 /** All source readers and memory operations are host-bound; references are selectors, not authority. */
 function assembleSfBusinessContext(host: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
   resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution>
+  observePlannerRecord?: SfPlannerRecordObservation
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   recall: BusinessContextService["recall"]
   finalizeRecall?: (records: Awaited<ReturnType<BusinessContextService["recall"]>>, call: TrustedDomainContext) => Promise<boolean>
@@ -81,36 +98,39 @@ function assembleSfBusinessContext(host: {
   async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
     if (ancestors.has(ref.refDigest) || ancestors.size >= 16 || !evidenceWithinBudget([ref])) return unavailable()
-    if (!(await host.revalidate(call))) return unavailable()
-    if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
-    try {
-      sfEvidenceSourceMaps([ref])
-    } catch {
-      return { ...unavailable(), state: "invalid" }
-    }
-    const result = await host.resolveSource(ref, call, ancestors)
-    if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
-    try {
-      sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
-    } catch {
-      return unavailable()
-    }
-    if (result.state === "fresh") {
-      if (ref.kind === "case-event" || ref.kind === "calculation") {
-        const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
-        const next = new Set([...ancestors, ref.refDigest])
-        const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
-        if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
+    const read = async (): Promise<BusinessEvidenceResolution> => {
+      if (!(await host.revalidate(call))) return unavailable()
+      if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
+      try {
+        sfEvidenceSourceMaps([ref])
+      } catch {
+        return { ...unavailable(), state: "invalid" }
       }
-      return result
+      const result = await host.resolveSource(ref, call, ancestors)
+      if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
+      try {
+        sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
+      } catch {
+        return unavailable()
+      }
+      if (result.state === "fresh") {
+        if (ref.kind === "case-event" || ref.kind === "calculation") {
+          const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
+          const next = new Set([...ancestors, ref.refDigest])
+          const dependencies = await mapSfEvidenceInOrder(children, (dependency) => resolveAncestry(dependency, call, next))
+          if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
+        }
+        return result
+      }
+      if (result.state === "historical") {
+        const current = result.currentRef
+        if (!result.authorizedProjection || !current || !result.differences || !sameHistoricalSource(ref, current) || current.installationId !== call.binding.installationId || current.projectId !== call.binding.projectId) return unavailable()
+        if (!(await host.proveContinuity(ref, current, call)) || !(await host.revalidate(call))) return unavailable()
+        return result
+      }
+      return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
     }
-    if (result.state === "historical") {
-      const current = result.currentRef
-      if (!result.authorizedProjection || !current || !result.differences || !sameHistoricalSource(ref, current) || current.installationId !== call.binding.installationId || current.projectId !== call.binding.projectId) return unavailable()
-      if (!(await host.proveContinuity(ref, current, call)) || !(await host.revalidate(call))) return unavailable()
-      return result
-    }
-    return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
+    return host.observePlannerRecord && terminalPlannerRecord(ref) ? host.observePlannerRecord(ref, call, read) : read()
   }
 
   const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
@@ -264,6 +284,7 @@ export function createSfAtlasBusiness(input: {
   calculationHistorical?: (ref: BusinessEvidenceRef, call: TrustedDomainContext,
     readCapture: (caseRef: { id: string; incarnation: string; version: number }, digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>) => Promise<BusinessEvidenceResolution>
   withCalculationCase?: SfCalculationCaseScope
+  observePlannerRecord?: SfPlannerRecordObservation
   lockedSourceFences?: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "scopedRecall" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
@@ -450,7 +471,7 @@ export function createSfAtlasBusiness(input: {
     call: TrustedDomainContext; selection: CaptureSelection; selectionDigest: string; recordsDigest: string; groups: readonly (readonly unknown[])[]
   }>()
   const assembled = assembleSfBusinessContext({
-    revalidate: input.host.revalidate, ...router,
+    revalidate: input.host.revalidate, ...router, observePlannerRecord: input.observePlannerRecord,
     recall: async (request, call) => {
       const records = await mapSfEvidenceInOrder(request.caseRefs, (ref) => memory.recall(ref, call))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")

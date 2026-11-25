@@ -1,0 +1,915 @@
+{
+  "schema": 1,
+  "kind": "native-producer-qualification",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "passed",
+  "qualifiedSource": {
+    "commit": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "tree": "3ef9243585d94940d76b258b873418567446184e"
+  },
+  "ciSnapshot": {
+    "commit": "90ef2894779a136a9bc0df16261919fe247d62b0",
+    "tree": "a52c2784f589c1d09ab49bcc341beceedf8fa613",
+    "branch": "ci-run-r4producersfresh",
+    "preparedBranch": "prepare-final-producers",
+    "delta": [
+      {
+        "path": ".ci-run.json",
+        "blob": "867de43f04a0d66f3542a753d89ec55c8c2021a1",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/sucafina-producer-verification.test.ts",
+        "blob": "ee9cb91e5568ba2e9afe0f249cf350e961ca9b68",
+        "status": "added"
+      }
+    ],
+    "originalProductAndTestsUnchanged": true
+  },
+  "selection": {
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-producer-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "wrapperOriginalReference": "8a1b0f3ba82b70bba49dc4711a5a0c4d5dd53168",
+    "wrapperOriginalBlob": "07de9ac780c4590f31d22c25b7f5e485a90bda3a",
+    "originalSixteenEntriesPreservedLiterally": true,
+    "addedFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/preferences-projection.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+    ],
+    "fullFilesSelected": true,
+    "testNameFilters": [],
+    "newSkips": 0,
+    "retries": 0,
+    "originalInnerDeadlinesPreserved": true,
+    "newFourCaseFiles": {
+      "cooperativeDeadlineMsPerCase": 12000,
+      "bunDeadlineMsPerCase": 15000,
+      "childDeadlineMs": 90000,
+      "wrapperDeadlineMs": 120000
+    }
+  },
+  "execution": {
+    "workflow": "test-ci",
+    "runId": 45305561117,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45305561117",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-24T01:30:41Z",
+    "completedAt": "2026-11-24T01:58:32Z",
+    "runner": "ubuntu-24.04",
+    "testsStartedAt": "2026-11-24T01:32:42Z",
+    "jobs": [
+      {
+        "id": 138148431694,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:30:44Z",
+        "completedAt": "2026-11-24T01:58:21Z"
+      },
+      {
+        "id": 138159483203,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:58:24Z",
+        "completedAt": "2026-11-24T01:58:32Z"
+      }
+    ],
+    "localProductExecution": false,
+    "activeJobLogsFetched": false
+  },
+  "totals": {
+    "fullFileGates": 18,
+    "expectedCases": 57,
+    "passedCases": 57,
+    "failedCases": 0,
+    "skippedCases": 0,
+    "internalAssertions": 3959,
+    "wrapperPassedCases": 18,
+    "wrapperFailedCases": 0,
+    "wrapperAssertions": 18,
+    "wrapperDurationMs": 1537280,
+    "allExitCodesZero": true,
+    "stdoutTruncations": 0,
+    "stderrTruncations": 0
+  },
+  "omni": {
+    "mode": "strict",
+    "verdict": "pass",
+    "declaredTests": 18,
+    "declarationFile": "test/sucafina-producer-verification.test.ts",
+    "spawns": 18,
+    "delegated": 0,
+    "logLine": 1379
+  },
+  "sourceVerification": {
+    "matchingHeaders": 18,
+    "candidate": "90ef2894779a136a9bc0df16261919fe247d62b0",
+    "source": "5074a0e3677238bf1955ff3877e743e6d5e9d54e",
+    "run": "45305561117"
+  },
+  "suites": [
+    {
+      "gate": "preferences-projection",
+      "file": "./test/product/wp10/integration/preferences-projection.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 4,
+      "childTimeoutMs": 90000,
+      "outerTimeoutMs": 120000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 4,
+      "failed": 0,
+      "assertions": 233,
+      "durationMs": 227,
+      "cases": [
+        {
+          "name": "C08 preferences projection keeps the complete fresh graph and detaches every observation",
+          "durationMs": 21.03,
+          "logLine": 728
+        },
+        {
+          "name": "C08 preferences projection preserves opaque context and descriptor fallback",
+          "durationMs": 10.6,
+          "logLine": 729
+        },
+        {
+          "name": "C08 preferences projection keeps both authority checks around asynchronous callbacks",
+          "durationMs": 9.26,
+          "logLine": 730
+        },
+        {
+          "name": "Baseline coverage reads the complete preference graph and observes selection at original C08 admission",
+          "durationMs": 45.84,
+          "logLine": 731
+        }
+      ],
+      "logMetadataLine": 724,
+      "logSummaryLine": 736,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/preferences-projection.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/preferences-projection.test.ts"
+    },
+    {
+      "gate": "fresh-tuple-digest",
+      "file": "./test/product/wp10/integration/fresh-tuple-digest.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 4,
+      "childTimeoutMs": 90000,
+      "outerTimeoutMs": 120000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 4,
+      "failed": 0,
+      "assertions": 168,
+      "durationMs": 46,
+      "cases": [
+        {
+          "name": "Fresh tuple digests preserve canonical bytes across complete fresh and mutated observations",
+          "durationMs": 16.14,
+          "logLine": 744
+        },
+        {
+          "name": "Opaque tuple values retain original getter, Proxy, sparse-array and failure behaviour",
+          "durationMs": 10.27,
+          "logLine": 745
+        },
+        {
+          "name": "Tuple intrinsic drift preserves original serialization and hash calls without replay",
+          "durationMs": 1.07,
+          "logLine": 747
+        },
+        {
+          "name": "Tuple owners reject post-hash admission and remain canonical through close and reentrancy",
+          "durationMs": 0.76,
+          "logLine": 748
+        }
+      ],
+      "logMetadataLine": 740,
+      "logSummaryLine": 753,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/fresh-tuple-digest.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+    },
+    {
+      "gate": "planner-recall-observation",
+      "file": "./test/product/wp10/integration/planner-recall-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 5,
+      "childTimeoutMs": 630000,
+      "outerTimeoutMs": 660000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 5,
+      "failed": 0,
+      "assertions": 477,
+      "durationMs": 215200,
+      "cases": [
+        {
+          "name": "Planner case preflight uses its private version and closes independent native observations",
+          "durationMs": 598.66,
+          "logLine": 857
+        },
+        {
+          "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+          "durationMs": 52108.26,
+          "logLine": 858
+        },
+        {
+          "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+          "durationMs": 52597.66,
+          "logLine": 859
+        },
+        {
+          "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+          "durationMs": 55599.98,
+          "logLine": 860
+        },
+        {
+          "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+          "durationMs": 53766.39,
+          "logLine": 861
+        }
+      ],
+      "logMetadataLine": 756,
+      "logSummaryLine": 866,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/planner-recall-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recall-observation.test.ts"
+    },
+    {
+      "gate": "current-choice-source-authority",
+      "file": "./test/product/wp10/integration/current-choice-source-authority.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 2,
+      "childTimeoutMs": 270000,
+      "outerTimeoutMs": 300000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 451,
+      "durationMs": 443,
+      "cases": [
+        {
+          "name": "CurrentChoice prepared sources preserve canonical values and close owner, callback and readonly boundaries",
+          "durationMs": 78.11,
+          "logLine": 897
+        },
+        {
+          "name": "Planner readonly proofs pin source factory inputs without changing canonical source reads",
+          "durationMs": 42.11,
+          "logLine": 898
+        }
+      ],
+      "logMetadataLine": 869,
+      "logSummaryLine": 903,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/current-choice-source-authority.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-source-authority.test.ts"
+    },
+    {
+      "gate": "planner-record-proof-scope",
+      "file": "./test/product/wp10/integration/planner-record-proof-scope.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 2,
+      "childTimeoutMs": 270000,
+      "outerTimeoutMs": 300000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 313,
+      "durationMs": 15420,
+      "cases": [
+        {
+          "name": "Planner record proofs preserve complete canonical values within only one live owner",
+          "durationMs": 7613.09,
+          "logLine": 946
+        },
+        {
+          "name": "Planner record proofs refuse changed authority, pending work and expired owners without replay",
+          "durationMs": 7404.91,
+          "logLine": 947
+        }
+      ],
+      "logMetadataLine": 907,
+      "logSummaryLine": 952,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/planner-record-proof-scope.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-record-proof-scope.test.ts"
+    },
+    {
+      "gate": "scenario-source-observation",
+      "file": "./test/product/wp10/integration/scenario-source-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 3,
+      "childTimeoutMs": 390000,
+      "outerTimeoutMs": 420000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 3,
+      "failed": 0,
+      "assertions": 576,
+      "durationMs": 64050,
+      "cases": [
+        {
+          "name": "Planner source observations preserve complete comparisons and independent phase owners",
+          "durationMs": 27718.09,
+          "logLine": 1010
+        },
+        {
+          "name": "Planner source observations reject incomplete shapes and forged source decisions",
+          "durationMs": 17720.17,
+          "logLine": 1011
+        },
+        {
+          "name": "Planner source observations do not share pending or expired canonical callbacks",
+          "durationMs": 18220.85,
+          "logLine": 1012
+        }
+      ],
+      "logMetadataLine": 955,
+      "logSummaryLine": 1017,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/scenario-source-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-source-observation.test.ts"
+    },
+    {
+      "gate": "portfolio-source-observation",
+      "file": "./test/product/wp10/integration/portfolio-source-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 2,
+      "childTimeoutMs": 270000,
+      "outerTimeoutMs": 300000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 530,
+      "durationMs": 35870,
+      "cases": [
+        {
+          "name": "Portfolio facade wires source owners independently of its pair and criterion producers",
+          "durationMs": 22556.92,
+          "logLine": 1045
+        },
+        {
+          "name": "Portfolio readMetric keeps canonical payloads and refuses drift after an admitted source read",
+          "durationMs": 12924.99,
+          "logLine": 1046
+        }
+      ],
+      "logMetadataLine": 1020,
+      "logSummaryLine": 1051,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/portfolio-source-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-source-observation.test.ts"
+    },
+    {
+      "gate": "finance-pair-observation",
+      "file": "./test/product/wp10/integration/finance-pair-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 1,
+      "childTimeoutMs": 150000,
+      "outerTimeoutMs": 180000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 35,
+      "durationMs": 4580,
+      "cases": [
+        {
+          "name": "Finance uses the wired coverage pair and closes on revocation or source change",
+          "durationMs": 4190.02,
+          "logLine": 1059
+        }
+      ],
+      "logMetadataLine": 1054,
+      "logSummaryLine": 1064,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/finance-pair-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts"
+    },
+    {
+      "gate": "scenario-phase-observation",
+      "file": "./test/product/wp10/integration/scenario-phase-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 2,
+      "childTimeoutMs": 270000,
+      "outerTimeoutMs": 300000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 127,
+      "durationMs": 57910,
+      "cases": [
+        {
+          "name": "scenario comparison preserves canonical values and independently closes every pair phase",
+          "durationMs": 25877.64,
+          "logLine": 1108
+        },
+        {
+          "name": "scenario observation boundaries refuse incomplete phases and detach retained canonical responses",
+          "durationMs": 31638.74,
+          "logLine": 1109
+        }
+      ],
+      "logMetadataLine": 1067,
+      "logSummaryLine": 1114,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/scenario-phase-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-phase-observation.test.ts"
+    },
+    {
+      "gate": "calculation-observation",
+      "file": "./test/product/wp10/integration/calculation-observation.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 1,
+      "childTimeoutMs": 150000,
+      "outerTimeoutMs": 180000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 28,
+      "durationMs": 2810,
+      "cases": [
+        {
+          "name": "calculation observations preserve fallback parity, fresh phases and refusal on source or authority change",
+          "durationMs": 2429.03,
+          "logLine": 1133
+        }
+      ],
+      "logMetadataLine": 1117,
+      "logSummaryLine": 1138,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/calculation-observation.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-observation.test.ts"
+    },
+    {
+      "gate": "calculation-ancestry-composition",
+      "file": "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 1,
+      "childTimeoutMs": 150000,
+      "outerTimeoutMs": 180000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 19,
+      "durationMs": 75910,
+      "cases": [
+        {
+          "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+          "durationMs": 75518.2,
+          "logLine": 1163
+        }
+      ],
+      "logMetadataLine": 1142,
+      "logSummaryLine": 1168,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/calculation-ancestry-composition.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts"
+    },
+    {
+      "gate": "scenario-subtotal-source",
+      "file": "./test/product/wp10/integration/scenario-subtotal-source.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 1,
+      "childTimeoutMs": 150000,
+      "outerTimeoutMs": 180000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 55,
+      "durationMs": 30110,
+      "cases": [
+        {
+          "name": "BI known subtotals retain their proven primary source within an annual forecast",
+          "durationMs": 29708.38,
+          "logLine": 1176
+        }
+      ],
+      "logMetadataLine": 1171,
+      "logSummaryLine": 1181,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/scenario-subtotal-source.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-subtotal-source.test.ts"
+    },
+    {
+      "gate": "sucafina-case-read-scope",
+      "file": "./test/sucafina-case-read-scope.test.ts",
+      "cwd": "apps/cli",
+      "expectedCases": 4,
+      "childTimeoutMs": 210000,
+      "outerTimeoutMs": 240000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 4,
+      "failed": 0,
+      "assertions": 110,
+      "durationMs": 1440,
+      "cases": [
+        {
+          "name": "canonical Planner case remains readable after the original global Procurement selection expires",
+          "durationMs": 283.63,
+          "logLine": 1189
+        },
+        {
+          "name": "analysis preparation distinguishes unavailable case evidence from a refused selection",
+          "durationMs": 116.49,
+          "logLine": 1190
+        },
+        {
+          "name": "canonical Atlas witnesses and renewals stay bound to their live observation",
+          "durationMs": 244.69,
+          "logLine": 1191
+        },
+        {
+          "name": "case-read scope keeps common fences and refuses expired or replaced eligible Procurement boundaries",
+          "durationMs": 245.62,
+          "logLine": 1192
+        }
+      ],
+      "logMetadataLine": 1184,
+      "logSummaryLine": 1197,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-case-read-scope.test.ts"
+      ],
+      "repositoryPath": "apps/cli/test/sucafina-case-read-scope.test.ts"
+    },
+    {
+      "gate": "operator-identity",
+      "file": "./test/operator-identity.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 14,
+      "childTimeoutMs": 100000,
+      "outerTimeoutMs": 130000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 14,
+      "failed": 0,
+      "assertions": 132,
+      "durationMs": 198,
+      "cases": [
+        {
+          "name": "local helper issues encrypted single-use credentials and scoped opaque eight-hour sessions",
+          "durationMs": 14.95,
+          "logLine": 1205
+        },
+        {
+          "name": "authentication grants only the selected local surface and performs only secret reads",
+          "durationMs": 7.76,
+          "logLine": 1206
+        },
+        {
+          "name": "expired credentials fail even when their storage expiry is extended",
+          "durationMs": 4.22,
+          "logLine": 1207
+        },
+        {
+          "name": "tampering, AAD record relocation, wrong keys and changed operator identities fail closed",
+          "durationMs": 6.16,
+          "logLine": 1208
+        },
+        {
+          "name": "auth routing has no HTTP enrollment grant and requires the configured origin",
+          "durationMs": 4.69,
+          "logLine": 1209
+        },
+        {
+          "name": "logout requires exact Origin and POST, persists revocation before removing and rejects replay",
+          "durationMs": 5.12,
+          "logLine": 1210
+        },
+        {
+          "name": "cookie namespace isolates mounts and operators, malformed or duplicate handles fail closed",
+          "durationMs": 4.75,
+          "logLine": 1211
+        },
+        {
+          "name": "configuration rejects non-loopback or noncanonical origins, malformed mounts, keys and OS identities",
+          "durationMs": 2.14,
+          "logLine": 1212
+        },
+        {
+          "name": "logout wins when an authentication read was already in flight",
+          "durationMs": 5.64,
+          "logLine": 1213
+        },
+        {
+          "name": "empty or unsupported runtime contexts fail closed without consulting group maps",
+          "durationMs": 3.9,
+          "logLine": 1214
+        },
+        {
+          "name": "private file enrollment allows cross-site GET but redirects without credentials and suppresses referrers",
+          "durationMs": 4.71,
+          "logLine": 1215
+        },
+        {
+          "name": "valid local cookies cannot authenticate a foreign request URL or inherit corporate roles",
+          "durationMs": 3.8,
+          "logLine": 1216
+        },
+        {
+          "name": "enrollment and session remain valid until one millisecond before their exact TTL boundary",
+          "durationMs": 5.62,
+          "logLine": 1217
+        },
+        {
+          "name": "explicit local buyer policy grants buyer only on Procurement and never changes the identity",
+          "durationMs": 4.15,
+          "logLine": 1218
+        }
+      ],
+      "logMetadataLine": 1200,
+      "logSummaryLine": 1223,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/operator-identity.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/operator-identity.test.ts"
+    },
+    {
+      "gate": "sensitivity-publication",
+      "file": "./test/product/wp10/integration/sensitivity-publication.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 1,
+      "childTimeoutMs": 330000,
+      "outerTimeoutMs": 360000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 41,
+      "durationMs": 189640,
+      "cases": [
+        {
+          "name": "unscoped sensitivity publishes only after final authorization and rejects late borrowed input changes",
+          "durationMs": 189241.74,
+          "logLine": 1241
+        }
+      ],
+      "logMetadataLine": 1226,
+      "logSummaryLine": 1246,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/sensitivity-publication.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-publication.test.ts"
+    },
+    {
+      "gate": "sensitivity-classification",
+      "file": "./test/product/wp10/integration/sensitivity-classification.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 3,
+      "childTimeoutMs": 750000,
+      "outerTimeoutMs": 780000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 3,
+      "failed": 0,
+      "assertions": 64,
+      "durationMs": 451470,
+      "cases": [
+        {
+          "name": "native sensitivity preserves sampled precision and durable replay for pending component classification",
+          "durationMs": 189904.68,
+          "logLine": 1275
+        },
+        {
+          "name": "native sensitivity preserves sampled precision and durable replay for partial component classification",
+          "durationMs": 193940.72,
+          "logLine": 1276
+        },
+        {
+          "name": "fully classified known components still receive the actual exact bound while training stays pending",
+          "durationMs": 67214.5,
+          "logLine": 1277
+        }
+      ],
+      "logMetadataLine": 1249,
+      "logSummaryLine": 1282,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/sensitivity-classification.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-classification.test.ts"
+    },
+    {
+      "gate": "atlas-capture-selectors",
+      "file": "./test/product/wp10/integration/atlas-capture-selectors.test.ts",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "expectedCases": 6,
+      "childTimeoutMs": 225000,
+      "outerTimeoutMs": 255000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 6,
+      "failed": 0,
+      "assertions": 576,
+      "durationMs": 2170,
+      "cases": [
+        {
+          "name": "C08 case projection retains complete payload, two authorizations and fresh detached reads",
+          "durationMs": 34.71,
+          "logLine": 1297
+        },
+        {
+          "name": "C08 Atlas projection clones the complete partition and outbox as one fresh graph",
+          "durationMs": 5.24,
+          "logLine": 1298
+        },
+        {
+          "name": "C08 capture selectors keep opaque contexts, readers and descriptors on the original full clone",
+          "durationMs": 22.15,
+          "logLine": 1299
+        },
+        {
+          "name": "C08 capture projections preserve refusal, asynchronous egress and cancellation without replay",
+          "durationMs": 9.94,
+          "logLine": 1300
+        },
+        {
+          "name": "C08 capture selectors retain complete state validation and selected clone behaviour",
+          "durationMs": 13.52,
+          "logLine": 1301
+        },
+        {
+          "name": "Native Atlas capture keeps canonical publication, complete payload and all three fresh C08 reads",
+          "durationMs": 1573.5,
+          "logLine": 1302
+        }
+      ],
+      "logMetadataLine": 1286,
+      "logSummaryLine": 1307,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/atlas-capture-selectors.test.ts"
+      ],
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/atlas-capture-selectors.test.ts"
+    },
+    {
+      "gate": "sucafina-reviewer-recall",
+      "file": "./test/sucafina-reviewer-recall.test.ts",
+      "cwd": "apps/cli",
+      "expectedCases": 1,
+      "childTimeoutMs": 880000,
+      "outerTimeoutMs": 910000,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "passed": 1,
+      "failed": 0,
+      "assertions": 24,
+      "durationMs": 389150,
+      "cases": [
+        {
+          "name": "native sf_reviewer recalls a selected Atlas precedent and rejects other cases without writing business state",
+          "durationMs": 387857.11,
+          "logLine": 1372
+        }
+      ],
+      "logMetadataLine": 1310,
+      "logSummaryLine": 1377,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/sucafina-reviewer-recall.test.ts"
+      ],
+      "repositoryPath": "apps/cli/test/sucafina-reviewer-recall.test.ts"
+    }
+  ],
+  "scannerEvidence": [
+    {
+      "gate": "atlas-capture-selectors",
+      "passedCases": 6,
+      "assertions": 576,
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/atlas-capture-selectors.test.ts",
+      "sourceBlob": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+      "evidence": "The complete selected file includes the native publication case, calls probeSfAtlasScanner with the real AppProcess bootstrap, and requires a clean scanner receipt after canonical publication.",
+      "sourceLines": [
+        479,
+        480,
+        493,
+        496,
+        590,
+        594
+      ]
+    },
+    {
+      "gate": "sucafina-reviewer-recall",
+      "passedCases": 1,
+      "assertions": 24,
+      "sourcePath": "apps/cli/test/sucafina-reviewer-recall.test.ts",
+      "sourceBlob": "c622668cc5e1dbba1674a8d1cb3c6d55bc1ad74a",
+      "evidence": "The complete original Linux case requires the real pinned scanner probe, canonical Atlas initialization and committed publication before reviewer recall. The original Windows-only skip did not apply.",
+      "sourceLines": [
+        200,
+        203,
+        270,
+        271
+      ],
+      "cooperativeDeadlineMs": 850000
+    }
+  ],
+  "artifacts": {
+    "apiTotalCount": 0,
+    "downloaded": false,
+    "archiveHash": null,
+    "reason": "This successful native Bun run uploaded no artifacts. Evidence is the completed job log and GitHub run/job metadata; no archive hash is claimed."
+  },
+  "evidence": {
+    "completedJobId": 138148431694,
+    "rawLogCharacters": 154342,
+    "persistedContent": "Structured numeric results and source locators only; no raw job log, environment values, credentials, payloads, business identifiers or scanner output retained.",
+    "lineNumbering": "One-based lines in the ANSI- and timestamp-stripped completed job log; stdout/stderr buffering can reorder final summaries.",
+    "summaryOrderingNote": "The wrapper 18-case summary appears before the final native one-case summary in the combined log; reports were matched by gate and expected case cardinality, not by last-summary position.",
+    "durationNote": "File durations and per-case durations are reported separately by Bun; their sums need not equal the outer wrapper duration."
+  },
+  "qualificationLimits": [
+    "Qualifies the selected 18 complete native producer/control files on source 5074a0e3677238bf1955ff3877e743e6d5e9d54e only.",
+    "Does not qualify the original browser Memory journeys or establish an HTTP performance improvement.",
+    "Does not qualify the later typed selected-read dispatch change 74c0a52c2ed8a1f617623eca30774c23ce899ec2; that candidate requires its separate gate."
+  ]
+}

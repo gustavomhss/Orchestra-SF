@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": 45298129069,
+  "job": 138123604020,
+  "cleanupJob": 138124433372,
+  "source": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+  "sourceTree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+  "snapshot": "bfb1093878997a8ee4fba28a92ab03b2978789e2",
+  "snapshotTree": "fea606210b1a38e3553ceee87c8416b2040bccc5",
+  "status": "completed",
+  "conclusion": "success",
+  "cleanup": "success",
+  "artifactCount": 0,
+  "product": {
+    "stateProviderBlob": "9abc3b3ddff2c97d7433767519be8c6b47d477ec",
+    "atlasMemoryBlob": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b"
+  },
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/atlas-capture-selectors.test.ts",
+    "blob": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+    "cases": 6,
+    "pass": 6,
+    "fail": 0,
+    "skip": 0,
+    "assertions": 576,
+    "deadlines": {
+      "firstFive": {
+        "cooperativeMs": 12000,
+        "bunMs": 15000
+      },
+      "native": {
+        "cooperativeMs": 105000,
+        "bunMs": 120000
+      }
+    }
+  },
+  "gates": [
+    {
+      "name": "fresh Atlas capture selections",
+      "exitCode": 0,
+      "durationMs": 2245.42,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "cases": [
+        {
+          "name": "case projection full payload, two authorizations, detached reads",
+          "ms": 38.58
+        },
+        {
+          "name": "Atlas partition/outbox fresh graph",
+          "ms": 7.53
+        },
+        {
+          "name": "opaque contexts/readers/descriptors full clone",
+          "ms": 23.05
+        },
+        {
+          "name": "refusal/async egress/cancellation",
+          "ms": 12.37
+        },
+        {
+          "name": "complete state validation/clone",
+          "ms": 33.8
+        },
+        {
+          "name": "native canonical publication and three fresh reads",
+          "ms": 1619.82
+        }
+      ]
+    },
+    {
+      "name": "CLI typecheck",
+      "exitCode": 0,
+      "durationMs": 26632.51,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "Sucafina typecheck",
+      "exitCode": 0,
+      "durationMs": 25711.66,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "strict": {
+    "declaredGates": 3,
+    "omniSpawns": 3,
+    "delegated": 0,
+    "positiveControl": "pass",
+    "wrapperAssertions": 3,
+    "wrapperAssertionsExcludedFromInternalTotal": true
+  },
+  "previousFailure": {
+    "run": 45297327229,
+    "ledgerPath": "/workspace/scratch/e460075886fd/round-four-final-after/atlas-selectors-45297327229/qualification-ledger.json",
+    "ledgerSha256": "35e15942d6a10493c834b7a35cbd363abbb27b5bab94535e0dbbcaf201073fba",
+    "cause": "four type/fixture diagnostics in new control; six functional cases already passed"
+  },
+  "notes": [
+    "Full six-case new control and both required typechecks passed on Linux strict Omni.",
+    "No original deadline/assertion/producer changed in the type-only test followup.",
+    "Native publication uses the real writer/scanner and three original capture reads; no browser performance claim is implied.",
+    "Zero artifacts is the workflow artifact API result; test evidence is the bounded job log.",
+    "No local product execution; ledger processes downloaded CI log only."
+  ],
+  "rawLogSha256": "34191f32b695ac6ad7bdfacbb9f75488e45e551caf61716748583d649cf60bcd",
+  "sanitizedLogSha256": "584b6b05fa123744fd4b6db98e6a4c5800a08df6c09cf8c1688da90dd22a5788",
+  "sanitizedLogPath": "/workspace/scratch/e460075886fd/round-four-final-after/atlas-selectors-45298129069/job-log.sanitized.txt"
+}

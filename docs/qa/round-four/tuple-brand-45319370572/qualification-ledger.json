@@ -1,0 +1,312 @@
+{
+  "schema": 1,
+  "kind": "round-four-tuple-brand-qualification",
+  "qualification": "failed-new-control-premise",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "118925fc4913fbdf5345cc3999c1b16e53252883",
+    "tree": "f068194a62ae16af148ff577dc3f01df1edf2f97",
+    "helper": {
+      "path": "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+      "blob": "1e1c38ccb22f89708742de354e97a4f8f73da2df"
+    },
+    "control": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts",
+      "blob": "dee8cd9e9f56e11ed1f66967b2711a4c8b68f3b8"
+    },
+    "financeOriginalBlob": "ef479bdae6916995838270b90f4dc957873f7d31",
+    "recallOriginalBlob": "cce24526efa015ae6a1100308c5483905d7c9ecb"
+  },
+  "snapshot": {
+    "commit": "fa8942d175f5679f8d154029896cfc597fce5434",
+    "tree": "6c61780c9e9935a51d1528abade178020e4b78cf",
+    "branch": "ci-run-r4brand",
+    "changedPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-tuples-verification.test.ts"
+    ],
+    "requestBlob": "32dadf4ec3a0feb94e780680be72fa7c94cd07ca",
+    "wrapperBlob": "6d1968573dcbc722b6c23dcabf7ad55f1fd6ca8b",
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-tuples-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    }
+  },
+  "contract": {
+    "existingFiveControlsLiteralPrefix": true,
+    "existingPrefixCharacters": 21682,
+    "helperCases": 6,
+    "helperCooperativeDeadlineMs": 12000,
+    "helperBunDeadlineMs": 15000,
+    "financeCases": 1,
+    "recallCases": 5,
+    "financeAndRecallOriginalCooperativeDeadlineMs": 105000,
+    "financeAndRecallOriginalBunDeadlineMs": 120000,
+    "wrapperBudgets": {
+      "helper": {
+        "childMs": 120000,
+        "outerMs": 150000
+      },
+      "finance": {
+        "childMs": 150000,
+        "outerMs": 180000
+      },
+      "recall": {
+        "childMs": 630000,
+        "outerMs": 660000
+      },
+      "eachTypecheck": {
+        "childMs": 240000,
+        "outerMs": 300000
+      }
+    },
+    "noOriginalAssertionsOrDeadlinesChanged": true,
+    "noRetriesOrAdditionalCI": true
+  },
+  "run": {
+    "id": 45319370572,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45319370572",
+    "conclusion": "failure",
+    "observedCompletedAt": "2026-11-24T03:34:22Z",
+    "createdAt": "2026-11-24T03:25:11Z",
+    "updatedAt": "2026-11-24T03:33:05Z",
+    "jobs": [
+      {
+        "id": 138193903064,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T03:25:14Z",
+        "completedAt": "2026-11-24T03:32:53Z",
+        "runTests": {
+          "startedAt": "2026-11-24T03:28:28Z",
+          "completedAt": "2026-11-24T03:32:49Z",
+          "conclusion": "failure"
+        }
+      },
+      {
+        "id": 138196857776,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T03:32:56Z",
+        "completedAt": "2026-11-24T03:33:04Z"
+      }
+    ],
+    "logsFetchedOnlyAfterCompletion": true
+  },
+  "result": {
+    "gatesDeclared": 5,
+    "gatesPassed": 4,
+    "gatesFailed": 1,
+    "nativeTests": 12,
+    "nativePassed": 11,
+    "nativeFailed": 1,
+    "nativeAssertions": 735,
+    "wrapperAssertions": 5,
+    "groups": [
+      {
+        "name": "complete fresh tuple controls",
+        "tests": 6,
+        "files": 1,
+        "duration": "68.00ms",
+        "passed": 5,
+        "failed": 1,
+        "assertions": 223
+      },
+      {
+        "name": "original Finance observation regression",
+        "tests": 1,
+        "files": 1,
+        "duration": "4.28s",
+        "passed": 1,
+        "failed": 0,
+        "assertions": 35
+      },
+      {
+        "name": "complete original Recall observation regression",
+        "tests": 5,
+        "files": 1,
+        "duration": "199.98s",
+        "passed": 5,
+        "failed": 0,
+        "assertions": 477
+      },
+      {
+        "name": "outer qualification wrapper",
+        "tests": 5,
+        "files": 1,
+        "duration": "261.41s",
+        "passed": 4,
+        "failed": 1,
+        "assertions": 5
+      }
+    ],
+    "nativeCases": [
+      {
+        "status": "pass",
+        "name": "Fresh tuple digests preserve canonical bytes across complete fresh and mutated observations",
+        "durationMs": 17.35
+      },
+      {
+        "status": "pass",
+        "name": "Opaque tuple values retain original getter, Proxy, sparse-array and failure behaviour",
+        "durationMs": 9.78
+      },
+      {
+        "status": "pass",
+        "name": "Tuple intrinsic drift preserves original serialization and hash calls without replay",
+        "durationMs": 1.04
+      },
+      {
+        "status": "pass",
+        "name": "Tuple owners reject post-hash admission and remain canonical through close and reentrancy",
+        "durationMs": 0.8
+      },
+      {
+        "status": "pass",
+        "name": "Fresh tuple inspection keeps own-key cardinality and separates active cycles from completed aliases",
+        "durationMs": 17.17
+      },
+      {
+        "status": "fail",
+        "name": "Fresh tuple digests keep retargeted shared-buffer views on the original digest path",
+        "durationMs": 0.61
+      },
+      {
+        "status": "pass",
+        "name": "Finance uses the wired coverage pair and closes on revocation or source change",
+        "durationMs": 3905.71
+      },
+      {
+        "status": "pass",
+        "name": "Planner case preflight uses its private version and closes independent native observations",
+        "durationMs": 586.26
+      },
+      {
+        "status": "pass",
+        "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+        "durationMs": 48443.61
+      },
+      {
+        "status": "pass",
+        "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+        "durationMs": 49103.3
+      },
+      {
+        "status": "pass",
+        "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+        "durationMs": 51784.79
+      },
+      {
+        "status": "pass",
+        "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+        "durationMs": 49550.2
+      }
+    ],
+    "typechecksPassed": [
+      "CLI",
+      "Sucafina"
+    ],
+    "gates": [
+      {
+        "name": "complete fresh tuple controls",
+        "exitCode": 1,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "name": "original Finance observation regression",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "name": "complete original Recall observation regression",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "name": "CLI typecheck",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "name": "Sucafina typecheck",
+        "exitCode": 0,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ]
+  },
+  "firstFailure": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts",
+    "line": 468,
+    "assertion": "expect(detached[0]).toBe(13)",
+    "expected": 13,
+    "received": 3,
+    "observed": "The preceding prototype/isView assertions passed. After changing writer[0], the independently structured-cloned view still contained the original byte.",
+    "classification": "Incorrect premise in the newly added scenario on this Bun runtime; shared backing storage was not demonstrated.",
+    "notEstablished": [
+      "A helper digest regression was not observed.",
+      "The previously proposed shared-byte counterexample was not reproduced.",
+      "The remainder of the sixth test, including its later nested and close checks, was not reached."
+    ],
+    "originalControls": "The five existing helper cases, original Finance case, complete five-case Recall file, and both typechecks passed."
+  },
+  "omni": {
+    "mode": "strict",
+    "status": "pass",
+    "declaredTests": 5,
+    "spawns": 5,
+    "delegated": 0,
+    "noDelegatedSpawns": true,
+    "approvalEnvironmentOverride": "empty",
+    "allGateOutputUntruncated": true
+  },
+  "evidence": {
+    "completedJobLog": {
+      "jobId": 138193903064,
+      "characters": 91011,
+      "sha256": "5fa616c842c910a103fe3682bab16dca18d4a4e350dcd5e89819b0a620376e4c",
+      "hashEncoding": "UTF-8 of the completed job-log content returned by GitHub MCP",
+      "rawLogCommitted": false
+    },
+    "artifactsApi": [],
+    "noLocalExecution": true
+  },
+  "limits": [
+    "The gate failed and is not a green qualification of the new control.",
+    "The shared-byte premise is explicitly refuted by the observed byte in this pinned runtime. Do not label this result a reproduced SAB vulnerability or a helper regression.",
+    "Any replacement scenario must use native behavior and retain the five prior cases, their assertions, and their deadlines.",
+    "This focused gate does not repair or qualify the failing complete Memory browser cohort.",
+    "No environment dump, control identifier, nonce, signed URL, raw log, private payload, or image data is committed."
+  ],
+  "visualCounts": {
+    "before": {
+      "states": 105,
+      "captures": 133
+    },
+    "added": {
+      "states": 0,
+      "captures": 0
+    },
+    "after": {
+      "states": 105,
+      "captures": 133
+    }
+  }
+}

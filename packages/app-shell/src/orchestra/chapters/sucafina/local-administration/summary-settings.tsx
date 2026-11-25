@@ -205,8 +205,7 @@ export function SfSummarySettings(props: SfSurfaceProps<"UI69">): JSX.Element {
               event.preventDefault()
               if (canWrite() && !state.busy && !state.blocked) setState({ review: true, intent: crypto.randomUUID() })
             }}>
-              <fieldset disabled={state.busy || state.blocked || state.review}>
-                <legend>{text("sf.u28.summaries")}</legend>
+              <fieldset aria-labelledby="sf-u28-summaries-title" disabled={state.busy || state.blocked || state.review}>
                 <For each={source().availablePages}>{(page) => <label>
                   <input type="checkbox" name="pages" value={page} checked={state.selected.includes(page)}
                     onChange={(event) => select(page, event.currentTarget.checked)} />

@@ -99,7 +99,7 @@ import { sfHumanReadActions } from "../../../../modules/sucafina/Sucafinav1/prod
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
-import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
+import { createSfLiveContext, createSfPageObservations, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { observeSfReportHealth, observeSfReviewReadHealth, observeSfReviewThreadContextHealth } from "./native-ui/report-health.ts"
 import { observeSfImportHealth } from "./native-ui/import-health.ts"
 import { observeSfDocumentHealth } from "./native-ui/document-health.ts"
@@ -1010,6 +1010,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
   // missing operation probes remain explicitly unavailable (never catalog-ready).
   const nativeUiContext = createSfLiveContext({
     origin: input.origin, mount: input.mount, currentBinding: identity,
+    contextObservation: input.contextObservation,
+    // Page reads keep the installation's original observations, including asset
+    // readiness, without repeating unrelated native-operation health probes.
+    ...(input.operational ? { pageOperational: createSfPageObservations(input.mount, input.operational) } : {}),
     operational: async (request, stamp) => {
       const observations = await Promise.allSettled([
         input.operational?.(request, stamp) ?? Promise.resolve([]),

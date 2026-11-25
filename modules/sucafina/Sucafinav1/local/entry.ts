@@ -4,7 +4,8 @@ import path from "node:path"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
 import { createModule, contributions, type ModuleServices } from "../index.ts"
-import { openLocalStore } from "../runtime/local-store.ts"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, openLocalStore } from "../runtime/local-store.ts"
+import { digestSfValue } from "../product/contracts/canonical.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
 import { createOperatorIdentity } from "../runtime/operator-identity.ts"
 import { documentHtml, esc, pageMain } from "../src/screen-shell.ts"
@@ -80,6 +81,54 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
   const directory = operator && context.createHostRuntime ? await prepareSfLocalWorkspace(loaded.directory) : loaded.directory
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  // Capture the real native reader before any host/source factory is composed.
+  // This scope carries no authority and never supplies an observation payload.
+  const contextMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+  const contextPins = contextMethods.map((name) => ({ name, value: Object.getOwnPropertyDescriptor(driver, name)?.value }))
+  const contextRoot = driver.readSnapshotRoot
+  const contextCurrent = () => Object.getPrototypeOf(driver) === Object.prototype && contextPins.every(({ name, value }) => {
+    const property = Object.getOwnPropertyDescriptor(driver, name)
+    return typeof value === "function" && !!property && Object.hasOwn(property, "value") && property.value === value
+  })
+  const contextObservation: NonNullable<Parameters<CreateSfHostRuntime>[0]["contextObservation"]> = async (request, read) => {
+    try {
+      const url = new URL(request.url)
+      if (!contextRoot || request.method !== "GET" || url.origin !== config.origin ||
+        url.pathname !== config.mount + "/api/ui/context" || !contextCurrent()) return false
+      const identity = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+      const current = () => !request.signal.aborted && contextCurrent() &&
+        digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) === identity
+      if (!current()) return false
+      const inherited = hasLocalSnapshotScope(driver)
+      if (inherited === undefined) return false
+      if (inherited) {
+        // An existing native owner keeps its canonical path, without a new root
+        // or a proof supplied by this callback. Its own lifetime and poison remain binding.
+        const before = driver.currentSnapshotScope?.()
+        if (!before || before.poisoned) return false
+        await read()
+        if (!current()) return false
+        const after = driver.currentSnapshotScope?.()
+        return current() && !!after && !after.poisoned && after.identity === before.identity &&
+          after.bytesIdentity === before.bytesIdentity && after.readOnly === before.readOnly
+      }
+      let calls = 0
+      let completed = false
+      const accepted = await contextRoot.call(driver, async () => {
+        calls++
+        if (calls !== 1 || !current()) return false
+        const native = currentLocalReadonlyAuthorityData(driver, [])
+        if (!native?.scope?.bytesIdentity || !native.current("unpoisoned")) return false
+        await read()
+        completed = true
+        return current() && native.current("unpoisoned")
+      }, { signal: request.signal })
+      return accepted === true && calls === 1 && completed && current() && hasLocalSnapshotScope(driver) === false
+    } catch {
+      // An admitted root, including poison or abort, never replays the work.
+      return false
+    }
+  }
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   try {
     let runtime: SfHostRuntime | undefined
@@ -171,7 +220,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
       runtime = await context.createHostRuntime({
         installationId: operator.installationId, directory, origin: config.origin,
         sourceRoot: context.sourceRoot ?? path.resolve(import.meta.dir, "../product/ai"),
-        mount: config.mount, authMode: "local-operator",
+        mount: config.mount, authMode: "local-operator", contextObservation,
         operational: (request, stamp) => nativeOperational?.(request, stamp) ?? Promise.resolve([]),
         nativeReadBinding: (operationId, producer) => nativeReadBinding?.(operationId, producer),
         nativeActions: (request, stamp, pages) => nativeActions

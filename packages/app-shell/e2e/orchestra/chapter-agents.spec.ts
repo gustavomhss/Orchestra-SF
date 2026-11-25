@@ -622,3 +622,148 @@ for (const fileApi of [false, "html"] as const) {
     expect(mock.writes).toEqual([])
   })
 }
+
+for (const variant of [
+  { width: 320, scheme: "dark" },
+  { width: 320, scheme: "light" },
+  { width: 390, scheme: "dark" },
+  { width: 390, scheme: "light" },
+] as const) {
+  test(`round four: Portuguese agent composition at ${variant.width}px in ${variant.scheme}`, async ({ page }, info) => {
+    expect(info.config.metadata.bundle, "Inspect the original production application").toBe("production")
+    const originalDescription = "Planeja mudanças no repositório"
+    const originalPrompt = "Preserve o contexto e a intenção de cada solicitação."
+    const mock = await setup(page, {
+      scheme: variant.scheme,
+      models: true,
+      files: {
+        plan: {
+          path: `${directory}/.orchestra/agent/plan.md`,
+          exists: true,
+          revision: "r1",
+          description: originalDescription,
+          system: originalPrompt,
+          permission: { "*": "ask", edit: "deny" },
+        },
+      },
+    })
+    await page.addInitScript(() => localStorage.setItem("language.v1", JSON.stringify({ locale: "br" })))
+    await page.setViewportSize({ width: variant.width, height: 844 })
+    await page.goto("/orchestra/agents")
+    const roster = page.getByRole("list", { name: "Agentes configurados", exact: true })
+    await expect(roster.getByRole("listitem")).toHaveCount(5)
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR")
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", variant.scheme)
+
+    // The same checkpoints that exposed the narrow layout now guard its
+    // native gutters, full metric labels, touch targets and prompt footer.
+    const capture = async (checkpoint: string) => {
+      await page.evaluate(() => document.fonts.ready.then(() => undefined))
+      const geometry = await page.evaluate(() => {
+        const selectors = [
+          ".orchestra-agents", ".agents-inner", ".agents-grid", ".agent-stats",
+          ".agent-screen", ".agent-tabs", ".agent-tabs button", ".agent-savebar",
+          ".agent-savebar > *", ".agent-prompt-foot", ".agent-prompt-foot > *",
+          ".agent-group-actions", ".agent-group-actions > *", ".agent-stats dt",
+          ".agent-savebar .mx-btn", ".agent-prompt-foot .mx-note",
+          ".agent-tabs button[aria-selected=true]",
+        ]
+        return {
+          viewport: { width: innerWidth, height: innerHeight },
+          document: { width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth },
+          elements: selectors.flatMap((selector) => [...document.querySelectorAll<HTMLElement>(selector)].map((element) => {
+            const rect = element.getBoundingClientRect()
+            const style = getComputedStyle(element)
+            return {
+              selector, text: element.innerText, x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+              right: rect.right, bottom: rect.bottom, clientWidth: element.clientWidth, scrollWidth: element.scrollWidth,
+              paddingInlineStart: style.paddingInlineStart, paddingInlineEnd: style.paddingInlineEnd,
+              paddingBlockStart: style.paddingBlockStart, paddingBlockEnd: style.paddingBlockEnd,
+              fontSize: style.fontSize, lineHeight: style.lineHeight,
+            }
+          })),
+        }
+      })
+      const name = `agents-${checkpoint}-br-${variant.scheme}-${variant.width}`
+      const path = info.outputPath(name + ".png")
+      await page.screenshot({ path, animations: "disabled", fullPage: true })
+      await info.attach(name, { path, contentType: "image/png" })
+      await info.attach(name + "-geometry", {
+        contentType: "application/json",
+        body: JSON.stringify({ classification: "production-component-regression", checkpoint, variant,
+          locale: "br", backendQualified: false, geometry }, null, 2),
+      })
+      const measured = (selector: string) => {
+        const element = geometry.elements.find((item) => item.selector === selector)
+        expect(element, selector + " must be measured").toBeDefined()
+        return element!
+      }
+      const chapter = measured(".orchestra-agents")
+      const inner = measured(".agents-inner")
+      expect(Math.abs(inner.width - (chapter.clientWidth - 32))).toBeLessThanOrEqual(1)
+      expect(Math.abs(inner.x - chapter.x - 16)).toBeLessThanOrEqual(1)
+      expect(inner.paddingBlockStart).toBe("28px")
+      expect(inner.paddingBlockEnd).toBe("40px")
+      expect(geometry.document.scrollWidth).toBeLessThanOrEqual(geometry.document.width)
+      for (const item of geometry.elements.filter((element) =>
+        [".agent-stats dt", ".agent-savebar", ".agent-prompt-foot"].includes(element.selector))) {
+        expect(item.scrollWidth, item.selector + " must contain its text").toBeLessThanOrEqual(item.clientWidth + 1)
+      }
+      for (const item of geometry.elements.filter((element) =>
+        [".agent-tabs button", ".agent-savebar .mx-btn"].includes(element.selector))) {
+        expect(item.height, item.selector + " must retain a mobile touch target").toBeGreaterThanOrEqual(44)
+      }
+      if (checkpoint !== "roster") {
+        const tabs = measured(".agent-tabs")
+        const selected = measured(".agent-tabs button[aria-selected=true]")
+        expect(selected.x).toBeGreaterThanOrEqual(tabs.x - 1)
+        expect(selected.right).toBeLessThanOrEqual(tabs.right + 1)
+        const bar = measured(".agent-savebar")
+        for (const item of geometry.elements.filter((element) => element.selector === ".agent-savebar > *")) {
+          expect(item.x).toBeGreaterThanOrEqual(bar.x)
+          expect(item.right).toBeLessThanOrEqual(bar.right)
+        }
+      }
+      if (checkpoint === "prompt-footer") {
+        const footer = measured(".agent-prompt-foot")
+        const counter = measured(".agent-prompt-foot .mx-note")
+        expect(counter.height, "The complete counter must fit one readable line").toBeLessThanOrEqual(parseFloat(counter.lineHeight) + 1)
+        const children = geometry.elements.filter((element) => element.selector === ".agent-prompt-foot > *")
+        expect(children).toHaveLength(2)
+        for (const item of children) {
+          expect(item.x).toBeGreaterThanOrEqual(footer.x)
+          expect(item.right).toBeLessThanOrEqual(footer.right)
+        }
+        expect(children[0].right <= children[1].x + 1 || children[0].bottom <= children[1].y + 1,
+          "The counter and reset action must not overlap").toBe(true)
+      }
+    }
+
+    await capture("roster")
+    await roster.getByRole("listitem", { name: "plan", exact: true }).getByRole("button", { name: "plan", exact: true }).click()
+    await expect(page).toHaveURL(/\/orchestra\/agents\/plan$/)
+    const description = screen(page).getByLabel("Descrição", { exact: true })
+    await expect(description).toHaveValue(originalDescription)
+    await description.fill("Planeja mudanças, revisa dependências e conserva os critérios de aceitação.")
+    const unsaved = page.getByRole("region", { name: "Alterações não salvas", exact: true })
+    await expect(unsaved).toBeVisible()
+    await unsaved.scrollIntoViewIfNeeded()
+    await unsaved.getByRole("button", { name: "Descartar", exact: true }).focus()
+    await page.keyboard.press("Tab")
+    await expect(unsaved.getByRole("button", { name: "Salvar", exact: true })).toBeFocused()
+    await capture("unsaved-overview")
+
+    await page.getByRole("tab", { name: "Prompt de sistema", exact: true }).click()
+    const prompt = screen(page).getByRole("textbox", { name: "Instruções do sistema", exact: true })
+    await expect(prompt).toHaveValue(originalPrompt)
+    await prompt.fill(originalPrompt + " Explique as decisões e mantenha as alterações verificáveis.")
+    await screen(page).getByRole("button", { name: "Voltar ao padrão", exact: true }).scrollIntoViewIfNeeded()
+    await capture("prompt-footer")
+    await unsaved.getByRole("button", { name: "Descartar", exact: true }).click()
+    await expect(prompt).toHaveValue(originalPrompt)
+    await expect(unsaved).toHaveCount(0)
+    await page.getByRole("tab", { name: "Visão geral", exact: true }).click()
+    await expect(description).toHaveValue(originalDescription)
+    expect(mock.writes, "Inspecting and discarding a draft must not change the agent definition").toEqual([])
+  })
+}

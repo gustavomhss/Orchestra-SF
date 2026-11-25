@@ -1,0 +1,4987 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Passive cost diagnosis; not UI qualification",
+  "status": "failed-original-http-deadline",
+  "source": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+  "sourceTree": "3283031d5e04de9fe5f0984b5f61142da22847b3",
+  "run": 45291117605,
+  "job": 138099826468,
+  "snapshot": "3bceb33f27c0ad2d4028d94260b2eeb811c25350",
+  "snapshotTree": "caa5f143e4e968013203f76785f63a4110c59c4a",
+  "branch": "ci-run-r4recallcost",
+  "jobConclusion": "failure",
+  "selection": {
+    "requestBlob": "59e0df5be0f786edfe2d0245e66ed5a8c19ba349",
+    "copyBlob": "2b927a309d216b820dddf07436b390e196c76892",
+    "originalHttpDeadlineMs": 40000,
+    "originalTestDeadlineMs": 300000,
+    "retries": 0,
+    "strictOmni": true,
+    "channel": "prod",
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "artifact": {
+    "id": 14874497820,
+    "bytes": 7197660,
+    "sha256": "018ff86bd1e3d0a8a685010c9c72942ed943b7f3bd4cbeffc4883f7f9294cd24",
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-cost-45291117605/recall-cost-14874497820.zip"
+  },
+  "trace": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-cost-45291117605/artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace.zip",
+    "sha256": "199e6f6cb61667d3bdf81447f645d47fcdd4833dffd2eb817ef70d02e1b28193"
+  },
+  "numericEvidence": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-cost-45291117605/numeric-cost-rows.json",
+    "sha256": "4b379a840a14bf7cdd328cab5121915089b2bebfb837b2ca9e9f0f92893c7863",
+    "rows": 405,
+    "completedProfiles": 388,
+    "partialRows": 17,
+    "completedActiveAsync": 0,
+    "kinds": {
+      "0": {
+        "rows": 72,
+        "uniqueOwners": 72,
+        "completed": 72
+      },
+      "1": {
+        "rows": 316,
+        "uniqueOwners": 316,
+        "completed": 316
+      },
+      "2": {
+        "rows": 17,
+        "uniqueOwners": 1,
+        "completed": 0
+      },
+      "3": {
+        "rows": 0,
+        "uniqueOwners": 0,
+        "completed": 0
+      },
+      "4": {
+        "rows": 0,
+        "uniqueOwners": 0,
+        "completed": 0
+      }
+    }
+  },
+  "schema": {
+    "columns": 184,
+    "headers": [
+      "schema",
+      "owner",
+      "parent",
+      "depth",
+      "kind",
+      "phase",
+      "fulfilled",
+      "epochMs",
+      "elapsedUs",
+      "activeAsync"
+    ],
+    "buckets": [
+      "owner-current",
+      "owner-readers",
+      "owner-environment",
+      "witness-before",
+      "witness-after",
+      "witness-egress",
+      "owner-state-cases",
+      "owner-state-atlas",
+      "owner-digest",
+      "owner-materialized",
+      "owner-authenticate",
+      "owner-revalidate",
+      "owner-work",
+      "owner-clone",
+      "root-prepare",
+      "record-scope",
+      "root-pinned",
+      "root-current",
+      "root-healthy",
+      "root-native-lookup",
+      "root-native-current",
+      "root-owner-current",
+      "root-request-identity",
+      "root-binding-digest",
+      "proof-frame-current",
+      "proof-readers-current",
+      "proof-owner-current",
+      "proof-unchanged",
+      "proof-refs-digest",
+      "proof-leaf-current",
+      "proof-authorize",
+      "proof-work",
+      "proof-canonical",
+      "proof-clone",
+      "canonical-read-first",
+      "canonical-read-second",
+      "canonical-rank-first",
+      "canonical-rank-second",
+      "canonical-memory-match",
+      "canonical-features",
+      "canonical-select",
+      "bcs-source",
+      "bcs-case-event",
+      "bcs-dependencies",
+      "bcs-source-maps",
+      "bcs-context",
+      "bcs-auth",
+      "event-read-first",
+      "event-read-second",
+      "event-state",
+      "event-authorize-case",
+      "event-authorize-evidence",
+      "event-environment",
+      "event-auth",
+      "event-digest",
+      "event-source-maps",
+      "atlas-read-records",
+      "atlas-state",
+      "atlas-case-read",
+      "atlas-evidence",
+      "atlas-evidence-batch",
+      "atlas-continuity",
+      "atlas-stable",
+      "atlas-authorize",
+      "atlas-digest",
+      "atlas-source-maps",
+      "atlas-map-entry",
+      "atlas-features",
+      "atlas-rank-authorized",
+      "atlas-finalize",
+      "atlas-rank-digest",
+      "atlas-capture",
+      "bcs-capture-integrity",
+      "bcs-capture-stable",
+      "bcs-context-digest",
+      "owner-frame-admitted",
+      "owner-frame-current",
+      "proof-cache-hit",
+      "proof-frame-admitted",
+      "finance-closed-pair",
+      "finance-snapshot-digest",
+      "c08-transaction",
+      "c08-authorize",
+      "c08-read-state",
+      "c08-clone",
+      "c08-selection",
+      "c08-callback"
+    ]
+  },
+  "http": {
+    "browserStart": "2026-11-23T23:50:42.419Z",
+    "fetchStart": "2026-11-23T23:50:42.422Z",
+    "fetchTimeoutMs": 40005.716,
+    "observedResponseStatus": -1,
+    "headersObserved": false,
+    "completedResponseObserved": false
+  },
+  "networkEvidence": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-cost-45291117605/safe-network.json",
+    "sha256": "0b57e6e701111b0bec6300401bd7a6359f4aad69db67ed8b5f3c0fab47f57c10"
+  },
+  "timeoutEvidence": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/recall-cost-45291117605/safe-timeouts.json",
+    "sha256": "d4dd188833b8eecf4159afbb82bbade2470b27ed9291fa1c89ebac633fc3238d"
+  },
+  "methodology": [
+    "Buckets are cumulative and inclusive; do not add overlapping buckets.",
+    "Parent wall durations include child wall durations; do not add descendants again.",
+    "Partial rows include open async elapsed time and are not final totals.",
+    "A fulfilled producer profile does not prove a successful HTTP response.",
+    "No runtime instrumentation is to be merged into the product; original deadlines and authorization fences were preserved."
+  ],
+  "target": {
+    "owner": 375,
+    "finalSettlementObserved": false,
+    "partials": [
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 405398,
+        "activeAsync": 6,
+        "buckets": {
+          "owner-current": {
+            "count": 13,
+            "elapsedUs": 1280
+          },
+          "owner-readers": {
+            "count": 34,
+            "elapsedUs": 435
+          },
+          "owner-environment": {
+            "count": 3,
+            "elapsedUs": 491
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 843,
+            "elapsedUs": 169433
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 2,
+            "elapsedUs": 159
+          },
+          "owner-revalidate": {
+            "count": 3,
+            "elapsedUs": 1417
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 350935
+          },
+          "owner-clone": {
+            "count": 6,
+            "elapsedUs": 1026
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 176200
+          },
+          "root-pinned": {
+            "count": 14,
+            "elapsedUs": 1218
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 8,
+            "elapsedUs": 192
+          },
+          "root-native-lookup": {
+            "count": 9,
+            "elapsedUs": 149
+          },
+          "root-native-current": {
+            "count": 8,
+            "elapsedUs": 64
+          },
+          "root-owner-current": {
+            "count": 14,
+            "elapsedUs": 903
+          },
+          "root-request-identity": {
+            "count": 15,
+            "elapsedUs": 202
+          },
+          "root-binding-digest": {
+            "count": 15,
+            "elapsedUs": 96
+          },
+          "proof-frame-current": {
+            "count": 1,
+            "elapsedUs": 252
+          },
+          "proof-readers-current": {
+            "count": 2,
+            "elapsedUs": 33
+          },
+          "proof-owner-current": {
+            "count": 2,
+            "elapsedUs": 252
+          },
+          "proof-unchanged": {
+            "count": 2,
+            "elapsedUs": 306
+          },
+          "proof-refs-digest": {
+            "count": 4,
+            "elapsedUs": 68
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 175519
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 174107
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 2,
+            "elapsedUs": 304
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 175777
+          },
+          "c08-transaction": {
+            "count": 2,
+            "elapsedUs": 219678
+          },
+          "c08-authorize": {
+            "count": 4,
+            "elapsedUs": 1736
+          },
+          "c08-read-state": {
+            "count": 2,
+            "elapsedUs": 21
+          },
+          "c08-clone": {
+            "count": 2,
+            "elapsedUs": 12931
+          },
+          "c08-callback": {
+            "count": 2,
+            "elapsedUs": 210522
+          }
+        },
+        "httpRelativeSeconds": 1.763398
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 559522,
+        "activeAsync": 7,
+        "buckets": {
+          "owner-current": {
+            "count": 13,
+            "elapsedUs": 1280
+          },
+          "owner-readers": {
+            "count": 34,
+            "elapsedUs": 435
+          },
+          "owner-environment": {
+            "count": 3,
+            "elapsedUs": 491
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 843,
+            "elapsedUs": 169433
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 2,
+            "elapsedUs": 159
+          },
+          "owner-revalidate": {
+            "count": 3,
+            "elapsedUs": 1417
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 659185
+          },
+          "owner-clone": {
+            "count": 6,
+            "elapsedUs": 1026
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 330324
+          },
+          "root-pinned": {
+            "count": 14,
+            "elapsedUs": 1218
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 8,
+            "elapsedUs": 192
+          },
+          "root-native-lookup": {
+            "count": 9,
+            "elapsedUs": 149
+          },
+          "root-native-current": {
+            "count": 8,
+            "elapsedUs": 64
+          },
+          "root-owner-current": {
+            "count": 14,
+            "elapsedUs": 903
+          },
+          "root-request-identity": {
+            "count": 15,
+            "elapsedUs": 202
+          },
+          "root-binding-digest": {
+            "count": 15,
+            "elapsedUs": 96
+          },
+          "proof-frame-current": {
+            "count": 1,
+            "elapsedUs": 252
+          },
+          "proof-readers-current": {
+            "count": 2,
+            "elapsedUs": 33
+          },
+          "proof-owner-current": {
+            "count": 2,
+            "elapsedUs": 252
+          },
+          "proof-unchanged": {
+            "count": 2,
+            "elapsedUs": 306
+          },
+          "proof-refs-digest": {
+            "count": 4,
+            "elapsedUs": 68
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 329643
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 328231
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 153912
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 2,
+            "elapsedUs": 304
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 329901
+          },
+          "c08-transaction": {
+            "count": 2,
+            "elapsedUs": 219678
+          },
+          "c08-authorize": {
+            "count": 4,
+            "elapsedUs": 1736
+          },
+          "c08-read-state": {
+            "count": 2,
+            "elapsedUs": 21
+          },
+          "c08-clone": {
+            "count": 2,
+            "elapsedUs": 12931
+          },
+          "c08-callback": {
+            "count": 2,
+            "elapsedUs": 210522
+          }
+        },
+        "httpRelativeSeconds": 1.917522
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 703323,
+        "activeAsync": 6,
+        "buckets": {
+          "owner-current": {
+            "count": 13,
+            "elapsedUs": 1280
+          },
+          "owner-readers": {
+            "count": 34,
+            "elapsedUs": 435
+          },
+          "owner-environment": {
+            "count": 3,
+            "elapsedUs": 491
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 843,
+            "elapsedUs": 169433
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 2,
+            "elapsedUs": 159
+          },
+          "owner-revalidate": {
+            "count": 3,
+            "elapsedUs": 1417
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 946785
+          },
+          "owner-clone": {
+            "count": 6,
+            "elapsedUs": 1026
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 474125
+          },
+          "root-pinned": {
+            "count": 14,
+            "elapsedUs": 1218
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 8,
+            "elapsedUs": 192
+          },
+          "root-native-lookup": {
+            "count": 9,
+            "elapsedUs": 149
+          },
+          "root-native-current": {
+            "count": 8,
+            "elapsedUs": 64
+          },
+          "root-owner-current": {
+            "count": 14,
+            "elapsedUs": 903
+          },
+          "root-request-identity": {
+            "count": 15,
+            "elapsedUs": 202
+          },
+          "root-binding-digest": {
+            "count": 15,
+            "elapsedUs": 96
+          },
+          "proof-frame-current": {
+            "count": 1,
+            "elapsedUs": 252
+          },
+          "proof-readers-current": {
+            "count": 2,
+            "elapsedUs": 33
+          },
+          "proof-owner-current": {
+            "count": 2,
+            "elapsedUs": 252
+          },
+          "proof-unchanged": {
+            "count": 2,
+            "elapsedUs": 306
+          },
+          "proof-refs-digest": {
+            "count": 4,
+            "elapsedUs": 68
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 473444
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472032
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 2,
+            "elapsedUs": 304
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 473702
+          },
+          "c08-transaction": {
+            "count": 3,
+            "elapsedUs": 230531
+          },
+          "c08-authorize": {
+            "count": 6,
+            "elapsedUs": 2499
+          },
+          "c08-read-state": {
+            "count": 3,
+            "elapsedUs": 26
+          },
+          "c08-clone": {
+            "count": 3,
+            "elapsedUs": 19102
+          },
+          "c08-callback": {
+            "count": 3,
+            "elapsedUs": 216964
+          }
+        },
+        "httpRelativeSeconds": 2.0613230000000002
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 1,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 703524,
+        "activeAsync": 5,
+        "buckets": {
+          "owner-current": {
+            "count": 13,
+            "elapsedUs": 1280
+          },
+          "owner-readers": {
+            "count": 34,
+            "elapsedUs": 435
+          },
+          "owner-environment": {
+            "count": 3,
+            "elapsedUs": 491
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 843,
+            "elapsedUs": 169433
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 2,
+            "elapsedUs": 159
+          },
+          "owner-revalidate": {
+            "count": 3,
+            "elapsedUs": 1417
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 947189
+          },
+          "owner-clone": {
+            "count": 6,
+            "elapsedUs": 1026
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 474327
+          },
+          "root-pinned": {
+            "count": 14,
+            "elapsedUs": 1218
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 8,
+            "elapsedUs": 192
+          },
+          "root-native-lookup": {
+            "count": 9,
+            "elapsedUs": 149
+          },
+          "root-native-current": {
+            "count": 8,
+            "elapsedUs": 64
+          },
+          "root-owner-current": {
+            "count": 14,
+            "elapsedUs": 903
+          },
+          "root-request-identity": {
+            "count": 15,
+            "elapsedUs": 202
+          },
+          "root-binding-digest": {
+            "count": 15,
+            "elapsedUs": 96
+          },
+          "proof-frame-current": {
+            "count": 1,
+            "elapsedUs": 252
+          },
+          "proof-readers-current": {
+            "count": 2,
+            "elapsedUs": 33
+          },
+          "proof-owner-current": {
+            "count": 2,
+            "elapsedUs": 252
+          },
+          "proof-unchanged": {
+            "count": 2,
+            "elapsedUs": 306
+          },
+          "proof-refs-digest": {
+            "count": 4,
+            "elapsedUs": 68
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 473646
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 2,
+            "elapsedUs": 304
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 473903
+          },
+          "c08-transaction": {
+            "count": 3,
+            "elapsedUs": 230531
+          },
+          "c08-authorize": {
+            "count": 6,
+            "elapsedUs": 2499
+          },
+          "c08-read-state": {
+            "count": 3,
+            "elapsedUs": 26
+          },
+          "c08-clone": {
+            "count": 3,
+            "elapsedUs": 19102
+          },
+          "c08-callback": {
+            "count": 3,
+            "elapsedUs": 216964
+          }
+        },
+        "httpRelativeSeconds": 2.0615240000000004
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 955438,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 13,
+            "elapsedUs": 1280
+          },
+          "owner-readers": {
+            "count": 34,
+            "elapsedUs": 435
+          },
+          "owner-environment": {
+            "count": 3,
+            "elapsedUs": 491
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 843,
+            "elapsedUs": 169433
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 2,
+            "elapsedUs": 159
+          },
+          "owner-revalidate": {
+            "count": 3,
+            "elapsedUs": 1417
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 1451017
+          },
+          "owner-clone": {
+            "count": 6,
+            "elapsedUs": 1026
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 726240
+          },
+          "root-pinned": {
+            "count": 14,
+            "elapsedUs": 1218
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 8,
+            "elapsedUs": 192
+          },
+          "root-native-lookup": {
+            "count": 9,
+            "elapsedUs": 149
+          },
+          "root-native-current": {
+            "count": 8,
+            "elapsedUs": 64
+          },
+          "root-owner-current": {
+            "count": 14,
+            "elapsedUs": 903
+          },
+          "root-request-identity": {
+            "count": 15,
+            "elapsedUs": 202
+          },
+          "root-binding-digest": {
+            "count": 15,
+            "elapsedUs": 96
+          },
+          "proof-frame-current": {
+            "count": 1,
+            "elapsedUs": 252
+          },
+          "proof-readers-current": {
+            "count": 2,
+            "elapsedUs": 33
+          },
+          "proof-owner-current": {
+            "count": 2,
+            "elapsedUs": 252
+          },
+          "proof-unchanged": {
+            "count": 2,
+            "elapsedUs": 306
+          },
+          "proof-refs-digest": {
+            "count": 4,
+            "elapsedUs": 68
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 725559
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 251277
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "atlas-read-records": {
+            "count": 1,
+            "elapsedUs": 167056
+          },
+          "atlas-state": {
+            "count": 1,
+            "elapsedUs": 9757
+          },
+          "atlas-case-read": {
+            "count": 1,
+            "elapsedUs": 153775
+          },
+          "atlas-stable": {
+            "count": 3,
+            "elapsedUs": 485
+          },
+          "atlas-authorize": {
+            "count": 1,
+            "elapsedUs": 910
+          },
+          "atlas-digest": {
+            "count": 15,
+            "elapsedUs": 826
+          },
+          "atlas-rank-digest": {
+            "count": 1,
+            "elapsedUs": 75
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 2,
+            "elapsedUs": 304
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 725817
+          },
+          "c08-transaction": {
+            "count": 6,
+            "elapsedUs": 320698
+          },
+          "c08-authorize": {
+            "count": 12,
+            "elapsedUs": 4987
+          },
+          "c08-read-state": {
+            "count": 6,
+            "elapsedUs": 47
+          },
+          "c08-clone": {
+            "count": 6,
+            "elapsedUs": 36725
+          },
+          "c08-callback": {
+            "count": 6,
+            "elapsedUs": 293725
+          }
+        },
+        "httpRelativeSeconds": 2.313438
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 4339473,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 125,
+            "elapsedUs": 7993
+          },
+          "owner-readers": {
+            "count": 290,
+            "elapsedUs": 2878
+          },
+          "owner-environment": {
+            "count": 19,
+            "elapsedUs": 2255
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 1899,
+            "elapsedUs": 176649
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 18,
+            "elapsedUs": 7963
+          },
+          "owner-revalidate": {
+            "count": 35,
+            "elapsedUs": 13531
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 8219087
+          },
+          "owner-clone": {
+            "count": 22,
+            "elapsedUs": 1200
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 4110276
+          },
+          "root-pinned": {
+            "count": 158,
+            "elapsedUs": 11762
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 152,
+            "elapsedUs": 3330
+          },
+          "root-native-lookup": {
+            "count": 153,
+            "elapsedUs": 2153
+          },
+          "root-native-current": {
+            "count": 152,
+            "elapsedUs": 1138
+          },
+          "root-owner-current": {
+            "count": 158,
+            "elapsedUs": 8576
+          },
+          "root-request-identity": {
+            "count": 159,
+            "elapsedUs": 2084
+          },
+          "root-binding-digest": {
+            "count": 159,
+            "elapsedUs": 892
+          },
+          "proof-frame-current": {
+            "count": 33,
+            "elapsedUs": 9656
+          },
+          "proof-readers-current": {
+            "count": 34,
+            "elapsedUs": 579
+          },
+          "proof-owner-current": {
+            "count": 34,
+            "elapsedUs": 3608
+          },
+          "proof-unchanged": {
+            "count": 34,
+            "elapsedUs": 5046
+          },
+          "proof-refs-digest": {
+            "count": 84,
+            "elapsedUs": 1206
+          },
+          "proof-leaf-current": {
+            "count": 16,
+            "elapsedUs": 4558
+          },
+          "proof-authorize": {
+            "count": 16,
+            "elapsedUs": 34358
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 4109595
+          },
+          "proof-clone": {
+            "count": 32,
+            "elapsedUs": 6012
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 3635313
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 1,
+            "elapsedUs": 38907
+          },
+          "bcs-case-event": {
+            "count": 1,
+            "elapsedUs": 38904
+          },
+          "bcs-dependencies": {
+            "count": 1,
+            "elapsedUs": 11984
+          },
+          "bcs-source-maps": {
+            "count": 2,
+            "elapsedUs": 206
+          },
+          "bcs-auth": {
+            "count": 3,
+            "elapsedUs": 1213
+          },
+          "event-read-first": {
+            "count": 3,
+            "elapsedUs": 51598
+          },
+          "event-read-second": {
+            "count": 3,
+            "elapsedUs": 49724
+          },
+          "event-state": {
+            "count": 6,
+            "elapsedUs": 62687
+          },
+          "event-authorize-case": {
+            "count": 6,
+            "elapsedUs": 2285
+          },
+          "event-authorize-evidence": {
+            "count": 6,
+            "elapsedUs": 35719
+          },
+          "event-environment": {
+            "count": 3,
+            "elapsedUs": 280
+          },
+          "event-auth": {
+            "count": 9,
+            "elapsedUs": 3521
+          },
+          "event-digest": {
+            "count": 24,
+            "elapsedUs": 673
+          },
+          "event-source-maps": {
+            "count": 3,
+            "elapsedUs": 212
+          },
+          "atlas-read-records": {
+            "count": 1,
+            "elapsedUs": 3551092
+          },
+          "atlas-state": {
+            "count": 3,
+            "elapsedUs": 33435
+          },
+          "atlas-case-read": {
+            "count": 2,
+            "elapsedUs": 285917
+          },
+          "atlas-evidence": {
+            "count": 3,
+            "elapsedUs": 57860
+          },
+          "atlas-evidence-batch": {
+            "count": 1,
+            "elapsedUs": 57989
+          },
+          "atlas-continuity": {
+            "count": 3,
+            "elapsedUs": 3072840
+          },
+          "atlas-stable": {
+            "count": 12,
+            "elapsedUs": 76607
+          },
+          "atlas-authorize": {
+            "count": 2,
+            "elapsedUs": 26010
+          },
+          "atlas-digest": {
+            "count": 115,
+            "elapsedUs": 92885
+          },
+          "atlas-source-maps": {
+            "count": 1,
+            "elapsedUs": 128
+          },
+          "atlas-map-entry": {
+            "count": 1,
+            "elapsedUs": 516
+          },
+          "atlas-rank-digest": {
+            "count": 1,
+            "elapsedUs": 75
+          },
+          "atlas-capture": {
+            "count": 56,
+            "elapsedUs": 2479575
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 114,
+            "elapsedUs": 17531
+          },
+          "proof-cache-hit": {
+            "count": 16,
+            "elapsedUs": 5642
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 4109852
+          },
+          "c08-transaction": {
+            "count": 196,
+            "elapsedUs": 2475448
+          },
+          "c08-authorize": {
+            "count": 392,
+            "elapsedUs": 154655
+          },
+          "c08-read-state": {
+            "count": 196,
+            "elapsedUs": 1178
+          },
+          "c08-clone": {
+            "count": 196,
+            "elapsedUs": 1194474
+          },
+          "c08-callback": {
+            "count": 196,
+            "elapsedUs": 1600500
+          }
+        },
+        "httpRelativeSeconds": 5.6974730000000005
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 7987636,
+        "activeAsync": 7,
+        "buckets": {
+          "owner-current": {
+            "count": 237,
+            "elapsedUs": 15302
+          },
+          "owner-readers": {
+            "count": 546,
+            "elapsedUs": 5431
+          },
+          "owner-environment": {
+            "count": 35,
+            "elapsedUs": 4016
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 2955,
+            "elapsedUs": 184675
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 34,
+            "elapsedUs": 9463
+          },
+          "owner-revalidate": {
+            "count": 67,
+            "elapsedUs": 26444
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 15515413
+          },
+          "owner-clone": {
+            "count": 38,
+            "elapsedUs": 1384
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 7758439
+          },
+          "root-pinned": {
+            "count": 302,
+            "elapsedUs": 23447
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 296,
+            "elapsedUs": 6802
+          },
+          "root-native-lookup": {
+            "count": 297,
+            "elapsedUs": 4377
+          },
+          "root-native-current": {
+            "count": 296,
+            "elapsedUs": 2289
+          },
+          "root-owner-current": {
+            "count": 302,
+            "elapsedUs": 17187
+          },
+          "root-request-identity": {
+            "count": 303,
+            "elapsedUs": 4128
+          },
+          "root-binding-digest": {
+            "count": 303,
+            "elapsedUs": 1727
+          },
+          "proof-frame-current": {
+            "count": 65,
+            "elapsedUs": 20511
+          },
+          "proof-readers-current": {
+            "count": 66,
+            "elapsedUs": 1205
+          },
+          "proof-owner-current": {
+            "count": 66,
+            "elapsedUs": 7688
+          },
+          "proof-unchanged": {
+            "count": 66,
+            "elapsedUs": 10278
+          },
+          "proof-refs-digest": {
+            "count": 164,
+            "elapsedUs": 2460
+          },
+          "proof-leaf-current": {
+            "count": 32,
+            "elapsedUs": 9917
+          },
+          "proof-authorize": {
+            "count": 32,
+            "elapsedUs": 64199
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 7757758
+          },
+          "proof-clone": {
+            "count": 64,
+            "elapsedUs": 13532
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 7283476
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 2,
+            "elapsedUs": 77312
+          },
+          "bcs-case-event": {
+            "count": 2,
+            "elapsedUs": 77303
+          },
+          "bcs-dependencies": {
+            "count": 2,
+            "elapsedUs": 17440
+          },
+          "bcs-source-maps": {
+            "count": 4,
+            "elapsedUs": 455
+          },
+          "bcs-auth": {
+            "count": 6,
+            "elapsedUs": 2555
+          },
+          "event-read-first": {
+            "count": 6,
+            "elapsedUs": 104782
+          },
+          "event-read-second": {
+            "count": 6,
+            "elapsedUs": 100202
+          },
+          "event-state": {
+            "count": 12,
+            "elapsedUs": 124651
+          },
+          "event-authorize-case": {
+            "count": 12,
+            "elapsedUs": 4561
+          },
+          "event-authorize-evidence": {
+            "count": 12,
+            "elapsedUs": 74656
+          },
+          "event-environment": {
+            "count": 6,
+            "elapsedUs": 517
+          },
+          "event-auth": {
+            "count": 18,
+            "elapsedUs": 6891
+          },
+          "event-digest": {
+            "count": 48,
+            "elapsedUs": 1310
+          },
+          "event-source-maps": {
+            "count": 6,
+            "elapsedUs": 449
+          },
+          "atlas-read-records": {
+            "count": 1,
+            "elapsedUs": 7054187
+          },
+          "atlas-state": {
+            "count": 5,
+            "elapsedUs": 169808
+          },
+          "atlas-case-read": {
+            "count": 2,
+            "elapsedUs": 286003
+          },
+          "atlas-evidence": {
+            "count": 6,
+            "elapsedUs": 110683
+          },
+          "atlas-evidence-batch": {
+            "count": 1,
+            "elapsedUs": 57989
+          },
+          "atlas-continuity": {
+            "count": 6,
+            "elapsedUs": 6056512
+          },
+          "atlas-stable": {
+            "count": 24,
+            "elapsedUs": 388548
+          },
+          "atlas-authorize": {
+            "count": 4,
+            "elapsedUs": 110172
+          },
+          "atlas-digest": {
+            "count": 297,
+            "elapsedUs": 520032
+          },
+          "atlas-source-maps": {
+            "count": 1,
+            "elapsedUs": 128
+          },
+          "atlas-map-entry": {
+            "count": 1,
+            "elapsedUs": 516
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 138970
+          },
+          "atlas-rank-digest": {
+            "count": 2,
+            "elapsedUs": 6134
+          },
+          "atlas-capture": {
+            "count": 112,
+            "elapsedUs": 4872068
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 226,
+            "elapsedUs": 36176
+          },
+          "proof-cache-hit": {
+            "count": 32,
+            "elapsedUs": 12735
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 7758015
+          },
+          "c08-transaction": {
+            "count": 386,
+            "elapsedUs": 4701510
+          },
+          "c08-authorize": {
+            "count": 772,
+            "elapsedUs": 301489
+          },
+          "c08-read-state": {
+            "count": 386,
+            "elapsedUs": 2311
+          },
+          "c08-clone": {
+            "count": 386,
+            "elapsedUs": 2346943
+          },
+          "c08-callback": {
+            "count": 386,
+            "elapsedUs": 3001182
+          }
+        },
+        "httpRelativeSeconds": 9.345636
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 16482923,
+        "activeAsync": 9,
+        "buckets": {
+          "owner-current": {
+            "count": 293,
+            "elapsedUs": 18680
+          },
+          "owner-readers": {
+            "count": 674,
+            "elapsedUs": 6664
+          },
+          "owner-environment": {
+            "count": 43,
+            "elapsedUs": 4916
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 3483,
+            "elapsedUs": 188269
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 42,
+            "elapsedUs": 10174
+          },
+          "owner-revalidate": {
+            "count": 83,
+            "elapsedUs": 32642
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 32505987
+          },
+          "owner-clone": {
+            "count": 46,
+            "elapsedUs": 1467
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 16253725
+          },
+          "root-pinned": {
+            "count": 374,
+            "elapsedUs": 29129
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 368,
+            "elapsedUs": 8362
+          },
+          "root-native-lookup": {
+            "count": 369,
+            "elapsedUs": 5335
+          },
+          "root-native-current": {
+            "count": 368,
+            "elapsedUs": 2853
+          },
+          "root-owner-current": {
+            "count": 374,
+            "elapsedUs": 21111
+          },
+          "root-request-identity": {
+            "count": 375,
+            "elapsedUs": 5438
+          },
+          "root-binding-digest": {
+            "count": 375,
+            "elapsedUs": 2085
+          },
+          "proof-frame-current": {
+            "count": 81,
+            "elapsedUs": 25657
+          },
+          "proof-readers-current": {
+            "count": 82,
+            "elapsedUs": 1485
+          },
+          "proof-owner-current": {
+            "count": 82,
+            "elapsedUs": 9893
+          },
+          "proof-unchanged": {
+            "count": 82,
+            "elapsedUs": 12574
+          },
+          "proof-refs-digest": {
+            "count": 204,
+            "elapsedUs": 3041
+          },
+          "proof-leaf-current": {
+            "count": 40,
+            "elapsedUs": 12203
+          },
+          "proof-authorize": {
+            "count": 40,
+            "elapsedUs": 78328
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 16253044
+          },
+          "proof-clone": {
+            "count": 80,
+            "elapsedUs": 16538
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 15778763
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 2,
+            "elapsedUs": 77312
+          },
+          "bcs-case-event": {
+            "count": 2,
+            "elapsedUs": 77303
+          },
+          "bcs-dependencies": {
+            "count": 2,
+            "elapsedUs": 17440
+          },
+          "bcs-source-maps": {
+            "count": 4,
+            "elapsedUs": 455
+          },
+          "bcs-auth": {
+            "count": 6,
+            "elapsedUs": 2555
+          },
+          "event-read-first": {
+            "count": 8,
+            "elapsedUs": 138249
+          },
+          "event-read-second": {
+            "count": 8,
+            "elapsedUs": 133563
+          },
+          "event-state": {
+            "count": 16,
+            "elapsedUs": 165336
+          },
+          "event-authorize-case": {
+            "count": 16,
+            "elapsedUs": 6132
+          },
+          "event-authorize-evidence": {
+            "count": 16,
+            "elapsedUs": 99012
+          },
+          "event-environment": {
+            "count": 8,
+            "elapsedUs": 700
+          },
+          "event-auth": {
+            "count": 24,
+            "elapsedUs": 9041
+          },
+          "event-digest": {
+            "count": 64,
+            "elapsedUs": 1655
+          },
+          "event-source-maps": {
+            "count": 8,
+            "elapsedUs": 590
+          },
+          "atlas-read-records": {
+            "count": 2,
+            "elapsedUs": 7222658
+          },
+          "atlas-state": {
+            "count": 6,
+            "elapsedUs": 179630
+          },
+          "atlas-case-read": {
+            "count": 3,
+            "elapsedUs": 443280
+          },
+          "atlas-evidence": {
+            "count": 6,
+            "elapsedUs": 110683
+          },
+          "atlas-evidence-batch": {
+            "count": 1,
+            "elapsedUs": 57989
+          },
+          "atlas-continuity": {
+            "count": 6,
+            "elapsedUs": 6056512
+          },
+          "atlas-stable": {
+            "count": 27,
+            "elapsedUs": 388785
+          },
+          "atlas-authorize": {
+            "count": 5,
+            "elapsedUs": 110712
+          },
+          "atlas-digest": {
+            "count": 312,
+            "elapsedUs": 520825
+          },
+          "atlas-source-maps": {
+            "count": 1,
+            "elapsedUs": 128
+          },
+          "atlas-map-entry": {
+            "count": 1,
+            "elapsedUs": 516
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 8492394
+          },
+          "atlas-rank-digest": {
+            "count": 4,
+            "elapsedUs": 34386
+          },
+          "atlas-capture": {
+            "count": 264,
+            "elapsedUs": 11459955
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 282,
+            "elapsedUs": 44681
+          },
+          "proof-cache-hit": {
+            "count": 40,
+            "elapsedUs": 15566
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 16253302
+          },
+          "c08-transaction": {
+            "count": 887,
+            "elapsedUs": 10334859
+          },
+          "c08-authorize": {
+            "count": 1774,
+            "elapsedUs": 692761
+          },
+          "c08-read-state": {
+            "count": 887,
+            "elapsedUs": 5528
+          },
+          "c08-clone": {
+            "count": 887,
+            "elapsedUs": 5262999
+          },
+          "c08-callback": {
+            "count": 887,
+            "elapsedUs": 6386144
+          }
+        },
+        "httpRelativeSeconds": 17.840923
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 19728190,
+        "activeAsync": 9,
+        "buckets": {
+          "owner-current": {
+            "count": 405,
+            "elapsedUs": 25587
+          },
+          "owner-readers": {
+            "count": 930,
+            "elapsedUs": 9154
+          },
+          "owner-environment": {
+            "count": 59,
+            "elapsedUs": 6562
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 4539,
+            "elapsedUs": 195882
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 58,
+            "elapsedUs": 11585
+          },
+          "owner-revalidate": {
+            "count": 115,
+            "elapsedUs": 44413
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 38996519
+          },
+          "owner-clone": {
+            "count": 62,
+            "elapsedUs": 1633
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 19498992
+          },
+          "root-pinned": {
+            "count": 518,
+            "elapsedUs": 40019
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 512,
+            "elapsedUs": 11430
+          },
+          "root-native-lookup": {
+            "count": 513,
+            "elapsedUs": 7270
+          },
+          "root-native-current": {
+            "count": 512,
+            "elapsedUs": 3933
+          },
+          "root-owner-current": {
+            "count": 518,
+            "elapsedUs": 29169
+          },
+          "root-request-identity": {
+            "count": 519,
+            "elapsedUs": 7339
+          },
+          "root-binding-digest": {
+            "count": 519,
+            "elapsedUs": 2864
+          },
+          "proof-frame-current": {
+            "count": 113,
+            "elapsedUs": 35159
+          },
+          "proof-readers-current": {
+            "count": 114,
+            "elapsedUs": 1985
+          },
+          "proof-owner-current": {
+            "count": 114,
+            "elapsedUs": 13264
+          },
+          "proof-unchanged": {
+            "count": 114,
+            "elapsedUs": 17475
+          },
+          "proof-refs-digest": {
+            "count": 284,
+            "elapsedUs": 4144
+          },
+          "proof-leaf-current": {
+            "count": 56,
+            "elapsedUs": 17013
+          },
+          "proof-authorize": {
+            "count": 56,
+            "elapsedUs": 106118
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 19498311
+          },
+          "proof-clone": {
+            "count": 112,
+            "elapsedUs": 22321
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 19024029
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 3,
+            "elapsedUs": 112747
+          },
+          "bcs-case-event": {
+            "count": 3,
+            "elapsedUs": 112735
+          },
+          "bcs-dependencies": {
+            "count": 3,
+            "elapsedUs": 22707
+          },
+          "bcs-source-maps": {
+            "count": 6,
+            "elapsedUs": 643
+          },
+          "bcs-auth": {
+            "count": 9,
+            "elapsedUs": 3640
+          },
+          "event-read-first": {
+            "count": 11,
+            "elapsedUs": 188522
+          },
+          "event-read-second": {
+            "count": 11,
+            "elapsedUs": 182100
+          },
+          "event-state": {
+            "count": 22,
+            "elapsedUs": 225674
+          },
+          "event-authorize-case": {
+            "count": 22,
+            "elapsedUs": 8280
+          },
+          "event-authorize-evidence": {
+            "count": 22,
+            "elapsedUs": 134994
+          },
+          "event-environment": {
+            "count": 11,
+            "elapsedUs": 960
+          },
+          "event-auth": {
+            "count": 33,
+            "elapsedUs": 12662
+          },
+          "event-digest": {
+            "count": 88,
+            "elapsedUs": 2218
+          },
+          "event-source-maps": {
+            "count": 11,
+            "elapsedUs": 797
+          },
+          "atlas-read-records": {
+            "count": 2,
+            "elapsedUs": 10467924
+          },
+          "atlas-state": {
+            "count": 8,
+            "elapsedUs": 199623
+          },
+          "atlas-case-read": {
+            "count": 4,
+            "elapsedUs": 576183
+          },
+          "atlas-evidence": {
+            "count": 9,
+            "elapsedUs": 157894
+          },
+          "atlas-evidence-batch": {
+            "count": 2,
+            "elapsedUs": 105217
+          },
+          "atlas-continuity": {
+            "count": 9,
+            "elapsedUs": 9008087
+          },
+          "atlas-stable": {
+            "count": 36,
+            "elapsedUs": 462446
+          },
+          "atlas-authorize": {
+            "count": 6,
+            "elapsedUs": 135990
+          },
+          "atlas-digest": {
+            "count": 412,
+            "elapsedUs": 611242
+          },
+          "atlas-source-maps": {
+            "count": 2,
+            "elapsedUs": 212
+          },
+          "atlas-map-entry": {
+            "count": 2,
+            "elapsedUs": 838
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 11737660
+          },
+          "atlas-rank-digest": {
+            "count": 4,
+            "elapsedUs": 34386
+          },
+          "atlas-capture": {
+            "count": 320,
+            "elapsedUs": 13804871
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 394,
+            "elapsedUs": 62353
+          },
+          "proof-cache-hit": {
+            "count": 56,
+            "elapsedUs": 21008
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 19498569
+          },
+          "c08-transaction": {
+            "count": 1077,
+            "elapsedUs": 12376537
+          },
+          "c08-authorize": {
+            "count": 2154,
+            "elapsedUs": 837098
+          },
+          "c08-read-state": {
+            "count": 1077,
+            "elapsedUs": 6605
+          },
+          "c08-clone": {
+            "count": 1077,
+            "elapsedUs": 6347982
+          },
+          "c08-callback": {
+            "count": 1077,
+            "elapsedUs": 7595170
+          }
+        },
+        "httpRelativeSeconds": 21.086190000000002
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 2,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 31657328,
+        "activeAsync": 5,
+        "buckets": {
+          "owner-current": {
+            "count": 573,
+            "elapsedUs": 36172
+          },
+          "owner-readers": {
+            "count": 1314,
+            "elapsedUs": 12922
+          },
+          "owner-environment": {
+            "count": 83,
+            "elapsedUs": 9113
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 6123,
+            "elapsedUs": 207160
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 82,
+            "elapsedUs": 13728
+          },
+          "owner-revalidate": {
+            "count": 163,
+            "elapsedUs": 62614
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 62854797
+          },
+          "owner-clone": {
+            "count": 86,
+            "elapsedUs": 1909
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 31428130
+          },
+          "root-pinned": {
+            "count": 734,
+            "elapsedUs": 56511
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 728,
+            "elapsedUs": 16085
+          },
+          "root-native-lookup": {
+            "count": 729,
+            "elapsedUs": 10272
+          },
+          "root-native-current": {
+            "count": 728,
+            "elapsedUs": 5482
+          },
+          "root-owner-current": {
+            "count": 734,
+            "elapsedUs": 41255
+          },
+          "root-request-identity": {
+            "count": 735,
+            "elapsedUs": 10317
+          },
+          "root-binding-digest": {
+            "count": 735,
+            "elapsedUs": 4032
+          },
+          "proof-frame-current": {
+            "count": 161,
+            "elapsedUs": 49618
+          },
+          "proof-readers-current": {
+            "count": 162,
+            "elapsedUs": 2858
+          },
+          "proof-owner-current": {
+            "count": 162,
+            "elapsedUs": 18616
+          },
+          "proof-unchanged": {
+            "count": 162,
+            "elapsedUs": 24646
+          },
+          "proof-refs-digest": {
+            "count": 404,
+            "elapsedUs": 5817
+          },
+          "proof-leaf-current": {
+            "count": 80,
+            "elapsedUs": 24012
+          },
+          "proof-authorize": {
+            "count": 80,
+            "elapsedUs": 148874
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 31427450
+          },
+          "proof-clone": {
+            "count": 160,
+            "elapsedUs": 31069
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 4,
+            "elapsedUs": 147557
+          },
+          "bcs-case-event": {
+            "count": 4,
+            "elapsedUs": 147542
+          },
+          "bcs-dependencies": {
+            "count": 4,
+            "elapsedUs": 28066
+          },
+          "bcs-source-maps": {
+            "count": 8,
+            "elapsedUs": 859
+          },
+          "bcs-auth": {
+            "count": 12,
+            "elapsedUs": 5160
+          },
+          "event-read-first": {
+            "count": 16,
+            "elapsedUs": 271131
+          },
+          "event-read-second": {
+            "count": 16,
+            "elapsedUs": 263654
+          },
+          "event-state": {
+            "count": 32,
+            "elapsedUs": 326092
+          },
+          "event-authorize-case": {
+            "count": 32,
+            "elapsedUs": 11952
+          },
+          "event-authorize-evidence": {
+            "count": 32,
+            "elapsedUs": 194476
+          },
+          "event-environment": {
+            "count": 16,
+            "elapsedUs": 1350
+          },
+          "event-auth": {
+            "count": 48,
+            "elapsedUs": 18145
+          },
+          "event-digest": {
+            "count": 128,
+            "elapsedUs": 3201
+          },
+          "event-source-maps": {
+            "count": 16,
+            "elapsedUs": 1170
+          },
+          "atlas-read-records": {
+            "count": 2,
+            "elapsedUs": 13927478
+          },
+          "atlas-state": {
+            "count": 10,
+            "elapsedUs": 317069
+          },
+          "atlas-case-read": {
+            "count": 4,
+            "elapsedUs": 576245
+          },
+          "atlas-evidence": {
+            "count": 12,
+            "elapsedUs": 206176
+          },
+          "atlas-evidence-batch": {
+            "count": 2,
+            "elapsedUs": 105217
+          },
+          "atlas-continuity": {
+            "count": 12,
+            "elapsedUs": 11978013
+          },
+          "atlas-stable": {
+            "count": 48,
+            "elapsedUs": 784446
+          },
+          "atlas-authorize": {
+            "count": 8,
+            "elapsedUs": 220913
+          },
+          "atlas-digest": {
+            "count": 650,
+            "elapsedUs": 1149957
+          },
+          "atlas-source-maps": {
+            "count": 2,
+            "elapsedUs": 212
+          },
+          "atlas-map-entry": {
+            "count": 2,
+            "elapsedUs": 838
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 9,
+            "elapsedUs": 53753
+          },
+          "atlas-capture": {
+            "count": 528,
+            "elapsedUs": 22834916
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 562,
+            "elapsedUs": 89021
+          },
+          "proof-cache-hit": {
+            "count": 80,
+            "elapsedUs": 29171
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 31427707
+          },
+          "c08-transaction": {
+            "count": 1766,
+            "elapsedUs": 20268479
+          },
+          "c08-authorize": {
+            "count": 3532,
+            "elapsedUs": 1376635
+          },
+          "c08-read-state": {
+            "count": 1766,
+            "elapsedUs": 11458
+          },
+          "c08-clone": {
+            "count": 1766,
+            "elapsedUs": 10473134
+          },
+          "c08-callback": {
+            "count": 1766,
+            "elapsedUs": 12455342
+          }
+        },
+        "httpRelativeSeconds": 33.015328
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 31896432,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 573,
+            "elapsedUs": 36172
+          },
+          "owner-readers": {
+            "count": 1314,
+            "elapsedUs": 12922
+          },
+          "owner-environment": {
+            "count": 83,
+            "elapsedUs": 9113
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 6123,
+            "elapsedUs": 207160
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 82,
+            "elapsedUs": 13728
+          },
+          "owner-revalidate": {
+            "count": 163,
+            "elapsedUs": 62614
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 63333005
+          },
+          "owner-clone": {
+            "count": 86,
+            "elapsedUs": 1909
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 31667234
+          },
+          "root-pinned": {
+            "count": 734,
+            "elapsedUs": 56511
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 728,
+            "elapsedUs": 16085
+          },
+          "root-native-lookup": {
+            "count": 729,
+            "elapsedUs": 10272
+          },
+          "root-native-current": {
+            "count": 728,
+            "elapsedUs": 5482
+          },
+          "root-owner-current": {
+            "count": 734,
+            "elapsedUs": 41255
+          },
+          "root-request-identity": {
+            "count": 735,
+            "elapsedUs": 10317
+          },
+          "root-binding-digest": {
+            "count": 735,
+            "elapsedUs": 4032
+          },
+          "proof-frame-current": {
+            "count": 161,
+            "elapsedUs": 49618
+          },
+          "proof-readers-current": {
+            "count": 162,
+            "elapsedUs": 2858
+          },
+          "proof-owner-current": {
+            "count": 162,
+            "elapsedUs": 18616
+          },
+          "proof-unchanged": {
+            "count": 162,
+            "elapsedUs": 24646
+          },
+          "proof-refs-digest": {
+            "count": 404,
+            "elapsedUs": 5817
+          },
+          "proof-leaf-current": {
+            "count": 80,
+            "elapsedUs": 24012
+          },
+          "proof-authorize": {
+            "count": 80,
+            "elapsedUs": 148874
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 31666553
+          },
+          "proof-clone": {
+            "count": 160,
+            "elapsedUs": 31069
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 238824
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 4,
+            "elapsedUs": 147557
+          },
+          "bcs-case-event": {
+            "count": 4,
+            "elapsedUs": 147542
+          },
+          "bcs-dependencies": {
+            "count": 4,
+            "elapsedUs": 28066
+          },
+          "bcs-source-maps": {
+            "count": 8,
+            "elapsedUs": 859
+          },
+          "bcs-auth": {
+            "count": 12,
+            "elapsedUs": 5160
+          },
+          "event-read-first": {
+            "count": 16,
+            "elapsedUs": 271131
+          },
+          "event-read-second": {
+            "count": 16,
+            "elapsedUs": 263654
+          },
+          "event-state": {
+            "count": 32,
+            "elapsedUs": 326092
+          },
+          "event-authorize-case": {
+            "count": 32,
+            "elapsedUs": 11952
+          },
+          "event-authorize-evidence": {
+            "count": 32,
+            "elapsedUs": 194476
+          },
+          "event-environment": {
+            "count": 16,
+            "elapsedUs": 1350
+          },
+          "event-auth": {
+            "count": 48,
+            "elapsedUs": 18145
+          },
+          "event-digest": {
+            "count": 128,
+            "elapsedUs": 3201
+          },
+          "event-source-maps": {
+            "count": 16,
+            "elapsedUs": 1170
+          },
+          "atlas-read-records": {
+            "count": 3,
+            "elapsedUs": 14075711
+          },
+          "atlas-state": {
+            "count": 11,
+            "elapsedUs": 327289
+          },
+          "atlas-case-read": {
+            "count": 5,
+            "elapsedUs": 712932
+          },
+          "atlas-evidence": {
+            "count": 12,
+            "elapsedUs": 206176
+          },
+          "atlas-evidence-batch": {
+            "count": 2,
+            "elapsedUs": 105217
+          },
+          "atlas-continuity": {
+            "count": 12,
+            "elapsedUs": 11978013
+          },
+          "atlas-stable": {
+            "count": 51,
+            "elapsedUs": 784720
+          },
+          "atlas-authorize": {
+            "count": 9,
+            "elapsedUs": 221507
+          },
+          "atlas-digest": {
+            "count": 665,
+            "elapsedUs": 1150643
+          },
+          "atlas-source-maps": {
+            "count": 2,
+            "elapsedUs": 212
+          },
+          "atlas-map-entry": {
+            "count": 2,
+            "elapsedUs": 838
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 9,
+            "elapsedUs": 53753
+          },
+          "atlas-capture": {
+            "count": 528,
+            "elapsedUs": 22834916
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 562,
+            "elapsedUs": 89021
+          },
+          "proof-cache-hit": {
+            "count": 80,
+            "elapsedUs": 29171
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 31666811
+          },
+          "c08-transaction": {
+            "count": 1769,
+            "elapsedUs": 20367693
+          },
+          "c08-authorize": {
+            "count": 3538,
+            "elapsedUs": 1379277
+          },
+          "c08-read-state": {
+            "count": 1769,
+            "elapsedUs": 11483
+          },
+          "c08-clone": {
+            "count": 1769,
+            "elapsedUs": 10491216
+          },
+          "c08-callback": {
+            "count": 1769,
+            "elapsedUs": 12540412
+          }
+        },
+        "httpRelativeSeconds": 33.254432
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 35236697,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 685,
+            "elapsedUs": 63828
+          },
+          "owner-readers": {
+            "count": 1570,
+            "elapsedUs": 31069
+          },
+          "owner-environment": {
+            "count": 99,
+            "elapsedUs": 10844
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 7179,
+            "elapsedUs": 225032
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 98,
+            "elapsedUs": 15181
+          },
+          "owner-revalidate": {
+            "count": 195,
+            "elapsedUs": 75080
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 70013535
+          },
+          "owner-clone": {
+            "count": 102,
+            "elapsedUs": 2081
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 35007499
+          },
+          "root-pinned": {
+            "count": 878,
+            "elapsedUs": 75431
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 872,
+            "elapsedUs": 19359
+          },
+          "root-native-lookup": {
+            "count": 873,
+            "elapsedUs": 12398
+          },
+          "root-native-current": {
+            "count": 872,
+            "elapsedUs": 6563
+          },
+          "root-owner-current": {
+            "count": 878,
+            "elapsedUs": 55279
+          },
+          "root-request-identity": {
+            "count": 879,
+            "elapsedUs": 14254
+          },
+          "root-binding-digest": {
+            "count": 879,
+            "elapsedUs": 4827
+          },
+          "proof-frame-current": {
+            "count": 193,
+            "elapsedUs": 67870
+          },
+          "proof-readers-current": {
+            "count": 194,
+            "elapsedUs": 3371
+          },
+          "proof-owner-current": {
+            "count": 194,
+            "elapsedUs": 22180
+          },
+          "proof-unchanged": {
+            "count": 194,
+            "elapsedUs": 38090
+          },
+          "proof-refs-digest": {
+            "count": 484,
+            "elapsedUs": 6935
+          },
+          "proof-leaf-current": {
+            "count": 96,
+            "elapsedUs": 34546
+          },
+          "proof-authorize": {
+            "count": 96,
+            "elapsedUs": 197763
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 35006818
+          },
+          "proof-clone": {
+            "count": 192,
+            "elapsedUs": 38469
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 3579089
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 5,
+            "elapsedUs": 217816
+          },
+          "bcs-case-event": {
+            "count": 5,
+            "elapsedUs": 217797
+          },
+          "bcs-dependencies": {
+            "count": 5,
+            "elapsedUs": 33666
+          },
+          "bcs-source-maps": {
+            "count": 10,
+            "elapsedUs": 1075
+          },
+          "bcs-auth": {
+            "count": 15,
+            "elapsedUs": 6565
+          },
+          "event-read-first": {
+            "count": 19,
+            "elapsedUs": 339123
+          },
+          "event-read-second": {
+            "count": 19,
+            "elapsedUs": 328740
+          },
+          "event-state": {
+            "count": 38,
+            "elapsedUs": 389638
+          },
+          "event-authorize-case": {
+            "count": 38,
+            "elapsedUs": 14147
+          },
+          "event-authorize-evidence": {
+            "count": 38,
+            "elapsedUs": 261264
+          },
+          "event-environment": {
+            "count": 19,
+            "elapsedUs": 1604
+          },
+          "event-auth": {
+            "count": 57,
+            "elapsedUs": 23494
+          },
+          "event-digest": {
+            "count": 152,
+            "elapsedUs": 3894
+          },
+          "event-source-maps": {
+            "count": 19,
+            "elapsedUs": 1383
+          },
+          "atlas-read-records": {
+            "count": 3,
+            "elapsedUs": 17415977
+          },
+          "atlas-state": {
+            "count": 13,
+            "elapsedUs": 347804
+          },
+          "atlas-case-read": {
+            "count": 6,
+            "elapsedUs": 846179
+          },
+          "atlas-evidence": {
+            "count": 15,
+            "elapsedUs": 289165
+          },
+          "atlas-evidence-batch": {
+            "count": 3,
+            "elapsedUs": 188224
+          },
+          "atlas-continuity": {
+            "count": 15,
+            "elapsedUs": 14964848
+          },
+          "atlas-stable": {
+            "count": 60,
+            "elapsedUs": 881866
+          },
+          "atlas-authorize": {
+            "count": 10,
+            "elapsedUs": 250249
+          },
+          "atlas-digest": {
+            "count": 765,
+            "elapsedUs": 1264366
+          },
+          "atlas-source-maps": {
+            "count": 3,
+            "elapsedUs": 307
+          },
+          "atlas-map-entry": {
+            "count": 3,
+            "elapsedUs": 1227
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 9,
+            "elapsedUs": 53753
+          },
+          "atlas-capture": {
+            "count": 584,
+            "elapsedUs": 25251492
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 674,
+            "elapsedUs": 135499
+          },
+          "proof-cache-hit": {
+            "count": 96,
+            "elapsedUs": 36197
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 35007076
+          },
+          "c08-transaction": {
+            "count": 1959,
+            "elapsedUs": 22463111
+          },
+          "c08-authorize": {
+            "count": 3918,
+            "elapsedUs": 1527317
+          },
+          "c08-read-state": {
+            "count": 1959,
+            "elapsedUs": 12749
+          },
+          "c08-clone": {
+            "count": 1959,
+            "elapsedUs": 11623425
+          },
+          "c08-callback": {
+            "count": 1959,
+            "elapsedUs": 13800482
+          }
+        },
+        "httpRelativeSeconds": 36.594697
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 3,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 38924304,
+        "activeAsync": 5,
+        "buckets": {
+          "owner-current": {
+            "count": 797,
+            "elapsedUs": 70660
+          },
+          "owner-readers": {
+            "count": 1826,
+            "elapsedUs": 33563
+          },
+          "owner-environment": {
+            "count": 115,
+            "elapsedUs": 12504
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 8235,
+            "elapsedUs": 232443
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 114,
+            "elapsedUs": 16574
+          },
+          "owner-revalidate": {
+            "count": 227,
+            "elapsedUs": 87434
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 77388749
+          },
+          "owner-clone": {
+            "count": 118,
+            "elapsedUs": 2267
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 38695106
+          },
+          "root-pinned": {
+            "count": 1022,
+            "elapsedUs": 86405
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 1016,
+            "elapsedUs": 22577
+          },
+          "root-native-lookup": {
+            "count": 1017,
+            "elapsedUs": 14477
+          },
+          "root-native-current": {
+            "count": 1016,
+            "elapsedUs": 7643
+          },
+          "root-owner-current": {
+            "count": 1022,
+            "elapsedUs": 63327
+          },
+          "root-request-identity": {
+            "count": 1023,
+            "elapsedUs": 16183
+          },
+          "root-binding-digest": {
+            "count": 1023,
+            "elapsedUs": 5642
+          },
+          "proof-frame-current": {
+            "count": 225,
+            "elapsedUs": 77585
+          },
+          "proof-readers-current": {
+            "count": 226,
+            "elapsedUs": 3922
+          },
+          "proof-owner-current": {
+            "count": 226,
+            "elapsedUs": 25964
+          },
+          "proof-unchanged": {
+            "count": 226,
+            "elapsedUs": 42792
+          },
+          "proof-refs-digest": {
+            "count": 564,
+            "elapsedUs": 8007
+          },
+          "proof-leaf-current": {
+            "count": 112,
+            "elapsedUs": 39235
+          },
+          "proof-authorize": {
+            "count": 112,
+            "elapsedUs": 226079
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 38694425
+          },
+          "proof-clone": {
+            "count": 224,
+            "elapsedUs": 44384
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 7266601
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 6,
+            "elapsedUs": 253890
+          },
+          "bcs-case-event": {
+            "count": 6,
+            "elapsedUs": 253809
+          },
+          "bcs-dependencies": {
+            "count": 6,
+            "elapsedUs": 39025
+          },
+          "bcs-source-maps": {
+            "count": 12,
+            "elapsedUs": 1452
+          },
+          "bcs-auth": {
+            "count": 18,
+            "elapsedUs": 8184
+          },
+          "event-read-first": {
+            "count": 22,
+            "elapsedUs": 389138
+          },
+          "event-read-second": {
+            "count": 22,
+            "elapsedUs": 377156
+          },
+          "event-state": {
+            "count": 44,
+            "elapsedUs": 450299
+          },
+          "event-authorize-case": {
+            "count": 44,
+            "elapsedUs": 16330
+          },
+          "event-authorize-evidence": {
+            "count": 44,
+            "elapsedUs": 296334
+          },
+          "event-environment": {
+            "count": 22,
+            "elapsedUs": 1871
+          },
+          "event-auth": {
+            "count": 66,
+            "elapsedUs": 26911
+          },
+          "event-digest": {
+            "count": 176,
+            "elapsedUs": 4483
+          },
+          "event-source-maps": {
+            "count": 22,
+            "elapsedUs": 1583
+          },
+          "atlas-read-records": {
+            "count": 3,
+            "elapsedUs": 21103464
+          },
+          "atlas-state": {
+            "count": 15,
+            "elapsedUs": 563151
+          },
+          "atlas-case-read": {
+            "count": 6,
+            "elapsedUs": 846239
+          },
+          "atlas-evidence": {
+            "count": 18,
+            "elapsedUs": 339473
+          },
+          "atlas-evidence-batch": {
+            "count": 3,
+            "elapsedUs": 188224
+          },
+          "atlas-continuity": {
+            "count": 18,
+            "elapsedUs": 17990689
+          },
+          "atlas-stable": {
+            "count": 72,
+            "elapsedUs": 1320103
+          },
+          "atlas-authorize": {
+            "count": 12,
+            "elapsedUs": 398387
+          },
+          "atlas-digest": {
+            "count": 947,
+            "elapsedUs": 1811515
+          },
+          "atlas-source-maps": {
+            "count": 3,
+            "elapsedUs": 307
+          },
+          "atlas-map-entry": {
+            "count": 3,
+            "elapsedUs": 1227
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 9,
+            "elapsedUs": 53753
+          },
+          "atlas-capture": {
+            "count": 640,
+            "elapsedUs": 27695421
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 786,
+            "elapsedUs": 152914
+          },
+          "proof-cache-hit": {
+            "count": 112,
+            "elapsedUs": 41700
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 38694683
+          },
+          "c08-transaction": {
+            "count": 2149,
+            "elapsedUs": 24771265
+          },
+          "c08-authorize": {
+            "count": 4298,
+            "elapsedUs": 1675986
+          },
+          "c08-read-state": {
+            "count": 2149,
+            "elapsedUs": 13916
+          },
+          "c08-clone": {
+            "count": 2149,
+            "elapsedUs": 12762757
+          },
+          "c08-callback": {
+            "count": 2149,
+            "elapsedUs": 15239775
+          }
+        },
+        "httpRelativeSeconds": 40.282303999999996
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 39175105,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 797,
+            "elapsedUs": 70660
+          },
+          "owner-readers": {
+            "count": 1826,
+            "elapsedUs": 33563
+          },
+          "owner-environment": {
+            "count": 115,
+            "elapsedUs": 12504
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 8235,
+            "elapsedUs": 232443
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 114,
+            "elapsedUs": 16574
+          },
+          "owner-revalidate": {
+            "count": 227,
+            "elapsedUs": 87434
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 77890350
+          },
+          "owner-clone": {
+            "count": 118,
+            "elapsedUs": 2267
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 38945907
+          },
+          "root-pinned": {
+            "count": 1022,
+            "elapsedUs": 86405
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 1016,
+            "elapsedUs": 22577
+          },
+          "root-native-lookup": {
+            "count": 1017,
+            "elapsedUs": 14477
+          },
+          "root-native-current": {
+            "count": 1016,
+            "elapsedUs": 7643
+          },
+          "root-owner-current": {
+            "count": 1022,
+            "elapsedUs": 63327
+          },
+          "root-request-identity": {
+            "count": 1023,
+            "elapsedUs": 16183
+          },
+          "root-binding-digest": {
+            "count": 1023,
+            "elapsedUs": 5642
+          },
+          "proof-frame-current": {
+            "count": 225,
+            "elapsedUs": 77585
+          },
+          "proof-readers-current": {
+            "count": 226,
+            "elapsedUs": 3922
+          },
+          "proof-owner-current": {
+            "count": 226,
+            "elapsedUs": 25964
+          },
+          "proof-unchanged": {
+            "count": 226,
+            "elapsedUs": 42792
+          },
+          "proof-refs-digest": {
+            "count": 564,
+            "elapsedUs": 8007
+          },
+          "proof-leaf-current": {
+            "count": 112,
+            "elapsedUs": 39235
+          },
+          "proof-authorize": {
+            "count": 112,
+            "elapsedUs": 226079
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 38945226
+          },
+          "proof-clone": {
+            "count": 224,
+            "elapsedUs": 44384
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-rank-second": {
+            "count": 1,
+            "elapsedUs": 250527
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 7266601
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 6,
+            "elapsedUs": 253890
+          },
+          "bcs-case-event": {
+            "count": 6,
+            "elapsedUs": 253809
+          },
+          "bcs-dependencies": {
+            "count": 6,
+            "elapsedUs": 39025
+          },
+          "bcs-source-maps": {
+            "count": 12,
+            "elapsedUs": 1452
+          },
+          "bcs-auth": {
+            "count": 18,
+            "elapsedUs": 8184
+          },
+          "event-read-first": {
+            "count": 22,
+            "elapsedUs": 389138
+          },
+          "event-read-second": {
+            "count": 22,
+            "elapsedUs": 377156
+          },
+          "event-state": {
+            "count": 44,
+            "elapsedUs": 450299
+          },
+          "event-authorize-case": {
+            "count": 44,
+            "elapsedUs": 16330
+          },
+          "event-authorize-evidence": {
+            "count": 44,
+            "elapsedUs": 296334
+          },
+          "event-environment": {
+            "count": 22,
+            "elapsedUs": 1871
+          },
+          "event-auth": {
+            "count": 66,
+            "elapsedUs": 26911
+          },
+          "event-digest": {
+            "count": 176,
+            "elapsedUs": 4483
+          },
+          "event-source-maps": {
+            "count": 22,
+            "elapsedUs": 1583
+          },
+          "atlas-read-records": {
+            "count": 4,
+            "elapsedUs": 21248624
+          },
+          "atlas-state": {
+            "count": 16,
+            "elapsedUs": 573655
+          },
+          "atlas-case-read": {
+            "count": 7,
+            "elapsedUs": 979322
+          },
+          "atlas-evidence": {
+            "count": 18,
+            "elapsedUs": 339473
+          },
+          "atlas-evidence-batch": {
+            "count": 3,
+            "elapsedUs": 188224
+          },
+          "atlas-continuity": {
+            "count": 18,
+            "elapsedUs": 17990689
+          },
+          "atlas-stable": {
+            "count": 75,
+            "elapsedUs": 1320402
+          },
+          "atlas-authorize": {
+            "count": 13,
+            "elapsedUs": 399082
+          },
+          "atlas-digest": {
+            "count": 962,
+            "elapsedUs": 1812281
+          },
+          "atlas-source-maps": {
+            "count": 3,
+            "elapsedUs": 307
+          },
+          "atlas-map-entry": {
+            "count": 3,
+            "elapsedUs": 1227
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 10,
+            "elapsedUs": 53803
+          },
+          "atlas-capture": {
+            "count": 640,
+            "elapsedUs": 27695421
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 786,
+            "elapsedUs": 152914
+          },
+          "proof-cache-hit": {
+            "count": 112,
+            "elapsedUs": 41700
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 38945484
+          },
+          "c08-transaction": {
+            "count": 2152,
+            "elapsedUs": 24884847
+          },
+          "c08-authorize": {
+            "count": 4304,
+            "elapsedUs": 1679280
+          },
+          "c08-read-state": {
+            "count": 2152,
+            "elapsedUs": 13945
+          },
+          "c08-clone": {
+            "count": 2152,
+            "elapsedUs": 12781059
+          },
+          "c08-callback": {
+            "count": 2152,
+            "elapsedUs": 15322527
+          }
+        },
+        "httpRelativeSeconds": 40.533105
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 42512229,
+        "activeAsync": 8,
+        "buckets": {
+          "owner-current": {
+            "count": 909,
+            "elapsedUs": 78058
+          },
+          "owner-readers": {
+            "count": 2082,
+            "elapsedUs": 36009
+          },
+          "owner-environment": {
+            "count": 131,
+            "elapsedUs": 14211
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 9291,
+            "elapsedUs": 240498
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 130,
+            "elapsedUs": 18056
+          },
+          "owner-revalidate": {
+            "count": 259,
+            "elapsedUs": 99357
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 84564599
+          },
+          "owner-clone": {
+            "count": 134,
+            "elapsedUs": 2442
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 42283031
+          },
+          "root-pinned": {
+            "count": 1166,
+            "elapsedUs": 97322
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 1160,
+            "elapsedUs": 25673
+          },
+          "root-native-lookup": {
+            "count": 1161,
+            "elapsedUs": 16462
+          },
+          "root-native-current": {
+            "count": 1160,
+            "elapsedUs": 8696
+          },
+          "root-owner-current": {
+            "count": 1166,
+            "elapsedUs": 71365
+          },
+          "root-request-identity": {
+            "count": 1167,
+            "elapsedUs": 18051
+          },
+          "root-binding-digest": {
+            "count": 1167,
+            "elapsedUs": 6473
+          },
+          "proof-frame-current": {
+            "count": 257,
+            "elapsedUs": 87052
+          },
+          "proof-readers-current": {
+            "count": 258,
+            "elapsedUs": 4406
+          },
+          "proof-owner-current": {
+            "count": 258,
+            "elapsedUs": 29369
+          },
+          "proof-unchanged": {
+            "count": 258,
+            "elapsedUs": 47647
+          },
+          "proof-refs-digest": {
+            "count": 644,
+            "elapsedUs": 9113
+          },
+          "proof-leaf-current": {
+            "count": 128,
+            "elapsedUs": 43813
+          },
+          "proof-authorize": {
+            "count": 128,
+            "elapsedUs": 254726
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 42282350
+          },
+          "proof-clone": {
+            "count": 256,
+            "elapsedUs": 50189
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-rank-second": {
+            "count": 1,
+            "elapsedUs": 3587651
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 7266601
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 7,
+            "elapsedUs": 294729
+          },
+          "bcs-case-event": {
+            "count": 7,
+            "elapsedUs": 294638
+          },
+          "bcs-dependencies": {
+            "count": 7,
+            "elapsedUs": 44633
+          },
+          "bcs-source-maps": {
+            "count": 14,
+            "elapsedUs": 1658
+          },
+          "bcs-auth": {
+            "count": 21,
+            "elapsedUs": 9651
+          },
+          "event-read-first": {
+            "count": 25,
+            "elapsedUs": 444126
+          },
+          "event-read-second": {
+            "count": 25,
+            "elapsedUs": 426412
+          },
+          "event-state": {
+            "count": 50,
+            "elapsedUs": 516106
+          },
+          "event-authorize-case": {
+            "count": 50,
+            "elapsedUs": 18441
+          },
+          "event-authorize-evidence": {
+            "count": 50,
+            "elapsedUs": 332283
+          },
+          "event-environment": {
+            "count": 25,
+            "elapsedUs": 2161
+          },
+          "event-auth": {
+            "count": 75,
+            "elapsedUs": 30301
+          },
+          "event-digest": {
+            "count": 200,
+            "elapsedUs": 5084
+          },
+          "event-source-maps": {
+            "count": 25,
+            "elapsedUs": 2575
+          },
+          "atlas-read-records": {
+            "count": 4,
+            "elapsedUs": 24585748
+          },
+          "atlas-state": {
+            "count": 18,
+            "elapsedUs": 596745
+          },
+          "atlas-case-read": {
+            "count": 8,
+            "elapsedUs": 1116060
+          },
+          "atlas-evidence": {
+            "count": 21,
+            "elapsedUs": 393139
+          },
+          "atlas-evidence-batch": {
+            "count": 4,
+            "elapsedUs": 241920
+          },
+          "atlas-continuity": {
+            "count": 21,
+            "elapsedUs": 20949635
+          },
+          "atlas-stable": {
+            "count": 84,
+            "elapsedUs": 1448783
+          },
+          "atlas-authorize": {
+            "count": 14,
+            "elapsedUs": 459629
+          },
+          "atlas-digest": {
+            "count": 1062,
+            "elapsedUs": 1960558
+          },
+          "atlas-source-maps": {
+            "count": 4,
+            "elapsedUs": 2756
+          },
+          "atlas-map-entry": {
+            "count": 4,
+            "elapsedUs": 4351
+          },
+          "atlas-features": {
+            "count": 1,
+            "elapsedUs": 141644
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 10,
+            "elapsedUs": 53803
+          },
+          "atlas-capture": {
+            "count": 696,
+            "elapsedUs": 30065913
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 898,
+            "elapsedUs": 171103
+          },
+          "proof-cache-hit": {
+            "count": 128,
+            "elapsedUs": 47128
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 42282608
+          },
+          "c08-transaction": {
+            "count": 2342,
+            "elapsedUs": 26972421
+          },
+          "c08-authorize": {
+            "count": 4684,
+            "elapsedUs": 1825289
+          },
+          "c08-read-state": {
+            "count": 2342,
+            "elapsedUs": 15079
+          },
+          "c08-clone": {
+            "count": 2342,
+            "elapsedUs": 13894209
+          },
+          "c08-callback": {
+            "count": 2342,
+            "elapsedUs": 16571871
+          }
+        },
+        "httpRelativeSeconds": 43.870228999999995
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 46194499,
+        "activeAsync": 7,
+        "buckets": {
+          "owner-current": {
+            "count": 1021,
+            "elapsedUs": 85425
+          },
+          "owner-readers": {
+            "count": 2338,
+            "elapsedUs": 38681
+          },
+          "owner-environment": {
+            "count": 147,
+            "elapsedUs": 15937
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 10347,
+            "elapsedUs": 248217
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 146,
+            "elapsedUs": 19563
+          },
+          "owner-revalidate": {
+            "count": 291,
+            "elapsedUs": 112095
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 91929139
+          },
+          "owner-clone": {
+            "count": 150,
+            "elapsedUs": 2628
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 45965301
+          },
+          "root-pinned": {
+            "count": 1310,
+            "elapsedUs": 108696
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 1304,
+            "elapsedUs": 29287
+          },
+          "root-native-lookup": {
+            "count": 1305,
+            "elapsedUs": 18863
+          },
+          "root-native-current": {
+            "count": 1304,
+            "elapsedUs": 9840
+          },
+          "root-owner-current": {
+            "count": 1310,
+            "elapsedUs": 79609
+          },
+          "root-request-identity": {
+            "count": 1311,
+            "elapsedUs": 20140
+          },
+          "root-binding-digest": {
+            "count": 1311,
+            "elapsedUs": 7320
+          },
+          "proof-frame-current": {
+            "count": 289,
+            "elapsedUs": 97590
+          },
+          "proof-readers-current": {
+            "count": 290,
+            "elapsedUs": 4986
+          },
+          "proof-owner-current": {
+            "count": 290,
+            "elapsedUs": 33222
+          },
+          "proof-unchanged": {
+            "count": 290,
+            "elapsedUs": 52965
+          },
+          "proof-refs-digest": {
+            "count": 724,
+            "elapsedUs": 10302
+          },
+          "proof-leaf-current": {
+            "count": 144,
+            "elapsedUs": 48938
+          },
+          "proof-authorize": {
+            "count": 144,
+            "elapsedUs": 284309
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 45964620
+          },
+          "proof-clone": {
+            "count": 288,
+            "elapsedUs": 56572
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-rank-second": {
+            "count": 1,
+            "elapsedUs": 7269921
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 7266601
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 8,
+            "elapsedUs": 335597
+          },
+          "bcs-case-event": {
+            "count": 8,
+            "elapsedUs": 335501
+          },
+          "bcs-dependencies": {
+            "count": 8,
+            "elapsedUs": 50054
+          },
+          "bcs-source-maps": {
+            "count": 16,
+            "elapsedUs": 1872
+          },
+          "bcs-auth": {
+            "count": 24,
+            "elapsedUs": 10908
+          },
+          "event-read-first": {
+            "count": 28,
+            "elapsedUs": 499077
+          },
+          "event-read-second": {
+            "count": 28,
+            "elapsedUs": 479159
+          },
+          "event-state": {
+            "count": 56,
+            "elapsedUs": 583173
+          },
+          "event-authorize-case": {
+            "count": 56,
+            "elapsedUs": 20658
+          },
+          "event-authorize-evidence": {
+            "count": 56,
+            "elapsedUs": 370348
+          },
+          "event-environment": {
+            "count": 28,
+            "elapsedUs": 2440
+          },
+          "event-auth": {
+            "count": 84,
+            "elapsedUs": 33713
+          },
+          "event-digest": {
+            "count": 224,
+            "elapsedUs": 5679
+          },
+          "event-source-maps": {
+            "count": 28,
+            "elapsedUs": 2782
+          },
+          "atlas-read-records": {
+            "count": 4,
+            "elapsedUs": 28127607
+          },
+          "atlas-state": {
+            "count": 20,
+            "elapsedUs": 714818
+          },
+          "atlas-case-read": {
+            "count": 8,
+            "elapsedUs": 1116169
+          },
+          "atlas-evidence": {
+            "count": 24,
+            "elapsedUs": 447383
+          },
+          "atlas-evidence-batch": {
+            "count": 4,
+            "elapsedUs": 241920
+          },
+          "atlas-continuity": {
+            "count": 24,
+            "elapsedUs": 23993091
+          },
+          "atlas-stable": {
+            "count": 96,
+            "elapsedUs": 1773428
+          },
+          "atlas-authorize": {
+            "count": 16,
+            "elapsedUs": 545191
+          },
+          "atlas-digest": {
+            "count": 1244,
+            "elapsedUs": 2366720
+          },
+          "atlas-source-maps": {
+            "count": 4,
+            "elapsedUs": 2756
+          },
+          "atlas-map-entry": {
+            "count": 4,
+            "elapsedUs": 4351
+          },
+          "atlas-features": {
+            "count": 2,
+            "elapsedUs": 275865
+          },
+          "atlas-rank-authorized": {
+            "count": 1,
+            "elapsedUs": 23448615
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 11,
+            "elapsedUs": 59930
+          },
+          "atlas-capture": {
+            "count": 752,
+            "elapsedUs": 32479440
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 1010,
+            "elapsedUs": 189795
+          },
+          "proof-cache-hit": {
+            "count": 144,
+            "elapsedUs": 53069
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 45964878
+          },
+          "c08-transaction": {
+            "count": 2532,
+            "elapsedUs": 29186197
+          },
+          "c08-authorize": {
+            "count": 5064,
+            "elapsedUs": 1974167
+          },
+          "c08-read-state": {
+            "count": 2532,
+            "elapsedUs": 16324
+          },
+          "c08-clone": {
+            "count": 2532,
+            "elapsedUs": 15036349
+          },
+          "c08-callback": {
+            "count": 2532,
+            "elapsedUs": 17943807
+          }
+        },
+        "httpRelativeSeconds": 47.552499
+      },
+      {
+        "schema": 1,
+        "owner": 375,
+        "parent": 0,
+        "depth": 0,
+        "kind": 2,
+        "phase": 6,
+        "fulfilled": 2,
+        "epochMs": 1795477843780,
+        "elapsedUs": 54711993,
+        "activeAsync": 9,
+        "buckets": {
+          "owner-current": {
+            "count": 1077,
+            "elapsedUs": 89037
+          },
+          "owner-readers": {
+            "count": 2466,
+            "elapsedUs": 39997
+          },
+          "owner-environment": {
+            "count": 155,
+            "elapsedUs": 16835
+          },
+          "witness-before": {
+            "count": 1,
+            "elapsedUs": 220859
+          },
+          "owner-state-cases": {
+            "count": 1,
+            "elapsedUs": 130928
+          },
+          "owner-state-atlas": {
+            "count": 1,
+            "elapsedUs": 88914
+          },
+          "owner-digest": {
+            "count": 10875,
+            "elapsedUs": 251947
+          },
+          "owner-materialized": {
+            "count": 4,
+            "elapsedUs": 1827
+          },
+          "owner-authenticate": {
+            "count": 154,
+            "elapsedUs": 20399
+          },
+          "owner-revalidate": {
+            "count": 307,
+            "elapsedUs": 118046
+          },
+          "owner-work": {
+            "count": 2,
+            "elapsedUs": 108964127
+          },
+          "owner-clone": {
+            "count": 158,
+            "elapsedUs": 2718
+          },
+          "root-prepare": {
+            "count": 1,
+            "elapsedUs": 3802
+          },
+          "record-scope": {
+            "count": 1,
+            "elapsedUs": 54482796
+          },
+          "root-pinned": {
+            "count": 1382,
+            "elapsedUs": 114143
+          },
+          "root-current": {
+            "count": 7,
+            "elapsedUs": 982
+          },
+          "root-healthy": {
+            "count": 1376,
+            "elapsedUs": 31240
+          },
+          "root-native-lookup": {
+            "count": 1377,
+            "elapsedUs": 20144
+          },
+          "root-native-current": {
+            "count": 1376,
+            "elapsedUs": 10479
+          },
+          "root-owner-current": {
+            "count": 1382,
+            "elapsedUs": 83581
+          },
+          "root-request-identity": {
+            "count": 1383,
+            "elapsedUs": 21134
+          },
+          "root-binding-digest": {
+            "count": 1383,
+            "elapsedUs": 7677
+          },
+          "proof-frame-current": {
+            "count": 305,
+            "elapsedUs": 102821
+          },
+          "proof-readers-current": {
+            "count": 306,
+            "elapsedUs": 5272
+          },
+          "proof-owner-current": {
+            "count": 306,
+            "elapsedUs": 35277
+          },
+          "proof-unchanged": {
+            "count": 306,
+            "elapsedUs": 55407
+          },
+          "proof-refs-digest": {
+            "count": 764,
+            "elapsedUs": 10942
+          },
+          "proof-leaf-current": {
+            "count": 152,
+            "elapsedUs": 51354
+          },
+          "proof-authorize": {
+            "count": 152,
+            "elapsedUs": 298714
+          },
+          "proof-work": {
+            "count": 1,
+            "elapsedUs": 54482115
+          },
+          "proof-clone": {
+            "count": 304,
+            "elapsedUs": 59591
+          },
+          "canonical-read-first": {
+            "count": 1,
+            "elapsedUs": 472188
+          },
+          "canonical-rank-first": {
+            "count": 1,
+            "elapsedUs": 30953147
+          },
+          "canonical-rank-second": {
+            "count": 1,
+            "elapsedUs": 15787415
+          },
+          "canonical-memory-match": {
+            "count": 1,
+            "elapsedUs": 7266601
+          },
+          "canonical-features": {
+            "count": 1,
+            "elapsedUs": 155701
+          },
+          "canonical-select": {
+            "count": 1,
+            "elapsedUs": 11958
+          },
+          "bcs-source": {
+            "count": 8,
+            "elapsedUs": 335597
+          },
+          "bcs-case-event": {
+            "count": 8,
+            "elapsedUs": 335501
+          },
+          "bcs-dependencies": {
+            "count": 8,
+            "elapsedUs": 50054
+          },
+          "bcs-source-maps": {
+            "count": 16,
+            "elapsedUs": 1872
+          },
+          "bcs-auth": {
+            "count": 24,
+            "elapsedUs": 10908
+          },
+          "event-read-first": {
+            "count": 30,
+            "elapsedUs": 534229
+          },
+          "event-read-second": {
+            "count": 30,
+            "elapsedUs": 513056
+          },
+          "event-state": {
+            "count": 60,
+            "elapsedUs": 625890
+          },
+          "event-authorize-case": {
+            "count": 60,
+            "elapsedUs": 22118
+          },
+          "event-authorize-evidence": {
+            "count": 60,
+            "elapsedUs": 394994
+          },
+          "event-environment": {
+            "count": 30,
+            "elapsedUs": 2597
+          },
+          "event-auth": {
+            "count": 90,
+            "elapsedUs": 35977
+          },
+          "event-digest": {
+            "count": 240,
+            "elapsedUs": 6049
+          },
+          "event-source-maps": {
+            "count": 30,
+            "elapsedUs": 2920
+          },
+          "atlas-read-records": {
+            "count": 5,
+            "elapsedUs": 28269408
+          },
+          "atlas-state": {
+            "count": 21,
+            "elapsedUs": 724834
+          },
+          "atlas-case-read": {
+            "count": 9,
+            "elapsedUs": 1246446
+          },
+          "atlas-evidence": {
+            "count": 24,
+            "elapsedUs": 447383
+          },
+          "atlas-evidence-batch": {
+            "count": 4,
+            "elapsedUs": 241920
+          },
+          "atlas-continuity": {
+            "count": 24,
+            "elapsedUs": 23993091
+          },
+          "atlas-stable": {
+            "count": 99,
+            "elapsedUs": 1773712
+          },
+          "atlas-authorize": {
+            "count": 17,
+            "elapsedUs": 545819
+          },
+          "atlas-digest": {
+            "count": 1259,
+            "elapsedUs": 2367555
+          },
+          "atlas-source-maps": {
+            "count": 4,
+            "elapsedUs": 2756
+          },
+          "atlas-map-entry": {
+            "count": 4,
+            "elapsedUs": 4351
+          },
+          "atlas-features": {
+            "count": 2,
+            "elapsedUs": 278009
+          },
+          "atlas-rank-authorized": {
+            "count": 2,
+            "elapsedUs": 31963801
+          },
+          "atlas-finalize": {
+            "count": 1,
+            "elapsedUs": 192124
+          },
+          "atlas-rank-digest": {
+            "count": 13,
+            "elapsedUs": 71258
+          },
+          "atlas-capture": {
+            "count": 904,
+            "elapsedUs": 39082377
+          },
+          "owner-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 2
+          },
+          "owner-frame-current": {
+            "count": 1066,
+            "elapsedUs": 198843
+          },
+          "proof-cache-hit": {
+            "count": 152,
+            "elapsedUs": 55878
+          },
+          "proof-frame-admitted": {
+            "count": 1,
+            "elapsedUs": 54482372
+          },
+          "c08-transaction": {
+            "count": 3033,
+            "elapsedUs": 34883530
+          },
+          "c08-authorize": {
+            "count": 6066,
+            "elapsedUs": 2377849
+          },
+          "c08-read-state": {
+            "count": 3033,
+            "elapsedUs": 19841
+          },
+          "c08-clone": {
+            "count": 3033,
+            "elapsedUs": 18031876
+          },
+          "c08-callback": {
+            "count": 3033,
+            "elapsedUs": 21417644
+          }
+        },
+        "httpRelativeSeconds": 56.069993
+      }
+    ],
+    "completedChildren": {
+      "profiles": 14,
+      "elapsedUs": 1972790,
+      "activeAsync": 0,
+      "buckets": {
+        "owner-current": {
+          "count": 434,
+          "elapsedUs": 28694
+        },
+        "owner-readers": {
+          "count": 984,
+          "elapsedUs": 10315
+        },
+        "owner-environment": {
+          "count": 58,
+          "elapsedUs": 6199
+        },
+        "owner-digest": {
+          "count": 4080,
+          "elapsedUs": 30054
+        },
+        "owner-authenticate": {
+          "count": 58,
+          "elapsedUs": 5365
+        },
+        "owner-revalidate": {
+          "count": 116,
+          "elapsedUs": 43967
+        },
+        "owner-work": {
+          "count": 14,
+          "elapsedUs": 1958545
+        },
+        "owner-clone": {
+          "count": 72,
+          "elapsedUs": 6047
+        },
+        "root-pinned": {
+          "count": 550,
+          "elapsedUs": 42195
+        },
+        "root-healthy": {
+          "count": 550,
+          "elapsedUs": 13031
+        },
+        "root-native-lookup": {
+          "count": 550,
+          "elapsedUs": 8465
+        },
+        "root-native-current": {
+          "count": 550,
+          "elapsedUs": 4197
+        },
+        "root-owner-current": {
+          "count": 550,
+          "elapsedUs": 31376
+        },
+        "root-request-identity": {
+          "count": 550,
+          "elapsedUs": 7230
+        },
+        "root-binding-digest": {
+          "count": 550,
+          "elapsedUs": 2884
+        },
+        "proof-frame-current": {
+          "count": 116,
+          "elapsedUs": 35090
+        },
+        "proof-readers-current": {
+          "count": 116,
+          "elapsedUs": 1926
+        },
+        "proof-owner-current": {
+          "count": 116,
+          "elapsedUs": 12905
+        },
+        "proof-unchanged": {
+          "count": 116,
+          "elapsedUs": 17642
+        },
+        "proof-refs-digest": {
+          "count": 300,
+          "elapsedUs": 13822
+        },
+        "proof-leaf-current": {
+          "count": 60,
+          "elapsedUs": 18175
+        },
+        "proof-authorize": {
+          "count": 58,
+          "elapsedUs": 104317
+        },
+        "proof-canonical": {
+          "count": 2,
+          "elapsedUs": 30343
+        },
+        "proof-clone": {
+          "count": 114,
+          "elapsedUs": 22865
+        },
+        "bcs-source": {
+          "count": 2,
+          "elapsedUs": 28483
+        },
+        "bcs-dependencies": {
+          "count": 28,
+          "elapsedUs": 205465
+        },
+        "bcs-source-maps": {
+          "count": 4,
+          "elapsedUs": 263
+        },
+        "bcs-context": {
+          "count": 28,
+          "elapsedUs": 236530
+        },
+        "bcs-auth": {
+          "count": 32,
+          "elapsedUs": 12306
+        },
+        "bcs-context-digest": {
+          "count": 28,
+          "elapsedUs": 141432
+        },
+        "owner-frame-current": {
+          "count": 434,
+          "elapsedUs": 72078
+        },
+        "proof-cache-hit": {
+          "count": 54,
+          "elapsedUs": 20055
+        },
+        "c08-transaction": {
+          "count": 56,
+          "elapsedUs": 1361158
+        },
+        "c08-authorize": {
+          "count": 112,
+          "elapsedUs": 46546
+        },
+        "c08-read-state": {
+          "count": 56,
+          "elapsedUs": 415
+        },
+        "c08-clone": {
+          "count": 56,
+          "elapsedUs": 194807
+        },
+        "c08-callback": {
+          "count": 56,
+          "elapsedUs": 1107322
+        }
+      }
+    },
+    "ownerBeginsSecondsAfterHttp": 1.358
+  },
+  "interpretation": [
+    "The admitted Recall owner remains pending at the last 54.711993 s owner checkpoint (56.069993 s since the HTTP fetch), activeAsync=9.",
+    "First rank completed at 30.953147 s duration; its completion checkpoint was 33.015328 s after HTTP start.",
+    "The last checkpoint before the original HTTP deadline was 36.594697 s after HTTP start; later checkpoints are explicitly post-deadline.",
+    "Atlas capture and C08 cloning dominate the measured inclusive work; no pin or terminal-cache-authorization dominance was observed.",
+    "The main profile's canonical count is zero because the first complete leaf reads are recorded by child profiles, not because canonical reads were omitted."
+  ]
+}

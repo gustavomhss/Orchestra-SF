@@ -11,6 +11,7 @@ import { SfContextResult, SfInstallationList } from "@orchestra/schema/sucafina/
 import { Effect, Schema } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { withNativeInstallation } from "./fixture/sucafina-native-installation"
+import { prepareSfLocalWorkspace } from "../../../modules/sucafina/Sucafinav1/local/workspace"
 
 const it = testEffect(LayerNode.compile(AppProcess.node))
 const web = path.resolve(import.meta.dir, "../../web")
@@ -44,8 +45,10 @@ it.live.skipIf(process.platform !== "linux")(
       expect(javascript.headers.get("content-type")).toContain("javascript")
       expect(Buffer.from(await javascript.arrayBuffer())).toEqual(await readFile(path.join(webRoot, script.slice(1))))
 
+      // Discovery selects the runtime workspace, a sibling of private installation state.
+      const workspace = await prepareSfLocalWorkspace(installed.root)
       const discovery = new URL("/api/sucafina/installations", installed.origin)
-      discovery.search = new URLSearchParams({ select: "location", "location[directory]": installed.root }).toString()
+      discovery.search = new URLSearchParams({ select: "location", "location[directory]": workspace }).toString()
       expect((await fetch(discovery)).status).toBe(401)
       const authorized = await fetch(discovery, {
         headers: { Authorization: "Basic " + Buffer.from(`orchestra:${serverPassword}`).toString("base64") },

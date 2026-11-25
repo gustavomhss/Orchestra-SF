@@ -1,0 +1,1947 @@
+{
+  "schema": "sf-round-four-recall-capture-cost-v1",
+  "purpose": "Diagnostic only; no production qualification or HTTP success inferred.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "72f8bc83753a2f4a175a086b4bba51ac50059f1b",
+  "sourceTree": "47ca3d501f023f21fe8197f6c0d010bdaedd15c6",
+  "snapshot": "f937c48d1083ca05d6844688ddf79a9df2f6c53e",
+  "snapshotTree": "0110cb5816e464b26153c0853b22a79854137373",
+  "previousDiagnostic": "3bceb33f27c0ad2d4028d94260b2eeb811c25350",
+  "previousSource": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+  "workflow": {
+    "run": 45298731358,
+    "job": 138125601442,
+    "cleanupJob": 138131209244,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45298731358",
+    "conclusion": "failure",
+    "createdAt": "2026-11-24T00:37:57Z",
+    "completedAt": "2026-11-24T00:50:42Z",
+    "testStep": {
+      "startedAt": "2026-11-24T00:43:57Z",
+      "completedAt": "2026-11-24T00:50:23Z"
+    },
+    "jobs": [
+      {
+        "id": 138125601442,
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-24T00:38:00Z",
+        "completedAt": "2026-11-24T00:50:30Z"
+      },
+      {
+        "id": 138131209244,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T00:50:32Z",
+        "completedAt": "2026-11-24T00:50:41Z"
+      }
+    ]
+  },
+  "artifact": {
+    "id": 14878711714,
+    "bytes": 7331410,
+    "apiDigest": "sha256:b9a52c99945f02385421484a5f5d90f072d792fc0a8f192c9daa8074809490b8",
+    "digestVerified": false,
+    "reason": "Artifact download locator obtained; local execution environment unavailable. ZIP bytes and trace not opened."
+  },
+  "logs": {
+    "decodedCharacters": 507733,
+    "rawSha256": "dbab81f386d73e972954d7eb14928b6e8c05deb1be0c414b41c8be145c6c3fbb",
+    "rawPersisted": false,
+    "reason": "Raw log retained only in session store; Git evidence contains numeric counters and sanitized original markers, never headers, payloads, preview images or credentials.",
+    "numericRows": 433,
+    "numericSha256": "76c4a5b06b8a53f13bf7a5e98e731ee78d6333d78a5f1885fc5520bf659f6344",
+    "safeOriginalMarkersSha256": "80085e5acff73f438a8cacf32d047022e5f5d053646efe82efd7626abe3bb85d"
+  },
+  "schemaDefinition": {
+    "helperBlob": "51f98e8debc05ec912bfa7a8612e95b46497b5f2",
+    "bucketCount": 87,
+    "buckets": [
+      "owner-current",
+      "owner-readers",
+      "owner-environment",
+      "witness-before",
+      "witness-after",
+      "witness-egress",
+      "owner-state-cases",
+      "owner-state-atlas",
+      "owner-digest",
+      "owner-materialized",
+      "owner-authenticate",
+      "owner-revalidate",
+      "owner-work",
+      "owner-clone",
+      "root-prepare",
+      "record-scope",
+      "root-pinned",
+      "root-current",
+      "root-healthy",
+      "root-native-lookup",
+      "root-native-current",
+      "root-owner-current",
+      "root-request-identity",
+      "root-binding-digest",
+      "proof-frame-current",
+      "proof-readers-current",
+      "proof-owner-current",
+      "proof-unchanged",
+      "proof-refs-digest",
+      "proof-leaf-current",
+      "proof-authorize",
+      "proof-work",
+      "proof-canonical",
+      "proof-clone",
+      "canonical-read-first",
+      "canonical-read-second",
+      "canonical-rank-first",
+      "canonical-rank-second",
+      "canonical-memory-match",
+      "canonical-features",
+      "canonical-select",
+      "bcs-source",
+      "bcs-case-event",
+      "bcs-dependencies",
+      "bcs-source-maps",
+      "bcs-context",
+      "bcs-auth",
+      "event-read-first",
+      "event-read-second",
+      "event-state",
+      "event-authorize-case",
+      "event-authorize-evidence",
+      "event-environment",
+      "event-auth",
+      "event-digest",
+      "event-source-maps",
+      "atlas-read-records",
+      "atlas-state",
+      "atlas-case-read",
+      "atlas-evidence",
+      "atlas-evidence-batch",
+      "atlas-continuity",
+      "atlas-stable",
+      "atlas-authorize",
+      "atlas-digest",
+      "atlas-source-maps",
+      "atlas-map-entry",
+      "atlas-features",
+      "atlas-rank-authorized",
+      "atlas-finalize",
+      "atlas-rank-digest",
+      "atlas-capture",
+      "bcs-capture-integrity",
+      "bcs-capture-stable",
+      "bcs-context-digest",
+      "owner-frame-admitted",
+      "owner-frame-current",
+      "proof-cache-hit",
+      "proof-frame-admitted",
+      "finance-closed-pair",
+      "finance-snapshot-digest",
+      "c08-transaction",
+      "c08-authorize",
+      "c08-read-state",
+      "c08-clone",
+      "c08-selection",
+      "c08-callback"
+    ],
+    "integerCount": 184
+  },
+  "ownerCounts": [
+    {
+      "kind": 0,
+      "owners": 72,
+      "settled": 72
+    },
+    {
+      "kind": 1,
+      "owners": 328,
+      "settled": 328
+    },
+    {
+      "kind": 2,
+      "owners": 2,
+      "settled": 1
+    },
+    {
+      "kind": 3,
+      "owners": 0,
+      "settled": 0
+    },
+    {
+      "kind": 4,
+      "owners": 0,
+      "settled": 0
+    }
+  ],
+  "recallOwners": [
+    {
+      "id": 375,
+      "startedAt": "2026-11-24T00:49:21.031Z",
+      "durationUs": 43617653,
+      "phase": "settlement",
+      "fulfilled": 1,
+      "activeAsync": 0,
+      "statusMeaning": "Promise fulfilled; no product status or HTTP status is encoded.",
+      "buckets": [
+        {
+          "name": "owner-current",
+          "count": 1383,
+          "elapsedUs": 74666
+        },
+        {
+          "name": "owner-readers",
+          "count": 3167,
+          "elapsedUs": 21413
+        },
+        {
+          "name": "owner-environment",
+          "count": 202,
+          "elapsedUs": 13793
+        },
+        {
+          "name": "witness-before",
+          "count": 1,
+          "elapsedUs": 171213
+        },
+        {
+          "name": "witness-after",
+          "count": 1,
+          "elapsedUs": 197088
+        },
+        {
+          "name": "witness-egress",
+          "count": 1,
+          "elapsedUs": 180054
+        },
+        {
+          "name": "owner-state-cases",
+          "count": 3,
+          "elapsedUs": 323334
+        },
+        {
+          "name": "owner-state-atlas",
+          "count": 3,
+          "elapsedUs": 222699
+        },
+        {
+          "name": "owner-digest",
+          "count": 15168,
+          "elapsedUs": 498790
+        },
+        {
+          "name": "owner-materialized",
+          "count": 12,
+          "elapsedUs": 4383
+        },
+        {
+          "name": "owner-authenticate",
+          "count": 198,
+          "elapsedUs": 9468
+        },
+        {
+          "name": "owner-revalidate",
+          "count": 393,
+          "elapsedUs": 97137
+        },
+        {
+          "name": "owner-work",
+          "count": 2,
+          "elapsedUs": 86108148
+        },
+        {
+          "name": "owner-clone",
+          "count": 209,
+          "elapsedUs": 4853
+        },
+        {
+          "name": "root-prepare",
+          "count": 2,
+          "elapsedUs": 5322
+        },
+        {
+          "name": "record-scope",
+          "count": 1,
+          "elapsedUs": 43055012
+        },
+        {
+          "name": "root-pinned",
+          "count": 1764,
+          "elapsedUs": 99273
+        },
+        {
+          "name": "root-current",
+          "count": 20,
+          "elapsedUs": 2351
+        },
+        {
+          "name": "root-healthy",
+          "count": 1746,
+          "elapsedUs": 23508
+        },
+        {
+          "name": "root-native-lookup",
+          "count": 1748,
+          "elapsedUs": 14638
+        },
+        {
+          "name": "root-native-current",
+          "count": 1746,
+          "elapsedUs": 8275
+        },
+        {
+          "name": "root-owner-current",
+          "count": 1764,
+          "elapsedUs": 73096
+        },
+        {
+          "name": "root-request-identity",
+          "count": 1766,
+          "elapsedUs": 17510
+        },
+        {
+          "name": "root-binding-digest",
+          "count": 1766,
+          "elapsedUs": 7047
+        },
+        {
+          "name": "proof-frame-current",
+          "count": 386,
+          "elapsedUs": 87214
+        },
+        {
+          "name": "proof-readers-current",
+          "count": 387,
+          "elapsedUs": 6202
+        },
+        {
+          "name": "proof-owner-current",
+          "count": 387,
+          "elapsedUs": 33096
+        },
+        {
+          "name": "proof-unchanged",
+          "count": 387,
+          "elapsedUs": 41236
+        },
+        {
+          "name": "proof-refs-digest",
+          "count": 965,
+          "elapsedUs": 10649
+        },
+        {
+          "name": "proof-leaf-current",
+          "count": 192,
+          "elapsedUs": 42292
+        },
+        {
+          "name": "proof-authorize",
+          "count": 192,
+          "elapsedUs": 237457
+        },
+        {
+          "name": "proof-work",
+          "count": 1,
+          "elapsedUs": 43054250
+        },
+        {
+          "name": "proof-canonical",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "proof-clone",
+          "count": 384,
+          "elapsedUs": 93967
+        },
+        {
+          "name": "canonical-read-first",
+          "count": 1,
+          "elapsedUs": 374533
+        },
+        {
+          "name": "canonical-read-second",
+          "count": 1,
+          "elapsedUs": 335513
+        },
+        {
+          "name": "canonical-rank-first",
+          "count": 1,
+          "elapsedUs": 18928643
+        },
+        {
+          "name": "canonical-rank-second",
+          "count": 1,
+          "elapsedUs": 19061378
+        },
+        {
+          "name": "canonical-memory-match",
+          "count": 1,
+          "elapsedUs": 4349809
+        },
+        {
+          "name": "canonical-features",
+          "count": 2,
+          "elapsedUs": 225212
+        },
+        {
+          "name": "canonical-select",
+          "count": 2,
+          "elapsedUs": 19141
+        },
+        {
+          "name": "bcs-source",
+          "count": 10,
+          "elapsedUs": 308150
+        },
+        {
+          "name": "bcs-case-event",
+          "count": 10,
+          "elapsedUs": 308029
+        },
+        {
+          "name": "bcs-dependencies",
+          "count": 10,
+          "elapsedUs": 39369
+        },
+        {
+          "name": "bcs-source-maps",
+          "count": 20,
+          "elapsedUs": 2000
+        },
+        {
+          "name": "bcs-context",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "bcs-auth",
+          "count": 30,
+          "elapsedUs": 8915
+        },
+        {
+          "name": "event-read-first",
+          "count": 38,
+          "elapsedUs": 526226
+        },
+        {
+          "name": "event-read-second",
+          "count": 38,
+          "elapsedUs": 536461
+        },
+        {
+          "name": "event-state",
+          "count": 76,
+          "elapsedUs": 672754
+        },
+        {
+          "name": "event-authorize-case",
+          "count": 76,
+          "elapsedUs": 16609
+        },
+        {
+          "name": "event-authorize-evidence",
+          "count": 76,
+          "elapsedUs": 368740
+        },
+        {
+          "name": "event-environment",
+          "count": 38,
+          "elapsedUs": 1680
+        },
+        {
+          "name": "event-auth",
+          "count": 114,
+          "elapsedUs": 24806
+        },
+        {
+          "name": "event-digest",
+          "count": 304,
+          "elapsedUs": 5504
+        },
+        {
+          "name": "event-source-maps",
+          "count": 38,
+          "elapsedUs": 2355
+        },
+        {
+          "name": "atlas-read-records",
+          "count": 5,
+          "elapsedUs": 21665208
+        },
+        {
+          "name": "atlas-state",
+          "count": 25,
+          "elapsedUs": 671459
+        },
+        {
+          "name": "atlas-case-read",
+          "count": 10,
+          "elapsedUs": 1036606
+        },
+        {
+          "name": "atlas-evidence",
+          "count": 30,
+          "elapsedUs": 400406
+        },
+        {
+          "name": "atlas-evidence-batch",
+          "count": 5,
+          "elapsedUs": 199921
+        },
+        {
+          "name": "atlas-continuity",
+          "count": 30,
+          "elapsedUs": 17758499
+        },
+        {
+          "name": "atlas-stable",
+          "count": 120,
+          "elapsedUs": 1681059
+        },
+        {
+          "name": "atlas-authorize",
+          "count": 20,
+          "elapsedUs": 494327
+        },
+        {
+          "name": "atlas-digest",
+          "count": 1597,
+          "elapsedUs": 2349434
+        },
+        {
+          "name": "atlas-source-maps",
+          "count": 5,
+          "elapsedUs": 502
+        },
+        {
+          "name": "atlas-map-entry",
+          "count": 5,
+          "elapsedUs": 1641
+        },
+        {
+          "name": "atlas-features",
+          "count": 2,
+          "elapsedUs": 221973
+        },
+        {
+          "name": "atlas-rank-authorized",
+          "count": 2,
+          "elapsedUs": 28525191
+        },
+        {
+          "name": "atlas-finalize",
+          "count": 2,
+          "elapsedUs": 305701
+        },
+        {
+          "name": "atlas-rank-digest",
+          "count": 18,
+          "elapsedUs": 63359
+        },
+        {
+          "name": "atlas-capture",
+          "count": 1168,
+          "elapsedUs": 27918689
+        },
+        {
+          "name": "bcs-capture-integrity",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "bcs-capture-stable",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "bcs-context-digest",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "owner-frame-admitted",
+          "count": 1,
+          "elapsedUs": 5
+        },
+        {
+          "name": "owner-frame-current",
+          "count": 1347,
+          "elapsedUs": 160675
+        },
+        {
+          "name": "proof-cache-hit",
+          "count": 192,
+          "elapsedUs": 89859
+        },
+        {
+          "name": "proof-frame-admitted",
+          "count": 1,
+          "elapsedUs": 43054755
+        },
+        {
+          "name": "finance-closed-pair",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "finance-snapshot-digest",
+          "count": 0,
+          "elapsedUs": 0
+        },
+        {
+          "name": "c08-transaction",
+          "count": 3917,
+          "elapsedUs": 24469722
+        },
+        {
+          "name": "c08-authorize",
+          "count": 7834,
+          "elapsedUs": 2043049
+        },
+        {
+          "name": "c08-read-state",
+          "count": 3917,
+          "elapsedUs": 21615
+        },
+        {
+          "name": "c08-clone",
+          "count": 3917,
+          "elapsedUs": 8090133
+        },
+        {
+          "name": "c08-selection",
+          "count": 1168,
+          "elapsedUs": 1909753
+        },
+        {
+          "name": "c08-callback",
+          "count": 3917,
+          "elapsedUs": 10034676
+        }
+      ],
+      "checkpoints": [
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 315862,
+          "activeAsync": 6,
+          "capture": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "clone": {
+            "count": 2,
+            "elapsedUs": 11724
+          },
+          "rankFirst": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 440032,
+          "activeAsync": 7,
+          "capture": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "clone": {
+            "count": 2,
+            "elapsedUs": 11724
+          },
+          "rankFirst": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 552590,
+          "activeAsync": 6,
+          "capture": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "clone": {
+            "count": 3,
+            "elapsedUs": 17298
+          },
+          "rankFirst": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 1,
+          "fulfilled": 2,
+          "durationUs": 552784,
+          "activeAsync": 5,
+          "capture": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "clone": {
+            "count": 3,
+            "elapsedUs": 17298
+          },
+          "rankFirst": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 734998,
+          "activeAsync": 8,
+          "capture": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "clone": {
+            "count": 6,
+            "elapsedUs": 34673
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 181814
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 2830907,
+          "activeAsync": 8,
+          "capture": {
+            "count": 56,
+            "elapsedUs": 1349382
+          },
+          "clone": {
+            "count": 196,
+            "elapsedUs": 428890
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 2277723
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 5163841,
+          "activeAsync": 7,
+          "capture": {
+            "count": 112,
+            "elapsedUs": 2672584
+          },
+          "clone": {
+            "count": 386,
+            "elapsedUs": 839908
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 4610657
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 10334494,
+          "activeAsync": 9,
+          "capture": {
+            "count": 264,
+            "elapsedUs": 6371636
+          },
+          "clone": {
+            "count": 887,
+            "elapsedUs": 1861601
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 9781310
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 12326049,
+          "activeAsync": 9,
+          "capture": {
+            "count": 320,
+            "elapsedUs": 7671406
+          },
+          "clone": {
+            "count": 1077,
+            "elapsedUs": 2277418
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 11772865
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 2,
+          "fulfilled": 2,
+          "durationUs": 19481976,
+          "activeAsync": 5,
+          "capture": {
+            "count": 528,
+            "elapsedUs": 12592232
+          },
+          "clone": {
+            "count": 1766,
+            "elapsedUs": 3641654
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 0,
+            "elapsedUs": 0
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 19659376,
+          "activeAsync": 8,
+          "capture": {
+            "count": 528,
+            "elapsedUs": 12592232
+          },
+          "clone": {
+            "count": 1769,
+            "elapsedUs": 3658116
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 176673
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 21660782,
+          "activeAsync": 8,
+          "capture": {
+            "count": 584,
+            "elapsedUs": 13914977
+          },
+          "clone": {
+            "count": 1959,
+            "elapsedUs": 4047749
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 2178079
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 3,
+          "fulfilled": 2,
+          "durationUs": 23832534,
+          "activeAsync": 5,
+          "capture": {
+            "count": 640,
+            "elapsedUs": 15198775
+          },
+          "clone": {
+            "count": 2149,
+            "elapsedUs": 4435598
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 0,
+            "elapsedUs": 0
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 24014558,
+          "activeAsync": 8,
+          "capture": {
+            "count": 640,
+            "elapsedUs": 15198775
+          },
+          "clone": {
+            "count": 2152,
+            "elapsedUs": 4452213
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 181806
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 26044347,
+          "activeAsync": 8,
+          "capture": {
+            "count": 696,
+            "elapsedUs": 16522684
+          },
+          "clone": {
+            "count": 2342,
+            "elapsedUs": 4840811
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 2211595
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 28336546,
+          "activeAsync": 7,
+          "capture": {
+            "count": 752,
+            "elapsedUs": 17830094
+          },
+          "clone": {
+            "count": 2532,
+            "elapsedUs": 5236109
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 4503795
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 33531285,
+          "activeAsync": 9,
+          "capture": {
+            "count": 904,
+            "elapsedUs": 21575931
+          },
+          "clone": {
+            "count": 3033,
+            "elapsedUs": 6262917
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 9698533
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 35588660,
+          "activeAsync": 9,
+          "capture": {
+            "count": 960,
+            "elapsedUs": 22931191
+          },
+          "clone": {
+            "count": 3223,
+            "elapsedUs": 6660688
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 11755908
+          }
+        },
+        {
+          "phase": 4,
+          "fulfilled": 2,
+          "durationUs": 42894218,
+          "activeAsync": 5,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3912,
+            "elapsedUs": 8061733
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 43022464,
+          "activeAsync": 6,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3912,
+            "elapsedUs": 8061733
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 43121399,
+          "activeAsync": 7,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3912,
+            "elapsedUs": 8061733
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        },
+        {
+          "phase": 6,
+          "fulfilled": 2,
+          "durationUs": 43229720,
+          "activeAsync": 6,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3913,
+            "elapsedUs": 8067304
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        },
+        {
+          "phase": 5,
+          "fulfilled": 2,
+          "durationUs": 43229865,
+          "activeAsync": 5,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3913,
+            "elapsedUs": 8067304
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        },
+        {
+          "phase": 0,
+          "fulfilled": 1,
+          "durationUs": 43617653,
+          "activeAsync": 0,
+          "capture": {
+            "count": 1168,
+            "elapsedUs": 27918689
+          },
+          "clone": {
+            "count": 3917,
+            "elapsedUs": 8090133
+          },
+          "rankFirst": {
+            "count": 1,
+            "elapsedUs": 18928643
+          },
+          "match": {
+            "count": 1,
+            "elapsedUs": 4349809
+          },
+          "rankSecond": {
+            "count": 1,
+            "elapsedUs": 19061378
+          }
+        }
+      ]
+    },
+    {
+      "id": 394,
+      "startedAt": "2026-11-24T00:50:05.248Z",
+      "lastObservedDurationUs": 12262505,
+      "phase": "partial",
+      "fulfilled": 2,
+      "activeAsync": 9,
+      "settlementObserved": false
+    }
+  ],
+  "selectedBranchEvidence": {
+    "c08Selection": {
+      "count": 1168,
+      "elapsedUs": 1909753
+    },
+    "atlasCapture": {
+      "count": 1168,
+      "elapsedUs": 27918689
+    },
+    "limits": "The adapted Atlas selectedRead branch executes before c08-callback; it includes the joint clone. Native branch behavior is independently covered by the six selector controls. The numeric row is not a cache-hit counter."
+  },
+  "remainingTime": {
+    "transaction": {
+      "count": 3917,
+      "elapsedUs": 24469722
+    },
+    "callback": {
+      "count": 3917,
+      "elapsedUs": 10034676
+    },
+    "authorize": {
+      "count": 7834,
+      "elapsedUs": 2043049
+    },
+    "readState": {
+      "count": 3917,
+      "elapsedUs": 21615
+    },
+    "selection": {
+      "count": 1168,
+      "elapsedUs": 1909753
+    },
+    "totalClone": {
+      "count": 3917,
+      "elapsedUs": 8090133
+    },
+    "transactionMinusCallbackAuthorizeReadStateUs": 12370382,
+    "transactionMinusCallbackAuthorizeReadStateSelectionUs": 10460629,
+    "attribution": "Residual only; not attributed to LocalStore or any specific unmeasured operation."
+  },
+  "matchedCheckpointComparison": {
+    "captureCount": 904,
+    "current": {
+      "elapsedUs": 33531285,
+      "capture": {
+        "count": 904,
+        "elapsedUs": 21575931
+      },
+      "clone": {
+        "count": 3033,
+        "elapsedUs": 6262917
+      },
+      "transaction": {
+        "count": 3033,
+        "elapsedUs": 18693288
+      }
+    },
+    "previousReported": {
+      "run": 45291117605,
+      "elapsedSecondsApprox": 54.712,
+      "captureSecondsApprox": 39.082,
+      "cloneSecondsApprox": 18.032,
+      "transactionSecondsApprox": 34.884,
+      "source": "Prior diagnostic ledger a0f8228c7e09bcaab7582e601d3b7688a5ed6a1edd5945b59ae11fbbcc8b49bb; rounded values from previously reviewed report, not a completed observation."
+    }
+  },
+  "originalMarkers": [
+    {
+      "at": "2026-11-24T00:48:31.7266205Z",
+      "kind": "context",
+      "status": 200
+    },
+    {
+      "at": "2026-11-24T00:48:37.5259130Z",
+      "kind": "context",
+      "status": 200
+    },
+    {
+      "at": "2026-11-24T00:48:59.0441898Z",
+      "kind": "cases",
+      "status": 200
+    },
+    {
+      "at": "2026-11-24T00:49:19.8010638Z",
+      "kind": "other-original-get",
+      "status": 200
+    },
+    {
+      "at": "2026-11-24T00:49:19.8049767Z",
+      "mode": "case",
+      "status": 200,
+      "milliseconds": 20580
+    },
+    {
+      "at": "2026-11-24T00:50:00.1192009Z",
+      "name": "UI62 sends a private recall question and explicit authorized candidates to the original producer",
+      "status": "failed",
+      "detail": "Original similar-case response exceeded the original 40s read deadline"
+    },
+    {
+      "at": "2026-11-24T00:50:20.3036610Z",
+      "diagnosticKind": "wave-three-page-closed",
+      "consoleErrors": 0,
+      "pageErrors": 0
+    },
+    {
+      "at": "2026-11-24T00:50:20.3076723Z",
+      "name": "UI62 Portuguese authorized candidates",
+      "status": "failed",
+      "detail": "page.goto: Timeout 15000ms exceeded."
+    },
+    {
+      "at": "2026-11-24T00:50:20.3082364Z",
+      "name": "No memory selection command was issued by the browser",
+      "status": "passed"
+    },
+    {
+      "at": "2026-11-24T00:50:20.3083265Z",
+      "name": "Memory pages emitted no JavaScript errors",
+      "status": "passed"
+    },
+    {
+      "at": "2026-11-24T00:50:20.3150910Z",
+      "name": "Memory console contains only verified original coverage refusals",
+      "status": "failed",
+      "detail": "expect(received).toEqual(expected) // deep equality"
+    },
+    {
+      "at": "2026-11-24T00:50:20.5286145Z",
+      "diagnosticKind": "wave-three-failure",
+      "consoleErrors": 2,
+      "pageErrors": 0
+    },
+    {
+      "at": "2026-11-24T00:50:20.5419325Z",
+      "diagnosticKind": "native-view"
+    },
+    {
+      "at": "2026-11-24T00:50:21.1156920Z",
+      "diagnosticKind": "wave-three-page-closed",
+      "consoleErrors": 2,
+      "pageErrors": 0
+    }
+  ],
+  "interpretation": [
+    "The first original UI62 step reported: Original similar-case response exceeded the original 40s read deadline.",
+    "The first Recall region settled after that failure marker, with activeAsync=0 and duration43.617653s. Fulfilled=1 is not product or HTTP success.",
+    "A second Recall region was observed only partially; no settlement is inferred.",
+    "C08 selection executes outside c08-callback; its joint clone contributes to both selection and clone totals. Case/fallback clone timings are within callback. Do not add inclusive buckets or parent/child profiles.",
+    "owner-work has nested spans and can exceed wall time. Checkpoint rows are cumulative; do not add them.",
+    "The selection reduces the matched904-capture checkpoint cost; the original40s deadline remains unmet.",
+    "Artifact trace, HTTP timing/status/body and PNG review remain unavailable until ZIP access is restored.",
+    "These results concern Recall only. Atlas capture was absent from the separate Materiality diagnostic."
+  ],
+  "preservation": {
+    "requestBlob": "59e0df5be0f786edfe2d0245e66ed5a8c19ba349",
+    "copyValidation": {
+      "originalBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+      "copyBlob": "2b927a309d216b820dddf07436b390e196c76892",
+      "caseCharacters": 7512,
+      "caseLiteral": true,
+      "usedHelpers": [
+        {
+          "name": "originalMemoryReads",
+          "literal": true,
+          "characters": 1936
+        },
+        {
+          "name": "memorySteps",
+          "literal": true,
+          "characters": 1193
+        },
+        {
+          "name": "seedInstalledMemory",
+          "literal": true,
+          "characters": 752
+        },
+        {
+          "name": "observeMemoryCommands",
+          "literal": true,
+          "characters": 418
+        }
+      ],
+      "hookLiteral": true,
+      "note": "The isolated copy omits imports and helpers used only by other original cases. All four UI62 helpers and the 7512-character UI62 body remain literal.",
+      "bodyDeadlineMs": 300000,
+      "originalReadDeadlineMs": 40000,
+      "retries": 0
+    },
+    "sourceStripValidation": [
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "baseBlob": "a09dcc59870faa02363538bc2234c3e1438e1bf4",
+        "reusedPreviousDiagnosticBlob": "cbfc4e585b55a5637ce41d11bb1eee6f153ec08f",
+        "awaitBefore": 26,
+        "awaitAfter": 26,
+        "literalRestoration": true,
+        "characters": 15327
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "baseBlob": "48d527ec1c2586f2d654796f9060ec7d895732df",
+        "reusedPreviousDiagnosticBlob": "2fdda91b26c124718f80017f6c952d9937bdc6a0",
+        "awaitBefore": 17,
+        "awaitAfter": 17,
+        "literalRestoration": true,
+        "characters": 12513
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+        "baseBlob": "dc102d7d17526f66539feb716f96e012cbf95527",
+        "reusedPreviousDiagnosticBlob": "2bf11da880e4fbbb869fea98f690cab75a03a958",
+        "awaitBefore": 28,
+        "awaitAfter": 28,
+        "literalRestoration": true,
+        "characters": 27232
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-record-proof-scope.ts",
+        "baseBlob": "1bfe65063523768b690be28a1a7f6b7d0c6790ab",
+        "reusedPreviousDiagnosticBlob": "79e68ef5c724248e5dd079ac4cfbf1cb94bbdca8",
+        "awaitBefore": 7,
+        "awaitAfter": 7,
+        "literalRestoration": true,
+        "characters": 8763
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "baseBlob": "bca30bef5d5a87b1825ff084e09642c5baa951d7",
+        "reusedPreviousDiagnosticBlob": "a3b0a1e075d3c1fcba1e5e2de355cb1231cf614a",
+        "awaitBefore": 14,
+        "awaitAfter": 14,
+        "literalRestoration": true,
+        "characters": 7934
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "baseBlob": "dfaf141fd6eda6b46828534f01ff65ecef5609a3",
+        "reusedPreviousDiagnosticBlob": "826a2a72b2f414c84ed0b3accbf894372da15756",
+        "awaitBefore": 14,
+        "awaitAfter": 14,
+        "literalRestoration": true,
+        "characters": 9508
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "baseBlob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "reusedPreviousDiagnosticBlob": "990cc8d2f79248fcc581c288bd5dc41fa0b8ffde",
+        "awaitBefore": 7,
+        "awaitAfter": 7,
+        "literalRestoration": true,
+        "characters": 15015
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "baseBlob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+        "reusedPreviousDiagnosticBlob": "8f9c8f0a32c2e505afe78f14dac47cdc09d84ced",
+        "awaitBefore": 62,
+        "awaitAfter": 62,
+        "literalRestoration": true,
+        "characters": 27193
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "baseBlob": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b",
+        "reusedPreviousDiagnosticBlob": null,
+        "awaitBefore": 76,
+        "awaitAfter": 76,
+        "literalRestoration": true,
+        "characters": 61344
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "baseBlob": "adba07723b43d350193afd1b3d95c1d25260825e",
+        "reusedPreviousDiagnosticBlob": "bccdc36113b78e53f738e17776c1e1562a797c4e",
+        "awaitBefore": 108,
+        "awaitAfter": 108,
+        "literalRestoration": true,
+        "characters": 71908
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "baseBlob": "9abc3b3ddff2c97d7433767519be8c6b47d477ec",
+        "reusedPreviousDiagnosticBlob": null,
+        "awaitBefore": 33,
+        "awaitAfter": 33,
+        "literalRestoration": true,
+        "characters": 59163
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "baseBlob": "d871c1a47c56541102e8bc535218a8034ff3db79",
+        "reusedPreviousDiagnosticBlob": "95b3626c3e8bc2c096cea3114f3eba290a0c4cfc",
+        "awaitBefore": 16,
+        "awaitAfter": 16,
+        "literalRestoration": true,
+        "characters": 12079
+      }
+    ],
+    "awaitCountsUnchanged": true,
+    "deadlinesChanged": false,
+    "retriesChanged": false,
+    "productionMarkers": false
+  },
+  "preparedManifest": {
+    "schema": 1,
+    "status": "prepared-root-approved-launch-reported",
+    "qualification": false,
+    "repository": "gustavomhss/Orchestra-SF",
+    "source": "72f8bc83753a2f4a175a086b4bba51ac50059f1b",
+    "sourceTree": "47ca3d501f023f21fe8197f6c0d010bdaedd15c6",
+    "snapshot": "f937c48d1083ca05d6844688ddf79a9df2f6c53e",
+    "snapshotTree": "0110cb5816e464b26153c0853b22a79854137373",
+    "preparedBranch": "diagnose-capture-cost",
+    "ciBranch": "ci-run-r4capturecost",
+    "priorDiagnostic": "3bceb33f27c0ad2d4028d94260b2eeb811c25350",
+    "priorSource": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+    "request": {
+      "blob": "59e0df5be0f786edfe2d0245e66ed5a8c19ba349",
+      "value": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "@orchestra/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/diagnostic-ui62.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      }
+    },
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cbfc4e585b55a5637ce41d11bb1eee6f153ec08f"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2fdda91b26c124718f80017f6c952d9937bdc6a0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2bf11da880e4fbbb869fea98f690cab75a03a958"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-record-proof-scope.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "79e68ef5c724248e5dd079ac4cfbf1cb94bbdca8"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a3b0a1e075d3c1fcba1e5e2de355cb1231cf614a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "826a2a72b2f414c84ed0b3accbf894372da15756"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "990cc8d2f79248fcc581c288bd5dc41fa0b8ffde"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8f9c8f0a32c2e505afe78f14dac47cdc09d84ced"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d4aab9a2b222f146fdf62e35116d9f9b21572697"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "bccdc36113b78e53f738e17776c1e1562a797c4e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4e48408768313b3d0bc8249ddca258d28807b019"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "95b3626c3e8bc2c096cea3114f3eba290a0c4cfc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/recall-observation-cost.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "51f98e8debc05ec912bfa7a8612e95b46497b5f2"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2b927a309d216b820dddf07436b390e196c76892"
+      },
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "59e0df5be0f786edfe2d0245e66ed5a8c19ba349"
+      }
+    ],
+    "schemaDefinition": {
+      "marker": "SF_RECALL_COST",
+      "helperBlob": "51f98e8debc05ec912bfa7a8612e95b46497b5f2",
+      "bucketCount": 87,
+      "buckets": [
+        "owner-current",
+        "owner-readers",
+        "owner-environment",
+        "witness-before",
+        "witness-after",
+        "witness-egress",
+        "owner-state-cases",
+        "owner-state-atlas",
+        "owner-digest",
+        "owner-materialized",
+        "owner-authenticate",
+        "owner-revalidate",
+        "owner-work",
+        "owner-clone",
+        "root-prepare",
+        "record-scope",
+        "root-pinned",
+        "root-current",
+        "root-healthy",
+        "root-native-lookup",
+        "root-native-current",
+        "root-owner-current",
+        "root-request-identity",
+        "root-binding-digest",
+        "proof-frame-current",
+        "proof-readers-current",
+        "proof-owner-current",
+        "proof-unchanged",
+        "proof-refs-digest",
+        "proof-leaf-current",
+        "proof-authorize",
+        "proof-work",
+        "proof-canonical",
+        "proof-clone",
+        "canonical-read-first",
+        "canonical-read-second",
+        "canonical-rank-first",
+        "canonical-rank-second",
+        "canonical-memory-match",
+        "canonical-features",
+        "canonical-select",
+        "bcs-source",
+        "bcs-case-event",
+        "bcs-dependencies",
+        "bcs-source-maps",
+        "bcs-context",
+        "bcs-auth",
+        "event-read-first",
+        "event-read-second",
+        "event-state",
+        "event-authorize-case",
+        "event-authorize-evidence",
+        "event-environment",
+        "event-auth",
+        "event-digest",
+        "event-source-maps",
+        "atlas-read-records",
+        "atlas-state",
+        "atlas-case-read",
+        "atlas-evidence",
+        "atlas-evidence-batch",
+        "atlas-continuity",
+        "atlas-stable",
+        "atlas-authorize",
+        "atlas-digest",
+        "atlas-source-maps",
+        "atlas-map-entry",
+        "atlas-features",
+        "atlas-rank-authorized",
+        "atlas-finalize",
+        "atlas-rank-digest",
+        "atlas-capture",
+        "bcs-capture-integrity",
+        "bcs-capture-stable",
+        "bcs-context-digest",
+        "owner-frame-admitted",
+        "owner-frame-current",
+        "proof-cache-hit",
+        "proof-frame-admitted",
+        "finance-closed-pair",
+        "finance-snapshot-digest",
+        "c08-transaction",
+        "c08-authorize",
+        "c08-read-state",
+        "c08-clone",
+        "c08-selection",
+        "c08-callback"
+      ],
+      "integerCount": 184
+    },
+    "copyValidation": {
+      "originalBlob": "73ac160d1c42d6d661e64a8ea72b64e72b10a40d",
+      "copyBlob": "2b927a309d216b820dddf07436b390e196c76892",
+      "caseCharacters": 7512,
+      "caseLiteral": true,
+      "usedHelpers": [
+        {
+          "name": "originalMemoryReads",
+          "literal": true,
+          "characters": 1936
+        },
+        {
+          "name": "memorySteps",
+          "literal": true,
+          "characters": 1193
+        },
+        {
+          "name": "seedInstalledMemory",
+          "literal": true,
+          "characters": 752
+        },
+        {
+          "name": "observeMemoryCommands",
+          "literal": true,
+          "characters": 418
+        }
+      ],
+      "hookLiteral": true,
+      "note": "The isolated copy omits imports and helpers used only by other original cases. All four UI62 helpers and the 7512-character UI62 body remain literal.",
+      "bodyDeadlineMs": 300000,
+      "originalReadDeadlineMs": 40000,
+      "retries": 0
+    },
+    "validation": [
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "baseBlob": "a09dcc59870faa02363538bc2234c3e1438e1bf4",
+        "reusedPreviousDiagnosticBlob": "cbfc4e585b55a5637ce41d11bb1eee6f153ec08f",
+        "awaitBefore": 26,
+        "awaitAfter": 26,
+        "literalRestoration": true,
+        "characters": 15327
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "baseBlob": "48d527ec1c2586f2d654796f9060ec7d895732df",
+        "reusedPreviousDiagnosticBlob": "2fdda91b26c124718f80017f6c952d9937bdc6a0",
+        "awaitBefore": 17,
+        "awaitAfter": 17,
+        "literalRestoration": true,
+        "characters": 12513
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-recall-observation.ts",
+        "baseBlob": "dc102d7d17526f66539feb716f96e012cbf95527",
+        "reusedPreviousDiagnosticBlob": "2bf11da880e4fbbb869fea98f690cab75a03a958",
+        "awaitBefore": 28,
+        "awaitAfter": 28,
+        "literalRestoration": true,
+        "characters": 27232
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-record-proof-scope.ts",
+        "baseBlob": "1bfe65063523768b690be28a1a7f6b7d0c6790ab",
+        "reusedPreviousDiagnosticBlob": "79e68ef5c724248e5dd079ac4cfbf1cb94bbdca8",
+        "awaitBefore": 7,
+        "awaitAfter": 7,
+        "literalRestoration": true,
+        "characters": 8763
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "baseBlob": "bca30bef5d5a87b1825ff084e09642c5baa951d7",
+        "reusedPreviousDiagnosticBlob": "a3b0a1e075d3c1fcba1e5e2de355cb1231cf614a",
+        "awaitBefore": 14,
+        "awaitAfter": 14,
+        "literalRestoration": true,
+        "characters": 7934
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "baseBlob": "dfaf141fd6eda6b46828534f01ff65ecef5609a3",
+        "reusedPreviousDiagnosticBlob": "826a2a72b2f414c84ed0b3accbf894372da15756",
+        "awaitBefore": 14,
+        "awaitAfter": 14,
+        "literalRestoration": true,
+        "characters": 9508
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "baseBlob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "reusedPreviousDiagnosticBlob": "990cc8d2f79248fcc581c288bd5dc41fa0b8ffde",
+        "awaitBefore": 7,
+        "awaitAfter": 7,
+        "literalRestoration": true,
+        "characters": 15015
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "baseBlob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+        "reusedPreviousDiagnosticBlob": "8f9c8f0a32c2e505afe78f14dac47cdc09d84ced",
+        "awaitBefore": 62,
+        "awaitAfter": 62,
+        "literalRestoration": true,
+        "characters": 27193
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "baseBlob": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b",
+        "reusedPreviousDiagnosticBlob": null,
+        "awaitBefore": 76,
+        "awaitAfter": 76,
+        "literalRestoration": true,
+        "characters": 61344
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "baseBlob": "adba07723b43d350193afd1b3d95c1d25260825e",
+        "reusedPreviousDiagnosticBlob": "bccdc36113b78e53f738e17776c1e1562a797c4e",
+        "awaitBefore": 108,
+        "awaitAfter": 108,
+        "literalRestoration": true,
+        "characters": 71908
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "baseBlob": "9abc3b3ddff2c97d7433767519be8c6b47d477ec",
+        "reusedPreviousDiagnosticBlob": null,
+        "awaitBefore": 33,
+        "awaitAfter": 33,
+        "literalRestoration": true,
+        "characters": 59163
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "baseBlob": "d871c1a47c56541102e8bc535218a8034ff3db79",
+        "reusedPreviousDiagnosticBlob": "95b3626c3e8bc2c096cea3114f3eba290a0c4cfc",
+        "awaitBefore": 16,
+        "awaitAfter": 16,
+        "literalRestoration": true,
+        "characters": 12079
+      }
+    ],
+    "adaptedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "blob": "d4aab9a2b222f146fdf62e35116d9f9b21572697",
+        "description": "Apply previous declared observers around unchanged readRecords/rank code; complete current readOriginalCapture including both new selectors stays byte-identical."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "4e48408768313b3d0bc8249ddca258d28807b019",
+        "description": "Preserve current selectors/all descriptors; use existing c08-selection for projectAtlasRead and existing c08-clone for its joint graph clone. Original C08 8 awaits, file33 awaits and transaction/write suffix are unchanged."
+      }
+    ],
+    "caveats": [
+      "Diagnostic-only instrumentation is not a product merge candidate.",
+      "All 87 buckets and the 184-integer output schema are identical to the previous diagnostic. No new bucket or public counter was introduced.",
+      "c08-selection now encloses the new joint Atlas clone; c08-clone is nested inside it. Timings are inclusive and must not be summed.",
+      "Callback buckets may include nested clone, authorization or producer buckets. Parent/child profiles and cumulative partial checkpoints must not be summed.",
+      "A missing settlement row does not prove no admission or product refusal. fulfilled refers to Promise settlement, not product status.",
+      "The selected branch has separate native/opaque parity controls; this diagnostic does not turn timing into an authority or result cache.",
+      "No repository source was written/read locally and no local product execution occurred.",
+      "Root launched after independent review; this agent did not launch another execution."
+    ]
+  }
+}

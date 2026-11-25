@@ -1,0 +1,1104 @@
+{
+  "recordedArtifactLedgerSha256": "54a3a0d7e60708a1b17a36f51559dce83cdf156129f73aa6cad51fa8f6b2fdce",
+  "schema": "r4-planner-cost-result-v1",
+  "qualification": false,
+  "purpose": "Diagnostic attribution only; unchanged isolated original UI61 failed its existing materiality HTTP deadline.",
+  "source": "fc71dd42a704d97a54ae2e5f3fa0ee6717a150ef",
+  "sourceTree": "b02d08458cec4c7ae396ccaf1d8140bc6fcc0914",
+  "snapshot": "652b5a8e58d401221381b9b050375124f45c5c73",
+  "snapshotTree": "19a5fb821cb4b3662503454bb178bc3ea7bce8d8",
+  "requestBlob": "6310d2c70fca19e5fcc630f552dc5146a7ecd680",
+  "specBlob": "d797750fcc9c8cde130f8b771d0cf4d9882652a1",
+  "branch": "ci-run-r4cost",
+  "run": 45282901989,
+  "job": 138071678322,
+  "result": "failure",
+  "jobCompletedAt": "2026-11-23T22:55:23Z",
+  "artifact": {
+    "id": 14871655089,
+    "bytes": 11867914,
+    "sha256": "e7d4cb1f49afd78761ccb53f51d36782010d4203bbb2a9afee6fc50c9eb548ed",
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/planner-cost-45282901989/planner-cost-14871655089.zip"
+  },
+  "trace": {
+    "path": "/workspace/scratch/e460075886fd/sf_visual_audit/round-four/planner-cost-45282901989/artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui61-U-dafaa-xplicit-signal-cancellation-chromium/trace.zip",
+    "sha256": "de6dd0fbea0e6385928050d9a89fc3f96dc09ddf93461b56f405c1b6e670558b"
+  },
+  "runtimeStats": {
+    "startTime": "2026-11-23T22:48:29.945Z",
+    "duration": 406814.035,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "environment": {
+    "os": "Linux",
+    "omni": "strict",
+    "bundle": "production",
+    "retry": 0,
+    "originalHttpMs": 40000,
+    "originalCaseMs": 300000
+  },
+  "allSettlements": {
+    "owners": 90,
+    "ownerIds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90
+    ],
+    "activeAsyncAllZero": true,
+    "parentAllZero": true,
+    "fulfilledCounts": {
+      "0": 0,
+      "1": 90
+    },
+    "sumOwnerMs": 72216.991,
+    "buckets": [
+      {
+        "name": "finance-current",
+        "count": 45000,
+        "elapsedMs": 1053.14
+      },
+      {
+        "name": "finance-reader-identities",
+        "count": 45090,
+        "elapsedMs": 320.048
+      },
+      {
+        "name": "finance-environment",
+        "count": 5160,
+        "elapsedMs": 377.069
+      },
+      {
+        "name": "finance-witness-before",
+        "count": 90,
+        "elapsedMs": 8403.01
+      },
+      {
+        "name": "finance-witness-after",
+        "count": 90,
+        "elapsedMs": 8123.172
+      },
+      {
+        "name": "finance-witness-egress",
+        "count": 90,
+        "elapsedMs": 8032.944
+      },
+      {
+        "name": "finance-closed-pair",
+        "count": 270,
+        "elapsedMs": 251.426
+      },
+      {
+        "name": "finance-snapshot-digest",
+        "count": 540,
+        "elapsedMs": 19588.069
+      },
+      {
+        "name": "finance-materialized",
+        "count": 540,
+        "elapsedMs": 194.319
+      },
+      {
+        "name": "finance-authorize-records",
+        "count": 4260,
+        "elapsedMs": 2957.397
+      },
+      {
+        "name": "finance-work",
+        "count": 90,
+        "elapsedMs": 46577.882
+      },
+      {
+        "name": "finance-authenticate",
+        "count": 4800,
+        "elapsedMs": 197.838
+      },
+      {
+        "name": "finance-revalidate",
+        "count": 8790,
+        "elapsedMs": 2120.786
+      },
+      {
+        "name": "root-pinned",
+        "count": 11310,
+        "elapsedMs": 519.983
+      },
+      {
+        "name": "root-current",
+        "count": 1800,
+        "elapsedMs": 142.496
+      },
+      {
+        "name": "root-healthy",
+        "count": 9690,
+        "elapsedMs": 196.12
+      },
+      {
+        "name": "root-native-lookup",
+        "count": 9870,
+        "elapsedMs": 134.655
+      },
+      {
+        "name": "root-native-current",
+        "count": 9690,
+        "elapsedMs": 60.455
+      },
+      {
+        "name": "root-owner-current",
+        "count": 9510,
+        "elapsedMs": 610.166
+      },
+      {
+        "name": "root-request-identity",
+        "count": 11490,
+        "elapsedMs": 127.004
+      },
+      {
+        "name": "root-binding-digest",
+        "count": 11490,
+        "elapsedMs": 81.767
+      },
+      {
+        "name": "proof-frame-current",
+        "count": 8700,
+        "elapsedMs": 1033.719
+      },
+      {
+        "name": "proof-readers-current",
+        "count": 8790,
+        "elapsedMs": 117.197
+      },
+      {
+        "name": "proof-owner-current",
+        "count": 8790,
+        "elapsedMs": 578.298
+      },
+      {
+        "name": "proof-unchanged",
+        "count": 8790,
+        "elapsedMs": 189.922
+      },
+      {
+        "name": "proof-refs-digest",
+        "count": 8790,
+        "elapsedMs": 150.134
+      },
+      {
+        "name": "proof-leaf-current",
+        "count": 4440,
+        "elapsedMs": 574.969
+      },
+      {
+        "name": "proof-canonical",
+        "count": 180,
+        "elapsedMs": 1938.746
+      },
+      {
+        "name": "proof-clone",
+        "count": 8340,
+        "elapsedMs": 1394.822
+      }
+    ]
+  },
+  "materialityTimeWindow": {
+    "requestApiStart": "2026-11-23T22:53:55.494Z",
+    "requestBrowserStart": "2026-11-23T22:53:55.490Z",
+    "responseStatus": -1,
+    "headersObserved": false,
+    "routeFetchTimeoutMs": 40003.223,
+    "firstOwnerOffsetMs": 1078,
+    "lastOwnerEndOffsetMs": 79578.95092773438,
+    "settlements": {
+      "owners": 42,
+      "ownerIds": [
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "activeAsyncAllZero": true,
+      "parentAllZero": true,
+      "fulfilledCounts": {
+        "0": 0,
+        "1": 42
+      },
+      "sumOwnerMs": 39341.715,
+      "buckets": [
+        {
+          "name": "finance-current",
+          "count": 22008,
+          "elapsedMs": 534.717
+        },
+        {
+          "name": "finance-reader-identities",
+          "count": 22050,
+          "elapsedMs": 165.402
+        },
+        {
+          "name": "finance-environment",
+          "count": 2520,
+          "elapsedMs": 210.276
+        },
+        {
+          "name": "finance-witness-before",
+          "count": 42,
+          "elapsedMs": 4816.196
+        },
+        {
+          "name": "finance-witness-after",
+          "count": 42,
+          "elapsedMs": 4626.961
+        },
+        {
+          "name": "finance-witness-egress",
+          "count": 42,
+          "elapsedMs": 4545.592
+        },
+        {
+          "name": "finance-closed-pair",
+          "count": 126,
+          "elapsedMs": 125.388
+        },
+        {
+          "name": "finance-snapshot-digest",
+          "count": 252,
+          "elapsedMs": 11289.428
+        },
+        {
+          "name": "finance-materialized",
+          "count": 252,
+          "elapsedMs": 99.009
+        },
+        {
+          "name": "finance-authorize-records",
+          "count": 2100,
+          "elapsedMs": 1474.479
+        },
+        {
+          "name": "finance-work",
+          "count": 42,
+          "elapsedMs": 24800.688
+        },
+        {
+          "name": "finance-authenticate",
+          "count": 2352,
+          "elapsedMs": 98.001
+        },
+        {
+          "name": "finance-revalidate",
+          "count": 4326,
+          "elapsedMs": 1042.362
+        },
+        {
+          "name": "root-pinned",
+          "count": 5502,
+          "elapsedMs": 266.556
+        },
+        {
+          "name": "root-current",
+          "count": 840,
+          "elapsedMs": 62.488
+        },
+        {
+          "name": "root-healthy",
+          "count": 4746,
+          "elapsedMs": 100.06
+        },
+        {
+          "name": "root-native-lookup",
+          "count": 4830,
+          "elapsedMs": 68.976
+        },
+        {
+          "name": "root-native-current",
+          "count": 4746,
+          "elapsedMs": 30.597
+        },
+        {
+          "name": "root-owner-current",
+          "count": 4662,
+          "elapsedMs": 321.21
+        },
+        {
+          "name": "root-request-identity",
+          "count": 5586,
+          "elapsedMs": 63.316
+        },
+        {
+          "name": "root-binding-digest",
+          "count": 5586,
+          "elapsedMs": 40.305
+        },
+        {
+          "name": "proof-frame-current",
+          "count": 4284,
+          "elapsedMs": 524.651
+        },
+        {
+          "name": "proof-readers-current",
+          "count": 4326,
+          "elapsedMs": 58.814
+        },
+        {
+          "name": "proof-owner-current",
+          "count": 4326,
+          "elapsedMs": 305.24
+        },
+        {
+          "name": "proof-unchanged",
+          "count": 4326,
+          "elapsedMs": 89.104
+        },
+        {
+          "name": "proof-refs-digest",
+          "count": 4326,
+          "elapsedMs": 72.544
+        },
+        {
+          "name": "proof-leaf-current",
+          "count": 2184,
+          "elapsedMs": 280.162
+        },
+        {
+          "name": "proof-canonical",
+          "count": 84,
+          "elapsedMs": 877.047
+        },
+        {
+          "name": "proof-clone",
+          "count": 4116,
+          "elapsedMs": 696.868
+        }
+      ]
+    },
+    "gapsBetweenOwners": [
+      {
+        "afterOwner": 49,
+        "beforeOwner": 50,
+        "startOffsetMs": 2030.056884765625,
+        "durationMs": 207.943115234375
+      },
+      {
+        "afterOwner": 50,
+        "beforeOwner": 51,
+        "startOffsetMs": 3178.4580078125,
+        "durationMs": 1424.5419921875
+      },
+      {
+        "afterOwner": 51,
+        "beforeOwner": 52,
+        "startOffsetMs": 5530.779052734375,
+        "durationMs": 3.220947265625
+      },
+      {
+        "afterOwner": 52,
+        "beforeOwner": 53,
+        "startOffsetMs": 6456.256103515625,
+        "durationMs": 636.743896484375
+      },
+      {
+        "afterOwner": 53,
+        "beforeOwner": 54,
+        "startOffsetMs": 8036.4130859375,
+        "durationMs": 1737.5869140625
+      },
+      {
+        "afterOwner": 54,
+        "beforeOwner": 55,
+        "startOffsetMs": 10721.112060546875,
+        "durationMs": 660.887939453125
+      },
+      {
+        "afterOwner": 55,
+        "beforeOwner": 56,
+        "startOffsetMs": 12293.241943359375,
+        "durationMs": 1971.758056640625
+      },
+      {
+        "afterOwner": 56,
+        "beforeOwner": 57,
+        "startOffsetMs": 15196.785888671875,
+        "durationMs": 704.214111328125
+      },
+      {
+        "afterOwner": 57,
+        "beforeOwner": 58,
+        "startOffsetMs": 16852.635009765625,
+        "durationMs": 924.364990234375
+      },
+      {
+        "afterOwner": 58,
+        "beforeOwner": 59,
+        "startOffsetMs": 18722.514892578125,
+        "durationMs": 638.485107421875
+      },
+      {
+        "afterOwner": 59,
+        "beforeOwner": 60,
+        "startOffsetMs": 20293.10595703125,
+        "durationMs": 3.89404296875
+      },
+      {
+        "afterOwner": 60,
+        "beforeOwner": 61,
+        "startOffsetMs": 21200.25,
+        "durationMs": 646.75
+      },
+      {
+        "afterOwner": 61,
+        "beforeOwner": 62,
+        "startOffsetMs": 22811.06591796875,
+        "durationMs": 1707.93408203125
+      },
+      {
+        "afterOwner": 62,
+        "beforeOwner": 63,
+        "startOffsetMs": 25444.60009765625,
+        "durationMs": 656.39990234375
+      },
+      {
+        "afterOwner": 63,
+        "beforeOwner": 64,
+        "startOffsetMs": 27027.6640625,
+        "durationMs": 2000.3359375
+      },
+      {
+        "afterOwner": 64,
+        "beforeOwner": 65,
+        "startOffsetMs": 29970.284912109375,
+        "durationMs": 676.715087890625
+      },
+      {
+        "afterOwner": 65,
+        "beforeOwner": 66,
+        "startOffsetMs": 31572.7041015625,
+        "durationMs": 960.2958984375
+      },
+      {
+        "afterOwner": 66,
+        "beforeOwner": 67,
+        "startOffsetMs": 33467.35888671875,
+        "durationMs": 1717.64111328125
+      },
+      {
+        "afterOwner": 67,
+        "beforeOwner": 68,
+        "startOffsetMs": 36157.931884765625,
+        "durationMs": 188.068115234375
+      },
+      {
+        "afterOwner": 68,
+        "beforeOwner": 69,
+        "startOffsetMs": 37268.72509765625,
+        "durationMs": 1647.27490234375
+      },
+      {
+        "afterOwner": 69,
+        "beforeOwner": 70,
+        "startOffsetMs": 39862.98193359375,
+        "durationMs": 256.01806640625
+      },
+      {
+        "afterOwner": 70,
+        "beforeOwner": 71,
+        "startOffsetMs": 41119.47998046875,
+        "durationMs": 1357.52001953125
+      },
+      {
+        "afterOwner": 71,
+        "beforeOwner": 72,
+        "startOffsetMs": 43418.34912109375,
+        "durationMs": 3.65087890625
+      },
+      {
+        "afterOwner": 72,
+        "beforeOwner": 73,
+        "startOffsetMs": 44352.302001953125,
+        "durationMs": 661.697998046875
+      },
+      {
+        "afterOwner": 73,
+        "beforeOwner": 74,
+        "startOffsetMs": 45964.465087890625,
+        "durationMs": 1770.534912109375
+      },
+      {
+        "afterOwner": 74,
+        "beforeOwner": 75,
+        "startOffsetMs": 48666.342041015625,
+        "durationMs": 658.657958984375
+      },
+      {
+        "afterOwner": 75,
+        "beforeOwner": 76,
+        "startOffsetMs": 50249.8349609375,
+        "durationMs": 2050.1650390625
+      },
+      {
+        "afterOwner": 76,
+        "beforeOwner": 77,
+        "startOffsetMs": 53237.580078125,
+        "durationMs": 624.419921875
+      },
+      {
+        "afterOwner": 77,
+        "beforeOwner": 78,
+        "startOffsetMs": 54790.389892578125,
+        "durationMs": 942.610107421875
+      },
+      {
+        "afterOwner": 78,
+        "beforeOwner": 79,
+        "startOffsetMs": 56661.243896484375,
+        "durationMs": 652.756103515625
+      },
+      {
+        "afterOwner": 79,
+        "beforeOwner": 80,
+        "startOffsetMs": 58241.9169921875,
+        "durationMs": 3.0830078125
+      },
+      {
+        "afterOwner": 80,
+        "beforeOwner": 81,
+        "startOffsetMs": 59169.27197265625,
+        "durationMs": 733.72802734375
+      },
+      {
+        "afterOwner": 81,
+        "beforeOwner": 82,
+        "startOffsetMs": 60948.468994140625,
+        "durationMs": 1735.531005859375
+      },
+      {
+        "afterOwner": 82,
+        "beforeOwner": 83,
+        "startOffsetMs": 63621.701904296875,
+        "durationMs": 664.298095703125
+      },
+      {
+        "afterOwner": 83,
+        "beforeOwner": 84,
+        "startOffsetMs": 65202.64208984375,
+        "durationMs": 2030.35791015625
+      },
+      {
+        "afterOwner": 84,
+        "beforeOwner": 85,
+        "startOffsetMs": 68146.44409179688,
+        "durationMs": 672.555908203125
+      },
+      {
+        "afterOwner": 85,
+        "beforeOwner": 86,
+        "startOffsetMs": 69750.11791992188,
+        "durationMs": 951.882080078125
+      },
+      {
+        "afterOwner": 86,
+        "beforeOwner": 87,
+        "startOffsetMs": 71618.04809570312,
+        "durationMs": 1727.951904296875
+      },
+      {
+        "afterOwner": 87,
+        "beforeOwner": 88,
+        "startOffsetMs": 74272.34204101562,
+        "durationMs": 198.657958984375
+      },
+      {
+        "afterOwner": 88,
+        "beforeOwner": 89,
+        "startOffsetMs": 75404.39892578125,
+        "durationMs": 2119.60107421875
+      },
+      {
+        "afterOwner": 89,
+        "beforeOwner": 90,
+        "startOffsetMs": 78445.498046875,
+        "durationMs": 228.501953125
+      }
+    ],
+    "concurrentConditionsRequestStart": "2026-11-23T22:54:55.971Z",
+    "concurrentConditions200Ms": 19567.774999999965,
+    "ownerProfilesFullyBeforeConcurrentRequest": [
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80
+    ]
+  },
+  "safeNetwork": [
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:52:27.069Z",
+      "timeMs": 1308.3030000000144,
+      "status": 200,
+      "bodySize": 26,
+      "snapshotKeys": [
+        "_apiRequest",
+        "_monotonicTime",
+        "cache",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:53:03.115Z",
+      "timeMs": 3542.087999999989,
+      "status": 200,
+      "bodySize": 318,
+      "snapshotKeys": [
+        "_apiRequest",
+        "_monotonicTime",
+        "cache",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:53:50.345Z",
+      "timeMs": 3616.228999999992,
+      "status": 200,
+      "bodySize": 318,
+      "snapshotKeys": [
+        "_apiRequest",
+        "_monotonicTime",
+        "cache",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:53:50.343Z",
+      "timeMs": 3624.379,
+      "status": 200,
+      "bodySize": -1,
+      "snapshotKeys": [
+        "_frameref",
+        "_monotonicTime",
+        "_wasFulfilled",
+        "cache",
+        "pageref",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-materiality",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:53:55.490Z",
+      "timeMs": -1,
+      "status": -1,
+      "bodySize": -1,
+      "snapshotKeys": [
+        "_frameref",
+        "_monotonicTime",
+        "_wasAborted",
+        "cache",
+        "pageref",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:54:55.971Z",
+      "timeMs": 19567.774999999965,
+      "status": 200,
+      "bodySize": 318,
+      "snapshotKeys": [
+        "_apiRequest",
+        "_monotonicTime",
+        "cache",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-conditions",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:54:55.967Z",
+      "timeMs": 19577.361,
+      "status": 200,
+      "bodySize": 304,
+      "snapshotKeys": [
+        "_frameref",
+        "_monotonicTime",
+        "_securityDetails",
+        "_wasFulfilled",
+        "cache",
+        "pageref",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-signals",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:55:15.604Z",
+      "timeMs": -1,
+      "status": -1,
+      "bodySize": -1,
+      "snapshotKeys": [
+        "_frameref",
+        "_monotonicTime",
+        "cache",
+        "pageref",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    },
+    {
+      "traceFile": "1-trace.network",
+      "operation": "memory-materiality",
+      "method": "GET",
+      "startedDateTime": "2026-11-23T22:53:55.494Z",
+      "timeMs": -1,
+      "status": -1,
+      "bodySize": -1,
+      "snapshotKeys": [
+        "_apiRequest",
+        "_monotonicTime",
+        "cache",
+        "request",
+        "response",
+        "startedDateTime",
+        "time",
+        "timings"
+      ]
+    }
+  ],
+  "safeTraceErrors": [
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "pw:api",
+      "startTime": 326185.838,
+      "endTime": 366191.359,
+      "wallTime": null,
+      "elapsedMs": 40005.52100000001,
+      "timeoutMs": [
+        "40000"
+      ],
+      "materialityNamed": true,
+      "errorName": ""
+    },
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "test.step",
+      "startTime": 325779.531,
+      "endTime": 366192.028,
+      "wallTime": null,
+      "elapsedMs": 40412.496999999974,
+      "timeoutMs": [],
+      "materialityNamed": false,
+      "errorName": ""
+    },
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "pw:api",
+      "startTime": 366310.418,
+      "endTime": 381312.214,
+      "wallTime": null,
+      "elapsedMs": 15001.795999999973,
+      "timeoutMs": [
+        "15000"
+      ],
+      "materialityNamed": false,
+      "errorName": ""
+    },
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "test.step",
+      "startTime": 366192.745,
+      "endTime": 386345.834,
+      "wallTime": null,
+      "elapsedMs": 20153.088999999978,
+      "timeoutMs": [
+        "15000"
+      ],
+      "materialityNamed": false,
+      "errorName": ""
+    },
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "expect",
+      "startTime": 406547.179,
+      "endTime": 406550.451,
+      "wallTime": null,
+      "elapsedMs": 3.271999999997206,
+      "timeoutMs": [],
+      "materialityNamed": true,
+      "errorName": ""
+    },
+    {
+      "file": "test.trace",
+      "api": null,
+      "method": "test.step",
+      "startTime": 406546.29,
+      "endTime": 406550.554,
+      "wallTime": null,
+      "elapsedMs": 4.26400000002468,
+      "timeoutMs": [],
+      "materialityNamed": true,
+      "errorName": ""
+    },
+    {
+      "file": "1-trace.trace",
+      "api": null,
+      "method": "fetch",
+      "startTime": 326186.165,
+      "endTime": 366189.388,
+      "wallTime": null,
+      "elapsedMs": 40003.223,
+      "timeoutMs": [
+        "40000"
+      ],
+      "materialityNamed": false,
+      "errorName": "TimeoutError"
+    },
+    {
+      "file": "0-trace.trace",
+      "api": null,
+      "method": "goto",
+      "startTime": 366310.628,
+      "endTime": 381311.393,
+      "wallTime": null,
+      "elapsedMs": 15000.764999999956,
+      "timeoutMs": [
+        "15000"
+      ],
+      "materialityNamed": false,
+      "errorName": "TimeoutError"
+    }
+  ],
+  "findings": [
+    "Measured guard/pin/reader allocation buckets are small relative to the full owner and request window; they are not a dominant optimization target.",
+    "The temporal materiality window contains 42 completed profiles totaling 39.342 seconds; measured work is 24.801 seconds and snapshot digest is 11.289 seconds.",
+    "Within that window proof-canonical callbacks total 0.877 seconds and terminal authorizations total 1.474 seconds, with nested guards/clone timings recorded separately.",
+    "Host-context.ts supplies Memory with extended.portfolioServices.planner. Both direct comparators in portfolio-authority.ts forwarded observeScenarios but omitted observeSources, while the main product composition supplied both.",
+    "The source-only wiring candidate forwards the existing independent Source observation in those two callers; no new policy, root type or producer stage is created."
+  ],
+  "limits": [
+    "All bucket durations are inclusive and instrumentation adds overhead; these are not production latency benchmarks.",
+    "activeAsync is zero for every emitted profile. Fulfilled counts describe Promise settlement, not a product status.",
+    "Owner rows contain no request/caller tag. The later concurrent conditions request prevents attributing every profile in the materiality time window exclusively to that HTTP request.",
+    "The producer has two independent materiality reads, but this diagnostic does not directly tag their exact runtime boundary. No 21/21 split is asserted.",
+    "Work outside the terminal leaf callback remains unpartitioned; no claim is made that all residual time is hashing or criteria.",
+    "The observation-free UI61 follow-up, native controls and eventual complete original Memory suite must qualify any candidate."
+  ],
+  "safeEvidenceFiles": [
+    "numeric-cost-rows.json",
+    "safe-memory-network.json",
+    "safe-trace-errors.json"
+  ],
+  "wiringCandidate": {
+    "commit": "4400dfbdee03bdab63dcec4c4180d5ec8c549d13",
+    "source": "d6f51dcc046020293aebf7e533dca62ddfa5e88f",
+    "tree": "3283031d5e04de9fe5f0984b5f61142da22847b3",
+    "paths": {
+      "apps/cli/src/sucafina-product/business-services.ts": "f7a14def970a6d6444b522ff66e8cd69778206ba",
+      "apps/cli/src/sucafina-product/portfolio-authority.ts": "7519c8447e0fad6e727fa90a542557c51b6824c4"
+    }
+  }
+}

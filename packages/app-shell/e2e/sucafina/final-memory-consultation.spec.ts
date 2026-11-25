@@ -205,7 +205,14 @@ for (const kind of ["materiality", "signals"] as const) {
       await captureFinalSurface(page, info, "UI61", "en-light-desktop-" + kind + "-conditions-before-consultation")
       await page.setViewportSize({ width: 320, height: 900 })
       await reflow(page)
-      await captureFinalSurface(page, info, "UI61", "en-light-320-" + kind + "-conditions-before-consultation")
+      const picker = page.locator('[data-sf-surface="UI61"]').getByRole("combobox", { name: "Authorized case", exact: true })
+      await expect(picker).toHaveValue(seeded.reference)
+      await expect(picker.locator("option:checked")).toContainText(finalMemoryData.objective)
+      await expect.poll(() => picker.evaluate((select) => {
+        const style = getComputedStyle(select)
+        return parseFloat(style.paddingInlineEnd) - parseFloat(style.paddingInlineStart)
+      }), { message: "The selected case leaves a separate end region for the native arrow" }).toBeGreaterThanOrEqual(16)
+      await captureFinalSurface(page, info, "UI61", "en-light-320-" + kind + "-conditions-before-consultation", { preview: true })
 
       await withFinalMemoryPortuguese(browser, page, installation, async (localized) => {
         const localizedWrites = observeMemoryCommands(localized, installation.origin)

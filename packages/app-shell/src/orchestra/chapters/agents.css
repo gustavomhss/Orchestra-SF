@@ -1,9 +1,4 @@
 /* Agents (mock `#viewAgents`): the roster cards that the shared kit does not cover. */
-.orchestra-agents .agents-inner {
-  inline-size: min(1020px, calc(100% - 72px));
-  margin: 0 auto;
-  padding: 52px 0 72px;
-}
 .agents-grid {
   align-items: stretch;
   margin: 0;
@@ -487,12 +482,20 @@ textarea.agent-prompt:focus {
 }
 .agent-prompt-foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   color: var(--mx-dim);
   font: var(--orchestra-font-size-xs) var(--mx-sans);
   font-variant-numeric: tabular-nums;
+}
+.agent-prompt-foot > .mx-note {
+  flex: 1 0 auto;
+}
+.agent-prompt-foot > .mx-btn {
+  flex-shrink: 0;
+  margin-inline-start: auto;
 }
 .agent-list {
   display: flex;
@@ -669,5 +672,19 @@ textarea.agent-prompt:focus {
   .agent-group .mx-row {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+/* Match the chapter kit's mobile rhythm while retaining the desktop roster. */
+@media (max-width: 640px) {
+  .orchestra-agents {
+    --agent-mobile-stat-inset: 6px;
+    --agent-mobile-target: 44px;
+  }
+  .orchestra-agents .agent-stats > div {
+    padding-inline: var(--agent-mobile-stat-inset);
+  }
+  .orchestra-agents .agent-tabs button {
+    min-block-size: var(--agent-mobile-target);
   }
 }

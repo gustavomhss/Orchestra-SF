@@ -1,0 +1,492 @@
+{
+  "schema": 1,
+  "kind": "isolated-original-ui62-diagnostic",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "89f8a8e1c9e561f72f136c10c14430a70b7a7e84",
+  "sourceTree": "80457c96e3019eaa29b40187a2140d3cb52c5478",
+  "snapshot": "0347fac6a76d229f409044da58dbeafd1e8374dc",
+  "snapshotTree": "53bc49e73abe6c5a78bd45e24500f1ce65c353fc",
+  "branch": "ci-run-r4capture",
+  "run": 45295656483,
+  "status": "completed",
+  "conclusion": "failure",
+  "runStartedAt": "2026-11-24T00:15:20Z",
+  "updatedAt": "2026-11-24T00:24:43Z",
+  "jobs": [
+    {
+      "id": 138115241359,
+      "name": "test (ubuntu-24.04)",
+      "conclusion": "failure",
+      "startedAt": "2026-11-24T00:15:23Z",
+      "completedAt": "2026-11-24T00:24:33Z",
+      "runTests": [
+        {
+          "startedAt": "2026-11-24T00:16:22Z",
+          "completedAt": "2026-11-24T00:24:27Z",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 138119505100,
+      "name": "cleanup",
+      "conclusion": "success",
+      "startedAt": "2026-11-24T00:24:35Z",
+      "completedAt": "2026-11-24T00:24:42Z",
+      "runTests": []
+    }
+  ],
+  "artifact": {
+    "id": 14876837536,
+    "bytes": 7080547,
+    "sha256": "cf5c36bb03d38d6e122099241e004d2bea73b64a22ce378bbfdf91159aa4c621",
+    "verified": true
+  },
+  "decodedJobLog": {
+    "sha256": "4d8c770eb0ae21faafaa3948731d3535465b98bb5dd32778a51db12f5511e1c5",
+    "characters": 251950,
+    "persisted": false,
+    "reason": "Only sanitized markers and error frontiers are persisted beside the private verified CI artifact."
+  },
+  "originalSpec": {
+    "path": "packages/app-shell/e2e/sucafina/diagnostic-ui62.spec.ts",
+    "blob": "2b927a309d216b820dddf07436b390e196c76892",
+    "bodyDeadlineMs": 300000,
+    "recallResponseDeadlineMs": 40000,
+    "retries": 0,
+    "notes": "Snapshot-only copy of original UI62; no new product instrumentation."
+  },
+  "markers": [
+    {
+      "at": "2026-11-24T00:23:23.2018192Z",
+      "marker": "SF_FINAL_MEMORY_ORIGINAL_READ",
+      "mode": "case",
+      "status": 200,
+      "milliseconds": 27550
+    },
+    {
+      "at": "2026-11-24T00:24:03.7535332Z",
+      "marker": "SF_FINAL_MEMORY_STEP",
+      "name": "UI62 sends a private recall question and explicit authorized candidates to the original producer",
+      "status": "failed",
+      "detail": {
+        "kind": "Error",
+        "summary": "Original similar-case response exceeded the original 40s read deadline"
+      }
+    },
+    {
+      "at": "2026-11-24T00:24:23.9822493Z",
+      "marker": "SF_FINAL_MEMORY_STEP",
+      "name": "UI62 Portuguese authorized candidates",
+      "status": "failed",
+      "detail": {
+        "kind": "TimeoutError",
+        "summary": "page.goto: Timeout 15000ms exceeded."
+      }
+    },
+    {
+      "at": "2026-11-24T00:24:23.9837178Z",
+      "marker": "SF_FINAL_MEMORY_STEP",
+      "name": "No memory selection command was issued by the browser",
+      "status": "passed"
+    },
+    {
+      "at": "2026-11-24T00:24:23.9843801Z",
+      "marker": "SF_FINAL_MEMORY_STEP",
+      "name": "Memory pages emitted no JavaScript errors",
+      "status": "passed"
+    },
+    {
+      "at": "2026-11-24T00:24:23.9920147Z",
+      "marker": "SF_FINAL_MEMORY_STEP",
+      "name": "Memory console contains only verified original coverage refusals",
+      "status": "failed",
+      "detail": {
+        "kind": "Error",
+        "summary": "expect(received).toEqual(expected) // deep equality"
+      }
+    }
+  ],
+  "conclusions": {
+    "firstFailure": "The original Recall POST did not return response headers within the unchanged 40s route.fetch deadline.",
+    "followups": "Portuguese navigation then timed out at 15s; the final console guard reports transport failures. Neither represents a successful Recall response.",
+    "selection": "This uninstrumented run has no counter proving selected clone branch execution. Native context provenance is compatible by source review; that is not runtime branch evidence.",
+    "performance": "Both previous and current uninstrumented HTTP observations censor Recall at the original 40s bound. No end-to-end improvement or final backend settlement can be inferred.",
+    "scope": "Atlas capture is absent from the separately measured Materiality regions; no Materiality improvement is claimed."
+  },
+  "runtimeStats": {
+    "startTime": "2026-11-24T00:16:25.574Z",
+    "duration": 482286.957,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "httpEntries": [
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:19:34.117Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 401,
+      "total_ms": 10.195000000006985,
+      "timings_ms": {
+        "send": 0.6220000000030268,
+        "wait": 9.804000000003725,
+        "receive": 0.39100000000325963,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.45600000000558794
+      },
+      "failure": null,
+      "bodySize": 28
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:19:34.159Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 200,
+      "total_ms": 11082.794999999984,
+      "timings_ms": {
+        "send": 0.40900000001420267,
+        "wait": 11082.049999999988,
+        "receive": 0.7449999999953434,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.2600000000093132
+      },
+      "failure": null,
+      "bodySize": 59307
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:21:26.976Z",
+      "method": "GET",
+      "endpoint": "/dashboard",
+      "sf": "memory-conditions",
+      "status": 200,
+      "total_ms": 1702.195000000007,
+      "timings_ms": {
+        "send": 0.2569999999832362,
+        "wait": 1701.9890000000014,
+        "receive": 0.20600000000558794,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.17999999999301508
+      },
+      "failure": null,
+      "bodySize": 26
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:21:28.684Z",
+      "method": "POST",
+      "endpoint": "/dashboard",
+      "sf": "memory-outcome-selection",
+      "status": 200,
+      "total_ms": 5072.608999999997,
+      "timings_ms": {
+        "send": 0.3150000000023283,
+        "wait": 5072.213999999978,
+        "receive": 0.39500000001862645,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.22999999998137355
+      },
+      "failure": null,
+      "bodySize": 97
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:21:33.762Z",
+      "method": "GET",
+      "endpoint": "/dashboard",
+      "sf": "memory-outcome",
+      "status": 503,
+      "total_ms": 33543.140000000014,
+      "timings_ms": {
+        "send": 0.3209999999962747,
+        "wait": 33542.848,
+        "receive": 0.2920000000158325,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.24600000004284084
+      },
+      "failure": null,
+      "bodySize": 329
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:08.851Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 200,
+      "total_ms": 9165.599,
+      "timings_ms": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 9165.599,
+        "receive": -1
+      },
+      "failure": null,
+      "bodySize": -1
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:08.858Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 200,
+      "total_ms": 9150.835000000021,
+      "timings_ms": {
+        "send": 0.9209999999729916,
+        "wait": 9150.293000000005,
+        "receive": 0.5420000000158325,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.746999999973923
+      },
+      "failure": null,
+      "bodySize": 59307
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:18.117Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 200,
+      "total_ms": 8409.615,
+      "timings_ms": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 8409.615,
+        "receive": -1
+      },
+      "failure": null,
+      "bodySize": -1
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:18.122Z",
+      "method": "GET",
+      "endpoint": "/api/ui/context",
+      "sf": null,
+      "status": 200,
+      "total_ms": 8397.167000000016,
+      "timings_ms": {
+        "send": 0.6199999999953434,
+        "wait": 8396.597000000009,
+        "receive": 0.5700000000069849,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.5
+      },
+      "failure": null,
+      "bodySize": 59307
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:26.559Z",
+      "method": "GET",
+      "endpoint": "/api/ui/projections/cases",
+      "sf": null,
+      "status": 200,
+      "total_ms": 28812.187,
+      "timings_ms": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 28812.187,
+        "receive": -1
+      },
+      "failure": null,
+      "bodySize": -1
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:26.562Z",
+      "method": "GET",
+      "endpoint": "/api/ui/projections/cases",
+      "sf": null,
+      "status": 200,
+      "total_ms": 28796.98000000004,
+      "timings_ms": {
+        "send": 0.47499999997671694,
+        "wait": 28796.629000000015,
+        "receive": 0.3510000000242144,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.34100000001490116
+      },
+      "failure": null,
+      "bodySize": 913
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:55.667Z",
+      "method": "GET",
+      "endpoint": "/api/ui/projections/case",
+      "sf": null,
+      "status": 200,
+      "total_ms": 27532.868,
+      "timings_ms": {
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "send": 0,
+        "wait": 27531.908,
+        "receive": 0.96
+      },
+      "failure": null,
+      "bodySize": 42270
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:22:55.673Z",
+      "method": "GET",
+      "endpoint": "/api/ui/projections/case",
+      "sf": null,
+      "status": 200,
+      "total_ms": 27516.206999999995,
+      "timings_ms": {
+        "send": 1.0210000000079162,
+        "wait": 27515.724999999977,
+        "receive": 0.4820000000181608,
+        "dns": -1,
+        "connect": -1,
+        "ssl": -1,
+        "blocked": 0.842000000004191
+      },
+      "failure": null,
+      "bodySize": 42284
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:23:23.703Z",
+      "method": "POST",
+      "endpoint": "/dashboard",
+      "sf": "memory-similar-cases",
+      "status": -1,
+      "total_ms": -1,
+      "timings_ms": {
+        "send": -1,
+        "wait": -1,
+        "receive": -1
+      },
+      "failure": null,
+      "bodySize": -1
+    },
+    {
+      "trace": "1-trace.network",
+      "at": "2026-11-24T00:23:23.706Z",
+      "method": "POST",
+      "endpoint": "/dashboard",
+      "sf": "memory-similar-cases",
+      "status": -1,
+      "total_ms": -1,
+      "timings_ms": {
+        "send": -1,
+        "wait": -1,
+        "receive": -1
+      },
+      "failure": null,
+      "bodySize": -1
+    }
+  ],
+  "errorFrontiers": [
+    {
+      "trace": "test.trace",
+      "method": "pw:api",
+      "class": "Test",
+      "startMs": 419048.032,
+      "endMs": 459081.897,
+      "firstLine": "TimeoutError: route.fetch: Timeout 40000ms exceeded."
+    },
+    {
+      "trace": "test.trace",
+      "method": "test.step",
+      "class": "Test",
+      "startMs": 342651.938,
+      "endMs": 459086.44,
+      "firstLine": "Error: Original similar-case response exceeded the original 40s read deadline"
+    },
+    {
+      "trace": "test.trace",
+      "method": "pw:api",
+      "class": "Test",
+      "startMs": 459257.375,
+      "endMs": 474273.4,
+      "firstLine": "TimeoutError: page.goto: Timeout 15000ms exceeded."
+    },
+    {
+      "trace": "test.trace",
+      "method": "test.step",
+      "class": "Test",
+      "startMs": 459087.387,
+      "endMs": 479314.087,
+      "firstLine": "TimeoutError: page.goto: Timeout 15000ms exceeded."
+    },
+    {
+      "trace": "test.trace",
+      "method": "expect",
+      "class": "Test",
+      "startMs": 479320.727,
+      "endMs": 479325.592,
+      "firstLine": "Error: expect(received).toEqual(expected) // deep equality"
+    },
+    {
+      "trace": "test.trace",
+      "method": "test.step",
+      "class": "Test",
+      "startMs": 479319.074,
+      "endMs": 479325.717,
+      "firstLine": "Error: expect(received).toEqual(expected) // deep equality"
+    },
+    {
+      "trace": "1-trace.trace",
+      "method": "fetch",
+      "class": "APIRequestContext",
+      "startMs": 419048.789,
+      "endMs": 459079.484,
+      "firstLine": "Timeout 40000ms exceeded."
+    },
+    {
+      "trace": "0-trace.trace",
+      "method": "goto",
+      "class": "Frame",
+      "startMs": 459257.656,
+      "endMs": 474272.519,
+      "firstLine": "Timeout 15000ms exceeded."
+    }
+  ],
+  "fileDigests": {
+    "artifact/test-ci-evidence/playwright-runtime.json": "af6173af16e809b5c9f2728cf9ae151eafbacd07475a3c982143fe6d956a6a5f",
+    "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace-data/test.trace": "2b1311df9cca2ce41a04fbc305a803f1a1bd9e33b13015c7ccc295bb46be546c",
+    "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace-data/1-trace.trace": "f246fe5bf986838ffc64dbe367b93a5f611a52066236a9b7ca38aaffc52ab595",
+    "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace-data/1-trace.network": "915fd8044cecc504096015069069918df0ee11e96d6161bb25b93d360b22d16d",
+    "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace-data/0-trace.trace": "2a13bf305228b5b112a4bbe92502fb2e5418c379b8a6971a1f9f607719dabc4e",
+    "artifact/packages/app-shell/e2e/test-results/sucafina-diagnostic-ui62---27d6a-in-an-isolated-installation-chromium/trace-data/0-trace.network": "41c5990daaf2fa1f869b956db89dd1df1da7fe278f94b216b6d8137afc34a9b9"
+  },
+  "sanitizedMarkersSha256": "32e77b60fbcf8cd3e4d5b822be449f2b5996a49733c6341debf33717d26972b9",
+  "httpEntryCaveat": "HAR contains intercepted/forwarded transport records. Entries are preserved individually; duplicate records are not summed or claimed to be separate logical user requests."
+}

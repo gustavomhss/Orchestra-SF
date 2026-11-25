@@ -5,7 +5,7 @@ import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contract
 import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
 import { createSfPlannerSourceHost } from "../integration/planner-sources.ts"
 import { createPlannerPort } from "./port.ts"
-import type { PlannerCriteriaHost, PlannerScenarioHost } from "./scenario-comparison-port.ts"
+import type { PlannerCriteriaHost, PlannerScenarioHost, PlannerScenarioObservation, PlannerSourceObservation } from "./scenario-comparison-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
 import { createPlannerSourceIssuer } from "./source-issuer.ts"
 import { createStoredPlannerScenarioHost } from "./stored-scenarios.ts"
@@ -23,7 +23,7 @@ export type StandaloneScenarioProducer = {
 }
 
 /** Bind Planner to the installation's authenticated source lifecycle and domain ports. */
-export function createPlannerProduct(input: { standalone?: StandaloneScenarioProducer; host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
+export function createPlannerProduct(input: { standalone?: StandaloneScenarioProducer; host: DomainPortHost; scopedSources: SfScopedSourcePort; coverageFor: PlannerSourceHost["resolveForecastCoverage"]; evidence?: BusinessContextService; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; observeScenarios?: PlannerScenarioObservation; observeSources?: PlannerSourceObservation; scenarioInputs?: PlannerScenarioInputs; currentChoicePreparing?: (context: TrustedDomainContext, baseRef: string) => boolean; verifyAssumption?: PlannerScenarioInputs["verifyAssumption"]; sensitivity?: PlannerPort["evaluateSensitivity"]; storedScenarios?: Omit<Parameters<typeof createStoredPlannerScenarioHost>[0], "planner">; versionAuthorize?: Parameters<typeof createPlannerVersionsHost>[0]["humanAuthorize"] }) {
   const plannerSources = createSfPlannerSourceHost({ host: input.host, scopedSources: input.scopedSources, coverageFor: input.coverageFor })
   const sources: PlannerSourceHost = input.standalone ? { ...plannerSources,
     resolveForecastSource: (reference, context) => input.standalone!.supportsSource(reference)

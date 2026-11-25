@@ -1,0 +1,240 @@
+{
+  "schema": "sf-round-four-preferences-qualification-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "16fadd12cb8b61f091723255621719a7fe77beb8",
+  "sourceTree": "862e3e9c1b56c11e8ef09ef29b0b217970702c64",
+  "snapshot": "485d14d369319fa31d7480f4a7db2bae99e0a3e7",
+  "snapshotTree": "fd16a42f86b2ebfb7e13d862a38c7518a427eca0",
+  "qualification": "focused controls and typechecks passed; not full browser or merge qualification",
+  "workflow": {
+    "id": 45301362851,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45301362851",
+    "job": 138134407496,
+    "cleanupJob": 138135328500,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-24T00:57:52Z",
+    "completedAt": "2026-11-24T01:00:14Z",
+    "testStep": {
+      "startedAt": "2026-11-24T00:59:08Z",
+      "completedAt": "2026-11-24T01:00:00Z"
+    },
+    "jobs": [
+      {
+        "id": 138134407496,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T00:57:54Z",
+        "completedAt": "2026-11-24T01:00:04Z"
+      },
+      {
+        "id": 138135328500,
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:00:06Z",
+        "completedAt": "2026-11-24T01:00:14Z"
+      }
+    ]
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "05a290a922ac71c739a5629d58e8d5df8c53ca07",
+    "value": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-preferences-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    }
+  },
+  "wrapper": {
+    "path": "apps/cli/test/sucafina-preferences-verification.test.ts",
+    "blob": "dc4f1a5a3b9e1e56a2fbfa25540e93d65d8c98a1",
+    "snapshotOnly": true,
+    "hostedLinuxAdmission": true
+  },
+  "gates": [
+    {
+      "name": "complete preference projection and coverage protocol",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/preferences-projection.test.ts",
+      "blob": "bc5b0c04e164f51a4362e14ee1157213135207c4",
+      "passed": 4,
+      "failed": 0,
+      "assertions": 233,
+      "childDurationMs": 186,
+      "wrapperDurationMs": 211.52,
+      "limits": {
+        "eachCooperativeMs": 12000,
+        "eachBunMs": 15000,
+        "childAggregateMs": 90000,
+        "wrapperMs": 120000
+      },
+      "cases": [
+        {
+          "name": "C08 preferences projection keeps the complete fresh graph and detaches every observation",
+          "durationMs": 20.64,
+          "passed": true
+        },
+        {
+          "name": "C08 preferences projection preserves opaque context and descriptor fallback",
+          "durationMs": 11.49,
+          "passed": true
+        },
+        {
+          "name": "C08 preferences projection keeps both authority checks around asynchronous callbacks",
+          "durationMs": 10.26,
+          "passed": true
+        },
+        {
+          "name": "Baseline coverage reads the complete preference graph and observes selection at original C08 admission",
+          "durationMs": 39.66,
+          "passed": true
+        }
+      ],
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "fresh Atlas capture selections",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/atlas-capture-selectors.test.ts",
+      "blob": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+      "passed": 6,
+      "failed": 0,
+      "assertions": 576,
+      "childDurationMs": 2180,
+      "wrapperDurationMs": 2206.29,
+      "limits": {
+        "protocolCases": {
+          "count": 5,
+          "eachCooperativeMs": 12000,
+          "eachBunMs": 15000
+        },
+        "nativeCase": {
+          "count": 1,
+          "cooperativeMs": 105000,
+          "bunMs": 120000
+        },
+        "childAggregateMs": 240000,
+        "wrapperMs": 300000
+      },
+      "cases": [
+        {
+          "name": "C08 case projection retains complete payload, two authorizations and fresh detached reads",
+          "durationMs": 36.41,
+          "passed": true
+        },
+        {
+          "name": "C08 Atlas projection clones the complete partition and outbox as one fresh graph",
+          "durationMs": 7.01,
+          "passed": true
+        },
+        {
+          "name": "C08 capture selectors keep opaque contexts, readers and descriptors on the original full clone",
+          "durationMs": 20.2,
+          "passed": true
+        },
+        {
+          "name": "C08 capture projections preserve refusal, asynchronous egress and cancellation without replay",
+          "durationMs": 12.59,
+          "passed": true
+        },
+        {
+          "name": "C08 capture selectors retain complete state validation and selected clone behaviour",
+          "durationMs": 14.49,
+          "passed": true
+        },
+        {
+          "name": "Native Atlas capture keeps canonical publication, complete payload and all three fresh C08 reads",
+          "durationMs": 1623.31,
+          "passed": true
+        }
+      ],
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "CLI typecheck",
+      "directory": "apps/cli",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "durationMs": 24742.29,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "Sucafina typecheck",
+      "directory": "modules/sucafina/Sucafinav1",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "durationMs": 25224.42,
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "totals": {
+    "productTestsPassed": 10,
+    "productTestsFailed": 0,
+    "productAssertions": 809,
+    "typechecksPassed": 2,
+    "wrapperGatesPassed": 4,
+    "wrapperAssertions": 4,
+    "wrapperDurationMs": 52600
+  },
+  "executor": {
+    "mode": "strict",
+    "channel": "prod",
+    "omniPositiveControl": "pass",
+    "declaredTests": 4,
+    "spawns": 4,
+    "delegated": 0,
+    "outputTruncated": false
+  },
+  "artifacts": {
+    "apiReturned": 0,
+    "items": [],
+    "playwrightUpload": "skipped; this request runs Bun controls/typechecks",
+    "downloadAttempted": false
+  },
+  "productionBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "c82dcc0d08c27ba35a54d1371b018cab04321646"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "sha": "290978fcf6007214abf5a94645b038db95d31042"
+    }
+  ],
+  "evidence": {
+    "rawLogCharacters": 71633,
+    "rawLogSha256": "0e507640f44e081d643150cddcd5060b5529e5ec6fe7e6c3b5a095c645db4fed",
+    "sanitizedLogSha256": "da7bae968a841ec0a28c38578f3f6f94a6af580f496204f9d26a3b229422f6f0",
+    "rawPersisted": false,
+    "sanitizedLines": 35,
+    "redactions": "Omni control identity omitted. Only gate JSON, pass/count/duration lines and control outcome retained."
+  },
+  "preservation": {
+    "noOriginalTestsModified": true,
+    "noInternalDeadlinesIncreased": true,
+    "noRetriesAdded": true,
+    "noSkipsAdded": true,
+    "nativeAtlasOriginalWriterAndScanner": true,
+    "sourcePortsForPreferencesCase4": "Deterministic fixture ports are explicit; actual LocalStore, C08 and register/readCoverage producers are exercised."
+  }
+}

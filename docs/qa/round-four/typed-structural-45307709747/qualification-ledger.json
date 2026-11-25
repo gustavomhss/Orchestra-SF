@@ -1,0 +1,440 @@
+{
+  "schema": 1,
+  "kind": "qualification",
+  "title": "Round four typed projections and complete structural gates",
+  "result": "passed",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "74c0a52c2ed8a1f617623eca30774c23ce899ec2",
+    "tree": "0c1c28b3b01a0fe768eb86866b4a07f1835aab4c"
+  },
+  "snapshot": {
+    "commit": "f66fa93937e96104e6d1e702b0fcc50565c22c7c",
+    "tree": "64e429a83c3af64b00eef98c4e253e1debe224d7",
+    "requestBlob": "337ff2027d527dbcb09729df6a5d6ced7904a607",
+    "wrapperPath": "apps/cli/test/sucafina-polish-verification.test.ts",
+    "wrapperBlob": "8deb721d07525b7d43072f8cc7d965c175db2d17",
+    "onlyAddedPaths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-polish-verification.test.ts"
+    ]
+  },
+  "run": {
+    "id": 45307709747,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45307709747",
+    "branch": "ci-run-r4typed",
+    "status": "completed",
+    "conclusion": "success",
+    "attempt": 1,
+    "createdAt": "2026-11-24T01:48:05Z",
+    "updatedAt": "2026-11-24T01:51:43Z",
+    "jobs": [
+      {
+        "id": 138155494392,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:48:08Z",
+        "completedAt": "2026-11-24T01:51:34Z",
+        "tests": [
+          {
+            "startedAt": "2026-11-24T01:48:50Z",
+            "completedAt": "2026-11-24T01:51:31Z",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 138156860502,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T01:51:36Z",
+        "completedAt": "2026-11-24T01:51:42Z",
+        "tests": []
+      }
+    ]
+  },
+  "request": {
+    "package": "cli",
+    "packageSelector": "@orchestra/cli",
+    "directory": "apps/cli",
+    "runner": "bun",
+    "args": [
+      "./test/sucafina-polish-verification.test.ts",
+      "--timeout",
+      "300000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "integrity": {
+    "originalTenGatePrefix": {
+      "snapshot": "257131acc945a0423a245bd5ec9cfc5bec96f67d",
+      "blob": "dab918a74037ba589a62728c4cb5e6fc2d5ef999",
+      "characters": 8670,
+      "literalPrefixUnchanged": true
+    },
+    "preferencesOriginalTestBlob": "bc5b0c04e164f51a4362e14ee1157213135207c4",
+    "atlasOriginalTestBlob": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+    "internalTestsAndDeadlinesChanged": false,
+    "wrapperAdditions": "Only the complete four-case Preferences and six-case Atlas files were added after the literal ten-gate prefix."
+  },
+  "totals": {
+    "wrapperGates": 12,
+    "wrapperPassed": 12,
+    "wrapperFailed": 0,
+    "wrapperAssertions": 19,
+    "wrapperDurationMs": 160450,
+    "internalTests": 283,
+    "internalAssertions": 3709,
+    "internalFailed": 0,
+    "typechecks": 4
+  },
+  "gateResults": [
+    {
+      "title": "the composed app-shell passes its package typecheck",
+      "status": "passed",
+      "durationMs": 17614.03
+    },
+    {
+      "title": "the composed candidate passes guardrails from the exact dev base",
+      "status": "passed",
+      "durationMs": 3535.27
+    },
+    {
+      "title": "the palette writer preserves the committed generated files exactly",
+      "status": "passed",
+      "durationMs": 325.82
+    },
+    {
+      "title": "the native design capture passes the permanent e2e typecheck",
+      "status": "passed",
+      "durationMs": 4173.93
+    },
+    {
+      "title": "review comparisons preserve typed source values and absence",
+      "status": "passed",
+      "durationMs": 184.83
+    },
+    {
+      "title": "UI commands, MCP and Teams preserve authority and reviewed values",
+      "status": "passed",
+      "durationMs": 7357.39
+    },
+    {
+      "title": "the native host composition passes CLI typechecking",
+      "status": "passed",
+      "durationMs": 33577.41
+    },
+    {
+      "title": "the original Sucafina contracts pass package typechecking",
+      "status": "passed",
+      "durationMs": 29954.36
+    },
+    {
+      "title": "page admission and original domain assets retain their source contracts",
+      "status": "passed",
+      "durationMs": 580.33
+    },
+    {
+      "title": "installed native context and procurement retain original authority",
+      "status": "passed",
+      "durationMs": 59674.72
+    },
+    {
+      "title": "typed preferences projection preserves its complete original controls",
+      "status": "passed",
+      "durationMs": 248.4
+    },
+    {
+      "title": "typed Atlas projection preserves all protocol and native controls",
+      "status": "passed",
+      "durationMs": 2947.22
+    }
+  ],
+  "internalGroups": [
+    {
+      "cases": 15,
+      "files": 2,
+      "assertions": 76,
+      "durationMs": 176,
+      "group": "review comparison"
+    },
+    {
+      "cases": 109,
+      "files": 14,
+      "assertions": 1594,
+      "durationMs": 7320,
+      "group": "browser command and Team regressions"
+    },
+    {
+      "cases": 145,
+      "files": 4,
+      "assertions": 1161,
+      "durationMs": 567,
+      "group": "native page and asset contracts"
+    },
+    {
+      "cases": 4,
+      "files": 2,
+      "assertions": 69,
+      "durationMs": 59660,
+      "group": "installed context and procurement"
+    },
+    {
+      "cases": 4,
+      "files": 1,
+      "assertions": 233,
+      "durationMs": 240,
+      "group": "preferences projection"
+    },
+    {
+      "cases": 6,
+      "files": 1,
+      "assertions": 576,
+      "durationMs": 2930,
+      "group": "Atlas capture selectors"
+    }
+  ],
+  "guardrails": {
+    "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "bootstrap": false,
+    "rules": 78,
+    "files": 99,
+    "findings": [],
+    "errors": [],
+    "approved": [],
+    "touchesGuards": false
+  },
+  "palette": {
+    "files": 7,
+    "changed": []
+  },
+  "omni": {
+    "mode": "strict",
+    "channel": "prod",
+    "declared": 12,
+    "spawns": 14,
+    "delegated": 0,
+    "extraSpawns": "The original guard group fetches and resolves the exact dev commit in the disposable checkout."
+  },
+  "commands": [
+    {
+      "gate": "app-shell typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "fetch pinned guard base",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=1",
+        "origin",
+        "490a1e1352081d28c0eb22afcd05fffea8b5323f:refs/remotes/origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "resolve pinned guard base",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "guardrails",
+      "command": [
+        "bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "palette generation",
+      "command": [
+        "bun",
+        "run",
+        "script/orchestra-palettes.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "app-shell e2e typecheck",
+      "command": [
+        "bun",
+        "run",
+        "typecheck:e2e"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "review comparison",
+      "command": [
+        "bun",
+        "test",
+        "--conditions=solid",
+        "--preload",
+        "./happydom.ts",
+        "./src/orchestra/chapters/sucafina/shared/change-review/compare.test.ts",
+        "./src/context/layout-route.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "browser command and Team regressions",
+      "command": [
+        "bun",
+        "test",
+        "--conditions=browser",
+        "--preload",
+        "./happydom.ts",
+        "./test-browser/mcp-fresh-editor.test.ts",
+        "./test-browser/settings-mcp-action.test.ts",
+        "./test-browser/sucafina-confirmation-payload.test.ts",
+        "./test-browser/sucafina-draft-confirmation.test.ts",
+        "./test-browser/sucafina-decision-command.test.ts",
+        "./test-browser/sucafina-procurement-command.test.ts",
+        "./test-browser/sucafina-saved-view-command.test.ts",
+        "./test-browser/sucafina-vendor-contract-command.test.ts",
+        "./test-browser/sucafina-preserved-review-model.test.ts",
+        "./test-browser/team-profile.test.ts",
+        "./test-browser/team-profile-configuration.test.ts",
+        "./test-browser/team-profile-navigation.test.ts",
+        "./test-browser/team-session-page.test.ts",
+        "./test-browser/sucafina-team-domain.test.ts"
+      ],
+      "cwd": "packages/app-shell",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "CLI typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "Sucafina typecheck",
+      "command": [
+        "bun",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "native page and asset contracts",
+      "command": [
+        "bun",
+        "test",
+        "./test/native-ui-contract/request-context.test.ts",
+        "./test/planner-runtime.test.ts",
+        "./test/procurement-runtime.test.ts",
+        "./test/assets.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "installed context and procurement",
+      "command": [
+        "bun",
+        "test",
+        "./test/sucafina-native-web.test.ts",
+        "./test/sucafina-native-procurement.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "typed preferences projection preserves its complete original controls",
+      "command": [
+        "bun",
+        "test",
+        "./test/product/wp10/integration/preferences-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "gate": "typed Atlas projection preserves all protocol and native controls",
+      "command": [
+        "bun",
+        "test",
+        "./test/product/wp10/integration/atlas-capture-selectors.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "evidence": {
+    "rawJobLog": {
+      "job": 138155494392,
+      "sha256": "bda19ec87e2f1de10d910c4dd47affe52e5c8e133485ad0334d4d0213be5b207",
+      "characters": 118333,
+      "persisted": false
+    },
+    "allCommandsExitZero": true,
+    "anyStdoutTruncated": false,
+    "anyStderrTruncated": false,
+    "artifactsApi": [],
+    "rawLogOrControlNonceCommitted": false
+  },
+  "limits": [
+    "This qualifies the complete structural and typed projection gates on this exact source; it does not claim the separate Memory browser cohort is green.",
+    "The 3709 internal assertions exclude the 19 wrapper assertions.",
+    "No workflow, approval, assertion, retry or internal test deadline was relaxed."
+  ]
+}

@@ -3,6 +3,7 @@
   --sf-memory-gap: 24px;
   --sf-memory-padding: 24px;
   --sf-memory-control: 44px;
+  --sf-memory-select-padding-end: 32px;
   --sf-memory-line: 1px;
   --sf-memory-focus: 2px;
   display: grid;
@@ -44,6 +45,8 @@
   color: var(--mx-strong);
   font: var(--orchestra-font-size-md)/1.5 var(--mx-sans);
 }
+/* Keep the native arrow reserve above the shared form input-selector specificity. */
+.sf-page-frame .sf-memory[data-sf-wave="six"] form.sf-form select { padding-inline-end: var(--sf-memory-select-padding-end); }
 .sf-memory textarea { resize: vertical; }
 .sf-memory :is(input, select, textarea, button, summary):focus-visible {
   outline: var(--sf-memory-focus) solid var(--mx-blue);

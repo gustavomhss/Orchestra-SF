@@ -1,0 +1,337 @@
+{
+  "schema": 1,
+  "kind": "native-tuple-inspect-qualification",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "passed",
+  "qualifiedSource": {
+    "commit": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "tree": "9bb0b94a55f0421908c1f93d58e9c7462a54133b",
+    "base": "834468f890915c0af8f73cfe9f50650a83c09ae1",
+    "helperBlob": "374daedc7f9db56df6c5d309dd44f17e4bfd34cc",
+    "testBlob": "db5e36cdaafcc36a69a87a18726e37ae1ae58ea4"
+  },
+  "ciSnapshot": {
+    "commit": "0514022deb02d0a16b26d33937c1df0641a42626",
+    "tree": "4b7114ffd1a0a66fcc2fcee077dc3134e4febc54",
+    "requestBlob": "32dadf4ec3a0feb94e780680be72fa7c94cd07ca",
+    "wrapperBlob": "e9ff2122893e62b0bace65b2c6c7de5f1fbae1d9",
+    "delta": [
+      {
+        "path": ".ci-run.json",
+        "blob": "32dadf4ec3a0feb94e780680be72fa7c94cd07ca",
+        "status": "added"
+      },
+      {
+        "path": "apps/cli/test/sucafina-tuples-verification.test.ts",
+        "blob": "e9ff2122893e62b0bace65b2c6c7de5f1fbae1d9",
+        "status": "added"
+      }
+    ],
+    "originalProductAndTestsUnchanged": true
+  },
+  "selection": {
+    "request": {
+      "package": "cli",
+      "packageSelector": "@orchestra/cli",
+      "directory": "apps/cli",
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-tuples-verification.test.ts",
+        "--timeout",
+        "300000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "fullTestFiles": true,
+    "testNameFilters": [],
+    "retries": 0,
+    "originalFourTupleTestBodiesPreservedLiterally": true,
+    "addedTupleCase": {
+      "count": 1,
+      "cooperativeDeadlineMs": 12000,
+      "bunDeadlineMs": 15000
+    },
+    "freshTupleAggregate": {
+      "childDeadlineMs": 105000,
+      "outerDeadlineMs": 135000,
+      "rationale": "Five unchanged 15 s case limits plus 30 s process shutdown, then the existing 30 s wrapper margin."
+    },
+    "originalFinanceAndRecallCasesAndDeadlinesPreserved": true
+  },
+  "execution": {
+    "workflow": "test-ci",
+    "runId": 45312811007,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/45312811007",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-24T02:29:58Z",
+    "completedAt": "2026-11-24T02:36:04Z",
+    "runner": "ubuntu-24.04",
+    "testsStartedAt": "2026-11-24T02:31:29Z",
+    "jobs": [
+      {
+        "id": 138172447048,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T02:30:01Z",
+        "completedAt": "2026-11-24T02:35:56Z"
+      },
+      {
+        "id": 138174854131,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-24T02:35:58Z",
+        "completedAt": "2026-11-24T02:36:04Z"
+      }
+    ],
+    "localProductExecution": false,
+    "activeJobLogsFetched": false,
+    "newCiLaunchedByThisAgent": false
+  },
+  "totals": {
+    "gates": 5,
+    "passedGates": 5,
+    "innerCases": 11,
+    "passedInnerCases": 11,
+    "failedInnerCases": 0,
+    "skippedInnerCases": 0,
+    "innerAssertions": 728,
+    "wrapperCases": 5,
+    "passedWrapperCases": 5,
+    "wrapperAssertions": 5,
+    "wrapperDurationMs": 262770,
+    "passedTypechecks": 2,
+    "allExitCodesZero": true,
+    "stdoutTruncations": 0,
+    "stderrTruncations": 0
+  },
+  "omni": {
+    "mode": "strict",
+    "verdict": "pass",
+    "declaredTests": 5,
+    "declarationFile": "test/sucafina-tuples-verification.test.ts",
+    "spawns": 5,
+    "delegated": 0,
+    "logLine": 875
+  },
+  "sourceVerification": {
+    "matchingHeaders": 5,
+    "source": "b082f450c4e0cfed4d901b427d07a5265d2bc195",
+    "candidate": "0514022deb02d0a16b26d33937c1df0641a42626",
+    "run": "45312811007"
+  },
+  "gates": [
+    {
+      "gate": "complete fresh tuple controls",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts",
+      "cases": [
+        {
+          "line": 726,
+          "name": "Fresh tuple digests preserve canonical bytes across complete fresh and mutated observations",
+          "durationMs": 15.17
+        },
+        {
+          "line": 727,
+          "name": "Opaque tuple values retain original getter, Proxy, sparse-array and failure behaviour",
+          "durationMs": 9.79
+        },
+        {
+          "line": 728,
+          "name": "Tuple intrinsic drift preserves original serialization and hash calls without replay",
+          "durationMs": 1.01
+        },
+        {
+          "line": 729,
+          "name": "Tuple owners reject post-hash admission and remain canonical through close and reentrancy",
+          "durationMs": 0.82
+        },
+        {
+          "line": 730,
+          "name": "Fresh tuple inspection keeps own-key cardinality and separates active cycles from completed aliases",
+          "durationMs": 18.69
+        }
+      ],
+      "childTimeoutMs": 105000,
+      "outerTimeoutMs": 135000,
+      "status": "passed",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/fresh-tuple-digest.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "wrapperCaseDurationMs": 87.32,
+      "logMetadataLine": 722,
+      "logWrapperPassLine": 737,
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "assertions": 216,
+        "durationMs": 64,
+        "logSummaryLine": 732
+      }
+    },
+    {
+      "gate": "original Finance observation regression",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/finance-pair-observation.test.ts",
+      "cases": [
+        {
+          "line": 743,
+          "name": "Finance uses the wired coverage pair and closes on revocation or source change",
+          "durationMs": 4049.79
+        }
+      ],
+      "childTimeoutMs": 150000,
+      "outerTimeoutMs": 180000,
+      "status": "passed",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/finance-pair-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "wrapperCaseDurationMs": 4448.68,
+      "logMetadataLine": 739,
+      "logWrapperPassLine": 747,
+      "summary": {
+        "passed": 1,
+        "failed": 0,
+        "assertions": 35,
+        "durationMs": 4430,
+        "logSummaryLine": 745
+      }
+    },
+    {
+      "gate": "complete original Recall observation regression",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recall-observation.test.ts",
+      "cases": [
+        {
+          "line": 853,
+          "name": "Planner case preflight uses its private version and closes independent native observations",
+          "durationMs": 568.12
+        },
+        {
+          "line": 854,
+          "name": "Planner Recall preserves published Atlas closure and freshly closes every native owner",
+          "durationMs": 49524.66
+        },
+        {
+          "line": 855,
+          "name": "Planner Recall refuses changed case selections and Atlas publication closure",
+          "durationMs": 49787.89
+        },
+        {
+          "line": 856,
+          "name": "Planner Recall admits open Planner assumptions without confirming uncertainty or borrowing other domains",
+          "durationMs": 53153.81
+        },
+        {
+          "line": 857,
+          "name": "Planner Recall preserves different candidate horizons and refuses a changed current query or precedent",
+          "durationMs": 51449.26
+        }
+      ],
+      "childTimeoutMs": 630000,
+      "outerTimeoutMs": 660000,
+      "status": "passed",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/planner-recall-observation.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "wrapperCaseDurationMs": 205033.8,
+      "logMetadataLine": 752,
+      "logWrapperPassLine": 753,
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "assertions": 477,
+        "durationMs": 205010,
+        "logSummaryLine": 859
+      }
+    },
+    {
+      "gate": "CLI typecheck",
+      "directory": "apps/cli",
+      "cases": [],
+      "childTimeoutMs": 240000,
+      "outerTimeoutMs": 300000,
+      "status": "passed",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "wrapperCaseDurationMs": 27142.09,
+      "logMetadataLine": 865,
+      "logWrapperPassLine": 869
+    },
+    {
+      "gate": "Sucafina typecheck",
+      "directory": "modules/sucafina/Sucafinav1",
+      "cases": [],
+      "childTimeoutMs": 240000,
+      "outerTimeoutMs": 300000,
+      "status": "passed",
+      "exitCode": 0,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "wrapperCaseDurationMs": 25826.79,
+      "logMetadataLine": 870,
+      "logWrapperPassLine": 873
+    }
+  ],
+  "artifacts": {
+    "apiTotalCount": 0,
+    "downloaded": false,
+    "archiveHash": null,
+    "reason": "No artifacts were uploaded by this successful native Bun job. No archive or download hash is claimed."
+  },
+  "evidence": {
+    "completedJobId": 138172447048,
+    "rawLogCharacters": 87426,
+    "retained": "Structured results and source locators only. No raw job log, nonce, signed URL, environment values or business payloads are persisted.",
+    "lineNumbering": "One-based lines after stripping ANSI and timestamps from the completed job log.",
+    "summaryOrdering": "stdout/stderr buffering can interleave wrapper and inner pass lines; gate metadata, case names and expected cardinalities identify each report.",
+    "durationNote": "Bun file durations, individual case durations and wrapper durations are distinct observations; their sums may differ."
+  },
+  "staticReview": {
+    "helperPeer": "Approved independently by Business and root before the run.",
+    "allOriginalIntrinsicPinsPreserved": true,
+    "originalDigestAndCloneSitesPreserved": true,
+    "callerAwaitsUnchanged": true,
+    "freshDescriptorPrototypeProxyFiniteAndCycleChecksPreserved": true,
+    "privateCounterpartOwnKeyCardinalityPreserved": true,
+    "visitingCheckedBeforeCounterpartComparison": true,
+    "originalTupleTestPrefixCharacters": 17364
+  },
+  "qualificationLimits": [
+    "Qualifies the focused helper controls, complete original Finance/Recall regression files and CLI/Sucafina typechecks on b082f450c4e0cfed4d901b427d07a5265d2bc195.",
+    "This is functional and type qualification. It does not establish an end-to-end HTTP performance improvement or qualify the original browser Memory journeys.",
+    "The source was an isolated candidate when this run launched; this ledger does not assert that it was merged."
+  ]
+}

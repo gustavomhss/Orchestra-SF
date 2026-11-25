@@ -158,7 +158,8 @@ const storedNamespaces = ["preferences", "reviews", "relations", "threads", "con
 // retains code identity, never an observed case, snapshot or admitted authority.
 const caseReads = new WeakMap<object, {
   id: string
-  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
+  plain?: true
+  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => unknown | Promise<unknown>
 }>()
 const readinessReads = new WeakMap<object, { namespace: SfStateNamespace; mode: "read" | "write"; select: (state: SfProductState, authority: SfStateAuthority) => { storageVersion: number; aggregateRevision: number; incarnation: string } | undefined }>()
 
@@ -174,6 +175,86 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
       return !!field && "value" in field && typeof field.value === "string"
     })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
   return read
+}
+
+/** Keep a selected case's original predicate inside the C08 callback. Every
+ * invocation still receives a new clone between the two authority checks. */
+export function selectSfCaseProjection<T>(id: string, context: TrustedDomainContext,
+  project: (value: SfProductState["cases"][string] | undefined, authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => project(state.cases[id], authority)
+  if (typeof id === "string" && !types.isProxy(project) && frozenSelectionContext(context))
+    caseReads.set(read, { id, plain: true, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
+
+// This registry stores only constructor-owned code and its private owner key,
+// never a partition, publication receipt, snapshot or authorization result.
+const atlasReads = new WeakMap<object, {
+  owner: string
+  read: (state: Pick<SfProductState, "atlas" | "outbox">, authority: SfStateAuthority) => unknown | Promise<unknown>
+}>()
+
+/** Clone the complete selected partition and complete outbox as one graph.
+ * The projector receives only those two detached values and the current actor. */
+export function selectSfAtlasPartition<T>(owner: string, context: TrustedDomainContext,
+  project: (partition: SfProductState["atlas"][string] | undefined, outbox: SfProductState["outbox"], authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (state: Pick<SfProductState, "atlas" | "outbox">, authority: SfStateAuthority) => project(state.atlas[owner], state.outbox, authority)
+  if (typeof owner === "string" && !types.isProxy(project) && frozenSelectionContext(context)) atlasReads.set(read, { owner, read })
+  return read
+}
+
+// Only constructor-owned callbacks can receive a detached preferences projection.
+const preferencesReads = new WeakMap<object,
+  (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => unknown | Promise<unknown>>()
+
+/** Preserve the complete preferences graph and original predicate timing.
+ * Each C08 invocation clones afresh between its two authority checks. */
+export function selectSfPreferencesProjection<T>(context: TrustedDomainContext,
+  project: (preferences: SfProductState["preferences"], authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => project(state.preferences, authority)
+  if (!types.isProxy(project) && frozenSelectionContext(context)) preferencesReads.set(read, read)
+  return read
+}
+
+function plainSelectionMap(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !types.isProxy(value) && !Array.isArray(value) &&
+    [Object.prototype, null].includes(Object.getPrototypeOf(value))
+}
+
+function frozenSelectionContext(context: TrustedDomainContext) {
+  const dataFields = (value: object) => Reflect.ownKeys(value).every((key) => {
+    const field = Object.getOwnPropertyDescriptor(value, key)
+    return !!field && "value" in field
+  })
+  if (!plainSelectionMap(context) || !Object.isFrozen(context) || !dataFields(context)) return false
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  return !!binding && "value" in binding && plainSelectionMap(binding.value) && Object.isFrozen(binding.value) && dataFields(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })
+}
+
+function projectAtlasRead(state: SfProductState, owner: string): Pick<SfProductState, "atlas" | "outbox"> | undefined {
+  if (!plainSelectionMap(state)) return undefined
+  const atlas = Object.getOwnPropertyDescriptor(state, "atlas")
+  const outbox: TypedPropertyDescriptor<SfProductState["outbox"]> | undefined = Object.getOwnPropertyDescriptor(state, "outbox")
+  if (!atlas?.enumerable || !("value" in atlas) || !plainSelectionMap(atlas.value) ||
+    !outbox?.enumerable || !("value" in outbox) || !plainSelectionMap(outbox.value)) return undefined
+  const partition = Object.getOwnPropertyDescriptor(atlas.value, owner)
+  if (!partition?.enumerable || !("value" in partition) || !plainSelectionMap(partition.value)) return undefined
+  // The joint clone retains cross-value aliases, cycles and selected clone
+  // errors. Opaque maps and missing/inherited/accessor lookups use read's
+  // original whole-state clone instead.
+  const selected = structuredClone({ partition: partition.value, outbox: outbox.value })
+  return { atlas: { [owner]: selected.partition }, outbox: selected.outbox }
+}
+
+function projectPreferencesRead(state: SfProductState): Pick<SfProductState, "preferences"> | undefined {
+  if (!plainSelectionMap(state)) return undefined
+  const preferences = Object.getOwnPropertyDescriptor(state, "preferences")
+  if (!preferences?.enumerable || !("value" in preferences) || !plainSelectionMap(preferences.value)) return undefined
+  return { preferences: structuredClone(preferences.value) }
 }
 
 /** Namespace infrastructure health only; this never observes or authorizes individual cases. */
@@ -393,11 +474,28 @@ export function createSfProductState(input: {
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
         const selection = namespace === "cases" ? caseReads.get(read) : undefined
-        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
-        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
-          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+        const cases = selection && (!selection.plain || plainSelectionMap(state)) ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value) &&
+          (!selection.plain || plainSelectionMap(cases.value)) ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
-        const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const atlasSelection = namespace === "atlas" ? atlasReads.get(read) : undefined
+        const preferencesSelection = namespace === "preferences" ? preferencesReads.get(read) : undefined
+        // Preserve clone timing; dispatch later through the exact constructor-owned reader.
+        // The registry erases only the callback's generic result, not its projected state shape.
+        const readSelected = (() => {
+          if (resultSelection) {
+            const projected = projectResultRead(state, resultSelection)
+            return projected ? () => read(projected, authority) : undefined
+          }
+          if (atlasSelection) {
+            const projected = projectAtlasRead(state, atlasSelection.owner)
+            return projected ? () => atlasSelection.read(projected, authority) : undefined
+          }
+          if (preferencesSelection) {
+            const projected = projectPreferencesRead(state)
+            return projected ? () => preferencesSelection(projected, authority) : undefined
+          }
+        })()
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
         const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
         const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
@@ -416,9 +514,9 @@ export function createSfProductState(input: {
         const value = readiness
           ? structuredClone(readiness.select(state, authority)) as T
           : selection && selected?.enumerable && "value" in selected && selected.value &&
-          typeof selected.value === "object" && !Array.isArray(selected.value)
+          typeof selected.value === "object" && !Array.isArray(selected.value) && (!selection.plain || plainSelectionMap(selected.value))
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
-          : selectedResults ? await read(selectedResults, authority)
+          : readSelected ? await readSelected() as T
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
           : sealed && authorityOnly ? await authorityOnly(authority) as T

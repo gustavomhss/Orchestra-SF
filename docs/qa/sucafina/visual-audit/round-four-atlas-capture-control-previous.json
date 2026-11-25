@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": 45297327229,
+  "job": 138120923607,
+  "source": "72f8bc83753a2f4a175a086b4bba51ac50059f1b",
+  "sourceTree": "47ca3d501f023f21fe8197f6c0d010bdaedd15c6",
+  "snapshot": "07bb22180dfbd7b9bb08f437214af379faadf36c",
+  "snapshotTree": "3571afef4594790df9ef7ca2d4db07852bacdcd2",
+  "status": "completed",
+  "conclusion": "failure",
+  "partialQualificationOnly": true,
+  "product": {
+    "stateProviderBlob": "9abc3b3ddff2c97d7433767519be8c6b47d477ec",
+    "atlasMemoryBlob": "f3ad0789fb7edc1fb5d472e863e4a3088d282f6b"
+  },
+  "testedControl": {
+    "commit": "310a8850b10092b729dcd728f83b9a9a4abe2cd2",
+    "blob": "08b7e0baf7e7224b0873b38c97d57acc1d7191ae"
+  },
+  "gates": [
+    {
+      "name": "fresh Atlas capture selections",
+      "exitCode": 0,
+      "durationMs": 3405.46,
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "assertions": 576,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "cases": [
+        {
+          "name": "case projection full payload, two authorizations, detached reads",
+          "ms": 50.58
+        },
+        {
+          "name": "Atlas partition/outbox fresh graph",
+          "ms": 9.73
+        },
+        {
+          "name": "opaque contexts/readers/descriptors full clone",
+          "ms": 34.68
+        },
+        {
+          "name": "refusal/async egress/cancellation",
+          "ms": 20.31
+        },
+        {
+          "name": "complete state validation/clone",
+          "ms": 21.57
+        },
+        {
+          "name": "native canonical publication and three fresh reads",
+          "ms": 2404.94
+        }
+      ]
+    },
+    {
+      "name": "CLI typecheck",
+      "exitCode": 0,
+      "durationMs": 44198.11,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "name": "Sucafina typecheck",
+      "exitCode": 2,
+      "durationMs": 43817.25,
+      "stdoutTruncated": false,
+      "stderrTruncated": false,
+      "errors": [
+        {
+          "line": 80,
+          "column": 37,
+          "code": "TS2741",
+          "reason": "missing createId in new protocol fixture"
+        },
+        {
+          "line": 169,
+          "column": 33,
+          "code": "TS2769",
+          "reason": "toBe static generic rejects intentionally aliased different types"
+        },
+        {
+          "line": 171,
+          "column": 53,
+          "code": "TS2769",
+          "reason": "toBe static generic rejects intentionally aliased different types"
+        },
+        {
+          "line": 310,
+          "column": 68,
+          "code": "TS2345",
+          "reason": "known fixture object typed unknown at Proxy attack"
+        }
+      ]
+    }
+  ],
+  "strict": {
+    "declaredGates": 3,
+    "omniSpawns": 3,
+    "delegated": 0,
+    "positiveControl": "pass"
+  },
+  "followup": {
+    "commit": "d008b222e06f803c96966111b4b4419fcdc44eb8",
+    "tree": "fc0d480813df1bdfc0dbf53a75a1c8163f68f7f0",
+    "blob": "2ccd25f062cdb2bb874b1be01faa9f150bd68c2a",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/atlas-capture-selectors.test.ts",
+    "qualification": "not executed here; exact four type/fixture corrections; original expectations and deadlines preserved"
+  },
+  "notes": [
+    "Gate failed only in Sucafina types; functional six-case result is partial evidence, not a green overall qualification.",
+    "No product code or original testcase/deadline changed by followup.",
+    "No local product execution; ledger processes downloaded CI log only."
+  ],
+  "rawLogSha256": "1ce8dbecb94c06744cf518fd743239d4e3073bf83a023cd31a0fe4a98a194267",
+  "sanitizedLogSha256": "536ce46924eabba019497b65f24ac7471b90b93e0d2b09bc3c38f753c13a1bb0",
+  "sanitizedLogPath": "/workspace/scratch/e460075886fd/round-four-final-after/atlas-selectors-45297327229/job-log.sanitized.txt"
+}

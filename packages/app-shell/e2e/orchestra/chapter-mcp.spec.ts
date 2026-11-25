@@ -306,6 +306,9 @@ test("configure prefills the raw profile entry, skips unedited saves, and remove
   await page.getByRole("dialog", { name: "Configure online" }).getByRole("button", { name: "Remove server" }).click()
   const confirm = page.getByRole("dialog", { name: "Remove this item?" })
   await expect(confirm).toContainText("This removes online from Profile A's project config.")
+  await expect(confirm.getByRole("button", { name: "Confirm", exact: true })).toHaveClass(/\bdanger\b/)
+  await expect(confirm.getByRole("button", { name: "Confirm", exact: true })).not.toHaveClass(/\bprimary\b/)
+  await page.screenshot({ path: test.info().outputPath("mcp-remove-confirmation-dark.png"), animations: "disabled" })
   await confirm.getByRole("button", { name: "Confirm" }).click()
   await expect(confirm.getByRole("alert")).toHaveText("Request failed: MCP server not found: online")
   await confirm.getByRole("button", { name: "Cancel" }).click()
@@ -676,4 +679,80 @@ const cors = {
 
 function json(route: Route, body: unknown, status = 200) {
   return route.fulfill({ status, contentType: "application/json", headers: cors, body: JSON.stringify(body) })
+}
+
+for (const variant of [
+  { width: 320, scheme: "dark" },
+  { width: 320, scheme: "light" },
+  { width: 390, scheme: "dark" },
+  { width: 390, scheme: "light" },
+] as const) {
+  test(`round four: MCP dialog composition at ${variant.width}px in ${variant.scheme}`, async ({ page }, info) => {
+    expect(info.config.metadata.bundle, "Inspect the original production application").toBe("production")
+    const state = fixture()
+    const endpoint = "https://mcp.example.test/" + "context".repeat(24) + "?key=resolved-secret"
+    state.config[serverA].online = { type: "remote", url: endpoint }
+    await setup(page, state)
+    await openChapter(page)
+    if (variant.scheme === "light") await page.locator('[data-slot="orchestra-theme-toggle"]').click()
+    await expect(page.locator("html")).toHaveAttribute("data-color-scheme", variant.scheme)
+    await page.setViewportSize({ width: variant.width, height: 844 })
+
+    const opener = row(page, "online").getByRole("button", { name: "Tools", exact: true })
+    await opener.click()
+    const tools = page.getByRole("dialog", { name: "online tools", exact: true })
+    await expect(tools.locator(".mx-dialog-head p")).toHaveText(endpoint.replace("resolved-secret", "•••"))
+    await expect(tools.locator(".mx-row strong")).toHaveText(["search_docs", "read_page"])
+    await expect(tools).not.toContainText("resolved-secret")
+    await page.evaluate(() => document.fonts.ready.then(() => undefined))
+    const geometry = await tools.evaluate((element) => {
+      const bounds = (node: Element) => {
+        const box = node.getBoundingClientRect()
+        return { left: box.left, right: box.right, top: box.top, bottom: box.bottom,
+          width: box.width, height: box.height, clientWidth: node.clientWidth, scrollWidth: node.scrollWidth }
+      }
+      return { viewport: { width: innerWidth, height: innerHeight }, dialog: bounds(element),
+        header: bounds(element.querySelector(".mx-dialog-head")!),
+        subtitle: bounds(element.querySelector(".mx-dialog-head p")!),
+        close: bounds(element.querySelector(".mx-dialog-head button")!) }
+    })
+    const name = `mcp-tools-long-endpoint-${variant.scheme}-${variant.width}`
+    const path = info.outputPath(name + ".png")
+    await page.screenshot({ path, animations: "disabled", fullPage: true })
+    await info.attach(name, { path, contentType: "image/png" })
+    await info.attach(name + "-geometry", { contentType: "application/json",
+      body: JSON.stringify({ classification: "production-component-regression", variant, geometry,
+        backendQualified: false }, null, 2) })
+    expect(geometry.dialog.scrollWidth).toBeLessThanOrEqual(geometry.dialog.clientWidth + 1)
+    expect(geometry.header.scrollWidth).toBeLessThanOrEqual(geometry.header.clientWidth + 1)
+    expect(geometry.subtitle.scrollWidth).toBeLessThanOrEqual(geometry.subtitle.clientWidth + 1)
+    for (const element of [geometry.header, geometry.subtitle, geometry.close]) {
+      expect(element.left).toBeGreaterThanOrEqual(geometry.dialog.left)
+      expect(element.right).toBeLessThanOrEqual(geometry.dialog.right)
+      expect(element.top).toBeGreaterThanOrEqual(geometry.dialog.top)
+      expect(element.bottom).toBeLessThanOrEqual(geometry.dialog.bottom)
+    }
+    await expect(tools.getByRole("heading", { name: "online tools", exact: true })).toBeInViewport()
+    await expect(tools.getByRole("button", { name: "Close dialog", exact: true })).toBeInViewport()
+    await expect(tools.getByRole("button", { name: "Cancel", exact: true })).toBeInViewport()
+    for (const name of ["search_docs", "read_page"]) await expect(tools.getByText(name, { exact: true })).toBeInViewport()
+    await page.keyboard.press("Escape")
+    await expect(tools).toHaveCount(0)
+    await expect(opener).toBeFocused()
+
+    await row(page, "online").getByRole("button", { name: "Configure", exact: true }).click()
+    const edit = page.getByRole("dialog", { name: "Configure online", exact: true })
+    await expect(edit).toContainText("This server is configured outside this project.")
+    await edit.getByRole("button", { name: "Remove server", exact: true }).click()
+    const remove = page.getByRole("dialog", { name: "Remove this item?", exact: true })
+    await expect(remove).toContainText("This removes online from Profile A's project config.")
+    const confirm = remove.getByRole("button", { name: "Confirm", exact: true })
+    await expect(confirm).toHaveClass(/\bdanger\b/)
+    await expect(confirm).not.toHaveClass(/\bprimary\b/)
+    await expect(confirm).toBeInViewport()
+    await page.screenshot({ path: info.outputPath(`mcp-remove-${variant.scheme}-${variant.width}.png`), animations: "disabled" })
+    await remove.getByRole("button", { name: "Cancel", exact: true }).click()
+    await expect(remove).toHaveCount(0)
+    expect([...writes(state, "PUT"), ...writes(state, "DELETE"), ...posts(state)]).toEqual([])
+  })
 }
