@@ -836,7 +836,7 @@ O checkpoint mantém `sf613-finish` como writer único, C9ea/T e942 como última
 
 ## Retomada de24/11/2026 — composição recuperada, autoria única e inventários
 
-Corte: **2026-11-25T00:38:28Z / 24/11/2026 21:38:28 BRT**. Dev **`490a1e1352081d28c0eb22afcd05fffea8b5323f` / T `8980cfaa6ab8f552b31f391fa4b30df1931a0569`**. [Coordenação](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148515584); [lease documental](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7148428014). Este adendo preserva integralmente os bytes do registro anterior e não antecipa o PR, review, CI ou merge da própria atualização.
+Corte: **2026-11-25T00:53:53Z / 24/11/2026 21:53:53 BRT**. Dev **`490a1e1352081d28c0eb22afcd05fffea8b5323f` / T `8980cfaa6ab8f552b31f391fa4b30df1931a0569`**. [Coordenação](https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148515584); [lease documental](https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7148428014). Este adendo preserva integralmente os bytes do registro anterior e não antecipa o PR, review, CI ou merge da própria atualização.
 
 ### Merges recebidos
 
@@ -880,3 +880,17 @@ Recebidos o [inventário administrativo](https://github.com/gustavomhss/Orchestr
 Faltam a identidade efetiva de dispatch, responsável pela revisão e configuração de retenção admitida, quatro contextos Microsoft/grants e reserva QA. A prevenção de autoaprovação observada impede a mesma conta de aprovar seu dispatch; o contrato não obriga automaticamente outro humano e as instalações de apps não provam independência admitida. O executor guest único conserva o complemento de raízes/R, canal privado, destino independente e reserva de recuperação.
 
 **0/5, NOT_READY.** Candidato final, ACKs, tar e reservas permanecem sem confirmação. G08/G10 não executados operacionalmente; sem corte ou decisão de produção. Os recibos de #349/#588 e G09 permanecem históricos fechados. O avanço de código e qualificação posterior a este corte terá recibos próprios antes de atualizar o estado corrente.
+
+### Complemento do mesmo corte — Collaboration com helpers correntes
+
+[Run45518709860 / intake](https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148962539), tentativa1, main138884771583/cleanup138887738447SUCCESS e ref removida404. C`22093149a9aa7abefa7ee1dbeab14eead9984ba2` / T`9a050a3f54938876c11233557001ff6162d5b2a6`; S`a844f785519947cc864cd75d21200634f2da2ab0` / T`ea5d0be69ec481f964f11f6a18c7362dbe1201ca`, filho direto, único delta `.ci-run.json` (blob`3136ab3aa1d9d7b143291f9f1ec6cc7c430ce7a4`). Produto, specs e helpers correntes preservados, sem quatro overlays.
+
+Dois casos originais PASS: UI55–UI56 em92.895ms, UI51–UI53 em51.880ms,1worker/retry0/repeat1/zero skips/flaky/erros. Bun1.3.14+0d9b296af. A asserção de headingUI56 durou9.902ms/10.000ms, margem98ms. O evento import-admitERR_ABORTED permanece no stdout; não há atribuição causal.
+
+ZIP14979354001,51.983.349B/SHA-256`45178b2935e29053baedcf455800d9fad855d0b416478b2f24feea49acbcd20b`, CRC140; ZIPembutido doHTML3.131.624B/SHA`a69884109cafe373509b7e7dd7134dc53ed3492f845292af0ee4b880444e7195`, CRC2. Main4.972.819B/SHA`9f2384d3803255240f4167eb4b2814a72dfe25c395b2c30cc8b8806a73e92017`; cleanup2.289B/SHA`9fef0eaf9d7d354106a6ce39b6d53427afa0f4c5bafc77cd781f57c22dde624b`; runtime4.911.311B/SHA`0ef606b12c1e818210682ff1fbc3e62aa1a3f98189b5bf460758c5acc573ad50`. Recibo11.769B/SHA`f793dbd25503b7e68159f92d03f6f509d6491259e9588dcc8bb2926eb4ba1a5c`.
+
+Seis capturas dirigidas foram inspecionadas; a coordenação reabriu as duas originaisUI56(390px/desktopPT-BR) e revalidou hashes/CRC nos mesmos bytes recebidos. Nenhum finding visual novo nessas capturas; não foi alegada inspeção de todos os membros. O positivo não aumenta12/15, não qualificaUI42–UI44/G06, não move head e não transfere aceite a outra fonte.
+
+### Caminho único do componente de digest
+
+A [revisão6049865166](https://github.com/gustavomhss/Orchestra-SF/pull/718#pullrequestreview-6049865166) é COMMENT técnico, fonte#718`887afc3df8e3c761eb07a50eec94f9c413738b94` / T`01d7d9237f7dd93891a2d2ec70baf715faca654b`. A [atribuição7148964043](https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043) escolhe#613 como veículo único para os dois caminhos fresh-tuple-digest(helper/seis controles), corrigindo bootstrap e qualificando o caller integral. #718 consumirá essa versão de dev; o restante permanece separado. Contraexemplos de hooks tardios são estáticos neste corte; sem alegar execução, ganho de performance ou aceite da adaptação.

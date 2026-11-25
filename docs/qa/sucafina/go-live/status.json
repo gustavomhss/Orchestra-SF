@@ -1,7 +1,7 @@
 {
   "schema": "orchestra-sf.go-live-preparation.v1",
   "recordKind": "PREPARATION_STATUS_WITH_COMPONENT_EXECUTION_REFERENCES",
-  "observedAtUtc": "2026-11-25T00:38:28Z",
+  "observedAtUtc": "2026-11-25T00:53:53Z",
   "repository": "gustavomhss/Orchestra-SF",
   "branch": "readiness-status",
   "base": {
@@ -647,7 +647,7 @@
       }
     ],
     "latestRead": {
-      "observedAtUtc": "2026-11-25T00:38:28Z",
+      "observedAtUtc": "2026-11-25T00:53:53Z",
       "channels": [
         628,
         613,
@@ -663,7 +663,7 @@
       "apiAvailable": true,
       "newFinalCandidateAcknowledgementsFound": false,
       "operationalReservationsConfirmed": false,
-      "meaning": "Dev490 includes four subsequent merges. New single-writer #613 resumption at220 consumes preserved work; five prior runs received with explicit source/harness limits. #673 frozen pending #613, with8 static overlaps/Operations8/APP-SRC280 reconciliation. Administrative inventory completed; guest complement and operational decisions/reservations remain unconfirmed.",
+      "meaning": "Dev490 includes four subsequent merges. New single-writer #613 resumption at220 consumes preserved work; five prior runs received with explicit source/harness limits. #673 frozen pending #613, with8 static overlaps/Operations8/APP-SRC280 reconciliation. Administrative inventory completed; guest complement and operational decisions/reservations remain unconfirmed. Current helpers subsequently received2/2 Collab cases in45518709860. A deliberate shared-component route from#718 through#613 is recorded, with bootstrap repair and qualification still pending.",
       "sequenceRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148515584"
     },
     "integrationCoordinator": "Astra go-live",
@@ -803,6 +803,27 @@
       "branch": "sf613-astra-finish",
       "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148499111",
       "scope": "Remainder of existing #613; no concurrent writer on preserved prior branches"
+    },
+    "sharedComponentIntegration": {
+      "kind": "EXPLICIT_SINGLE_INTEGRATION_PATH_FOR_REVIEWED_COMPONENT_NOT_WHOLE_PR_DEPENDENCY",
+      "sourcePullRequest": 718,
+      "sourceSha": "887afc3df8e3c761eb07a50eec94f9c413738b94",
+      "sourceTree": "01d7d9237f7dd93891a2d2ec70baf715faca654b",
+      "integrationPullRequest": 613,
+      "writer": "Astra / close_pr613",
+      "paths": [
+        "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+      ],
+      "helperBlob": "1e1c38ccb22f89708742de354e97a4f8f73da2df",
+      "originalSixControlsBlob": "ce478f0a6c09aea9a956b2b8ed8338ec2f736c29",
+      "staticFinding": "Late helper bootstrap can certify changed hasher or non-detaching clone as its baseline. Counterexamples static, not executed in this observation.",
+      "requiredCorrection": "Reuse earlier canonical capture and original clone admission before aliases/reflection; full tuple, original reads/authorizations/fences and errors retained; six existing controls plus late-load/caller regressions.",
+      "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/718#pullrequestreview-6049865166",
+      "routeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043",
+      "componentQualified": false,
+      "performanceBenefitClaimed": false,
+      "sourceBranchMutated": false
     }
   },
   "gates": [
@@ -5482,6 +5503,189 @@
       "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7148649687",
       "compositionExecuted": false,
       "finalCandidateApproval": false
+    },
+    {
+      "id": "design-current-helper-collab-45518709860",
+      "kind": "SOURCE_BOUND_REQUEST_ONLY_ORIGINAL_COLLAB_INTAKE",
+      "runId": 45518709860,
+      "runAttempt": 1,
+      "sourceSha": "22093149a9aa7abefa7ee1dbeab14eead9984ba2",
+      "sourceTree": "9a050a3f54938876c11233557001ff6162d5b2a6",
+      "snapshotSha": "a844f785519947cc864cd75d21200634f2da2ab0",
+      "snapshotTree": "ea5d0be69ec481f964f11f6a18c7362dbe1201ca",
+      "snapshotDelta": [
+        ".ci-run.json"
+      ],
+      "requestBlob": "3136ab3aa1d9d7b143291f9f1ec6cc7c430ce7a4",
+      "jobs": [
+        {
+          "id": 138884771583,
+          "role": "execution",
+          "conclusion": "success"
+        },
+        {
+          "id": 138887738447,
+          "role": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "actualBun": "1.3.14+0d9b296af",
+      "selection": {
+        "passed": 2,
+        "total": 2,
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "skipped": 0,
+        "flaky": 0,
+        "errors": 0
+      },
+      "cases": [
+        {
+          "title": "UI55 UI56 · original scanned import preview, cancellation and provenance",
+          "durationMs": 92895,
+          "status": "passed"
+        },
+        {
+          "title": "UI51 UI52 UI53 · original relationships, unsent discussion and material confirmation",
+          "durationMs": 51880,
+          "status": "passed"
+        }
+      ],
+      "artifact": {
+        "id": 14979354001,
+        "bytes": 51983349,
+        "sha256": "45178b2935e29053baedcf455800d9fad855d0b416478b2f24feea49acbcd20b",
+        "crcVerifiedMembers": 140
+      },
+      "runtimeHash": {
+        "bytes": 4911311,
+        "sha256": "0ef606b12c1e818210682ff1fbc3e62aa1a3f98189b5bf460758c5acc573ad50"
+      },
+      "htmlHash": {
+        "bytes": 4698312,
+        "sha256": "0c98411f9b21cb62380c5c0c94ecdb9c83157b444af9c600a8503fe391641c99"
+      },
+      "embedded": {
+        "bytes": 3131624,
+        "sha256": "a69884109cafe373509b7e7dd7134dc53ed3492f845292af0ee4b880444e7195",
+        "crcMembers": 2,
+        "files": [
+          "b5424d5faa3a0db84830.json",
+          "report.json"
+        ]
+      },
+      "originalLogs": [
+        {
+          "file": "main.mcp.log",
+          "bytes": 4972819,
+          "sha256": "9f2384d3803255240f4167eb4b2814a72dfe25c395b2c30cc8b8806a73e92017",
+          "matches": true
+        },
+        {
+          "file": "cleanup.mcp.log",
+          "bytes": 2289,
+          "sha256": "9fef0eaf9d7d354106a6ce39b6d53427afa0f4c5bafc77cd781f57c22dde624b",
+          "matches": true
+        }
+      ],
+      "directedVisual": [
+        {
+          "path": "UI56-preview-dark-390.png",
+          "bytes": 75672,
+          "sha256": "5dec6aafc78621678856191073a6477a3078aa332ebbebd3d74dcc1a1626d24f",
+          "width": 390,
+          "height": 1100,
+          "observation": "Import preview in EN at390px: source selector, original simulation version and item changes visible; text wraps within viewport."
+        },
+        {
+          "path": "UI56-pt-BR-dark-desktop.png",
+          "bytes": 481414,
+          "sha256": "1b1c60e159eb23087b2f32cb4295154b80c2e7802e455f42e676f0963d9e9f53",
+          "width": 1440,
+          "height": 1100,
+          "observation": "PT-BR original simulation visible:4added,47changed,0removed/unchanged/ignored/rejected; no applied changes claimed."
+        },
+        {
+          "path": "UI55-dark-desktop-cancel-retains-file.png",
+          "bytes": 465652,
+          "sha256": "06469c5f636030d21e61e2ae5ea7d053e0d7e4f547dd489d41b3b65b4285c98f",
+          "width": 1440,
+          "height": 1100,
+          "observation": "Cancellation retained selected XLSX and options; original Generate preview action remains."
+        },
+        {
+          "path": "UI53-dark-desktop-original-receipt.png",
+          "bytes": 448858,
+          "sha256": "f92c21657855745bd64856378418d447e8726f69a17d6a9429790e9ba8bc7430",
+          "width": 1440,
+          "height": 1100,
+          "observation": "Original confirmation receipt, audit reference,source version1 and current-validity action visible."
+        },
+        {
+          "path": "UI52-dark-390-unsent-draft.png",
+          "bytes": 63538,
+          "sha256": "091ec5523d850d3d3fe907b5a6934ff26d631c6105b1d2bb5910b084fb0ae79d",
+          "width": 390,
+          "height": 1100,
+          "observation": "At390px original discussion and explicitly unsent draft visible with wrapping; no claim that draft was sent."
+        },
+        {
+          "path": "UI51-relationship-dark-390.png",
+          "bytes": 72682,
+          "sha256": "c99a1312d7a0145e150fbf754f0ac827b9560a124d482e91b1ff1a92a9132006",
+          "width": 390,
+          "height": 1100,
+          "observation": "At390px original relationship source/type and open/remove controls visible without horizontal overflow in this capture."
+        }
+      ],
+      "ui56Heading": {
+        "fileLine": "design-wave-five-collab.spec.ts:195",
+        "clickStartTime": "2026-11-25T00:35:28.378Z",
+        "assertStartTime": "2026-11-25T00:35:28.403Z",
+        "durationMs": 9902,
+        "originalTimeoutMs": 10000,
+        "observedMarginMs": 98
+      },
+      "refRemovedAfterCleanup": true,
+      "originalArtifactCrcVerified": true,
+      "visualScope": "Six directed originals reviewed; coordinator also opened two UI56 originals. No full artifact-wide visual claim.",
+      "intakeBytes": 11769,
+      "intakeSha256": "f793dbd25503b7e68159f92d03f6f509d6491259e9588dcc8bb2926eb4ba1a5c",
+      "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148962539",
+      "limits": [
+        "Executed checkout is S, not source C; original product/spec/config/helpers are byte-identical to C and only request differs.",
+        "2of2original declarations passed; no retries,repeats,skips,flaky or top-level errors.",
+        "Six original PNGs inspected, not every artifact member.",
+        "The original import-admit requestfailed ERR_ABORTED event remains in stdout; successful case does not establish its cause or Request relationship.",
+        "UI56 heading duration is within original10s but margin is narrow; no robustness claim.",
+        "This reobserves UI51,UI52,UI53,UI55,UI56 on this snapshot; it does not qualify UI42,UI43,UI44 or G06 and does not promote final #613 candidate.",
+        "No causal conclusion that the four historical overlays caused the previous UI56 failure."
+      ],
+      "finalCandidateApproval": false,
+      "installedFinalGateApproval": false
+    },
+    {
+      "id": "fresh-tuple-component-route",
+      "kind": "EXPLICIT_SINGLE_INTEGRATION_PATH_FOR_REVIEWED_COMPONENT_NOT_WHOLE_PR_DEPENDENCY",
+      "sourcePullRequest": 718,
+      "sourceSha": "887afc3df8e3c761eb07a50eec94f9c413738b94",
+      "sourceTree": "01d7d9237f7dd93891a2d2ec70baf715faca654b",
+      "integrationPullRequest": 613,
+      "writer": "Astra / close_pr613",
+      "paths": [
+        "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+      ],
+      "helperBlob": "1e1c38ccb22f89708742de354e97a4f8f73da2df",
+      "originalSixControlsBlob": "ce478f0a6c09aea9a956b2b8ed8338ec2f736c29",
+      "staticFinding": "Late helper bootstrap can certify changed hasher or non-detaching clone as its baseline. Counterexamples static, not executed in this observation.",
+      "requiredCorrection": "Reuse earlier canonical capture and original clone admission before aliases/reflection; full tuple, original reads/authorizations/fences and errors retained; six existing controls plus late-load/caller regressions.",
+      "reviewRef": "https://github.com/gustavomhss/Orchestra-SF/pull/718#pullrequestreview-6049865166",
+      "routeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043",
+      "componentQualified": false,
+      "performanceBenefitClaimed": false,
+      "sourceBranchMutated": false
     }
   ],
   "migrationObservations": [
@@ -6619,12 +6823,12 @@
     "sourceIdentitySource": "Read actual source/tree, review, Actions and merge from the original PR metadata; this document does not embed its own resulting commit SHA.",
     "stateSource": "Review, Actions and merge are not anticipated in this source.",
     "leaseRef": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7148428014",
-    "observationCutUtc": "2026-11-25T00:38:28Z"
+    "observationCutUtc": "2026-11-25T00:53:53Z"
   },
   "latestDevObserved": {
     "sha": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
     "tree": "8980cfaa6ab8f552b31f391fa4b30df1931a0569",
-    "observedAtUtc": "2026-11-25T00:38:28Z",
+    "observedAtUtc": "2026-11-25T00:53:53Z",
     "notFinalCandidate": true,
     "mergePullRequest": 717,
     "mergedAtUtc": "2026-11-23T20:53:04Z",
@@ -6632,7 +6836,7 @@
   },
   "integrationObservation": {
     "state": "COMPONENTS_MERGED_FINAL_QUALIFICATION_PENDING",
-    "observedAtUtc": "2026-11-25T00:38:28Z",
+    "observedAtUtc": "2026-11-25T00:53:53Z",
     "merges": [
       {
         "pullRequest": 665,
@@ -6915,7 +7119,7 @@
           "sourceRole": "WORKING_BRANCH_OBSERVED_AT_DOCUMENT_CUT",
           "branch": "sf613-astra-finish",
           "representsCurrentBranchHead": true,
-          "observedAtUtc": "2026-11-25T00:38:28Z"
+          "observedAtUtc": "2026-11-25T00:53:53Z"
         },
         "technicalEvidenceRef": "design-resumption-five-runs",
         "installedEvidenceRef": "design-resumption-five-runs",
@@ -6981,7 +7185,17 @@
         "pullRequest": 718,
         "automaticallyAddedToGoLiveGates": false,
         "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/718",
-        "rule": "Preserve its author and analyze overlaps. No automatic partial incorporation or inferred qualification."
+        "rule": "Preserve its author and analyze overlaps. No automatic partial incorporation or inferred qualification.",
+        "explicitComponentException": {
+          "paths": [
+            "apps/cli/src/sucafina-product/fresh-tuple-digest.ts",
+            "modules/sucafina/Sucafinav1/test/product/wp10/integration/fresh-tuple-digest.test.ts"
+          ],
+          "integrationPullRequest": 613,
+          "reference": "https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043",
+          "qualified": false,
+          "wholePullRequestRequired": false
+        }
       }
     },
     "mergedVisualObservation": {
@@ -9229,7 +9443,7 @@
       "branch": "sf613-astra-finish",
       "state": "ISOLATED_COMPOSED_SOURCE_NOT_FINAL_QUALIFICATION",
       "sourceRole": "WORKING_BRANCH_OBSERVED_AT_DOCUMENT_CUT",
-      "observedAtUtc": "2026-11-25T00:38:28Z",
+      "observedAtUtc": "2026-11-25T00:53:53Z",
       "representsCurrentBranchHead": true
     },
     "writer": {
@@ -9313,9 +9527,34 @@
       "ui42": "ORIGINAL_FIRST_PREVIEW_60000MS_FAIL",
       "ui43": "NOT_REACHED",
       "ui44": "NOT_REACHED",
-      "ui56": "ORIGINAL_REFRESH_HEADING_10000MS_FAIL_IN_HISTORICAL_HELPER_SNAPSHOT",
+      "ui56": "CURRENT_HELPER_SNAPSHOT45518709860_PASS_9902MS_WITHIN10000MS_PRIOR_NEGATIVE_RETAINED_NO_CAUSAL_OR_ROBUSTNESS_CLAIM",
       "packageAndVisualIntakeComplete": false,
-      "qualificationOfCurrentProductSource": false
+      "qualificationOfCurrentProductSource": false,
+      "currentCollaboration": {
+        "evidenceRef": "design-current-helper-collab-45518709860",
+        "sourceSha": "22093149a9aa7abefa7ee1dbeab14eead9984ba2",
+        "sourceTree": "9a050a3f54938876c11233557001ff6162d5b2a6",
+        "snapshotSha": "a844f785519947cc864cd75d21200634f2da2ab0",
+        "snapshotTree": "ea5d0be69ec481f964f11f6a18c7362dbe1201ca",
+        "runId": 45518709860,
+        "runAttempt": 1,
+        "passed": 2,
+        "total": 2,
+        "fixtureOverlays": 0,
+        "onlySnapshotDelta": ".ci-run.json",
+        "artifactOriginalAndCrcReceived": true,
+        "originalDirectedCapturesReviewed": 6,
+        "ui56Heading": {
+          "fileLine": "design-wave-five-collab.spec.ts:195",
+          "clickStartTime": "2026-11-25T00:35:28.378Z",
+          "assertStartTime": "2026-11-25T00:35:28.403Z",
+          "durationMs": 9902,
+          "originalTimeoutMs": 10000,
+          "observedMarginMs": 98
+        },
+        "intakeRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148962539",
+        "finalCandidateQualification": false
+      }
     },
     "latestOrdering": {
       "evidenceRef": "design-resumption-five-runs",
@@ -9327,10 +9566,11 @@
       "scope": "SELECTIVE_ORIGINAL_SNAPSHOT_NOT_COMPLETE_COMPOSITION"
     },
     "currentReviewBlocker": {
-      "state": "EFFECTIVE_COMPOSITION_AND_INSTALLED_ORIGINALS_PENDING",
-      "harness": "Historical helper overlays differ from product220. Current helpers must be exercised without moving deadlines or admitting premature success.",
+      "state": "UI42_UI43_UI44_AND_EFFECTIVE_FINAL_COMPOSITION_QUALIFICATION_PENDING_CURRENT_COLLAB_RECEIVED",
+      "harness": "Current helpers received2/2 original Collaboration cases in request-only snapshot45518709860. Historical overlay negatives are retained, with no inferred cause or transfer to later source.",
       "forwarderCorrection": "The first Collaboration case indirectly calls forwardOnce via captureOriginalImportPreview; the earlier direct-call-only delimitation is superseded. Logs do not establish timeout causality.",
-      "causalPerformanceConclusion": false
+      "causalPerformanceConclusion": false,
+      "nextRepairRoute": "https://github.com/gustavomhss/Orchestra-SF/pull/718#issuecomment-7148964043"
     },
     "receiptRef": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7148592871",
     "sequenceRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7148515584",
