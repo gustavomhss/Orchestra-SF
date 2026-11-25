@@ -139,8 +139,9 @@ async function baselineCallback(call: TrustedDomainContext, classified: boolean,
         callbacks.push(read)
         return { status: "unavailable", reason: "callback-captured-without-invocation" }
       }
+      // This custom port intentionally supplies only cases; the unknown bridge has no runtime effect.
       return { status: "ok", storageVersion: 0, aggregateRevision: 0, incarnation: "custom-state",
-        value: await read({ cases: { selected: value } } as Readonly<SfProductState>, actor) }
+        value: await read({ cases: { selected: value } } as unknown as Readonly<SfProductState>, actor) }
     },
     transaction: async () => { unused++; throw new Error("No custom write belongs to callback capture") },
   }

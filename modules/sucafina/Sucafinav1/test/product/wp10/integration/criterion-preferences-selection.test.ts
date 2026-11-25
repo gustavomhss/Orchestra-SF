@@ -446,8 +446,8 @@ test("Criterion resolve admits two distinct preference callbacks and preserves i
       expect(c.audit.callbacks[0]).not.toBe(c.audit.callbacks[1])
       expect(c.audit.preferences).toHaveLength(2)
       expect(c.audit.preferences.map((entry) => ok(entry))).toEqual([expected, expected])
-      expect(f.control.calls).toEqual(["cases", "cases", "preferences", "preferences",
-        "cases", "cases", "preferences", "preferences"].map((namespace) => ({ namespace, mode: "read" })))
+      expect(f.control.calls).toEqual((["cases", "cases", "preferences", "preferences",
+        "cases", "cases", "preferences", "preferences"] as const).map((namespace) => ({ namespace, mode: "read" })))
       expect(outsideReads).toBe(opaque ? 2 : 0)
       expect({ caseChecks: c.audit.caseChecks, evidenceChecks: c.audit.evidenceChecks, ruleChecks: c.audit.ruleChecks,
         revalidations: c.audit.revalidations, metricReads: c.audit.metricReads }).toEqual({
