@@ -6,6 +6,7 @@ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
+import { selectSfPreferencesProjection } from "../host-binding/state-provider.ts"
 import { assessCostCoverage } from "./cost-coverage.ts"
 import { classifyCoverage, classificationDigest, classificationKey, supportsCoverageClassification } from "./coverage-classification.ts"
 import type { CoverageClassification } from "./coverage-classification.ts"
@@ -38,7 +39,10 @@ export function createDecisionBaselineCoverage(input: {
       const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[bound.value.id] : undefined)
       const current = await readCase()
       if (current.status !== "ok" || !allowed(current.value, bound.value, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
-      const readRecords = (coverageRef?: string) => input.state.read(source, "preferences", (state, authority) => {
+      // This observer's complete read-set is preferences. Selection and predicates
+      // still run after C08 admission; unrelated namespaces are not cloned for it.
+      const readRecords = (coverageRef?: string) => input.state.read(source, "preferences", selectSfPreferencesProjection(context, (selectedPreferences, authority) => {
+        const state = { preferences: selectedPreferences }
         if (!sameAuthority(authority, context)) return undefined
         const preferences = Object.entries(state.preferences)
         return preferences.filter(([key]) => key.startsWith("sf:proposal-coverage:baseline:active:")).flatMap<{ record: BaselineCoverage; classification?: CoverageClassification }>(([key, value]) => {
@@ -52,7 +56,7 @@ export function createDecisionBaselineCoverage(input: {
             candidate.classificationDigest === value.classificationDigest && candidate.classificationDigest === classificationDigest(candidate)).length
           return [{ record: value, classification: count === 1 ? classification : undefined }]
         })
-      })
+      }))
       const records = await readRecords()
       if (records.status !== "ok" || !records.value) return { status: "unavailable", reason: "baseline-coverage-unavailable" }
       const matches = records.value

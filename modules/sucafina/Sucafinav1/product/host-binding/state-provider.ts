@@ -176,6 +176,51 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
   return read
 }
 
+// This private registry records an explicit read-set contract, never a
+// snapshot, observed result or admitted authority.
+const preferencesReads = new WeakMap<object,
+  (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => unknown | Promise<unknown>>()
+
+/** Explicit opt-in to the complete preferences graph, cloned afresh in each C08.
+ * Effects and errors reachable only through unselected namespaces are outside
+ * this callback's read-set. This is not equivalence to cloning the whole state.
+ * Opaque callbacks, contexts and map shapes keep the original full-state path;
+ * both authority checks and the callback's observation time remain unchanged. */
+export function selectSfPreferencesProjection<T>(context: TrustedDomainContext,
+  project: (preferences: SfProductState["preferences"], authority: SfStateAuthority) => T | Promise<T>) {
+  const read = (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => project(state.preferences, authority)
+  if (!types.isProxy(project) && frozenSelectionContext(context)) preferencesReads.set(read, read)
+  return read
+}
+
+function plainSelectionMap(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !types.isProxy(value) && !Array.isArray(value) &&
+    [Object.prototype, null].includes(Object.getPrototypeOf(value))
+}
+
+function frozenSelectionContext(context: TrustedDomainContext) {
+  const dataFields = (value: object) => Reflect.ownKeys(value).every((key) => {
+    const field = Object.getOwnPropertyDescriptor(value, key)
+    return !!field && "value" in field
+  })
+  if (!plainSelectionMap(context) || !Object.isFrozen(context) || !dataFields(context)) return false
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  return !!binding && "value" in binding && plainSelectionMap(binding.value) && Object.isFrozen(binding.value) && dataFields(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })
+}
+
+function projectPreferencesRead(state: SfProductState): Pick<SfProductState, "preferences"> | undefined {
+  if (!plainSelectionMap(state)) return undefined
+  const preferences = Object.getOwnPropertyDescriptor(state, "preferences")
+  if (!preferences?.enumerable || !("value" in preferences) || !plainSelectionMap(preferences.value)) return undefined
+  // Clone the complete graph once: aliases and cycles stay connected; getters
+  // are observed and clone errors propagate according to structuredClone.
+  return { preferences: structuredClone(preferences.value) }
+}
+
 /** Namespace infrastructure health only; this never observes or authorizes individual cases. */
 export function selectSfCaseHealth(context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">) {
   return selectSfNamespaceHealth("cases", context)
@@ -397,6 +442,8 @@ export function createSfProductState(input: {
         const selected = selection && cases ? Object.getOwnPropertyDescriptor(cases, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const preferencesSelection = namespace === "preferences" ? preferencesReads.get(read) : undefined
+        let selectedPreferences: Pick<SfProductState, "preferences"> | undefined
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
         const scenarioResults = scenarioSelection ? scenarioResultMap(state) : undefined
         const identitySelection = namespace === "cases" ? caseIdentityReads.get(read) : undefined
@@ -418,6 +465,8 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
+          : preferencesSelection && (selectedPreferences = projectPreferencesRead(state))
+          ? await preferencesSelection(selectedPreferences, authority) as T
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
           : sealed && authorityOnly ? await authorityOnly(authority) as T
