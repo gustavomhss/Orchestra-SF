@@ -6,7 +6,7 @@ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
-import { selectSfPreferencesProjection } from "../host-binding/state-provider.ts"
+import { selectSfPreferencesRead } from "../host-binding/state-provider.ts"
 import { assessCostCoverage } from "./cost-coverage.ts"
 import { classifyCoverage, classificationDigest, classificationKey, supportsCoverageClassification } from "./coverage-classification.ts"
 import type { CoverageClassification } from "./coverage-classification.ts"
@@ -41,8 +41,7 @@ export function createDecisionBaselineCoverage(input: {
       if (current.status !== "ok" || !allowed(current.value, bound.value, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
       // This observer's complete read-set is preferences. Selection and predicates
       // still run after C08 admission; unrelated namespaces are not cloned for it.
-      const readRecords = (coverageRef?: string) => input.state.read(source, "preferences", selectSfPreferencesProjection(context, (selectedPreferences, authority) => {
-        const state = { preferences: selectedPreferences }
+      const readRecords = (coverageRef?: string) => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => {
         if (!sameAuthority(authority, context)) return undefined
         const preferences = Object.entries(state.preferences)
         return preferences.filter(([key]) => key.startsWith("sf:proposal-coverage:baseline:active:")).flatMap<{ record: BaselineCoverage; classification?: CoverageClassification }>(([key, value]) => {

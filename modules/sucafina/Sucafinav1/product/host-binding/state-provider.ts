@@ -206,6 +206,17 @@ export function selectSfPreference(key: string, context: TrustedDomainContext) {
   return read
 }
 
+/** Declare the complete preferences read-set without adapting the callback.
+ * Return the same function and never observe state, authority or the callback.
+ * Its own guards, repeated getters and observation time stay in their original
+ * order, including on custom ports. Admission only opts into the existing fresh
+ * whole-preferences clone; it does not prove purity or reuse an authority. */
+export function selectSfPreferencesRead<T>(context: TrustedDomainContext,
+  read: (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) => T | Promise<T>) {
+  if (typeof read === "function" && !types.isProxy(read) && frozenSelectionContext(context)) preferencesReads.set(read, read)
+  return read
+}
+
 function plainSelectionMap(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !types.isProxy(value) && !Array.isArray(value) &&
     [Object.prototype, null].includes(Object.getPrototypeOf(value))
