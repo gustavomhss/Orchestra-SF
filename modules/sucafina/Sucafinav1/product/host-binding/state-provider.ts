@@ -193,6 +193,19 @@ export function selectSfPreferencesProjection<T>(context: TrustedDomainContext,
   return read
 }
 
+/** Explicit opt-in to the complete preferences graph for one authority-gated
+ * lookup. The callback retains the original comparison order before accessing
+ * the namespace, including on opaque state ports. Only the existing plain,
+ * frozen context admission marks it; no binding, value or authority is retained.
+ * The provider clones all of preferences afresh, including every reachable
+ * alias. Effects solely in unreachable namespaces remain outside this read-set. */
+export function selectSfPreference(key: string, context: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "preferences">, authority: SfStateAuthority) =>
+    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.preferences[key] : undefined
+  if (typeof key === "string" && frozenSelectionContext(context)) preferencesReads.set(read, read)
+  return read
+}
+
 function plainSelectionMap(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === "object" && !types.isProxy(value) && !Array.isArray(value) &&
     [Object.prototype, null].includes(Object.getPrototypeOf(value))
