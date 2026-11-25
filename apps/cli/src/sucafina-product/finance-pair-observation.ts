@@ -13,19 +13,22 @@ import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/su
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import { createSfPlannerCalculationRoot } from "./planner-calculation-root.ts"
+import type { createSfPlannerRecordProofScope } from "./planner-record-proof-scope.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Principal = NonNullable<Awaited<ReturnType<DomainPortHost["authenticate"]>>>
-type Witness = { kind: "current"; digest: string; environment: string } | { kind: "unsupported" }
+type RecordWitness = { refs: readonly PlannerRecord[]; principalDigest: string; plannerRoleMap: ReturnType<typeof roleMap> }
+type Witness = { kind: "current"; digest: string; environment: string; records?: RecordWitness } | { kind: "unsupported" }
 
-/** Own one physical read of a closed Finance pair, while every canonical reader runs normally. */
+/** Own a closed Finance pair; optional terminal facts stay inside its physical read owner. */
 export function createSfFinancePairObservation(input: {
   host: DomainPortHost
   state: SfProductStatePort
   selectedScope: (call: TrustedDomainContext) => { ref: CaseRef; current: () => boolean } | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   readerIdentities: () => readonly unknown[]
+  recordProof?: ReturnType<typeof createSfPlannerRecordProofScope>
   /** A separate private instance may observe the original rule readers too.
    * The ordinary Finance pair instance retains its criteria-free eligibility. */
   criteria?: {
@@ -55,6 +58,8 @@ export function createSfFinancePairObservation(input: {
       const pairDigest = digestSfValue(incoming), caseDigest = digestSfValue(selection.ref)
       const readState = input.state.read, lockedFences = input.lockedSourceFences, readers = input.readerIdentities
       const identities = [...readers()]
+      const recordProof = input.recordProof
+      const observeRecords = recordProof?.run
       const criteria = parsed.value.criteria.length ? input.criteria : undefined
       const resolveCriteria = criteria?.resolve, criteriaCurrent = criteria?.current
       let initialRules: readonly CriterionRule[] | undefined, rulesDigest: string | undefined
@@ -69,7 +74,8 @@ export function createSfFinancePairObservation(input: {
       const current = () => rulesCurrent() && selection.current() && digestSfValue(selection.ref) === caseDigest &&
         input.host === host && host.persistence === persistence && host.requestFor(call) === request && !request.signal.aborted &&
         digestSfValue(incoming) === pairDigest && input.state.read === readState && input.lockedSourceFences === lockedFences &&
-        input.readerIdentities === readers && sameReaders(readers(), identities)
+        input.readerIdentities === readers && sameReaders(readers(), identities) &&
+        (!recordProof || input.recordProof === recordProof && recordProof.run === observeRecords)
       const environment = async () => {
         const value = await host.environment(request), at = Date.parse(value.at)
         return Number.isFinite(at) ? digestSfValue({ day: new Date(at).toISOString().slice(0, 10),
@@ -103,7 +109,9 @@ export function createSfFinancePairObservation(input: {
           const again = await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshots.planner, "planner") })
           if (!after || before !== after || digestSfValue(principal) !== digestSfValue(again) || !current() ||
             snapshotDigest !== digestSfValue({ state, snapshots: persistence.currentSnapshots?.(), sources: lockedFences() })) return undefined
-          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after }
+          return { kind: "current", digest: digestSfValue({ snapshotDigest, principal, environment: after }), environment: after,
+            ...(observeRecords ? { records: { refs: structuredClone(refs), principalDigest: digestSfValue(principal),
+              plannerRoleMap: structuredClone(roleMap(snapshots.planner, "planner")) } } : {}) }
         })
         if (!current() || observed.status !== "ok" || !observed.value) return undefined
         if (observed.value.kind === "unsupported") return observed.value
@@ -132,7 +140,19 @@ export function createSfFinancePairObservation(input: {
         const before = await witness()
         if (!before) return unavailable()
         if (before.kind === "unsupported") return { status: "ok", value: unsupported }
-        const result = await work()
+        // A hit reuses a completed terminal fact with its original timestamp.
+        // The owner and bytes remain current; authorization is observed anew.
+        const authorizeRecords = async () => {
+          if (!before.records || !current() || !await host.revalidate(call) || !current()) return false
+          const environmentNow = await environment()
+          if (!current() || environmentNow !== before.environment) return false
+          const principalNow = await host.authenticate(request, { surface: "planner", roleMap: structuredClone(before.records.plannerRoleMap) })
+          return current() && digestSfValue(principalNow) === before.records.principalDigest &&
+            await host.revalidate(call) && current()
+        }
+        const result = observeRecords && before.records
+          ? await observeRecords(before.records.refs, call, root.proof(call), authorizeRecords, current, work)
+          : await work()
         const after = await witness()
         return after?.kind === "current" && after.digest === before.digest
           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } }

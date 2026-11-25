@@ -16,14 +16,14 @@ import type { SfStateResult } from "../../../../product/contracts/state.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
-import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
+import { createSfCanonicalSourceScopeProjector, createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import type { compositionTestDeadline } from "./composition-test-deadline.ts"
 
 /** Current native composition: real C08, sources, human classification/promotion,
  * criterion, UI admission and sensitivity producer. Only the initial case is seeded. */
 export async function sensitivityObservationFixture(deadline: ReturnType<typeof compositionTestDeadline>,
-  assessment: "all" | "partial" | "pending" = "all", operator: "lte" | "eq" = "lte") {
+  assessment: "all" | "partial" | "pending" = "all", operator: "lte" | "eq" = "lte", options?: { plannerRecordProof?: true }) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-sensitivity-observation-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const store = await openLocalStore(join(directory, "store"))
@@ -31,7 +31,8 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
   const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-01-31" }
   const control = { active: true }
   const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID,
-    enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
+    enumerate: enumerateSfSources, projectScope: options?.plannerRecordProof
+      ? createSfCanonicalSourceScopeProjector() : createSfSourceScopeProjector(() => at) }) }
   const request = () => new Request("https://example.test/planner", { method: "POST", signal: deadline.signal,
     headers: { origin: "https://example.test" } })
   const identity = { installationId: "sensitivity-installation", hostId: "host", projectId: "project",
@@ -83,7 +84,7 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
     state.cases[ref.id] = decision
     return { commit: true, value: true }
   })).status).toBe("ok")
-  const references: string[] = []
+  const references: string[] = [], proofCoverageRefs: string[] = []
   for (const [id, source] of [["baseline", baseline], ["candidate", candidate]] as const) {
     const projection = sensitivityOk(await business.withCase(admitted, ref, {}, () => business.planner.compareForecast({
       baseRef: source.refId, candidateRef: source.refId, period, currency: "USD",
@@ -101,6 +102,7 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
     try {
       const registered = sensitivityOk(await business.withCase(coverageCall, ref, {}, () => business.baselineCoverage.register(registration, coverageCall)))
       coverageRef = registered.coverageRef
+      if (options?.plannerRecordProof) proofCoverageRefs.push(coverageRef)
       const observed = sensitivityOk(await business.withCase(coverageCall, ref, {}, () =>
         business.baselineCoverage.resolveForecastCoverage(coverageRef, coverageCall)))
       expect(observed.assessment.coverageState).toBe("pending")
@@ -137,7 +139,7 @@ export async function sensitivityObservationFixture(deadline: ReturnType<typeof 
   deadline.own(() => authority.ui.finish(call))
   expect(await authority.ui.validate(call, "sf_sensitivity_evaluate", digestSfValue(input))).toBe(true)
   return { authority, business, portfolio, product, persistence, writes, control, call, transport, caseRef: ref,
-    sources: [baseline, candidate], input, references }
+    sources: [baseline, candidate], input, references, ...(options?.plannerRecordProof ? { proofCoverageRefs } : {}) }
 }
 
 export function sensitivityOk<Value>(result: PortResult<Value> | SfStateResult<Value>): Value {

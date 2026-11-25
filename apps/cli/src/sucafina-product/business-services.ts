@@ -16,7 +16,7 @@ import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase, DocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue, sfCanonicalCaptureRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { mapSfEvidenceInOrder } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
@@ -38,6 +38,7 @@ import { createProcurementCapabilities } from "../../../../modules/sucafina/Suca
 import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
 import { createProcurementDecisionHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
 import { createPlannerProduct, createPlannerCoverageRouter } from "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts"
+import { isSfPlannerSourcePortCurrent } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
 import { createDecisionCoverageAccess, decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
 import { createPlannerCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts"
@@ -51,6 +52,7 @@ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfFinancePairObservation } from "./finance-pair-observation.ts"
+import { createSfPlannerRecordProofScope, pinSfPlannerRecordReaders } from "./planner-record-proof-scope.ts"
 import { observeSfUiContextIntegrity, type SfUiContextIntegrity } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
@@ -450,7 +452,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     decisionDomain.current = value
   }
   const procurementScenarios = createSfProcurementScenarioServices({ host, state: input.authority.state, sources: individual, port: procurement, withCase: withCalculationCase })
-  const product = createPlannerProduct({ standalone: { supports: procurementScenarios.producer.supports,
+  const plannerProductInput: Parameters<typeof createPlannerProduct>[0] = { standalone: { supports: procurementScenarios.producer.supports,
     supportsSource: (reference) => reference.startsWith("sf-procurement:"), simulateScenario: procurementScenarios.producer.simulateScenario,
     resolveSource: procurementScenarios.resolveSource, resolveStored: procurementScenarios.resolveStored }, host, scopedSources: input.persistence, evidence: context, currentChoicePreparing: input.currentChoicePreparing,
     coverageFor: createPlannerCoverageRouter({ forecast: async (ref, call) => {
@@ -464,15 +466,26 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         : forecastCoverage.current?.(ref, call) ?? baselineCoverage.resolveForecastCoverage(ref, call)
     }, decision: coverage }),
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
-    storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
+    storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } }
+  const plannerScopedSources = plannerProductInput.scopedSources
+  const product = createPlannerProduct(plannerProductInput)
   const procurementComposite = createSfProcurementCompositePlanner({ host, state: input.authority.state, planner: product.planner, selectedCase, readSourceFences })
   const planner = procurementComposite.planner
   const readOnlyScenario = (request: Parameters<typeof planner.simulateScenario>[0]) => procurementScenarios.producer.supports(request) || procurementComposite.supports(request)
   plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
+  const plannerRuntime = sfCanonicalCaptureRuntime()
+  const persistenceDescriptor = plannerRuntime && !plannerRuntime.isProxy(host) && Object.getOwnPropertyDescriptor(host, "persistence")
+  const plannerHostPersistence: unknown = persistenceDescriptor && Object.hasOwn(persistenceDescriptor, "value") ? persistenceDescriptor.value : undefined
+  let canonicalPlannerReaders: (() => boolean) | undefined
+  let canonicalPlannerAtlas: { value: BusinessContextService; current: () => boolean } | undefined
+  const plannerRecordProof = createSfPlannerRecordProofScope({ host, readersCurrent: () => canonicalPlannerReaders?.() === true &&
+    !!plannerHostPersistence && typeof plannerHostPersistence === "object" &&
+    isSfPlannerSourcePortCurrent(plannerHostPersistence, plannerScopedSources) &&
+    !!canonicalPlannerAtlas && evidence.current === canonicalPlannerAtlas.value && canonicalPlannerAtlas.current() })
   const plannerObservationInput: Parameters<typeof createSfFinancePairObservation>[0] = {
-    host, state: input.authority.state, lockedSourceFences,
+    host, state: input.authority.state, lockedSourceFences, recordProof: plannerRecordProof,
     selectedScope: (call) => {
       const scope = caseBindings.get(call)
       if (!scope || scope.historical) return undefined
@@ -494,6 +507,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
   const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
+  canonicalPlannerReaders = plannerRuntime && plannerHostPersistence && typeof plannerHostPersistence === "object"
+    ? pinSfPlannerRecordReaders([host, plannerHostPersistence, plannerScopedSources, plannerObservationInput.state, canonicalCases, cases,
+      product.scenarios, product.planner, planner, plannerSources, results, context, projectPlannerEvidence]) : () => false
   const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
@@ -590,6 +606,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? matches.map((entry) => entry.ref) : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords, dashboardEvidence: dashboardDecisions,
+      observePlannerRecord: plannerRecordProof.observe,
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
@@ -629,6 +646,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       } })
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
+    canonicalPlannerAtlas = { value: atlas.context, current: pinSfPlannerRecordReaders([atlas.context]) }
     recall.current = createSfCaseRecall({ host, cases,
       ...(input.reviewerRecall ? { candidateAccess: input.reviewerRecall.candidateAccess } : {}),
       memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },
@@ -798,5 +816,5 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     caseRecallSource: () => recall.current && evidence.current && atlasState.current
       ? { recall: recall.current, evidence: evidence.current, atlas: atlasState.current } : undefined,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; canonicalPlannerAtlas = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }

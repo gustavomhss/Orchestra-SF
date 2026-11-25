@@ -442,6 +442,20 @@ export const domain: Domain = {
     }
   },
 }
+// Capture the method at its producer's birth, before consumers can replace it.
+const plannerViewDescriptorOf = Object.getOwnPropertyDescriptor
+const plannerViewHasOwn = Object.hasOwn
+const originalPlannerViewDescriptor = plannerViewDescriptorOf(domain, "view")
+
+/** Identity only; does not execute, freeze or replace the shared domain method. */
+export function sfOriginalPlannerViewCurrent() {
+  try {
+    const current = plannerViewDescriptorOf(domain, "view"), original = originalPlannerViewDescriptor
+    return !!current && !!original && plannerViewHasOwn(current, "value") && plannerViewHasOwn(original, "value") &&
+      current.value === original.value && current.enumerable === original.enumerable &&
+      current.configurable === original.configurable && current.writable === original.writable
+  } catch { return false }
+}
 function execute(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment): Result {
   const versions = rows(snapshot.data.versions).map(versionOf)
   const values = command.values

@@ -45,7 +45,7 @@ import { createSfResidentProjectionHandlers, observeSfResidentHealth } from "../
 import { mountSfReviewProjection } from "../../../../apps/cli/src/sucafina-product/native-ui/review-routing"
 import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../product/decisions/current-choice-preview.ts"
-import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
+import { createSfCanonicalSourceScopeProjector } from "../product/integration/source-projections.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { initializeAbsentSfProductState } from "../product/host-binding/state-provider.ts"
@@ -96,7 +96,7 @@ export async function createLocalInstallation(context: SfLocalContext, file: str
     }) : undefined
     const sourceOptions = {
       enumerate: enumerateSfSources,
-      projectScope: createSfSourceScopeProjector(() => new Date().toISOString()),
+      projectScope: createSfCanonicalSourceScopeProjector(),
       createId: randomUUID,
     }
     const verifyTransactions = context.createCurrentChoiceFence ? context.currentChoiceOwnsSnapshotTransactions : currentChoiceOwnsSnapshotTransactions
