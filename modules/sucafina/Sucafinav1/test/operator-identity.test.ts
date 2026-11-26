@@ -212,13 +212,14 @@ test("configuration rejects non-loopback or noncanonical origins, malformed moun
   })
 })
 
-test("logout wins when an authentication read was already in flight", async () => {
+test("logout wins when a fallback authentication read was already in flight", async () => {
   await fixture(async (f) => {
     const login = await f.enroll()
     const ready = Promise.withResolvers<void>()
     const release = Promise.withResolvers<void>()
     const identity = createOperatorIdentity({ ...f.options, secrets: {
       ...f.secrets,
+      getActive: undefined,
       async get(key, at) {
         const bytes = await f.secrets.get(key, at)
         if (key === slot("session", login.handle)) {
@@ -325,5 +326,151 @@ test("explicit local buyer policy grants buyer only on Procurement and never cha
     expect(await identity.authenticate(request("/planner", login.cookie), { surface: "planner", roleMap: [] })).toEqual({ id: profile.id, canWrite: true, roles: [{ surface: "planner", role: "admin" }] })
     const readonly = createOperatorIdentity({ ...f.options, operator: { ...operator, buyer: false } })
     expect(await readonly.authenticate(request("/procurement", login.cookie), { surface: "procurement", roleMap: [] })).toEqual({ id: profile.id, canWrite: true, roles: [{ surface: "procurement", role: "admin" }] })
+  })
+})
+
+test("session lookup captures getActive once with its receiver and preserves fallback read order", async () => {
+  await fixture(async (f) => {
+    const login = await f.enroll()
+    const readActive = f.secrets.getActive
+    if (!readActive) throw new Error("LocalStore getActive capability required")
+    const sessionKey = slot("session", login.handle)
+    const revokedKey = slot("revoked", login.handle)
+    for (const mode of ["atomic", "fallback"] as const) {
+      const calls: string[] = []
+      const receivers: LocalSecrets[] = []
+      const times: number[] = []
+      let capabilityReads = 0
+      const active: NonNullable<LocalSecrets["getActive"]> = function (this: LocalSecrets, key, revoked, at) {
+        calls.push("active:" + key + ":" + revoked)
+        receivers.push(this)
+        times.push(at)
+        return readActive.call(f.secrets, key, revoked, at)
+      }
+      const secrets: LocalSecrets = {
+        ...f.secrets,
+        get getActive() { capabilityReads++; return mode === "atomic" ? active : undefined },
+        get(this: LocalSecrets, key, at) {
+          calls.push("get:" + key)
+          receivers.push(this)
+          times.push(at)
+          return f.secrets.get(key, at)
+        },
+      }
+      const identity = createOperatorIdentity({ ...f.options, secrets })
+      expect(capabilityReads).toBe(0)
+      expect(await identity.person(request("/planner"))).toBeNull()
+      expect(await identity.person(new Request("http://attacker.example/sucafina/planner", { headers: { cookie: login.cookie } }))).toBeNull()
+      expect(capabilityReads).toBe(0)
+      expect(calls).toEqual([])
+      expect(await identity.authenticate(request("/planner", login.cookie), { surface: "planner", roleMap: [] })).toEqual({ id: profile.id, canWrite: true, roles: [{ surface: "planner", role: "admin" }] })
+      expect(capabilityReads).toBe(1)
+      expect(calls).toEqual(mode === "atomic"
+        ? ["active:" + sessionKey + ":" + revokedKey, "get:" + revokedKey]
+        : ["get:" + revokedKey, "get:" + sessionKey, "get:" + revokedKey])
+      expect(receivers.every((receiver) => receiver === secrets)).toBe(true)
+      expect(times).toEqual(calls.map(() => f.clock.value))
+    }
+  })
+})
+
+test("logout wins after getActive captured credential bytes before revocation", async () => {
+  await fixture(async (f) => {
+    const login = await f.enroll()
+    const readActive = f.secrets.getActive
+    if (!readActive) throw new Error("LocalStore getActive capability required")
+    const ready = Promise.withResolvers<void>()
+    const release = Promise.withResolvers<void>()
+    let captured: Uint8Array | undefined
+    let activeCalls = 0
+    const reads: string[] = []
+    const identity = createOperatorIdentity({ ...f.options, secrets: {
+      ...f.secrets,
+      async getActive(key, revokedKey, at) {
+        activeCalls++
+        const bytes = await readActive.call(f.secrets, key, revokedKey, at)
+        captured = bytes
+        ready.resolve()
+        await release.promise
+        return bytes
+      },
+      get(key, at) { reads.push(key); return f.secrets.get(key, at) },
+    } })
+    const pending = identity.authenticate(request("/planner", login.cookie), { surface: "planner", roleMap: [] })
+    try {
+      await ready.promise
+      expect(captured).toBeDefined()
+      expect(reads).toEqual([])
+      expect((await f.identity.handle(request("/auth/logout", login.cookie, { method: "POST", headers: { origin } })))?.status).toBe(204)
+    } finally { release.resolve() }
+    expect(await pending).toBeNull()
+    expect(activeCalls).toBe(1)
+    expect(reads).toEqual([slot("revoked", login.handle)])
+  })
+})
+
+test("getActive absence results and rejections never replay the legacy lookup", async () => {
+  await fixture(async (f) => {
+    const login = await f.enroll()
+    for (const result of ["undefined", "rejected"] as const) {
+      const failure = new Error("active lookup rejected")
+      let activeCalls = 0
+      let legacyCalls = 0
+      const identity = createOperatorIdentity({ ...f.options, secrets: {
+        ...f.secrets,
+        async getActive() {
+          activeCalls++
+          if (result === "rejected") throw failure
+          return undefined
+        },
+        get(key, at) { legacyCalls++; return f.secrets.get(key, at) },
+      } })
+      const pending = identity.person(request("/planner", login.cookie))
+      if (result === "rejected") await expect(pending).rejects.toBe(failure)
+      else expect(await pending).toBeNull()
+      expect(activeCalls).toBe(1)
+      expect(legacyCalls).toBe(0)
+    }
+  })
+})
+
+test("credential expiry is checked after either pending session read resolves", async () => {
+  await fixture(async (f) => {
+    const readActive = f.secrets.getActive
+    if (!readActive) throw new Error("LocalStore getActive capability required")
+    for (const mode of ["atomic", "fallback"] as const) {
+      const login = await f.enroll()
+      const sessionKey = slot("session", login.handle)
+      const expiresAt = f.clock.value + 28800000
+      const ready = Promise.withResolvers<void>()
+      const release = Promise.withResolvers<void>()
+      let captured: Uint8Array | undefined
+      const identity = createOperatorIdentity({ ...f.options, secrets: {
+        ...f.secrets,
+        getActive: mode === "atomic" ? async (key, revokedKey, at) => {
+          const bytes = await readActive.call(f.secrets, key, revokedKey, at)
+          captured = bytes
+          ready.resolve()
+          await release.promise
+          return bytes
+        } : undefined,
+        async get(key, at) {
+          const bytes = await f.secrets.get(key, at)
+          if (mode === "fallback" && key === sessionKey) {
+            captured = bytes
+            ready.resolve()
+            await release.promise
+          }
+          return bytes
+        },
+      } })
+      const pending = identity.person(request("/planner", login.cookie))
+      try {
+        await ready.promise
+        expect(captured).toBeDefined()
+        f.clock.value = expiresAt
+      } finally { release.resolve() }
+      expect(await pending).toBeNull()
+    }
   })
 })

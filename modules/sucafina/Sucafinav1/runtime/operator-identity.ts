@@ -48,9 +48,13 @@ export function createOperatorIdentity(options: OperatorOptions): OperatorIdenti
   const session = async (request: Request) => {
     if (new URL(request.url).origin !== fixedOrigin) return false
     const id = handle(request)
-    if (!id || await secrets.get(slot("revoked", id), now())) return false
+    if (!id) return false
+    const getActive = secrets.getActive
+    if (!getActive && await secrets.get(slot("revoked", id), now())) return false
     const storageKey = slot("session", id)
-    const bytes = await secrets.get(storageKey, now())
+    const bytes = getActive
+      ? await getActive.call(secrets, storageKey, slot("revoked", id), now())
+      : await secrets.get(storageKey, now())
     if (!bytes) return false
     const value = await Promise.resolve().then(() => open(storageKey, bytes)).catch(() => undefined)
     if (!valid(value)) return false
