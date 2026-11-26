@@ -80,6 +80,7 @@ export function createSfPortfolioServices(input: {
   if (scenarios && units) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
     sources: business.plannerSources, evidence: business.context, results: business.results, revalidate: authority.host.revalidate,
     readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences, caseFor: business.resolveCase,
+    observeComparison: registries.observeComparisonProof,
     idempotencyKey, decisions: mutations, createReceipt, units, coveragePreview, exactThreshold,
     candidateCoverageRefFor: async (candidate) => {
       const ref = parseCaseRef(candidate.caseRef)

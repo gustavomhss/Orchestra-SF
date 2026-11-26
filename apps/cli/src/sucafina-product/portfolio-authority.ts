@@ -15,6 +15,7 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
 import { createSfPortfolioComparisonObservation } from "./portfolio-comparison-observation.ts"
+import { hasSfLocalSnapshotScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 
 /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
 export function createSfPortfolioAuthority(input: {
@@ -108,6 +109,33 @@ export function createSfPortfolioAuthority(input: {
     },
   })
   const observation = createSfPortfolioComparisonObservation({ authority, business, rules })
+  const persistence = host.persistence, snapshots = persistence.currentSnapshots
+  const observeComparisonProof: NonNullable<Parameters<typeof createPortfolioProofVerifier>[0]["observeComparison"]> = async (request, call, work) => {
+    const current = () => input.authority === authority && input.business === business && authority.host === host &&
+      host.persistence === persistence && persistence.currentSnapshots === snapshots
+    // A nested result is not acceptance of its physical owner's later outcome.
+    // The registered presence check also catches a hidden native parent scope.
+    const outside = () => hasSfLocalSnapshotScope(persistence) !== true &&
+      (!snapshots || snapshots.call(persistence) === undefined)
+    if (!current() || !outside()) return false
+    let invocations = 0
+    let threw = false
+    let originalError: unknown
+    const observed = await observation.scenarios<boolean>(request, call, async () => {
+      if (++invocations !== 1) return { status: "unavailable", reason: "comparison-verification-reentered" }
+      try {
+        return { status: "ok", value: await work() }
+      } catch (error) {
+        // Finance intentionally converts producer errors to unavailable. Keep the
+        // verifier's original error, including throw undefined, outside its result.
+        threw = true
+        originalError = error
+        throw error
+      }
+    })
+    if (threw) throw originalError
+    return invocations === 1 && observed.status === "ok" && observed.value === true && current() && outside()
+  }
   const planner: typeof business.planner = { ...business.planner, compareScenarios: scenarios ? (request: Parameters<typeof business.planner.compareScenarios>[0], call: TrustedDomainContext) =>
     observation.scenarios(request, call, () => compareScenarios({ host, sources: business.plannerSources,
       // Criteria may share completed scenario data only inside the explicit
@@ -146,5 +174,5 @@ export function createSfPortfolioAuthority(input: {
     verifySnapshot: (snapshot, binding, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
   return { rules, planner, compare, selection, sensitivityBindings, comparisonBindings, portfolioBindings, intent, authorizeCase, readMetric,
-    observedScenarios: comparisons.scenarios, withComparisonObservation: comparisons.observeCriteria }
+    observedScenarios: comparisons.scenarios, withComparisonObservation: comparisons.observeCriteria, observeComparisonProof }
 }

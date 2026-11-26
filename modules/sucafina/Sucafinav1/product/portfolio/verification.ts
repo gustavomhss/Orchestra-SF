@@ -48,12 +48,18 @@ export function createPortfolioProofVerifier(input: {
    * One invocation gets one new scope; no numerical or authority proof is reused.
    * Providers outside that store still require all existing fresh checks. */
   sensitivityReadScope?: Pick<DomainPortHost, "persistence" | "requestFor" | "revalidate">
+  /** Private canonical composition only. The original work runs at most once;
+   * a borrowed physical root cannot authorize publication after its inner work.
+   * Unsupported observations keep the full unscoped producer. No proof is cached. */
+  observeComparison?: (request: CriterionComparisonBinding["request"], context: TrustedDomainContext,
+    work: () => Promise<boolean>) => Promise<boolean>
 }) {
   const proveSensitivityInterval = createPlannerIntervalProof({ units: input.units, preview: (request, context) => input.sensitivityPreview(request, context) })
   type SourceFenceCapture = { digest: string; planner: string; expires: number }
   type StagedCapture = { key: string; value: SourceFenceCapture }
   const fences = new Map<string, SourceFenceCapture>()
   const sensitivityAttempts = new Map<string, symbol>()
+  const comparisonAttempts = new Map<string, symbol>()
   const key = (binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext) => digestSfValue({ binding: binding.bindingDigest, installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, revision: context.binding.accessRevision, policy: context.binding.policyVersion })
   const capture = async (binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext, expected: string, stage?: (capture: StagedCapture) => void) => {
     const current = await input.readSourceFences(context)
@@ -96,13 +102,62 @@ export function createPortfolioProofVerifier(input: {
     const initialFence = digestSfValue(initial)
     return await replayPortfolio(binding.request, stored.result, context) && await capture(binding, context, initialFence)
   }
-  const verifyComparison = async (binding: CriterionComparisonBinding, stored: StoredDecisionResult, context: TrustedDomainContext) => {
+  const replayComparison = async (binding: CriterionComparisonBinding, stored: StoredDecisionResult, context: TrustedDomainContext, stage: (capture: StagedCapture) => void) => {
     if (stored.kind !== "comparison" || stored.resultRef !== binding.resultRef || stored.requestDigest !== digestSfValue(binding.request) || stored.resultDigest !== digestSfValue(stored.result) || digestSfValue(stored.caseRef) !== digestSfValue(binding.caseRef)) return false
     const initial = await input.readSourceFences(context)
     if (!initial) return false
     const initialFence = digestSfValue(initial)
     const current = await input.planner.compareScenarios(binding.request, context)
-    return current.status === "ok" && digestSfValue(current.value) === stored.resultDigest && await capture(binding, context, initialFence)
+    return current.status === "ok" && digestSfValue(current.value) === stored.resultDigest && await capture(binding, context, initialFence, stage)
+  }
+  const verifyComparison = async (incomingBinding: CriterionComparisonBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
+    let fenceKey: string | undefined
+    let attempt: symbol | undefined
+    let published = false
+    try {
+      // A new attempt revokes its old grant before any awaited work. Only the
+      // latest attempt for this authority and binding can publish or clean up.
+      fenceKey = key(incomingBinding, context)
+      fences.delete(fenceKey)
+      if (comparisonAttempts.size >= 2048 && !comparisonAttempts.has(fenceKey)) return false
+      attempt = Symbol("comparison-verification")
+      comparisonAttempts.set(fenceKey, attempt)
+      const observe = input.observeComparison
+      const bindingDigest = digestSfValue(incomingBinding), storedDigest = digestSfValue(incomingStored)
+      const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
+      const binding = structuredClone(incomingBinding), stored = structuredClone(incomingStored)
+      const current = () => input.observeComparison === observe && comparisonAttempts.get(fenceKey!) === attempt &&
+        digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest &&
+        digestSfValue(incomingBinding) === bindingDigest && digestSfValue(incomingStored) === storedDigest &&
+        digestSfValue(binding) === bindingDigest && digestSfValue(stored) === storedDigest
+      const staged: { capture?: StagedCapture } = {}
+      let invocations = 0
+      const work = async () => {
+        if (++invocations !== 1 || !current()) return false
+        return await replayComparison(binding, stored, context, (entry) => {
+          if (staged.capture || entry.key !== fenceKey || !current()) throw new Error("Comparison source fence capture changed")
+          staged.capture = entry
+        })
+      }
+      const accepted = observe ? await observe(binding.request, context, work) : await work()
+      const entry = staged.capture
+      if (!accepted || invocations !== 1 || !entry || entry.key !== fenceKey || !current()) return false
+      const now = Date.now()
+      for (const [ref, value] of fences) if (value.expires <= now) fences.delete(ref)
+      if (entry.value.expires <= now || fences.size >= 2048 && !fences.has(fenceKey)) return false
+      // Both the producer's final authorization and the observation's root and
+      // egress acceptance have completed. No awaited callback follows publication.
+      fences.set(fenceKey, entry.value)
+      published = true
+      return true
+    } finally {
+      // Unlike sensitivity, comparison propagates the original rejection: its
+      // consumer distinguishes an unavailable producer from an ordinary false.
+      if (fenceKey && attempt && comparisonAttempts.get(fenceKey) === attempt) {
+        comparisonAttempts.delete(fenceKey)
+        if (!published) fences.delete(fenceKey)
+      }
+    }
   }
   const replaySensitivity = async (binding: CriterionResultBinding, stored: StoredDecisionResult, context: TrustedDomainContext, stage?: (capture: StagedCapture) => void) => {
     if (stored.kind !== "sensitivity" || stored.resultRef !== binding.resultRef || stored.requestDigest !== digestSfValue(binding.request) || stored.resultDigest !== digestSfValue(stored.result) || digestSfValue(stored.caseRef) !== digestSfValue(binding.caseRef)) return false
