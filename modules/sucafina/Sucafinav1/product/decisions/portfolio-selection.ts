@@ -1,4 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { selectSfPreferencesRead } from "../host-binding/state-provider.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -26,7 +27,7 @@ export function createDecisionPortfolioSelection(input: {
     try {
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "selection-access-unavailable" }
-      const readState = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined)
+      const readState = () => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined))
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
       if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "selection-access-unavailable" }
       const saved = await readState()

@@ -6,6 +6,7 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
+import { selectSfPreferencesRead } from "../host-binding/state-provider.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "./result-store.ts"
 import { criterionRuleKey } from "./criterion-rules.ts"
 import type { createCriterionRuleRegistry } from "./criterion-rules.ts"
@@ -45,7 +46,7 @@ export function createCriterionComparisonBindings(input: {
     try {
       const source = input.host.requestFor(context)
       if (!source || !request.resultRef.trim() || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
-      const readBinding = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[comparisonBindingKey(request.resultRef)] : undefined)
+      const readBinding = () => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[comparisonBindingKey(request.resultRef)] : undefined))
       const current = await readBinding()
       if (current.status !== "ok" || !isComparisonBinding(current.value)) return { status: "unavailable", reason: "comparison-binding-unavailable" }
       const binding = current.value
