@@ -313,7 +313,7 @@ test("Portfolio selection uses fresh whole-preferences C08 reads and detects cha
       "read:preferences", "done:preferences:ok", "compare:1", "read:preferences",
       "done:preferences:ok", "compare:2", "authorizeCase", "revalidate"]
     const expectedCalls = (["cases", "cases", "preferences", "preferences", "preferences", "preferences"] as const)
-      .map((namespace) => ({ namespace, mode: "read" }))
+      .map((namespace) => ({ namespace, mode: "read" as const }))
     let markedObservation: { result: PortResult<PortfolioSelection>; preferences: SfStateResult<unknown>[] } | undefined
     for (const mode of ["marked", "opaque", "mutable"] as const) {
       await f.reset()
@@ -340,7 +340,7 @@ test("Portfolio selection uses fresh whole-preferences C08 reads and detects cha
       })))
       const observation = structuredClone({ result, preferences: f.audit.preferences })
       if (mode === "marked") markedObservation = observation
-      else expect(observation).toEqual(markedObservation)
+      else expect(observation).toEqual(markedObservation!)
       const value = ok(result)
       expect(value).not.toBe(ok(f.audit.preferences[0]!))
       expect(value).not.toBe(ok(f.audit.preferences[1]!))
