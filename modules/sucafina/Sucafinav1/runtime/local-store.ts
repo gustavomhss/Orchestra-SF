@@ -400,10 +400,10 @@ export async function openLocalStore(directory: string, options: {
         }
       }
     })()
-    const settled = pending.then(() => undefined, () => undefined)
-    // A cancelled waiter cannot let later work overtake an earlier active owner.
-    const tail = previous ? previous.then(() => settled) : settled
     if (write) {
+      const settled = pending.then(() => undefined, () => undefined)
+      // A cancelled waiter cannot let later work overtake an earlier active owner.
+      const tail = previous ? previous.then(() => settled) : settled
       queue.tail = tail
       void tail.then(() => { if (queue.tail === tail) queue.tail = undefined })
     }
