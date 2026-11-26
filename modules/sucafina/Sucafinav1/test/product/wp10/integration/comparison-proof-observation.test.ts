@@ -57,7 +57,8 @@ function deferred<Value>() {
 /** The native fixture follows finance-pair-observation's canonical producers.
  * Only the initial case/forecast and coverage fixture are supplied; comparisons,
  * rules, source checks, C08, Finance and LocalStore all execute their real code. */
-async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, principalRef = "person") {
+async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, principalRef = "person",
+  mode: "native" | "instrumented" = "native") {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-comparison-proof-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const store = await openLocalStore(join(directory, "store"))
@@ -72,13 +73,16 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, pri
   const assets: AssetPersistence = store
   const transaction = assets.transaction, all = store.transactionAll, root = store.readSnapshotRoot
   const currentSnapshots = store.currentSnapshots
+  const nativeMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnapshots", "transaction", "transactionAll", "readSnapshotRoot", "currentSnapshotScope"] as const
+  const nativePins = nativeMethods.map((name) => Object.getOwnPropertyDescriptor(store, name)?.value)
+  const nativeMethodsCurrent = () => nativeMethods.every((name, index) =>
+    Object.getOwnPropertyDescriptor(store, name)?.value === nativePins[index])
   if (!all || !root || !currentSnapshots) throw new Error("Native comparison roots unavailable")
   const observeTransaction: AssetPersistence["transaction"] = (surface, work, options) => {
   if (control.counts && !physical.getStore()) control.counts.physical++
   return transaction(surface, (...args) => physical.run(true, () => work(...args)), options)
   }
-  store.transaction = observeTransaction
-  store.transactionAll = (work, options) => {
+  const observeAll: NonNullable<typeof store.transactionAll> = (work, options) => {
   if (control.counts) {
     control.counts.transactionAll++
     if (fenceRead.getStore()) control.counts.fenceTransactionAll++
@@ -86,17 +90,36 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, pri
   }
   return all((...args) => physical.run(true, () => work(...args)), options)
   }
-  store.readSnapshotRoot = async (work, options) => {
+  type RootOptions = Parameters<NonNullable<typeof store.readSnapshotRoot>>[1]
+  const observeRoot = async <Value>(owner: object,
+    original: (work: () => Promise<Value>, options?: RootOptions) => Promise<Value>,
+    work: () => Promise<Value>, options?: RootOptions): Promise<Value> => {
   if (control.counts) {
     control.counts.roots++
-    if (!physical.getStore()) control.counts.physical++
+    if (mode === "instrumented" && !physical.getStore()) control.counts.physical++
   }
-  const value = await root(() => physical.run(true, work), options)
+  const value = await original.call(owner, () => physical.run(true, work), options)
   await control.afterRoot?.(++control.rootsInAttempt)
   return value
   }
+  // Native identity is part of the sealed capability. Physical instrumentation
+  // deliberately uses a different fixture and does not claim that capability.
+  if (mode === "instrumented") {
+    store.transaction = observeTransaction
+    store.transactionAll = observeAll
+    store.readSnapshotRoot = <Value>(work: () => Promise<Value>, options?: RootOptions) =>
+      observeRoot<Value>(store, root, work, options)
+  }
   const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources,
   projectScope: createSfSourceScopeProjector(() => at) }) }
+  // Registered source forwarders permit this facade-only bracket. The seven
+  // methods pinned privately by LocalStore remain untouched in native mode.
+  if (mode === "native") {
+    const sourceRoot = persistence.readSnapshotRoot
+    if (!sourceRoot) throw new Error("Original source root forwarder unavailable")
+    persistence.readSnapshotRoot = <Value>(work: () => Promise<Value>, options?: RootOptions) =>
+      observeRoot<Value>(persistence, sourceRoot, work, options)
+  }
   const request = (signal = deadline.signal) => new Request("https://example.test/planner", { method: "POST", signal, headers: { origin: "https://example.test" } })
   const identity = { installationId: "finance-installation", hostId: "host", projectId: "project",
   location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
@@ -239,7 +262,7 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, pri
         return identity && await authority.host.revalidate(call) ? "comparison-proof:" + digestSfValue({ identity, digest }) : undefined
       },
       decisions: portfolio.mutations,
-      createReceipt: (call, operation, digest, result) => business.receipt(call, operation, digest, result),
+      createReceipt: async (call, operation, digest, result) => business.receipt(call, operation, digest, result),
       candidateCoverageRefFor: async () => ({ status: "unavailable", reason: "unused-comparison-control" }),
       revalidateAnalysis: async () => false,
       units, sensitivityPreview: (incoming, call) => comparePlannerPreview({
@@ -298,7 +321,8 @@ async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, pri
     proposalCoverageWrites, now: () => at,
   })
   return { authority, business, portfolio, persistence, store, control, physical, request, ref, pair,
-    binding, stored, makeVerifier, hasGrant, run, withCall, verify, consumer, currentSnapshots, at, admitted, principalRef }
+    binding, stored, makeVerifier, hasGrant, run, withCall, verify, consumer, currentSnapshots, at, admitted, principalRef,
+    mode, nativeMethodsCurrent }
 }
 
 
@@ -306,6 +330,7 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
   const deadline = compositionTestDeadline("comparison-proof-observation", 110_000)
   try {
     const native = await deadline.phase("native-fixture", () => fixture(deadline))
+    expect(native.nativeMethodsCurrent()).toBe(true)
     const outside = await deadline.phase("unscoped-verification", () => native.run(false))
     const captureVisibility: boolean[] = [], rootVisibility: boolean[] = []
     const owned = await deadline.phase("owned-verification", () => native.run(true, {
@@ -333,37 +358,68 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
     expect(owned.counts.captureAuthorizations).toBe(2)
     expect(outside.counts.fenceAuthorizations).toBeGreaterThan(0)
     expect(owned.counts.fenceAuthorizations).toBe(outside.counts.fenceAuthorizations)
-    expect(outside.counts.fenceTransactionAll).toBe(2)
-    expect(owned.counts.fenceTransactionAll).toBe(0)
+    expect(native.nativeMethodsCurrent()).toBe(true)
     expect(outside.counts.sealedFences).toBe(0)
     expect(owned.counts.sealedFences).toBe(2)
     expect(owned.counts.sealIdentities).toHaveLength(2)
     expect(owned.counts.sealIdentities[0]).toBe(owned.counts.sealIdentities[1])
     expect(outside.counts.roots).toBe(2)
     expect(owned.counts.roots).toBe(2)
-    expect(owned.counts.physical).toBe(outside.counts.physical - 2)
     // An inner admission still runs, but sees the current root and does not open
     // another owner. This does not claim identical global admission reads.
     expect(owned.counts.admissions).toBe(outside.counts.admissions + 1)
     console.info("SF_COMPARISON_PROOF_CONTROL", JSON.stringify({
-      scenario: "admitted", qualification: false, outside: withoutIdentities(outside.counts),
-      owned: withoutIdentities(owned.counts),
+      scenario: "admitted", mode: "native-sealed", qualification: false,
+      nativeMethodsIntact: native.nativeMethodsCurrent(), physicalCountersMeasured: false,
+      outside: withoutIdentities(outside.counts, false), owned: withoutIdentities(owned.counts, false),
     }))
 
-    const rootMethod = native.persistence.readSnapshotRoot
-    if (!rootMethod) throw new Error("Native root method unavailable")
-    native.persistence.readSnapshotRoot = undefined
+    const instrumented = await deadline.phase("instrumented-fixture", () => fixture(deadline, "person", "instrumented"))
+    expect(instrumented.nativeMethodsCurrent()).toBe(false)
+    const physicalOutside = await deadline.phase("instrumented-unscoped", () => instrumented.run(false))
+    const physicalOwned = await deadline.phase("instrumented-owned", () => instrumented.run(true))
+    expect(physicalOutside.value).toBe(true)
+    expect(physicalOwned.value).toBe(true)
+    expect(physicalOutside.grant).toBe(true)
+    expect(physicalOwned.grant).toBe(true)
+    expect(physicalOutside.counts.fenceReads).toBe(2)
+    expect(physicalOwned.counts.fenceReads).toBe(2)
+    expect(physicalOutside.counts.comparisons).toBe(1)
+    expect(physicalOwned.counts.comparisons).toBe(1)
+    expect(physicalOutside.counts.captureAuthorizations).toBe(2)
+    expect(physicalOwned.counts.captureAuthorizations).toBe(2)
+    expect(physicalOutside.counts.fenceAuthorizations).toBeGreaterThan(0)
+    expect(physicalOwned.counts.fenceAuthorizations).toBe(physicalOutside.counts.fenceAuthorizations)
+    expect(physicalOutside.counts.fenceTransactionAll).toBe(2)
+    expect(physicalOwned.counts.fenceTransactionAll).toBe(0)
+    expect(physicalOutside.counts.sealedFences).toBe(0)
+    expect(physicalOwned.counts.sealedFences).toBe(0)
+    expect(physicalOutside.counts.roots).toBe(2)
+    expect(physicalOwned.counts.roots).toBe(2)
+    expect(physicalOwned.counts.physical).toBe(physicalOutside.counts.physical - 2)
+    expect(physicalOwned.counts.admissions).toBe(physicalOutside.counts.admissions + 1)
+    console.info("SF_COMPARISON_PROOF_CONTROL", JSON.stringify({
+      scenario: "instrumented-physical", mode: "instrumented", qualification: false,
+      sealedCapabilityClaimed: false, outside: withoutIdentities(physicalOutside.counts),
+      owned: withoutIdentities(physicalOwned.counts),
+    }))
+    const instrumentedRoot = instrumented.persistence.readSnapshotRoot
+    if (!instrumentedRoot) throw new Error("Instrumented root method unavailable")
+    instrumented.persistence.readSnapshotRoot = undefined
     try {
-      const legacy = await deadline.phase("absent-capability", () => native.run(true))
+      const legacy = await deadline.phase("absent-capability", () => instrumented.run(true))
       expect(legacy.value).toBe(true)
       expect(legacy.grant).toBe(true)
       expect(legacy.counts.roots).toBe(0)
       expect(legacy.counts.fenceTransactionAll).toBe(2)
       expect(legacy.counts.comparisons).toBe(1)
       console.info("SF_COMPARISON_PROOF_CONTROL", JSON.stringify({
-        scenario: "capability-absent", qualification: false, counts: withoutIdentities(legacy.counts),
+        scenario: "capability-absent", mode: "instrumented", qualification: false,
+        sealedCapabilityClaimed: false, counts: withoutIdentities(legacy.counts),
       }))
-    } finally { native.persistence.readSnapshotRoot = rootMethod }
+    } finally { instrumented.persistence.readSnapshotRoot = instrumentedRoot }
+    const rootMethod = native.persistence.readSnapshotRoot
+    if (!rootMethod) throw new Error("Native root method unavailable")
 
     await deadline.phase("borrowed-and-hidden-parent", () => native.withCall(async (call) => {
       const empty = { ...native.pair, criteria: [] }
@@ -439,7 +495,7 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
     // This principal deliberately takes Finance's documented unsupported branch.
     // It is not the macos principal used by Analytics. The extra failed admission
     // is measured, rather than being hidden by a new context or cached decision.
-    const unsupported = await deadline.phase("unsupported-fixture", () => fixture(deadline, "local:person"))
+    const unsupported = await deadline.phase("unsupported-fixture", () => fixture(deadline, "local:person", "instrumented"))
     const oldFallback = await deadline.phase("old-unsupported", () => unsupported.run(false))
     const newFallback = await deadline.phase("new-unsupported", () => unsupported.run(true))
     expect(oldFallback.value).toBe(true)
@@ -454,7 +510,8 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
     expect(newFallback.counts.roots).toBe(oldFallback.counts.roots + 1)
     expect(newFallback.counts.physical).toBeGreaterThan(oldFallback.counts.physical)
     console.info("SF_COMPARISON_PROOF_CONTROL", JSON.stringify({
-      scenario: "unsupported", qualification: false, outside: withoutIdentities(oldFallback.counts),
+      scenario: "unsupported", mode: "instrumented", qualification: false,
+      sealedCapabilityClaimed: false, outside: withoutIdentities(oldFallback.counts),
       observed: withoutIdentities(newFallback.counts),
     }))
 
@@ -484,7 +541,8 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
       })))
 
     await deadline.phase("late-input-and-expiry", () => native.withCall(async (call) => {
-      const borrowed = structuredClone(native.binding)
+      const copied = structuredClone(native.binding)
+      const borrowed = { ...copied, request: { ...copied.request, criteria: [...copied.request.criteria] } }
       const late = native.makeVerifier(false, { compare: returnComparison,
         afterAuthorization: async (index) => { if (index === 2) borrowed.request.criteria.push("late") },
       }).verifier
@@ -564,7 +622,8 @@ test("Comparison proof owns Finance reads and publishes only after accepted root
   } finally { await deadline.close() }
 }, 120_000)
 
-function withoutIdentities(counts: Counts) {
-  const { sealIdentities, ...value } = counts
-  return { ...value, sealedIdentities: new Set(sealIdentities).size }
+function withoutIdentities(counts: Counts, physicalMeasured = true) {
+  const { sealIdentities, physical, transactionAll, fenceTransactionAll, ...value } = counts
+  return { ...value, ...(physicalMeasured ? { physical, transactionAll, fenceTransactionAll } : {}),
+    sealedIdentities: new Set(sealIdentities).size }
 }
