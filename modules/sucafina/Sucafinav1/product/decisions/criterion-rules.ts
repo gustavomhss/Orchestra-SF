@@ -1,5 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import { selectSfPreference } from "../host-binding/state-provider.ts"
+import { selectSfCasesRead, selectSfPreference } from "../host-binding/state-provider.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
@@ -33,7 +33,7 @@ export function createCriterionRuleRegistry(input: {
     try {
       const source = input.host.requestFor(context)
       if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "criterion-access-unavailable" }
-      const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const readCase = () => input.state.read(source, "cases", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))
       const current = await readCase()
       if (current.status !== "ok") return { status: "unavailable", reason: "criterion-unavailable" }
       const decision = current.value

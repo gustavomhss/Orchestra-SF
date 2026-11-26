@@ -245,6 +245,30 @@ function projectPreferencesRead(state: SfProductState): Pick<SfProductState, "pr
   return { preferences: structuredClone(preferences.value) }
 }
 
+// A caller declares the complete cases read-set without moving its own guard or
+// key lookup. Registration retains callback identity, never selected data.
+const caseGraphReads = new WeakMap<object,
+  (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => unknown | Promise<unknown>>()
+
+/** Explicit opt-in to a fresh clone of the whole cases graph in each C08.
+ * Effects and errors reachable only through unselected namespaces are outside
+ * this callback's read-set; this is not global full-state clone equivalence.
+ * Return the same callback so opaque ports preserve guards, late IDs and
+ * repeated getters. Mutable contexts and opaque maps retain the full path. */
+export function selectSfCasesRead<T>(context: TrustedDomainContext,
+  read: (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) => T | Promise<T>) {
+  if (typeof read === "function" && !types.isProxy(read) && frozenSelectionContext(context)) caseGraphReads.set(read, read)
+  return read
+}
+
+function projectCasesRead(state: SfProductState): Pick<SfProductState, "cases"> | undefined {
+  if (!plainSelectionMap(state)) return undefined
+  const cases = Object.getOwnPropertyDescriptor(state, "cases")
+  if (!cases?.enumerable || !("value" in cases) || !plainSelectionMap(cases.value)) return undefined
+  // One fresh whole-graph clone retains reachable aliases, cycles and failures.
+  return { cases: structuredClone(cases.value) }
+}
+
 /** Namespace infrastructure health only; this never observes or authorizes individual cases. */
 export function selectSfCaseHealth(context: Pick<SfStateAuthority, "principalRef" | "policyVersion" | "accessRevision">) {
   return selectSfNamespaceHealth("cases", context)
@@ -466,6 +490,8 @@ export function createSfProductState(input: {
         const selected = selection && cases ? Object.getOwnPropertyDescriptor(cases, selection.id) : undefined
         const resultSelection = namespace === "cases" ? resultReads.get(read) : undefined
         const selectedResults = resultSelection ? projectResultRead(state, resultSelection) : undefined
+        const casesSelection = namespace === "cases" ? caseGraphReads.get(read) : undefined
+        let selectedCases: Pick<SfProductState, "cases"> | undefined
         const preferencesSelection = namespace === "preferences" ? preferencesReads.get(read) : undefined
         let selectedPreferences: Pick<SfProductState, "preferences"> | undefined
         const scenarioSelection = namespace === "cases" ? scenarioReads.get(read) : undefined
@@ -489,6 +515,8 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
+          : casesSelection && (selectedCases = projectCasesRead(state))
+          ? await casesSelection(selectedCases, authority) as T
           : preferencesSelection && (selectedPreferences = projectPreferencesRead(state))
           ? await preferencesSelection(selectedPreferences, authority) as T
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T

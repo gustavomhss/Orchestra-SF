@@ -6,7 +6,7 @@ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
-import { selectSfPreferencesRead } from "../host-binding/state-provider.ts"
+import { selectSfCasesRead, selectSfPreferencesRead } from "../host-binding/state-provider.ts"
 import { assessCostCoverage } from "./cost-coverage.ts"
 import { classifyCoverage, classificationDigest, classificationKey, supportsCoverageClassification } from "./coverage-classification.ts"
 import type { CoverageClassification } from "./coverage-classification.ts"
@@ -36,7 +36,7 @@ export function createDecisionBaselineCoverage(input: {
       const source = input.host.requestFor(context)
       const bound = await input.resolveCase(context)
       if (!source || !selector.trim() || bound.status !== "ok" || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
-      const readCase = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[bound.value.id] : undefined)
+      const readCase = () => input.state.read(source, "cases", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[bound.value.id] : undefined))
       const current = await readCase()
       if (current.status !== "ok" || !allowed(current.value, bound.value, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "baseline-coverage-access-unavailable" }
       // This observer's complete read-set is preferences. Selection and predicates
