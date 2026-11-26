@@ -266,7 +266,7 @@ function projectCasesRead(state: SfProductState): Pick<SfProductState, "cases"> 
   const cases = Object.getOwnPropertyDescriptor(state, "cases")
   if (!cases?.enumerable || !("value" in cases) || !plainSelectionMap(cases.value)) return undefined
   // One fresh whole-graph clone retains reachable aliases, cycles and failures.
-  return { cases: structuredClone(cases.value) }
+  return { cases: structuredClone(cases.value as SfProductState["cases"]) }
 }
 
 /** Namespace infrastructure health only; this never observes or authorizes individual cases. */
