@@ -1,3 +1,4 @@
+import { enterSfE13Unit, runSfE13Phase, returnedSfE13Await, finishSfE13Unit } from "../../runtime/preview-progress-e13-diagnostic.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainProjection } from "../contracts/context.ts"
@@ -18,53 +19,58 @@ export type PlannerCriteriaHost = { evaluate: (request: { scenarioRef: string; b
 
 /** Resolve current, authorized case results and recheck their sources before returning. */
 export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
-  const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
-  if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
-  const request = parsed.value
-  if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
-  if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
-  if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
-  const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
-  const resolved = await resolveScenarios()
-  const failed = resolved.find((result) => result.status !== "ok")
-  if (failed) return failed
-  if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
-  const values = [resolved[0].value, resolved[1].value]
-  const validateSources = async () => {
-    const checks: boolean[] = []
-    for (const value of values) {
-      if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
-        checks.push(false)
-        continue
+  const e13Unit = enterSfE13Unit("compare")
+  let e13Rejected = false
+  try {
+    const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
+    if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
+    const request = parsed.value
+    if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
+    if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
+    if (!(returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "compare-authority-initial", () => input.host.revalidate(binding))))) return { status: "denied", reason: "invalid-binding" }
+    const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
+    const resolved = returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "scenarios-initial", () => resolveScenarios()))
+    const failed = resolved.find((result) => result.status !== "ok")
+    if (failed) return failed
+    if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
+    const values = [resolved[0].value, resolved[1].value]
+    const validateSources = async () => {
+      const checks: boolean[] = []
+      for (const value of values) {
+        if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
+          checks.push(false)
+          continue
+        }
+        const source = structuredClone(await input.sources.resolveForecastSource(value.source.refId, binding))
+        const coverage = structuredClone(await input.sources.resolveForecastCoverage(value.coverageRef, binding))
+        checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
       }
-      const source = structuredClone(await input.sources.resolveForecastSource(value.source.refId, binding))
-      const coverage = structuredClone(await input.sources.resolveForecastCoverage(value.coverageRef, binding))
-      checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
+      return checks
     }
-    return checks
-  }
-  if ((await validateSources()).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
-  const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
-  const again = await resolveScenarios()
-  if (!(await input.host.revalidate(binding)) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-or-authority-changed" }
-  if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
-  if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
-  const criteria = input.criteria
-  const evaluate = async () => {
-    const results: Awaited<ReturnType<PlannerCriteriaHost["evaluate"]>>[] = []
-    // A host may reuse a cached result object; retain this observation before its next call.
-    for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
-    return results
-  }
-  const evaluated = await evaluate()
-  const failure = evaluated.find((item) => item.status !== "ok")
-  if (failure) return failure
-  if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
-  const checked = await evaluate()
-  const finalScenarios = await resolveScenarios()
-  if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await input.host.revalidate(binding)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "criterion-or-authority-changed" }
-  const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
-  return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
+    if ((returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "sources-initial", () => validateSources()))).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
+    const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
+    const again = returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "scenarios-again", () => resolveScenarios()))
+    if (!(returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "comparison-recheck", () => input.host.revalidate(binding)))) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "comparison-recheck", () => validateSources()))).some((item) => !item) || !(returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "comparison-recheck", () => input.host.revalidate(binding))))) return { status: "stale", reason: "scenario-or-authority-changed" }
+    if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
+    if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
+    const criteria = input.criteria
+    const evaluate = async () => {
+      const results: Awaited<ReturnType<PlannerCriteriaHost["evaluate"]>>[] = []
+      // A host may reuse a cached result object; retain this observation before its next call.
+      for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
+      return results
+    }
+    const evaluated = returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "criteria-initial", () => evaluate()))
+    const failure = evaluated.find((item) => item.status !== "ok")
+    if (failure) return failure
+    if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
+    const checked = returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "criteria-again", () => evaluate()))
+    const finalScenarios = returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "scenarios-final", () => resolveScenarios()))
+    if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "criteria-recheck", () => input.host.revalidate(binding)))) || (returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "criteria-recheck", () => validateSources()))).some((item) => !item) || !(returnedSfE13Await(e13Unit, await runSfE13Phase(e13Unit, "criteria-recheck", () => input.host.revalidate(binding))))) return { status: "stale", reason: "criterion-or-authority-changed" }
+    const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
+    return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
+  } catch (e13Error) { e13Rejected = true; throw e13Error }
+  finally { finishSfE13Unit(e13Unit, e13Rejected) }
 }
 
 export function projectionDigest(projection: DomainProjection) {
