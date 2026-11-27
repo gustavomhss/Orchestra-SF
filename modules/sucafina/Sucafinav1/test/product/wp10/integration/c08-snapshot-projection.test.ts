@@ -695,13 +695,13 @@ test("C15 whole graph selections preserve complete shape, metadata, authorizatio
             : selectSfPreferencesRead<C15Graph>(call, (state, authority) => observe(state.preferences, authority))
           const first = await fixture.authority.state.read<C15Graph>(incoming, namespace, callback)
           const firstValue = stateValue(first)
-          expect(firstValue.graph).toEqual(product[namespace])
+          expect<unknown>(firstValue.graph).toEqual(product[namespace])
           expect(first).toMatchObject({ status: "ok", storageVersion: object(product.versions)[namespace],
             aggregateRevision: product.revision, incarnation: product.incarnation })
           firstValue.graph.c15DetachedMutation = { onlyThisResult: true }
           const second = await fixture.authority.state.read<C15Graph>(incoming, namespace, callback)
           const secondValue = stateValue(second)
-          expect(secondValue.graph).toEqual(product[namespace])
+          expect<unknown>(secondValue.graph).toEqual(product[namespace])
           expect(secondValue.graph).not.toBe(firstValue.graph)
           expect(secondValue.authority).toEqual(firstValue.authority)
           const snapshotStart = fixture.opaqueSnapshots.length
@@ -953,7 +953,7 @@ test("C15 selections refuse drift and preserve invalid, legacy, late and competi
               selectSfCasesRead(call, () => { callbacks++; throw sentinel }))
           } catch (error) { threw = true; received = error }
           const healthy = await fixture.authority.state.read(incoming, "cases", selectSfCasesRead(call, (state) => state.cases))
-          expect(stateValue(healthy)).toEqual(product.cases)
+          expect<unknown>(stateValue(healthy)).toEqual(product.cases)
         })
         expect(threw).toBe(true)
         expect(received).toBe(sentinel)
