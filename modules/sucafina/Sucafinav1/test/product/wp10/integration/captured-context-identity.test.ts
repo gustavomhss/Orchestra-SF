@@ -7,6 +7,7 @@ import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { capturedContextLoadingModes, runSfCaptureLoadingControl } from "../../../../../../../apps/cli/test/fixture/sucafina-captured-context-loading.ts"
+import { runSfCaptureLazyControl } from "../../../../../../../apps/cli/test/fixture/sucafina-captured-context-lazy.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { prepareSfCapturedContextIdentity } from "../../../../product/host-binding/captured-context-identity.ts"
 import { readSfMemoryCaptureIntegrity } from "../../../../product/host-binding/business-context.ts"
@@ -432,3 +433,51 @@ test("BCS keeps the one-shot capture, original snapshot and real late reauthoriz
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test("capture defers its private baseline once and closes materialization failures without replay", async () => {
+  const result = await runSfCaptureLazyControl(import.meta.path)
+  expect(result.pid).toBeGreaterThan(0)
+  expect(result.pid).not.toBe(process.pid)
+  expect(result.omniSpawns).toBe(1)
+  expect(result.omniDelegations).toBe(0)
+  expect<unknown>(result.report).toEqual({
+    mode: "deferred-baseline", pid: result.pid, syntheticBootstrap: true, admitted: true,
+    deferred: {
+      prepared: { create: 0, define: 0, hash: 0 },
+      first: true, firstCounts: { create: 4, define: 13, hash: 2 }, firstLiveReads: 0,
+      second: true, secondCounts: { create: 4, define: 13, hash: 3 }, secondLiveReads: 0,
+      changed: false, changedCounts: { create: 4, define: 13, hash: 4 }, changedLiveReads: 1,
+      reentries: 1, reentryMatches: false,
+      shape: { alias: true, detached: true, nullPrototype: true, ownProto: true,
+        ownUndefined: true, hidden: true, negativeZero: true },
+    },
+    primitiveUndefined: {
+      prepared: { create: 0, define: 0, hash: 0 }, undefinedMatches: true, first: { create: 0, define: 0, hash: 2 },
+      nullMatches: false, last: { create: 0, define: 0, hash: 3 },
+    },
+    allocationFailure: {
+      firstThrew: true, firstExact: true, first: { create: 1, define: 1, hash: 0 },
+      againThrew: true, againExact: true, last: { create: 1, define: 1, hash: 0 },
+    },
+    undefinedFailure: {
+      firstThrew: true, firstUndefined: true, first: { create: 1, define: 0, hash: 0 },
+      againThrew: true, againUndefined: true, last: { create: 1, define: 0, hash: 0 },
+    },
+    hashRetry: {
+      firstThrew: true, firstExact: true, first: { create: 1, define: 1, hash: 1 },
+      changedAfterRetry: false, retried: { create: 1, define: 1, hash: 3 },
+      originalAfterRetry: true, last: { create: 1, define: 1, hash: 4 },
+    },
+    prebuildDrift: {
+      beforeDrift: false, before: { create: 0, define: 0, hash: 0 }, unexpectedCreate: 0,
+      afterRestore: true, after: { create: 1, define: 1, hash: 2 },
+    },
+    constructionDrift: {
+      duringDrift: false, during: { create: 1, define: 1, hash: 0 },
+      refusedAfterRestore: false, after: { create: 1, define: 1, hash: 0 }, stringifyCalls: 0, liveReads: 0,
+    },
+    setterIsolation: { historicalStringsObserved: true, objectWrites: 0 },
+  })
+  console.log("SF_C18_CAPTURE_LAZY " + JSON.stringify({ control: result.report, omniSpawns: result.omniSpawns,
+    omniDelegations: result.omniDelegations }))
+}, 10_000)
