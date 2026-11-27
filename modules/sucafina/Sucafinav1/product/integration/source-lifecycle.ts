@@ -2,7 +2,7 @@ import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import { currentChoiceReadonlyAuthorityData, isCurrentChoiceSnapshotAuthorityReader } from "../decisions/current-choice-preview.ts"
-import { isSfProductSnapshotRead } from "../host-binding/state-provider.ts"
+import { isSfProductSnapshotRead, sfProductSnapshotReadSelection } from "../host-binding/state-provider.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, SnapshotAuthorityRead, TransactionOptions } from "../../runtime/contract.ts"
 import type { AssetPersistence, BlobTransaction } from "../../runtime/assets.ts"
@@ -694,14 +694,17 @@ export function createSfSourcePersistence(input: {
           Object.hasOwn(fields, "dashboardProductRead")) return execute
         const root = readAuthority?.([])
         if (!root?.current()) return execute
-        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute }) }
+        const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
+        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
         return execute
       }
       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
         if (checking) requireSourceChecks(checking)
         const projection = observeLocalProductRead(snapshot)
         const requireProduct = () => {
-          if (projection && (!productCurrent() || !projection.current())) throw new Error("SF_PRODUCT_READ_PROJECTION_CHANGED")
+          if (projection && (!productCurrent() || !projection.current() || projection.selection &&
+            sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction")) !== projection.selection))
+            throw new Error("SF_PRODUCT_READ_PROJECTION_CHANGED")
         }
         requireProduct()
         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])

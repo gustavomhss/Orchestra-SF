@@ -447,6 +447,27 @@ function caseIdentityMap(state: SfProductState) {
 
 const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
 const productSnapshotReads = new WeakMap<object, (transaction: object) => boolean>()
+const productSnapshotSelections = new WeakMap<object, (transaction: object) => "cases" | "preferences" | undefined>()
+const selectionGet = WeakMap.prototype.get, selectionSet = WeakMap.prototype.set, selectionApply = Reflect.apply
+const selectionValue = <T>(registry: WeakMap<object, T>, read: object): T | undefined =>
+  selectionApply(selectionGet, registry, [read])
+
+// Only the existing whole-graph declarations may narrow the native copy. Do
+// not run selectors, inspect IDs or promote a lower-precedence declaration.
+function productReadSelection(namespace: SfStateNamespace, read: object) {
+  if (selectionValue(readinessReads, read)) return undefined
+  if (namespace === "cases" && selectionValue(caseGraphReads, read) === read &&
+    !selectionValue(caseReads, read) && !selectionValue(resultReads, read) &&
+    !selectionValue(scenarioReads, read) && !selectionValue(caseIdentityReads, read)) return "cases" as const
+  if (namespace === "preferences" && selectionValue(preferencesReads, read) === read) return "preferences" as const
+  return undefined
+}
+
+/** A finite read-set query, never a callback registrar or a snapshot reader. */
+export function sfProductSnapshotReadSelection(work: object, transaction: unknown) {
+  if (typeof transaction !== "function") return undefined
+  return selectionValue(productSnapshotSelections, work)?.(transaction)
+}
 
 /** Only this factory's closed C08 read body can request the fixed native view. */
 export function isSfProductSnapshotRead(work: object, transaction: object) {
@@ -497,26 +518,29 @@ export function createSfProductState(input: {
       !!persistence && Object.hasOwn(persistence, "value") && persistence.value === readerPersistence.value &&
       isSfProductStateReader(port, persistence.value)
   }
-  const productRead = <T>(work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: SfStateResult<T> }>) => {
+  const productRead = <T>(work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: SfStateResult<T> }>, namespace: SfStateNamespace, read: object) => {
     productSnapshotReads.set(work, (transaction) => {
       if (!projectionCurrent()) return false
       const method = Object.getOwnPropertyDescriptor(readerPersistence!.value, "transaction")
       return !!method && Object.hasOwn(method, "value") && method.value === transaction
     })
+    selectionApply(selectionSet, productSnapshotSelections, [work, (transaction: object) =>
+      isSfProductSnapshotRead(work, transaction) ? productReadSelection(namespace, read) : undefined])
     return work
   }
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
       input.persistence.transaction<SfStateResult<T>>("dashboard", productRead<T>(async (snapshot) => {
         const projection = observeLocalProductRead(snapshot)
-        if (projection && (!projectionCurrent() || !projection.current()))
+        const selectionCurrent = () => !projection?.selection || productReadSelection(namespace, read) === projection.selection
+        if (projection && (!projectionCurrent() || !projection.current() || !selectionCurrent()))
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const candidate = readinessReads.get(read)
         const readiness = candidate?.namespace === namespace ? candidate : undefined
         const mode = readiness?.mode ?? "read"
         const authority = await input.authorize(request, snapshot, namespace, mode)
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
-        if (projection && (!projectionCurrent() || !projection.current()))
+        if (projection && (!projectionCurrent() || !projection.current() || !selectionCurrent()))
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
@@ -542,6 +566,19 @@ export function createSfProductState(input: {
           persistence.dashboardSourceFence === fence && hasSfDashboardSourceFence(persistence)
         const sealed = sealCurrent()
         const receipts = sealed && !authorityOnly ? structuredClone({ reviews: state.reviews, transactions: state.transactions }) as SfProductState : undefined
+        // A reduced native view must never reach the opaque callback branch.
+        // Recheck the actual precedence after admission, then keep the existing
+        // fresh selected clone and callback at this original observation point.
+        if (projection?.selection) {
+          if (!selectionCurrent() || (projection.selection === "cases"
+            ? readiness || selection || resultSelection || casesSelection !== read
+            : readiness || preferencesSelection !== read))
+            return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+          if (projection.selection === "cases") selectedCases = projectCasesRead(state)
+          if (projection.selection === "preferences") selectedPreferences = projectPreferencesRead(state)
+          if (projection.selection === "cases" ? !selectedCases : !selectedPreferences)
+            return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+        }
         // Keep missing/inherited, accessor and malformed lookups on the original
         // path. Durable SQLite snapshots contain plain cloneable data.
         const value = readiness
@@ -550,9 +587,9 @@ export function createSfProductState(input: {
           typeof selected.value === "object" && !Array.isArray(selected.value)
           ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
           : selectedResults ? await read(selectedResults, authority)
-          : casesSelection && (selectedCases = projectCasesRead(state))
+          : casesSelection && (selectedCases ??= projectCasesRead(state))
           ? await casesSelection(selectedCases, authority) as T
-          : preferencesSelection && (selectedPreferences = projectPreferencesRead(state))
+          : preferencesSelection && (selectedPreferences ??= projectPreferencesRead(state))
           ? await preferencesSelection(selectedPreferences, authority) as T
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
@@ -560,13 +597,13 @@ export function createSfProductState(input: {
           : await read(receipts ?? structuredClone(state), authority)
         if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
-        if (projection && (!projectionCurrent() || !projection.current()))
+        if (projection && (!projectionCurrent() || !projection.current() || !selectionCurrent()))
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
-        if (!sameAuthority(authority, current) || sealed && !sealCurrent() || projection && (!projectionCurrent() || !projection.current()))
+        if (!sameAuthority(authority, current) || sealed && !sealCurrent() || projection && (!projectionCurrent() || !projection.current() || !selectionCurrent()))
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
-      }), { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
+      }, namespace, read), { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
         ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) }),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
       if (command.idempotencyKey.startsWith(abortJournalPrefix) && !abortJournalWrites.has(work))

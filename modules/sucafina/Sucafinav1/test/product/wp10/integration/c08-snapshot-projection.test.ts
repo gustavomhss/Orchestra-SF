@@ -10,14 +10,15 @@ import { createSfProductAuthority } from "../../../../product/integration/produc
 import { createSfSourcePersistence, currentSfReadonlyAuthorityData, withSfScopedSourceChecks } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
-import { createSfProductState, isSfProductStateReader } from "../../../../product/host-binding/state-provider.ts"
+import { createSfProductState, isSfProductStateReader, selectSfCase, selectSfCasesRead, selectSfPreferencesRead } from "../../../../product/host-binding/state-provider.ts"
 import { isSfAclStateAuthorize } from "../../../../product/host-binding/acl-state-authorize.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
-import type { SfProductStatePort, SfStateResult } from "../../../../product/contracts/state.ts"
+import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateResult } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import { roleMap } from "../../../../runtime/admin.ts"
 import { isLocalSnapshotAuthorityReader, observeLocalProductRead, openLocalStore } from "../../../../runtime/local-store.ts"
+import { object } from "../../../../runtime/contract.ts"
 import type { Persistence, Snapshot } from "../../../../runtime/contract.ts"
 import type { Surface } from "../../../../src/identity.ts"
 
@@ -621,3 +622,352 @@ test("C14 projection refuses live drift and preserves opaque, scoped, abort, err
     limit: "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim",
   }))
 }), 120_000)
+
+
+// The old two C14 tests retain their original 110/120-second limits. These
+// additional bounded cases fit the same whole-file 300/360-second envelope.
+async function boundedC15<T>(work: (signal: AbortSignal) => Promise<T>): Promise<T> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(new Error("C15 control cooperative deadline")), 18_000)
+  try { return await work(controller.signal) } finally { clearTimeout(timer) }
+}
+type C15Graph = { graph: Record<string, unknown>; authority: SfStateAuthority }
+type C15Read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => unknown | Promise<unknown>
+
+test("C15 whole graph selections preserve complete shape, metadata, authorization and detached values", async () => boundedC15(async (deadline) => {
+  await withFixture(deadline, false, async (fixture) => {
+    // Valid durable setup deliberately includes an unknown graph and both
+    // optional absence and own undefined. Neither is a manufactured default.
+    await fixture.store.transaction("dashboard", async (snapshot) => {
+      const state = object(snapshot.data.__sfProductV1)
+      object(state.reviews).c15 = { unselected: [{ label: "review", nested: [1, 2, 3] }] }
+      object(state.preferences).c15 = { branches: [{ values: [4, 5] }, { values: [6, 7] }] }
+      state.c15Unknown = { retained: [{ value: "complete unknown field" }] }
+      state.claimBindings = undefined
+      Reflect.deleteProperty(state, "nativeRuns")
+      return { commit: true, value: undefined }
+    }, { signal: deadline })
+    const before = await fixture.durable(), product = object(before.data.__sfProductV1)
+    const outcomes: { mode: ReadMode; namespace: "cases" | "preferences"; callbacks: number; authentication: number }[] = []
+    await fixture.ui(async (call, incoming) => {
+      expect(Object.isFrozen(call)).toBe(true)
+      for (const mode of ["readonly", "preimage"] as const) for (const namespace of ["cases", "preferences"] as const) {
+        deadline.throwIfAborted()
+        await inContext(fixture, mode, incoming.signal, async () => {
+          // Inspect the actual native copy contract separately from the C08
+          // chain. Its capability neither replaces nor counts an authorization.
+          const owner = required(fixture.store.observeAuthority!([]), "native C15 owner")
+          const probe = async (snapshot: Snapshot) => {
+            const observed = observeLocalProductRead(snapshot)
+            return { commit: false, value: { snapshot, selection: observed?.selection, current: observed?.current() } }
+          }
+          const copied = await fixture.store.transaction("dashboard", probe, {
+            signal: incoming.signal, dashboardProductRead: { identity: owner.identity, work: probe, selection: namespace },
+          })
+          expect(copied.selection).toBe(namespace)
+          expect(copied.current).toBe(true)
+          const selected = object(copied.snapshot.data.__sfProductV1)
+          expect(selected[namespace]).toEqual(product[namespace])
+          expect(selected[namespace === "cases" ? "preferences" : "cases"]).toEqual({})
+          expect(selected.reviews).toEqual({})
+          expect(selected.schemaVersion).toBe(product.schemaVersion)
+          expect(selected.revision).toBe(product.revision)
+          expect(selected.incarnation).toBe(product.incarnation)
+          expect(selected.versions).toEqual(product.versions)
+          expect(selected.c15Unknown).toEqual(product.c15Unknown)
+          expect(Object.hasOwn(selected, "claimBindings")).toBe(true)
+          expect(selected.claimBindings).toBeUndefined()
+          expect(Object.hasOwn(selected, "nativeRuns")).toBe(false)
+          expect(copied.snapshot.data.roleMap).toEqual(before.data.roleMap)
+          expect(copied.snapshot.data.access).toEqual(before.data.access)
+          expect({ ...copied.snapshot, data: before.data }).toEqual(before)
+          expect(copied.snapshot.data.c14DomainOnly).toBeUndefined()
+
+          const start = fixture.authentication.length, callbackAt: number[] = []
+          let callbacks = 0
+          const observe = (graph: Record<string, unknown>, authority: SfStateAuthority): C15Graph => {
+            callbacks++
+            callbackAt.push(fixture.authentication.length - start)
+            return { graph, authority }
+          }
+          const callback = namespace === "cases"
+            ? selectSfCasesRead<C15Graph>(call, (state, authority) => observe(state.cases, authority))
+            : selectSfPreferencesRead<C15Graph>(call, (state, authority) => observe(state.preferences, authority))
+          const first = await fixture.authority.state.read<C15Graph>(incoming, namespace, callback)
+          const firstValue = stateValue(first)
+          expect(firstValue.graph).toEqual(product[namespace])
+          expect(first).toMatchObject({ status: "ok", storageVersion: object(product.versions)[namespace],
+            aggregateRevision: product.revision, incarnation: product.incarnation })
+          firstValue.graph.c15DetachedMutation = { onlyThisResult: true }
+          const second = await fixture.authority.state.read<C15Graph>(incoming, namespace, callback)
+          const secondValue = stateValue(second)
+          expect(secondValue.graph).toEqual(product[namespace])
+          expect(secondValue.graph).not.toBe(firstValue.graph)
+          expect(secondValue.authority).toEqual(firstValue.authority)
+          const snapshotStart = fixture.opaqueSnapshots.length
+          const full = await fixture.custom.read<C15Graph>(incoming, namespace, callback)
+          expect(full).toEqual(second)
+          expect(stateValue(full).graph).not.toBe(secondValue.graph)
+          expect(callbacks).toBe(3)
+          expect(callbackAt).toEqual([3, 9, 15])
+          expect(fixture.authentication.length - start).toBe(18)
+          const snapshots = fixture.opaqueSnapshots.slice(snapshotStart)
+          expect(snapshots).toHaveLength(2)
+          for (const snapshot of snapshots) {
+            expect(observeLocalProductRead(snapshot)).toBeUndefined()
+            expect(snapshot).toEqual(before)
+          }
+          outcomes.push({ mode, namespace, callbacks, authentication: fixture.authentication.length - start })
+        })
+        expect(await fixture.durable()).toEqual(before)
+      }
+
+      // Custom snapshots remain on the complete path. Reachable aliasing is
+      // exercised there, where the durable native codec's no-alias premise does
+      // not apply; the original selected clone must preserve it independently.
+      const original = fixture.customInput.authorize
+      let authorizations = 0, callbacks = 0
+      fixture.customInput.authorize = (request, snapshot, namespace, mode) => {
+        authorizations++
+        const value = object(object(object(snapshot.data.__sfProductV1).cases)[caseRef.id])
+        const shared = { nested: ["one graph"] }
+        value.c15Left = shared
+        value.c15Right = shared
+        return original.call(fixture.customInput, request, snapshot, namespace, mode)
+      }
+      try {
+        await inContext(fixture, "readonly", incoming.signal, async () => {
+          const callback = selectSfCasesRead(call, (state) => { callbacks++; return state.cases[caseRef.id] })
+          const first = object(stateValue(await fixture.custom.read(incoming, "cases", callback)))
+          const second = object(stateValue(await fixture.custom.read(incoming, "cases", callback)))
+          expect(first.c15Left).toBe(first.c15Right)
+          expect(second.c15Left).toBe(second.c15Right)
+          expect(first.c15Left).not.toBe(second.c15Left)
+          object(first.c15Left).changed = "first detached clone only"
+          expect(object(first.c15Right).changed).toBe("first detached clone only")
+          expect(object(second.c15Left).changed).toBeUndefined()
+        })
+      } finally { fixture.customInput.authorize = original }
+      expect(authorizations).toBe(4)
+      expect(callbacks).toBe(2)
+      expect(await fixture.durable()).toEqual(before)
+    })
+    expect(outcomes).toHaveLength(4)
+    console.log("SF_C15_SELECTION_CONTROL " + JSON.stringify({
+      scenario: "whole-graphs-and-shape", qualification: false, outcomes,
+      aliases: "custom full path retained; each selected callback receives its own graph",
+      limit: "native structural copy and functional composition; no latency or current Analytics result",
+    }))
+  })
+}), 20_000)
+
+test("C15 selections refuse drift and preserve invalid, legacy, late and competing read decisions", async () => boundedC15(async (deadline) => {
+  await withFixture(deadline, false, async (fixture) => {
+    const before = await fixture.durable(), product = object(before.data.__sfProductV1)
+    expect(Object.hasOwn(product, "commandProposals")).toBe(true)
+    expect(Object.getOwnPropertyDescriptor(Object.prototype, "commandProposals")).toBeUndefined()
+    const outcomes: { scenario: string; callbacks: number | null; authentication: number; outcome: string }[] = []
+    await fixture.ui(async (call, incoming) => {
+      // This is a semantic admission oracle. C14's full copy has its own
+      // commandProposals and does not need this additional narrow-view gate.
+      for (const mode of ["readonly", "preimage"] as const) for (const namespace of ["cases", "preferences"] as const) {
+        let callbacks = 0, prototypeReads = 0, hooks = 0, failure: unknown
+        let result: SfStateResult<unknown> | undefined
+        const callback: C15Read = namespace === "cases"
+          ? selectSfCasesRead(call, (state) => { callbacks++; return state.cases })
+          : selectSfPreferencesRead(call, (state) => { callbacks++; return state.preferences })
+        const start = fixture.authentication.length
+        await inContext(fixture, mode, incoming.signal, async () => {
+          fixture.control.afterDashboard = () => {
+            hooks++
+            Object.defineProperty(Object.prototype, "commandProposals", {
+              configurable: true, get: () => { prototypeReads++; throw new Error("C15 inherited payload must not be observed") },
+            })
+          }
+          try { result = await fixture.authority.state.read(incoming, namespace, callback) }
+          catch (error) { failure = error }
+          finally {
+            fixture.control.afterDashboard = undefined
+            Reflect.deleteProperty(Object.prototype, "commandProposals")
+          }
+        })
+        expect(hooks).toBe(1)
+        expect(prototypeReads).toBe(0)
+        expect(callbacks).toBe(0)
+        expect(result).toBeUndefined()
+        expect(failure instanceof Error ? failure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
+        expect(fixture.authentication.length - start).toBe(3)
+        expect(await fixture.durable()).toEqual(before)
+        outcomes.push({ scenario: mode + "-" + namespace + "-narrow-drift", callbacks, authentication: 3, outcome: "refused before callback" })
+      }
+
+      // Canonical source-check scopes do not disable the narrow route. Query
+      // the current native child rather than using a parent's lexical current().
+      let scopedCallbacks = 0, scopedFailure: unknown, scopedHooks = 0
+      const scopedStart = fixture.authentication.length
+      await inContext(fixture, "readonly", incoming.signal, async () => {
+        const owner = required(fixture.store.observeAuthority!([]), "scoped C15 owner")
+        await withSfScopedSourceChecks({
+          owner: fixture.authority.host, request: incoming, current: () => {
+            const active = fixture.store.observeAuthority!([])
+            return !!active && active.identity === owner.identity && active.current()
+          },
+        }, async () => {
+          fixture.control.afterDashboard = () => {
+            scopedHooks++
+            Object.defineProperty(Object.prototype, "commandProposals", { configurable: true, value: "selection drift" })
+          }
+          try {
+            await fixture.authority.state.read(incoming, "cases",
+              selectSfCasesRead(call, () => { scopedCallbacks++; return "must not escape" }))
+          } catch (error) { scopedFailure = error }
+          finally {
+            fixture.control.afterDashboard = undefined
+            Reflect.deleteProperty(Object.prototype, "commandProposals")
+          }
+        })
+      })
+      expect(scopedHooks).toBe(1)
+      expect(scopedCallbacks).toBe(0)
+      expect(scopedFailure instanceof Error ? scopedFailure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
+      expect(fixture.authentication.length - scopedStart).toBe(3)
+      outcomes.push({ scenario: "active-source-checks-narrow-drift", callbacks: scopedCallbacks, authentication: 3, outcome: "refused before callback" })
+
+      let egressCallbacks = 0, egressHooks = 0, egressFailure: unknown
+      let egressResult: SfStateResult<unknown> | undefined
+      const egressStart = fixture.authentication.length
+      await inContext(fixture, "readonly", incoming.signal, async () => {
+        try {
+          egressResult = await fixture.authority.state.read(incoming, "cases", selectSfCasesRead(call, () => {
+            egressCallbacks++
+            fixture.control.afterDashboard = () => {
+              egressHooks++
+              Object.defineProperty(Object.prototype, "commandProposals", { configurable: true, value: "second authorization drift" })
+            }
+            return "body returned before the second authorization"
+          }))
+        } catch (error) { egressFailure = error }
+        finally {
+          fixture.control.afterDashboard = undefined
+          Reflect.deleteProperty(Object.prototype, "commandProposals")
+        }
+      })
+      expect(egressCallbacks).toBe(1)
+      expect(egressHooks).toBe(1)
+      expect(egressResult).toBeUndefined()
+      expect(egressFailure instanceof Error ? egressFailure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
+      expect(fixture.authentication.length - egressStart).toBe(6)
+      outcomes.push({ scenario: "narrow-second-authorization-drift", callbacks: 1, authentication: 6, outcome: "returned body withheld" })
+
+      for (const scenario of ["case-precedence", "namespace-mismatch", "late-registration"] as const) {
+        let callbacks = 0, hooks = 0, failure: unknown
+        const lateRead = (state: Pick<SfProductState, "cases">) => { callbacks++; return { cases: state.cases, keys: Object.keys(state) } }
+        let callback: C15Read
+        if (scenario === "case-precedence") callback = selectSfCasesRead(call, selectSfCase(caseRef.id, call))
+        else if (scenario === "namespace-mismatch") callback = selectSfPreferencesRead(call, (state) => {
+          callbacks++; return { preferences: state.preferences, keys: Object.keys(state) }
+        })
+        else callback = lateRead
+        let result: SfStateResult<unknown> | undefined
+        const start = fixture.authentication.length
+        await inContext(fixture, "readonly", incoming.signal, async () => {
+          fixture.control.afterDashboard = () => {
+            hooks++
+            Object.defineProperty(Object.prototype, "commandProposals", { configurable: true, value: "full path remains valid" })
+            if (scenario === "late-registration") selectSfCasesRead(call, lateRead)
+          }
+          try { result = await fixture.authority.state.read(incoming, "cases", callback) }
+          catch (error) { failure = error }
+          finally {
+            fixture.control.afterDashboard = undefined
+            Reflect.deleteProperty(Object.prototype, "commandProposals")
+          }
+        })
+        expect(hooks).toBe(1)
+        expect(failure).toBeUndefined()
+        const value = stateValue(required(result, "full C15 fallback result"))
+        if (scenario === "case-precedence") expect(value).toEqual(object(product.cases)[caseRef.id])
+        else if (scenario === "namespace-mismatch") expect(value).toEqual({ preferences: product.preferences, keys: Object.keys(product) })
+        else expect(value).toEqual({ cases: product.cases, keys: ["cases"] })
+        expect(callbacks).toBe(scenario === "case-precedence" ? 0 : 1)
+        expect(fixture.authentication.length - start).toBe(6)
+        outcomes.push({ scenario, callbacks: scenario === "case-precedence" ? null : callbacks, authentication: 6,
+          outcome: scenario === "case-precedence" ? "factory callback returned; not wrapped to count" : "original full fallback and selection order" })
+      }
+
+      for (const scenario of ["invalid-map", "invalid-version", "invalid-additive", "legacy"] as const) {
+        const changed = structuredClone(product)
+        if (scenario === "invalid-map") changed.outbox = []
+        if (scenario === "invalid-version") object(changed.versions).unexpected = 0
+        if (scenario === "invalid-additive") changed.nativeRuns = null
+        if (scenario === "legacy") { Reflect.deleteProperty(changed, "biArtifacts"); Reflect.deleteProperty(object(changed.versions), "bi-artifacts") }
+        await fixture.store.transaction("dashboard", async (snapshot) => {
+          snapshot.data.__sfProductV1 = changed
+          return { commit: true, value: undefined }
+        }, { signal: deadline })
+        let result: SfStateResult<unknown> | undefined, failure: unknown, callbacks = 0, hooks = 0
+        const start = fixture.authentication.length
+        try {
+          await inContext(fixture, "readonly", incoming.signal, async () => {
+            fixture.control.afterDashboard = () => {
+              hooks++
+              Object.defineProperty(Object.prototype, "commandProposals", { configurable: true, value: "must retain full validation" })
+            }
+            try {
+              result = await fixture.authority.state.read(incoming, "cases",
+                selectSfCasesRead(call, (state) => { callbacks++; return state.cases }))
+            } catch (error) { failure = error }
+            finally {
+              fixture.control.afterDashboard = undefined
+              Reflect.deleteProperty(Object.prototype, "commandProposals")
+            }
+          })
+        } finally {
+          await fixture.store.transaction("dashboard", async (snapshot) => {
+            snapshot.data.__sfProductV1 = structuredClone(product)
+            return { commit: true, value: undefined }
+          }, { signal: deadline })
+        }
+        expect(hooks).toBe(1)
+        expect(failure).toBeUndefined()
+        if (scenario === "legacy") {
+          expect(stateValue(required(result, "legacy read result"))).toEqual(product.cases)
+          expect(callbacks).toBe(1)
+          expect(fixture.authentication.length - start).toBe(6)
+        } else {
+          expect(result).toEqual({ status: "unavailable", reason: "invalid-product-state" })
+          expect(callbacks).toBe(0)
+          expect(fixture.authentication.length - start).toBe(3)
+        }
+        expect(await fixture.durable()).toEqual(before)
+        outcomes.push({ scenario, callbacks, authentication: fixture.authentication.length - start,
+          outcome: scenario === "legacy" ? "original legacy normalization" : "original invalid-product-state" })
+      }
+
+      for (const sentinel of [new Error("C15 selected callback sentinel"), undefined]) {
+        let callbacks = 0, threw = false, received: unknown
+        const start = fixture.authentication.length
+        await inContext(fixture, "readonly", incoming.signal, async () => {
+          try {
+            await fixture.authority.state.read(incoming, "cases",
+              selectSfCasesRead(call, () => { callbacks++; throw sentinel }))
+          } catch (error) { threw = true; received = error }
+          const healthy = await fixture.authority.state.read(incoming, "cases", selectSfCasesRead(call, (state) => state.cases))
+          expect(stateValue(healthy)).toEqual(product.cases)
+        })
+        expect(threw).toBe(true)
+        expect(received).toBe(sentinel)
+        expect(callbacks).toBe(1)
+        expect(fixture.authentication.length - start).toBe(9)
+        outcomes.push({ scenario: sentinel === undefined ? "throw-undefined" : "throw-sentinel", callbacks, authentication: 9, outcome: "original exception; next child remains usable" })
+      }
+      expect(await fixture.durable()).toEqual(before)
+    })
+    expect(outcomes).toHaveLength(15)
+    expect(Object.getOwnPropertyDescriptor(Object.prototype, "commandProposals")).toBeUndefined()
+    console.log("SF_C15_SELECTION_CONTROL " + JSON.stringify({
+      scenario: "shape-precedence-and-drift", qualification: false, outcomes,
+      limit: "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores",
+    }))
+  })
+}), 20_000)

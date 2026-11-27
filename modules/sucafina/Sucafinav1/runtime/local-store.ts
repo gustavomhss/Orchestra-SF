@@ -24,7 +24,7 @@ type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => Readon
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
-type LocalProductRead = Readonly<{ current: () => boolean }>
+type LocalProductRead = Readonly<{ current: () => boolean; selection: "cases" | "preferences" | undefined }>
 const localProductReads = new WeakMap<object, LocalProductRead>()
 const productReadGet = WeakMap.prototype.get, productReadSet = WeakMap.prototype.set, productReadApply = Reflect.apply
 const localSnapshotAuthorities = new WeakMap<object, { read: object; current: () => boolean }>()
@@ -286,10 +286,10 @@ export async function openLocalStore(directory: string, options: {
     return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
       versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
   }
-  const dashboardProductSnapshot = (scope: ReadScope, identity: object) => {
+  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: "cases" | "preferences") => {
     const snapshot = requireDashboardSource(scope, identity)
     if (!snapshot) throw new Error("Local Dashboard product view unavailable")
-    return productSnapshotView.copy(snapshot)
+    return productSnapshotView.copy(snapshot, selection)
   }
   const requireScope = (scope: ReadScope) => {
     let current: ReadScope | undefined = scope
@@ -613,6 +613,9 @@ export async function openLocalStore(directory: string, options: {
         const identity = product && typeof product === "object" && !types.isProxy(product)
           ? productSnapshotView.property(product, "identity") : undefined
         const callback = identity ? productSnapshotView.property(product, "work") : undefined
+        const selected = callback ? productSnapshotView.property(product, "selection") : undefined
+        const selection: "cases" | "preferences" | undefined = selected && productSnapshotView.own(selected, "value") &&
+          (selected.value === "cases" || selected.value === "preferences") ? selected.value : undefined
         // CurrentChoice's wrapped route changes work and retains the full path.
         const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
           callback && productSnapshotView.own(callback, "value") && callback.value === work &&
@@ -624,16 +627,21 @@ export async function openLocalStore(directory: string, options: {
         if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || rootIdentities.get(parent.root) !== aclRoot))
           throw new Error("Local Dashboard ACL root changed")
         // The callback obtains ACL fields separately via observeAuthority.
+        const projected = productRoot ? dashboardProductSnapshot(parent, productRoot, selection) : undefined
         const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
-          : productRoot ? dashboardProductSnapshot(parent, productRoot)
+          : projected ? projected.snapshot
           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
-        if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({ current: () => {
-          requireScope(scope)
-          if (context.getStore() !== scope || !sameStore() || !productSnapshotView.current()) return false
-          requireDashboardSource(scope, productRoot)
-          return true
-        } })])
+        if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
+          selection: projected?.selection,
+          current: () => {
+            requireScope(scope)
+            if (context.getStore() !== scope || !sameStore() || !productSnapshotView.current() ||
+              projected?.selection && !productSnapshotView.selectionCurrent()) return false
+            requireDashboardSource(scope, productRoot)
+            return true
+          },
+        })])
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -655,7 +663,8 @@ export async function openLocalStore(directory: string, options: {
           if (scope.root.poisoned) throw new Error("Nested local write attempted")
           if (sourceRoot) requireDashboardSource(scope, sourceRoot)
           if (productRoot) {
-            if (!sameStore() || !productSnapshotView.current()) throw new Error("Local Dashboard product root changed")
+            if (!sameStore() || !productSnapshotView.current() || projected?.selection && !productSnapshotView.selectionCurrent())
+              throw new Error("Local Dashboard product root changed")
             requireDashboardSource(scope, productRoot)
           }
           return result.value
@@ -1304,15 +1313,76 @@ const productSnapshotView = (() => {
     }
     return true
   }
-  const copy = (snapshot: Snapshot) => {
+  // This finite v1 layout mirrors the provider's shallow shape validation.
+  // Unknown fields and all envelope metadata remain complete. Only the known
+  // unselected map contents are outside the declared callback's read-set.
+  const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
+  const maps = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
+  const additive = ["claimBindings", "commandProposals", "compositeScenarios", "decisionResults", "nativeRuns", "biArtifacts"] as const
+  const parentOf = Object.getPrototypeOf, integer = Number.isSafeInteger, trim = String.prototype.trim
+  const selectionPins = [
+    { owner: String.prototype, key: "trim", value: trim },
+    { owner: Array.prototype, key: "some", value: Array.prototype.some },
+  ]
+  const selectionCurrent = () => {
+    for (let index = 0; index < selectionPins.length; index++) {
+      const pin = selectionPins[index]!, active = property(pin.owner, pin.key)
+      if (!active || !own(active, "value") || active.value !== pin.value) return false
+    }
+    for (let index = 0; index < additive.length; index++) if (property(prototype, additive[index]!)) return false
+    return true
+  }
+  const plain = (value: unknown): value is Record<string, unknown> =>
+    !!value && typeof value === "object" && parentOf(value) === prototype
+  const selectedState = (value: unknown, selection: "cases" | "preferences") => {
+    if (!current() || !selectionCurrent() || !plain(value)) return undefined
+    const state = descriptors(value), names = keys(state)
+    for (let index = 0; index < names.length; index++) {
+      const field = state[names[index]!]!
+      if (!field.enumerable || !own(field, "value")) return undefined
+    }
+    const field = (name: string) => own(state, name) ? state[name]!.value : undefined
+    if (field("schemaVersion") !== 1 || !integer(field("revision")) || Number(field("revision")) < 0 ||
+      typeof field("incarnation") !== "string" || !productReadApply(trim, field("incarnation"), [])) return undefined
+    const versions = field("versions")
+    if (!plain(versions)) return undefined
+    const versionFields = descriptors(versions)
+    if (keys(versionFields).length !== namespaces.length) return undefined
+    for (let index = 0; index < namespaces.length; index++) {
+      const name = namespaces[index]!, version = own(versionFields, name) ? versionFields[name] : undefined
+      if (!version?.enumerable || !own(version, "value") || !integer(version.value) || Number(version.value) < 0) return undefined
+    }
+    for (let index = 0; index < maps.length; index++) if (!plain(field(maps[index]!))) return undefined
+    for (let index = 0; index < additive.length; index++) {
+      const value = field(additive[index]!)
+      if (value !== undefined && !plain(value)) return undefined
+    }
+    // Legacy or incomplete v1 state keeps the full copy; this path never
+    // creates a missing field or repairs an invalid map.
+    if (!plain(field("biArtifacts"))) return undefined
+    const selected: Record<string, unknown> = {}
+    for (let index = 0; index < names.length; index++) {
+      const name = names[index]!, value = state[name]!.value
+      let map = false
+      for (let item = 0; item < maps.length; item++) if (maps[item] === name) map = true
+      for (let item = 0; item < additive.length; item++) if (additive[item] === name) map = true
+      define(selected, name, { value: map && name !== selection && value !== undefined ? {} : value,
+        enumerable: true, writable: true, configurable: true })
+    }
+    return selected
+  }
+  const copy = (snapshot: Snapshot, selection?: "cases" | "preferences") => {
     const data: Record<string, unknown> = {}
     const fields = descriptors(snapshot.data), names = keys(fields)
+    const product = own(fields, "__sfProductV1") ? fields.__sfProductV1 : undefined
+    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection) : undefined
     for (let index = 0; index < names.length; index++) {
       const name = names[index]!
       if (name !== "__sfProductV1" && name !== "roleMap" && name !== "access") continue
       const field = fields[name]!
       if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
-      define(data, name, { value: field.value, enumerable: true, writable: true, configurable: true })
+      define(data, name, { value: name === "__sfProductV1" && selected ? selected : field.value,
+        enumerable: true, writable: true, configurable: true })
     }
     const view: Record<string, unknown> = {}
     const top = descriptors(snapshot), topNames = keys(top)
@@ -1321,9 +1391,9 @@ const productSnapshotView = (() => {
       if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
       define(view, name, { value: name === "data" ? data : field.value, enumerable: true, writable: true, configurable: true })
     }
-    return validateSnapshot(clone(view))
+    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined }
   }
-  return { current, copy, property, own }
+  return { current, selectionCurrent, copy, property, own }
 })()
 
 type SnapshotMaterialization = Readonly<{
