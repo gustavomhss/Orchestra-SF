@@ -553,7 +553,7 @@ test("C13 unfenced admission rejects opaque or changed providers and preserves e
         return { commit: false, value: undefined }
       }))
     }
-    let child: ReturnType<typeof currentChoiceReadonlyAuthorityData>
+    let child: ReturnType<typeof currentChoiceReadonlyAuthorityData<never>>
     await fixture.persistence.readSnapshotRoot!(async () => fixture.persistence.transaction("planner", async () => {
       const parent = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")
       if (!parent) throw new Error("Original parent observation missing")
