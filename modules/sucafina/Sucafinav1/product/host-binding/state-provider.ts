@@ -452,13 +452,17 @@ const selectionGet = WeakMap.prototype.get, selectionSet = WeakMap.prototype.set
 const selectionValue = <T>(registry: WeakMap<object, T>, read: object): T | undefined =>
   selectionApply(selectionGet, registry, [read])
 
-// Only the existing whole-graph declarations may narrow the native copy. Do
-// not run selectors, inspect IDs or promote a lower-precedence declaration.
+// Only closed cases factories and explicit whole-graph declarations may narrow
+// the native copy. Never inspect IDs or run selectors before authorization.
 function productReadSelection(namespace: SfStateNamespace, read: object) {
   if (selectionValue(readinessReads, read)) return undefined
-  if (namespace === "cases" && selectionValue(caseGraphReads, read) === read &&
-    !selectionValue(caseReads, read) && !selectionValue(resultReads, read) &&
-    !selectionValue(scenarioReads, read) && !selectionValue(caseIdentityReads, read)) return "cases" as const
+  if (namespace === "cases" && !selectionValue(resultReads, read) && !selectionValue(scenarioReads, read)) {
+    const selected = selectionValue(caseReads, read), graph = selectionValue(caseGraphReads, read)
+    const identity = selectionValue(caseIdentityReads, read)
+    // Concurrent declarations retain the full path; later registration invalidates
+    // an already materialized selection instead of changing its callback route.
+    if (selected ? !graph && !identity : identity ? !graph : graph === read) return "cases" as const
+  }
   if (namespace === "preferences" && selectionValue(preferencesReads, read) === read) return "preferences" as const
   return undefined
 }
@@ -571,12 +575,13 @@ export function createSfProductState(input: {
         // fresh selected clone and callback at this original observation point.
         if (projection?.selection) {
           if (!selectionCurrent() || (projection.selection === "cases"
-            ? readiness || selection || resultSelection || casesSelection !== read
+            ? readiness || resultSelection || scenarioSelection ||
+              (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)
             : readiness || preferencesSelection !== read))
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
-          if (projection.selection === "cases") selectedCases = projectCasesRead(state)
+          if (projection.selection === "cases" && casesSelection === read) selectedCases = projectCasesRead(state)
           if (projection.selection === "preferences") selectedPreferences = projectPreferencesRead(state)
-          if (projection.selection === "cases" ? !selectedCases : !selectedPreferences)
+          if (projection.selection === "cases" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases : !selectedPreferences)
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         }
         // Keep missing/inherited, accessor and malformed lookups on the original
@@ -594,6 +599,10 @@ export function createSfProductState(input: {
           : scenarioSelection && scenarioResults ? await scenarioSelection.project(structuredClone(scenarioResults), authority) as T
           : identitySelection && identityCases ? await identitySelection.project(structuredClone(identityCases), authority) as T
           : sealed && authorityOnly ? await authorityOnly(authority) as T
+          // Missing or malformed single-case entries keep the factory's original
+          // cases lookup; a reduced view can never fall through to an opaque read.
+          : projection?.selection === "cases" && selection
+          ? await selection.project(structuredClone(cases!), authority) as T
           : await read(receipts ?? structuredClone(state), authority)
         if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }

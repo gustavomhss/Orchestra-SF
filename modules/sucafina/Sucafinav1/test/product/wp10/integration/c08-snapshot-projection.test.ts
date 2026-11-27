@@ -10,7 +10,7 @@ import { createSfProductAuthority } from "../../../../product/integration/produc
 import { createSfSourcePersistence, currentSfReadonlyAuthorityData, withSfScopedSourceChecks } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
-import { createSfProductState, isSfProductStateReader, selectSfCase, selectSfCasesRead, selectSfPreferencesRead } from "../../../../product/host-binding/state-provider.ts"
+import { createSfProductState, isSfProductStateReader, selectSfCase, selectSfCaseIdentity, selectSfCasesRead, selectSfPreferencesRead } from "../../../../product/host-binding/state-provider.ts"
 import { isSfAclStateAuthorize } from "../../../../product/host-binding/acl-state-authorize.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
@@ -971,3 +971,226 @@ test("C15 selections refuse drift and preserve invalid, legacy, late and competi
     }))
   })
 }), 20_000)
+
+
+// The existing four declarations retain 120/120/20/20 seconds. This additional
+// 8/10-second control keeps the whole-file nominal bound at 290 seconds.
+async function boundedC16<T>(work: (signal: AbortSignal) => Promise<T>): Promise<T> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(new Error("C16 control cooperative deadline")), 8_000)
+  try { return await work(controller.signal) } finally { clearTimeout(timer) }
+}
+
+test("C16 closed case factories preserve selection, fallback, late observations and readonly fences", async () => boundedC16(async (deadline) => {
+  await withFixture(deadline, false, async (fixture) => {
+    await fixture.store.transaction("dashboard", async (snapshot) => {
+      const state = object(snapshot.data.__sfProductV1)
+      object(state.cases).c16Malformed = ["original malformed entry"]
+      object(state.reviews).c16Unselected = { nested: ["must remain outside the declared cases read-set"] }
+      return { commit: true, value: undefined }
+    }, { signal: deadline })
+    const before = await fixture.durable(), product = object(before.data.__sfProductV1)
+    const cases = object(product.cases)
+    const outcomes: { scenario: string; authentication: number; outcome: string }[] = []
+    await fixture.ui(async (call, incoming) => {
+      const factory = (kind: "case" | "identity", id: string = caseRef.id, context: TrustedDomainContext = call) =>
+        kind === "case" ? selectSfCase(id, context) : selectSfCaseIdentity({ ...caseRef, id }, context)
+      for (const kind of ["case", "identity"] as const) for (const mode of ["readonly", "preimage"] as const) {
+        deadline.throwIfAborted()
+        await inContext(fixture, mode, incoming.signal, async () => {
+          const start = fixture.authentication.length, callback = factory(kind)
+          const first = await fixture.authority.state.read<unknown>(incoming, "cases", callback)
+          const firstValue = object(stateValue(first))
+          expect<unknown>(firstValue).toEqual(kind === "case" ? cases[caseRef.id] : caseRef)
+          expect(first).toMatchObject({ status: "ok", storageVersion: object(product.versions).cases,
+            aggregateRevision: product.revision, incarnation: product.incarnation })
+          firstValue.c16Detached = { onlyFirst: true }
+          const second = await fixture.authority.state.read<unknown>(incoming, "cases", callback)
+          expect(stateValue(second)).toEqual(kind === "case" ? cases[caseRef.id] : caseRef)
+          expect(stateValue(second)).not.toBe(firstValue)
+          const snapshots = fixture.opaqueSnapshots.length
+          const full = await fixture.custom.read<unknown>(incoming, "cases", callback)
+          expect(full).toEqual(second)
+          expect(stateValue(full)).not.toBe(stateValue(second))
+          expect(fixture.authentication.length - start).toBe(18)
+          for (const snapshot of fixture.opaqueSnapshots.slice(snapshots)) {
+            expect(observeLocalProductRead(snapshot)).toBeUndefined()
+            expect(snapshot).toEqual(before)
+          }
+          expect(fixture.opaqueSnapshots.length - snapshots).toBe(2)
+          outcomes.push({ scenario: kind + "-" + mode + "-fresh-values", authentication: 18,
+            outcome: "same values and metadata; independent copies; both real authorizations" })
+          for (const id of ["c16Missing", "c16Malformed"]) {
+            const entryStart = fixture.authentication.length, selected = factory(kind, id)
+            const current = await fixture.authority.state.read<unknown>(incoming, "cases", selected)
+            const original = await fixture.custom.read<unknown>(incoming, "cases", selected)
+            expect(current).toEqual(original)
+            expect(stateValue(current)).toEqual(kind === "case" ? cases[id] : undefined)
+            expect(fixture.authentication.length - entryStart).toBe(12)
+            outcomes.push({ scenario: kind + "-" + mode + "-" + id, authentication: 12,
+              outcome: "closed factory matches the original full fallback" })
+          }
+        })
+        expect(await fixture.durable()).toEqual(before)
+      }
+
+      // The additive prototype gate belongs only to actual narrow copies. This
+      // refusal proves admission without wrapping the Provider or native methods.
+      for (const kind of ["case", "identity"] as const) for (const phase of ["first", "second"] as const) {
+        for (const change of ["prototype", "concurrent-declaration"] as const) {
+          const callback = factory(kind), start = fixture.authentication.length
+          let hooks = 0, prototypeReads = 0, failure: unknown, result: SfStateResult<unknown> | undefined
+          const mutate = () => {
+            if (change === "concurrent-declaration") selectSfCasesRead(call, callback)
+            else Object.defineProperty(Object.prototype, "commandProposals", {
+              configurable: true, get: () => { prototypeReads++; throw new Error("C16 inherited payload must not be read") },
+            })
+          }
+          await inContext(fixture, "readonly", incoming.signal, async () => {
+            fixture.control.afterDashboard = () => {
+              hooks++
+              if (phase === "first") mutate()
+              else fixture.control.afterDashboard = () => { hooks++; mutate() }
+            }
+            try { result = await fixture.authority.state.read<unknown>(incoming, "cases", callback) }
+            catch (error) { failure = error }
+            finally {
+              fixture.control.afterDashboard = undefined
+              Reflect.deleteProperty(Object.prototype, "commandProposals")
+            }
+          })
+          expect(result).toBeUndefined()
+          expect(failure instanceof Error ? failure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
+          expect(hooks).toBe(phase === "first" ? 1 : 2)
+          expect(prototypeReads).toBe(0)
+          expect(fixture.authentication.length - start).toBe(phase === "first" ? 3 : 6)
+          outcomes.push({ scenario: kind + "-" + phase + "-" + change,
+            authentication: phase === "first" ? 3 : 6, outcome: "projected result withheld without replay" })
+        }
+      }
+
+      // Registration that is already ambiguous, an opaque context, or a
+      // mismatched namespace must keep the original complete C14 path.
+      for (const kind of ["case", "identity"] as const) {
+        for (const reason of ["concurrent", "opaque-context", "namespace"] as const) {
+          const callback = factory(kind, caseRef.id, reason === "opaque-context" ? { ...call } : call)
+          if (reason === "concurrent") selectSfCasesRead(call, callback)
+          const start = fixture.authentication.length
+          let hooks = 0, failure: unknown, result: SfStateResult<unknown> | undefined
+          await inContext(fixture, "readonly", incoming.signal, async () => {
+            fixture.control.afterDashboard = () => {
+              hooks++
+              Object.defineProperty(Object.prototype, "commandProposals", {
+                configurable: true, value: "full copies keep their original own field",
+              })
+            }
+            try { result = await fixture.authority.state.read<unknown>(incoming, reason === "namespace" ? "preferences" : "cases", callback) }
+            catch (error) { failure = error }
+            finally {
+              fixture.control.afterDashboard = undefined
+              Reflect.deleteProperty(Object.prototype, "commandProposals")
+            }
+          })
+          expect(failure).toBeUndefined()
+          expect(stateValue(required(result, "C16 full fallback"))).toEqual(kind === "case" ? cases[caseRef.id] : caseRef)
+          expect(hooks).toBe(1)
+          expect(fixture.authentication.length - start).toBe(6)
+          outcomes.push({ scenario: kind + "-" + reason, authentication: 6, outcome: "complete fallback preserved" })
+        }
+      }
+
+      // Identity factories must still observe a mutable captured key only inside
+      // their original callback, after the first authorization has fulfilled.
+      let selectedId = "c16Missing", idReads = 0, readsAtFirst = -1, readsAtSecond = -1
+      const captured = { get id() { idReads++; return selectedId }, incarnation: caseRef.incarnation, version: caseRef.version }
+      const lateIdentity = selectSfCaseIdentity(captured, call), lateStart = fixture.authentication.length
+      await inContext(fixture, "readonly", incoming.signal, async () => {
+        fixture.control.afterDashboard = () => {
+          readsAtFirst = idReads
+          selectedId = caseRef.id
+          fixture.control.afterDashboard = () => { readsAtSecond = idReads; selectedId = "c16Missing" }
+        }
+        try {
+          const result = await fixture.authority.state.read<unknown>(incoming, "cases", lateIdentity)
+          expect(stateValue(result)).toEqual(caseRef)
+        } finally { fixture.control.afterDashboard = undefined }
+      })
+      expect(readsAtFirst).toBe(0)
+      expect(readsAtSecond).toBe(1)
+      expect(idReads).toBe(1)
+      expect(fixture.authentication.length - lateStart).toBe(6)
+      outcomes.push({ scenario: "identity-key-observed-after-first-authorization", authentication: 6,
+        outcome: "no key read at registration, native selection or reauthorization" })
+
+      for (const sentinel of [new Error("C16 identity getter sentinel"), undefined]) {
+        let idReads = 0, threw = false, received: unknown
+        const captured = { get id(): string { idReads++; throw sentinel }, incarnation: caseRef.incarnation, version: caseRef.version }
+        const start = fixture.authentication.length
+        await inContext(fixture, "readonly", incoming.signal, async () => {
+          try { await fixture.authority.state.read(incoming, "cases", selectSfCaseIdentity(captured, call)) }
+          catch (error) { threw = true; received = error }
+          const healthy = await fixture.authority.state.read(incoming, "cases", selectSfCaseIdentity(caseRef, call))
+          expect(stateValue(healthy)).toEqual(caseRef)
+          expect(fixture.store.currentSnapshotScope?.()?.poisoned).toBe(false)
+        })
+        expect(threw).toBe(true)
+        expect(received).toBe(sentinel)
+        expect(idReads).toBe(1)
+        expect(fixture.authentication.length - start).toBe(9)
+        outcomes.push({ scenario: sentinel === undefined ? "identity-throw-undefined" : "identity-throw-sentinel",
+          authentication: 9, outcome: "original throw preserved; next child remains usable" })
+      }
+
+      const controller = new AbortController(), abort = new Error("C16 original Request abort")
+      const abortRequest = fixture.request(controller.signal), abortStart = fixture.authentication.length
+      let abortReads = 0, abortFailure: unknown, abortAccepted = false
+      const abortCase = { get id() { abortReads++; controller.abort(abort); return caseRef.id },
+        incarnation: caseRef.incarnation, version: caseRef.version }
+      try {
+        await inContext(fixture, "readonly", abortRequest.signal, async () => {
+          await fixture.authority.state.read(abortRequest, "cases", selectSfCaseIdentity(abortCase, call))
+        })
+        abortAccepted = true
+      } catch (error) { abortFailure = error }
+      expect(abortFailure).toBe(abort)
+      expect(abortAccepted).toBe(false)
+      expect(abortReads).toBe(1)
+      expect(fixture.authentication.length - abortStart).toBe(3)
+      outcomes.push({ scenario: "identity-request-abort", authentication: 3, outcome: "original abort refuses the root" })
+
+      let nestedWrites = 0, poisoned = false, rootAccepted = false, readAccepted = false
+      let nestedFailure: unknown, rootFailure: unknown
+      const poisonStart = fixture.authentication.length
+      try {
+        await inContext(fixture, "readonly", deadline, async () => {
+          try {
+            await fixture.persistence.transaction("dashboard", async (snapshot) => {
+              nestedWrites++
+              snapshot.data.c14DomainOnly = { mustNeverCommit: true }
+              return { commit: true, value: undefined }
+            }, { signal: deadline })
+          } catch (error) { nestedFailure = error }
+          poisoned = fixture.store.currentSnapshotScope?.()?.poisoned === true
+          const result = await fixture.authority.state.read(incoming, "cases", selectSfCaseIdentity(caseRef, call))
+          readAccepted = result.status === "ok"
+        })
+        rootAccepted = true
+      } catch (error) { rootFailure = error }
+      expect(nestedFailure instanceof Error ? nestedFailure.message : undefined).toBe("Nested local writes are forbidden")
+      expect(rootFailure).toBeInstanceOf(Error)
+      expect(nestedWrites).toBe(1)
+      expect(poisoned).toBe(true)
+      expect(readAccepted).toBe(false)
+      expect(rootAccepted).toBe(false)
+      outcomes.push({ scenario: "poisoned-native-root", authentication: fixture.authentication.length - poisonStart,
+        outcome: "no child result or root accepted after caught commit:true" })
+    })
+    expect(await fixture.durable()).toEqual(before)
+    expect(Object.getOwnPropertyDescriptor(Object.prototype, "commandProposals")).toBeUndefined()
+    expect(outcomes).toHaveLength(31)
+    console.log("SF_C16_SELECTION_CONTROL " + JSON.stringify({
+      scenario: "closed-case-factories", qualification: false, outcomes,
+      limits: "composed functional and refusal oracles; no latency or current Analytics qualification",
+    }))
+  })
+}), 10_000)
