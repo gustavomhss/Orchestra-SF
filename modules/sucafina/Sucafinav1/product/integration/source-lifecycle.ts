@@ -1,3 +1,4 @@
+import { markSfE11CpuRoute, markSfE11SourceSelection } from "../../runtime/preview-cpu-e11-diagnostic.ts"
 import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
@@ -696,6 +697,7 @@ export function createSfSourcePersistence(input: {
         if (!root?.current()) return execute
         const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
         forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
+        markSfE11SourceSelection(selection)
         return execute
       }
       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
@@ -709,6 +711,7 @@ export function createSfSourcePersistence(input: {
         requireProduct()
         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])
         if (seal && seal.current()) {
+          markSfE11CpuRoute(0)
           // Only the Dashboard snapshot covered by the held durable preimage
           // can reuse its pure source-metadata validation.
           const identity = surface === "dashboard" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined
@@ -742,6 +745,7 @@ export function createSfSourcePersistence(input: {
         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
           active && Object.hasOwn(active, "value") && active.value === method.value ?
           currentDriverReadonlyAuthorityData(driver, [], "unfenced") : undefined
+        markSfE11CpuRoute(sealed ? 1 : 2)
         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
         const guarded = guard(surface, snapshot, sealedPreimage)
         try {

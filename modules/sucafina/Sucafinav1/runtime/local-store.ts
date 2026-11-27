@@ -1,3 +1,4 @@
+import { markSfE11NativeCopy } from "./preview-cpu-e11-diagnostic.ts"
 import { Database } from "bun:sqlite"
 import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
@@ -632,6 +633,7 @@ export async function openLocalStore(directory: string, options: {
           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
           : projected ? projected.snapshot
           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
+        markSfE11NativeCopy(selection, projected?.selection)
         if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
           selection: projected?.selection,
           current: () => {
