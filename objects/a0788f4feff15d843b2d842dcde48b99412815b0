@@ -1,0 +1,89 @@
+{
+  "schema": "sf613-e12-focal-originals-v1",
+  "status": "BOTH_ORIGINALS_PRESERVED_BEFORE_SEMANTIC_PARSE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": 46061092039,
+  "attempt": 1,
+  "runMetadata": {
+    "head": "73677353c81e17ac1b80a98b066ff4c505430cde",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46061092039"
+  },
+  "declaredBindings": {
+    "snapshot": "73677353c81e17ac1b80a98b066ff4c505430cde",
+    "snapshotTree": "290887ae4cae508f11ef472bf2b22d9b3b918c17",
+    "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "sourceTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "clean": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+  },
+  "authority": {
+    "gitBlob": "87b3e4c54c05a291bfccea49352088a0d5eb12a1",
+    "bytes": 23287,
+    "sha256": "de1116e2eb311401175ffac9ac089dfc81c2b3101607326f71233b440968be9e"
+  },
+  "jobs": [
+    {
+      "id": 140715265330,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "completedAt": "2026-11-27T20:07:02Z"
+    },
+    {
+      "id": 140716227339,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "completedAt": "2026-11-27T20:07:08Z"
+    }
+  ],
+  "main": {
+    "job": 140715265330,
+    "gitBlob": "6d73e49f094ea26e52531ee3ee327e9593c40628",
+    "bytes": 119099,
+    "sha256": "0d8505d868ef00477f86711a3dccde155499bbf9f210854b47897029fb68bd7d",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 900,
+    "bomCodeUnitOffsets": [
+      0
+    ],
+    "bomByteOffsets": [
+      0
+    ]
+  },
+  "cleanup": {
+    "job": 140716227339,
+    "gitBlob": "3055168a5fe6fef93d51ce1e493a97188871ddc4",
+    "bytes": 2281,
+    "sha256": "b31d71a16e9d3f56cfc9018641ce8794ceea88e7fd89899e6ceb09046ef0278b",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ],
+    "bomByteOffsets": [
+      0
+    ]
+  },
+  "originalAcquisition": {
+    "receiver": "/root",
+    "gets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "fullDecodedTextPreserved": true,
+    "readback": "Both actual Git blobs were read back literally before semantic parsing; BOM/LF unchanged",
+    "reacquisitionProhibited": true
+  },
+  "artifacts": [],
+  "temporaryBranch": {
+    "name": "ci-run-sf613e12f",
+    "terminalRead": "404 NOT_FOUND"
+  },
+  "semanticOutcome": null,
+  "zipGets": 0,
+  "productionAuthorized": false
+}

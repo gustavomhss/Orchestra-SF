@@ -1,0 +1,611 @@
+{
+  "schema": "sf613-e12-reader-concrete-manifest-v1",
+  "status": "CONCRETE_TEXT_CREATED_READBACK_ROOT_OBJECT_REPORTED_EXECUTION_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "purpose": "Receive the one current E12 original artifact with the accepted E11 reader transport, finite E12 selection protocol and authenticated current bindings.",
+  "authoringAuthority": {
+    "scope": "Python/YAML and derivation/bounds/manifest blobs only",
+    "operator": "/root",
+    "writer": "/root/close_pr613",
+    "writerMayCreateTreeCommitRefRun": false,
+    "writerMayAcquireOriginalLogsOrZip": false
+  },
+  "cleanSource": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "meaning": "Clean S17, reader sole parent; distinct from diagnostic execution snapshot."
+  },
+  "originalSnapshot": {
+    "commit": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "delta": "2A6M",
+    "mode": "100644",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts",
+        "status": "A",
+        "preimage": null,
+        "postimage": "11686520311978c09a66c1e5b1317d3a0a0347bc",
+        "bytes": 23524,
+        "sha256": "54303a8b88d170557b6002688d7f52ad7698bee0d61d5a6777712cfbb00dfa40"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "status": "M",
+        "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "postimage": "7c9f4a929842a97c4b4949aa4bf94226a22230e8",
+        "bytes": 13818,
+        "sha256": "3e9febd52bc51863592e00b68c289e94f2d3e65d016451021c9e5f3a49756f26"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "status": "M",
+        "preimage": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "postimage": "0874435020bc8d000a99eb72db18f33f17010443",
+        "bytes": 10333,
+        "sha256": "ba43bfcea2c2fde2d6b14f23d99f1d9aa58abb854cef928705916a29b91a41df"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "status": "M",
+        "preimage": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "postimage": "21d20336212bee594b80d3cd8a6424064998bb67",
+        "bytes": 16431,
+        "sha256": "242bd4d232d16c76b2a67051d1a73a60bf89a513df613c59ba965d5f8a946928"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "status": "M",
+        "preimage": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "postimage": "a81e87a3122aeb38d3c1059e21255879866e6cf6",
+        "bytes": 32579,
+        "sha256": "1b847800e1c259b3168aa3dc5b1661e0ecf0ee518dacac97790c934dc7c82c82"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "status": "M",
+        "preimage": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "postimage": "fcf55e2b49e316a5fabfd92c1ae1d85195063447",
+        "bytes": 60958,
+        "sha256": "8e90f0bf9a3d63dc3fc3b82f45758c83ea6ec0b53848c9a65d6aed82b434c666"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "status": "M",
+        "preimage": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "postimage": "cb160ee21d22a311e4b5d77bfc34fc56ce6b9297",
+        "bytes": 97388,
+        "sha256": "0ca4a701414052f644ede7f16bb69f4c5c5793a32bce8e13d522b052fae685d1"
+      },
+      {
+        "path": ".ci-run.json",
+        "status": "A",
+        "preimage": null,
+        "postimage": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+      }
+    ],
+    "sourceManifest": {
+      "gitSha": "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+      "bytes": 22710,
+      "sha256": "51311a693dd0a800f7043e2b9b5905defe1d834e6dc99d3e74e0e751ea7f1703",
+      "lf": 621
+    },
+    "sourceBinding": {
+      "gitBlob": "bea70840077fa85b7df5354dca2af349d2abd2c8",
+      "bytes": 14625,
+      "sha256": "bff1c05f5d9a334f9f1679b7dafc45711b7627e8726dcbc9a68b170ac98169f3"
+    },
+    "sourceBounds": {
+      "gitBlob": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+      "bytes": 25207,
+      "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab"
+    }
+  },
+  "inputs": {
+    "bindingFinal": {
+      "gitSha": "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "bytes": 20196,
+      "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623",
+      "lf": 725
+    },
+    "supersededBinding": {
+      "gitSha": "21bf036f2ef43c9bf9adfad0ced06e4188889bef",
+      "bytes": 19229,
+      "sha256": "de43f7ce1a091e6c073f91d396deac3013a594512bf5e48861559db52fdd80eb",
+      "lf": 700
+    },
+    "finalIntake": {
+      "gitSha": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+      "bytes": 39804,
+      "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6",
+      "lf": 1360
+    },
+    "rawManifest": {
+      "gitSha": "2406d1d4c3ea0150ab227b8544255df804439984",
+      "bytes": 13647,
+      "sha256": "19e4d17a4e8bd37c2a1edf0363dc77706ed09236086d8f8bfef2269f10630fce",
+      "lf": 443
+    },
+    "literalMainMarkerUnion": {
+      "gitSha": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+      "lf": 103
+    },
+    "derivedFamilyHashesAreCalculatedNotFetchedBlobs": true
+  },
+  "base": {
+    "python": {
+      "gitSha": "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "bytes": 96993,
+      "sha256": "740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290",
+      "lf": 1636
+    },
+    "workflow": {
+      "gitSha": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "bytes": 118627,
+      "sha256": "79647ce8bba2d50e7885e92eed1cd50f291392b6f4af6365760e543079393152",
+      "lf": 1691
+    },
+    "concreteManifest": {
+      "gitSha": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "bytes": 13422,
+      "sha256": "2ba9ff69b8ecead402f51452d7852144356ab5069cf3d4ab8a2256b4a21cbdae"
+    },
+    "bounds": {
+      "gitSha": "54a44996d95457c85e2273b5368f578223a6825b",
+      "bytes": 7234,
+      "sha256": "9460ab995a64e0bb8ee020abed5fa2453e3e392f7ca766dd9293eeb075892858",
+      "lf": 279
+    }
+  },
+  "postimages": {
+    "python": {
+      "gitSha": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+      "lf": 1649,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "workflow": {
+      "gitSha": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+      "lf": 1704,
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "mode": "100644",
+      "created": true,
+      "readbackLiteral": true
+    }
+  },
+  "supports": {
+    "pythonDerivation": {
+      "gitSha": "b78923d1feacecb724cc46a65184f1b5c786d7a0",
+      "bytes": 145307,
+      "sha256": "6e13671d9dec5084889d8f160f8591c4dbeb336b31044e3d673ea56d0a4e7638",
+      "lf": 438,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "workflowDerivation": {
+      "gitSha": "4f028fea6be02f3abbc616b12cff23688ddbf112",
+      "bytes": 249344,
+      "sha256": "a56e3f7d81adda14fcc8d957548a4deaa5b1d92cdc8fb346d5d295b3fbff3f20",
+      "lf": 81,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "completeTwoFileDiff": {
+      "gitSha": "ae73a71983e8dea651972aca299bc6e828f250f7",
+      "bytes": 80651,
+      "sha256": "186bb2a5361ed8250c054f34bc844b547482c2476f9aefaa6b898b75a9652a6a",
+      "lf": 1059,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "bounds": {
+      "gitSha": "dd7f1811082b9f35a7a0e14a25ea722755a70934",
+      "bytes": 12999,
+      "sha256": "ecc186b870d0096d7a65b03cf6be7c669cee7b8aa129d0d3018d7c6156703fde",
+      "lf": 447,
+      "created": true,
+      "readbackLiteral": true
+    }
+  },
+  "derivation": {
+    "pythonAnchors": 11,
+    "workflowAnchors": 5,
+    "uniqueForward": true,
+    "uniqueInverse": true,
+    "fullRecompositionBothDirections": true,
+    "unifiedDiff": {
+      "python": {
+        "hunks": 29,
+        "added": 118,
+        "removed": 105
+      },
+      "yaml": {
+        "hunks": 32,
+        "added": 122,
+        "removed": 109
+      }
+    },
+    "delimitedNames": {
+      "upper": {
+        "pattern": "(?<![A-Za-z0-9])E11(?![A-Za-z0-9])",
+        "from": "E11",
+        "to": "E12",
+        "count": 40
+      },
+      "lower": {
+        "pattern": "(?<![A-Za-z0-9])e11(?=[_\\-A-Z])",
+        "from": "e11",
+        "to": "e12",
+        "count": 30
+      }
+    },
+    "noGlobalSubstringRenameInsideHashes": true,
+    "immutableRuntimePin": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "all44DefinitionsCompared": true,
+    "definitionPartition": {
+      "literalBytes": 34,
+      "nameRetargetOnly": [
+        "marker_stream",
+        "e12_routes",
+        "e12_unique_object",
+        "finalize_core",
+        "report_failure"
+      ],
+      "remaining": [
+        "check_original_and_reader",
+        "e12_selection",
+        "parse_e12_markers",
+        "parse_cpu_originals",
+        "main"
+      ]
+    },
+    "footerLiteral": true,
+    "capsLiteral": true,
+    "requestSpecConfigLiteral": true,
+    "YamlEmbeddingLiteral": true,
+    "YamlBootstrapLiteral": true
+  },
+  "originalRun": {
+    "run": 46063135555,
+    "attempt": 1,
+    "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "mainJob": 140721962760,
+    "cleanupJob": 140725518085,
+    "conclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "testStepConclusion": "failure"
+  },
+  "artifactMetadata": {
+    "id": 15229333864,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 46003924,
+    "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+    "headBranch": "ci-run-sf613e12a",
+    "headSha": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "expired": false
+  },
+  "currentMainTargets": {
+    "counts": {
+      "SF_ANALYTICS_SOURCE": 45,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_PREVIEW_E12_CPU": 3,
+      "SF_PREVIEW_E12_PROGRESS": 3,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "parities": {
+      "analytics": {
+        "lines": 97,
+        "bytes": 34282,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "gitBlobCalculated": "729b06464ca3e8399a4b1c9b435d5f4c35177bd9",
+        "gitBlobPersisted": false
+      },
+      "cpu": {
+        "lines": 3,
+        "bytes": 3817,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "gitBlobCalculated": "1d2820a28503b2f5caa3f82dc3703a50dd1d7744",
+        "gitBlobPersisted": false
+      },
+      "progress": {
+        "lines": 3,
+        "bytes": 2763,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "gitBlobCalculated": "e00e5c65651969587b1587e3295159a2f68af54d",
+        "gitBlobPersisted": false
+      },
+      "union": {
+        "lines": 103,
+        "bytes": 40862,
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "gitBlobCalculated": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "gitBlobPersisted": true,
+        "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "literalReadback": true
+      }
+    },
+    "outcomes": {
+      "failed": 1,
+      "passed": 1,
+      "firstWaiterFailure": {
+        "timeoutMs": 60000,
+        "file": "design-wave-five-analytics.spec.ts",
+        "line": 72,
+        "column": 32,
+        "operation": "decision-portfolio-preview",
+        "sequence": 3
+      },
+      "ui": {
+        "historicalQualified": 12,
+        "total": 15,
+        "newAccepted": 0,
+        "UI42": "six partial captures; original preview unreturned",
+        "UI43": "not reached",
+        "UI44": "not reached"
+      },
+      "BI": {
+        "status": "passed",
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "scope": {
+          "surfaces": [
+            "UI45",
+            "UI46"
+          ],
+          "catalogViews": 11,
+          "originalFinancialRead": true,
+          "originalOperationalRead": true,
+          "originalSourceResolution": true,
+          "originalOperationalSourceResolution": true,
+          "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+          "originalSensitivityChoices": 0,
+          "invalidatedOnPeriodChange": true,
+          "fabricatedResult": false
+        }
+      },
+      "expectedArtifactStatusesToVerify": [
+        "failed",
+        "passed"
+      ],
+      "priorResultsCurrentVariation": {
+        "sequence1": {
+          "http": 200,
+          "acquisitionFailure": "response-body-unavailable",
+          "nativeRequestFailed": true,
+          "statusNotAvailable": true
+        },
+        "sequence2": {
+          "http": 200,
+          "status": "ok"
+        },
+        "causalityNotAsserted": true
+      }
+    },
+    "tuple": {
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "pid": 3729,
+      "parentPid": 3684,
+      "nonce": "sf613-e12-cpu-sV3cAs"
+    },
+    "cpuKinds": [
+      "started",
+      "stopped",
+      "finished"
+    ],
+    "profileClaim": {
+      "name": "preview-first.cpuprofile",
+      "bytes": 2120673,
+      "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+      "fsyncTenthMs": 2478358,
+      "closeTenthMs": 2478358
+    },
+    "collectionClaim": {
+      "name": "collection.json",
+      "bytes": 1876,
+      "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+      "fsyncTenthMs": 2478362,
+      "closeTenthMs": 2478362
+    },
+    "CPUDeclaration": "completed-on-time",
+    "selectionAtStoppedAndFinished": {
+      "scope": "pid-running-window",
+      "cap": 65535,
+      "sourceOrder": [
+        "none",
+        "cases",
+        "preferences",
+        "case-identities"
+      ],
+      "sourceRequests": [
+        566,
+        1670,
+        702,
+        633
+      ],
+      "nativeOrder": [
+        "tag-refused",
+        "cases-complete",
+        "normalized-map"
+      ],
+      "nativeCopies": [
+        0,
+        0,
+        633
+      ],
+      "loopOrder": [
+        "enumerated",
+        "not-enumerated",
+        "eligible",
+        "reduced",
+        "retained",
+        "known-fields-omitted"
+      ],
+      "identityLoop": [
+        633,
+        0,
+        1266,
+        1266,
+        0,
+        17724
+      ],
+      "saturated": false
+    },
+    "actualCpuFilesReceived": false,
+    "currentCombinedCpuProgressBytes": 6580,
+    "runtimeCaseResultStreamMembershipNotAssumed": true
+  },
+  "protocolDelta": {
+    "selectionExactKeys": [
+      "scope",
+      "cap",
+      "sourceOrder",
+      "sourceRequests",
+      "nativeOrder",
+      "nativeCopies",
+      "loopOrder",
+      "identityLoop",
+      "saturated"
+    ],
+    "sourceSlots": 4,
+    "nativeSlots": 3,
+    "loopSlots": 6,
+    "countRange": [
+      0,
+      65535
+    ],
+    "strictIntsExcludeBoolean": true,
+    "saturatedExactlyAny13SlotsAtCap": true,
+    "routeCountersExcluded": true,
+    "unitDictionary": {
+      "sourceRequests": "qualified token decisions",
+      "nativeCopies": "completed child copies requested as case-identities, before work",
+      "enumerated": "completed copies whose identity loop ran",
+      "notEnumerated": "completed copies whose identity loop did not run; no fallback enumeration",
+      "eligible": "entries satisfying the already-calculated simple predicate",
+      "reduced": "entries with at least one actual known field omitted",
+      "retained": "entries with zero omission, including malformed or eligible without body fields",
+      "knownFieldsOmitted": "actual own known body fields omitted"
+    },
+    "noNewResultOrOutputSeries": true,
+    "lateProgressMayFollowCpuClose": true,
+    "presentCollectionFinishedContradictionHardFail": true,
+    "completeClosureAlsoRequiresCollectionStoppedFinishedEquality": true,
+    "absentMalformedEmptyRawPoliciesUnchanged": true
+  },
+  "preservedTransport": {
+    "apiDownloadOnce": true,
+    "archiveAllEntryCrcAndHash": true,
+    "allNonceNamespaceInventory": true,
+    "unclassifiedOrAmbiguousHardFail": true,
+    "pngPixelsOrTraceAvailabilityNotClaimed": true,
+    "nominalExports": [
+      "original-cpu-preview-first.cpuprofile",
+      "preview-e12-cpu-progress-markers.lf.log",
+      "original-cpu-collection.json",
+      "original-cpu-launcher.json",
+      "safe-summary.json",
+      "inventory.json",
+      "receipt.json"
+    ],
+    "actualExportsRange": [
+      4,
+      7
+    ],
+    "presentZeroByteOneEmptyChunkAndInventoryId": true,
+    "absentNoPayload": true,
+    "rawFilesExactEvenMalformed": true,
+    "combinedMarkerCap65536": true,
+    "emitterCapBytes": 7340032,
+    "wholeMainReceiptCapBytes": 8388608,
+    "exactJointPreflightAfterReceiptFreeze": true,
+    "allListedHashesChunksAndTerminalRequired": true,
+    "successfulJobAloneInsufficient": true,
+    "noRepositoryCheckoutOrExecution": true
+  },
+  "interpretation": [
+    "Current original result is negative for UI42 preview at60000ms/spec72:32; UI43/UI44 unreached, BI passed. These are validation targets for the artifact, not a future inferred result.",
+    "Current sequence1 priorResults has HTTP200 plus response-body-unavailable/native-request-failed; sequence2 HTTP200/ok. Literal Analytics parity preserves this variation without assigning cause.",
+    "Source/native/loop populations differ; equality of current numeric counts is not a pairing or conservation result.",
+    "tag-refused is not transaction denial; cases-complete does not assert complete Snapshot materialization; normalized-map does not promise all entries reduced.",
+    "Copy failure publishes no native/loop counts; callback failure after completed copy can still contribute.",
+    "Local loop bookkeeping may execute outside capture; only running owned capture contributes. No Request exclusivity or observer-free performance claim.",
+    "CPU state/file hashes are marker claims until originals and runtime memberships are verified. captureComplete is not predetermined.",
+    "Profile/native performance points, Actions UTC and Playwright clocks remain separate; no samples-times-interval saving or deadline prediction.",
+    "The diagnostic source never becomes product source. No C18 or product patch is included."
+  ],
+  "rootReportedObject": {
+    "commit": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+    "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "baseTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "message": "ci(sucafina): receive E12 original CPU evidence",
+    "delta": [
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "status": "added",
+        "mode": "100644",
+        "blob": "13db57775b23b9603ea1018dc734ffd314942811"
+      }
+    ],
+    "ciRunRequestAbsent": true,
+    "rootReportedAudit": {
+      "treePairs": 3,
+      "unchangedSiblings": 69,
+      "complete": true
+    },
+    "createdBy": "/root",
+    "authorIndependentObjectAudit": false,
+    "branch": "sf613-artifact-e12cpu",
+    "refCreatedByWriter": false,
+    "runId": null,
+    "independentObjectReviewReported": {
+      "reviewer": "/root/teams_product",
+      "treePairs": 3,
+      "unchangedSiblings": 69,
+      "exactOneAddition": true,
+      "ciRunRequestAbsent": true,
+      "positive": true
+    }
+  },
+  "review": {
+    "rootPythonYamlAnd11Plus5AnchorsReported": "PASS_STATIC",
+    "rootObjectAuditReported": "PASS",
+    "teamsEssentialPython": "PASS_STATIC",
+    "teamsFinalSupportsAndManifest": "MANIFEST_LINK_PENDING_ONLY",
+    "runtimeVerification": "NOT_EXECUTED",
+    "teamsCodeSupportsBoundsAndObject": "PASS_STATIC_INDEPENDENT_ACK"
+  },
+  "remaining": {
+    "rootSeparateActivationAuthority": true,
+    "actualZipDownloadAndRuntimeMembership": true,
+    "actualProfileCollectionLauncherAndCaptureComplete": true,
+    "readerMainWholePreservationAndAllExports": true,
+    "boundsObjectPendingNote": "Bounds was frozen before root reported D/T; the concrete rootReportedObject above resolves object identity, not execution authority."
+  },
+  "authorActions": {
+    "gitBlobReadsAndWritesOnly": true,
+    "readerCodeExecuted": false,
+    "repositoryCodeExecuted": false,
+    "originalActionsLogGets": 0,
+    "zipGets": 0,
+    "treesCommitsRefsRunsCreated": 0
+  },
+  "instructions": {
+    "rootAgreements": "Root sole operator/receiver; preserve main original before parse and whole-log8MiB cap. No rerun or auditZIP. Separate execution authority remains required."
+  }
+}

@@ -1,0 +1,494 @@
+{
+  "schema": "sf613-evidence-publication-r2-v1",
+  "observedAtUtc": "2026-11-27 19:35:56 UTC",
+  "state": "PUBLISHED_REVIEWED_ARCHIVE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf613-evidence",
+  "previousCommit": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+  "commit": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+  "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+  "index": {
+    "gitBlob": "4fcb157a6da2f7ca0b78cfbf30fcb9a5beda8e4c",
+    "bytes": 344397,
+    "sha256": "f7434bbefab66a6d2e8f93fd9a88aeae0c27412f1849dfe7b7af2921f59ee639"
+  },
+  "readme": {
+    "gitBlob": "3c7a84c85e23aca17e520f411ffa1e08a82f548e",
+    "bytes": 7643,
+    "sha256": "01efaf8309b00bcb6527c4b3a4f3c7f682ded3dabe1cb376cc0bffd92e53e993"
+  },
+  "manifest": {
+    "gitBlob": "3e297a73cee1b65a4ddfb5953c4b86cf681b4d88",
+    "bytes": 29598,
+    "sha256": "d92a677950c70e24b5ef60a31b18e3e8d3d70d6e2fab61a8ffb6c2fb114e4d69"
+  },
+  "treeAudit": {
+    "rootTree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+    "objectsTree": "5f2955ef46fbf11066c45ff8416cf289f8b30c3f",
+    "rootHashRecomputedByResolver": true,
+    "objectsHashRecomputedByResolver": true,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "dataObjects": 271,
+    "treeFiles": 273,
+    "bytes": 29679298,
+    "checks": [
+      {
+        "name": "exact root paths",
+        "pass": true
+      },
+      {
+        "name": "two complete authenticated Git trees",
+        "pass": true
+      },
+      {
+        "name": "objects directory tree mode",
+        "pass": true
+      },
+      {
+        "name": "exact 271 blob leaves",
+        "pass": true
+      },
+      {
+        "name": "README exact",
+        "pass": true
+      },
+      {
+        "name": "index exact",
+        "pass": true
+      }
+    ]
+  },
+  "commitAudit": {
+    "sha": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+    "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+    "parents": [
+      "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+      "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+      "3131f1766768473ed1e5cb69e97416b55a04aae4",
+      "e63cffcea872aa538bc7ee1d6ed2768ecad80862"
+    ],
+    "treeExact": true,
+    "parentsExact": true,
+    "messageExact": true,
+    "refUpdated": false
+  },
+  "rootIndexChecks": [
+    {
+      "name": "exact 271 unique objects",
+      "pass": true
+    },
+    {
+      "name": "exact expected object metadata",
+      "pass": true
+    },
+    {
+      "name": "only safe data object paths and modes",
+      "pass": true
+    },
+    {
+      "name": "byte sum exact",
+      "pass": true
+    },
+    {
+      "name": "83 previous metadata and membership prefixes literal",
+      "pass": true
+    },
+    {
+      "name": "exact nine previous objects with memberships appended",
+      "pass": true
+    },
+    {
+      "name": "five previous groups literal",
+      "pass": true
+    },
+    {
+      "name": "four previous streams literal",
+      "pass": true
+    },
+    {
+      "name": "all thirteen E11 stream records literal",
+      "pass": true
+    },
+    {
+      "name": "four C17 streams added with correct runs",
+      "pass": true
+    },
+    {
+      "name": "21 unique streams and 14 groups",
+      "pass": true
+    },
+    {
+      "name": "310 memberships consistent",
+      "pass": true
+    },
+    {
+      "name": "every group item resolves",
+      "pass": true
+    },
+    {
+      "name": "ordered five parents literal",
+      "pass": true
+    },
+    {
+      "name": "own documentary tree contract",
+      "pass": true
+    },
+    {
+      "name": "old index README and publication receipt preserved",
+      "pass": true
+    },
+    {
+      "name": "E11 inventory review and C17 catalog preserved",
+      "pass": true
+    },
+    {
+      "name": "R7 five blobs exact",
+      "pass": true
+    },
+    {
+      "name": "R7 not ready and source unchanged",
+      "pass": true
+    },
+    {
+      "name": "entire previous README occurs exactly once",
+      "pass": true
+    },
+    {
+      "name": "calculated wholes and commit parents excluded from blob entries",
+      "pass": true
+    },
+    {
+      "name": "actual C17 unions included",
+      "pass": true
+    },
+    {
+      "name": "no proof or production transfer",
+      "pass": true
+    },
+    {
+      "name": "archive manifest not recursively included",
+      "pass": true
+    },
+    {
+      "name": "manifest new-object delta exact",
+      "pass": true
+    },
+    {
+      "name": "manifest membership delta exact",
+      "pass": true
+    },
+    {
+      "name": "original complete index reconstructs from preserved metadata and delta removal",
+      "pass": true
+    }
+  ],
+  "rootStreamChecks": [
+    {
+      "id": "C16-focal-main",
+      "parts": 1,
+      "bytes": 104436,
+      "sha256": "3581fd7f1c18f24071159351111692c9eb55010d52fd215db4b8565fa802c183",
+      "lf": 872,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C16-focal-cleanup",
+      "parts": 1,
+      "bytes": 2280,
+      "sha256": "8d8a6ae59f92530020ac831029b00bf7dfd49c6ab9f93ce483773747bd86c69d",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C16-Analytics-main",
+      "parts": 17,
+      "bytes": 4859527,
+      "sha256": "06f6263deccbee5c52296156f2f44c0ba4aa311c76e553fec05345a1eb720443",
+      "lf": 1965,
+      "bomByteOffsets": [
+        0,
+        2104639,
+        4217528
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C16-Analytics-cleanup",
+      "parts": 1,
+      "bytes": 2281,
+      "sha256": "56b0cb24e80d95930104a24009eb647d7739de102d83b5699919cd9d9885b5e7",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-focal-main",
+      "parts": 1,
+      "bytes": 101801,
+      "sha256": "7cba0af02bddbbb7e07dee2c49ccefa4be1baa6a8cd0302d5a84c8c05dfca11e",
+      "lf": 871,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-focal-cleanup",
+      "parts": 1,
+      "bytes": 2281,
+      "sha256": "8ce2ad24c93acdcef3c07829ccad5d8176e4362e1907d606fbb457fefd87933c",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-Analytics-main",
+      "parts": 17,
+      "bytes": 4874240,
+      "sha256": "41e0ea6134783ec1005550ec0e4581dda58c0c8f376689ac816cd6338ae86fc3",
+      "lf": 1976,
+      "bomByteOffsets": [
+        0,
+        2110279,
+        4231461
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-Analytics-cleanup",
+      "parts": 1,
+      "bytes": 2281,
+      "sha256": "dbeec96205e77fb83f65e52b777d471865d1643f2af4dfcef6284aa1e05bcc99",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-reader-main",
+      "parts": 10,
+      "bytes": 2938896,
+      "sha256": "f2e4145baf527fc89066ac1406a92fc3f151cb3e904bfeda0a7049625d57fb26",
+      "lf": 1851,
+      "bomByteOffsets": [
+        0,
+        2116451
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-profile",
+      "parts": 7,
+      "bytes": 1888001,
+      "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+      "lf": 1,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-markers",
+      "parts": 1,
+      "bytes": 5324,
+      "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+      "lf": 6,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-collection",
+      "parts": 1,
+      "bytes": 1661,
+      "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+      "lf": 1,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-launcher",
+      "parts": 1,
+      "bytes": 663,
+      "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+      "lf": 1,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-summary",
+      "parts": 1,
+      "bytes": 43963,
+      "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+      "lf": 781,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-inventory",
+      "parts": 1,
+      "bytes": 105553,
+      "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+      "lf": 2175,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-export-receipt",
+      "parts": 1,
+      "bytes": 52546,
+      "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+      "lf": 997,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "E11-Analytics-marker-union",
+      "parts": 1,
+      "bytes": 39486,
+      "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+      "lf": 102,
+      "bomByteOffsets": [],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C17-focal-main",
+      "parts": 1,
+      "bytes": 104973,
+      "sha256": "5e3964930eed8f5f89428427b0f6b71fd8db909c5ce4251aed01fda06dbcb76b",
+      "lf": 871,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C17-focal-cleanup",
+      "parts": 1,
+      "bytes": 2281,
+      "sha256": "1dcad47a209a012fd6dea8476b2d6e665f4d682883ffa2ebcd467e8e91f13fe8",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C17-Analytics-main",
+      "parts": 17,
+      "bytes": 4869189,
+      "sha256": "3b58e6e78c33bf6579fda19bb4e060886a7b9e71604e4290ccb727b244b9961d",
+      "lf": 1964,
+      "bomByteOffsets": [
+        0,
+        2104752,
+        4225638
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    },
+    {
+      "id": "C17-Analytics-cleanup",
+      "parts": 1,
+      "bytes": 2281,
+      "sha256": "73b3e73aa2862574776b3135405bea2e75d89465d6b1d5793a7d7041ecb55376",
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "literalToPreservedOriginalOrPreviouslyVerifiedExport": true,
+      "pass": true
+    }
+  ],
+  "peer": {
+    "reviewer": "/root/focal_migration",
+    "atUtc": "2026-11-27T19:35:20Z",
+    "status": "ACK_NONFORCE_ARCHIVE_UPDATE",
+    "commit": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+    "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+    "objectsTree": "5f2955ef46fbf11066c45ff8416cf289f8b30c3f",
+    "orderedParentsExact": true,
+    "bothGitTreeHashesRecomputed": true,
+    "leaves": 271,
+    "files": 273,
+    "bytes": 29679298,
+    "allFilesMode": "100644",
+    "refObserved": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+    "scope": "Actual REST commit metadata/parents/tree/message and both raw tree hash serializations; no claim of raw commit rehash.",
+    "originalGets": 0,
+    "zipGets": 0,
+    "mutation": false
+  },
+  "objectAuthentication": {
+    "previous83": "Root authenticated every original archive blob in the first publication; metadata and memberships preserved here.",
+    "E11": {
+      "gitBlob": "b8f773c09e60526ce725c7fca15ba31f8a338c44",
+      "bytes": 34893,
+      "sha256": "223b74473c093215ee62b72676e8785ce80f81308d8e02ef8895e341dab159d0"
+    },
+    "C17Catalog": {
+      "gitBlob": "32e941a04b4b13310e96b6196145080dec461a59",
+      "bytes": 45285,
+      "sha256": "bb5a19fe8e601f079fde60421a655fa53072f69b8698f5c4a6b895bd96fb6195"
+    },
+    "R7Review": {
+      "gitBlob": "53395615e18b37ebe909858c0c9732d751f38ecb",
+      "bytes": 4190,
+      "sha256": "8077c6c031d502928a20ed997ca9f06718bc086d5ab9bfe9de57845dc2879623"
+    },
+    "claim": "Reuse of authenticated actual blob inventories and current tree leaf checks. No claim that all 271 blob bodies were fetched again in this increment."
+  },
+  "refsPreserved": {
+    "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+  },
+  "runsObserved": 0,
+  "originalActionsGets": 0,
+  "zipGets": 0,
+  "qualification": {
+    "C17Focal": "CLOSED_PASS_FOCAL_ONLY",
+    "C17Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+    "qualifiedHistoricalAreas": 12,
+    "totalAreas": 15,
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "readiness": "NOT_READY",
+    "D26": "FOUR_FINAL_BINDINGS_UNBOUND"
+  },
+  "productionAuthorized": false,
+  "scope": "Own documentary tree; five ordered parents retain exact historical execution snapshots. No product ref advanced, no dev merge, no source/release qualification transfer."
+}

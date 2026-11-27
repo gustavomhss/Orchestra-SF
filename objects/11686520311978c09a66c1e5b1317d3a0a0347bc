@@ -1,0 +1,394 @@
+import inspector from "node:inspector"
+import { createHash } from "node:crypto"
+import { Buffer } from "node:buffer"
+import { closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, writeFileSync } from "node:fs"
+import cpuPath from "node:path"
+import { fileURLToPath } from "node:url"
+
+const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+const sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+
+// Temporary CPU-only observation. The lexical handle never enters product context.
+type Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }
+let selectionTried = false, selectedFrame: Frame | undefined
+const numberCap = 999_999_999, pulseMs = 10_000
+const routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]
+type SelectionClass = 0 | 1 | 2 | 3
+type IdentityLoopCounts = Readonly<{ enumerated: boolean; eligible: number; reduced: number; retained: number; omitted: number }>
+const sourceRequests: [number, number, number, number] = [0, 0, 0, 0]
+const nativeCopies: [number, number, number] = [0, 0, 0]
+const identityLoop: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0]
+const progressPrefix = "SF_PREVIEW_E12_PROGRESS ", progressCapBytes = 1024
+const progressSchema = "sf-preview-causal-e12-progress-v1"
+type HttpProgress = "body-returned" | "admit-returned" | "case-callback-entered"
+
+function whole(value: number) { return value - value % 1 }
+function bounded(value: number) { return value <= numberCap ? whole(value < 0 ? 0 : value) : numberCap }
+function pid() {
+  const value = process.pid
+  return typeof value === "number" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0
+}
+function parentPid() {
+  const value = process.ppid
+  return typeof value === "number" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0
+}
+
+function routeSnapshot() {
+  return { scope: "pid-running-window", order: ["sealed-read", "unfenced", "full-guard"], cap: routeCap, counts: routeCounts.slice() }
+}
+function selectionClass(value: "cases" | "preferences" | "case-identities" | undefined): SelectionClass | undefined {
+  return value === undefined ? 0 : value === "cases" ? 1 : value === "preferences" ? 2 : value === "case-identities" ? 3 : undefined
+}
+function increment(counts: number[], slot: number, amount = 1) {
+  const value = counts[slot]
+  if (value === undefined || value >= routeCap) return
+  const total = value + amount
+  counts[slot] = total < routeCap ? total : routeCap
+}
+function selectionSnapshot() {
+  let saturated = false
+  for (let index = 0; index < sourceRequests.length; index++) if (sourceRequests[index] === routeCap) saturated = true
+  for (let index = 0; index < nativeCopies.length; index++) if (nativeCopies[index] === routeCap) saturated = true
+  for (let index = 0; index < identityLoop.length; index++) if (identityLoop[index] === routeCap) saturated = true
+  return { scope: "pid-running-window", cap: routeCap,
+    sourceOrder: ["none", "cases", "preferences", "case-identities"], sourceRequests: sourceRequests.slice(),
+    nativeOrder: ["tag-refused", "cases-complete", "normalized-map"], nativeCopies: nativeCopies.slice(),
+    loopOrder: ["enumerated", "not-enumerated", "eligible", "reduced", "retained", "known-fields-omitted"],
+    identityLoop: identityLoop.slice(), saturated }
+}
+export function markSfE12SourceSelection(selection: "cases" | "preferences" | "case-identities" | undefined) {
+  try {
+    const frame = selectedFrame, capture = cpuCapture
+    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
+    const slot = selectionClass(selection)
+    if (slot !== undefined) increment(sourceRequests, slot)
+  } catch { /* Count an issued Source token only; never alter its admission or pump here. */ }
+}
+export function markSfE12NativeCopy(requested: "cases" | "preferences" | "case-identities" | undefined,
+  materialized: "cases" | "preferences" | "case-identities" | undefined, normalized: boolean | undefined,
+  loop: IdentityLoopCounts | undefined) {
+  try {
+    const frame = selectedFrame, capture = cpuCapture
+    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
+        requested !== "case-identities") return
+    const slot = materialized !== "case-identities" ? 0 : normalized === true ? 2 : 1
+    const enumerated = loop?.enumerated === true
+    const values = loop && enumerated ? [loop.eligible, loop.reduced, loop.retained, loop.omitted] : [0, 0, 0, 0]
+    for (let index = 0; index < values.length; index++) {
+      const value = values[index]
+      if (typeof value !== "number" || value < 0 || value > routeCap || value % 1 !== 0) return
+    }
+    increment(nativeCopies, slot)
+    increment(identityLoop, enumerated ? 0 : 1)
+    if (enumerated) for (let index = 0; index < values.length; index++) increment(identityLoop, index + 2, values[index]!)
+  } catch { /* Publish only completed requested identity copies; absent loops stay explicitly unenumerated. */ }
+}
+export function pumpSfE12CpuObservation() {
+  try {
+    const frame = selectedFrame, capture = cpuCapture
+    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
+    pulseCpuFrame(frame)
+  } catch { /* A cooperative boundary cannot change the original outcome. */ }
+}
+export function markSfE12CpuRoute(route: 0 | 1 | 2) {
+  try {
+    const frame = selectedFrame, capture = cpuCapture
+    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
+        (route !== 0 && route !== 1 && route !== 2)) return
+    if (routeCounts[route] < routeCap) routeCounts[route]++
+    pumpSfE12CpuObservation()
+  } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }
+}
+export function markSfE12HttpProgress(handle: unknown, request: Request, point: HttpProgress) {
+  try {
+    const frame = selectedFrame
+    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
+    const slot = point === "body-returned" ? 1 : point === "admit-returned" ? 2 : point === "case-callback-entered" ? 4 : 0
+    if (!slot || (frame.progressMask & slot) !== 0) return
+    frame.progressMask |= slot
+    const sequence = ++frame.progressSequence
+    try {
+      const now = cpuNow(), capture = cpuCapture?.frame === frame ? cpuCapture : undefined
+      const binding = capture?.binding
+      const line = progressPrefix + JSON.stringify({ schema: progressSchema, source, sourceTree, qualification: false,
+        pid: pid(), request: 1, sequence, kind: point,
+        elapsedTenthMs: now === undefined || now < frame.start ? null : cpuTenth(now - frame.start),
+        cpuPhase: capture?.phase ?? "unavailable", routes: routeSnapshot(), selection: selectionSnapshot(),
+        ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + "\n"
+      if (line.length <= progressCapBytes && /^[\x20-\x7e]*\n$/.test(line)) process.stdout.write(line)
+    } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }
+    pumpSfE12CpuObservation()
+  } catch { /* Do not inspect the Request or replace a product result. */ }
+}
+
+function disposeCpuFrame(frame: Frame) {
+  frame.closed = true
+  const timer = frame.timer
+  frame.timer = undefined
+  if (timer !== undefined) {
+    try { clearInterval(timer) } catch { /* Never replace the original request outcome. */ }
+  }
+}
+function pulseCpuFrame(frame: Frame) {
+  try {
+    if (frame !== selectedFrame || frame.closed) return
+    const now = cpuNow()
+    if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)
+  } catch { /* A delayed or failed pulse is not proof of timely collection. */ }
+}
+export function startSfE12CpuObservation(request: Request): Frame | undefined {
+  if (selectionTried) return undefined
+  selectionTried = true
+  let frame: Frame | undefined
+  try {
+    const start = cpuNow()
+    if (start === undefined) { cpuEmit("unavailable", undefined, { reason: "selection-clock" }); return undefined }
+    frame = { request, start, closed: false, httpClosed: false, progressMask: 0, progressSequence: 0 }
+    selectedFrame = frame
+    const selected = frame
+    // Install and unref before starting a sampler, so timer failure owns no sampler.
+    frame.timer = setInterval(() => pulseCpuFrame(selected), pulseMs)
+    frame.timer.unref?.()
+    startCpuObservation(frame)
+    if (cpuCapture?.frame !== frame || cpuCapture.phase !== "running") disposeCpuFrame(frame)
+    return frame
+  } catch {
+    if (frame) disposeCpuFrame(frame)
+    cpuEmit("unavailable", undefined, { reason: "selection-timer" })
+    return undefined
+  }
+}
+export function finishSfE12CpuObservation(handle: unknown, request: Request) {
+  try {
+    const frame = selectedFrame
+    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
+    frame.httpClosed = true
+    if (frame.closed) return
+    disposeCpuFrame(frame)
+    const now = cpuNow()
+    finishCpuObservation(frame, now, now !== undefined && now - frame.start >= cpuTargetMs ? "target" : "final")
+  } catch { /* Observation cannot replace a returned value or original rejection. */ }
+}
+
+type CpuMethod = "Profiler.enable" | "Profiler.setSamplingInterval" | "Profiler.start" | "Profiler.stop"
+type CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }
+type CpuBinding = {
+  schema: "sf-preview-e12-cpu-launch-v1"; source: string; sourceTree: string; snapshot: string;
+  runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string
+}
+type CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }
+type CpuCapture = {
+  frame: Frame; directory: string; binding: CpuBinding; session: CpuSession;
+  phase: "running" | "stopping" | "finished" | "failed"; owned: boolean;
+  points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;
+  cleanupFailed: boolean
+}
+const cpuPrefix = "SF_PREVIEW_E12_CPU ", cpuSchema = "sf-preview-causal-e12-cpu-v1"
+const cpuRevision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+const cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000
+const cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024
+const cpuDirectoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", cpuBindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
+let cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0
+
+function cpuNow(): number | undefined {
+  try {
+    const value = performance.now()
+    if (typeof value === "number" && value >= 0 && value <= numberCap / 10) return value
+  } catch { /* CPU observation never changes the original outcome. */ }
+}
+function cpuTenth(value: number | undefined): number | null {
+  return value === undefined ? null : whole(value * 10)
+}
+function cpuUtc(): number | null {
+  try {
+    const value = Date.now()
+    if (typeof value === "number" && value >= 0 && value <= 8_640_000_000_000_000 && value % 1 === 0) return value
+  } catch { /* Separate from the original observer's health. */ }
+  return null
+}
+function cpuHash(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
+function cpuWithin(parent: string, child: string) {
+  const relative = cpuPath.relative(parent, child)
+  return relative === "" || relative !== ".." && !relative.startsWith(".." + cpuPath.sep) && !cpuPath.isAbsolute(relative)
+}
+function cpuObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+}
+function cpuEmit(kind: string, binding: CpuBinding | undefined, payload: Record<string, unknown>) {
+  if (cpuLines >= 3) return
+  const sequence = ++cpuLines
+  try {
+    const line = cpuPrefix + JSON.stringify({ schema: cpuSchema, source, sourceTree, qualification: false,
+      pid: pid(), sequence, kind, request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),
+      ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}),
+      ...payload }) + "\n"
+    if (line.length <= 4096 && /^[\x20-\x7e]*\n$/.test(line)) process.stdout.write(line)
+  } catch { /* An attempted line is never replayed. */ }
+}
+function cpuAdmit(): { directory: string; binding: CpuBinding } | undefined {
+  const directory = process.env[cpuDirectoryKey], encoded = process.env[cpuBindingKey]
+  if (!directory || !encoded) return undefined
+  if (encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
+      typeof Bun === "undefined" || Bun.version !== "1.3.14" || Bun.revision !== cpuRevision) throw new Error("cpu-runtime")
+  const repository = realpathSync(fileURLToPath(new URL("../../../../", import.meta.url)))
+  if (process.argv[1] !== cpuPath.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
+    throw new Error("cpu-process")
+  const base = cpuPath.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
+  if (!cpuObject(value) || value.schema !== "sf-preview-e12-cpu-launch-v1" || value.source !== source ||
+      value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
+      typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
+      typeof value.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||
+      typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
+      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
+    throw new Error("cpu-binding")
+  if (!cpuPath.isAbsolute(directory) || cpuPath.dirname(directory) !== base || cpuPath.basename(directory) !== value.nonce ||
+      realpathSync(base) !== base || realpathSync(directory) !== directory ||
+      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || cpuWithin(realpathSync(process.cwd()), directory))
+    throw new Error("cpu-directory")
+  const launcherPath = cpuPath.join(directory, "launcher.json"), info = lstatSync(launcherPath)
+  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error("cpu-launcher")
+  const text = readFileSync(launcherPath, "utf8"), launcher: unknown = JSON.parse(text)
+  if (Buffer.byteLength(text, "utf8") !== value.launcherBytes || cpuHash(text) !== value.launcherSha256 || !cpuObject(launcher))
+    throw new Error("cpu-launcher")
+  for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
+    if (launcher[key] !== value[key]) throw new Error("cpu-launcher-binding")
+  if (launcher.processRole !== "native-cli" || launcher.profileName !== "preview-first.cpuprofile")
+    throw new Error("cpu-launcher-role")
+  return { directory, binding: value as CpuBinding }
+}
+function cpuWrite(directory: string, name: string, text: string): CpuFile {
+  const bytes = Buffer.byteLength(text, "utf8")
+  const cap = name === "preview-first.cpuprofile" ? cpuProfileCapBytes : cpuCollectionCapBytes
+  if (bytes > cap) throw new Error("cpu-file-cap")
+  const sha256 = cpuHash(text)
+  let fd: number | undefined
+  try {
+    fd = openSync(cpuPath.join(directory, name), "wx", 0o600)
+    writeFileSync(fd, text, "utf8")
+    fsyncSync(fd)
+    const fsyncTenthMs = cpuTenth(cpuNow()), info = fstatSync(fd)
+    if (!info.isFile() || info.size !== bytes) throw new Error("cpu-file-size")
+    closeSync(fd)
+    fd = undefined
+    return { name, bytes, sha256, fsyncTenthMs, closeTenthMs: cpuTenth(cpuNow()) }
+  } finally {
+    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve the primary observation failure. */ } }
+  }
+}
+function startCpuObservation(frame: Frame) {
+  if (cpuTried) return
+  cpuTried = true
+  let admitted: ReturnType<typeof cpuAdmit> = undefined, stage = "admission"
+  try {
+    admitted = cpuAdmit()
+    if (!admitted) { cpuEmit("unavailable", undefined, { reason: "no-launcher" }); return }
+    const now = cpuNow()
+    if (now === undefined || now < frame.start || now - frame.start >= cpuTargetMs) {
+      cpuEmit("unavailable", admitted.binding, { reason: "late-or-invalid-clock", elapsedTenthMs: now === undefined ? null : cpuTenth(now - frame.start) })
+      return
+    }
+    stage = "connect"
+    // This is the exact default-import/synchronous form exercised by the pinned Bun.
+    const session = new inspector.Session() as unknown as CpuSession
+    session.connect()
+    stage = "enable"
+    session.post("Profiler.enable")
+    stage = "sampling-preflight"
+    // A rejection here can mean another VM sampler is running. Never disconnect it.
+    session.post("Profiler.setSamplingInterval", { interval: cpuIntervalUs })
+    const beforeStart = cpuNow()
+    const points: Record<string, number | null> = { frameStart: cpuTenth(frame.start), startEnter: cpuTenth(beforeStart) }
+    if (beforeStart === undefined || beforeStart < frame.start || beforeStart - frame.start >= cpuTargetMs) {
+      cpuEmit("unavailable", admitted.binding, { reason: "late-before-start", points })
+      return
+    }
+    stage = "start"
+    session.post("Profiler.start")
+    points.startReturn = cpuTenth(cpuNow())
+    const capture: CpuCapture = { frame, directory: admitted.directory, binding: admitted.binding, session,
+      phase: "running", owned: true, points, utcStartReturnMs: cpuUtc(), cleanupFailed: false }
+    cpuCapture = capture
+    cpuEmit("started", capture.binding, { runtime: ["1.3.14", cpuRevision], parentPid: parentPid(),
+      intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,
+      utcMs: capture.utcStartReturnMs, points })
+  } catch {
+    // Admission/start failure has no established sampler ownership: no disable/disconnect.
+    cpuEmit("unavailable", admitted?.binding, { reason: stage, ownership: stage === "start" ? "uncertain" : "not-owned" })
+  }
+}
+function checkpointCpuObservation(frame: Frame, now: number): boolean {
+  try {
+    const capture = cpuCapture
+    if (capture?.frame === frame && capture.phase === "running" && now - frame.start >= cpuTargetMs) {
+      finishCpuObservation(frame, now, "target")
+      return true
+    }
+  } catch { /* Never prevent the original cutoff check. */ }
+  return false
+}
+function finishCpuObservation(frame: Frame, now: number | undefined, cause: "target" | "window" | "final") {
+  const capture = cpuCapture
+  if (!capture || capture.frame !== frame || capture.phase !== "running" || !capture.owned) return
+  capture.phase = "stopping"
+  capture.stopCause = cause
+  let stage = "stop", profileFile: CpuFile | undefined
+  try {
+    capture.points.stopCheckpoint = cpuTenth(now)
+    capture.points.stopEnter = cpuTenth(cpuNow())
+    capture.utcStopEnterMs = cpuUtc()
+    const result: unknown = capture.session.post("Profiler.stop")
+    capture.points.stopReturn = cpuTenth(cpuNow())
+    capture.owned = false
+    // Stop returned successfully in this same synchronous turn. Keep its result.
+    try { capture.session.disconnect() } catch { capture.cleanupFailed = true }
+    stage = "result"
+    if (!cpuObject(result) || !cpuObject(result.profile)) throw new Error("cpu-result")
+    const profile = result.profile
+    if (!Array.isArray(profile.nodes) || !Array.isArray(profile.samples) || !Array.isArray(profile.timeDeltas) ||
+        typeof profile.startTime !== "number" || typeof profile.endTime !== "number" ||
+        !Number.isFinite(profile.startTime) || !Number.isFinite(profile.endTime) || profile.endTime < profile.startTime ||
+        profile.samples.length !== profile.timeDeltas.length) throw new Error("cpu-profile")
+    cpuEmit("stopped", capture.binding, { cause, points: capture.points,
+      nodesBounded: bounded(profile.nodes.length), samplesBounded: bounded(profile.samples.length), cleanupFailed: capture.cleanupFailed })
+    stage = "serialize"
+    capture.points.serializeEnter = cpuTenth(cpuNow())
+    // Full first serialization of returned result.profile, not the inaccessible native JSON string.
+    const profileText = JSON.stringify(profile) + "\n"
+    capture.points.serializeReturn = cpuTenth(cpuNow())
+    stage = "profile-cap"
+    if (Buffer.byteLength(profileText, "utf8") > cpuProfileCapBytes) throw new Error("cpu-profile-cap")
+    stage = "profile-write"
+    capture.points.profileWriteEnter = cpuTenth(cpuNow())
+    profileFile = cpuWrite(capture.directory, "preview-first.cpuprofile", profileText)
+    capture.points.profileFsync = profileFile.fsyncTenthMs
+    capture.points.profileClose = profileFile.closeTenthMs
+    const stop = capture.points.stopEnter, closed = profileFile.closeTenthMs, origin = whole(frame.start * 10)
+    const temporalProfile = typeof stop === "number" && closed !== null && stop >= origin && closed >= stop &&
+      closed - origin < cpuAcceptMs * 10
+    const short = cause === "final" && now !== undefined && now - frame.start < cpuTargetMs
+    const state = short ? "short-completed" : temporalProfile ? "completed-on-time" : "completed-late"
+    const collection = { schema: cpuSchema, source, sourceTree, qualification: false,
+      snapshot: capture.binding.snapshot, runId: capture.binding.runId, attempt: capture.binding.attempt,
+      nonce: capture.binding.nonce, pid: pid(), parentPid: parentPid(), request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),
+      runtime: ["1.3.14", cpuRevision], intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,
+      state, cause, utcStartReturnMs: capture.utcStartReturnMs, utcStopEnterMs: capture.utcStopEnterMs ?? null, points: capture.points,
+      profile: profileFile, native: { startTime: profile.startTime, endTime: profile.endTime,
+        nodes: profile.nodes.length, samples: profile.samples.length },
+      cleanupFailed: capture.cleanupFailed, profileCapBytes: cpuProfileCapBytes, collectionCapBytes: cpuCollectionCapBytes,
+      limits: "Whole VM samples; endTime is last sample; no async/exclusive CPU attribution; overhead not subtracted. This file does not attest its own durable completion." }
+    stage = "collection-write"
+    const collectionFile = cpuWrite(capture.directory, "collection.json", JSON.stringify(collection) + "\n")
+    capture.phase = "finished"
+    // Only this later marker attests collection.json's own fsync/close and hash.
+    cpuEmit("finished", capture.binding, { state, cause, profile: profileFile, collection: collectionFile,
+      collectionWithinAccept: temporalProfile && collectionFile.closeTenthMs !== null && closed !== null &&
+        collectionFile.closeTenthMs >= closed && collectionFile.closeTenthMs - origin < cpuAcceptMs * 10,
+      points: capture.points, cleanupFailed: capture.cleanupFailed })
+  } catch {
+    capture.phase = "failed"
+    // No second stop and no uncertain global cleanup. Partial files remain evidence.
+    cpuEmit("finished", capture.binding, { state: "incomplete", reason: stage, cause,
+      points: capture.points, ...(profileFile ? { profile: profileFile } : {}),
+      stopReturned: !capture.owned, cleanupFailed: capture.cleanupFailed })
+  }
+}

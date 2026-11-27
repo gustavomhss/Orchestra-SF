@@ -1,0 +1,141 @@
+{
+  "schema": "sf613-e12-analytics-authority-v1",
+  "createdAt": "2026-11-27 20:21:57 UTC",
+  "operator": "/root",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "AUTHORIZED_SINGLE_DIAGNOSTIC_ACTIVATION_NO_RETRY",
+  "branch": "ci-run-sf613e12a",
+  "activation": {
+    "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "directSourceBranch": true,
+    "newOverlay": false,
+    "newSnapshot": false,
+    "expectedWorkflow": "test-ci",
+    "event": "push"
+  },
+  "preflight": {
+    "time": "2026-11-27 20:21:24 UTC",
+    "branchAbsent404": true,
+    "existingRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "6f8690ed690b3271f312e8954c1229ac5ec07176"
+    }
+  },
+  "sourceBinding": {
+    "gitBlob": "bea70840077fa85b7df5354dca2af349d2abd2c8",
+    "bytes": 14625,
+    "sha256": "bff1c05f5d9a334f9f1679b7dafc45711b7627e8726dcbc9a68b170ac98169f3"
+  },
+  "sourceManifest": {
+    "gitBlob": "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+    "bytes": 22710,
+    "sha256": "51311a693dd0a800f7043e2b9b5905defe1d834e6dc99d3e74e0e751ea7f1703"
+  },
+  "sourceBounds": {
+    "gitBlob": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+    "bytes": 25207,
+    "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab"
+  },
+  "focalReceipt": {
+    "gitBlob": "d8b2fa28d316464793095bf0b03c2327e86a847e",
+    "bytes": 77171,
+    "sha256": "d4da7ebb71f85c80eb612a4505b847943c5135700a77cea862d10496056f1326"
+  },
+  "focalRun": {
+    "id": 46061092039,
+    "attempt": 1,
+    "status": "success"
+  },
+  "independentActualSourcePreflight": {
+    "reviewer": "/root/close_pr613",
+    "pass": true,
+    "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "exactSourceChanges": "2A6M",
+    "all8ContentsVerifiedAtPathRef": true,
+    "request": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    },
+    "pins": {
+      "spec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "productionConfig": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "baseConfig": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "workflow": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "runner": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    "selection": {
+      "cases": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "firstTestTimeoutMs": 780000,
+      "biTimeoutMs": 660000,
+      "previewTimeoutMs": 60000,
+      "sensitivityTimeoutMs": 120000,
+      "jobMinutes": 45
+    },
+    "journeysUnchanged": true,
+    "diagnosticOnly": true
+  },
+  "purpose": "Observe completed requested identity copies in the real installed Analytics journey using reviewed E12 source; preserve negative and positive outcomes without changing original tests.",
+  "execution": {
+    "linux": "ubuntu-24.04 x64",
+    "bun": "1.3.14",
+    "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "journeyOrderAndAssertionsUnchanged": true,
+    "previewTimeoutMs": 60000,
+    "sensitivityTimeoutMs": 120000,
+    "jobMinutes": 45
+  },
+  "observation": {
+    "intervalUs": 5000,
+    "targetMs": 50000,
+    "acceptedCloseBeforeMs": 55000,
+    "sourceSlots": 4,
+    "nativeSlots": 3,
+    "loopSlots": 6,
+    "cap": 65535,
+    "wireCpuLineBytes": 4096,
+    "wireProgressLineBytes": 1024,
+    "totalWireBytesPerProcess": 15360,
+    "profileBytes": 4194304,
+    "collectionBytes": 16384,
+    "launcherBytes": 8192,
+    "scope": "whole VM/PID window, not exclusive Request"
+  },
+  "receiptProtocol": {
+    "metadataOnlyUntilTerminal": true,
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "fullTextPreservationAndLiteralGitReadbackBeforeParsing": true,
+    "largeTextSplitBytes": 300000,
+    "noOriginalReacquisition": true,
+    "noZipGetUntilReviewedBoundReader": true,
+    "noAutomaticRetry": true
+  },
+  "qualification": {
+    "finalProduct": false,
+    "cleanCandidate": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "UI42": "PENDING",
+    "UI43": "PENDING",
+    "UI44": "PENDING",
+    "finalAncestryExcludesDiagnostics": true
+  },
+  "productionAuthorized": false
+}

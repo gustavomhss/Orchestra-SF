@@ -1,0 +1,1360 @@
+{
+  "schema": "sf613-e12-analytics-receipt-v1",
+  "at": "2026-11-27 20:39:02 UTC",
+  "status": "CLOSED_NEGATIVE_ORIGINAL_PREVIEW_TIMEOUT_CPU_MARKERS_PRESENT_FILES_PENDING",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "cleanProductSource": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+  },
+  "instrumentedSnapshot": {
+    "sha": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceDelta": "2A6M diagnostic",
+    "directActivationOnSource": true
+  },
+  "run": {
+    "run": 46063135555,
+    "attempt": 1,
+    "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "mainJob": 140721962760,
+    "cleanupJob": 140725518085,
+    "conclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "testStepConclusion": "failure",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46063135555",
+    "temporaryBranch": "ci-run-sf613e12a"
+  },
+  "authority": {
+    "gitBlob": "8d32eea292feb652b324ce7049dc2c9169acd73f",
+    "bytes": 4715,
+    "sha256": "fbfaeb970543645dab8962ab6f4c705479e16e54edf47fe1e95001fadc7c722a"
+  },
+  "acceptedFocal": {
+    "gitBlob": "d8b2fa28d316464793095bf0b03c2327e86a847e",
+    "bytes": 77171,
+    "sha256": "d4da7ebb71f85c80eb612a4505b847943c5135700a77cea862d10496056f1326"
+  },
+  "rawManifest": {
+    "gitBlob": "2406d1d4c3ea0150ab227b8544255df804439984",
+    "bytes": 13647,
+    "sha256": "19e4d17a4e8bd37c2a1edf0363dc77706ed09236086d8f8bfef2269f10630fce"
+  },
+  "main": {
+    "job": 140721962760,
+    "bytes": 4872232,
+    "sha256": "d649941b2c9fd3d8b15ab69091f5dd75be29fc3362f782e92070f25ae1d7b69f",
+    "wholeBlobPersisted": false,
+    "literalReadback": true,
+    "lf": 1974,
+    "bomCodeUnitOffsets": [
+      0,
+      2106435,
+      4224937
+    ],
+    "wholeGitBlobCalculated": "43e102cf0c76057eb80c5f936e724e82d61b6516",
+    "allPartsPersisted": true,
+    "parts": [
+      {
+        "index": 1,
+        "startCodeUnit": 0,
+        "endCodeUnit": 297350,
+        "bytes": 300000,
+        "gitBlob": "0f396aadb27ad2ab70f9e5fb04e1c1a7e378cf52",
+        "sha256": "3118a11b7d4c0e83b72d2a4f477214c686fefaa434c8ed9c7d461e13db2631e0",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 2,
+        "startCodeUnit": 297350,
+        "endCodeUnit": 597350,
+        "bytes": 300000,
+        "gitBlob": "370d608151ca7166988209431f99825028dc3ce8",
+        "sha256": "edae584f00fea07e588b1aa5c6f7f486a1e982ddc7eb99da4559aa68b2240b01",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 3,
+        "startCodeUnit": 597350,
+        "endCodeUnit": 895187,
+        "bytes": 300000,
+        "gitBlob": "06aefbc863319f2cec226535ca52a6ebabcd995e",
+        "sha256": "a0ee6c7dfa7a2f142e982a7f36e452e061d5c295d550ddd57b84c5824907e2a3",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 4,
+        "startCodeUnit": 895187,
+        "endCodeUnit": 1195187,
+        "bytes": 300000,
+        "gitBlob": "ea17661245bd50d7dbd0f194d3663cc0a2ae42f2",
+        "sha256": "28b130159296b098b1aa2bbce19010fe6edbaec8b91d4433192edd0490048cac",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 5,
+        "startCodeUnit": 1195187,
+        "endCodeUnit": 1495187,
+        "bytes": 300000,
+        "gitBlob": "551c97e99f2c9c6b020bdb81dab70e430b06f106",
+        "sha256": "7741ef5460dbd1a489e0bfbb199a6e8089645013b16fd724642c332414186c25",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 6,
+        "startCodeUnit": 1495187,
+        "endCodeUnit": 1795187,
+        "bytes": 300000,
+        "gitBlob": "0f6cca15da3eebbc6bf11a031815b9c53d619dbc",
+        "sha256": "2a2a49fdc05f8f187cf74bcbc3c4eec9a2a7228d7f15e18df69b5c7e356e56e0",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 7,
+        "startCodeUnit": 1795187,
+        "endCodeUnit": 2095187,
+        "bytes": 300000,
+        "gitBlob": "c442519325203dc57c51b3a3cd4b0a4454a37ad8",
+        "sha256": "8d7ef7ab7f8c21abae2f7b6a81f6e077d3a83956b54531f7945c00ba8e669915",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 8,
+        "startCodeUnit": 2095187,
+        "endCodeUnit": 2395185,
+        "bytes": 300000,
+        "gitBlob": "3239e9f76877c98032725263ec11111dcf25ccb1",
+        "sha256": "8d6e773392d5735d41b3e0e5bf55e2c0b13a030cab4285b0e335c70305ef8f91",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 9,
+        "startCodeUnit": 2395185,
+        "endCodeUnit": 2695182,
+        "bytes": 300000,
+        "gitBlob": "54ecec089b7624099245b2d3211a2aa54f2ff5cf",
+        "sha256": "7e01b4df7a7e3a98a8ed0b83d39a1e6bf5bdc4238723dfa0b2f0fa6b9e6e185a",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 10,
+        "startCodeUnit": 2695182,
+        "endCodeUnit": 2995179,
+        "bytes": 300000,
+        "gitBlob": "fb59bb10d0cd306ed060ae4eddf640f6efb8464c",
+        "sha256": "87854313d91fcb052b8797fe6b1b2ff569c2d20bf3bc0833dfbe5b323d5ddda7",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 11,
+        "startCodeUnit": 2995179,
+        "endCodeUnit": 3295179,
+        "bytes": 300000,
+        "gitBlob": "c481c19a3c56bae0839792e770f45b97b5131e60",
+        "sha256": "ec26be4344c821fcc5c881296a2ca4403ff3f6a109c4932ef93700ccabe93549",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 12,
+        "startCodeUnit": 3295179,
+        "endCodeUnit": 3595179,
+        "bytes": 300000,
+        "gitBlob": "a45879dce1f80cff6c7fa35c6427bddea9a06786",
+        "sha256": "865ec8be3d6144cbd64707dd658277c048a0799f243c98be97f39ff114c9f40d",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 13,
+        "startCodeUnit": 3595179,
+        "endCodeUnit": 3895179,
+        "bytes": 300000,
+        "gitBlob": "00950faaa923f2e364bb1cd7d9527244fabb522a",
+        "sha256": "4950fc06a666966a25aeb035acba63b6f6b8bdb4bdc122d6ea7d6405ac5992b2",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 14,
+        "startCodeUnit": 3895179,
+        "endCodeUnit": 4195176,
+        "bytes": 300000,
+        "gitBlob": "cdacbf4bdbb159c87201867547f3a27517db9776",
+        "sha256": "7a6e7b2780254666cffcba16d0f46aa3ba62409804bfb742bc26941714e5575b",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 15,
+        "startCodeUnit": 4195176,
+        "endCodeUnit": 4495174,
+        "bytes": 300000,
+        "gitBlob": "23c217be216bfd7c2481745729c071bd391abb0b",
+        "sha256": "4c1ffc6832634cb692eaa123f57814c445551eb6d4c9a56834415b3d89caba2b",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 16,
+        "startCodeUnit": 4495174,
+        "endCodeUnit": 4795174,
+        "bytes": 300000,
+        "gitBlob": "8af34d7b3cb7e8c894f045202ae1857b52f8a393",
+        "sha256": "ac540c27e12aa6345e11ab00ffbaffb7a02e1ea8fa350b7bd17c49ba57b592ee",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 17,
+        "startCodeUnit": 4795174,
+        "endCodeUnit": 4867402,
+        "bytes": 72232,
+        "gitBlob": "fa600cd1e26932b0446fb90eea434a6b7955fc1f",
+        "sha256": "3bfff1bf8db8ce0fd0f1ee1d076673666db57c6428422e5da4cfcfcabe4be44b",
+        "persisted": true,
+        "literalReadback": true
+      }
+    ],
+    "bomByteOffsets": [
+      0,
+      2111248,
+      4229761
+    ]
+  },
+  "cleanup": {
+    "job": 140725518085,
+    "gitBlob": "433709288a8e6b527487ed965a66e6aa66ebf6f5",
+    "bytes": 2281,
+    "sha256": "8e2c0c2e2278e6f478dd40dc644cadfdf8fe043f90e61beb4617364c141e2b56",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "originalGetsAtThisCut": {
+    "main": 1,
+    "cleanup": 1,
+    "originalZip": 0,
+    "auditZip": 0
+  },
+  "preservedBeforeSemanticParse": true,
+  "originalAcquisitionClosed": true,
+  "branchAfterCleanup": "404 NOT_FOUND",
+  "artifactsMetadataOnly": [
+    {
+      "id": 15229333864,
+      "node_id": "MDg6QXJ0aWZhY3QxNTIyOTMzMzg2NA==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 46003924,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864/zip",
+      "expired": false,
+      "digest": "sha256:6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+      "created_at": "2026-11-27T20:31:32Z",
+      "updated_at": "2026-11-27T20:31:32Z",
+      "expires_at": "2026-12-04T20:31:30Z",
+      "workflow_run": {
+        "id": 46063135555,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613e12a",
+        "head_sha": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+      }
+    }
+  ],
+  "selection": {
+    "request": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "finalLF": false
+    },
+    "actualSpec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "config": "e2e/playwright.production.config.ts",
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "originalSpecAndSeedPreserved": true,
+    "firstPreviewTimeoutMs": 60000,
+    "sensitivityTimeoutMs": 120000,
+    "sourcePreflight": {
+      "reviewer": "/root/close_pr613",
+      "pass": true,
+      "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "exactSourceChanges": "2A6M",
+      "all8ContentsVerifiedAtPathRef": true,
+      "request": {
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0
+      },
+      "pins": {
+        "spec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "productionConfig": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "baseConfig": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "workflow": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "runner": "5007e48270b80c83eb719d35cec9e6343206a195"
+      },
+      "selection": {
+        "cases": 2,
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "firstTestTimeoutMs": 780000,
+        "biTimeoutMs": 660000,
+        "previewTimeoutMs": 60000,
+        "sensitivityTimeoutMs": 120000,
+        "jobMinutes": 45
+      },
+      "journeysUnchanged": true,
+      "diagnosticOnly": true
+    }
+  },
+  "runtime": {
+    "versionFromMain": "1.3.14+0d9b296af",
+    "revisionFromStartedMarker": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "omniEnvironmentNonce": "cc0cac2dae02af71a558b7f74138b1ec",
+    "releaseQualification": false
+  },
+  "outcome": {
+    "failed": 1,
+    "passed": 1,
+    "reportedTotalElapsed": "8.2m",
+    "firstPreviewTimeoutMs": 60000,
+    "newAreasAccepted": 0,
+    "historicalQualified": 12,
+    "totalAreas": 15,
+    "priorResults": {
+      "seq1": [
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 1,
+          "method": "POST",
+          "ownerBinding": "exact"
+        },
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-request-failed",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 260
+        },
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 258,
+          "http": 200,
+          "acquisitionFailure": "response-body-unavailable"
+        }
+      ],
+      "seq2": [
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 2,
+          "method": "POST",
+          "ownerBinding": "exact"
+        },
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 518,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      ]
+    },
+    "scope": {
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "catalogViews": 11,
+      "originalFinancialRead": true,
+      "originalOperationalRead": true,
+      "originalSourceResolution": true,
+      "originalOperationalSourceResolution": true,
+      "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+      "originalSensitivityChoices": 0,
+      "invalidatedOnPeriodChange": true,
+      "fabricatedResult": false
+    },
+    "first": {
+      "status": "failed",
+      "reason": "first original preview response waiter exceeded60000ms",
+      "source": {
+        "file": "design-wave-five-analytics.spec.ts",
+        "line": 72,
+        "column": 32
+      },
+      "request": {
+        "operation": "decision-portfolio-preview",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact",
+        "observedNativeResponse": false
+      },
+      "UI42": {
+        "qualification": false,
+        "captures": 6,
+        "state": "Preview combinations Running; preview not yet available",
+        "readiness": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready"
+        }
+      },
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "second": {
+      "status": "passed",
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "captures": {
+        "UI45": 7,
+        "UI46": 33
+      },
+      "scope": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      },
+      "originalBI06": {
+        "enUS": {
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true
+        },
+        "ptBR": {
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true
+        },
+        "negativeSourceHttp": 403,
+        "negativeReason": "bi-source-outside-selected-value"
+      },
+      "originalBI01": {
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22
+      }
+    }
+  },
+  "markers": {
+    "normalization": "Remove leading Actions timestamp/BOM and CSI ANSI; preserve every selected literal line plus LF in original order. Main sections alone do not prove artifact runtime case/result/stdio membership.",
+    "literalUnion": {
+      "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+    },
+    "parities": {
+      "analytics": {
+        "lines": 97,
+        "bytes": 34282,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "gitBlobCalculated": "729b06464ca3e8399a4b1c9b435d5f4c35177bd9",
+        "gitBlobPersisted": false
+      },
+      "cpu": {
+        "lines": 3,
+        "bytes": 3817,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "gitBlobCalculated": "1d2820a28503b2f5caa3f82dc3703a50dd1d7744",
+        "gitBlobPersisted": false
+      },
+      "progress": {
+        "lines": 3,
+        "bytes": 2763,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "gitBlobCalculated": "e00e5c65651969587b1587e3295159a2f68af54d",
+        "gitBlobPersisted": false
+      },
+      "union": {
+        "lines": 103,
+        "bytes": 40862,
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "gitBlobCalculated": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "gitBlobPersisted": true,
+        "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "literalReadback": true
+      }
+    },
+    "families": {
+      "SF_ANALYTICS_SOURCE": 45,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_PREVIEW_E12_CPU": 3,
+      "SF_PREVIEW_E12_PROGRESS": 3,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "sections": [
+      {
+        "case": 1,
+        "records": 40,
+        "bytes": 12583,
+        "sha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "counts": {
+          "SF_ANALYTICS_SOURCE": 25,
+          "SF_ANALYTICS_CAPTURE": 6,
+          "SF_PREVIEW_E12_CPU": 3,
+          "SF_PREVIEW_E12_PROGRESS": 3,
+          "SF_DESIGN_DIAGNOSTICS": 3
+        }
+      },
+      {
+        "case": 2,
+        "records": 63,
+        "bytes": 28279,
+        "sha256": "07179393bcad5025b4a7576208f797cfb2084efd096afaa0834b780be1bef184",
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 40,
+          "SF_ANALYTICS_SOURCE": 20,
+          "SF_DESIGN_DIAGNOSTICS": 2,
+          "SF_ANALYTICS_SCOPE": 1
+        }
+      }
+    ],
+    "failureExcerpt": {
+      "gitBlob": "9434da0c0189c4cdd794411b03df2ef933a1e928",
+      "bytes": 1739,
+      "sha256": "8bb7428e2dbf0c368c69d1563671551332fca7a6e3a5c95a61080edb5d2e85f3"
+    }
+  },
+  "cpu": {
+    "status": "MARKER_CLAIMS_ONLY_ACTUAL_FILES_PENDING",
+    "markerRecords": [
+      {
+        "line": 1235,
+        "value": {
+          "schema": "sf-preview-causal-e12-cpu-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "sequence": 1,
+          "kind": "started",
+          "request": 1,
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              0,
+              0,
+              0
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              0
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs",
+          "runtime": [
+            "1.3.14",
+            "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+          ],
+          "parentPid": 3684,
+          "intervalUs": 5000,
+          "targetMs": 50000,
+          "acceptMs": 55000,
+          "utcMs": 1795811288212,
+          "points": {
+            "frameStart": 1976335,
+            "startEnter": 1976345,
+            "startReturn": 1976347
+          }
+        }
+      },
+      {
+        "line": 1243,
+        "value": {
+          "schema": "sf-preview-causal-e12-cpu-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "sequence": 2,
+          "kind": "stopped",
+          "request": 1,
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              3917,
+              758,
+              1316
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              566,
+              1670,
+              702,
+              633
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              633
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              633,
+              0,
+              1266,
+              1266,
+              0,
+              17724
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs",
+          "cause": "target",
+          "points": {
+            "frameStart": 1976335,
+            "startEnter": 1976345,
+            "startReturn": 1976347,
+            "stopCheckpoint": 2476338,
+            "stopEnter": 2476342,
+            "stopReturn": 2478281
+          },
+          "nodesBounded": 9269,
+          "samplesBounded": 9687,
+          "cleanupFailed": false
+        }
+      },
+      {
+        "line": 1245,
+        "value": {
+          "schema": "sf-preview-causal-e12-cpu-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "sequence": 3,
+          "kind": "finished",
+          "request": 1,
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              3917,
+              758,
+              1316
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              566,
+              1670,
+              702,
+              633
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              633
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              633,
+              0,
+              1266,
+              1266,
+              0,
+              17724
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs",
+          "state": "completed-on-time",
+          "cause": "target",
+          "profile": {
+            "name": "preview-first.cpuprofile",
+            "bytes": 2120673,
+            "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+            "fsyncTenthMs": 2478358,
+            "closeTenthMs": 2478358
+          },
+          "collection": {
+            "name": "collection.json",
+            "bytes": 1876,
+            "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+            "fsyncTenthMs": 2478362,
+            "closeTenthMs": 2478362
+          },
+          "collectionWithinAccept": true,
+          "points": {
+            "frameStart": 1976335,
+            "startEnter": 1976345,
+            "startReturn": 1976347,
+            "stopCheckpoint": 2476338,
+            "stopEnter": 2476342,
+            "stopReturn": 2478281,
+            "serializeEnter": 2478284,
+            "serializeReturn": 2478314,
+            "profileWriteEnter": 2478317,
+            "profileFsync": 2478358,
+            "profileClose": 2478358
+          },
+          "cleanupFailed": false
+        }
+      }
+    ],
+    "progressRecords": [
+      {
+        "line": 1237,
+        "value": {
+          "schema": "sf-preview-causal-e12-progress-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "request": 1,
+          "sequence": 1,
+          "kind": "body-returned",
+          "elapsedTenthMs": 21,
+          "cpuPhase": "running",
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              0,
+              0,
+              0
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              0
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs"
+        }
+      },
+      {
+        "line": 1239,
+        "value": {
+          "schema": "sf-preview-causal-e12-progress-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "request": 1,
+          "sequence": 2,
+          "kind": "admit-returned",
+          "elapsedTenthMs": 81,
+          "cpuPhase": "running",
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              1,
+              0,
+              0
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              0
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs"
+        }
+      },
+      {
+        "line": 1241,
+        "value": {
+          "schema": "sf-preview-causal-e12-progress-v1",
+          "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+          "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "qualification": false,
+          "pid": 3729,
+          "request": 1,
+          "sequence": 3,
+          "kind": "case-callback-entered",
+          "elapsedTenthMs": 2470,
+          "cpuPhase": "running",
+          "routes": {
+            "scope": "pid-running-window",
+            "order": [
+              "sealed-read",
+              "unfenced",
+              "full-guard"
+            ],
+            "cap": 65535,
+            "counts": [
+              3,
+              0,
+              18
+            ]
+          },
+          "selection": {
+            "scope": "pid-running-window",
+            "cap": 65535,
+            "sourceOrder": [
+              "none",
+              "cases",
+              "preferences",
+              "case-identities"
+            ],
+            "sourceRequests": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "nativeOrder": [
+              "tag-refused",
+              "cases-complete",
+              "normalized-map"
+            ],
+            "nativeCopies": [
+              0,
+              0,
+              0
+            ],
+            "loopOrder": [
+              "enumerated",
+              "not-enumerated",
+              "eligible",
+              "reduced",
+              "retained",
+              "known-fields-omitted"
+            ],
+            "identityLoop": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+          "runId": "46063135555",
+          "attempt": "1",
+          "nonce": "sf613-e12-cpu-sV3cAs"
+        }
+      }
+    ],
+    "singleTupleVerified": true,
+    "selectionFieldsFiniteAndConsistent": true,
+    "stoppedFinishedSelectionAndRoutesLiteralEqual": true,
+    "observedCounts": {
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          3917,
+          758,
+          1316
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          566,
+          1670,
+          702,
+          633
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          633
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          633,
+          0,
+          1266,
+          1266,
+          0,
+          17724
+        ],
+        "saturated": false
+      }
+    },
+    "declaredTimingSameHelperClockMs": {
+      "bodyReturned": 2.1,
+      "admitReturned": 8.1,
+      "caseCallbackEntered": 247,
+      "stopCheckpoint": 50000.3,
+      "collectionClose": 50202.7
+    },
+    "declaredProfile": {
+      "name": "preview-first.cpuprofile",
+      "bytes": 2120673,
+      "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+      "fsyncTenthMs": 2478358,
+      "closeTenthMs": 2478358
+    },
+    "declaredCollection": {
+      "name": "collection.json",
+      "bytes": 1876,
+      "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+      "fsyncTenthMs": 2478362,
+      "closeTenthMs": 2478362
+    },
+    "filesVerified": false,
+    "interpretation": {
+      "reviewer": "/root/close_pr613",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "overlay": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "completed": true,
+      "findings": [
+        "nativeCopies covers only completed child copies requested as case-identities",
+        "top-level copies, cases/opaque classes and calls before the Source query are not in nativeCopies",
+        "tag-refused means requested physical tag not retained after successful copy, not transaction refusal",
+        "cases-complete may reflect preimage or lost/unavailable birth/owner proof; counter does not identify the individual gate",
+        "normalized-map may contain reduced and retained entries; eligible does not imply omitted known fields",
+        "ownersPrivate is a permanent per-store latch; snapshot birth ties trusted construction to exact readonly root",
+        "failed copy publishes no native counts; subsequent callback failure does",
+        "Source/native/loop populations must not be paired or conserved",
+        "remaining costs can include initial materialization, iteration, metadata/ACL/sfSources/audit/unknown fields, final identity clone and fresh authorizations"
+      ],
+      "noNewCode": true
+    }
+  },
+  "rootChecks": [
+    {
+      "name": "exact terminal run attempt snapshot and both job identities",
+      "pass": true
+    },
+    {
+      "name": "one acquisition each originals preserved fully before semantic parse",
+      "pass": true
+    },
+    {
+      "name": "main exact17 parts and whole hash calculated only",
+      "pass": true
+    },
+    {
+      "name": "actual checkout prints source SHA",
+      "pass": true
+    },
+    {
+      "name": "original Analytics spec and explicit one worker zero retries repeat1",
+      "pass": true
+    },
+    {
+      "name": "one failed and one passed actual terminal summary",
+      "pass": true
+    },
+    {
+      "name": "first actual original preview timeout60000 spec72:32",
+      "pass": true
+    },
+    {
+      "name": "preview original native POST seq3 exact owner no response",
+      "pass": true
+    },
+    {
+      "name": "current97 Analytics plus3CPU3progress family multiplicities",
+      "pass": true
+    },
+    {
+      "name": "four literal parity digests match independent review",
+      "pass": true
+    },
+    {
+      "name": "union actual blob literal persisted",
+      "pass": true
+    },
+    {
+      "name": "independent CPU and progress sequence1to3",
+      "pass": true
+    },
+    {
+      "name": "actual kinds ordered current window",
+      "pass": true
+    },
+    {
+      "name": "all six exact producer tuple and clean source tuple",
+      "pass": true
+    },
+    {
+      "name": "actual runtime full revision and parent declared",
+      "pass": true
+    },
+    {
+      "name": "13-slot selection validator all six",
+      "pass": true
+    },
+    {
+      "name": "started counters zero",
+      "pass": true
+    },
+    {
+      "name": "current stopped and finished selection/routes literal equal",
+      "pass": true
+    },
+    {
+      "name": "current native population actual normalized633 and zero other",
+      "pass": true
+    },
+    {
+      "name": "current source and loop values exact unsaturated",
+      "pass": true
+    },
+    {
+      "name": "wire all CPU/progress lines and total within cap",
+      "pass": true
+    },
+    {
+      "name": "claimed bounded timing in same helper clock",
+      "pass": true
+    },
+    {
+      "name": "claimed completed-on-time target and no cleanup failure",
+      "pass": true
+    },
+    {
+      "name": "claimed profile and collection bounded; files still unacquired",
+      "pass": true
+    },
+    {
+      "name": "six UI42 partial captures and UI43 UI44 not reached",
+      "pass": true
+    },
+    {
+      "name": "BI40 captures7 UI45 and33 UI46",
+      "pass": true
+    },
+    {
+      "name": "BI original data and negative source scope",
+      "pass": true
+    },
+    {
+      "name": "all emitted page and console error arrays empty",
+      "pass": true
+    },
+    {
+      "name": "UI42 readiness ready while preview remained running",
+      "pass": true
+    },
+    {
+      "name": "prior seq1 acquisition variation preserved without false ok",
+      "pass": true
+    },
+    {
+      "name": "prior seq2 actual successful response",
+      "pass": true
+    },
+    {
+      "name": "single current artifact metadata source exact and unexpired",
+      "pass": true
+    },
+    {
+      "name": "cleanup branch absent",
+      "pass": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/focal_migration",
+    "checks": 46,
+    "positive": true,
+    "divergences": [],
+    "fourParitiesMatch": true,
+    "originalGets": 0,
+    "zipGets": 0,
+    "sourceScope": "Preserved Git raw manifest, all17 main parts and cleanup; independent full hashes before semantic parse",
+    "limits": [
+      "CPU profile/collection/launcher not yet acquired",
+      "Source and native counters are separate populations",
+      "zero tag-refused/cases-complete in this requested-child population does not establish zero fallback globally",
+      "no UI42–44 qualification"
+    ]
+  },
+  "nextAction": {
+    "readerBindings": {
+      "gitBlob": "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "bytes": 20196,
+      "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623"
+    },
+    "required": "Finish independent review of fully bound E12 reader code; root may then authorize one bounded original artifact acquisition.",
+    "noAutomaticAnalyticsRerun": true
+  },
+  "limits": {
+    "firstContextLogOrderIsNotRuntimeStdioBinding": true,
+    "profileWholeVmNotExclusiveRequest": true,
+    "noSourceNativeConservation": true,
+    "syntheticControlDoesNotQualifyInstalledUI": true,
+    "filesUnacquiredBeforeReader": true,
+    "profileBytesClaim": 2120673,
+    "collectionBytesClaim": 1876,
+    "readableGitRawPreservationVerified": true,
+    "artifactZipGets": 0
+  },
+  "productionAuthorized": false
+}

@@ -1,0 +1,17 @@
+2026-11-27T20:29:11.0131008Z [1A[2K  1) [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity 
+2026-11-27T20:29:11.0131855Z 
+2026-11-27T20:29:11.0132572Z     TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event "response"
+2026-11-27T20:29:11.0132971Z 
+2026-11-27T20:29:11.0133185Z       70 |   await expect(limit).toHaveCSS("outline-style", "solid")
+2026-11-27T20:29:11.0133827Z       71 |   await captureAnalytics(page, info, "UI42-configure-focused-candidate-test-data")
+2026-11-27T20:29:11.0134705Z     > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), "decision-portfolio-preview"), { timeout: 60_000 })
+2026-11-27T20:29:11.0135366Z          |                                ^
+2026-11-27T20:29:11.0135750Z       73 |   await page.getByRole("button", { name: "Preview combinations", exact: true }).click()
+2026-11-27T20:29:11.0136150Z       74 |   const originalPreview = await previewResponse
+2026-11-27T20:29:11.0136469Z       75 |   expect(originalPreview.status()).toBe(200)
+2026-11-27T20:29:11.0136982Z         at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32
+2026-11-27T20:31:30.6363246Z [1A[2K  1 failed
+2026-11-27T20:31:30.6363959Z     [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity 
+2026-11-27T20:31:30.6364463Z   1 passed (8.2m)
+2026-11-27T20:31:30.6851820Z error: script "test:e2e:local" exited with code 1
+2026-11-27T20:31:30.6904188Z ##[error]Process completed with exit code 1.

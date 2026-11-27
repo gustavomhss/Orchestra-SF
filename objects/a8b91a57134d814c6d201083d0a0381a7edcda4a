@@ -1,0 +1,379 @@
+{
+  "schema": "sf613-e12-reader-seven-exports-v1",
+  "at": "2026-11-27 20:54:06 UTC",
+  "status": "ALL_ACTUAL_EXPORTS_PRESERVED_LITERAL_READBACK_BEFORE_PROFILE_ANALYSIS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reader": {
+    "run": 46066111400,
+    "attempt": 1,
+    "head": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+    "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+    "job": 140731695680,
+    "conclusion": "success"
+  },
+  "rawManifest": {
+    "gitBlob": "6c7e604044384369588a098dad88394b6774144b",
+    "bytes": 6766,
+    "sha256": "6cc4ba46015aa52e75d33df5c25eebbbb26d39d5428753501e92bf13e20af347"
+  },
+  "producer": {
+    "run": 46063135555,
+    "attempt": 1,
+    "head": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "artifact": 15229333864
+  },
+  "transport": {
+    "wholeMainBytes": 3270463,
+    "coreLogBytes": 3158748,
+    "terminalBytes": 2065,
+    "beforeBytes": 0,
+    "totalEmitterBytes": 3160813,
+    "corePayloadBytes": 2341911,
+    "coreFiles": 7,
+    "coreChunks": 132
+  },
+  "terminal": {
+    "schema": 1,
+    "kind": "e12-core-terminal",
+    "qualification": false,
+    "status": "ORIGINAL_BYTES_VERIFIED",
+    "coreBytesComplete": true,
+    "receiptBase64Complete": true,
+    "captureComplete": true,
+    "cpuState": "completed-on-time",
+    "coreFiles": 7,
+    "coreChunks": 132,
+    "corePayloadBytes": 2341911,
+    "coreLogBytes": 3158748,
+    "logBytesBeforeCore": 0,
+    "logBytesBeforeTerminal": 3158748,
+    "emitterCapBytes": 7340032,
+    "mainLogReviewCapBytes": 8388608,
+    "receiptBytes": 57596,
+    "receiptSha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+    "exports": [
+      {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 116,
+        "file": 7
+      },
+      {
+        "name": "preview-e12-cpu-progress-markers.lf.log",
+        "bytes": 6580,
+        "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+        "mime": "text/plain",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 1
+      },
+      {
+        "name": "original-cpu-collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 5
+      },
+      {
+        "name": "original-cpu-launcher.json",
+        "bytes": 663,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 6
+      },
+      {
+        "name": "safe-summary.json",
+        "bytes": 48969,
+        "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 3
+      },
+      {
+        "name": "inventory.json",
+        "bytes": 105554,
+        "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 6
+      },
+      {
+        "name": "receipt.json",
+        "bytes": 57596,
+        "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 4
+      }
+    ],
+    "entries": 153,
+    "crcVerified": 153,
+    "expandedBytes": 57674703,
+    "pending": 0,
+    "failures": [],
+    "readerExitCode": 0
+  },
+  "exports": [
+    {
+      "role": "profile",
+      "wire": {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 116,
+        "file": 7,
+        "firstLine": 1709,
+        "lastLine": 1824,
+        "firstChunk": 1,
+        "lastChunk": 116
+      },
+      "preserved": {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "wholeGitBlobCalculated": "35dfa571c490bc54be4e315be222c0920dce93c8",
+        "wholeBlobPersisted": false,
+        "literalReadback": true,
+        "originalFile": 7,
+        "lf": 1,
+        "bomCodeUnitOffsets": [],
+        "allPartsPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "startCodeUnit": 0,
+            "endCodeUnit": 300000,
+            "bytes": 300000,
+            "gitBlob": "65d701ed6eba5d5d57b36662b05efe88251ad80e",
+            "sha256": "d18332ec42245840721befaba96464fdc37a1edb5cdb814b650a67246b417df7",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 2,
+            "startCodeUnit": 300000,
+            "endCodeUnit": 600000,
+            "bytes": 300000,
+            "gitBlob": "76e959fa191db41b60937492423df54458d0ed9d",
+            "sha256": "360f396b62c34fa037577dcb908ac5e88951bcd8f99d0b1398fe5c456cbb9bb3",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 3,
+            "startCodeUnit": 600000,
+            "endCodeUnit": 900000,
+            "bytes": 300000,
+            "gitBlob": "48daf30f84c08045af1fe82b7ae32971859d8343",
+            "sha256": "968faf5872eeebc71a0118642f7fbf9cd4ead78f0afb6adf5bd861be3963709b",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 4,
+            "startCodeUnit": 900000,
+            "endCodeUnit": 1200000,
+            "bytes": 300000,
+            "gitBlob": "71030b1e6e05ccba6360bb15ecef7127980fd468",
+            "sha256": "f8516307267cd477720537271e6057f2afe09e523d97ec6785ef3eac79695c0b",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 5,
+            "startCodeUnit": 1200000,
+            "endCodeUnit": 1500000,
+            "bytes": 300000,
+            "gitBlob": "3d84c939079bb105abd82bd8ae48ec2233a549f2",
+            "sha256": "206e403a85d96705cc0d8b4ed304afa49be3fa2c84c9f698d8f3ddf02fde82fe",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 6,
+            "startCodeUnit": 1500000,
+            "endCodeUnit": 1800000,
+            "bytes": 300000,
+            "gitBlob": "ad1dc50f14f6436549718e18cddb2a874654fd25",
+            "sha256": "fd9ad998a0b9b0967c37015534a7ce957affa94ccc244a0f4e1b4ff3ed64647e",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 7,
+            "startCodeUnit": 1800000,
+            "endCodeUnit": 2100000,
+            "bytes": 300000,
+            "gitBlob": "5a2f635f82453ec13d549a9f830f8aa6b1c54b17",
+            "sha256": "b5c7aae53dc2dfc5fa29f3bf25e6bb19cc9c66c600a818931f4054ee9dc59171",
+            "persisted": true,
+            "literalReadback": true
+          },
+          {
+            "index": 8,
+            "startCodeUnit": 2100000,
+            "endCodeUnit": 2120673,
+            "bytes": 20673,
+            "gitBlob": "7a22b971a21b10af8a410e8410778389733c6a49",
+            "sha256": "984e56552d3984f37bf2400201cef72bde8a1c005ebbf68f874b85b1357ccb47",
+            "persisted": true,
+            "literalReadback": true
+          }
+        ],
+        "bomByteOffsets": []
+      }
+    },
+    {
+      "role": "markers",
+      "wire": {
+        "name": "preview-e12-cpu-progress-markers.lf.log",
+        "bytes": 6580,
+        "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+        "mime": "text/plain",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 1,
+        "firstLine": 1825,
+        "lastLine": 1825,
+        "firstChunk": 117,
+        "lastChunk": 117
+      },
+      "preserved": {
+        "gitBlob": "eefa273ac1d2788994e6dc1ec0c7120411842126",
+        "bytes": 6580,
+        "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319"
+      }
+    },
+    {
+      "role": "collection",
+      "wire": {
+        "name": "original-cpu-collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 5,
+        "firstLine": 1826,
+        "lastLine": 1826,
+        "firstChunk": 118,
+        "lastChunk": 118
+      },
+      "preserved": {
+        "gitBlob": "8669ff010853eac62f014f0b2886b96e0b2f490c",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+      }
+    },
+    {
+      "role": "launcher",
+      "wire": {
+        "name": "original-cpu-launcher.json",
+        "bytes": 663,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 6,
+        "firstLine": 1827,
+        "lastLine": 1827,
+        "firstChunk": 119,
+        "lastChunk": 119
+      },
+      "preserved": {
+        "gitBlob": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+        "bytes": 663,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+      }
+    },
+    {
+      "role": "summary",
+      "wire": {
+        "name": "safe-summary.json",
+        "bytes": 48969,
+        "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 3,
+        "firstLine": 1828,
+        "lastLine": 1830,
+        "firstChunk": 120,
+        "lastChunk": 122
+      },
+      "preserved": {
+        "gitBlob": "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+        "bytes": 48969,
+        "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae"
+      }
+    },
+    {
+      "role": "inventory",
+      "wire": {
+        "name": "inventory.json",
+        "bytes": 105554,
+        "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 6,
+        "firstLine": 1831,
+        "lastLine": 1836,
+        "firstChunk": 123,
+        "lastChunk": 128
+      },
+      "preserved": {
+        "gitBlob": "9b8978e9079085bc789197aa91bb02c94700062b",
+        "bytes": 105554,
+        "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd"
+      }
+    },
+    {
+      "role": "receipt",
+      "wire": {
+        "name": "receipt.json",
+        "bytes": 57596,
+        "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 4,
+        "firstLine": 1837,
+        "lastLine": 1840,
+        "firstChunk": 129,
+        "lastChunk": 132
+      },
+      "preserved": {
+        "gitBlob": "c57b4a91ce564589732f7526afc11afce27b9f10",
+        "bytes": 57596,
+        "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66"
+      }
+    }
+  ],
+  "wholeProfileGitHashCalculatedOnly": true,
+  "wholeProfileGitBlobPersisted": false,
+  "profileActualParts": 8,
+  "exportCount": 7,
+  "originalLogReacquisitions": 0,
+  "auditZipGets": 0,
+  "interpretation": "Profile capture and outcome still require semantic receipt/collection/runtime cross-check; byte integrity complete. No final UI or production qualification.",
+  "productionAuthorized": false
+}

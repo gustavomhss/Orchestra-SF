@@ -1,0 +1,806 @@
+{
+  "archiveSummary": {
+    "allEntriesVerified": true,
+    "archives": 2,
+    "crcVerified": 153,
+    "entries": 153,
+    "expandedBytes": 57674703
+  },
+  "artifact": {
+    "bytes": 46003924,
+    "downloadCount": 1,
+    "expired": false,
+    "id": 15229333864,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+    "verifiedBytes": 46003924,
+    "verifiedSha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff"
+  },
+  "attempt": 1,
+  "cpu": {
+    "acceptMs": 55000,
+    "captureComplete": true,
+    "caseMembership": [
+      {
+        "case": 1,
+        "lines": 3,
+        "markerBytes": 12583,
+        "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "records": [
+          {
+            "bindingComplete": true,
+            "kind": "started",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":1,\"kind\":\"started\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[0,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"runtime\":[\"1.3.14\",\"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"],\"parentPid\":3684,\"intervalUs\":5000,\"targetMs\":50000,\"acceptMs\":55000,\"utcMs\":1795811288212,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347}}\n",
+            "ordinal": 32,
+            "pid": 3729,
+            "sequence": 1
+          },
+          {
+            "bindingComplete": true,
+            "kind": "stopped",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":2,\"kind\":\"stopped\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"cause\":\"target\",\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281},\"nodesBounded\":9269,\"samplesBounded\":9687,\"cleanupFailed\":false}\n",
+            "ordinal": 36,
+            "pid": 3729,
+            "sequence": 2
+          },
+          {
+            "bindingComplete": true,
+            "kind": "finished",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"state\":\"completed-on-time\",\"cause\":\"target\",\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":2120673,\"sha256\":\"327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632\",\"fsyncTenthMs\":2478358,\"closeTenthMs\":2478358},\"collection\":{\"name\":\"collection.json\",\"bytes\":1876,\"sha256\":\"61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7\",\"fsyncTenthMs\":2478362,\"closeTenthMs\":2478362},\"collectionWithinAccept\":true,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281,\"serializeEnter\":2478284,\"serializeReturn\":2478314,\"profileWriteEnter\":2478317,\"profileFsync\":2478358,\"profileClose\":2478358},\"cleanupFailed\":false}\n",
+            "ordinal": 37,
+            "pid": 3729,
+            "sequence": 3
+          }
+        ],
+        "result": 1,
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "stream": "stdout"
+      }
+    ],
+    "collectionProfileBytesMatched": true,
+    "collectionRoutes": {
+      "cap": 65535,
+      "counts": [
+        3917,
+        758,
+        1316
+      ],
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "scope": "pid-running-window"
+    },
+    "collectionSelection": {
+      "cap": 65535,
+      "identityLoop": [
+        633,
+        0,
+        1266,
+        1266,
+        0,
+        17724
+      ],
+      "loopOrder": [
+        "enumerated",
+        "not-enumerated",
+        "eligible",
+        "reduced",
+        "retained",
+        "known-fields-omitted"
+      ],
+      "nativeCopies": [
+        0,
+        0,
+        633
+      ],
+      "nativeOrder": [
+        "tag-refused",
+        "cases-complete",
+        "normalized-map"
+      ],
+      "saturated": false,
+      "scope": "pid-running-window",
+      "sourceOrder": [
+        "none",
+        "cases",
+        "preferences",
+        "case-identities"
+      ],
+      "sourceRequests": [
+        566,
+        1670,
+        702,
+        633
+      ]
+    },
+    "collectionSelectionValid": true,
+    "collectionWithinAccept": true,
+    "finishedRecordPresent": true,
+    "intervalUs": 5000,
+    "kinds": [
+      "started",
+      "stopped",
+      "finished"
+    ],
+    "limits": [
+      "Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+      "Zero bytes is a present inventory file with the empty SHA256, not an absent-file placeholder.",
+      "A ZIP CRC/hash proves received bytes, not producer fsync/close; only a later verified finished can attest that.",
+      "Collection contents alone do not attest their own close, even when its JSON and profile hash are valid.",
+      "Malformed JSON, missing LF or missing files remains explicit negative evidence and never capture completion.",
+      "Whole-VM samples include unrelated backend work; no exclusive/async/browser/child-process cost is inferred.",
+      "No samples*5ms estimate, causal bottleneck or product qualification is inferred.",
+      "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+      "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+      "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
+      "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
+      "Source token decisions and requested case-identities child copies have distinct populations; no conservation or fallback rate is inferred.",
+      "Native counts are published only after snapshot copy/validation completes; callback failure afterward still counts.",
+      "Loop local arithmetic can run outside the CPU window, but only running owned capture accepts its completed-copy contribution.",
+      "Native counts exclude top-level materializations, other requested classes and failed copies; the CPU profile may still include them.",
+      "All clocks retain their domains; no reconciliation with Playwright startTime/duration."
+    ],
+    "markerBytes": 3817,
+    "markerSha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+    "native": {
+      "endTime": 1795811338210359.2,
+      "nodes": 9269,
+      "samples": 9687,
+      "startTime": 1795811288211997.2
+    },
+    "nonce": "sf613-e12-cpu-sV3cAs",
+    "originalFiles": [
+      {
+        "bytes": 2120673,
+        "file": 7,
+        "name": "preview-first.cpuprofile",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/preview-first.cpuprofile",
+        "trailingLF": true
+      },
+      {
+        "bytes": 1876,
+        "file": 5,
+        "name": "collection.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/collection.json",
+        "trailingLF": true
+      },
+      {
+        "bytes": 663,
+        "file": 6,
+        "name": "launcher.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/launcher.json",
+        "trailingLF": true
+      }
+    ],
+    "parentPid": 3684,
+    "pid": 3729,
+    "postCloseFilesVerified": [
+      "preview-first.cpuprofile",
+      "collection.json"
+    ],
+    "presence": {
+      "collection.json": {
+        "bytes": 1876,
+        "file": 5,
+        "name": "collection.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/collection.json",
+        "trailingLF": true
+      },
+      "launcher.json": {
+        "bytes": 663,
+        "file": 6,
+        "name": "launcher.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/launcher.json",
+        "trailingLF": true
+      },
+      "preview-first.cpuprofile": {
+        "bytes": 2120673,
+        "file": 7,
+        "name": "preview-first.cpuprofile",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/preview-first.cpuprofile",
+        "trailingLF": true
+      }
+    },
+    "presenceState": "profile-and-collection",
+    "profileSchemaValid": true,
+    "runtime": [
+      "1.3.14",
+      "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    ],
+    "selectedFileBindings": {
+      "collection.json": true,
+      "launcher.json": true
+    },
+    "startedPoints": {
+      "frameStart": 1976335,
+      "startEnter": 1976345,
+      "startReturn": 1976347
+    },
+    "startedUtcMs": 1795811288212,
+    "state": "completed-on-time",
+    "targetMs": 50000
+  },
+  "cpuMarkers": {
+    "bytes": 6580,
+    "cpuCounts": {
+      "SF_PREVIEW_E12_CPU": 3
+    },
+    "cpuMemberships": [
+      {
+        "case": 1,
+        "lines": 3,
+        "markerBytes": 12583,
+        "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "records": [
+          {
+            "bindingComplete": true,
+            "kind": "started",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":1,\"kind\":\"started\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[0,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"runtime\":[\"1.3.14\",\"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"],\"parentPid\":3684,\"intervalUs\":5000,\"targetMs\":50000,\"acceptMs\":55000,\"utcMs\":1795811288212,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347}}\n",
+            "ordinal": 32,
+            "pid": 3729,
+            "sequence": 1
+          },
+          {
+            "bindingComplete": true,
+            "kind": "stopped",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":2,\"kind\":\"stopped\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"cause\":\"target\",\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281},\"nodesBounded\":9269,\"samplesBounded\":9687,\"cleanupFailed\":false}\n",
+            "ordinal": 36,
+            "pid": 3729,
+            "sequence": 2
+          },
+          {
+            "bindingComplete": true,
+            "kind": "finished",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"state\":\"completed-on-time\",\"cause\":\"target\",\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":2120673,\"sha256\":\"327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632\",\"fsyncTenthMs\":2478358,\"closeTenthMs\":2478358},\"collection\":{\"name\":\"collection.json\",\"bytes\":1876,\"sha256\":\"61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7\",\"fsyncTenthMs\":2478362,\"closeTenthMs\":2478362},\"collectionWithinAccept\":true,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281,\"serializeEnter\":2478284,\"serializeReturn\":2478314,\"profileWriteEnter\":2478317,\"profileFsync\":2478358,\"profileClose\":2478358},\"cleanupFailed\":false}\n",
+            "ordinal": 37,
+            "pid": 3729,
+            "sequence": 3
+          }
+        ],
+        "result": 1,
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "stream": "stdout"
+      }
+    ],
+    "limits": [
+      "Every literal record and ordinal belongs to one original case/result/stdio stream.",
+      "Ordinal counts all six recognized families in that stream; no cross-stream temporal interleaving is inferred.",
+      "Analytics, CPU, progress and complete-union parities are separate hard requirements.",
+      "CPU and progress sequences are independent attempted writes; gaps are not fabricated or replayed.",
+      "Progress may continue after CPU completion until the HTTP finally; it never attests file close.",
+      "Unavailable progress may lack a complete tuple; missing fields remain missing and do not select a nonce.",
+      "A complete tuple selects an artifact namespace, not sampler ownership or capture completion.",
+      "Routes count already selected branches in this PID only while sampling runs; they are not Request totals.",
+      "A route count at65535 is saturated. No conservation, exclusive time or authority result is inferred.",
+      "Source4 counts already calculated token-selection decisions in its qualified population.",
+      "Native3 counts only completed child copies requested as case-identities, before callback; tag-refused is not a transaction denial.",
+      "Cases-complete retains complete cases without normalization; normalized-map can still retain individual entries.",
+      "Loop enumerated/not-enumerated count copies; eligible/reduced/retained count entries; known-fields-omitted counts actual fields.",
+      "Not-enumerated never traverses fallback entries and does not mean an empty map; eligible does not require an omitted field.",
+      "Source, native and loop populations are distinct; no pairing, conservation, positivity or cross-family monotonicity is required.",
+      "Selection.saturated reports cap reached among its thirteen slots only, not the three routes or events above the cap.",
+      "Body/admit returned and case callback entered are boundaries, not result validity, admission or producer success.",
+      "Playwright workerIndex is not a PID; native identity is read only from literal authenticated records."
+    ],
+    "lines": 6,
+    "parities": {
+      "allFour": true,
+      "analytics": {
+        "bytes": 34282,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5
+        },
+        "expectedBytes": 34282,
+        "expectedSha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "matchesOriginalMainSequence": true,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679"
+      },
+      "cpu": {
+        "bytes": 3817,
+        "counts": {
+          "SF_PREVIEW_E12_CPU": 3
+        },
+        "expectedBytes": 3817,
+        "expectedSha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "matchesOriginalMainSequence": true,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b"
+      },
+      "progress": {
+        "bytes": 2763,
+        "counts": {
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 2763,
+        "expectedSha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "matchesOriginalMainSequence": true,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a"
+      },
+      "union": {
+        "bytes": 40862,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5,
+          "SF_PREVIEW_E12_CPU": 3,
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 40862,
+        "expectedSha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "matchesOriginalMainSequence": true,
+        "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+      }
+    },
+    "path": "derived/preview-e12-cpu-progress-markers.lf.log",
+    "progressCounts": {
+      "SF_PREVIEW_E12_PROGRESS": 3
+    },
+    "progressMemberships": [
+      {
+        "case": 1,
+        "lines": 3,
+        "markerBytes": 12583,
+        "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "records": [
+          {
+            "bindingComplete": true,
+            "kind": "body-returned",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":1,\"kind\":\"body-returned\",\"elapsedTenthMs\":21,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[0,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 33,
+            "pid": 3729,
+            "sequence": 1
+          },
+          {
+            "bindingComplete": true,
+            "kind": "admit-returned",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":2,\"kind\":\"admit-returned\",\"elapsedTenthMs\":81,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[1,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 34,
+            "pid": 3729,
+            "sequence": 2
+          },
+          {
+            "bindingComplete": true,
+            "kind": "case-callback-entered",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":3,\"kind\":\"case-callback-entered\",\"elapsedTenthMs\":2470,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3,0,18]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 35,
+            "pid": 3729,
+            "sequence": 3
+          }
+        ],
+        "result": 1,
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "stream": "stdout"
+      }
+    ],
+    "selectedBinding": {
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "pid": 3729,
+      "runId": "46063135555",
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+    },
+    "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319"
+  },
+  "cpuPopulationInventory": {
+    "directories": [
+      {
+        "collection": [],
+        "directory": "test-ci-evidence/sf613-e12-cpu-9X8SQP",
+        "launcher": [
+          {
+            "bytes": 663,
+            "file": 4,
+            "name": "launcher.json",
+            "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb"
+          }
+        ],
+        "nonce": "sf613-e12-cpu-9X8SQP",
+        "profile": [],
+        "unclassified": []
+      },
+      {
+        "collection": [
+          {
+            "bytes": 1876,
+            "file": 5,
+            "name": "collection.json",
+            "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+          }
+        ],
+        "directory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+        "launcher": [
+          {
+            "bytes": 663,
+            "file": 6,
+            "name": "launcher.json",
+            "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+          }
+        ],
+        "nonce": "sf613-e12-cpu-sV3cAs",
+        "profile": [
+          {
+            "bytes": 2120673,
+            "file": 7,
+            "name": "preview-first.cpuprofile",
+            "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632"
+          }
+        ],
+        "unclassified": []
+      }
+    ],
+    "extraLauncherFiles": [
+      {
+        "bytes": 663,
+        "file": 4,
+        "limit": "No profile/collection in this directory; no case/PID/Request/start/stop/completion is inferred.",
+        "name": "launcher.json",
+        "nonce": "sf613-e12-cpu-9X8SQP",
+        "parseStatus": "JSON_OBJECT",
+        "preparedBindingVerified": true,
+        "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb",
+        "stateObserved": "prepared",
+        "trailingLF": true
+      }
+    ],
+    "launcherLimit": "Launcher preparation is not Request/start/profile/close proof; absent files are not fabricated.",
+    "populationCount": 1,
+    "scope": "all outer archive E12 nonce directories",
+    "selectedDirectory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+    "selectedNonce": "sf613-e12-cpu-sV3cAs"
+  },
+  "htmlArchives": [
+    {
+      "archive": 1,
+      "htmlFile": 150,
+      "zipBytes": 3064436,
+      "zipSha256": "1bd198d03621d618f6d5fd92ac1110bdb29d36dff7fcd2b4fac5c83796d71e60"
+    }
+  ],
+  "kind": "e12-original-core-summary",
+  "limits": [
+    "This job receives one existing original ZIP; no checkout or repository product/test/observer is executed.",
+    "The execution used E12 S with eight overlays2A6M over clean S17; no clean-source performance or final qualification is inferred.",
+    "The two original cases retain their selection and deadlines. Outcomes are verified only against the completed current E12 intake.",
+    "Every actually present selected profile/collection/launcher is exported whole, plus literal CPU+progress when present, summary, inventory and receipt.",
+    "Absent files have no fabricated payload. A real zero-byte file has its inventory ID, empty SHA256 and one empty base64 chunk.",
+    "Raw runtime/selection, error-context and HTML remain preserved in the audit artifact but are not exported whole in this log.",
+    "No PNG or trace-safe log export is attempted; inventory/ZIP CRC coverage does not claim PNG pixels or trace availability.",
+    "Runtime/main union and separate Analytics, CPU and progress parities are four hard requirements.",
+    "A selected nonce/PID requires a complete authenticated tuple in a literal original case/result/stdio record; workerIndex is not a PID.",
+    "Partial unavailable records stay partial. Present contradictory identity fields fail; absent fields are never filled from another record.",
+    "CPU and progress have separate attempt sequences and lifetimes; late HTTP progress never rewrites closed CPU files.",
+    "Progress proves only body/admit return or entry of the withCase callback, not validity, accepted authorization or product success.",
+    "Routes are PID-running-window counters of already selected branches, capped65535, not Request totals or completed work.",
+    "Selection Source4 counts qualified token decisions; native3 counts completed child copies requested as case-identities before callback.",
+    "Loop enumerated/not-enumerated count copies, eligible/reduced/retained count entries, and omitted counts actual known fields.",
+    "Tag-refused is not transaction refusal; cases-complete is not a full-Snapshot claim; normalized-map need not reduce every entry.",
+    "No fallback traversal is added; local loop arithmetic can run outside the window, while only running owned capture accepts contributions.",
+    "Selection is finite with thirteen slots capped65535; saturated means cap reached in those slots, not in the historical route counters.",
+    "No equality, conservation, positivity, Request ownership or counters-to-samples pairing is inferred across these populations.",
+    "Present collection/finished selection contradictions fail even with missing files; complete closure also requires stopped equality, excluding late progress.",
+    "Received file hashes are not post-close producer hashes. Missing CPU finished never promotes captureComplete, even if progress says finished.",
+    "Partial, empty, malformed and non-LF files remain exact original bytes with explicit parse/presence state; no JSON or LF is fabricated.",
+    "CPU whole-VM samples may include unrelated backend work and observer overhead; no exclusive time or causal bottleneck is inferred.",
+    "Native, Actions and Playwright clocks stay distinct. No stop duration, starvation or timer-delivery conclusion follows from missing finished.",
+    "Receipt emission is planned until the final terminal and successful job confirm all listed complete hashes/chunks; transport does not promote capture.",
+    "The emitter jointly enforces7MiB; the independent receiver authenticates the whole original Actions main and enforces8MiB including framing.",
+    "No credentials, headers, cookies, signed URL, request/response body or raw error message is emitted."
+  ],
+  "pending": [],
+  "qualification": false,
+  "run": 46063135555,
+  "runtime": {
+    "bytes": 4813218,
+    "cases": [
+      {
+        "attachmentCount": 9,
+        "durationMs": 224313,
+        "errors": [
+          {
+            "messageBytes": 769,
+            "messageSha256": "ef98b217daca065793bb20e3e848a9671eeb071ac4762cc2a4ece35c09eb230b",
+            "source": {
+              "column": 32,
+              "file": "design-wave-five-analytics.spec.ts",
+              "line": 72
+            },
+            "stackBytes": 0,
+            "stackSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timeout60000": true,
+            "waitForResponse": true
+          }
+        ],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T20:24:01.928Z",
+        "status": "failed",
+        "stdioStreams": [
+          {
+            "bytes": 747811,
+            "case": 1,
+            "markerBytes": 12583,
+            "markerLines": 40,
+            "markerPath": "derived/runtime-case-1-result-1-stdout-semantic-markers.lf.log",
+            "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+            "result": 1,
+            "sha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 1,
+            "markerBytes": 0,
+            "markerLines": 0,
+            "markerPath": "derived/runtime-case-1-result-1-stderr-semantic-markers.lf.log",
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+        "workerIndex": 0
+      },
+      {
+        "attachmentCount": 40,
+        "durationMs": 58308,
+        "errors": [],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T20:29:11.668Z",
+        "status": "passed",
+        "stdioStreams": [
+          {
+            "bytes": 3991674,
+            "case": 2,
+            "markerBytes": 28279,
+            "markerLines": 63,
+            "markerPath": "derived/runtime-case-2-result-1-stdout-semantic-markers.lf.log",
+            "markerSha256": "07179393bcad5025b4a7576208f797cfb2084efd096afaa0834b780be1bef184",
+            "result": 1,
+            "sha256": "035f2fa69d3d7b809bf8e9403217199a313f7a9df2edbb6cedc15d7f0185a1f5",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 2,
+            "markerBytes": 0,
+            "markerLines": 0,
+            "markerPath": "derived/runtime-case-2-result-1-stderr-semantic-markers.lf.log",
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: question catalog and original contextual BI",
+        "workerIndex": 1
+      }
+    ],
+    "config": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "e12CpuRecords": [
+      {
+        "case": 1,
+        "lines": 3,
+        "markerBytes": 12583,
+        "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "records": [
+          {
+            "bindingComplete": true,
+            "kind": "started",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":1,\"kind\":\"started\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[0,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"runtime\":[\"1.3.14\",\"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"],\"parentPid\":3684,\"intervalUs\":5000,\"targetMs\":50000,\"acceptMs\":55000,\"utcMs\":1795811288212,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347}}\n",
+            "ordinal": 32,
+            "pid": 3729,
+            "sequence": 1
+          },
+          {
+            "bindingComplete": true,
+            "kind": "stopped",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":2,\"kind\":\"stopped\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"cause\":\"target\",\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281},\"nodesBounded\":9269,\"samplesBounded\":9687,\"cleanupFailed\":false}\n",
+            "ordinal": 36,
+            "pid": 3729,
+            "sequence": 2
+          },
+          {
+            "bindingComplete": true,
+            "kind": "finished",
+            "literal": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3917,758,1316]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[566,1670,702,633],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,633],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[633,0,1266,1266,0,17724],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\",\"state\":\"completed-on-time\",\"cause\":\"target\",\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":2120673,\"sha256\":\"327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632\",\"fsyncTenthMs\":2478358,\"closeTenthMs\":2478358},\"collection\":{\"name\":\"collection.json\",\"bytes\":1876,\"sha256\":\"61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7\",\"fsyncTenthMs\":2478362,\"closeTenthMs\":2478362},\"collectionWithinAccept\":true,\"points\":{\"frameStart\":1976335,\"startEnter\":1976345,\"startReturn\":1976347,\"stopCheckpoint\":2476338,\"stopEnter\":2476342,\"stopReturn\":2478281,\"serializeEnter\":2478284,\"serializeReturn\":2478314,\"profileWriteEnter\":2478317,\"profileFsync\":2478358,\"profileClose\":2478358},\"cleanupFailed\":false}\n",
+            "ordinal": 37,
+            "pid": 3729,
+            "sequence": 3
+          }
+        ],
+        "result": 1,
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "stream": "stdout"
+      }
+    ],
+    "e12ProgressRecords": [
+      {
+        "case": 1,
+        "lines": 3,
+        "markerBytes": 12583,
+        "markerSha256": "90c9489dc0476fa6e8c0efe10f3ecf220221479e4d4cc3ed83dd306362dfce64",
+        "records": [
+          {
+            "bindingComplete": true,
+            "kind": "body-returned",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":1,\"kind\":\"body-returned\",\"elapsedTenthMs\":21,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[0,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 33,
+            "pid": 3729,
+            "sequence": 1
+          },
+          {
+            "bindingComplete": true,
+            "kind": "admit-returned",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":2,\"kind\":\"admit-returned\",\"elapsedTenthMs\":81,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[1,0,0]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 34,
+            "pid": 3729,
+            "sequence": 2
+          },
+          {
+            "bindingComplete": true,
+            "kind": "case-callback-entered",
+            "literal": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\"sourceTree\":\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\",\"qualification\":false,\"pid\":3729,\"request\":1,\"sequence\":3,\"kind\":\"case-callback-entered\",\"elapsedTenthMs\":2470,\"cpuPhase\":\"running\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[3,0,18]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[0,0,0,0],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[0,0,0],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[0,0,0,0,0,0],\"saturated\":false},\"snapshot\":\"c061693ae9833819cd3afd2ae1b03805de6c82f9\",\"runId\":\"46063135555\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-sV3cAs\"}\n",
+            "ordinal": 35,
+            "pid": 3729,
+            "sequence": 3
+          }
+        ],
+        "result": 1,
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "stream": "stdout"
+      }
+    ],
+    "file": 0,
+    "parities": {
+      "allFour": true,
+      "analytics": {
+        "bytes": 34282,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5
+        },
+        "expectedBytes": 34282,
+        "expectedSha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "matchesOriginalMainSequence": true,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679"
+      },
+      "cpu": {
+        "bytes": 3817,
+        "counts": {
+          "SF_PREVIEW_E12_CPU": 3
+        },
+        "expectedBytes": 3817,
+        "expectedSha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "matchesOriginalMainSequence": true,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b"
+      },
+      "progress": {
+        "bytes": 2763,
+        "counts": {
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 2763,
+        "expectedSha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "matchesOriginalMainSequence": true,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a"
+      },
+      "union": {
+        "bytes": 40862,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5,
+          "SF_PREVIEW_E12_CPU": 3,
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 40862,
+        "expectedSha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "matchesOriginalMainSequence": true,
+        "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+      }
+    },
+    "semanticMarkers": {
+      "bytes": 40862,
+      "counts": {
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_ANALYTICS_SCOPE": 1,
+        "SF_ANALYTICS_SOURCE": 45,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_PREVIEW_E12_CPU": 3,
+        "SF_PREVIEW_E12_PROGRESS": 3
+      },
+      "expectedBytes": 40862,
+      "expectedSha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+      "matchesOriginalMainSequence": true,
+      "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+    },
+    "sha256": "961c1aa0140e28f0875669f11b9d650ab574a574c3918e37fb606b856491acf1",
+    "tests": 2,
+    "verdict": {
+      "BI": "passed;40 captures and original complete UI45/UI46 scope",
+      "UI42": "partial;6 captures before first preview response",
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "failed": 1,
+      "passed": 1
+    }
+  },
+  "schema": 1,
+  "selection": {
+    "bytes": 3056,
+    "config": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "file": 3,
+    "sha256": "cfdd4ace7dd1dd2c2c4c0ba378cbeca443912ffb6cdf1d137a4f457aad6b387c",
+    "tests": 2,
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ]
+  },
+  "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+  "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+  "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+  "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+}

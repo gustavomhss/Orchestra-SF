@@ -1,0 +1,187 @@
+{
+  "schema": "sf613-e12-focal-binding/v1",
+  "status": "SOURCE_OBJECT_BOUND_CI_PENDING",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "template": {
+    "git": "ced64456c2b91b759b9c441cdb77dd2cb205ee27",
+    "bytes": 12830,
+    "sha256": "55c05b496315245d8205ca9b1f45444a00d57586cb15566fbbc38127c02fe3ce",
+    "lf": 192,
+    "finalLF": true
+  },
+  "bound": {
+    "git": "a1ea764ca22bf91b05638836f3d6631751bae24a",
+    "bytes": 12873,
+    "sha256": "ec52e91e8fdf4b2d0622176fd76709c0bf310315f97a93a1d9c53641d2bcb679",
+    "lf": 192,
+    "finalLF": true
+  },
+  "operations": [
+    {
+      "ordinal": 1,
+      "before": "UNBOUND_SOURCE_SHA",
+      "after": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "ordinal": 2,
+      "before": "UNBOUND_SOURCE_TREE",
+      "after": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    }
+  ],
+  "exclusiveChanges": 2,
+  "forwardAndInverseLiteral": true,
+  "source": {
+    "commit": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "reportedBy": "/root",
+    "treePairs": 18,
+    "unchangedSiblings": 564,
+    "delta": {
+      "added": 2,
+      "modified": 6,
+      "deleted": 0
+    },
+    "agentCreated": false
+  },
+  "sourceManifest": {
+    "git": "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+    "bytes": 22710,
+    "sha256": "51311a693dd0a800f7043e2b9b5905defe1d834e6dc99d3e74e0e751ea7f1703",
+    "finalLF": true,
+    "historicalUnboundStatementsPreserved": true
+  },
+  "sourceBounds": {
+    "git": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+    "bytes": 25207,
+    "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab",
+    "finalLF": true,
+    "historicalUnboundStatementsPreserved": true
+  },
+  "bindingDiff": {
+    "git": "6423db9cc40f8b4b8e2376a0c82176490ce8841a",
+    "bytes": 883,
+    "sha256": "7550dd2d8d069cb82a725b3e96b8446c667326c86a3cf1be10296c507981e5ad",
+    "lf": 15,
+    "finalLF": true,
+    "hunks": 1,
+    "added": 2,
+    "removed": 2
+  },
+  "fullSnapshotDiff": {
+    "git": "4e7b00b1b38fb6149bd09093ce29a5b644ce3c82",
+    "bytes": 40104,
+    "sha256": "b74a90e68d8e373b958fa8000395c954d91a38b6ec87ccdcfeb40b89dbbcbcac",
+    "lf": 622,
+    "finalLF": true,
+    "hunks": 3,
+    "added": 602,
+    "removed": 1,
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "kind": "M",
+        "hunks": 1,
+        "added": 1,
+        "removed": 1
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "kind": "A",
+        "hunks": 1,
+        "added": 192,
+        "removed": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts",
+        "kind": "A",
+        "hunks": 1,
+        "added": 409,
+        "removed": 0
+      }
+    ],
+    "requestBefore": {
+      "git": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "finalLF": false
+    },
+    "requestAfter": {
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "finalLF": false
+    },
+    "requestBothNoFinalLF": true
+  },
+  "futureD": {
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "soleParent": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "delta": "2A1M",
+    "rootOperatorOnly": true,
+    "absentWrapperAndControlPreimagesRequireActualSourceAudit": true
+  },
+  "invariants": {
+    "runCommandLiteralToC17": true,
+    "G2ThroughG6LiteralToC17": true,
+    "seventeenPinsUnchangedFromReviewedTemplate": true,
+    "sourceAndTreeOnlySentinels": true,
+    "noSentinelsRemainInBoundDriver": true,
+    "widthOnlyModelMatched": true,
+    "groupCount": 7,
+    "commands": 13,
+    "truncationFlagsRequiredFalse": 26,
+    "selectedFunctionalDeclarations": 13,
+    "expectedReports": 9,
+    "syntheticControlOnly": true
+  },
+  "prebinding": {
+    "anchors": {
+      "git": "949136662a68f7c4ae6b6b741064adfc0524dca6",
+      "bytes": 24355,
+      "sha256": "f1c433fdfe8bb390b40882ed6dba5a091820fe70225b201822b9ace06edccd5d",
+      "lf": 418,
+      "finalLF": true
+    },
+    "retargetDiff": {
+      "git": "5ee75fe53aba86e3af44a21a8cc9aca5e1f42349",
+      "bytes": 10764,
+      "sha256": "4f5de606e7b68107fdac4d8280502c1be70b948ed01e9960ccb8a99ff093e87f",
+      "lf": 135,
+      "finalLF": true
+    },
+    "fullSnapshotDiff": {
+      "git": "7c36c206cb91de27b0277bb207471d65d53ce25b",
+      "bytes": 40061,
+      "sha256": "a94ba204f23d813d69e4f3b8546b165415de11b239075f89d851dc0bd2aaceb3",
+      "lf": 622,
+      "finalLF": true
+    },
+    "bounds": {
+      "git": "909d79330551681dbb469c1d8ba9fd885cda03ec",
+      "bytes": 19332,
+      "sha256": "53f040afa7d5df3ebdb51c70b1b9f741ab8309c53f37074c55fdaca12cca5c8c",
+      "lf": 618,
+      "finalLF": true
+    },
+    "preserved": true
+  },
+  "authorEffects": {
+    "onlyGitBlobsCreated": true,
+    "sourceTreesOrCommitsCreated": false,
+    "refsChanged": false,
+    "runsCreated": false,
+    "repositoryCodeExecuted": false,
+    "originalLogsAcquired": false,
+    "zipAcquired": false
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "schema": "sf613-e12-diagnostic-bounds-v1",
+  "status": "STATIC_TEXT_AND_PURE_DATA_ONLY_CI_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "clean": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "immutable": true
+  },
+  "diagnosticSource": {
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "delta": {
+      "added": 2,
+      "modified": 6,
+      "paths": 8
+    }
+  },
+  "helper": {
+    "gitSha": "11686520311978c09a66c1e5b1317d3a0a0347bc",
+    "bytes": 23524,
+    "sha256": "54303a8b88d170557b6002688d7f52ad7698bee0d61d5a6777712cfbb00dfa40",
+    "lf": 394
+  },
+  "control": {
+    "gitSha": "66971ae90c6aecf6836fb7d2150f920fdbf025b5",
+    "bytes": 25082,
+    "sha256": "76139aa6fe735477f3983020f99c894cab0ca626c9a46fbcd7004de56564aeaf",
+    "lf": 409
+  },
+  "linkedDerivation": {
+    "gitSha": "e8a2145067b15cbfbb8f2efdc63cde9c69798ebe",
+    "bytes": 85067,
+    "sha256": "fa81a54273b2f3aa07e53d86beb0e7a00074f7324e2e8182d1e10752461edf9b",
+    "lf": 784
+  },
+  "linkedDiff": {
+    "gitSha": "6399946ab73cfe5d410d4d667036e166dce29d2e",
+    "bytes": 56884,
+    "sha256": "eaa040afc42c853478c74994f0a020e7cbc73dab139528420b46e1e1216d4be3",
+    "lf": 837
+  },
+  "linkedControlDerivation": {
+    "gitSha": "99b2b20ba85c6c04424ee03d59db673ee665c425",
+    "bytes": 58769,
+    "sha256": "235e2f1a59ff25d29e5d7d7e947a07cb7dc9c3a1ad4413354e8875465fa55314",
+    "lf": 164
+  },
+  "observation": {
+    "profiler": "Bun inspector Session; one attempted sampler per backend process, reusing the E11 ownership/start/stop/serialize/fsync lifecycle",
+    "scope": "The selected first HTTP preview starts a whole-VM CPU sampler. CPU samples and Source/native counters are PID/window aggregates, not Request-exclusive or case-exclusive work.",
+    "intervalUs": 5000,
+    "targetMs": 50000,
+    "acceptStrictlyBeforeMs": 55000,
+    "timerPulseMs": 10000,
+    "existingCooperativePumps": [
+      "HTTP progress after the three original boundaries",
+      "Source route after the already-decided sealed-read or unfenced/full-guard path",
+      "ProductAuthority immediately after fulfilled authenticate, before its original guard"
+    ],
+    "newCounterFunctionsPump": false,
+    "completionLimits": [
+      "Timer and cooperative boundaries can be delayed or never reached.",
+      "A target is not a deadline guarantee. Starvation, termination, invalid clock, start/stop failure or a nonreturning operation can leave capture incomplete.",
+      "short-completed, completed-late, completed-on-time and incomplete remain distinct observational states; none is a successful HTTP or Analytics outcome.",
+      "HTTP progress remains eligible after CPU closure until the selected handle's HTTP finally. Late progress cannot rewrite profile or collection bytes already closed."
+    ],
+    "runtime": {
+      "platform": "linux",
+      "arch": "x64",
+      "bunVersion": "1.3.14",
+      "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "revisionBytes": 40,
+      "releaseRuntimeNotRetargeted": true
+    },
+    "ownership": [
+      "Timer is installed and unref attempted before Session ownership.",
+      "Profiler preflight and start remain synchronous; no new await, then, ALS, root or product callback.",
+      "An uncertain start or failed stop does not receive cleanup that could stop a sampler not proven owned.",
+      "Native output uses the existing wx/0600, fsync, fstat and close sequence outside fixture cleanup roots."
+    ]
+  },
+  "counters": {
+    "cap": 65535,
+    "existingRoutes": {
+      "slots": 3,
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "unchangedSemantics": true
+    },
+    "selection": {
+      "slots": 13,
+      "sourceRequests": 4,
+      "nativeCopies": 3,
+      "identityLoop": 6,
+      "sourceOrder": [
+        "none",
+        "cases",
+        "preferences",
+        "case-identities"
+      ],
+      "nativeOrder": [
+        "tag-refused",
+        "cases-complete",
+        "normalized-map"
+      ],
+      "loopOrder": [
+        "enumerated",
+        "not-enumerated",
+        "eligible",
+        "reduced",
+        "retained",
+        "known-fields-omitted"
+      ],
+      "saturatedMeaning": "true iff at least one of the thirteen selection slots reached 65535; it does not establish events above the cap and excludes the three historical route counters."
+    },
+    "populations": {
+      "sourceRequests": "Only the already calculated Source selection at its qualified token point after existing gates/root/current/query and construction of the forwarded option. This does not count all C08 calls or prove native acceptance.",
+      "nativeCopies": "Only requested case-identities native child snapshots whose entire snapshot expression completed, before invoking work, while this PID owns the running sampler.",
+      "tagRefused": "The completed child copy did not return the case-identities physical tag; not operation refusal, copy failure, authorization failure or transaction denial.",
+      "casesComplete": "The completed copy returned case-identities but normalizedIdentities was not true. Cases stay complete; other product maps may still be narrowed. It does not mean the entire Snapshot was materialized in full.",
+      "normalizedMap": "The completed copy returned case-identities with normalizedIdentities true. Individual malformed, unknown or body-free entries can still be retained.",
+      "enumerated": {
+        "unit": "completed copies/maps",
+        "meaning": "identityCases loop actually ran; an empty normalized map still increments this slot once."
+      },
+      "notEnumerated": {
+        "unit": "completed copies/maps",
+        "meaning": "No identityCases loop ran for this copy. The map is not traversed to count it; zero entry slots cannot mean empty map."
+      },
+      "eligible": {
+        "unit": "entries",
+        "meaning": "Original simple predicate was accepted."
+      },
+      "reduced": {
+        "unit": "entries",
+        "meaning": "At least one actual own known body field was omitted by the original branch."
+      },
+      "retained": {
+        "unit": "entries",
+        "meaning": "Zero fields omitted, including eligible identity-only entries and ineligible/malformed entries."
+      },
+      "knownFieldsOmitted": {
+        "unit": "fields",
+        "meaning": "Count each original body === true branch for an actual own field. Never assume fourteen omissions for an eligible entry."
+      },
+      "staging": "Local numeric loop counters are staged in the private physical-copy result. They are not passed to product callbacks. Aggregation happens only after clone, validateSnapshot and the final native snapshot expression return.",
+      "copyFailure": "Any failure before final snapshot completion publishes no native or staged loop contribution.",
+      "workFailure": "A completed snapshot is counted even if product work later throws, including throw undefined, or if transaction acceptance later fails.",
+      "excluded": [
+        "Top-level materializations",
+        "Non-case-identities requested native children",
+        "Copies that throw before completion",
+        "Any event outside the owned running sampler"
+      ],
+      "conservation": "No pairing, equality, conservation, subtraction or fallback-rate is inferred between Source/native/loop populations, historical routes, HTTP progress or CPU samples."
+    },
+    "overhead": {
+      "perSourceHook": "Constant checks and one bounded increment, no pump.",
+      "perNativeHook": "Constant checks, validation of four local numbers and up to six bounded increments, no pump.",
+      "localLoop": "Numeric bookkeeping occurs in the already executed identity loop, including outside the capture window. It does not add graph enumeration, descriptor lookup, ID access or authority checks. Only helper aggregation is restricted to running ownership.",
+      "localMemory": "One fixed private record for a case-identities physical copy; no per-entry retained record. No staged counter object reaches a product callback.",
+      "counterMemory": "Thirteen selection counters plus three existing route counters per backend process.",
+      "snapshotSerialization": "Fixed dictionaries and small arrays at the bounded CPU/progress/collection emissions only.",
+      "requestAttribution": "Observer overhead, loop work and whole-VM CPU samples are not exclusive to the selected Request."
+    },
+    "passivity": "Original arguments, receiver lookups, predicates, clones, authorizations, guards, callback results, abort/error/poison and transaction behavior remain literal except observational statements. Observer exceptions are contained without product replay."
+  },
+  "wire": {
+    "cpu": {
+      "prefix": "SF_PREVIEW_E12_CPU ",
+      "maximumAttempts": 3,
+      "perLineCapBytes": 4096,
+      "includesLF": true
+    },
+    "progress": {
+      "prefix": "SF_PREVIEW_E12_PROGRESS ",
+      "maximumUniqueAttempts": 3,
+      "perLineCapBytes": 1024,
+      "includesLF": true,
+      "kinds": [
+        "body-returned",
+        "admit-returned",
+        "case-callback-entered"
+      ],
+      "identity": "same captured handle and exact Request; no Request property read",
+      "writeFailure": "Slot is consumed once before the write; false/backpressure or throw does not block the cooperative pump or trigger a replay."
+    },
+    "helperMaximumBytes": 15360,
+    "scopeOfQuota": "Per helper/backend process. This is not a bound for the entire two-case CI log or a promise that all attempted lines reach the reader. Existing launcher disabled/prepared records are separately attributable.",
+    "futureCombinedCpuProgressMarkerSlotBytes": 65536,
+    "capsUnchanged": true,
+    "model": {
+      "method": "Literal data objects only, JSON serialization and independent UTF-8 byte counts; neither repository helper nor tests were executed.",
+      "numericWidths": {
+        "pidAndParentPidDigits": 9,
+        "pointAndElapsedTenthMsDigits": 9,
+        "runIdDigits": 20,
+        "utcMax": 8640000000000000,
+        "sha1HexDigits": 40,
+        "sha256HexDigits": 64,
+        "attempt": "1",
+        "sequenceMaximum": 3
+      },
+      "counterWidths": {
+        "totalSlots": 16,
+        "selectionSlots": 13,
+        "historicalRouteSlots": 3,
+        "valuePerSlot": 65535,
+        "saturated": false,
+        "explanation": "false is one byte longer than true. All thirteen selection counters at cap together with false is unreachable but conservatively models width."
+      },
+      "pointKeys": [
+        "frameStart",
+        "startEnter",
+        "startReturn",
+        "stopCheckpoint",
+        "stopEnter",
+        "stopReturn",
+        "serializeEnter",
+        "serializeReturn",
+        "profileWriteEnter",
+        "profileFsync",
+        "profileClose"
+      ],
+      "pointScope": "All eleven keys are included in every CPU size model, including started and stopped, although those earlier states ordinarily have fewer points.",
+      "maximumStringChoices": {
+        "progressKind": "case-callback-entered",
+        "cpuPhase": "unavailable",
+        "nonce": "sf613-e12-cpu-ZZZZZZ",
+        "finishedState": "completed-on-time"
+      },
+      "resultBytes": {
+        "started": 1389,
+        "stopped": 1317,
+        "finished": 1693,
+        "incomplete": 1524,
+        "unavailable": 1003,
+        "progress": 1014
+      },
+      "lines": {
+        "started": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"started\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\",\"runtime\":[\"1.3.14\",\"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"],\"parentPid\":999999999,\"intervalUs\":5000,\"targetMs\":50000,\"acceptMs\":55000,\"utcMs\":8640000000000000,\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999}}\n",
+        "stopped": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"stopped\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\",\"cause\":\"target\",\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"nodesBounded\":999999999,\"samplesBounded\":999999999,\"cleanupFailed\":false}\n",
+        "finished": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\",\"state\":\"completed-on-time\",\"cause\":\"target\",\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":4194304,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"collection\":{\"name\":\"collection.json\",\"bytes\":16384,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"collectionWithinAccept\":false,\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"cleanupFailed\":false}\n",
+        "incomplete": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\",\"state\":\"incomplete\",\"reason\":\"collection-write\",\"cause\":\"target\",\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":4194304,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"stopReturned\":false,\"cleanupFailed\":false}\n",
+        "unavailable": "SF_PREVIEW_E12_CPU {\"schema\":\"sf-preview-causal-e12-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"unavailable\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\",\"reason\":\"late-or-invalid-clock\",\"elapsedTenthMs\":-999999999}\n",
+        "progress": "SF_PREVIEW_E12_PROGRESS {\"schema\":\"sf-preview-causal-e12-progress-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"request\":1,\"sequence\":3,\"kind\":\"case-callback-entered\",\"elapsedTenthMs\":999999999,\"cpuPhase\":\"unavailable\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"cap\":65535,\"sourceOrder\":[\"none\",\"cases\",\"preferences\",\"case-identities\"],\"sourceRequests\":[65535,65535,65535,65535],\"nativeOrder\":[\"tag-refused\",\"cases-complete\",\"normalized-map\"],\"nativeCopies\":[65535,65535,65535],\"loopOrder\":[\"enumerated\",\"not-enumerated\",\"eligible\",\"reduced\",\"retained\",\"known-fields-omitted\"],\"identityLoop\":[65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e12-cpu-ZZZZZZ\"}\n"
+      },
+      "interpretation": "These width models demonstrate headroom inside unchanged per-line hard caps. They do not predict any event, health, counter value, runtime result, duration or final capture."
+    }
+  },
+  "files": {
+    "profile": {
+      "name": "preview-first.cpuprofile",
+      "capBytes": 4194304
+    },
+    "collection": {
+      "name": "collection.json",
+      "capBytes": 16384
+    },
+    "launcher": {
+      "name": "launcher.json",
+      "capBytes": 8192
+    },
+    "namespace": "test-ci-evidence/sf613-e12-cpu-<six alphanumeric characters>, outside the private roots removed by the fixture",
+    "originalByteChecks": "Existing SHA256/byte counts and post-write fsync/fstat/close remain. Closed CPU snapshots are immutable receipts of that instant; late HTTP progress is separate."
+  },
+  "unchangedOriginalSelection": {
+    "request": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    },
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "newExtraRepeats": 0,
+    "firstPreviewWaitMs": 60000,
+    "specOraclesChanged": false,
+    "seedChanged": false,
+    "clockChanged": false,
+    "deadlinesChanged": false,
+    "sensitivityWaitMs": 120000,
+    "specChanged": false,
+    "fixtureOverlay": true,
+    "fixtureOverlayMeaning": "The two launchers only set and forward the private CPU binding and bounded CPU/progress lines. The original spec, seed, assertions, interactions, ordering and test deadlines remain literal."
+  },
+  "focalPlan": {
+    "owner": "/root/focal_migration",
+    "status": "EXECUTABLE_DRIVER_SEPARATE_UNBOUND",
+    "groups": 7,
+    "commands": 13,
+    "expectedTruncationFlags": 26,
+    "functionalTests": 13,
+    "reports": 9,
+    "wholeFiles": 3,
+    "readonly": {
+      "declarations": 7,
+      "reports": 3,
+      "processMs": 360000,
+      "parentMs": 420000,
+      "changed": false
+    },
+    "projection": {
+      "declarations": 5,
+      "reports": 5,
+      "nominalTestMs": 290000,
+      "processMs": 300000,
+      "parentMs": 360000,
+      "outcomesC16": 31,
+      "identityProjectionSubcases": 9,
+      "changed": false
+    },
+    "diagnostic": {
+      "declarations": 1,
+      "reports": 1,
+      "staticExpectSites": 64,
+      "awaitTokens": 23,
+      "checks": 8,
+      "bunTestMs": 15000,
+      "cooperativeMs": 12000,
+      "processMs": 45000,
+      "parentMs": 60000,
+      "reportCapBytes": 65536,
+      "syntheticSaturation": {
+        "iterations": 65537,
+        "callsPerIteration": 5,
+        "additionalNormalizedCall": 1,
+        "totalHookCalls": 327686,
+        "productCalls": 0
+      },
+      "unsaturatedAtStop": {
+        "sourceCaseIdentities": 1,
+        "nativeNormalized": 3,
+        "loopEnumerated": 3
+      },
+      "expectedAtStop": {
+        "sourceRequests": [
+          65535,
+          65535,
+          65535,
+          1
+        ],
+        "nativeCopies": [
+          65535,
+          65535,
+          3
+        ],
+        "identityLoop": [
+          3,
+          65535,
+          65535,
+          65535,
+          65535,
+          65535
+        ],
+        "saturated": true
+      },
+      "limitations": [
+        "Inspector Session and monotonic clock are simulated.",
+        "Source classifications are supplied directly to the observational API; this test does not prove the complete installed Provider/Source path.",
+        "LocalStore projection/copy boundaries and temporary files are real when future CI executes the control.",
+        "No real fifty-second wait, CPU performance, deadline success or operational file durability is claimed."
+      ]
+    },
+    "dShape": {
+      "parent": "future diagnostic source S",
+      "added": 2,
+      "modified": 1,
+      "control": "new diagnostic test",
+      "driver": "new isolated focal wrapper",
+      "request": "inherited 295-byte Analytics request replaced by existing 247-byte focal request"
+    },
+    "note": "All counts are selection requirements, not execution results. Existing process/parent budgets are unchanged; one new 45/60-second process is added. Root separately reviews the final wrapper and its complete command budget."
+  },
+  "verification": {
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "profilerExecuted": false,
+    "originalActionsOrZipAcquired": false,
+    "modelsArePureData": true,
+    "sourceAndControlBlobsReadBack": true
+  },
+  "superseded": {
+    "controlR1": {
+      "gitSha": "74c932e341327ad61f1238adc0e93f29688a761d",
+      "bytes": 25084,
+      "sha256": "625fb9fdb3e7c496c9c7d5268cf381044f9df0bbf404d49f21a0618b1479227b",
+      "lf": 409
+    },
+    "reason": "All-slot saturation masked post-stop counter contributions; no R1 run occurred."
+  }
+}

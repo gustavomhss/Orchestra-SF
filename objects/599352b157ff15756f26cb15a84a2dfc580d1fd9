@@ -1,0 +1,425 @@
+// Snapshot-only E10 adapter controls. Select one exact title per fresh Bun process.
+// Session and monotonic time are simulated here; these controls do not sample real CPU.
+import { expect, mock, spyOn, test } from "bun:test"
+import { createHash } from "node:crypto"
+import { Buffer } from "node:buffer"
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+type Api = typeof import("../../../../product/contracts/preview-cpu-e10-diagnostic.ts")
+type Mode = "target" | "short" | "late" | "timer-failure" | "preflight-busy" | "start-uncertain" | "stop-failure" | "binding-invalid"
+const source = "7d26eb502441aafeacfaa89c135e81dc8d98571b"
+const sourceTree = "b90f6e774436bddd61043b6ac70a9dc2a625baf4"
+const prefix = "SF_PREVIEW_E10_CPU "
+const progressPrefix = "SF_PREVIEW_E10_PROGRESS "
+const reportPrefix = "SF_E10_CPU_CONTROL "
+const directoryKey = "SF_PREVIEW_E10_CPU_EVIDENCE_DIR"
+const bindingKey = "SF_PREVIEW_E10_CPU_EVIDENCE_BINDING"
+const repository = realpathSync(fileURLToPath(new URL("../../../../../../../", import.meta.url)))
+let controlStarted = false
+
+function required<T>(value: T | undefined): T {
+  if (value === undefined) throw new Error("The E10 control did not reach its required boundary")
+  return value
+}
+function object(value: unknown): Record<string, unknown> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected a JSON object")
+  return Object.fromEntries(Object.entries(value))
+}
+function hash(value: string | Uint8Array) { return createHash("sha256").update(value).digest("hex") }
+
+async function fixture(mode: Mode) {
+  if (controlStarted) throw new Error("Select one E10 control per fresh process; sampler selection has no reset")
+  controlStarted = true
+  const base = path.join(repository, "test-ci-evidence")
+  mkdirSync(base, { recursive: true })
+  const directory = mkdtempSync(path.join(base, "sf613-e10-cpu-"))
+  chmodSync(directory, 0o700)
+  const privateRoot = mkdtempSync(path.join(realpathSync(tmpdir()), "sf-e10-control-"))
+  const oldCwd = process.cwd(), oldArgv = process.argv
+  const oldDirectory = process.env[directoryKey], oldBinding = process.env[bindingKey]
+  const binding = { schema: "sf-preview-e10-cpu-launch-v1", source, sourceTree, snapshot: source,
+    runId: "1", attempt: "1", nonce: path.basename(directory) }
+  const launcher = JSON.stringify({ ...binding, qualification: false, state: "synthetic-control",
+    processRole: "native-cli", profileName: "preview-first.cpuprofile" }) + "\n"
+  writeFileSync(path.join(directory, "launcher.json"), launcher, { flag: "wx", mode: 0o600 })
+  process.env[directoryKey] = directory
+  process.env[bindingKey] = JSON.stringify({ ...binding, launcherBytes: Buffer.byteLength(launcher, "utf8"),
+    launcherSha256: mode === "binding-invalid" ? "0".repeat(64) : hash(launcher) })
+  process.argv = [oldArgv[0]!, path.join(repository, "apps/cli/src/index.ts"), "serve"]
+  process.chdir(privateRoot)
+
+  const calls: string[] = [], intervals: unknown[] = [], lines: string[] = [], events: string[] = []
+  const timers = new Set<ReturnType<typeof setInterval>>()
+  const cleared = new Set<ReturnType<typeof setInterval>>()
+  let now = 1000, timerCalls = 0, requestGets = 0, pulseCalls = 0
+  let progressAttempts = 0, progressFailures = 0, progressBackpressure = 0
+  let progressOutput: "normal" | "false" | "throw" = "normal"
+  let samplerLive = mode === "preflight-busy"
+  let pulseCallback: (() => void) | undefined, stopHook: (() => void) | undefined
+  const profile = { nodes: [{ id: 1, callFrame: { functionName: "syntheticControl", scriptId: "0",
+    url: "e10-control-only", lineNumber: 0, columnNumber: 0 }, hitCount: 1 }],
+    samples: [1], timeDeltas: [5000], startTime: 1_000_000, endTime: 1_005_000 }
+  class ControlSession {
+    constructor() { calls.push("construct") }
+    connect() { calls.push("connect") }
+    disconnect() { calls.push("disconnect"); samplerLive = false }
+    post(method: string, params?: unknown): unknown {
+      calls.push(method)
+      events.push(method)
+      if (method === "Profiler.enable") return undefined
+      if (method === "Profiler.setSamplingInterval") {
+        intervals.push(params)
+        if (mode === "preflight-busy") throw new Error("Synthetic sampler already active")
+        return undefined
+      }
+      if (method === "Profiler.start") {
+        samplerLive = true
+        if (mode === "start-uncertain") throw new Error("Synthetic start outcome uncertain")
+        return undefined
+      }
+      if (method === "Profiler.stop") {
+        stopHook?.()
+        if (mode === "stop-failure") throw new Error("Synthetic stop failure")
+        samplerLive = false
+        return { profile }
+      }
+      throw new Error("Unexpected profiler method in the E10 control")
+    }
+  }
+  // Only this observational dependency is replaced, before importing the helper.
+  // Each named control runs in a different process; no reset or shared module mock is used.
+  mock.module("node:inspector", () => ({ default: { Session: ControlSession } }))
+  const originalWrite = process.stdout.write
+  const originalInterval = globalThis.setInterval, originalClear = globalThis.clearInterval
+  const clock = spyOn(performance, "now").mockImplementation(() => now)
+  const output = spyOn(process.stdout, "write").mockImplementation((...args) => {
+    const value = args[0]
+    if (typeof value === "string" && value.startsWith(prefix)) { events.push("cpu-write"); lines.push(value); return true }
+    if (typeof value === "string" && value.startsWith(progressPrefix)) {
+      events.push("progress-write")
+      progressAttempts++
+      if (progressOutput === "throw") { progressFailures++; throw new Error("Synthetic progress write failure") }
+      lines.push(value)
+      if (progressOutput === "false") { progressBackpressure++; return false }
+      return true
+    }
+    return Reflect.apply(originalWrite, process.stdout, args)
+  })
+  const interval = spyOn(globalThis as { setInterval: (...args: Parameters<typeof setInterval>) => ReturnType<typeof setInterval> }, "setInterval").mockImplementation((callback, ...args) => {
+    timerCalls++
+    if (mode === "timer-failure") throw new Error("Synthetic interval failure")
+    if (typeof callback !== "function") throw new Error("Expected a callable interval")
+    pulseCallback = () => { Reflect.apply(callback, undefined, []) }
+    const timer: ReturnType<typeof setInterval> = Reflect.apply(originalInterval, globalThis, [callback, ...args])
+    timers.add(timer)
+    return timer
+  })
+  const clear = spyOn(globalThis, "clearInterval").mockImplementation((timer) => {
+    if (timer !== undefined && timers.has(timer as ReturnType<typeof setInterval>)) cleared.add(timer as ReturnType<typeof setInterval>)
+    return Reflect.apply(originalClear, undefined, [timer])
+  })
+  const request = new Proxy(new Request("http://127.0.0.1/e10-cpu-control"), {
+    get() { requestGets++; throw new Error("Observer must not inspect the Request") },
+  })
+  const restore = () => {
+    for (const timer of timers) originalClear(timer)
+    clear.mockRestore()
+    interval.mockRestore()
+    output.mockRestore()
+    clock.mockRestore()
+    process.argv = oldArgv
+    process.chdir(oldCwd)
+    if (oldDirectory === undefined) delete process.env[directoryKey]
+    else process.env[directoryKey] = oldDirectory
+    if (oldBinding === undefined) delete process.env[bindingKey]
+    else process.env[bindingKey] = oldBinding
+    rmSync(directory, { recursive: true, force: true })
+    rmSync(privateRoot, { recursive: true, force: true })
+  }
+  try {
+    const inspector = await import("node:inspector")
+    expect<unknown>(inspector.default.Session).toBe(ControlSession)
+    const api: Api = await import("../../../../product/contracts/preview-cpu-e10-diagnostic.ts")
+    const records = () => lines.filter((line) => line.startsWith(prefix)).map((line) => object(JSON.parse(line.slice(prefix.length))))
+    const progressRecords = () => lines.filter((line) => line.startsWith(progressPrefix)).map((line) => object(JSON.parse(line.slice(progressPrefix.length))))
+    const latest = () => required(records().at(-1))
+    const pulse = (at: number) => { pulseCalls++; now = at; required(pulseCallback)() }
+    const textFile = (name: string) => readFileSync(path.join(directory, name), "utf8")
+    const fileNames = () => readdirSync(directory).sort()
+    const fileMeta = (name: string) => {
+      const bytes = readFileSync(path.join(directory, name)), info = statSync(path.join(directory, name))
+      return { name, bytes: bytes.length, sha256: hash(bytes), mode: info.mode & 0o777 }
+    }
+    const verifyWire = () => {
+      const values = records(), progress = progressRecords()
+      expect(values.length).toBeGreaterThanOrEqual(1)
+      expect(values.length).toBeLessThanOrEqual(3)
+      expect(progress.length).toBeLessThanOrEqual(3)
+      expect(lines.length).toBe(values.length + progress.length)
+      expect(progressAttempts).toBeLessThanOrEqual(3)
+      expect(Buffer.byteLength(lines.join(""), "utf8")).toBeLessThanOrEqual(15_360)
+      for (const family of [
+        { prefix, values, schema: "sf-preview-causal-e10-cpu-v1", cap: 4096 },
+        { prefix: progressPrefix, values: progress, schema: "sf-preview-causal-e10-progress-v1", cap: 1024 },
+      ]) {
+        const selected = lines.filter((line) => line.startsWith(family.prefix))
+        for (let index = 0; index < selected.length; index++) {
+          expect(selected[index]).toMatch(/^[\x20-\x7e]*\n$/)
+          expect(Buffer.byteLength(selected[index]!, "utf8")).toBeLessThanOrEqual(family.cap)
+          expect(family.values[index]).toMatchObject({ schema: family.schema, source, sourceTree,
+            qualification: false, pid: process.pid, request: 1, sequence: index + 1 })
+          expect(family.values[index]?.routes).toMatchObject({ scope: "pid-running-window",
+            order: ["sealed-read", "unfenced", "full-guard"], cap: 65_535 })
+        }
+      }
+      expect(requestGets).toBe(0)
+      expect(api.startSfE10CpuObservation(new Request("http://127.0.0.1/not-selected"))).toBeUndefined()
+      return values
+    }
+    const evidence = () => {
+      const wire = lines.join("")
+      return { qualification: false, syntheticClock: true, syntheticSession: true, pid: process.pid,
+        checksCompleted: true, records: lines.slice(), bytes: Buffer.byteLength(wire, "utf8"), sha256: hash(wire),
+        calls: calls.slice(), intervals: intervals.slice(), samplerLive, timerCalls, clearedTimers: cleared.size,
+        requestGets, pulseCalls, progressAttempts, progressFailures, progressBackpressure,
+        cpuRecords: records().length, progressRecords: progressRecords().length, events: events.slice(),
+        files: fileNames().map(fileMeta) }
+    }
+    const report = (scenario: string, value: ReturnType<typeof evidence>) => {
+      const text = reportPrefix + JSON.stringify({ scenario, ...value }) + "\n"
+      if (Buffer.byteLength(text, "utf8") > 65_536) throw new Error("E10 control evidence exceeded 64 KiB")
+      Reflect.apply(originalWrite, process.stdout, [text])
+    }
+    return { api, request, calls, intervals, profile, records, progressRecords, latest, pulse, events, textFile, fileNames, fileMeta,
+      verifyWire, evidence, report, restore, setTime: (value: number) => { now = value },
+      setStopHook: (value: () => void) => { stopHook = value },
+      setProgressOutput: (value: "normal" | "false" | "throw") => { progressOutput = value },
+      progressAttempts: () => progressAttempts, progressFailures: () => progressFailures,
+      progressBackpressure: () => progressBackpressure, pulseCalls: () => pulseCalls,
+      samplerLive: () => samplerLive, timerCalls: () => timerCalls, clearedTimers: () => cleared.size }
+  } catch (error) { restore(); throw error }
+}
+type Fixture = Awaited<ReturnType<typeof fixture>>
+
+async function control(name: string, mode: Mode, work: (f: Fixture) => void | Promise<void>) {
+  const f = await fixture(mode)
+  let evidence: ReturnType<Fixture["evidence"]> | undefined
+  try { await work(f); f.verifyWire(); evidence = f.evidence() }
+  finally { f.restore() }
+  f.report(name, required(evidence))
+}
+function verifyCompleted(f: Fixture, state: "completed-on-time" | "short-completed" | "completed-late", onTime: boolean) {
+  expect(f.records().map((entry) => entry.kind)).toEqual(["started", "stopped", "finished"])
+  expect(f.latest()).toMatchObject({ state, collectionWithinAccept: onTime, cleanupFailed: false })
+  expect(f.fileNames()).toEqual(["collection.json", "launcher.json", "preview-first.cpuprofile"])
+  expect(f.textFile("preview-first.cpuprofile")).toBe(JSON.stringify(f.profile) + "\n")
+  const collection = object(JSON.parse(f.textFile("collection.json")))
+  expect(collection).toMatchObject({ state, qualification: false, intervalUs: 5000, targetMs: 50000, acceptMs: 55000 })
+  const profileMeta = f.fileMeta("preview-first.cpuprofile"), collectionMeta = f.fileMeta("collection.json")
+  expect(profileMeta.mode).toBe(0o600)
+  expect(collectionMeta.mode).toBe(0o600)
+  expect(f.latest().profile).toMatchObject({ name: profileMeta.name, bytes: profileMeta.bytes, sha256: profileMeta.sha256 })
+  expect(f.latest().collection).toMatchObject({ name: collectionMeta.name, bytes: collectionMeta.bytes, sha256: collectionMeta.sha256 })
+  expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(1)
+  expect(f.calls.filter((call) => call === "disconnect")).toHaveLength(1)
+  expect(f.samplerLive()).toBe(false)
+  expect(f.clearedTimers()).toBe(1)
+}
+
+test("E10 CPU observer preserves target identity ownership and single terminal", () => control(
+  "E10 CPU observer preserves target identity ownership and single terminal", "target", (f) => {
+    f.api.pumpSfE10CpuObservation()
+    f.api.markSfE10CpuRoute(0)
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    expect(f.calls).toEqual(["construct", "connect", "Profiler.enable", "Profiler.setSamplingInterval", "Profiler.start"])
+    expect(f.intervals).toEqual([{ interval: 5000 }])
+    expect(f.latest()).toMatchObject({ kind: "started", routes: { counts: [0, 0, 0] } })
+    expect(f.timerCalls()).toBe(1)
+    let forgedGets = 0
+    const forged = new Proxy({}, { get() { forgedGets++; throw new Error("Forged handle was inspected") } })
+    const different = new Request("http://127.0.0.1/different")
+    f.api.finishSfE10CpuObservation(forged, f.request)
+    f.api.finishSfE10CpuObservation(handle, different)
+    f.api.markSfE10HttpProgress(forged, f.request, "body-returned")
+    f.api.markSfE10HttpProgress(handle, different, "body-returned")
+    Reflect.apply(f.api.markSfE10HttpProgress, undefined, [handle, f.request, "not-a-boundary"])
+    expect(f.progressRecords()).toEqual([])
+    expect(f.progressAttempts()).toBe(0)
+    expect(forgedGets).toBe(0)
+    expect(f.api.startSfE10CpuObservation(f.request)).toBeUndefined()
+    // These count synthetic route selections, not calls to any product persistence port.
+    for (let index = 0; index < 65_537; index++) {
+      f.api.markSfE10CpuRoute(0)
+      f.api.markSfE10CpuRoute(1)
+      f.api.markSfE10CpuRoute(2)
+    }
+    f.setTime(50_999)
+    f.api.pumpSfE10CpuObservation()
+    expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(0)
+    f.setStopHook(() => { f.api.pumpSfE10CpuObservation(); f.api.markSfE10CpuRoute(0) })
+    f.setProgressOutput("false")
+    f.setTime(51_000)
+    f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+    expect(f.pulseCalls()).toBe(0)
+    expect(f.events.indexOf("progress-write")).toBeLessThan(f.events.indexOf("Profiler.stop"))
+    expect(f.progressBackpressure()).toBe(1)
+    expect(f.progressRecords()[0]).toMatchObject({ kind: "body-returned", cpuPhase: "running",
+      routes: { counts: [65_535, 65_535, 65_535] } })
+    verifyCompleted(f, "completed-on-time", true)
+    const frozen = { profile: f.textFile("preview-first.cpuprofile"), collection: f.textFile("collection.json"),
+      profileMeta: f.fileMeta("preview-first.cpuprofile"), collectionMeta: f.fileMeta("collection.json"), cpu: f.records() }
+    expect(object(JSON.parse(frozen.collection)).routes).toMatchObject({ counts: [65_535, 65_535, 65_535] })
+    f.setProgressOutput("normal")
+    f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+    f.api.markSfE10HttpProgress(handle, f.request, "admit-returned")
+    f.api.markSfE10HttpProgress(handle, f.request, "case-callback-entered")
+    expect(f.progressRecords().map((entry) => entry.kind)).toEqual(["body-returned", "admit-returned", "case-callback-entered"])
+    expect(f.progressRecords().slice(1).map((entry) => entry.cpuPhase)).toEqual(["finished", "finished"])
+    expect(f.progressAttempts()).toBe(3)
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.api.markSfE10HttpProgress(handle, f.request, "admit-returned")
+    f.api.pumpSfE10CpuObservation()
+    f.api.markSfE10CpuRoute(1)
+    f.pulse(80_000)
+    expect({ profile: f.textFile("preview-first.cpuprofile"), collection: f.textFile("collection.json"),
+      profileMeta: f.fileMeta("preview-first.cpuprofile"), collectionMeta: f.fileMeta("collection.json"), cpu: f.records() }).toEqual(frozen)
+    expect(f.progressAttempts()).toBe(3)
+    expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(1)
+    expect(f.calls.filter((call) => call === "disconnect")).toHaveLength(1)
+  }), 15_000)
+
+test("E10 CPU observer preserves early final values and original thrown sentinel", () => control(
+  "E10 CPU observer preserves early final values and original thrown sentinel", "short", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    const sentinel = new Error("Original request sentinel")
+    let threw = false, received: unknown
+    f.setTime(1500)
+    f.setStopHook(() => f.api.finishSfE10CpuObservation(handle, f.request))
+    try {
+      try { throw sentinel }
+      finally { f.api.finishSfE10CpuObservation(handle, f.request) }
+    } catch (error) { threw = true; received = error }
+    expect(threw).toBe(true)
+    expect(received).toBe(sentinel)
+    const value = Object.freeze({ original: "value" })
+    const returned = (() => {
+      try { return value }
+      finally { f.api.finishSfE10CpuObservation(handle, f.request) }
+    })()
+    expect(returned).toBe(value)
+    f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+    f.api.pumpSfE10CpuObservation()
+    expect(f.progressRecords()).toEqual([])
+    expect(f.progressAttempts()).toBe(0)
+    f.pulse(51_000)
+    verifyCompleted(f, "short-completed", true)
+    expect(f.latest().cause).toBe("final")
+  }), 15_000)
+
+test("E10 CPU observer reports delayed timer collection without claiming on time", () => control(
+  "E10 CPU observer reports delayed timer collection without claiming on time", "late", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    f.pulse(61_000)
+    f.api.markSfE10CpuRoute(2)
+    f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+    expect(f.progressRecords()).toHaveLength(1)
+    expect(f.progressRecords()[0]).toMatchObject({ cpuPhase: "finished", routes: { counts: [0, 0, 0] } })
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.api.markSfE10HttpProgress(handle, f.request, "admit-returned")
+    f.api.pumpSfE10CpuObservation()
+    expect(f.progressRecords()).toHaveLength(1)
+    expect(f.progressAttempts()).toBe(1)
+    f.pulse(91_000)
+    verifyCompleted(f, "completed-late", false)
+    expect(f.latest().cause).toBe("target")
+    expect(object(f.latest().points).stopEnter).toBe(610_000)
+  }), 15_000)
+
+test("E10 CPU observer refuses timer failure before creating a Session", () => control(
+  "E10 CPU observer refuses timer failure before creating a Session", "timer-failure", (f) => {
+    const handle = f.api.startSfE10CpuObservation(f.request)
+    expect(handle).toBeUndefined()
+    expect(f.calls).toEqual([])
+    expect(f.latest()).toMatchObject({ kind: "unavailable", reason: "selection-timer" })
+    const value = Object.freeze({ original: "timer-failure-value" })
+    const returned = (() => {
+      try { return value }
+      finally { f.api.finishSfE10CpuObservation(handle, f.request) }
+    })()
+    expect(returned).toBe(value)
+    expect(f.fileNames()).toEqual(["launcher.json"])
+    expect(f.timerCalls()).toBe(1)
+    expect(f.samplerLive()).toBe(false)
+  }), 15_000)
+
+test("E10 CPU observer preserves a sampler rejected by sampling preflight", () => control(
+  "E10 CPU observer preserves a sampler rejected by sampling preflight", "preflight-busy", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.pulse(61_000)
+    expect(f.calls).toEqual(["construct", "connect", "Profiler.enable", "Profiler.setSamplingInterval"])
+    expect(f.latest()).toMatchObject({ kind: "unavailable", reason: "sampling-preflight", ownership: "not-owned" })
+    expect(f.samplerLive()).toBe(true)
+    expect(f.fileNames()).toEqual(["launcher.json"])
+    expect(f.clearedTimers()).toBe(1)
+  }), 15_000)
+
+test("E10 CPU observer leaves uncertain start ownership untouched", () => control(
+  "E10 CPU observer leaves uncertain start ownership untouched", "start-uncertain", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.pulse(61_000)
+    expect(f.calls).toEqual(["construct", "connect", "Profiler.enable", "Profiler.setSamplingInterval", "Profiler.start"])
+    expect(f.latest()).toMatchObject({ kind: "unavailable", reason: "start", ownership: "uncertain" })
+    expect(f.samplerLive()).toBe(true)
+    expect(f.fileNames()).toEqual(["launcher.json"])
+    expect(f.clearedTimers()).toBe(1)
+  }), 15_000)
+
+test("E10 CPU observer records stop failure without cleanup replay or changed rejection", () => control(
+  "E10 CPU observer records stop failure without cleanup replay or changed rejection", "stop-failure", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    let threw = false, received: unknown = "not-thrown"
+    f.setTime(51_000)
+    f.setProgressOutput("throw")
+    try {
+      try { throw undefined }
+      finally {
+        f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+        f.api.markSfE10HttpProgress(handle, f.request, "body-returned")
+        f.api.finishSfE10CpuObservation(handle, f.request)
+      }
+    } catch (error) { threw = true; received = error }
+    expect(threw).toBe(true)
+    expect(received).toBeUndefined()
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.pulse(61_000)
+    expect(f.records().map((entry) => entry.kind)).toEqual(["started", "finished"])
+    expect(f.latest()).toMatchObject({ state: "incomplete", reason: "stop", stopReturned: false, cause: "target" })
+    expect(f.progressRecords()).toEqual([])
+    expect(f.progressAttempts()).toBe(1)
+    expect(f.progressFailures()).toBe(1)
+    expect(f.events.indexOf("progress-write")).toBeLessThan(f.events.indexOf("Profiler.stop"))
+    f.api.pumpSfE10CpuObservation()
+    f.api.markSfE10CpuRoute(0)
+    expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(1)
+    expect(f.calls.filter((call) => call === "disconnect")).toHaveLength(0)
+    expect(f.samplerLive()).toBe(true)
+    expect(f.fileNames()).toEqual(["launcher.json"])
+    expect(f.clearedTimers()).toBe(1)
+  }), 15_000)
+
+test("E10 CPU observer refuses an invalid launcher binding without sampler ownership", () => control(
+  "E10 CPU observer refuses an invalid launcher binding without sampler ownership", "binding-invalid", (f) => {
+    const handle = required(f.api.startSfE10CpuObservation(f.request))
+    f.api.finishSfE10CpuObservation(handle, f.request)
+    f.pulse(61_000)
+    expect(f.calls).toEqual([])
+    expect(f.latest()).toMatchObject({ kind: "unavailable", reason: "admission", ownership: "not-owned" })
+    expect(f.samplerLive()).toBe(false)
+    expect(f.fileNames()).toEqual(["launcher.json"])
+    expect(f.clearedTimers()).toBe(1)
+  }), 15_000)

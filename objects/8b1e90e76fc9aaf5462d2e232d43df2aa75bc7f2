@@ -1,0 +1,43 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts
+@@ -358,14 +358,14 @@
+       expect(f.progressRecords()[1]).toMatchObject({ selection: { sourceRequests: [1, 1, 1, 1],
+         nativeCopies: [1, 1, 2], identityLoop: [2, 2, 4, 2, 4, 4], saturated: false } })
+       selectionChecks.push("completed-copy-counted-before-original-throw-undefined")
+-      // Saturate the finite transport using observational inputs, not product calls.
++      // Saturate selected slots, leaving three slots sensitive to post-stop contributions.
+       const maxima = { enumerated: true, eligible: 65_535, reduced: 65_535, retained: 65_535, omitted: 65_535 }
++      f.api.markSfE12NativeCopy("case-identities", "case-identities", true, maxima)
+       for (let index = 0; index < 65_537; index++) {
+-        for (const selection of [undefined, "cases", "preferences", "case-identities"] as const)
++        for (const selection of [undefined, "cases", "preferences"] as const)
+           f.api.markSfE12SourceSelection(selection)
+         f.api.markSfE12NativeCopy("case-identities", undefined, undefined, undefined)
+         f.api.markSfE12NativeCopy("case-identities", "case-identities", false, undefined)
+-        f.api.markSfE12NativeCopy("case-identities", "case-identities", true, maxima)
+       }
+       f.setStopHook(() => {
+         f.api.markSfE12SourceSelection("case-identities")
+@@ -375,17 +375,17 @@
+       f.setTime(51_000)
+       f.api.pumpSfE12CpuObservation()
+       verifyCompleted(f, "completed-on-time", true)
+-      const expected = { sourceRequests: [65_535, 65_535, 65_535, 65_535], nativeCopies: [65_535, 65_535, 65_535],
+-        identityLoop: [65_535, 65_535, 65_535, 65_535, 65_535, 65_535], saturated: true }
++      const expected = { sourceRequests: [65_535, 65_535, 65_535, 1], nativeCopies: [65_535, 65_535, 3],
++        identityLoop: [3, 65_535, 65_535, 65_535, 65_535, 65_535], saturated: true }
+       const collection = object(JSON.parse(f.textFile("collection.json")))
+       expect(f.latest().selection).toMatchObject(expected)
+       expect(collection.selection).toEqual(f.latest().selection)
+       expect(f.records()[1]?.selection).toEqual(f.latest().selection)
+-      selectionChecks.push("thirteen-finite-slots-saturate-without-overflow")
++      selectionChecks.push("selected-slots-saturate-without-overflow-and-three-remain-sensitive")
+       const frozen = { profile: f.textFile("preview-first.cpuprofile"), collection: f.textFile("collection.json"),
+         records: f.records(), profileMeta: f.fileMeta("preview-first.cpuprofile"), collectionMeta: f.fileMeta("collection.json") }
+       await store.readSnapshotRoot(async () => { expect((await physical()).current).toBe(true) }, { signal: deadline.signal })
+-      f.api.markSfE12SourceSelection(undefined)
++      f.api.markSfE12SourceSelection("case-identities")
+       f.api.markSfE12HttpProgress(handle, f.request, "case-callback-entered")
+       expect(f.progressRecords()[2]).toMatchObject({ cpuPhase: "finished", selection: expected })
+       f.pulse(52_000)

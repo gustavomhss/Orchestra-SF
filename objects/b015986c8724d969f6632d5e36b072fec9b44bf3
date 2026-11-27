@@ -1,0 +1,474 @@
+{
+  "schema": "sf613-e12-reader-execution-authority-v1",
+  "at": "2026-11-27 20:48:19 UTC",
+  "status": "AUTHORIZED_SINGLE_CURRENT_ORIGINAL_ARTIFACT_RECEIPT_NO_RERUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "branch": "sf613-artifact-e12cpu",
+  "reader": {
+    "commit": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+    "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "parentTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "message": "ci(sucafina): receive E12 original CPU evidence",
+    "workflowPath": ".github/workflows/sf613-artifact-read.yml",
+    "python": {
+      "gitBlob": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf"
+    },
+    "workflow": {
+      "gitBlob": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b"
+    },
+    "exactOneAddition": true,
+    "ciRunRequestAbsent": true
+  },
+  "package": {
+    "manifest": {
+      "gitBlob": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+      "bytes": 21038,
+      "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968"
+    },
+    "bounds": {
+      "gitBlob": "dd7f1811082b9f35a7a0e14a25ea722755a70934",
+      "bytes": 12999,
+      "sha256": "ecc186b870d0096d7a65b03cf6be7c669cee7b8aa129d0d3018d7c6156703fde"
+    },
+    "pythonSupport": {
+      "gitBlob": "b78923d1feacecb724cc46a65184f1b5c786d7a0",
+      "bytes": 145307,
+      "sha256": "6e13671d9dec5084889d8f160f8591c4dbeb336b31044e3d673ea56d0a4e7638"
+    },
+    "yamlSupport": {
+      "gitBlob": "4f028fea6be02f3abbc616b12cff23688ddbf112",
+      "bytes": 249344,
+      "sha256": "a56e3f7d81adda14fcc8d957548a4deaa5b1d92cdc8fb346d5d295b3fbff3f20"
+    },
+    "fullDiff": {
+      "gitBlob": "ae73a71983e8dea651972aca299bc6e828f250f7",
+      "bytes": 80651,
+      "sha256": "186bb2a5361ed8250c054f34bc844b547482c2476f9aefaa6b898b75a9652a6a"
+    },
+    "historicalRejectedManifest": {
+      "manifest": {
+        "gitBlob": "11dfae470a69e24ae43027ae687965811eccdc38",
+        "bytes": 21037,
+        "sha256": "7a4aaf3a2210b9b742339491b9129d942ccbb369167a47b134e9486ac2925565"
+      },
+      "finding": "rootReportedObject.tree missing initial d, 39-character documentary value; actual immutable tree is d264e417f1afbc69c6730c8ef22e93030f82f49d",
+      "foundBy": [
+        "/root",
+        "/root/teams_product"
+      ],
+      "effect": "One JSON field correction required before activation; no code or actual Git object change",
+      "status": "STATIC_DOCUMENTARY_REJECTION_NO_RUN"
+    }
+  },
+  "currentInput": {
+    "binding": {
+      "gitBlob": "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "bytes": 20196,
+      "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623"
+    },
+    "intake": {
+      "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+      "bytes": 39804,
+      "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+    },
+    "rawManifest": {
+      "gitBlob": "2406d1d4c3ea0150ab227b8544255df804439984",
+      "bytes": 13647,
+      "sha256": "19e4d17a4e8bd37c2a1edf0363dc77706ed09236086d8f8bfef2269f10630fce"
+    },
+    "markerUnion": {
+      "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+    },
+    "producer": {
+      "run": 46063135555,
+      "attempt": 1,
+      "head": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "artifact": {
+        "id": 15229333864,
+        "node_id": "MDg6QXJ0aWZhY3QxNTIyOTMzMzg2NA==",
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 46003924,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864/zip",
+        "expired": false,
+        "digest": "sha256:6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+        "created_at": "2026-11-27T20:31:32Z",
+        "updated_at": "2026-11-27T20:31:32Z",
+        "expires_at": "2026-12-04T20:31:30Z",
+        "workflow_run": {
+          "id": 46063135555,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf613e12a",
+          "head_sha": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+        }
+      }
+    },
+    "originalMainAndCleanupGetsAlreadyClosed": true,
+    "originalZipGetsBeforeExecution": 0
+  },
+  "reviews": {
+    "rootDocumentChecks": [
+      {
+        "name": "repository and source snapshot bindings",
+        "pass": true
+      },
+      {
+        "name": "same exact original run jobs result",
+        "pass": true
+      },
+      {
+        "name": "current artifact fields",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_analytics_reader_bindings_v2",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_analytics_reader_bindings",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_analytics_final_receipt",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_analytics_raw_manifest",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_analytics_marker_union",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_python",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_yaml",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_python_support",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_yaml_support",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_full_diff",
+        "pass": true
+      },
+      {
+        "name": "exact metadata e12_root_reader_bounds",
+        "pass": true
+      },
+      {
+        "name": "current four parities and outcomes literal",
+        "pass": true
+      },
+      {
+        "name": "CPU current tuple claims not promoted to file receipt",
+        "pass": true
+      },
+      {
+        "name": "reader actual commit tree sole parent and one workflow",
+        "pass": true
+      },
+      {
+        "name": "all8 actual source leaves match",
+        "pass": true
+      },
+      {
+        "name": "root exact derivation already verified",
+        "pass": true
+      },
+      {
+        "name": "finite13 protocol and independent populations",
+        "pass": true
+      },
+      {
+        "name": "transport4to7 exact real exports and original bytes",
+        "pass": true
+      },
+      {
+        "name": "capture remains pending after static review",
+        "pass": true
+      },
+      {
+        "name": "reviewed bounds16 positive",
+        "pass": true
+      },
+      {
+        "name": "manifest one-field correction preserved history",
+        "pass": true
+      }
+    ],
+    "rootDerivation": {
+      "pass": true,
+      "results": [
+        {
+          "kind": "python",
+          "anchors": 11,
+          "forwardExact": true,
+          "inverseExact": true,
+          "hunks": 29,
+          "adds": 118,
+          "removes": 105
+        },
+        {
+          "kind": "yaml",
+          "anchors": 5,
+          "forwardExact": true,
+          "inverseExact": true,
+          "hunks": 32,
+          "adds": 122,
+          "removes": 109
+        }
+      ],
+      "namingCounts": {
+        "upper": 40,
+        "lower": 30
+      },
+      "fullTextPairVerified": true,
+      "repositoryExecution": false
+    },
+    "rootBoundsChecks": [
+      {
+        "name": "current Python/YAML exact",
+        "pass": true
+      },
+      {
+        "name": "final bindings/intake exact",
+        "pass": true
+      },
+      {
+        "name": "all core caps and transport preserved",
+        "pass": true
+      },
+      {
+        "name": "presence model 0",
+        "pass": true
+      },
+      {
+        "name": "presence model 1",
+        "pass": true
+      },
+      {
+        "name": "presence model 2",
+        "pass": true
+      },
+      {
+        "name": "presence model 3",
+        "pass": true
+      },
+      {
+        "name": "presence model 4",
+        "pass": true
+      },
+      {
+        "name": "presence model 5",
+        "pass": true
+      },
+      {
+        "name": "presence model 6",
+        "pass": true
+      },
+      {
+        "name": "presence model 7",
+        "pass": true
+      },
+      {
+        "name": "max arithmetic and spare excludes prior log bytes",
+        "pass": true
+      },
+      {
+        "name": "zero-byte originals retain empty chunks and no placeholders",
+        "pass": true
+      },
+      {
+        "name": "current marker bounds exact",
+        "pass": true
+      },
+      {
+        "name": "actual run artifact parities and tuple consistent",
+        "pass": true
+      },
+      {
+        "name": "all real file and runtime acceptance pending",
+        "pass": true
+      }
+    ],
+    "rootYamlReview": {
+      "pass": true,
+      "changes": [
+        {
+          "name": "branch",
+          "count": 1,
+          "pass": true
+        },
+        {
+          "name": "concurrency",
+          "count": 1,
+          "pass": true
+        },
+        {
+          "name": "pythonHash",
+          "count": 1,
+          "pass": true
+        },
+        {
+          "name": "embedding",
+          "count": 1,
+          "pass": true
+        },
+        {
+          "name": "upload",
+          "count": 1,
+          "pass": true
+        }
+      ],
+      "forwardExact": true,
+      "inverseExact": true,
+      "oldPythonHash": "740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290",
+      "permissionsReadOnly": true,
+      "checkoutSteps": 0,
+      "bootstrapUnchanged": true,
+      "jobMinutes": 20
+    },
+    "independent": {
+      "reviewer": "/root/teams_product",
+      "pass": true,
+      "manifest": {
+        "gitBlob": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+        "bytes": 21038,
+        "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968"
+      },
+      "python": {
+        "gitBlob": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+        "bytes": 98691,
+        "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf"
+      },
+      "yaml": {
+        "gitBlob": "13db57775b23b9603ea1018dc734ffd314942811",
+        "bytes": 120481,
+        "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b"
+      },
+      "allCodeAndDerivationAndBoundsReviewed": true,
+      "manifestLinks": 11,
+      "sourceLeaves": 8,
+      "actualObject": {
+        "commit": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+        "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+        "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+        "treePairs": 3,
+        "literalSiblings": 69,
+        "exactOneWorkflowAddition": true,
+        "ciRunAbsent": true
+      },
+      "correction": {
+        "oneField": true,
+        "bytes": 1,
+        "forwardInverseExact": true
+      },
+      "originalGets": 0,
+      "zipGets": 0,
+      "refRunWrites": 0
+    },
+    "manifestRepair": {
+      "pass": true,
+      "forwardExact": true,
+      "inverseExact": true,
+      "oneField": true,
+      "bytesDelta": 1,
+      "prior": {
+        "gitBlob": "11dfae470a69e24ae43027ae687965811eccdc38",
+        "bytes": 21037,
+        "sha256": "7a4aaf3a2210b9b742339491b9129d942ccbb369167a47b134e9486ac2925565"
+      },
+      "current": {
+        "gitBlob": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+        "bytes": 21038,
+        "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968"
+      }
+    }
+  },
+  "actualTreeAudit": {
+    "complete": true,
+    "pairs": 3,
+    "literalSiblings": 69,
+    "changes": [
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "before": null,
+        "after": {
+          "path": "sf613-artifact-read.yml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "13db57775b23b9603ea1018dc734ffd314942811",
+          "size": 120481,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/13db57775b23b9603ea1018dc734ffd314942811"
+        }
+      }
+    ]
+  },
+  "preflight": {
+    "at": "2026-11-27 20:46:39 UTC",
+    "branch404": true,
+    "priorRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "6f8690ed690b3271f312e8954c1229ac5ec07176"
+    },
+    "currentArtifactMetadataUnchanged": true,
+    "directArtifactEndpointUnsupported": "Fallback used approved producer-run artifacts collection; no binary download or original reacquisition."
+  },
+  "execution": {
+    "singleOriginalZipGetByReviewedReader": true,
+    "jobMinutes": 20,
+    "linux": "ubuntu-24.04",
+    "permissions": {
+      "contents": "read",
+      "actions": "read"
+    },
+    "checkout": false,
+    "repositoryCodeImportedOrExecuted": false,
+    "refActivationCount": 1,
+    "automaticRetries": 0,
+    "mainOriginalGetsByRoot": 1,
+    "mainAcquisitionOnlyAfterTerminal": true,
+    "wholeMainCapBytes": 8388608,
+    "fullPreservationAndLiteralReadbackBeforeParse": true,
+    "allExportsAndTerminalRequired": true,
+    "auditArtifactMetadataOnlyNeverDownloaded": true
+  },
+  "acceptancePending": [
+    "actual original ZIP size/hash and complete inventory CRC",
+    "original runtime selection/result order/status and four hard parities",
+    "actual CPU profile, collection and launcher file bytes",
+    "exact selected namespace and case/result/stdout membership",
+    "capture completion consistency across original files and markers",
+    "whole receiver main and all export/terminal integrity"
+  ],
+  "limits": [
+    "Static review does not constitute executed reader evidence or captureComplete.",
+    "Diagnostic source, reader and evidence archive excluded from final product ancestry.",
+    "No new UI42–44 qualification from CPU diagnostics.",
+    "No go-live or production cutover authority."
+  ],
+  "productionAuthorized": false
+}

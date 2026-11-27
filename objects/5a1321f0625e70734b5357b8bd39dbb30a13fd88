@@ -1,0 +1,384 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts b/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts
+--- a/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts
++++ b/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts
+@@ -5,19 +5,21 @@
+ import cpuPath from "node:path"
+ import { fileURLToPath } from "node:url"
+ 
+-const source = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+-const sourceTree = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
++const sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+ 
+ // Temporary CPU-only observation. The lexical handle never enters product context.
+ type Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }
+ let selectionTried = false, selectedFrame: Frame | undefined
+ const numberCap = 999_999_999, pulseMs = 10_000
+ const routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]
+-type SelectionClass = 0 | 1 | 2
+-const sourceRequests: [number, number, number] = [0, 0, 0]
+-const nativePairs: [number, number, number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+-const progressPrefix = "SF_PREVIEW_E11_PROGRESS ", progressCapBytes = 1024
+-const progressSchema = "sf-preview-causal-e11-progress-v1"
++type SelectionClass = 0 | 1 | 2 | 3
++type IdentityLoopCounts = Readonly<{ enumerated: boolean; eligible: number; reduced: number; retained: number; omitted: number }>
++const sourceRequests: [number, number, number, number] = [0, 0, 0, 0]
++const nativeCopies: [number, number, number] = [0, 0, 0]
++const identityLoop: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0]
++const progressPrefix = "SF_PREVIEW_E12_PROGRESS ", progressCapBytes = 1024
++const progressSchema = "sf-preview-causal-e12-progress-v1"
+ type HttpProgress = "body-returned" | "admit-returned" | "case-callback-entered"
+ 
+ function whole(value: number) { return value - value % 1 }
+@@ -34,52 +36,70 @@
+ function routeSnapshot() {
+   return { scope: "pid-running-window", order: ["sealed-read", "unfenced", "full-guard"], cap: routeCap, counts: routeCounts.slice() }
+ }
+-function selectionClass(value: "cases" | "preferences" | undefined): SelectionClass | undefined {
+-  return value === undefined ? 0 : value === "cases" ? 1 : value === "preferences" ? 2 : undefined
++function selectionClass(value: "cases" | "preferences" | "case-identities" | undefined): SelectionClass | undefined {
++  return value === undefined ? 0 : value === "cases" ? 1 : value === "preferences" ? 2 : value === "case-identities" ? 3 : undefined
+ }
++function increment(counts: number[], slot: number, amount = 1) {
++  const value = counts[slot]
++  if (value === undefined || value >= routeCap) return
++  const total = value + amount
++  counts[slot] = total < routeCap ? total : routeCap
++}
+ function selectionSnapshot() {
+   let saturated = false
+   for (let index = 0; index < sourceRequests.length; index++) if (sourceRequests[index] === routeCap) saturated = true
+-  for (let index = 0; index < nativePairs.length; index++) if (nativePairs[index] === routeCap) saturated = true
+-  return { scope: "pid-running-window", order: ["none", "cases", "preferences"], cap: routeCap,
+-    sourceRequests: sourceRequests.slice(), nativePairs: nativePairs.slice(), saturated }
++  for (let index = 0; index < nativeCopies.length; index++) if (nativeCopies[index] === routeCap) saturated = true
++  for (let index = 0; index < identityLoop.length; index++) if (identityLoop[index] === routeCap) saturated = true
++  return { scope: "pid-running-window", cap: routeCap,
++    sourceOrder: ["none", "cases", "preferences", "case-identities"], sourceRequests: sourceRequests.slice(),
++    nativeOrder: ["tag-refused", "cases-complete", "normalized-map"], nativeCopies: nativeCopies.slice(),
++    loopOrder: ["enumerated", "not-enumerated", "eligible", "reduced", "retained", "known-fields-omitted"],
++    identityLoop: identityLoop.slice(), saturated }
+ }
+-export function markSfE11SourceSelection(selection: "cases" | "preferences" | undefined) {
++export function markSfE12SourceSelection(selection: "cases" | "preferences" | "case-identities" | undefined) {
+   try {
+     const frame = selectedFrame, capture = cpuCapture
+     if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
+     const slot = selectionClass(selection)
+-    if (slot !== undefined && sourceRequests[slot] < routeCap) sourceRequests[slot]++
++    if (slot !== undefined) increment(sourceRequests, slot)
+   } catch { /* Count an issued Source token only; never alter its admission or pump here. */ }
+ }
+-export function markSfE11NativeCopy(requested: "cases" | "preferences" | undefined,
+-  materialized: "cases" | "preferences" | undefined) {
++export function markSfE12NativeCopy(requested: "cases" | "preferences" | "case-identities" | undefined,
++  materialized: "cases" | "preferences" | "case-identities" | undefined, normalized: boolean | undefined,
++  loop: IdentityLoopCounts | undefined) {
+   try {
+     const frame = selectedFrame, capture = cpuCapture
+-    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
+-    const row = selectionClass(requested), column = selectionClass(materialized)
+-    if (row === undefined || column === undefined) return
+-    const slot = row * 3 + column, value = nativePairs[slot]
+-    if (value !== undefined && value < routeCap) nativePairs[slot] = value + 1
+-  } catch { /* All completed native child copies in this PID; no Request or C08 attribution. */ }
++    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
++        requested !== "case-identities") return
++    const slot = materialized !== "case-identities" ? 0 : normalized === true ? 2 : 1
++    const enumerated = loop?.enumerated === true
++    const values = loop && enumerated ? [loop.eligible, loop.reduced, loop.retained, loop.omitted] : [0, 0, 0, 0]
++    for (let index = 0; index < values.length; index++) {
++      const value = values[index]
++      if (typeof value !== "number" || value < 0 || value > routeCap || value % 1 !== 0) return
++    }
++    increment(nativeCopies, slot)
++    increment(identityLoop, enumerated ? 0 : 1)
++    if (enumerated) for (let index = 0; index < values.length; index++) increment(identityLoop, index + 2, values[index]!)
++  } catch { /* Publish only completed requested identity copies; absent loops stay explicitly unenumerated. */ }
+ }
+-export function pumpSfE11CpuObservation() {
++export function pumpSfE12CpuObservation() {
+   try {
+     const frame = selectedFrame, capture = cpuCapture
+     if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
+     pulseCpuFrame(frame)
+   } catch { /* A cooperative boundary cannot change the original outcome. */ }
+ }
+-export function markSfE11CpuRoute(route: 0 | 1 | 2) {
++export function markSfE12CpuRoute(route: 0 | 1 | 2) {
+   try {
+     const frame = selectedFrame, capture = cpuCapture
+     if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
+         (route !== 0 && route !== 1 && route !== 2)) return
+     if (routeCounts[route] < routeCap) routeCounts[route]++
+-    pumpSfE11CpuObservation()
++    pumpSfE12CpuObservation()
+   } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }
+ }
+-export function markSfE11HttpProgress(handle: unknown, request: Request, point: HttpProgress) {
++export function markSfE12HttpProgress(handle: unknown, request: Request, point: HttpProgress) {
+   try {
+     const frame = selectedFrame
+     if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
+@@ -97,7 +117,7 @@
+         ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + "\n"
+       if (line.length <= progressCapBytes && /^[\x20-\x7e]*\n$/.test(line)) process.stdout.write(line)
+     } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }
+-    pumpSfE11CpuObservation()
++    pumpSfE12CpuObservation()
+   } catch { /* Do not inspect the Request or replace a product result. */ }
+ }
+ 
+@@ -116,7 +136,7 @@
+     if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)
+   } catch { /* A delayed or failed pulse is not proof of timely collection. */ }
+ }
+-export function startSfE11CpuObservation(request: Request): Frame | undefined {
++export function startSfE12CpuObservation(request: Request): Frame | undefined {
+   if (selectionTried) return undefined
+   selectionTried = true
+   let frame: Frame | undefined
+@@ -138,7 +158,7 @@
+     return undefined
+   }
+ }
+-export function finishSfE11CpuObservation(handle: unknown, request: Request) {
++export function finishSfE12CpuObservation(handle: unknown, request: Request) {
+   try {
+     const frame = selectedFrame
+     if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
+@@ -153,7 +173,7 @@
+ type CpuMethod = "Profiler.enable" | "Profiler.setSamplingInterval" | "Profiler.start" | "Profiler.stop"
+ type CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }
+ type CpuBinding = {
+-  schema: "sf-preview-e11-cpu-launch-v1"; source: string; sourceTree: string; snapshot: string;
++  schema: "sf-preview-e12-cpu-launch-v1"; source: string; sourceTree: string; snapshot: string;
+   runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string
+ }
+ type CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }
+@@ -163,11 +183,11 @@
+   points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;
+   cleanupFailed: boolean
+ }
+-const cpuPrefix = "SF_PREVIEW_E11_CPU ", cpuSchema = "sf-preview-causal-e11-cpu-v1"
++const cpuPrefix = "SF_PREVIEW_E12_CPU ", cpuSchema = "sf-preview-causal-e12-cpu-v1"
+ const cpuRevision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+ const cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000
+ const cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024
+-const cpuDirectoryKey = "SF_PREVIEW_E11_CPU_EVIDENCE_DIR", cpuBindingKey = "SF_PREVIEW_E11_CPU_EVIDENCE_BINDING"
++const cpuDirectoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", cpuBindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
+ let cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0
+ 
+ function cpuNow(): number | undefined {
+@@ -214,10 +234,10 @@
+   if (process.argv[1] !== cpuPath.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
+     throw new Error("cpu-process")
+   const base = cpuPath.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
+-  if (!cpuObject(value) || value.schema !== "sf-preview-e11-cpu-launch-v1" || value.source !== source ||
++  if (!cpuObject(value) || value.schema !== "sf-preview-e12-cpu-launch-v1" || value.source !== source ||
+       value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
+       typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
+-      typeof value.nonce !== "string" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||
++      typeof value.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||
+       typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
+       value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
+     throw new Error("cpu-binding")
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,4 +1,4 @@
+-import { startSfE11CpuObservation, finishSfE11CpuObservation, markSfE11HttpProgress } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts"
++import { startSfE12CpuObservation, finishSfE12CpuObservation, markSfE12HttpProgress } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -44,20 +44,20 @@
+     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
+     const mode = selected as Mode
+-    const cpu = mode === "decision-portfolio-preview" ? startSfE11CpuObservation(request) : undefined
++    const cpu = mode === "decision-portfolio-preview" ? startSfE12CpuObservation(request) : undefined
+     try {
+       const payload = await boundedJson(request)
+-      markSfE11HttpProgress(cpu, request, "body-returned")
++      markSfE12HttpProgress(cpu, request, "body-returned")
+       if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+       const admitted = await input.authority.human.admit(request, actions[mode], payload)
+-      markSfE11HttpProgress(cpu, request, "admit-returned")
++      markSfE12HttpProgress(cpu, request, "admit-returned")
+       if (admitted.status !== "ok") return reply(admitted)
+       try {
+         const call = admitted.value
+         const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+         const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+         const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+-          markSfE11HttpProgress(cpu, request, "case-callback-entered")
++          markSfE12HttpProgress(cpu, request, "case-callback-entered")
+           if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+           if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
+           if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
+@@ -84,7 +84,7 @@
+         return reply(result)
+       } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+       finally { input.authority.human.finish(admitted.value) }
+-    } finally { finishSfE11CpuObservation(cpu, request) }
++    } finally { finishSfE12CpuObservation(cpu, request) }
+   }
+ }
+ 
+diff --git a/apps/cli/test/fixture/sucafina-native-installation.ts b/apps/cli/test/fixture/sucafina-native-installation.ts
+--- a/apps/cli/test/fixture/sucafina-native-installation.ts
++++ b/apps/cli/test/fixture/sucafina-native-installation.ts
+@@ -89,8 +89,8 @@
+     const ready = yield* Deferred.make<void>()
+     const diagnostic = { last: "" }
+     yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+-      if (((line.startsWith("SF_PREVIEW_E11_CPU ") && line.length + 1 <= 4096) ||
+-          (line.startsWith("SF_PREVIEW_E11_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
++      if (((line.startsWith("SF_PREVIEW_E12_CPU ") && line.length + 1 <= 4096) ||
++          (line.startsWith("SF_PREVIEW_E12_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+         try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }
+       }
+       return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+@@ -132,9 +132,9 @@
+ 
+ /** Neutralize only our diagnostic keys on refusal, including possible inherited values. */
+ function nativePreviewE11CpuEnvironment(privateRoot: string): Record<string, string> {
+-  const directoryKey = "SF_PREVIEW_E11_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E11_CPU_EVIDENCE_BINDING"
++  const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
+   const disabled = { [directoryKey]: "", [bindingKey]: "" }
+-  const source = "069a56a60a9c12ea7c32ed54b07ee11442c35db5", sourceTree = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++  const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598", sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+   let stage = "binding"
+   try {
+     const directory = process.env[directoryKey], encoded = process.env[bindingKey]
+@@ -144,10 +144,10 @@
+     const value: unknown = JSON.parse(encoded)
+     if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("cpu-binding")
+     const binding = value as Record<string, unknown>
+-    if (binding.schema !== "sf-preview-e11-cpu-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
++    if (binding.schema !== "sf-preview-e12-cpu-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
+         typeof binding.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||
+         typeof binding.runId !== "string" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== "1" ||
+-        typeof binding.nonce !== "string" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
++        typeof binding.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
+         typeof binding.launcherBytes !== "number" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||
+         binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))
+       throw new Error("cpu-binding")
+@@ -176,7 +176,7 @@
+     return { [directoryKey]: directory, [bindingKey]: encoded }
+   } catch {
+     try {
+-      console.info("SF_PREVIEW_E11_CPU " + JSON.stringify({ schema: "sf-preview-causal-e11-cpu-v1", source, sourceTree,
++      console.info("SF_PREVIEW_E12_CPU " + JSON.stringify({ schema: "sf-preview-causal-e12-cpu-v1", source, sourceTree,
+         qualification: false, role: "native-launcher", kind: "disabled", reason: stage }))
+     } catch { /* The original child must still be spawned with its original settings. */ }
+     return disabled
+diff --git a/packages/app-shell/e2e/sucafina/design-support/installation.ts b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+--- a/packages/app-shell/e2e/sucafina/design-support/installation.ts
++++ b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+@@ -75,8 +75,8 @@
+       }))
+       owned.child = child
+       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+-        if (((line.startsWith("SF_PREVIEW_E11_CPU ") && line.length + 1 <= 4096) ||
+-          (line.startsWith("SF_PREVIEW_E11_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
++        if (((line.startsWith("SF_PREVIEW_E12_CPU ") && line.length + 1 <= 4096) ||
++          (line.startsWith("SF_PREVIEW_E12_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+           try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }
+         }
+         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+@@ -216,9 +216,9 @@
+ 
+ /** Diagnostic files survive the two original private roots; failure never blocks launch. */
+ function preparePreviewE11CpuEnvironment(repository: string, privateRoot: string): Record<string, string> {
+-  const directoryKey = "SF_PREVIEW_E11_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E11_CPU_EVIDENCE_BINDING"
++  const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
+   const disabled = { [directoryKey]: "", [bindingKey]: "" }
+-  const source = "069a56a60a9c12ea7c32ed54b07ee11442c35db5", sourceTree = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++  const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598", sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+   let fd: number | undefined, stage = "gate"
+   try {
+     const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+@@ -229,15 +229,15 @@
+     const base = path.join(realpathSync(repository), "test-ci-evidence"), baseInfo = lstatSync(base)
+     if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error("cpu-base")
+     stage = "directory"
+-    const directory = mkdtempSync(path.join(base, "sf613-e11-cpu-"))
++    const directory = mkdtempSync(path.join(base, "sf613-e12-cpu-"))
+     chmodSync(directory, 0o700)
+     const relative = path.relative(realpathSync(privateRoot), directory)
+     if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||
+         relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
+       throw new Error("cpu-root")
+     const nonce = path.basename(directory)
+-    if (!/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
+-    const binding = { schema: "sf-preview-e11-cpu-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
++    if (!/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
++    const binding = { schema: "sf-preview-e12-cpu-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
+     const launcher = { ...binding, qualification: false, state: "prepared", processRole: "native-cli",
+       entry: "apps/cli/src/index.ts", command: "serve", profileName: "preview-first.cpuprofile",
+       relativeDirectory: "test-ci-evidence/" + nonce, createdUtcMs: Date.now(),
+@@ -257,7 +257,7 @@
+     return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }
+   } catch {
+     try {
+-      console.info("SF_PREVIEW_E11_CPU " + JSON.stringify({ schema: "sf-preview-causal-e11-cpu-v1", source, sourceTree,
++      console.info("SF_PREVIEW_E12_CPU " + JSON.stringify({ schema: "sf-preview-causal-e12-cpu-v1", source, sourceTree,
+         qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }))
+     } catch { /* Original setup/spawn remains authoritative. */ }
+     return disabled
+diff --git a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -1,4 +1,4 @@
+-import { pumpSfE11CpuObservation } from "../../runtime/preview-cpu-e11-diagnostic.ts"
++import { pumpSfE12CpuObservation } from "../../runtime/preview-cpu-e12-diagnostic.ts"
+ import type { SessionSchema } from "@orchestra/core/session/schema"
+ import { types } from "node:util"
+ import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./source-lifecycle.ts"
+@@ -140,7 +140,7 @@
+     const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+       if (currentRead && !currentRead()) return undefined
+       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+-      pumpSfE11CpuObservation()
++      pumpSfE12CpuObservation()
+       if (!actor || (currentRead && !currentRead())) return undefined
+       const access = object(object(snapshot.data.access)[actor.id])
+       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -1,4 +1,4 @@
+-import { markSfE11CpuRoute, markSfE11SourceSelection } from "../../runtime/preview-cpu-e11-diagnostic.ts"
++import { markSfE12CpuRoute, markSfE12SourceSelection } from "../../runtime/preview-cpu-e12-diagnostic.ts"
+ import { types } from "node:util"
+ import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
+ import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
+@@ -697,7 +697,7 @@
+         if (!root?.current()) return execute
+         const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
+         forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
+-        markSfE11SourceSelection(selection)
++        markSfE12SourceSelection(selection)
+         return execute
+       }
+       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
+@@ -711,7 +711,7 @@
+         requireProduct()
+         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])
+         if (seal && seal.current()) {
+-          markSfE11CpuRoute(0)
++          markSfE12CpuRoute(0)
+           // Only the Dashboard snapshot covered by the held durable preimage
+           // can reuse its pure source-metadata validation.
+           const identity = surface === "dashboard" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined
+@@ -745,7 +745,7 @@
+         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
+           active && Object.hasOwn(active, "value") && active.value === method.value ?
+           currentDriverReadonlyAuthorityData(driver, [], "unfenced") : undefined
+-        markSfE11CpuRoute(sealed ? 1 : 2)
++        markSfE12CpuRoute(sealed ? 1 : 2)
+         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
+         const guarded = guard(surface, snapshot, sealedPreimage)
+         try {

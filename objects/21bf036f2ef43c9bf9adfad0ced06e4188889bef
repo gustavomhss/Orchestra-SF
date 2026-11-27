@@ -1,0 +1,700 @@
+{
+  "schema": "sf613-e12-analytics-reader-bindings-v1",
+  "at": "2026-11-27 20:34:46 UTC",
+  "status": "ACTUAL_ORIGINALS_BOUND_INDEPENDENT_INTAKE_REVIEW_PENDING_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "readerBranch": "sf613-artifact-e12cpu",
+  "readerSoleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+  "readerParentTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+  "original": {
+    "run": 46063135555,
+    "attempt": 1,
+    "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "mainJob": 140721962760,
+    "cleanupJob": 140725518085,
+    "conclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "testStepConclusion": "failure"
+  },
+  "artifactMetadata": {
+    "id": 15229333864,
+    "node_id": "MDg6QXJ0aWZhY3QxNTIyOTMzMzg2NA==",
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 46003924,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15229333864/zip",
+    "expired": false,
+    "digest": "sha256:6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+    "created_at": "2026-11-27T20:31:32Z",
+    "updated_at": "2026-11-27T20:31:32Z",
+    "expires_at": "2026-12-04T20:31:30Z",
+    "workflow_run": {
+      "id": 46063135555,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613e12a",
+      "head_sha": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+    }
+  },
+  "rawManifest": {
+    "gitBlob": "2406d1d4c3ea0150ab227b8544255df804439984",
+    "bytes": 13647,
+    "sha256": "19e4d17a4e8bd37c2a1edf0363dc77706ed09236086d8f8bfef2269f10630fce"
+  },
+  "markerCopy": {
+    "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+    "bytes": 40862,
+    "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+    "actualGitBlobPersisted": true,
+    "literalReadback": true
+  },
+  "parities": {
+    "analytics": {
+      "lines": 97,
+      "bytes": 34282,
+      "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+      "gitBlobCalculated": "729b06464ca3e8399a4b1c9b435d5f4c35177bd9",
+      "gitBlobPersisted": false
+    },
+    "cpu": {
+      "lines": 3,
+      "bytes": 3817,
+      "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+      "gitBlobCalculated": "1d2820a28503b2f5caa3f82dc3703a50dd1d7744",
+      "gitBlobPersisted": false
+    },
+    "progress": {
+      "lines": 3,
+      "bytes": 2763,
+      "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+      "gitBlobCalculated": "e00e5c65651969587b1587e3295159a2f68af54d",
+      "gitBlobPersisted": false
+    },
+    "union": {
+      "lines": 103,
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+      "gitBlobCalculated": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "gitBlobPersisted": false
+    }
+  },
+  "semanticCounts": {
+    "SF_ANALYTICS_SOURCE": 45,
+    "SF_ANALYTICS_CAPTURE": 46,
+    "SF_PREVIEW_E12_CPU": 3,
+    "SF_PREVIEW_E12_PROGRESS": 3,
+    "SF_DESIGN_DIAGNOSTICS": 5,
+    "SF_ANALYTICS_SCOPE": 1
+  },
+  "outcomesFromMain": {
+    "failed": 1,
+    "passed": 1,
+    "firstWaiterFailure": {
+      "timeoutMs": 60000,
+      "file": "design-wave-five-analytics.spec.ts",
+      "line": 72,
+      "column": 32,
+      "operation": "decision-portfolio-preview",
+      "sequence": 3
+    },
+    "ui": {
+      "historicalQualified": 12,
+      "total": 15,
+      "newAccepted": 0,
+      "UI42": "six partial captures; original preview unreturned",
+      "UI43": "not reached",
+      "UI44": "not reached"
+    },
+    "BI": {
+      "status": "passed",
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "scope": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      }
+    },
+    "expectedArtifactStatusesToVerify": [
+      "failed",
+      "passed"
+    ],
+    "priorResultsCurrentVariation": {
+      "sequence1": {
+        "http": 200,
+        "acquisitionFailure": "response-body-unavailable",
+        "nativeRequestFailed": true,
+        "statusNotAvailable": true
+      },
+      "sequence2": {
+        "http": 200,
+        "status": "ok"
+      },
+      "causalityNotAsserted": true
+    }
+  },
+  "cpuMarkerClaim": {
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "pid": 3729,
+    "parentPid": 3684,
+    "nonce": "sf613-e12-cpu-sV3cAs",
+    "kinds": [
+      "started",
+      "stopped",
+      "finished"
+    ],
+    "started": {
+      "schema": "sf-preview-causal-e12-cpu-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "sequence": 1,
+      "kind": "started",
+      "request": 1,
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          0,
+          0,
+          0
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          0
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "runtime": [
+        "1.3.14",
+        "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      ],
+      "parentPid": 3684,
+      "intervalUs": 5000,
+      "targetMs": 50000,
+      "acceptMs": 55000,
+      "utcMs": 1795811288212,
+      "points": {
+        "frameStart": 1976335,
+        "startEnter": 1976345,
+        "startReturn": 1976347
+      }
+    },
+    "stopped": {
+      "schema": "sf-preview-causal-e12-cpu-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "sequence": 2,
+      "kind": "stopped",
+      "request": 1,
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          3917,
+          758,
+          1316
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          566,
+          1670,
+          702,
+          633
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          633
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          633,
+          0,
+          1266,
+          1266,
+          0,
+          17724
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "cause": "target",
+      "points": {
+        "frameStart": 1976335,
+        "startEnter": 1976345,
+        "startReturn": 1976347,
+        "stopCheckpoint": 2476338,
+        "stopEnter": 2476342,
+        "stopReturn": 2478281
+      },
+      "nodesBounded": 9269,
+      "samplesBounded": 9687,
+      "cleanupFailed": false
+    },
+    "finished": {
+      "schema": "sf-preview-causal-e12-cpu-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "sequence": 3,
+      "kind": "finished",
+      "request": 1,
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          3917,
+          758,
+          1316
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          566,
+          1670,
+          702,
+          633
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          633
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          633,
+          0,
+          1266,
+          1266,
+          0,
+          17724
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "state": "completed-on-time",
+      "cause": "target",
+      "profile": {
+        "name": "preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "fsyncTenthMs": 2478358,
+        "closeTenthMs": 2478358
+      },
+      "collection": {
+        "name": "collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "fsyncTenthMs": 2478362,
+        "closeTenthMs": 2478362
+      },
+      "collectionWithinAccept": true,
+      "points": {
+        "frameStart": 1976335,
+        "startEnter": 1976345,
+        "startReturn": 1976347,
+        "stopCheckpoint": 2476338,
+        "stopEnter": 2476342,
+        "stopReturn": 2478281,
+        "serializeEnter": 2478284,
+        "serializeReturn": 2478314,
+        "profileWriteEnter": 2478317,
+        "profileFsync": 2478358,
+        "profileClose": 2478358
+      },
+      "cleanupFailed": false
+    },
+    "actualFilesVerified": false
+  },
+  "progressMarkers": [
+    {
+      "schema": "sf-preview-causal-e12-progress-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "request": 1,
+      "sequence": 1,
+      "kind": "body-returned",
+      "elapsedTenthMs": 21,
+      "cpuPhase": "running",
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          0,
+          0,
+          0
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          0
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs"
+    },
+    {
+      "schema": "sf-preview-causal-e12-progress-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "request": 1,
+      "sequence": 2,
+      "kind": "admit-returned",
+      "elapsedTenthMs": 81,
+      "cpuPhase": "running",
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          1,
+          0,
+          0
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          0
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs"
+    },
+    {
+      "schema": "sf-preview-causal-e12-progress-v1",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "qualification": false,
+      "pid": 3729,
+      "request": 1,
+      "sequence": 3,
+      "kind": "case-callback-entered",
+      "elapsedTenthMs": 2470,
+      "cpuPhase": "running",
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          3,
+          0,
+          18
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "cap": 65535,
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          0
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "identityLoop": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "runId": "46063135555",
+      "attempt": "1",
+      "nonce": "sf613-e12-cpu-sV3cAs"
+    }
+  ],
+  "rootAndIndependentParitiesMatch": null,
+  "independentReview": "PENDING: authoring only permitted; root must receive independent intake ACK before execution authority",
+  "zipGets": 0,
+  "sourceBinding": {
+    "gitBlob": "bea70840077fa85b7df5354dca2af349d2abd2c8",
+    "bytes": 14625,
+    "sha256": "bff1c05f5d9a334f9f1679b7dafc45711b7627e8726dcbc9a68b170ac98169f3"
+  },
+  "sourceManifest": {
+    "gitBlob": "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+    "bytes": 22710,
+    "sha256": "51311a693dd0a800f7043e2b9b5905defe1d834e6dc99d3e74e0e751ea7f1703"
+  },
+  "sourceBounds": {
+    "gitBlob": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+    "bytes": 25207,
+    "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab"
+  },
+  "selectionInterpretation": {
+    "reviewer": "/root/close_pr613",
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "overlay": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "completed": true,
+    "findings": [
+      "nativeCopies covers only completed child copies requested as case-identities",
+      "top-level copies, cases/opaque classes and calls before the Source query are not in nativeCopies",
+      "tag-refused means requested physical tag not retained after successful copy, not transaction refusal",
+      "cases-complete may reflect preimage or lost/unavailable birth/owner proof; counter does not identify the individual gate",
+      "normalized-map may contain reduced and retained entries; eligible does not imply omitted known fields",
+      "ownersPrivate is a permanent per-store latch; snapshot birth ties trusted construction to exact readonly root",
+      "failed copy publishes no native counts; subsequent callback failure does",
+      "Source/native/loop populations must not be paired or conserved",
+      "remaining costs can include initial materialization, iteration, metadata/ACL/sfSources/audit/unknown fields, final identity clone and fresh authorizations"
+    ],
+    "noNewCode": true
+  },
+  "limits": [
+    "Actual ZIP and runtime selection/result reports, profile, collection and launcher remain unacquired.",
+    "Bind exact 97 Analytics +3 CPU +3 progress union; Source45 is current evidence, do not carry Source44 from E11/C17.",
+    "Reader must verify original runtime result statuses and all four parities before accepting a capture.",
+    "Reader runs as sole child of CLEAN S17 with exactly one new reviewed workflow; no product changes, no diagnostic source in product ancestry.",
+    "CPU markers describe whole-VM/PID window; separate Source/native/loop populations, no conservation or exclusive Request attribution.",
+    "Profile and collection byte/hash claims remain marker claims until actual files verified.",
+    "Present contradictions must fail even when another original file is absent.",
+    "No automatic rerun and no production authority."
+  ]
+}

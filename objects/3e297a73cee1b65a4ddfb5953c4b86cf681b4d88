@@ -1,0 +1,788 @@
+{
+  "schema": "orchestra.sf613-evidence.increment-package.v2",
+  "revision": "SECOND_E11_C17_R7_D26",
+  "status": "BLOBS_CREATED_READBACK_ROOT_PUBLICATION_PENDING",
+  "preparedAtUtc": "2026-11-27 19:28:43 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized exactly index, README and package manifest blobs. Root retains sole authority for the archive tree, commit, ref and any run; none is created or changed by this author.",
+  "base": {
+    "index": {
+      "gitBlob": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+      "bytes": 97079,
+      "sha256": "5c775351a7f9514448860bbeff8026023c4ed6136c10979721eed9c57c554582"
+    },
+    "readme": {
+      "gitBlob": "b2f9409d8e6f665207c67fb118fd5d1e6506b06c",
+      "bytes": 2234,
+      "sha256": "5517679ff81af35a9c1e6c1a2d78f715e57c017a2d95dd500b0baa17f0a694c5"
+    },
+    "publicationReceipt": "a1d862386c8945dad2e7df82fdcb255bb4523504",
+    "publishedCommit": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+    "publishedTree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+    "refObservation": {
+      "ref": "refs/heads/sf613-evidence",
+      "sha": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+      "expected": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+      "match": true,
+      "mutation": false,
+      "observedAtUtc": "2026-11-27 19:17:16 UTC"
+    }
+  },
+  "outputs": {
+    "index": {
+      "path": "index.json",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "4fcb157a6da2f7ca0b78cfbf30fcb9a5beda8e4c",
+      "bytes": 344397,
+      "sha256": "f7434bbefab66a6d2e8f93fd9a88aeae0c27412f1849dfe7b7af2921f59ee639",
+      "lf": 10178,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    "readme": {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "3c7a84c85e23aca17e520f411ffa1e08a82f548e",
+      "bytes": 7643,
+      "sha256": "01efaf8309b00bcb6527c4b3a4f3c7f682ded3dabe1cb376cc0bffd92e53e993",
+      "lf": 71,
+      "endsWithLF": true,
+      "literalReadback": true
+    }
+  },
+  "catalogs": {
+    "E11": {
+      "gitBlob": "502dc36bc25551f730bcf9ba56c007bca65db643",
+      "bytes": 163953,
+      "sha256": "76aa0d4ab5edb26f26ccd8776d499fd7cf1539f51ce24a481eba8cc53f48bb76",
+      "actualBlobs": 118,
+      "newRelativeToFirstIndex": 112,
+      "streams": 13,
+      "rootReview": {
+        "gitBlob": "b8f773c09e60526ce725c7fca15ba31f8a338c44",
+        "bytes": 34893,
+        "sha256": "223b74473c093215ee62b72676e8785ce80f81308d8e02ef8895e341dab159d0"
+      },
+      "independentReview": "/root/focal_migration ACK; full 118 blobs, 13 concatenations, seven exports and four parities authenticated using Git copies only"
+    },
+    "C17": {
+      "gitBlob": "32e941a04b4b13310e96b6196145080dec461a59",
+      "bytes": 45285,
+      "sha256": "bb5a19fe8e601f079fde60421a655fa53072f69b8698f5c4a6b895bd96fb6195",
+      "actualBlobs": 75,
+      "streams": 4,
+      "allAuthenticated": true
+    }
+  },
+  "R7": {
+    "cutUtc": "2026-11-27T19:08:31Z",
+    "status": "ROOT_REVIEWED_DOCUMENTARY_ONLY",
+    "files": [
+      {
+        "role": "r7-status",
+        "gitBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+        "path": "objects/420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+        "bytes": 642382,
+        "sha256": "ef7c8d4b2cd598b6debf2515a7d37ba071eb094ce34438b6ebf508784d66b28f"
+      },
+      {
+        "role": "r7-readme",
+        "gitBlob": "9b5e1016f4cdd7b4968b30ad4614516931c4bdd7",
+        "path": "objects/9b5e1016f4cdd7b4968b30ad4614516931c4bdd7",
+        "bytes": 89575,
+        "sha256": "d7bb27f69537e4a5d2ffd803c46c75616376dd64465faddd5b6c55181679616a"
+      },
+      {
+        "role": "r7-execution",
+        "gitBlob": "f7407f76cfba4334d35ae89fcf051a90c4431e2a",
+        "path": "objects/f7407f76cfba4334d35ae89fcf051a90c4431e2a",
+        "bytes": 183745,
+        "sha256": "3e35d84a396ca33e7bf09b5404da1e86a531fcc0b81343b62e8b9bc23e6635e7"
+      },
+      {
+        "role": "r7-manifest",
+        "gitBlob": "b4c0815b58a6f1cba28081da1afd688f1bc5e2cc",
+        "path": "objects/b4c0815b58a6f1cba28081da1afd688f1bc5e2cc",
+        "bytes": 30753,
+        "sha256": "e84e5be81dc08c5084fa17ff693a6eb338bc50142ecad23096d9cb6f65420321"
+      }
+    ],
+    "rootReview": {
+      "gitBlob": "53395615e18b37ebe909858c0c9732d751f38ecb",
+      "bytes": 4190,
+      "sha256": "8077c6c031d502928a20ed997ca9f06718bc086d5ab9bfe9de57845dc2879623"
+    },
+    "sourceUnchanged": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "readiness": "NOT_READY",
+    "evidenceCount": 98,
+    "cutPolicy": "R7 retains its own 19:08:31 UTC observation cut; later external comment/ref/device checks are not silently incorporated.",
+    "additionalRecords": [
+      {
+        "role": "r7-root-review",
+        "gitBlob": "53395615e18b37ebe909858c0c9732d751f38ecb",
+        "bytes": 4190,
+        "sha256": "8077c6c031d502928a20ed997ca9f06718bc086d5ab9bfe9de57845dc2879623"
+      }
+    ]
+  },
+  "inventory": {
+    "objects": 271,
+    "previousObjects": 83,
+    "newObjects": 188,
+    "objectsWithAppendedMemberships": 9,
+    "memberships": 310,
+    "groups": 14,
+    "streams": 21,
+    "originalLogStreams": 13,
+    "exportStreams": 7,
+    "derivedMarkerUnionStreams": 1,
+    "objectBytes": 29327258,
+    "treeFileCount": 273,
+    "treeFileBytes": 29679298,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "allFilesMode": "100644",
+    "oneObjectsEntryPerSha": true,
+    "exactTreeContract": "Exactly root README.md, root index.json, and objects/<sha> for every object below. All files are 100644 blobs; the objects directory is a tree. No executable repository layout or workflow. The current index and package manifest do not recursively list themselves; the package manifest is a separate review artifact, not an asserted object entry."
+  },
+  "plannedOrderedParents": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+      "tree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+      "role": "previous published archive"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+      "role": "C17 executed focal",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+      "tree": "aa774f70dc197926561857711a9faf5c080f008c",
+      "role": "C17 executed Analytics",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+    },
+    {
+      "order": 4,
+      "type": "commit",
+      "sha": "3131f1766768473ed1e5cb69e97416b55a04aae4",
+      "tree": "c8c09517aa23a0276a724c3c2b85fe4904895f93",
+      "role": "E11 executed focal",
+      "soleParent": "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
+    },
+    {
+      "order": 5,
+      "type": "commit",
+      "sha": "e63cffcea872aa538bc7ee1d6ed2768ecad80862",
+      "tree": "41f942de834bb4dedeb94fcbd4b1f6b93ef12f80",
+      "role": "E11 executed reader",
+      "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+    }
+  ],
+  "reachability": {
+    "currentArchiveUnchangedByAuthor": true,
+    "sourceS17AncestorThroughC17Snapshots": true,
+    "E11SourceAndAnalyticsAncestorThroughE11Focal": true,
+    "rootMustAuditActualParentsAndTree": true,
+    "noNewReachabilityClaimBeforePublication": true,
+    "calculatedHashesAreNotObjects": true
+  },
+  "preservation": {
+    "previousObjectsAllFieldsPreservedExceptMembershipAppend": true,
+    "previousMembershipPrefixesLiteral": true,
+    "previousGroupsLiteral": 5,
+    "previousStreamsLiteral": 4,
+    "baseIndexFullInverseLiteral": true,
+    "previousIndexActualObjectIncluded": true,
+    "previousReadmeActualObjectIncluded": true,
+    "previousPublicationReceiptIncluded": true,
+    "oldReadmeTextRetainedExactlyOnceInHistoricalDetails": true,
+    "oldMetadataAndPendingStatesExplicitlyHistorical": true,
+    "currentE11ClosureSeparatelyResolved": true,
+    "historicalNegativeEvidenceUnchanged": true
+  },
+  "delta": {
+    "newObjectShas": [
+      "01c6fc88ae9290577f44669d486164ecc83d7f09",
+      "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+      "06fad42a46bb562330654267948732a16d109957",
+      "073c035995a98db8f1b824c163532a904aecb17d",
+      "0881f785a09710fb1d897feae2d642f560266c62",
+      "0aaa859c3a8b713d57a100f531af6c4ef778fe5a",
+      "0b7923ba98342a861e6e4b9ba608169caf783dcd",
+      "1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "14f241caaf0393d27439a4a983a0697ae7ade42e",
+      "19c0740f43a20e813affb296774e14a33c018e66",
+      "1c64bf908768f0e015496fa58d7592e4594e1d88",
+      "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "244d46ee41e9ce288a7260938174a57161137bab",
+      "2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+      "2c1c53ddc942ffe7782652e55d008203cbb02daf",
+      "2c9a0497590fc1ab9dd4c087b76f65ad0e6be9da",
+      "2d3ff19c71816688b9843b2dc942d238fa9845e7",
+      "2e908cb17714359dea5281357f956ff89f66d7da",
+      "30d9fac161b3fe3c862b96280bf339064d574cd9",
+      "31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+      "31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+      "322ca0a153f34287ea317cda9f2b59e1815dc269",
+      "32955aba8923908437f8a5e40d2900d47307d7e8",
+      "347edd5292d86537451507026236f27f2488a06a",
+      "348bfb1fdc699992a7253d860cce4b6360cc360c",
+      "36a47a4d844139854c31f461822115339e5c0487",
+      "38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+      "39c5e608988efc6d32ad742b647f315a0b82a74d",
+      "39faa5753dee705fd89a8262e6d0713a351f20d6",
+      "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "413ca99db8592570de690ee67d232b233b560aca",
+      "4180de318a5d5642ebb65b9190393179480c7275",
+      "44610d70e50484d2f7177ff94e9d1af50a39cee0",
+      "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+      "49ed5a6496f9d9c753747719fadc152af91548fa",
+      "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+      "4df0056061887fa81c60138ca4bb677ff4fcb091",
+      "4f8d1cc730133015e47495810cf52e4ae49c8468",
+      "50edcd66141ad27884148b2683a68bdc6bb593d9",
+      "52b20e75154f7b4235d880c0e1a6d35e092fe966",
+      "54a44996d95457c85e2273b5368f578223a6825b",
+      "54d146487581b34ec68cffda4e089b5453804162",
+      "56a06415240134d4d36a0620cb38d574846e7675",
+      "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+      "58ab5308fb06fb453b86b12ce85c9b42bbfa0bac",
+      "629eb12bf5e9d06a37b0729261fd324859f299ab",
+      "65b34f4b17401ee49196a518008dbe1c952f5d67",
+      "6a8db9a3b45a82cc1b7a89471f835070e291c175",
+      "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+      "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "7738836dacbe9e0c63166560f087bc235392e0a1",
+      "7af030aab7cb129a256019038909950bc7fa988f",
+      "7bf8887e36f712624d6521adb2e56d2a27d27da5",
+      "7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+      "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+      "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "7f812dc6bb1d37138c441552614ef6d87f791b2a",
+      "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+      "82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+      "832214bc2430294b321918ebe2b25834fceabc1e",
+      "841b16c3a8050e366f511618e100b50ac1ae4a13",
+      "8a2502adae41fc496430bf8b3dd7fb35352e8973",
+      "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "8bdc12d191a76137cd2244e01990f7a780091216",
+      "8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+      "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "94bff195a4e55f169ddebeeacc09d320153e73d2",
+      "959a2d45d9deb951f8339829415e9456d18199bd",
+      "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+      "9d2351aaed9549f876a072ced264d9429924ab61",
+      "9f47f0f49b068f79068dd9754d9db2b2738df8c3",
+      "a20597fc20bf61f8bb989f6358b688387bf5228b",
+      "ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+      "aee006454f953ba5bd9ffad59597e425b313d312",
+      "b5e2f218117a0f30e803a8b251922e92b6da2332",
+      "b7c0cf94e170c73d55f8e5fd6a84cc8e097816bc",
+      "b7de9404461591ce0162d496ec917a47fb72a479",
+      "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+      "b9988a8b966b627904454e530233daf8b2e567c4",
+      "ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+      "bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+      "c17f04f979d0aff336c00170986f1b39db389689",
+      "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+      "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "c62fd70f7134e748306cafd319f335a14f1fb5d8",
+      "c9860ed08da9fcf847fe0ecdd976f3167ae18ec7",
+      "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+      "ccc5ea87046144843e1751b1288e907974d24ca5",
+      "d02bcbfc770719935dcaca97cc20045b656f784d",
+      "d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+      "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+      "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "db51996fdf5e9d478b64fb1efa68976a6bc4b4ee",
+      "dbb29da511366b5aac85a4844b5dde99d617564b",
+      "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+      "dec8d7fffd0d300cad08112b5863c0813a5029f0",
+      "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+      "e04bef68f8ec6e99f0f316ea00a8ea876946f585",
+      "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+      "e5909bcea5c9f9051894106192a74a58df7e1cbe",
+      "e664f6378e37c79ef64d9a680016911d9f8e7231",
+      "e9a9692952d9156b9ce5f0d9d65e6335fcc196a0",
+      "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "eecabc52d48c1cd39fba37a2ecca0ef354d2a047",
+      "f183dd1049ef205c38395bda99c83efa8eddc80a",
+      "f252beb029d4f40b8932445ec7dfd7f9bfadea95",
+      "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "fe21695f18e751c8f4de76bd275742223507e7f8",
+      "0031a8430373df98e4fff6f5ad458301a9e29654",
+      "07a22d34eb812b8ee539561d6bc1fb35a99d98ca",
+      "0ba413a0dc6153dc34f940aa8d172c6649b8a41b",
+      "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+      "1076c79d317aa075c4388b748f2e7fedacd94645",
+      "1204b30decaedb941e98c6513c107bd44b64c65a",
+      "181097b3741b02f5099ce67ee6e90651b1ff5346",
+      "1d1af1f73dace7c7603f4e41323919c892b781a7",
+      "1ff71678703f579bc5f90732e813598ededf77af",
+      "2a87de700ced984b6b658fc890ad0eb78ee37dc0",
+      "2b660b737a80526b14f9406a5934ba23681968d8",
+      "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+      "2cff7643223d0bfb630c8aca2029792115adf2ba",
+      "2fb99cb5ba64ed36ef93384b46704b235ef20786",
+      "39e6da84a3dd815721484affaf8315731ded073b",
+      "3a7ce980f7863c3fd3cf27766e65302de09046a0",
+      "3fc0baf11dccadaaa8a12d9ee246e7471327e524",
+      "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+      "44d32600657b5ef2f4ccf79a3bc2b770b1d76544",
+      "4c33f46e4f67bbcd053a1e074e9863e9dbf8124f",
+      "502dc36bc25551f730bcf9ba56c007bca65db643",
+      "57197162a4fec1a7795cb2dd2b679aee008238ac",
+      "5b453e1672aa98616e814ac64900517d1ae4f60a",
+      "5f5382e2b394ca2a9bb6880229ac0f7436363488",
+      "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+      "65abc787941189bb408c1ae4386b4c117cd3850e",
+      "6b53d5b91654f08ad44f84ca3b900d8ce631b8c5",
+      "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "742a41dc168da553776129699eb33061068c2725",
+      "76a51f7600a90c7edc5bf939180ec8f88f22e546",
+      "7d573ea99fc7436dcb1583800615693243832576",
+      "7d98b46e4056cae7ff122d57f6231cb49a926d6e",
+      "836e0a0032c6bb51bc5c7da25822d21743a3d71c",
+      "8c183026ca67546b52c40cce43112dd29e306717",
+      "8c79663544e9794a05d52860964ad7a41697464d",
+      "9117f3e935ca0e814aaba9302d041e21133af3e7",
+      "92632021c87495b62b0debd337214923a4ab2cda",
+      "9695827af84432f0a78d74763901c72660585f34",
+      "9791852a50081b19a70f0a82aa0053a9b41a898d",
+      "99dc0027ef2a65bcf44ec849d2d1afb7df44a644",
+      "9a0700a45d2148762970a2b140533cd834dd1470",
+      "9e1cf57bbeabfb4af649d46f3d52e7db5457982d",
+      "a1d862386c8945dad2e7df82fdcb255bb4523504",
+      "a30fe9ee396718427fa6058eb06e539364396a16",
+      "a6e589633307f1f09d5d602cee05d4f1686e2d0e",
+      "a93fe8ee7205652db5ec5caa0325a4d23059d06d",
+      "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+      "b0f3f8abaf52dc71a1612adba2e8096f6e6e7650",
+      "b8f773c09e60526ce725c7fca15ba31f8a338c44",
+      "bb3a76252a7be38694c900ab32e70855ff471aef",
+      "c4495a8fa670ba05e5db6745cb6ff510abd73148",
+      "c5f48a4b305e4d3e3626a5023a4a154c8907905a",
+      "c69ee89ba5885b3abc5a91817c1f53320b182a5c",
+      "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "ce6090bad72629a9eab229a997f60aa16677cd09",
+      "cff4f7cec980d4cb12d230453bf4e4293d62f941",
+      "d336b53bb7b1142405bbc71435196f4a93108033",
+      "d3a81e28717aeb750542a7ce21390e401199acd4",
+      "d5171b6513a775ee2b5abdbdfac4f334a4141480",
+      "da2dfce4db1159120893733e0b8b680c2f113bdb",
+      "da41241cfe00ef5e482d652e041451a30c63dfbb",
+      "db2ac5dd889300137fbc54ca8747b69f60e33209",
+      "dcd588401c233dd9687820f10f94add0d2157f5a",
+      "dfb919efa8a9dc7ef7262bbf6ff57f9e357787dd",
+      "e8ff707c3c5b4a6f8d3d0f0139225d66416f5a44",
+      "f01135c91d9d3210938c0cc699f4828d2b985b81",
+      "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+      "f45d4a97f4a489456267123f9470e8c8382baaae",
+      "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+      "b2f9409d8e6f665207c67fb118fd5d1e6506b06c",
+      "32e941a04b4b13310e96b6196145080dec461a59",
+      "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+      "9b5e1016f4cdd7b4968b30ad4614516931c4bdd7",
+      "f7407f76cfba4334d35ae89fcf051a90c4431e2a",
+      "b4c0815b58a6f1cba28081da1afd688f1bc5e2cc",
+      "53395615e18b37ebe909858c0c9732d751f38ecb"
+    ],
+    "existingMembershipAdditions": [
+      {
+        "sha": "33966f83510cd306df0b553a3827979ae49b1064",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "C17-closed-and-support",
+            "role": "focal-base-C16-driver"
+          }
+        ]
+      },
+      {
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-focal",
+            "role": "post:.ci-run.json",
+            "from": {
+              "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+              "pointer": "outputFiles.post"
+            }
+          },
+          {
+            "group": "C17-closed-and-support",
+            "role": "focal-original-request"
+          }
+        ]
+      },
+      {
+        "sha": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "C17-closed-and-support",
+            "role": "source-preimage:modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts"
+          }
+        ]
+      },
+      {
+        "sha": "550236df66f1e02e5111a1eee23579e76178bc6b",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "C17-closed-and-support",
+            "role": "source-preimage:modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+          }
+        ]
+      },
+      {
+        "sha": "9f230a963d5540d73296d447bb84afc302489bd4",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-analysis",
+            "role": "already-published-C16-profile-evidence",
+            "from": {
+              "blob": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+              "pointer": "coverage.includedE11AnalysisDocument"
+            }
+          }
+        ]
+      },
+      {
+        "sha": "a55818797ecf9fa6801393762bbe3261a1812576",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-focal",
+            "role": "working-pin:modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+            "from": {
+              "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+              "pointer": "sourcePinRecord.value.files"
+            }
+          }
+        ]
+      },
+      {
+        "sha": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-focal",
+            "role": "base-driver",
+            "from": {
+              "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+              "pointer": "base.driver"
+            }
+          }
+        ]
+      },
+      {
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-source",
+            "role": "postimage:.ci-run.json",
+            "from": {
+              "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+              "pointer": "files.request.postimage"
+            }
+          },
+          {
+            "group": "E11-focal",
+            "role": "pre:.ci-run.json",
+            "from": {
+              "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+              "pointer": "outputFiles.pre"
+            }
+          },
+          {
+            "group": "C17-closed-and-support",
+            "role": "analytics-original-request"
+          }
+        ]
+      },
+      {
+        "sha": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+        "oldMembershipCount": 1,
+        "appended": [
+          {
+            "group": "E11-focal",
+            "role": "working-pin:modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "from": {
+              "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+              "pointer": "sourcePinRecord.value.files"
+            }
+          }
+        ]
+      }
+    ],
+    "baseGroupsUnchanged": 5,
+    "baseStreamsUnchanged": 4,
+    "oldReadmeLiteral": true
+  },
+  "transportE11": {
+    "exports": 7,
+    "chunks": 118,
+    "payloadBytes": 2097711,
+    "coreEmissionBytes": 2829285,
+    "terminalBytes": 2065,
+    "totalEmissionIncludingTerminalBytes": 2831350,
+    "accounting": "Core excludes its separate terminal. All numbers exclude Actions timestamps/wrapper overhead.",
+    "fourParities": {
+      "analytics": {
+        "lines": 96,
+        "bytes": 34162,
+        "sha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1",
+        "expectedMatches": true
+      },
+      "cpu": {
+        "lines": 3,
+        "bytes": 3180,
+        "sha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+        "expectedMatches": true
+      },
+      "progress": {
+        "lines": 3,
+        "bytes": 2144,
+        "sha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7",
+        "expectedMatches": true
+      },
+      "union": {
+        "lines": 102,
+        "bytes": 39486,
+        "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+        "expectedMatches": true
+      }
+    },
+    "captureComplete": true,
+    "pending": 0,
+    "readerReceipt": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+    "memberships": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout"
+    },
+    "cpuScope": "Historical whole-VM/PID capture; no Request-exclusive CPU, clocks merger, source/native population conservation, C17 cost or Release qualification inferred."
+  },
+  "C17": {
+    "source": {
+      "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a"
+    },
+    "focal": {
+      "run": 46051100090,
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+      "receipt": {
+        "gitBlob": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+        "bytes": 63985,
+        "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b"
+      },
+      "status": "CLOSED_PASS"
+    },
+    "analytics": {
+      "run": 46052118180,
+      "snapshot": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+      "tree": "aa774f70dc197926561857711a9faf5c080f008c",
+      "receipt": {
+        "gitBlob": "bb3a76252a7be38694c900ab32e70855ff471aef",
+        "bytes": 26111,
+        "sha256": "96af17f9e4a0d142f3ffe6128ef413c692424374c8f5f3eec762c9d24fcbf965"
+      },
+      "status": "CLOSED_NEGATIVE"
+    },
+    "actualFocalReports": {
+      "gitBlob": "f01135c91d9d3210938c0cc699f4828d2b985b81",
+      "path": "objects/f01135c91d9d3210938c0cc699f4828d2b985b81",
+      "bytes": 10163,
+      "sha256": "86fe8e68bff6db751f8fa947de158df567aab624aad29da2830040328a8f079a",
+      "reportCount": 8,
+      "actualGitBlobPersisted": true
+    },
+    "actualAnalyticsMarkers": {
+      "gitBlob": "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "path": "objects/c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "bytes": 34168,
+      "sha256": "2bc4682e592e5742deea6e4ad1ba84218191263633a136188c5f2563ae2bbf8f",
+      "lines": 96,
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 44,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      },
+      "actualGitBlobPersisted": true
+    },
+    "sectionHashes": [
+      {
+        "section": 1,
+        "lines": 33,
+        "bytes": 5856,
+        "sha256": "c3fe82a57eec2ccdfdd28e4c9df8d93ffa7ea117013f427789a68d303e7758e5",
+        "counts": {
+          "SF_ANALYTICS_SOURCE": 24,
+          "SF_ANALYTICS_CAPTURE": 6,
+          "SF_DESIGN_DIAGNOSTICS": 3,
+          "SF_ANALYTICS_SCOPE": 0
+        },
+        "separateBlobPersisted": false
+      },
+      {
+        "section": 2,
+        "lines": 63,
+        "bytes": 28312,
+        "sha256": "c70a03151fe79f13a6aa523df0433bc63242ef5eec93ab1b9c7da8c84ca8650d",
+        "counts": {
+          "SF_ANALYTICS_SOURCE": 20,
+          "SF_ANALYTICS_CAPTURE": 40,
+          "SF_DESIGN_DIAGNOSTICS": 2,
+          "SF_ANALYTICS_SCOPE": 1
+        },
+        "separateBlobPersisted": false
+      }
+    ],
+    "limits": "Focal PASS is limited to its controls. Original Analytics failed the first preview waiter at spec72:32/60000ms; BI passed only for this candidate. Causal interpretation remains unproved."
+  },
+  "exclusions": {
+    "calculatedWholeOrDerivedHashes": [
+      "b9e19c83f7530b8ef2c49e43389386ddc311aee2",
+      "e9df1ad2808c4e4e76348605d89ab75a0b152b6f",
+      "d26fa67a647ceab9ab44133529ed0066b10e8362",
+      "9b09b5d3cd2a70e1b336a0bb45c30180720f9770",
+      "ac668b238261f78cb262228599e36bbb13a72a19",
+      "92860230bee25fba7f6736f88e956a1ecb900c20",
+      "803d37eaef11afaec29ebdaee8aac1eb9a955d64",
+      "5a304af4b1b25b86c936acd7acb199bbcafcc4dd",
+      "ed3a1b751c8ab2f91238534e396c0cccbbe2875e"
+    ],
+    "noZipBlobs": true,
+    "originalOrAuditZipGetsByAuthor": 0,
+    "actualC17MarkerAndReportBlobsIncluded": true,
+    "actualC17MarkerGit": "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+    "actualC17ReportGit": "f01135c91d9d3210938c0cc699f4828d2b985b81",
+    "commitsAndTreesAreMetadataOnly": true,
+    "notTransitiveHistoricalClosure": true,
+    "currentPackageManifestNotRecursivelyAnObjectEntry": true
+  },
+  "checks": [
+    {
+      "name": "271 unique exact objects paths/mode/type",
+      "pass": true
+    },
+    {
+      "name": "83 previous metadata records and membership prefixes preserved",
+      "pass": true
+    },
+    {
+      "name": "first five groups and four streams literal",
+      "pass": true
+    },
+    {
+      "name": "full previous index reconstructed byte-for-byte",
+      "pass": true
+    },
+    {
+      "name": "old README retained once byte-for-byte",
+      "pass": true
+    },
+    {
+      "name": "all188 new object bodies authenticated",
+      "pass": true
+    },
+    {
+      "name": "all118 E11 and75 C17 catalog identities authenticated",
+      "pass": true
+    },
+    {
+      "name": "21 typed streams reference matching real leaves",
+      "pass": true
+    },
+    {
+      "name": "group memberships complete in both directions",
+      "pass": true
+    },
+    {
+      "name": "nine calculated whole/derived identities excluded",
+      "pass": true
+    },
+    {
+      "name": "five ordered parents exact and absent from blob entries",
+      "pass": true
+    },
+    {
+      "name": "E11 core/terminal/total byte terminology corrected without changing originals",
+      "pass": true
+    },
+    {
+      "name": "C17 actual marker/report unions included as real blobs",
+      "pass": true
+    },
+    {
+      "name": "R7 four documents plus root review authenticated and included",
+      "pass": true
+    },
+    {
+      "name": "R7 cut19:08:31 preserved; no later external facts silently merged",
+      "pass": true
+    },
+    {
+      "name": "no workflow/executable source layout in proposed archive",
+      "pass": true
+    },
+    {
+      "name": "index and README created and literal readback complete",
+      "pass": true
+    }
+  ],
+  "effects": {
+    "createdIndexBlobs": 1,
+    "createdReadmeBlobs": 1,
+    "createdPackageManifestBlobs": 1,
+    "createdTrees": 0,
+    "createdCommits": 0,
+    "changedRefs": 0,
+    "runs": 0,
+    "comments": 0,
+    "repositoryExecutions": 0,
+    "originalActionsGets": 0,
+    "zipGets": 0
+  },
+  "qualification": {
+    "productQualified": false,
+    "finalGatesQualified": 0,
+    "requiredFinalGates": 5,
+    "readiness": "NOT_READY",
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "D26Executed": false,
+    "D26FinalBindings": "FOUR_UNBOUND",
+    "productionAuthorized": false
+  },
+  "nextStep": "Root and any assigned independent reviewer validate the exact objects set and parent order, recheck the current ref, then root alone may create and publish the documentary archive. This package grants no product execution or production approval."
+}

@@ -1,0 +1,1332 @@
+{
+  "schema": "sf613-e12-root-reader-final-receipt-v1",
+  "at": "2026-11-27T21:07:44Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "CLOSED_ORIGINAL_BYTES_AND_CAPTURE_VERIFIED",
+  "qualification": false,
+  "reader": {
+    "run": 46066111400,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46066111400",
+    "attempt": 1,
+    "head": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+    "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "parentTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "branch": "sf613-artifact-e12cpu",
+    "status": "completed",
+    "conclusion": "success",
+    "completedAt": "2026-11-27T20:51:05Z",
+    "jobs": [
+      {
+        "id": 140731695680,
+        "name": "original-artifact",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-27T20:48:25Z",
+        "completedAt": "2026-11-27T20:51:04Z"
+      }
+    ],
+    "workflow": {
+      "gitBlob": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b"
+    },
+    "python": {
+      "gitBlob": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf"
+    },
+    "package": {
+      "gitBlob": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+      "bytes": 21038,
+      "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968"
+    },
+    "bounds": {
+      "gitBlob": "dd7f1811082b9f35a7a0e14a25ea722755a70934",
+      "bytes": 12999,
+      "sha256": "ecc186b870d0096d7a65b03cf6be7c669cee7b8aa129d0d3018d7c6156703fde"
+    },
+    "authority": {
+      "gitBlob": "b015986c8724d969f6632d5e36b072fec9b44bf3",
+      "bytes": 14463,
+      "sha256": "8fb46239e8190e65ab9871a5f85a24b443a13bcab3eea126885478ed983f709c"
+    },
+    "treeAudit": {
+      "complete": true,
+      "pairs": 3,
+      "literalSiblings": 69,
+      "changes": [
+        {
+          "path": ".github/workflows/sf613-artifact-read.yml",
+          "before": null,
+          "after": {
+            "path": "sf613-artifact-read.yml",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "13db57775b23b9603ea1018dc734ffd314942811",
+            "size": 120481,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/13db57775b23b9603ea1018dc734ffd314942811"
+          }
+        }
+      ],
+      "ciRunAbsent": true
+    }
+  },
+  "producer": {
+    "run": 46063135555,
+    "attempt": 1,
+    "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "cleanSource": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "cleanTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "conclusion": "failure",
+    "mainJob": 140721962760,
+    "mainConclusion": "failure",
+    "cleanupJob": 140725518085,
+    "cleanupConclusion": "success",
+    "receipt": {
+      "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+      "bytes": 39804,
+      "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+    },
+    "readerBinding": {
+      "gitBlob": "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "bytes": 20196,
+      "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623"
+    }
+  },
+  "originals": {
+    "readerJobMain": {
+      "job": 140731695680,
+      "bytes": 3270463,
+      "sha256": "ce3843a1e6313b3f3e18f8e94bf0685d51eb296c370b483b605798b5b26a20cc",
+      "wholeBlobPersisted": false,
+      "literalReadback": true,
+      "lf": 1878,
+      "bomCodeUnitOffsets": [
+        0,
+        2118147
+      ],
+      "wholeGitBlobCalculated": "eabac61f8dfcb596d4abeeb54174713a1ec2af8b",
+      "allPartsPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "startCodeUnit": 0,
+          "endCodeUnit": 299998,
+          "bytes": 300000,
+          "gitBlob": "7b63fe118c0196aa66e9839294b56060cd39122d",
+          "sha256": "7298dffa40f27acee7176b939d30712da47b255e980dbecc08ba36cf75925e1d",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 2,
+          "startCodeUnit": 299998,
+          "endCodeUnit": 599998,
+          "bytes": 300000,
+          "gitBlob": "7fef01fc44c3ab53255e50461b8ba4f3fad75cc4",
+          "sha256": "f7416be22d3231ff1addd5db0f04fd612e4358a3961a49174f94094d7a5ea618",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 3,
+          "startCodeUnit": 599998,
+          "endCodeUnit": 899998,
+          "bytes": 300000,
+          "gitBlob": "ca6b98cd156c234727c152359fde1ef9d0624fe0",
+          "sha256": "a5aa79cc7d365727738d18dc431f9754162ef7b6a6376d22ebefe88479c430ea",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 4,
+          "startCodeUnit": 899998,
+          "endCodeUnit": 1199998,
+          "bytes": 300000,
+          "gitBlob": "f75321f23ec0c010e1ff9cbe04f2ab3bd407e2f8",
+          "sha256": "8138f7a3efa6d83d72754e410529ea4ed70ec6da6b11ed51ea27b2afd000a639",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 5,
+          "startCodeUnit": 1199998,
+          "endCodeUnit": 1499998,
+          "bytes": 300000,
+          "gitBlob": "c998152f85e4658a422b7e63de6338b7a5a7f982",
+          "sha256": "3242ce2f834cf2685c296e4bc79da1ceb73fe428b456bc8dffee5e4ca374147f",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 6,
+          "startCodeUnit": 1499998,
+          "endCodeUnit": 1799998,
+          "bytes": 300000,
+          "gitBlob": "f4e9b12cb2d3ce7fe6c495c438b4ce2d055fcef3",
+          "sha256": "b4451ad116980c1afa5352c1de33020240ac8be620e578afb42c3ef3c422849f",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 7,
+          "startCodeUnit": 1799998,
+          "endCodeUnit": 2099998,
+          "bytes": 300000,
+          "gitBlob": "63e1b277198984d954178930538698b1b2a6c020",
+          "sha256": "baef1b13a6b31a2130035865402c1e1095e7f874d811b3f76d6005d5401aefb4",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 8,
+          "startCodeUnit": 2099998,
+          "endCodeUnit": 2399996,
+          "bytes": 300000,
+          "gitBlob": "3ded36339c3861c342e6d1f7ba763b54eef48cb5",
+          "sha256": "95bc0e4d593a40cb243b1d5bc0b7b1225f52a1d349528f6a27b9edec5678e9b1",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 9,
+          "startCodeUnit": 2399996,
+          "endCodeUnit": 2699996,
+          "bytes": 300000,
+          "gitBlob": "723cc8167d23edc5c32dba9ed3793ef8bc5ee991",
+          "sha256": "ae8c2dbcceb2094520774c4eb1b2151a6e89f01c46c34a054077f0f59d00f8e3",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 10,
+          "startCodeUnit": 2699996,
+          "endCodeUnit": 2999996,
+          "bytes": 300000,
+          "gitBlob": "c29e2015d8c19145e144f2f56b946cd7928a105a",
+          "sha256": "5ce575ea9e1a8ec3295534c76749edea583a640f24d5dde75d895e78f2e247ea",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 11,
+          "startCodeUnit": 2999996,
+          "endCodeUnit": 3270459,
+          "bytes": 270463,
+          "gitBlob": "8a99ae2f779d31df317902e0fe49762b860d9a01",
+          "sha256": "0f897180e91c78380d21331e3fe71b0d5d5022c60c536ee28ad868ad3bc92923",
+          "persisted": true,
+          "literalReadback": true
+        }
+      ],
+      "bomByteOffsets": [
+        0,
+        2118149
+      ],
+      "receivedOnce": true,
+      "preservedAndLiteralReadbackBeforeParsing": true
+    },
+    "rawManifest": {
+      "gitBlob": "6c7e604044384369588a098dad88394b6774144b",
+      "bytes": 6766,
+      "sha256": "6cc4ba46015aa52e75d33df5c25eebbbb26d39d5428753501e92bf13e20af347"
+    },
+    "producerArtifact": {
+      "bytes": 46003924,
+      "downloadCount": 1,
+      "expired": false,
+      "id": 15229333864,
+      "name": "playwright-ubuntu-24.04-1",
+      "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+      "verifiedBytes": 46003924,
+      "verifiedSha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+      "acquisition": "One reader-side download, authenticated as the producer original; closed and never reacquired."
+    },
+    "auditArtifacts": [
+      {
+        "id": 15231435395,
+        "name": "sf613-analytics-original-46063135555-receipt-1",
+        "bytes": 98232011,
+        "sha256": "e4e02bf6888ce2bbe92f23420bfa7fb56a22306d7f60ed73ce7c452cfe294465",
+        "expired": false,
+        "mode": "METADATA_ONLY",
+        "downloads": 0
+      }
+    ]
+  },
+  "exports": {
+    "manifest": {
+      "gitBlob": "a8b91a57134d814c6d201083d0a0381a7edcda4a",
+      "bytes": 12090,
+      "sha256": "d0d783c1a92533334602c9abcbe4f65f78529c67739a64b46936afa8a3d10685"
+    },
+    "items": [
+      {
+        "role": "profile",
+        "wire": {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 116,
+          "file": 7,
+          "firstLine": 1709,
+          "lastLine": 1824,
+          "firstChunk": 1,
+          "lastChunk": 116
+        },
+        "preserved": {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "wholeGitBlobCalculated": "35dfa571c490bc54be4e315be222c0920dce93c8",
+          "wholeBlobPersisted": false,
+          "literalReadback": true,
+          "originalFile": 7,
+          "lf": 1,
+          "bomCodeUnitOffsets": [],
+          "allPartsPersisted": true,
+          "parts": [
+            {
+              "index": 1,
+              "startCodeUnit": 0,
+              "endCodeUnit": 300000,
+              "bytes": 300000,
+              "gitBlob": "65d701ed6eba5d5d57b36662b05efe88251ad80e",
+              "sha256": "d18332ec42245840721befaba96464fdc37a1edb5cdb814b650a67246b417df7",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 2,
+              "startCodeUnit": 300000,
+              "endCodeUnit": 600000,
+              "bytes": 300000,
+              "gitBlob": "76e959fa191db41b60937492423df54458d0ed9d",
+              "sha256": "360f396b62c34fa037577dcb908ac5e88951bcd8f99d0b1398fe5c456cbb9bb3",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 3,
+              "startCodeUnit": 600000,
+              "endCodeUnit": 900000,
+              "bytes": 300000,
+              "gitBlob": "48daf30f84c08045af1fe82b7ae32971859d8343",
+              "sha256": "968faf5872eeebc71a0118642f7fbf9cd4ead78f0afb6adf5bd861be3963709b",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 4,
+              "startCodeUnit": 900000,
+              "endCodeUnit": 1200000,
+              "bytes": 300000,
+              "gitBlob": "71030b1e6e05ccba6360bb15ecef7127980fd468",
+              "sha256": "f8516307267cd477720537271e6057f2afe09e523d97ec6785ef3eac79695c0b",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 5,
+              "startCodeUnit": 1200000,
+              "endCodeUnit": 1500000,
+              "bytes": 300000,
+              "gitBlob": "3d84c939079bb105abd82bd8ae48ec2233a549f2",
+              "sha256": "206e403a85d96705cc0d8b4ed304afa49be3fa2c84c9f698d8f3ddf02fde82fe",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 6,
+              "startCodeUnit": 1500000,
+              "endCodeUnit": 1800000,
+              "bytes": 300000,
+              "gitBlob": "ad1dc50f14f6436549718e18cddb2a874654fd25",
+              "sha256": "fd9ad998a0b9b0967c37015534a7ce957affa94ccc244a0f4e1b4ff3ed64647e",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 7,
+              "startCodeUnit": 1800000,
+              "endCodeUnit": 2100000,
+              "bytes": 300000,
+              "gitBlob": "5a2f635f82453ec13d549a9f830f8aa6b1c54b17",
+              "sha256": "b5c7aae53dc2dfc5fa29f3bf25e6bb19cc9c66c600a818931f4054ee9dc59171",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 8,
+              "startCodeUnit": 2100000,
+              "endCodeUnit": 2120673,
+              "bytes": 20673,
+              "gitBlob": "7a22b971a21b10af8a410e8410778389733c6a49",
+              "sha256": "984e56552d3984f37bf2400201cef72bde8a1c005ebbf68f874b85b1357ccb47",
+              "persisted": true,
+              "literalReadback": true
+            }
+          ],
+          "bomByteOffsets": []
+        }
+      },
+      {
+        "role": "markers",
+        "wire": {
+          "name": "preview-e12-cpu-progress-markers.lf.log",
+          "bytes": 6580,
+          "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+          "mime": "text/plain",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 1,
+          "firstLine": 1825,
+          "lastLine": 1825,
+          "firstChunk": 117,
+          "lastChunk": 117
+        },
+        "preserved": {
+          "gitBlob": "eefa273ac1d2788994e6dc1ec0c7120411842126",
+          "bytes": 6580,
+          "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319"
+        }
+      },
+      {
+        "role": "collection",
+        "wire": {
+          "name": "original-cpu-collection.json",
+          "bytes": 1876,
+          "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 5,
+          "firstLine": 1826,
+          "lastLine": 1826,
+          "firstChunk": 118,
+          "lastChunk": 118
+        },
+        "preserved": {
+          "gitBlob": "8669ff010853eac62f014f0b2886b96e0b2f490c",
+          "bytes": 1876,
+          "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+        }
+      },
+      {
+        "role": "launcher",
+        "wire": {
+          "name": "original-cpu-launcher.json",
+          "bytes": 663,
+          "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 6,
+          "firstLine": 1827,
+          "lastLine": 1827,
+          "firstChunk": 119,
+          "lastChunk": 119
+        },
+        "preserved": {
+          "gitBlob": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+          "bytes": 663,
+          "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+        }
+      },
+      {
+        "role": "summary",
+        "wire": {
+          "name": "safe-summary.json",
+          "bytes": 48969,
+          "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 3,
+          "firstLine": 1828,
+          "lastLine": 1830,
+          "firstChunk": 120,
+          "lastChunk": 122
+        },
+        "preserved": {
+          "gitBlob": "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+          "bytes": 48969,
+          "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae"
+        }
+      },
+      {
+        "role": "inventory",
+        "wire": {
+          "name": "inventory.json",
+          "bytes": 105554,
+          "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 6,
+          "firstLine": 1831,
+          "lastLine": 1836,
+          "firstChunk": 123,
+          "lastChunk": 128
+        },
+        "preserved": {
+          "gitBlob": "9b8978e9079085bc789197aa91bb02c94700062b",
+          "bytes": 105554,
+          "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd"
+        }
+      },
+      {
+        "role": "receipt",
+        "wire": {
+          "name": "receipt.json",
+          "bytes": 57596,
+          "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 4,
+          "firstLine": 1837,
+          "lastLine": 1840,
+          "firstChunk": 129,
+          "lastChunk": 132
+        },
+        "preserved": {
+          "gitBlob": "c57b4a91ce564589732f7526afc11afce27b9f10",
+          "bytes": 57596,
+          "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66"
+        }
+      }
+    ],
+    "wholeProfileGitHashCalculatedOnly": true,
+    "wholeProfileGitBlobPersisted": false
+  },
+  "transport": {
+    "wholeMainBytes": 3270463,
+    "coreLogBytes": 3158748,
+    "terminalBytes": 2065,
+    "beforeBytes": 0,
+    "totalEmitterBytes": 3160813,
+    "corePayloadBytes": 2341911,
+    "coreFiles": 7,
+    "coreChunks": 132,
+    "terminal": {
+      "schema": 1,
+      "kind": "e12-core-terminal",
+      "qualification": false,
+      "status": "ORIGINAL_BYTES_VERIFIED",
+      "coreBytesComplete": true,
+      "receiptBase64Complete": true,
+      "captureComplete": true,
+      "cpuState": "completed-on-time",
+      "coreFiles": 7,
+      "coreChunks": 132,
+      "corePayloadBytes": 2341911,
+      "coreLogBytes": 3158748,
+      "logBytesBeforeCore": 0,
+      "logBytesBeforeTerminal": 3158748,
+      "emitterCapBytes": 7340032,
+      "mainLogReviewCapBytes": 8388608,
+      "receiptBytes": 57596,
+      "receiptSha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+      "exports": [
+        {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 116,
+          "file": 7
+        },
+        {
+          "name": "preview-e12-cpu-progress-markers.lf.log",
+          "bytes": 6580,
+          "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+          "mime": "text/plain",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 1
+        },
+        {
+          "name": "original-cpu-collection.json",
+          "bytes": 1876,
+          "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 5
+        },
+        {
+          "name": "original-cpu-launcher.json",
+          "bytes": 663,
+          "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 6
+        },
+        {
+          "name": "safe-summary.json",
+          "bytes": 48969,
+          "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 3
+        },
+        {
+          "name": "inventory.json",
+          "bytes": 105554,
+          "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 6
+        },
+        {
+          "name": "receipt.json",
+          "bytes": 57596,
+          "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 4
+        }
+      ],
+      "entries": 153,
+      "crcVerified": 153,
+      "expandedBytes": 57674703,
+      "pending": 0,
+      "failures": [],
+      "readerExitCode": 0
+    },
+    "rootCaps": {
+      "emitterBytes": 7340032,
+      "wholeMainBytes": 8388608
+    },
+    "frozenReceiptStatus": "ORIGINAL_BYTES_VERIFIED",
+    "interpretation": "Receipt was serialized before exports; its planned transport was independently confirmed by the complete actual wire, terminal and successful reader job."
+  },
+  "archive": {
+    "allEntriesVerified": true,
+    "archives": 2,
+    "crcVerified": 153,
+    "entries": 153,
+    "expandedBytes": 57674703
+  },
+  "actualOriginals": {
+    "runtime": {
+      "file": 0,
+      "bytes": 4813218,
+      "sha256": "961c1aa0140e28f0875669f11b9d650ab574a574c3918e37fb606b856491acf1"
+    },
+    "selection": {
+      "file": 3,
+      "bytes": 3056,
+      "sha256": "cfdd4ace7dd1dd2c2c4c0ba378cbeca443912ffb6cdf1d137a4f457aad6b387c"
+    },
+    "cpu": [
+      {
+        "bytes": 2120673,
+        "file": 7,
+        "name": "preview-first.cpuprofile",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/preview-first.cpuprofile",
+        "trailingLF": true
+      },
+      {
+        "bytes": 1876,
+        "file": 5,
+        "name": "collection.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/collection.json",
+        "trailingLF": true
+      },
+      {
+        "bytes": 663,
+        "file": 6,
+        "name": "launcher.json",
+        "original": true,
+        "parseStatus": "JSON_OBJECT",
+        "present": true,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "suffix": "test-ci-evidence/sf613-e12-cpu-sV3cAs/launcher.json",
+        "trailingLF": true
+      }
+    ],
+    "independentlyRecomputedCrc32": [
+      {
+        "role": "profile",
+        "id": 7,
+        "crc32": "cb514981"
+      },
+      {
+        "role": "collection",
+        "id": 5,
+        "crc32": "b8f558a0"
+      },
+      {
+        "role": "launcher",
+        "id": 6,
+        "crc32": "260b2791"
+      }
+    ]
+  },
+  "namespace": {
+    "directories": [
+      {
+        "collection": [],
+        "directory": "test-ci-evidence/sf613-e12-cpu-9X8SQP",
+        "launcher": [
+          {
+            "bytes": 663,
+            "file": 4,
+            "name": "launcher.json",
+            "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb"
+          }
+        ],
+        "nonce": "sf613-e12-cpu-9X8SQP",
+        "profile": [],
+        "unclassified": []
+      },
+      {
+        "collection": [
+          {
+            "bytes": 1876,
+            "file": 5,
+            "name": "collection.json",
+            "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+          }
+        ],
+        "directory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+        "launcher": [
+          {
+            "bytes": 663,
+            "file": 6,
+            "name": "launcher.json",
+            "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+          }
+        ],
+        "nonce": "sf613-e12-cpu-sV3cAs",
+        "profile": [
+          {
+            "bytes": 2120673,
+            "file": 7,
+            "name": "preview-first.cpuprofile",
+            "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632"
+          }
+        ],
+        "unclassified": []
+      }
+    ],
+    "extraLauncherFiles": [
+      {
+        "bytes": 663,
+        "file": 4,
+        "limit": "No profile/collection in this directory; no case/PID/Request/start/stop/completion is inferred.",
+        "name": "launcher.json",
+        "nonce": "sf613-e12-cpu-9X8SQP",
+        "parseStatus": "JSON_OBJECT",
+        "preparedBindingVerified": true,
+        "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb",
+        "stateObserved": "prepared",
+        "trailingLF": true
+      }
+    ],
+    "launcherLimit": "Launcher preparation is not Request/start/profile/close proof; absent files are not fabricated.",
+    "populationCount": 1,
+    "scope": "all outer archive E12 nonce directories",
+    "selectedDirectory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+    "selectedNonce": "sf613-e12-cpu-sV3cAs"
+  },
+  "parity": {
+    "allFour": true,
+    "originalMarkerUnion": {
+      "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+    },
+    "runtime": {
+      "allFour": true,
+      "analytics": {
+        "bytes": 34282,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5
+        },
+        "expectedBytes": 34282,
+        "expectedSha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "matchesOriginalMainSequence": true,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679"
+      },
+      "cpu": {
+        "bytes": 3817,
+        "counts": {
+          "SF_PREVIEW_E12_CPU": 3
+        },
+        "expectedBytes": 3817,
+        "expectedSha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "matchesOriginalMainSequence": true,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b"
+      },
+      "progress": {
+        "bytes": 2763,
+        "counts": {
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 2763,
+        "expectedSha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "matchesOriginalMainSequence": true,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a"
+      },
+      "union": {
+        "bytes": 40862,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 45,
+          "SF_DESIGN_DIAGNOSTICS": 5,
+          "SF_PREVIEW_E12_CPU": 3,
+          "SF_PREVIEW_E12_PROGRESS": 3
+        },
+        "expectedBytes": 40862,
+        "expectedSha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "matchesOriginalMainSequence": true,
+        "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+      }
+    },
+    "cpuMembership": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout",
+      "sourceBytes": 747811,
+      "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+      "ordinals": [
+        32,
+        36,
+        37
+      ],
+      "kinds": [
+        "started",
+        "stopped",
+        "finished"
+      ]
+    },
+    "progressMembership": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout",
+      "sourceBytes": 747811,
+      "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+      "ordinals": [
+        33,
+        34,
+        35
+      ],
+      "kinds": [
+        "body-returned",
+        "admit-returned",
+        "case-callback-entered"
+      ]
+    }
+  },
+  "capture": {
+    "complete": true,
+    "state": "completed-on-time",
+    "pid": 3729,
+    "parentPid": 3684,
+    "nonce": "sf613-e12-cpu-sV3cAs",
+    "runtime": [
+      "1.3.14",
+      "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    ],
+    "intervalUs": 5000,
+    "targetMs": 50000,
+    "acceptMs": 55000,
+    "profile": {
+      "endTime": 1795811338210359.2,
+      "nodes": 9269,
+      "samples": 9687,
+      "startTime": 1795811288211997.2
+    },
+    "collectionWithinAccept": true,
+    "postCloseFilesVerified": [
+      "preview-first.cpuprofile",
+      "collection.json"
+    ],
+    "profileClosedAfterFrameStartMs": 50202.3,
+    "collectionClosedAfterFrameStartMs": 50202.7,
+    "selection": {
+      "cap": 65535,
+      "identityLoop": [
+        633,
+        0,
+        1266,
+        1266,
+        0,
+        17724
+      ],
+      "loopOrder": [
+        "enumerated",
+        "not-enumerated",
+        "eligible",
+        "reduced",
+        "retained",
+        "known-fields-omitted"
+      ],
+      "nativeCopies": [
+        0,
+        0,
+        633
+      ],
+      "nativeOrder": [
+        "tag-refused",
+        "cases-complete",
+        "normalized-map"
+      ],
+      "saturated": false,
+      "scope": "pid-running-window",
+      "sourceOrder": [
+        "none",
+        "cases",
+        "preferences",
+        "case-identities"
+      ],
+      "sourceRequests": [
+        566,
+        1670,
+        702,
+        633
+      ]
+    },
+    "routes": {
+      "cap": 65535,
+      "counts": [
+        3917,
+        758,
+        1316
+      ],
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "scope": "pid-running-window"
+    },
+    "graph": {
+      "nodes": 9269,
+      "samples": 9687,
+      "timeDeltas": 9687,
+      "totalLocations": 701,
+      "positiveSelfLocations": 314,
+      "maxDepth": 60,
+      "connected": true,
+      "uniqueIds": true,
+      "singleParent": true,
+      "allSampleIdsPresent": true
+    }
+  },
+  "clockDomains": {
+    "playwright": {
+      "startTime": "2026-11-27T20:24:01.928Z",
+      "durationMs": 224313,
+      "arithmeticEndUtc": "2026-11-27T20:27:46.241Z"
+    },
+    "native": {
+      "utcStartReturnMs": 1795811288212,
+      "utcStartReturnIso": "2026-11-27T20:28:08.212Z",
+      "utcStopEnterMs": 1795811338211,
+      "utcStopEnterIso": "2026-11-27T20:28:58.211Z"
+    },
+    "differenceStartMinusPlaywrightArithmeticEndMs": 21971,
+    "limit": "Clock fields preserved in distinct domains; no interval reconciliation, exclusive request CPU attribution or cause inferred."
+  },
+  "originalOutcome": {
+    "config": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "cases": [
+      {
+        "attachmentCount": 9,
+        "durationMs": 224313,
+        "errors": [
+          {
+            "messageBytes": 769,
+            "messageSha256": "ef98b217daca065793bb20e3e848a9671eeb071ac4762cc2a4ece35c09eb230b",
+            "source": {
+              "column": 32,
+              "file": "design-wave-five-analytics.spec.ts",
+              "line": 72
+            },
+            "stackBytes": 0,
+            "stackSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timeout60000": true,
+            "waitForResponse": true
+          }
+        ],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T20:24:01.928Z",
+        "status": "failed",
+        "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+        "workerIndex": 0
+      },
+      {
+        "attachmentCount": 40,
+        "durationMs": 58308,
+        "errors": [],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T20:29:11.668Z",
+        "status": "passed",
+        "title": "wave five analytics: question catalog and original contextual BI",
+        "workerIndex": 1
+      }
+    ],
+    "verdict": {
+      "BI": "passed;40 captures and original complete UI45/UI46 scope",
+      "UI42": "partial;6 captures before first preview response",
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "failed": 1,
+      "passed": 1
+    },
+    "historicalQualified": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "details": {
+      "failed": 1,
+      "passed": 1,
+      "reportedTotalElapsed": "8.2m",
+      "firstPreviewTimeoutMs": 60000,
+      "newAreasAccepted": 0,
+      "historicalQualified": 12,
+      "totalAreas": 15,
+      "priorResults": {
+        "seq1": [
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 1,
+            "method": "POST",
+            "ownerBinding": "exact"
+          },
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request-failed",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 260
+          },
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 258,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          }
+        ],
+        "seq2": [
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          },
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 518,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        ]
+      },
+      "scope": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      }
+    }
+  },
+  "review": {
+    "root": {
+      "count": 40,
+      "passed": 40,
+      "failed": 0,
+      "checks": [
+        {
+          "name": "terminal job success exact reader identity",
+          "pass": true
+        },
+        {
+          "name": "reader workflow and clean sole parent",
+          "pass": true
+        },
+        {
+          "name": "original main closed before parse within8MiB",
+          "pass": true
+        },
+        {
+          "name": "all seven actual exports preserved",
+          "pass": true
+        },
+        {
+          "name": "transport exact132 chunks2341911payload3160813wire",
+          "pass": true
+        },
+        {
+          "name": "one original artifact download exact bytes and digest",
+          "pass": true
+        },
+        {
+          "name": "actual source snapshot producer preserved",
+          "pass": true
+        },
+        {
+          "name": "two archives all153 entries CRC verified by reader",
+          "pass": true
+        },
+        {
+          "name": "outer and nested inventory totals",
+          "pass": true
+        },
+        {
+          "name": "actual export original inventory hash and independent CRC profile",
+          "pass": true
+        },
+        {
+          "name": "actual export original inventory hash and independent CRC collection",
+          "pass": true
+        },
+        {
+          "name": "actual export original inventory hash and independent CRC launcher",
+          "pass": true
+        },
+        {
+          "name": "runtime/selection original inventory identities",
+          "pass": true
+        },
+        {
+          "name": "runtime original2cases one worker0retry repeat1",
+          "pass": true
+        },
+        {
+          "name": "actual two statuses and first failure retained",
+          "pass": true
+        },
+        {
+          "name": "runtime hard parity analytics",
+          "pass": true
+        },
+        {
+          "name": "runtime hard parity cpu",
+          "pass": true
+        },
+        {
+          "name": "runtime hard parity progress",
+          "pass": true
+        },
+        {
+          "name": "runtime hard parity union",
+          "pass": true
+        },
+        {
+          "name": "literal six marker export matches current original main",
+          "pass": true
+        },
+        {
+          "name": "cpu membership one current case1/result1/stdout",
+          "pass": true
+        },
+        {
+          "name": "cpu exact literal records and ordinals",
+          "pass": true
+        },
+        {
+          "name": "progress membership one current case1/result1/stdout",
+          "pass": true
+        },
+        {
+          "name": "progress exact literal records and ordinals",
+          "pass": true
+        },
+        {
+          "name": "all original selected file bindings agree",
+          "pass": true
+        },
+        {
+          "name": "profile shape exact observed native data",
+          "pass": true
+        },
+        {
+          "name": "profile graph independently validated",
+          "pass": true
+        },
+        {
+          "name": "collection profile receipt actual raw hash",
+          "pass": true
+        },
+        {
+          "name": "actual collection bytes matched finished receipt",
+          "pass": true
+        },
+        {
+          "name": "collection stopped finished routes and13slots equal",
+          "pass": true
+        },
+        {
+          "name": "same capture tuple across originals and markers",
+          "pass": true
+        },
+        {
+          "name": "actual runtime gate and sampling targets",
+          "pass": true
+        },
+        {
+          "name": "capture complete same status all receipts",
+          "pass": true
+        },
+        {
+          "name": "postclose verification limited to profile and collection",
+          "pass": true
+        },
+        {
+          "name": "all namespaces inventoried selected exact nonce",
+          "pass": true
+        },
+        {
+          "name": "extra prepared launcher is not another capture",
+          "pass": true
+        },
+        {
+          "name": "receipt frozen planned transport confirmed by actual terminal",
+          "pass": true
+        },
+        {
+          "name": "no pending or failures",
+          "pass": true
+        },
+        {
+          "name": "clock discrepancy explicitly retained",
+          "pass": true
+        },
+        {
+          "name": "audit artifact metadata only no reacquisition",
+          "pass": true
+        }
+      ]
+    },
+    "independent": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_NO_BLOCKER_ORIGINAL_BYTES_AND_CAPTURE_VERIFIED",
+      "semanticChecks": 81,
+      "failed": 0,
+      "ack": {
+        "gitBlob": "79ac6e4b5a9894dd68870c965d80a031788273cb",
+        "bytes": 39979,
+        "sha256": "835ee8c5263ffeecc0be00c7f0204cf58d069fcec040dfb83b6a5ae3cd68b80a"
+      },
+      "additionalClockObservation": {
+        "playwright": {
+          "startTime": "2026-11-27T20:24:01.928Z",
+          "startEpochMs": 1795811041928,
+          "durationMs": 224313,
+          "calculatedEndUtc": "2026-11-27T20:27:46.241Z",
+          "calculatedEndEpochMs": 1795811266241
+        },
+        "native": {
+          "cpuStartedUtcMs": 1795811288212,
+          "cpuStartedUtc": "2026-11-27T20:28:08.212Z",
+          "collectionUtcStartReturnMs": 1795811288212
+        },
+        "arithmeticDifferenceCpuStartedMinusPlaywrightCalculatedEndMs": 21971,
+        "reconciliationAttempted": false,
+        "clockSynchronizationProven": false,
+        "interpretation": "Arithmetic discrepancy across clock domains; retained literally. It does not disprove the case/result/stdout binding, establish event ordering across these clocks, or prove CPU ownership, overlap, delay, starvation or causality."
+      }
+    },
+    "profileDescriptiveAnalysis": {
+      "gitBlob": "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+      "bytes": 328258,
+      "sha256": "22a4ac9a4c6a37a42d8b49d7ec9e93eba6dd65df34b2020808a436fbe649ca58"
+    }
+  },
+  "restrictions": {
+    "originalReaderLogGets": 1,
+    "readerOriginalArtifactDownloads": 1,
+    "originalReacquisitions": 0,
+    "auditArtifactDownloads": 0,
+    "productRefsAdvanced": false,
+    "devMerge": false,
+    "sourceCodeExecutedLocally": false,
+    "wholeCalculatedGitObjectsAcquired": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+    "Zero bytes is a present inventory file with the empty SHA256, not an absent-file placeholder.",
+    "A ZIP CRC/hash proves received bytes, not producer fsync/close; only a later verified finished can attest that.",
+    "Collection contents alone do not attest their own close, even when its JSON and profile hash are valid.",
+    "Malformed JSON, missing LF or missing files remains explicit negative evidence and never capture completion.",
+    "Whole-VM samples include unrelated backend work; no exclusive/async/browser/child-process cost is inferred.",
+    "No samples*5ms estimate, causal bottleneck or product qualification is inferred.",
+    "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+    "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+    "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
+    "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
+    "Source token decisions and requested case-identities child copies have distinct populations; no conservation or fallback rate is inferred.",
+    "Native counts are published only after snapshot copy/validation completes; callback failure afterward still counts.",
+    "Loop local arithmetic can run outside the CPU window, but only running owned capture accepts its completed-copy contribution.",
+    "Native counts exclude top-level materializations, other requested classes and failed copies; the CPU profile may still include them.",
+    "All clocks retain their domains; no reconciliation with Playwright startTime/duration.",
+    "Successful transport and CPU collection do not qualify UI42/UI43/UI44 or change the original negative Analytics result.",
+    "The clean product remains S17; diagnostic source and reader are excluded from final product lineage.",
+    "No new test execution or rerun is authorized by this receipt."
+  ],
+  "productionAuthorized": false
+}

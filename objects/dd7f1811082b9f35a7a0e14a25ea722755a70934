@@ -1,0 +1,447 @@
+{
+  "schema": "sf613-e12-reader-concrete-bounds-v1",
+  "status": "CONCRETE_TEXT_CREATED_READBACK_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "python": {
+    "gitSha": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+    "bytes": 98691,
+    "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+    "lf": 1649
+  },
+  "workflow": {
+    "gitSha": "13db57775b23b9603ea1018dc734ffd314942811",
+    "bytes": 120481,
+    "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+    "lf": 1704
+  },
+  "base": {
+    "python": {
+      "gitSha": "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "bytes": 96993,
+      "sha256": "740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290",
+      "lf": 1636
+    },
+    "workflow": {
+      "gitSha": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "bytes": 118627,
+      "sha256": "79647ce8bba2d50e7885e92eed1cd50f291392b6f4af6365760e543079393152",
+      "lf": 1691
+    },
+    "priorBounds": {
+      "gitSha": "54a44996d95457c85e2273b5368f578223a6825b",
+      "bytes": 7234,
+      "sha256": "9460ab995a64e0bb8ee020abed5fa2453e3e392f7ca766dd9293eeb075892858",
+      "lf": 279
+    }
+  },
+  "binding": {
+    "gitSha": "3a24e92ac6ef10134de8329eada032a5194c462d",
+    "bytes": 20196,
+    "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623",
+    "lf": 725
+  },
+  "intake": {
+    "gitSha": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+    "bytes": 39804,
+    "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6",
+    "lf": 1360
+  },
+  "capsLiteral": true,
+  "coreRawCaps": {
+    "profile": 4194304,
+    "cpuMarkers": 65536,
+    "collection": 16384,
+    "launcher": 8192,
+    "summary": 131072,
+    "inventory": 262144,
+    "receipt": 131072
+  },
+  "transport": {
+    "chunkBase64Bytes": 24576,
+    "chunkEnvelopeOverheadCap": 1024,
+    "terminalReservationBytes": 32768,
+    "terminalReservationMeaning": "Conservative size-model allowance, not a new code cap; actual frozen terminal and all payload lines are jointly measured before emission.",
+    "emitterCapBytes": 7340032,
+    "wholeMainReceiptCapBytes": 8388608,
+    "exportsMin": 4,
+    "exportsMax": 7,
+    "actualJointPreflightIncludesPriorLog": true
+  },
+  "maximumArithmetic": {
+    "presence": [
+      "profile",
+      "collection",
+      "launcher"
+    ],
+    "exportCount": 7,
+    "order": [
+      "profile",
+      "cpuMarkers",
+      "collection",
+      "launcher",
+      "summary",
+      "inventory",
+      "receipt"
+    ],
+    "payloadBytes": 4808704,
+    "base64Bytes": 6411620,
+    "chunks": 265,
+    "envelopeBeforePriorLog": 6715748
+  },
+  "spareBeforePriorLog": 624284,
+  "presenceModels": [
+    {
+      "presence": [],
+      "exportCount": 4,
+      "order": [
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 589824,
+      "base64Bytes": 786440,
+      "chunks": 35,
+      "envelopeBeforePriorLog": 855048
+    },
+    {
+      "presence": [
+        "profile"
+      ],
+      "exportCount": 5,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4784128,
+      "base64Bytes": 6378848,
+      "chunks": 263,
+      "envelopeBeforePriorLog": 6680928
+    },
+    {
+      "presence": [
+        "collection"
+      ],
+      "exportCount": 5,
+      "order": [
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 606208,
+      "base64Bytes": 808288,
+      "chunks": 36,
+      "envelopeBeforePriorLog": 877920
+    },
+    {
+      "presence": [
+        "profile",
+        "collection"
+      ],
+      "exportCount": 6,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4800512,
+      "base64Bytes": 6400696,
+      "chunks": 264,
+      "envelopeBeforePriorLog": 6703800
+    },
+    {
+      "presence": [
+        "launcher"
+      ],
+      "exportCount": 5,
+      "order": [
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 598016,
+      "base64Bytes": 797364,
+      "chunks": 36,
+      "envelopeBeforePriorLog": 866996
+    },
+    {
+      "presence": [
+        "profile",
+        "launcher"
+      ],
+      "exportCount": 6,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4792320,
+      "base64Bytes": 6389772,
+      "chunks": 264,
+      "envelopeBeforePriorLog": 6692876
+    },
+    {
+      "presence": [
+        "collection",
+        "launcher"
+      ],
+      "exportCount": 6,
+      "order": [
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 614400,
+      "base64Bytes": 819212,
+      "chunks": 37,
+      "envelopeBeforePriorLog": 889868
+    },
+    {
+      "presence": [
+        "profile",
+        "collection",
+        "launcher"
+      ],
+      "exportCount": 7,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4808704,
+      "base64Bytes": 6411620,
+      "chunks": 265,
+      "envelopeBeforePriorLog": 6715748
+    }
+  ],
+  "zeroByteModel": {
+    "allThreeOriginalsPresentWithZeroBytes": true,
+    "originalInventoryIdRequired": true,
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emptyBase64ChunksPerPresentZeroByteOriginal": 1,
+    "payloadBytes": 589824,
+    "base64Bytes": 786440,
+    "chunks": 38,
+    "envelopeBeforePriorLog": 858120,
+    "noPayloadForAbsentName": true
+  },
+  "selection": {
+    "scope": "pid-running-window",
+    "cap": 65535,
+    "exactKeys": [
+      "scope",
+      "cap",
+      "sourceOrder",
+      "sourceRequests",
+      "nativeOrder",
+      "nativeCopies",
+      "loopOrder",
+      "identityLoop",
+      "saturated"
+    ],
+    "sourceOrder": [
+      "none",
+      "cases",
+      "preferences",
+      "case-identities"
+    ],
+    "nativeOrder": [
+      "tag-refused",
+      "cases-complete",
+      "normalized-map"
+    ],
+    "loopOrder": [
+      "enumerated",
+      "not-enumerated",
+      "eligible",
+      "reduced",
+      "retained",
+      "known-fields-omitted"
+    ],
+    "sourceSlots": 4,
+    "nativeSlots": 3,
+    "loopSlots": 6,
+    "totalSlots": 13,
+    "strictIntegerNotBoolean": true,
+    "saturatedType": "bool",
+    "saturatedRule": "exactly any of the thirteen selection counts ==65535; historical routes excluded",
+    "unknownExtraKeysRejected": true,
+    "noConservation": true,
+    "noPositivityRequired": true,
+    "noCrossFamilyMonotonicityRequired": true
+  },
+  "markerTransport": {
+    "cpuLineCap": 4096,
+    "progressLineCap": 1024,
+    "cpuMaxAttemptsPerPid": 3,
+    "progressMaxAttemptsPerPid": 3,
+    "combinedRawSlot": 65536,
+    "lateProgressIndependent": true,
+    "parities": [
+      "Analytics",
+      "CPU",
+      "Progress",
+      "complete union"
+    ],
+    "newExportSeries": 0,
+    "actualMainFamilies": {
+      "cpu": {
+        "lines": 3,
+        "bytes": 3817,
+        "maxLineBytes": 1614,
+        "cap": 4096
+      },
+      "progress": {
+        "lines": 3,
+        "bytes": 2763,
+        "maxLineBytes": 928,
+        "cap": 1024
+      }
+    },
+    "currentCombinedCpuProgressBytes": 6580,
+    "currentCombinedRawUnderCap": true
+  },
+  "closeRules": {
+    "finiteCollectionIfPresent": true,
+    "presentContradictionCollectionFinished": "hard failure for valid supplied selection fields bound to the same capture, even if another file is absent",
+    "missingSelection": "pending; captureComplete cannot become true",
+    "completeOnly": "collection/stopped/finished equality required only in complete CPU path; HTTP progress is excluded",
+    "captureIsNotTransport": true
+  },
+  "observedMainTargets": {
+    "run": {
+      "run": 46063135555,
+      "attempt": 1,
+      "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "mainJob": 140721962760,
+      "cleanupJob": 140725518085,
+      "conclusion": "failure",
+      "mainConclusion": "failure",
+      "cleanupConclusion": "success",
+      "testStepConclusion": "failure"
+    },
+    "artifact": {
+      "id": 15229333864,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 46003924,
+      "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff"
+    },
+    "parities": {
+      "analytics": {
+        "lines": 97,
+        "bytes": 34282,
+        "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+        "gitBlobCalculated": "729b06464ca3e8399a4b1c9b435d5f4c35177bd9",
+        "gitBlobPersisted": false
+      },
+      "cpu": {
+        "lines": 3,
+        "bytes": 3817,
+        "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+        "gitBlobCalculated": "1d2820a28503b2f5caa3f82dc3703a50dd1d7744",
+        "gitBlobPersisted": false
+      },
+      "progress": {
+        "lines": 3,
+        "bytes": 2763,
+        "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+        "gitBlobCalculated": "e00e5c65651969587b1587e3295159a2f68af54d",
+        "gitBlobPersisted": false
+      },
+      "union": {
+        "lines": 103,
+        "bytes": 40862,
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "gitBlobCalculated": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "gitBlobPersisted": true,
+        "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "literalReadback": true
+      }
+    },
+    "tuple": {
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "pid": 3729,
+      "parentPid": 3684
+    },
+    "cpuKinds": [
+      "started",
+      "stopped",
+      "finished"
+    ],
+    "markerStateClaim": "completed-on-time",
+    "fileClaims": {
+      "profile": {
+        "name": "preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "fsyncTenthMs": 2478358,
+        "closeTenthMs": 2478358
+      },
+      "collection": {
+        "name": "collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "fsyncTenthMs": 2478362,
+        "closeTenthMs": 2478362
+      }
+    },
+    "claimsAreNotActualFileVerification": true
+  },
+  "pending": {
+    "currentRuntimeCaseResultStdioBinding": true,
+    "actualZipAndFilePresence": true,
+    "actualCpuProfileSchemaAndBytes": true,
+    "collectionAndLauncherOriginals": true,
+    "captureComplete": true,
+    "readerObjectAndExecutionAuthority": true
+  },
+  "interpretations": [
+    "Source4 is the qualified already-calculated token-selection population, not all C08 or Request calls.",
+    "Native3 includes only completed native child snapshot copies requested as case-identities, before callback.",
+    "tag-refused means no effective physical identity tag on a completed copy, not transaction denial or copy failure.",
+    "cases-complete retains the cases graph without normalization, not necessarily the complete Snapshot.",
+    "normalized-map may include entries retained conservatively.",
+    "Loop enumerated/not-enumerated count completed copies/maps; eligible/reduced/retained count entries; omitted counts actual known fields.",
+    "Not-enumerated adds no fallback traversal and does not imply an empty map.",
+    "Local loop arithmetic may run outside the measured window; only running owned capture accepts aggregate contributions.",
+    "No Source/native pairing, conservation, fallback-rate, positivity, Request exclusivity or counters-to-samples estimate.",
+    "Native/performance, Actions UTC and Playwright clocks remain separate; whole-VM profile can include unrelated work and observer overhead."
+  ],
+  "preserved": [
+    "One authorized original ZIP only; no checkout or repo import/execution",
+    "All-entry CRC/hash/safe-path/expanded inventory",
+    "Unclassified namespace and present contradictions are hard failures",
+    "Prepared-only namespaces inventoried without selecting first/latest",
+    "4–7 real exports with file IDs and raw malformed/non-LF bytes preserved",
+    "Receipt frozen before exact joint preflight and first emission",
+    "No complete transport from job badge alone; whole main and all listed series/terminal required"
+  ],
+  "method": "Pure own-JavaScript data arithmetic, hashing and literal text comparison; no reader/helper/repository execution and no original logs/ZIP acquired.",
+  "authorActions": {
+    "createdBlobsOnly": true,
+    "treeCommitRefRun": false,
+    "originalActionsGets": 0,
+    "originalZipGets": 0
+  }
+}

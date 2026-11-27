@@ -1,0 +1,837 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,3 +1,4 @@
++import { startSfE12CpuObservation, finishSfE12CpuObservation, markSfE12HttpProgress } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -43,41 +44,47 @@
+     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
+     const mode = selected as Mode
+-    const payload = await boundedJson(request)
+-    if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+-    const admitted = await input.authority.human.admit(request, actions[mode], payload)
+-    if (admitted.status !== "ok") return reply(admitted)
++    const cpu = mode === "decision-portfolio-preview" ? startSfE12CpuObservation(request) : undefined
+     try {
+-      const call = admitted.value
+-      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+-      const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+-      const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+-        if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+-        if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
+-        if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
+-        if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
+-        if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
+-        if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
+-        const product = input.product
+-        if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
+-        if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
+-        if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
+-        if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
+-        if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
+-        if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
+-        if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
+-        if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
+-        if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
+-        if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
+-        return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
+-      })
+-      if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
+-      if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+-        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
+-        return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
+-      return reply(result)
+-    } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+-    finally { input.authority.human.finish(admitted.value) }
++      const payload = await boundedJson(request)
++      markSfE12HttpProgress(cpu, request, "body-returned")
++      if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
++      const admitted = await input.authority.human.admit(request, actions[mode], payload)
++      markSfE12HttpProgress(cpu, request, "admit-returned")
++      if (admitted.status !== "ok") return reply(admitted)
++      try {
++        const call = admitted.value
++        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
++        const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
++        const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
++          markSfE12HttpProgress(cpu, request, "case-callback-entered")
++          if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
++          if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
++          if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
++          if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
++          if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
++          if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
++          const product = input.product
++          if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
++          if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
++          if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
++          if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
++          if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
++          if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
++          if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
++          if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
++          if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
++          if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
++          return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
++        })
++        if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
++        if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
++          binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
++          return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
++        return reply(result)
++      } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
++      finally { input.authority.human.finish(admitted.value) }
++    } finally { finishSfE12CpuObservation(cpu, request) }
+   }
+ }
+ 
+diff --git a/apps/cli/test/fixture/sucafina-native-installation.ts b/apps/cli/test/fixture/sucafina-native-installation.ts
+--- a/apps/cli/test/fixture/sucafina-native-installation.ts
++++ b/apps/cli/test/fixture/sucafina-native-installation.ts
+@@ -1,4 +1,7 @@
+ import { mkdtemp, realpath, rm } from "node:fs/promises"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { lstatSync, readFileSync, realpathSync } from "node:fs"
+ import { tmpdir, userInfo } from "node:os"
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
+@@ -62,6 +65,7 @@
+       return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }
+     })
+     const app = yield* AppProcess.Service
++    const cpuEnvironment = nativePreviewE11CpuEnvironment(root)
+     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
+       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", factory,
+     ], {
+@@ -79,13 +83,18 @@
+         XDG_STATE_HOME: path.join(root, "host-state"),
+         ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),
+         ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),
++        ...cpuEnvironment,
+       },
+     }))
+     const ready = yield* Deferred.make<void>()
+     const diagnostic = { last: "" }
+-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
+-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
+-    )))
++    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
++      if (((line.startsWith("SF_PREVIEW_E12_CPU ") && line.length + 1 <= 4096) ||
++          (line.startsWith("SF_PREVIEW_E12_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
++        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }
++      }
++      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
++    })))
+     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
+       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
+     )))
+@@ -119,3 +128,57 @@
+     }
+   })
+ }
++
++
++/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */
++function nativePreviewE11CpuEnvironment(privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
++  const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598", sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++  let stage = "binding"
++  try {
++    const directory = process.env[directoryKey], encoded = process.env[bindingKey]
++    if (!directory && !encoded) return disabled
++    if (!directory || !encoded || encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
++        Bun.version !== "1.3.14" || Bun.revision !== "0d9b296af33f2b851fcbf4df3e9ec89751734ba4") throw new Error("cpu-binding")
++    const value: unknown = JSON.parse(encoded)
++    if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("cpu-binding")
++    const binding = value as Record<string, unknown>
++    if (binding.schema !== "sf-preview-e12-cpu-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
++        typeof binding.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||
++        typeof binding.runId !== "string" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== "1" ||
++        typeof binding.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
++        typeof binding.launcherBytes !== "number" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||
++        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))
++      throw new Error("cpu-binding")
++    stage = "directory"
++    const repository = realpathSync(path.resolve(path.dirname(entry), "../../.."))
++    const base = path.join(repository, "test-ci-evidence"), info = lstatSync(directory)
++    const relative = path.relative(realpathSync(privateRoot), directory)
++    if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== binding.nonce ||
++        realpathSync(base) !== base || realpathSync(directory) !== directory || !info.isDirectory() || info.isSymbolicLink() ||
++        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
++      throw new Error("cpu-directory")
++    stage = "launcher"
++    const launcherPath = path.join(directory, "launcher.json"), launcherInfo = lstatSync(launcherPath)
++    if (!launcherInfo.isFile() || launcherInfo.isSymbolicLink() || launcherInfo.size !== binding.launcherBytes)
++      throw new Error("cpu-launcher")
++    const text = readFileSync(launcherPath, "utf8")
++    if (Buffer.byteLength(text, "utf8") !== binding.launcherBytes ||
++        createHash("sha256").update(text, "utf8").digest("hex") !== binding.launcherSha256) throw new Error("cpu-launcher-hash")
++    const parsed: unknown = JSON.parse(text)
++    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("cpu-launcher-shape")
++    const launcher = parsed as Record<string, unknown>
++    for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
++      if (launcher[key] !== binding[key]) throw new Error("cpu-launcher-binding")
++    if (launcher.processRole !== "native-cli" || launcher.profileName !== "preview-first.cpuprofile")
++      throw new Error("cpu-launcher-role")
++    return { [directoryKey]: directory, [bindingKey]: encoded }
++  } catch {
++    try {
++      console.info("SF_PREVIEW_E12_CPU " + JSON.stringify({ schema: "sf-preview-causal-e12-cpu-v1", source, sourceTree,
++        qualification: false, role: "native-launcher", kind: "disabled", reason: stage }))
++    } catch { /* The original child must still be spawned with its original settings. */ }
++    return disabled
++  }
++}
+diff --git a/packages/app-shell/e2e/sucafina/design-support/installation.ts b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+--- a/packages/app-shell/e2e/sucafina/design-support/installation.ts
++++ b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+@@ -1,6 +1,9 @@
+ import type { BrowserContext } from "@playwright/test"
+ import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
+ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { chmodSync, closeSync, fstatSync, fsyncSync, lstatSync, mkdtempSync, openSync, realpathSync, writeFileSync } from "node:fs"
+ import { tmpdir } from "node:os"
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
+@@ -59,9 +62,10 @@
+     const installed = yield* Effect.gen(function* () {
+       const ready = yield* Deferred.make<void, Error>()
+       const diagnostic = { tail: "" }
++      const cpuEnvironment = preparePreviewE11CpuEnvironment(repository, root)
+       const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
+         cwd: repository,
+-        env: isolatedEnvironment(root),
++        env: { ...isolatedEnvironment(root), ...cpuEnvironment },
+         extendEnv: false,
+         stdin: "ignore",
+         stdout: "pipe",
+@@ -71,6 +75,10 @@
+       }))
+       owned.child = child
+       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
++        if (((line.startsWith("SF_PREVIEW_E12_CPU ") && line.length + 1 <= 4096) ||
++          (line.startsWith("SF_PREVIEW_E12_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
++          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }
++        }
+         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
+@@ -204,3 +212,56 @@
+ function redact(value: string) {
+   return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]")
+ }
++
++
++/** Diagnostic files survive the two original private roots; failure never blocks launch. */
++function preparePreviewE11CpuEnvironment(repository: string, privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
++  const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598", sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++  let fd: number | undefined, stage = "gate"
++  try {
++    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
++    if (process.env.GITHUB_ACTIONS !== "true" || process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
++        process.platform !== "linux" || process.arch !== "x64" || !snapshot || !/^[a-f0-9]{40}$/.test(snapshot) ||
++        !runId || !/^[0-9]{1,20}$/.test(runId) || attempt !== "1") throw new Error("cpu-gate")
++    stage = "base"
++    const base = path.join(realpathSync(repository), "test-ci-evidence"), baseInfo = lstatSync(base)
++    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error("cpu-base")
++    stage = "directory"
++    const directory = mkdtempSync(path.join(base, "sf613-e12-cpu-"))
++    chmodSync(directory, 0o700)
++    const relative = path.relative(realpathSync(privateRoot), directory)
++    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||
++        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
++      throw new Error("cpu-root")
++    const nonce = path.basename(directory)
++    if (!/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
++    const binding = { schema: "sf-preview-e12-cpu-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
++    const launcher = { ...binding, qualification: false, state: "prepared", processRole: "native-cli",
++      entry: "apps/cli/src/index.ts", command: "serve", profileName: "preview-first.cpuprofile",
++      relativeDirectory: "test-ci-evidence/" + nonce, createdUtcMs: Date.now(),
++      childGraceMs: 2000, adapterGraceMs: 10000,
++      limits: "Preparation is not proof of selection, native start, profile flush or durable collection." }
++    stage = "launcher"
++    const text = JSON.stringify(launcher) + "\n", launcherBytes = Buffer.byteLength(text, "utf8")
++    if (launcherBytes > 8192) throw new Error("cpu-launcher-size")
++    const launcherSha256 = createHash("sha256").update(text, "utf8").digest("hex")
++    fd = openSync(path.join(directory, "launcher.json"), "wx", 0o600)
++    writeFileSync(fd, text, "utf8")
++    fsyncSync(fd)
++    const written = fstatSync(fd)
++    if (!written.isFile() || written.size !== launcherBytes) throw new Error("cpu-launcher-write")
++    closeSync(fd)
++    fd = undefined
++    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }
++  } catch {
++    try {
++      console.info("SF_PREVIEW_E12_CPU " + JSON.stringify({ schema: "sf-preview-causal-e12-cpu-v1", source, sourceTree,
++        qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }))
++    } catch { /* Original setup/spawn remains authoritative. */ }
++    return disabled
++  } finally {
++    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve original setup outcome. */ } }
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -1,3 +1,4 @@
++import { pumpSfE12CpuObservation } from "../../runtime/preview-cpu-e12-diagnostic.ts"
+ import type { SessionSchema } from "@orchestra/core/session/schema"
+ import { types } from "node:util"
+ import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./source-lifecycle.ts"
+@@ -139,6 +140,7 @@
+     const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
+       if (currentRead && !currentRead()) return undefined
+       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
++      pumpSfE12CpuObservation()
+       if (!actor || (currentRead && !currentRead())) return undefined
+       const access = object(object(snapshot.data.access)[actor.id])
+       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -1,3 +1,4 @@
++import { markSfE12CpuRoute, markSfE12SourceSelection } from "../../runtime/preview-cpu-e12-diagnostic.ts"
+ import { types } from "node:util"
+ import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
+ import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
+@@ -696,6 +697,7 @@
+         if (!root?.current()) return execute
+         const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
+         forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
++        markSfE12SourceSelection(selection)
+         return execute
+       }
+       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
+@@ -709,6 +711,7 @@
+         requireProduct()
+         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])
+         if (seal && seal.current()) {
++          markSfE12CpuRoute(0)
+           // Only the Dashboard snapshot covered by the held durable preimage
+           // can reuse its pure source-metadata validation.
+           const identity = surface === "dashboard" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined
+@@ -742,6 +745,7 @@
+         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
+           active && Object.hasOwn(active, "value") && active.value === method.value ?
+           currentDriverReadonlyAuthorityData(driver, [], "unfenced") : undefined
++        markSfE12CpuRoute(sealed ? 1 : 2)
+         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
+         const guarded = guard(surface, snapshot, sealedPreimage)
+         try {
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,5 +1,6 @@
+ import { Database } from "bun:sqlite"
+ import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
++import { markSfE12NativeCopy } from "./preview-cpu-e12-diagnostic.ts"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { createHash, randomUUID } from "node:crypto"
+ import { types } from "node:util"
+@@ -650,6 +651,7 @@
+           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
+           : projected ? projected.snapshot
+           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
++        markSfE12NativeCopy(selection, projected?.selection, projected?.normalizedIdentities, projected?.identityCounts)
+         if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
+           selection: projected?.selection,
+           current: () => {
+@@ -1463,12 +1465,15 @@
+   // be omitted from a graph whose readonly birth proves a normalized tree.
+   const caseBodies = ["state", "objective", "horizon", "currency", "criteria", "sourceRefs", "alternatives", "costCoverageBases",
+     "assumptions", "questions", "choices", "preparedChanges", "receipts", "ledger"] as const
+-  const identityCases = (cases: Record<string, unknown>) => {
++  type IdentityLoopCounts = { enumerated: boolean; eligible: number; reduced: number; retained: number; omitted: number }
++  const identityCases = (cases: Record<string, unknown>, identityCounts: IdentityLoopCounts | undefined) => {
++    if (identityCounts) identityCounts.enumerated = true
+     const fields = descriptors(cases), names = keys(fields), selected: Record<string, unknown> = {}
+     for (let index = 0; index < names.length; index++) {
+       const name = names[index]!, field = fields[name]!
+       const entry: unknown = field.value
+       let value = entry
++      let omittedEntry = false
+       if (plain(entry)) {
+         const parts = descriptors(entry)
+         const id = own(parts, "id") ? parts.id : undefined, incarnation = own(parts, "incarnation") ? parts.incarnation : undefined
+@@ -1487,21 +1492,31 @@
+           }
+         }
+         if (simple) {
++          if (identityCounts && identityCounts.eligible < 65_535) identityCounts.eligible++
+           const reduced: Record<string, unknown> = {}, partNames = keys(parts)
+           for (let item = 0; item < partNames.length; item++) {
+             const key = partNames[item]!
+             let body = false
+             for (let known = 0; known < caseBodies.length; known++) if (caseBodies[known] === key) body = true
++            if (body) {
++              omittedEntry = true
++              if (identityCounts && identityCounts.omitted < 65_535) identityCounts.omitted++
++            }
+             if (!body) define(reduced, key, { value: parts[key]!.value, enumerable: true, writable: true, configurable: true })
+           }
+           value = reduced
+         }
+       }
++      if (identityCounts) {
++        const slot = omittedEntry ? "reduced" : "retained"
++        if (identityCounts[slot] < 65_535) identityCounts[slot]++
++      }
+       define(selected, name, { value, enumerable: true, writable: true, configurable: true })
+     }
+     return selected
+   }
+-  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean) => {
++  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean,
++    identityCounts: IdentityLoopCounts | undefined) => {
+     if (!current() || !selectionCurrent() || !plain(value)) return undefined
+     const state = descriptors(value), names = keys(state)
+     for (let index = 0; index < names.length; index++) {
+@@ -1534,7 +1549,7 @@
+       for (let item = 0; item < maps.length; item++) if (maps[item] === name) map = true
+       for (let item = 0; item < additive.length; item++) if (additive[item] === name) map = true
+       const retained = selection === "case-identities" ? "cases" : selection
+-      define(selected, name, { value: name === "cases" && normalizedIdentities && plain(value) ? identityCases(value) :
++      define(selected, name, { value: name === "cases" && normalizedIdentities && plain(value) ? identityCases(value, identityCounts) :
+         map && name !== retained && value !== undefined ? {} : value,
+         enumerable: true, writable: true, configurable: true })
+     }
+@@ -1542,10 +1557,12 @@
+   }
+   const copy = (snapshot: Snapshot, selection?: "cases" | "preferences" | "case-identities", normalized = false) => {
+     const normalizedIdentities = selection === "case-identities" && normalized && identitySnapshotBirth.current()
++    const identityCounts: IdentityLoopCounts | undefined = selection === "case-identities"
++      ? { enumerated: false, eligible: 0, reduced: 0, retained: 0, omitted: 0 } : undefined
+     const data: Record<string, unknown> = {}
+     const fields = descriptors(snapshot.data), names = keys(fields)
+     const product = own(fields, "__sfProductV1") ? fields.__sfProductV1 : undefined
+-    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection, normalizedIdentities) : undefined
++    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection, normalizedIdentities, identityCounts) : undefined
+     for (let index = 0; index < names.length; index++) {
+       const name = names[index]!
+       if (name !== "__sfProductV1" && name !== "roleMap" && name !== "access") continue
+@@ -1561,7 +1578,8 @@
+       if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
+       define(view, name, { value: name === "data" ? data : field.value, enumerable: true, writable: true, configurable: true })
+     }
+-    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities }
++    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities,
++      identityCounts }
+   }
+   return { current, selectionCurrent, copy, property, own }
+ })()
+diff --git a/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts b/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts
+@@ -0,0 +1,394 @@
++import inspector from "node:inspector"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, writeFileSync } from "node:fs"
++import cpuPath from "node:path"
++import { fileURLToPath } from "node:url"
++
++const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
++const sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++
++// Temporary CPU-only observation. The lexical handle never enters product context.
++type Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }
++let selectionTried = false, selectedFrame: Frame | undefined
++const numberCap = 999_999_999, pulseMs = 10_000
++const routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]
++type SelectionClass = 0 | 1 | 2 | 3
++type IdentityLoopCounts = Readonly<{ enumerated: boolean; eligible: number; reduced: number; retained: number; omitted: number }>
++const sourceRequests: [number, number, number, number] = [0, 0, 0, 0]
++const nativeCopies: [number, number, number] = [0, 0, 0]
++const identityLoop: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0]
++const progressPrefix = "SF_PREVIEW_E12_PROGRESS ", progressCapBytes = 1024
++const progressSchema = "sf-preview-causal-e12-progress-v1"
++type HttpProgress = "body-returned" | "admit-returned" | "case-callback-entered"
++
++function whole(value: number) { return value - value % 1 }
++function bounded(value: number) { return value <= numberCap ? whole(value < 0 ? 0 : value) : numberCap }
++function pid() {
++  const value = process.pid
++  return typeof value === "number" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0
++}
++function parentPid() {
++  const value = process.ppid
++  return typeof value === "number" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0
++}
++
++function routeSnapshot() {
++  return { scope: "pid-running-window", order: ["sealed-read", "unfenced", "full-guard"], cap: routeCap, counts: routeCounts.slice() }
++}
++function selectionClass(value: "cases" | "preferences" | "case-identities" | undefined): SelectionClass | undefined {
++  return value === undefined ? 0 : value === "cases" ? 1 : value === "preferences" ? 2 : value === "case-identities" ? 3 : undefined
++}
++function increment(counts: number[], slot: number, amount = 1) {
++  const value = counts[slot]
++  if (value === undefined || value >= routeCap) return
++  const total = value + amount
++  counts[slot] = total < routeCap ? total : routeCap
++}
++function selectionSnapshot() {
++  let saturated = false
++  for (let index = 0; index < sourceRequests.length; index++) if (sourceRequests[index] === routeCap) saturated = true
++  for (let index = 0; index < nativeCopies.length; index++) if (nativeCopies[index] === routeCap) saturated = true
++  for (let index = 0; index < identityLoop.length; index++) if (identityLoop[index] === routeCap) saturated = true
++  return { scope: "pid-running-window", cap: routeCap,
++    sourceOrder: ["none", "cases", "preferences", "case-identities"], sourceRequests: sourceRequests.slice(),
++    nativeOrder: ["tag-refused", "cases-complete", "normalized-map"], nativeCopies: nativeCopies.slice(),
++    loopOrder: ["enumerated", "not-enumerated", "eligible", "reduced", "retained", "known-fields-omitted"],
++    identityLoop: identityLoop.slice(), saturated }
++}
++export function markSfE12SourceSelection(selection: "cases" | "preferences" | "case-identities" | undefined) {
++  try {
++    const frame = selectedFrame, capture = cpuCapture
++    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
++    const slot = selectionClass(selection)
++    if (slot !== undefined) increment(sourceRequests, slot)
++  } catch { /* Count an issued Source token only; never alter its admission or pump here. */ }
++}
++export function markSfE12NativeCopy(requested: "cases" | "preferences" | "case-identities" | undefined,
++  materialized: "cases" | "preferences" | "case-identities" | undefined, normalized: boolean | undefined,
++  loop: IdentityLoopCounts | undefined) {
++  try {
++    const frame = selectedFrame, capture = cpuCapture
++    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
++        requested !== "case-identities") return
++    const slot = materialized !== "case-identities" ? 0 : normalized === true ? 2 : 1
++    const enumerated = loop?.enumerated === true
++    const values = loop && enumerated ? [loop.eligible, loop.reduced, loop.retained, loop.omitted] : [0, 0, 0, 0]
++    for (let index = 0; index < values.length; index++) {
++      const value = values[index]
++      if (typeof value !== "number" || value < 0 || value > routeCap || value % 1 !== 0) return
++    }
++    increment(nativeCopies, slot)
++    increment(identityLoop, enumerated ? 0 : 1)
++    if (enumerated) for (let index = 0; index < values.length; index++) increment(identityLoop, index + 2, values[index]!)
++  } catch { /* Publish only completed requested identity copies; absent loops stay explicitly unenumerated. */ }
++}
++export function pumpSfE12CpuObservation() {
++  try {
++    const frame = selectedFrame, capture = cpuCapture
++    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned) return
++    pulseCpuFrame(frame)
++  } catch { /* A cooperative boundary cannot change the original outcome. */ }
++}
++export function markSfE12CpuRoute(route: 0 | 1 | 2) {
++  try {
++    const frame = selectedFrame, capture = cpuCapture
++    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== "running" || !capture.owned ||
++        (route !== 0 && route !== 1 && route !== 2)) return
++    if (routeCounts[route] < routeCap) routeCounts[route]++
++    pumpSfE12CpuObservation()
++  } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }
++}
++export function markSfE12HttpProgress(handle: unknown, request: Request, point: HttpProgress) {
++  try {
++    const frame = selectedFrame
++    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
++    const slot = point === "body-returned" ? 1 : point === "admit-returned" ? 2 : point === "case-callback-entered" ? 4 : 0
++    if (!slot || (frame.progressMask & slot) !== 0) return
++    frame.progressMask |= slot
++    const sequence = ++frame.progressSequence
++    try {
++      const now = cpuNow(), capture = cpuCapture?.frame === frame ? cpuCapture : undefined
++      const binding = capture?.binding
++      const line = progressPrefix + JSON.stringify({ schema: progressSchema, source, sourceTree, qualification: false,
++        pid: pid(), request: 1, sequence, kind: point,
++        elapsedTenthMs: now === undefined || now < frame.start ? null : cpuTenth(now - frame.start),
++        cpuPhase: capture?.phase ?? "unavailable", routes: routeSnapshot(), selection: selectionSnapshot(),
++        ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + "\n"
++      if (line.length <= progressCapBytes && /^[\x20-\x7e]*\n$/.test(line)) process.stdout.write(line)
++    } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }
++    pumpSfE12CpuObservation()
++  } catch { /* Do not inspect the Request or replace a product result. */ }
++}
++
++function disposeCpuFrame(frame: Frame) {
++  frame.closed = true
++  const timer = frame.timer
++  frame.timer = undefined
++  if (timer !== undefined) {
++    try { clearInterval(timer) } catch { /* Never replace the original request outcome. */ }
++  }
++}
++function pulseCpuFrame(frame: Frame) {
++  try {
++    if (frame !== selectedFrame || frame.closed) return
++    const now = cpuNow()
++    if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)
++  } catch { /* A delayed or failed pulse is not proof of timely collection. */ }
++}
++export function startSfE12CpuObservation(request: Request): Frame | undefined {
++  if (selectionTried) return undefined
++  selectionTried = true
++  let frame: Frame | undefined
++  try {
++    const start = cpuNow()
++    if (start === undefined) { cpuEmit("unavailable", undefined, { reason: "selection-clock" }); return undefined }
++    frame = { request, start, closed: false, httpClosed: false, progressMask: 0, progressSequence: 0 }
++    selectedFrame = frame
++    const selected = frame
++    // Install and unref before starting a sampler, so timer failure owns no sampler.
++    frame.timer = setInterval(() => pulseCpuFrame(selected), pulseMs)
++    frame.timer.unref?.()
++    startCpuObservation(frame)
++    if (cpuCapture?.frame !== frame || cpuCapture.phase !== "running") disposeCpuFrame(frame)
++    return frame
++  } catch {
++    if (frame) disposeCpuFrame(frame)
++    cpuEmit("unavailable", undefined, { reason: "selection-timer" })
++    return undefined
++  }
++}
++export function finishSfE12CpuObservation(handle: unknown, request: Request) {
++  try {
++    const frame = selectedFrame
++    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return
++    frame.httpClosed = true
++    if (frame.closed) return
++    disposeCpuFrame(frame)
++    const now = cpuNow()
++    finishCpuObservation(frame, now, now !== undefined && now - frame.start >= cpuTargetMs ? "target" : "final")
++  } catch { /* Observation cannot replace a returned value or original rejection. */ }
++}
++
++type CpuMethod = "Profiler.enable" | "Profiler.setSamplingInterval" | "Profiler.start" | "Profiler.stop"
++type CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }
++type CpuBinding = {
++  schema: "sf-preview-e12-cpu-launch-v1"; source: string; sourceTree: string; snapshot: string;
++  runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string
++}
++type CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }
++type CpuCapture = {
++  frame: Frame; directory: string; binding: CpuBinding; session: CpuSession;
++  phase: "running" | "stopping" | "finished" | "failed"; owned: boolean;
++  points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;
++  cleanupFailed: boolean
++}
++const cpuPrefix = "SF_PREVIEW_E12_CPU ", cpuSchema = "sf-preview-causal-e12-cpu-v1"
++const cpuRevision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
++const cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000
++const cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024
++const cpuDirectoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", cpuBindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
++let cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0
++
++function cpuNow(): number | undefined {
++  try {
++    const value = performance.now()
++    if (typeof value === "number" && value >= 0 && value <= numberCap / 10) return value
++  } catch { /* CPU observation never changes the original outcome. */ }
++}
++function cpuTenth(value: number | undefined): number | null {
++  return value === undefined ? null : whole(value * 10)
++}
++function cpuUtc(): number | null {
++  try {
++    const value = Date.now()
++    if (typeof value === "number" && value >= 0 && value <= 8_640_000_000_000_000 && value % 1 === 0) return value
++  } catch { /* Separate from the original observer's health. */ }
++  return null
++}
++function cpuHash(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
++function cpuWithin(parent: string, child: string) {
++  const relative = cpuPath.relative(parent, child)
++  return relative === "" || relative !== ".." && !relative.startsWith(".." + cpuPath.sep) && !cpuPath.isAbsolute(relative)
++}
++function cpuObject(value: unknown): value is Record<string, unknown> {
++  return value !== null && typeof value === "object" && !Array.isArray(value)
++}
++function cpuEmit(kind: string, binding: CpuBinding | undefined, payload: Record<string, unknown>) {
++  if (cpuLines >= 3) return
++  const sequence = ++cpuLines
++  try {
++    const line = cpuPrefix + JSON.stringify({ schema: cpuSchema, source, sourceTree, qualification: false,
++      pid: pid(), sequence, kind, request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),
++      ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}),
++      ...payload }) + "\n"
++    if (line.length <= 4096 && /^[\x20-\x7e]*\n$/.test(line)) process.stdout.write(line)
++  } catch { /* An attempted line is never replayed. */ }
++}
++function cpuAdmit(): { directory: string; binding: CpuBinding } | undefined {
++  const directory = process.env[cpuDirectoryKey], encoded = process.env[cpuBindingKey]
++  if (!directory || !encoded) return undefined
++  if (encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
++      typeof Bun === "undefined" || Bun.version !== "1.3.14" || Bun.revision !== cpuRevision) throw new Error("cpu-runtime")
++  const repository = realpathSync(fileURLToPath(new URL("../../../../", import.meta.url)))
++  if (process.argv[1] !== cpuPath.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
++    throw new Error("cpu-process")
++  const base = cpuPath.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
++  if (!cpuObject(value) || value.schema !== "sf-preview-e12-cpu-launch-v1" || value.source !== source ||
++      value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
++      typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
++      typeof value.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||
++      typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
++      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
++    throw new Error("cpu-binding")
++  if (!cpuPath.isAbsolute(directory) || cpuPath.dirname(directory) !== base || cpuPath.basename(directory) !== value.nonce ||
++      realpathSync(base) !== base || realpathSync(directory) !== directory ||
++      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || cpuWithin(realpathSync(process.cwd()), directory))
++    throw new Error("cpu-directory")
++  const launcherPath = cpuPath.join(directory, "launcher.json"), info = lstatSync(launcherPath)
++  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error("cpu-launcher")
++  const text = readFileSync(launcherPath, "utf8"), launcher: unknown = JSON.parse(text)
++  if (Buffer.byteLength(text, "utf8") !== value.launcherBytes || cpuHash(text) !== value.launcherSha256 || !cpuObject(launcher))
++    throw new Error("cpu-launcher")
++  for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
++    if (launcher[key] !== value[key]) throw new Error("cpu-launcher-binding")
++  if (launcher.processRole !== "native-cli" || launcher.profileName !== "preview-first.cpuprofile")
++    throw new Error("cpu-launcher-role")
++  return { directory, binding: value as CpuBinding }
++}
++function cpuWrite(directory: string, name: string, text: string): CpuFile {
++  const bytes = Buffer.byteLength(text, "utf8")
++  const cap = name === "preview-first.cpuprofile" ? cpuProfileCapBytes : cpuCollectionCapBytes
++  if (bytes > cap) throw new Error("cpu-file-cap")
++  const sha256 = cpuHash(text)
++  let fd: number | undefined
++  try {
++    fd = openSync(cpuPath.join(directory, name), "wx", 0o600)
++    writeFileSync(fd, text, "utf8")
++    fsyncSync(fd)
++    const fsyncTenthMs = cpuTenth(cpuNow()), info = fstatSync(fd)
++    if (!info.isFile() || info.size !== bytes) throw new Error("cpu-file-size")
++    closeSync(fd)
++    fd = undefined
++    return { name, bytes, sha256, fsyncTenthMs, closeTenthMs: cpuTenth(cpuNow()) }
++  } finally {
++    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve the primary observation failure. */ } }
++  }
++}
++function startCpuObservation(frame: Frame) {
++  if (cpuTried) return
++  cpuTried = true
++  let admitted: ReturnType<typeof cpuAdmit> = undefined, stage = "admission"
++  try {
++    admitted = cpuAdmit()
++    if (!admitted) { cpuEmit("unavailable", undefined, { reason: "no-launcher" }); return }
++    const now = cpuNow()
++    if (now === undefined || now < frame.start || now - frame.start >= cpuTargetMs) {
++      cpuEmit("unavailable", admitted.binding, { reason: "late-or-invalid-clock", elapsedTenthMs: now === undefined ? null : cpuTenth(now - frame.start) })
++      return
++    }
++    stage = "connect"
++    // This is the exact default-import/synchronous form exercised by the pinned Bun.
++    const session = new inspector.Session() as unknown as CpuSession
++    session.connect()
++    stage = "enable"
++    session.post("Profiler.enable")
++    stage = "sampling-preflight"
++    // A rejection here can mean another VM sampler is running. Never disconnect it.
++    session.post("Profiler.setSamplingInterval", { interval: cpuIntervalUs })
++    const beforeStart = cpuNow()
++    const points: Record<string, number | null> = { frameStart: cpuTenth(frame.start), startEnter: cpuTenth(beforeStart) }
++    if (beforeStart === undefined || beforeStart < frame.start || beforeStart - frame.start >= cpuTargetMs) {
++      cpuEmit("unavailable", admitted.binding, { reason: "late-before-start", points })
++      return
++    }
++    stage = "start"
++    session.post("Profiler.start")
++    points.startReturn = cpuTenth(cpuNow())
++    const capture: CpuCapture = { frame, directory: admitted.directory, binding: admitted.binding, session,
++      phase: "running", owned: true, points, utcStartReturnMs: cpuUtc(), cleanupFailed: false }
++    cpuCapture = capture
++    cpuEmit("started", capture.binding, { runtime: ["1.3.14", cpuRevision], parentPid: parentPid(),
++      intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,
++      utcMs: capture.utcStartReturnMs, points })
++  } catch {
++    // Admission/start failure has no established sampler ownership: no disable/disconnect.
++    cpuEmit("unavailable", admitted?.binding, { reason: stage, ownership: stage === "start" ? "uncertain" : "not-owned" })
++  }
++}
++function checkpointCpuObservation(frame: Frame, now: number): boolean {
++  try {
++    const capture = cpuCapture
++    if (capture?.frame === frame && capture.phase === "running" && now - frame.start >= cpuTargetMs) {
++      finishCpuObservation(frame, now, "target")
++      return true
++    }
++  } catch { /* Never prevent the original cutoff check. */ }
++  return false
++}
++function finishCpuObservation(frame: Frame, now: number | undefined, cause: "target" | "window" | "final") {
++  const capture = cpuCapture
++  if (!capture || capture.frame !== frame || capture.phase !== "running" || !capture.owned) return
++  capture.phase = "stopping"
++  capture.stopCause = cause
++  let stage = "stop", profileFile: CpuFile | undefined
++  try {
++    capture.points.stopCheckpoint = cpuTenth(now)
++    capture.points.stopEnter = cpuTenth(cpuNow())
++    capture.utcStopEnterMs = cpuUtc()
++    const result: unknown = capture.session.post("Profiler.stop")
++    capture.points.stopReturn = cpuTenth(cpuNow())
++    capture.owned = false
++    // Stop returned successfully in this same synchronous turn. Keep its result.
++    try { capture.session.disconnect() } catch { capture.cleanupFailed = true }
++    stage = "result"
++    if (!cpuObject(result) || !cpuObject(result.profile)) throw new Error("cpu-result")
++    const profile = result.profile
++    if (!Array.isArray(profile.nodes) || !Array.isArray(profile.samples) || !Array.isArray(profile.timeDeltas) ||
++        typeof profile.startTime !== "number" || typeof profile.endTime !== "number" ||
++        !Number.isFinite(profile.startTime) || !Number.isFinite(profile.endTime) || profile.endTime < profile.startTime ||
++        profile.samples.length !== profile.timeDeltas.length) throw new Error("cpu-profile")
++    cpuEmit("stopped", capture.binding, { cause, points: capture.points,
++      nodesBounded: bounded(profile.nodes.length), samplesBounded: bounded(profile.samples.length), cleanupFailed: capture.cleanupFailed })
++    stage = "serialize"
++    capture.points.serializeEnter = cpuTenth(cpuNow())
++    // Full first serialization of returned result.profile, not the inaccessible native JSON string.
++    const profileText = JSON.stringify(profile) + "\n"
++    capture.points.serializeReturn = cpuTenth(cpuNow())
++    stage = "profile-cap"
++    if (Buffer.byteLength(profileText, "utf8") > cpuProfileCapBytes) throw new Error("cpu-profile-cap")
++    stage = "profile-write"
++    capture.points.profileWriteEnter = cpuTenth(cpuNow())
++    profileFile = cpuWrite(capture.directory, "preview-first.cpuprofile", profileText)
++    capture.points.profileFsync = profileFile.fsyncTenthMs
++    capture.points.profileClose = profileFile.closeTenthMs
++    const stop = capture.points.stopEnter, closed = profileFile.closeTenthMs, origin = whole(frame.start * 10)
++    const temporalProfile = typeof stop === "number" && closed !== null && stop >= origin && closed >= stop &&
++      closed - origin < cpuAcceptMs * 10
++    const short = cause === "final" && now !== undefined && now - frame.start < cpuTargetMs
++    const state = short ? "short-completed" : temporalProfile ? "completed-on-time" : "completed-late"
++    const collection = { schema: cpuSchema, source, sourceTree, qualification: false,
++      snapshot: capture.binding.snapshot, runId: capture.binding.runId, attempt: capture.binding.attempt,
++      nonce: capture.binding.nonce, pid: pid(), parentPid: parentPid(), request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),
++      runtime: ["1.3.14", cpuRevision], intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,
++      state, cause, utcStartReturnMs: capture.utcStartReturnMs, utcStopEnterMs: capture.utcStopEnterMs ?? null, points: capture.points,
++      profile: profileFile, native: { startTime: profile.startTime, endTime: profile.endTime,
++        nodes: profile.nodes.length, samples: profile.samples.length },
++      cleanupFailed: capture.cleanupFailed, profileCapBytes: cpuProfileCapBytes, collectionCapBytes: cpuCollectionCapBytes,
++      limits: "Whole VM samples; endTime is last sample; no async/exclusive CPU attribution; overhead not subtracted. This file does not attest its own durable completion." }
++    stage = "collection-write"
++    const collectionFile = cpuWrite(capture.directory, "collection.json", JSON.stringify(collection) + "\n")
++    capture.phase = "finished"
++    // Only this later marker attests collection.json's own fsync/close and hash.
++    cpuEmit("finished", capture.binding, { state, cause, profile: profileFile, collection: collectionFile,
++      collectionWithinAccept: temporalProfile && collectionFile.closeTenthMs !== null && closed !== null &&
++        collectionFile.closeTenthMs >= closed && collectionFile.closeTenthMs - origin < cpuAcceptMs * 10,
++      points: capture.points, cleanupFailed: capture.cleanupFailed })
++  } catch {
++    capture.phase = "failed"
++    // No second stop and no uncertain global cleanup. Partial files remain evidence.
++    cpuEmit("finished", capture.binding, { state: "incomplete", reason: stage, cause,
++      points: capture.points, ...(profileFile ? { profile: profileFile } : {}),
++      stopReturned: !capture.owned, cleanupFailed: capture.cleanupFailed })
++  }
++}
+diff --git a/.ci-run.json b/.ci-run.json
+new file mode 100644
+--- /dev/null
++++ b/.ci-run.json
+@@ -0,0 +1,1 @@
++{"package":"app","directory":"packages/app-shell","packageSelector":"@orchestra/app","runner":"playwright","args":["e2e/sucafina/design-wave-five-analytics.spec.ts"],"env":{"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER":"strict","ORCHESTRA_CHANNEL":"prod"},"config":"e2e/playwright.production.config.ts"}
+\ No newline at end of file

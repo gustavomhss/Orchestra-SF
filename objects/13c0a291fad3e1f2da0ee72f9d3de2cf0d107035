@@ -1,0 +1,621 @@
+{
+  "schema": "sf613-e12-diagnostic-source-control-manifest-v1",
+  "status": "STATIC_REVIEW_COMPLETE_SOURCE_AND_FOCAL_OBJECTS_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "task": "PR #613, E12 current CPU and identity-projection observation",
+  "authority": {
+    "operator": "/root",
+    "writer": "/root/close_pr613",
+    "wrapperOwner": "/root/focal_migration",
+    "independentReviewer": "/root/teams_product",
+    "allowedHere": "Reviewable text blobs, derivation and metadata only. Root alone creates source/driver objects, refs, runs and acquires original Actions/ZIP.",
+    "createdHere": {
+      "blobsOnly": true,
+      "sourceTree": false,
+      "commit": false,
+      "ref": false,
+      "run": false,
+      "originalLogGet": false,
+      "zipGet": false,
+      "repositoryExecution": false
+    }
+  },
+  "clean": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "immutable": true
+  },
+  "scope": {
+    "diagnosticSource": {
+      "commit": "UNBOUND",
+      "tree": "UNBOUND",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "added": 2,
+      "modified": 6,
+      "removed": 0,
+      "totalPaths": 8
+    },
+    "finalProduct": "The clean S17 product is unchanged. Diagnostic overlays are not part of a future final product candidate.",
+    "focal": {
+      "commit": "UNBOUND",
+      "tree": "UNBOUND",
+      "soleParent": "future diagnostic source S",
+      "added": 2,
+      "modified": 1,
+      "additions": [
+        "apps/cli/test/sucafina-proof-verification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts"
+      ],
+      "requestChange": {
+        "path": ".ci-run.json",
+        "from": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "to": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "fromBytes": 295,
+        "toBytes": 247
+      },
+      "driverOwner": "/root/focal_migration",
+      "driverPending": true
+    }
+  },
+  "files": [
+    {
+      "key": "helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "11686520311978c09a66c1e5b1317d3a0a0347bc",
+        "bytes": 23524,
+        "sha256": "54303a8b88d170557b6002688d7f52ad7698bee0d61d5a6777712cfbb00dfa40",
+        "lf": 394
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134
+      },
+      "postimage": {
+        "gitSha": "7c9f4a929842a97c4b4949aa4bf94226a22230e8",
+        "bytes": 13818,
+        "sha256": "3e9febd52bc51863592e00b68c289e94f2d3e65d016451021c9e5f3a49756f26",
+        "lf": 141
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "inner",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121
+      },
+      "postimage": {
+        "gitSha": "0874435020bc8d000a99eb72db18f33f17010443",
+        "bytes": 10333,
+        "sha256": "ba43bfcea2c2fde2d6b14f23d99f1d9aa58abb854cef928705916a29b91a41df",
+        "lf": 184
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "outer",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206
+      },
+      "postimage": {
+        "gitSha": "21d20336212bee594b80d3cd8a6424064998bb67",
+        "bytes": 16431,
+        "sha256": "242bd4d232d16c76b2a67051d1a73a60bf89a513df613c59ba965d5f8a946928",
+        "lf": 267
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "authority",
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "bytes": 32461,
+        "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+        "lf": 404
+      },
+      "postimage": {
+        "gitSha": "a81e87a3122aeb38d3c1059e21255879866e6cf6",
+        "bytes": 32579,
+        "sha256": "1b847800e1c259b3168aa3dc5b1661e0ecf0ee518dacac97790c934dc7c82c82",
+        "lf": 406
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "source",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891
+      },
+      "postimage": {
+        "gitSha": "fcf55e2b49e316a5fabfd92c1ae1d85195063447",
+        "bytes": 60958,
+        "sha256": "8e90f0bf9a3d63dc3fc3b82f45758c83ea6ec0b53848c9a65d6aed82b434c666",
+        "lf": 895
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "store",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685
+      },
+      "postimage": {
+        "gitSha": "cb160ee21d22a311e4b5d77bfc34fc56ce6b9297",
+        "bytes": 97388,
+        "sha256": "0ca4a701414052f644ede7f16bb69f4c5c5793a32bce8e13d522b052fae685d1",
+        "lf": 1703
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "request",
+      "path": ".ci-run.json",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0
+      },
+      "created": false,
+      "readbackLiteral": true
+    }
+  ],
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts",
+    "mode": "100644",
+    "preimage": null,
+    "postimage": {
+      "gitSha": "66971ae90c6aecf6836fb7d2150f920fdbf025b5",
+      "bytes": 25082,
+      "sha256": "76139aa6fe735477f3983020f99c894cab0ca626c9a46fbcd7004de56564aeaf",
+      "lf": 409
+    },
+    "placement": "D only, not S",
+    "created": true,
+    "readbackLiteral": true,
+    "title": "E12 selection counters distinguish completed native copies and unenumerated fallback",
+    "reportPrefix": "SF_E12_CPU_CONTROL ",
+    "declarations": 1,
+    "staticExpectSites": 64,
+    "awaitTokens": 23,
+    "reports": 1,
+    "selectionChecks": 8,
+    "budgets": {
+      "bunTestMs": 15000,
+      "cooperativeMs": 12000,
+      "processMs": 45000,
+      "parentMs": 60000
+    },
+    "syntheticClock": true,
+    "syntheticSession": true,
+    "nativeLocalStoreReal": true,
+    "sourceInputs": "Source-selection classes in the new control are supplied directly to the observational API. Real installed Provider/Source selection is not claimed by that control.",
+    "checks": [
+      "Source class labels supplied synthetically and ignored outside selected running sampler.",
+      "Real native readonly mixed map: normalized copy, two actual known fields omitted; identity-only eligible entry retained, malformed entry retained.",
+      "Real held preimage: tag case-identities, complete cases, no enumeration.",
+      "Real invalid product envelope: physical tag refused, complete cases, no enumeration.",
+      "Actual clone failure preserves original Error and publishes neither native nor staged loop count.",
+      "Original throw undefined after completed copy preserves throw and counts completed snapshot.",
+      "Selected finite selection slots saturate to 65535; three unsaturated slots make reentrant stop and post-close contribution observable without reset or another process.",
+      "Closed CPU ignores later native/source observations; late HTTP progress remains available and does not rewrite profile, collection or CPU records."
+    ],
+    "expectedFinalCounters": {
+      "sourceRequests": [
+        65535,
+        65535,
+        65535,
+        1
+      ],
+      "nativeCopies": [
+        65535,
+        65535,
+        3
+      ],
+      "identityLoop": [
+        3,
+        65535,
+        65535,
+        65535,
+        65535,
+        65535
+      ],
+      "saturated": true
+    },
+    "saturation": {
+      "calls": 327686,
+      "productCalls": 0,
+      "threeInsaturatedSlots": "source case-identities=1, native normalized=3, loop enumerated=3"
+    },
+    "r1Superseded": {
+      "postimage": {
+        "gitSha": "74c932e341327ad61f1238adc0e93f29688a761d",
+        "bytes": 25084,
+        "sha256": "625fb9fdb3e7c496c9c7d5268cf381044f9df0bbf404d49f21a0618b1479227b",
+        "lf": 409
+      },
+      "support": {
+        "gitSha": "c9ce44b0bffce27ac48d90ce5f0e3308b263ad6d",
+        "bytes": 55163,
+        "sha256": "86d18590d8557a38ae1e3751889ade82b7e83dc8fa443a008cbae9eeaa168126",
+        "lf": 95
+      },
+      "reason": "All thirteen selection slots saturated before stop masked late contributions. R2 leaves three slots sensitive; no R1 execution."
+    }
+  },
+  "supports": {
+    "sourceDerivation": {
+      "gitSha": "e8a2145067b15cbfbb8f2efdc63cde9c69798ebe",
+      "bytes": 85067,
+      "sha256": "fa81a54273b2f3aa07e53d86beb0e7a00074f7324e2e8182d1e10752461edf9b",
+      "lf": 784
+    },
+    "sourceFullDiff": {
+      "gitSha": "6399946ab73cfe5d410d4d667036e166dce29d2e",
+      "bytes": 56884,
+      "sha256": "eaa040afc42c853478c74994f0a020e7cbc73dab139528420b46e1e1216d4be3",
+      "lf": 837
+    },
+    "e11ReuseDiff": {
+      "gitSha": "5a1321f0625e70734b5357b8bd39dbb30a13fd88",
+      "bytes": 27339,
+      "sha256": "3ff6d77ef8f5b653613a3cf11dd991853da36d648f2b6a93bd86f826f4a74eb4",
+      "lf": 384
+    },
+    "controlDerivation": {
+      "gitSha": "99b2b20ba85c6c04424ee03d59db673ee665c425",
+      "bytes": 58769,
+      "sha256": "235e2f1a59ff25d29e5d7d7e947a07cb7dc9c3a1ad4413354e8875465fa55314",
+      "lf": 164
+    },
+    "controlReuseDiff": {
+      "gitSha": "3d9409d0f0c199530bcb912699dd4854b3f7f5f8",
+      "bytes": 30597,
+      "sha256": "d21868c3a670b6545f6d5a900f50661c84a7bafe5dc6a311c0f98e3ebc884762",
+      "lf": 505
+    },
+    "controlAdditionDiff": {
+      "gitSha": "d0d82a948c455f3cc6df695841700b49c55899f0",
+      "bytes": 25844,
+      "sha256": "47917778a673c4dcc85ccd2b866fa548377eb9a0fe4d1905a07adaaffe18040b",
+      "lf": 414
+    },
+    "controlR1R2Diff": {
+      "gitSha": "8b1e90e76fc9aaf5462d2e232d43df2aa75bc7f2",
+      "bytes": 3390,
+      "sha256": "877a60f752b54989a9edc371a895ab10843c2053a9f8c684613aea41097bd90c",
+      "lf": 43
+    },
+    "bounds": {
+      "gitSha": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+      "bytes": 25207,
+      "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab",
+      "lf": 398
+    }
+  },
+  "derivation": {
+    "sourceAnchors": 28,
+    "e11ReuseOperations": 27,
+    "controlReuseAnchors": 2,
+    "controlR1R2Anchors": 5,
+    "forwardAndInverseLiteral": true,
+    "sourceDiff": {
+      "hunks": 25,
+      "added": 593,
+      "removed": 43
+    },
+    "reuseDiff": {
+      "hunks": 25,
+      "added": 81,
+      "removed": 61
+    },
+    "controlReuseDiff": {
+      "hunks": 11,
+      "added": 197,
+      "removed": 213
+    },
+    "controlAdditionDiff": {
+      "hunks": 1,
+      "added": 409,
+      "removed": 0
+    },
+    "controlR1R2Diff": {
+      "hunks": 2,
+      "added": 7,
+      "removed": 7
+    },
+    "awaitAndThenCounts": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "await": [
+          7,
+          7
+        ],
+        "then": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "await": [
+          13,
+          13
+        ],
+        "then": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "await": [
+          16,
+          16
+        ],
+        "then": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "await": [
+          26,
+          26
+        ],
+        "then": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "await": [
+          21,
+          21
+        ],
+        "then": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "await": [
+          21,
+          21
+        ],
+        "then": [
+          7,
+          7
+        ]
+      }
+    ],
+    "helperCore": "type CpuMethod through EOF is E11 literal after enumerated protocol/source/tree retargets.",
+    "retargetPolicy": "Only exact identifiers, protocol/schema/name strings and complete source/tree IDs are substituted. Private E11CpuEnvironment function names in the launchers remain literal. Never globally substitute e11 inside hashes.",
+    "runtimeRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "runtimeRevisionBytes": 40
+  },
+  "contracts": {
+    "pipeline": "Source receives the original computed selection. Native receives original requested selection, physical tag, normalization flag and local counters only after the final child snapshot expression succeeds. No new predicate, ID, Request property or authority lookup is used to count.",
+    "nativePopulation": "Requested case-identities completed native child copies only; historical E11 matrix semantics are not reused.",
+    "refused": "tag-refused means a completed child snapshot without the requested physical tag, not denial or failure of an operation.",
+    "casesComplete": "case-identities tag with no normalization permission; cases remain complete even if other product maps are narrow.",
+    "normalized": "case-identities tag and normalization permission; malformed/unknown/body-free entries can remain complete.",
+    "loop": "Local existing loop branches supply eligible/reduced/retained/actual-known-fields-omitted; map/copy enumeration and entry/field units are distinct. Fallback is explicitly not-enumerated and never scanned for diagnostic size.",
+    "publication": "No native or loop count is published when snapshot copying/validation throws. A completed copy is counted even if product work or later acceptance throws.",
+    "overhead": "Local record allocation and numeric bookkeeping occur even outside the selected capture window. Only aggregation is running/owned-gated. Do not attribute this overhead or whole-VM profile cost exclusively to the selected Request.",
+    "scopes": "Source and native populations are separate; do not infer conservation, pair events, subtract counters, or compute fallback rates by joining them.",
+    "caps": "Thirteen new counters saturate at65535; three historical route counters remain. Saturated covers only the thirteen, and does not prove events beyond the cap.",
+    "progress": "At most three handle/Request-identity milestones: fulfilled boundedJson, fulfilled human.admit, callback entry. Names do not imply validation, authorization acceptance, producer entry or successful HTTP response.",
+    "lifecycle": "Existing timer/finally/cooperative pumps, single ownership, uncertain-start and failed-stop handling, original error/abort/poison behavior and lookup/argument order remain.",
+    "close": "CPU stopped/finished/collection snapshots describe closure; late HTTP progress is separate and cannot rewrite files. File and marker completeness must be validated against actual future reader bytes.",
+    "clocks": "Sampler timestamps, performance.now collection points, UTC and synthetic control clock are distinct. A sample count times interval is not a saved-time or deadline estimate."
+  },
+  "bounds": {
+    "cpuIntervalUs": 5000,
+    "targetMs": 50000,
+    "acceptStrictlyBeforeMs": 55000,
+    "pulseMs": 10000,
+    "cpuAttempts": 3,
+    "cpuLineBytes": 4096,
+    "progressAttempts": 3,
+    "progressLineBytes": 1024,
+    "helperWireBytes": 15360,
+    "profileCapBytes": 4194304,
+    "collectionCapBytes": 16384,
+    "launcherCapBytes": 8192,
+    "futureCombinedMarkerSlotBytes": 65536,
+    "modelBytes": {
+      "started": 1389,
+      "stopped": 1317,
+      "finished": 1693,
+      "incomplete": 1524,
+      "unavailable": 1003,
+      "progress": 1014
+    },
+    "modeledRunIdDigits": 20
+  },
+  "originalAnalytics": {
+    "request": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "requestBytes": 295,
+    "noFinalLf": true,
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "newExtraRepeats": 0,
+    "previewWaitMs": 60000,
+    "sensitivityWaitMs": 120000,
+    "specChanged": false,
+    "seedChanged": false,
+    "assertionsChanged": false,
+    "orderChanged": false,
+    "testDeadlinesChanged": false,
+    "overlays": "HTTP, Authority and Source pumps; native completed-copy and local numeric counters; two launchers for private CPU environment and bounded marker forwarding. No specification/helper journey patch.",
+    "futureRun": "UNBOUND",
+    "futureJobs": "UNBOUND",
+    "futureArtifact": "UNBOUND",
+    "futureCpuTuple": "UNBOUND",
+    "futureOutcomes": "UNBOUND"
+  },
+  "focalPlan": {
+    "groups": 7,
+    "commands": 13,
+    "expectedTruncationFlags": 26,
+    "functionalTests": 13,
+    "reports": 9,
+    "wholeFiles": 3,
+    "readonly": {
+      "declarations": 7,
+      "reports": 3,
+      "processMs": 360000,
+      "parentMs": 420000,
+      "unchanged": true
+    },
+    "projection": {
+      "declarations": 5,
+      "reports": 5,
+      "nominalMs": 290000,
+      "processMs": 300000,
+      "parentMs": 360000,
+      "outcomesC16": 31,
+      "identitySubcases": 9,
+      "unchanged": true
+    },
+    "diagnostic": {
+      "declarations": 1,
+      "reports": 1,
+      "processMs": 45000,
+      "parentMs": 60000
+    },
+    "noTransferredResults": true
+  },
+  "preserved": {
+    "currentChoiceReadonly": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+    "c08Projection": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+    "provider": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+    "runtimeContract": "39e6da84a3dd815721484affaf8315731ded073b",
+    "c17ControlMeaning": "The original seven readonly and five projection declarations, including31 C16 outcomes and9 identity subcases, are selected unchanged in the focal driver."
+  },
+  "priorEvidence": {
+    "e11SourceManifest": {
+      "gitSha": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+      "bytes": 24771,
+      "sha256": "15f9df4237fe766309b5c3670ec503f2142379b5ab7b1523ad8f37e3de1c0df1",
+      "lf": 553
+    },
+    "e11MechanismSupport": {
+      "derivation": {
+        "gitSha": "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+        "bytes": 105938,
+        "sha256": "cfef9b7f6761136fe51591cdee0cbcc1809e4697924b874f3c46eb2636d8fd40",
+        "lf": 549
+      },
+      "diff": {
+        "gitSha": "073c035995a98db8f1b824c163532a904aecb17d",
+        "bytes": 50026,
+        "sha256": "bec2eed1baaa7ae6a72231090fb63dde018aed25aa1e8f055bd9f3df0ddf607f",
+        "lf": 732
+      },
+      "reuseDiff": {
+        "gitSha": "0881f785a09710fb1d897feae2d642f560266c62",
+        "bytes": 24334,
+        "sha256": "63feb6b2eaa75e391280826cb07d4ad05ff47f032e458b67aef3372693941ef1",
+        "lf": 342
+      },
+      "bounds": {
+        "gitSha": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+        "bytes": 18474,
+        "sha256": "3659b3bf3bb4fcd28be64e181db71cbc9569e6b5a4d2b55681de9978a886b2ee",
+        "lf": 258
+      }
+    },
+    "e10Control": {
+      "gitSha": "599352b157ff15756f26cb15a84a2dfc580d1fd9",
+      "bytes": 24282,
+      "sha256": "326a648e6731204841ec44b2e091978b4583fd8ce9d3c6448baa24fd81b30cd6",
+      "lf": 425
+    },
+    "c17OriginalAnalytics": {
+      "run": "46052118180",
+      "attempt": 1,
+      "rawManifest": "0031a8430373df98e4fff6f5ad458301a9e29654",
+      "rootReceipt": "bb3a76252a7be38694c900ab32e70855ff471aef",
+      "reportedOutcome": "First preview timeout60000 at spec72:32; UI42 partial6captures; UI43/UI44 unreached; BI passed.",
+      "source": "Root and peer intake already closed; no new original acquisition here."
+    },
+    "interpretation": "E11 is historical mechanism/performance evidence only. No E11 sample proportions or counts are assigned to S17; E12 exists to measure the current diagnostic source."
+  },
+  "instructions": {
+    "rootAgents": {
+      "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223
+    },
+    "scope": "Root previously audited the applicable runtime/product/test ancestors and reported no additional AGENTS. Writer did not duplicate that tree audit.",
+    "applied": [
+      "Repository tests only through authorized Actions.",
+      "Typecheck via package bun run route; guard baseline origin/dev.",
+      "No dependency, generated-source, seed, deadline or unrelated product change.",
+      "No local repository execution in authoring or support verification."
+    ]
+  },
+  "review": {
+    "root": "Source and R2 control bodies, preimages and full forward/inverse supports reviewed; final bounds/manifest binding pending.",
+    "teams": "Static ACK source and R2 control; 28+27 source derivations and2+5 control anchors/full diffs independently authenticated; final bounds/manifest binding pending.",
+    "execution": "No typecheck, tests, profiler, Actions original acquisition or ZIP acquisition has been performed by this writer for E12.",
+    "remaining": "Root object creation/audit, separately authored focal wrapper, exact run authority, actual CI and future original intake remain separate."
+  }
+}

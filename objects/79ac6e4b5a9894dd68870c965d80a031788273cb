@@ -1,0 +1,1294 @@
+{
+  "schema": "sf613-e12-reader-independent-reception-v1",
+  "at": "2026-11-27 21:06:12 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/teams_product",
+  "status": "ACK_NO_BLOCKER_ORIGINAL_BYTES_AND_CAPTURE_VERIFIED",
+  "qualification": false,
+  "productionAuthorized": false,
+  "authority": {
+    "kind": "root requested one JSON Git blob recording already completed independent intake; no tree/commit/ref/run"
+  },
+  "scope": {
+    "reads": "preserved Git copies only",
+    "dataProcessing": "pure data decoding, hashes, CRC32 of exported originals, structural comparisons and timestamp arithmetic; no repository or reader code execution",
+    "notPerformed": [
+      "original Actions GET",
+      "original artifact ZIP GET",
+      "audit ZIP GET",
+      "workflow/test/compiler execution",
+      "profile hotspot analysis",
+      "clock reconciliation"
+    ]
+  },
+  "reader": {
+    "run": 46066111400,
+    "attempt": 1,
+    "head": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+    "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "status": "completed",
+    "conclusion": "success",
+    "job": 140731695680,
+    "jobConclusion": "success",
+    "completedAt": "2026-11-27T20:51:04Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46066111400",
+    "workflow": {
+      "gitSha": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+      "lf": 1704,
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "mode": "100644",
+      "created": true,
+      "readbackLiteral": true
+    },
+    "python": {
+      "gitSha": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+      "lf": 1649,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "authority": {
+      "gitBlob": "b015986c8724d969f6632d5e36b072fec9b44bf3",
+      "bytes": 14463,
+      "sha256": "8fb46239e8190e65ab9871a5f85a24b443a13bcab3eea126885478ed983f709c"
+    },
+    "package": {
+      "gitBlob": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+      "bytes": 21038,
+      "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968"
+    },
+    "independentObjectReview": {
+      "status": "ACK_ACTUAL_READER_OBJECT",
+      "commit": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+      "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+      "parent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "parentTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "message": "ci(sucafina): receive E12 original CPU evidence",
+      "pairs": 3,
+      "siblings": 69,
+      "leaves": [
+        {
+          "path": ".github/workflows/sf613-artifact-read.yml",
+          "pre": null,
+          "post": "13db57775b23b9603ea1018dc734ffd314942811",
+          "type": "blob",
+          "mode": "100644"
+        }
+      ],
+      "noCiRun": true,
+      "delta": "1A workflow only"
+    }
+  },
+  "cleanSource": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "meaning": "Clean S17, reader sole parent; distinct from diagnostic execution snapshot."
+  },
+  "producer": {
+    "run": 46063135555,
+    "attempt": 1,
+    "snapshot": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "snapshotTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+    "mainJob": 140721962760,
+    "cleanupJob": 140725518085,
+    "conclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "testStepConclusion": "failure",
+    "diagnosticSnapshot": {
+      "commit": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "delta": "2A6M",
+      "mode": "100644",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts",
+          "status": "A",
+          "preimage": null,
+          "postimage": "11686520311978c09a66c1e5b1317d3a0a0347bc",
+          "bytes": 23524,
+          "sha256": "54303a8b88d170557b6002688d7f52ad7698bee0d61d5a6777712cfbb00dfa40"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "status": "M",
+          "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "postimage": "7c9f4a929842a97c4b4949aa4bf94226a22230e8",
+          "bytes": 13818,
+          "sha256": "3e9febd52bc51863592e00b68c289e94f2d3e65d016451021c9e5f3a49756f26"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "status": "M",
+          "preimage": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "postimage": "0874435020bc8d000a99eb72db18f33f17010443",
+          "bytes": 10333,
+          "sha256": "ba43bfcea2c2fde2d6b14f23d99f1d9aa58abb854cef928705916a29b91a41df"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "status": "M",
+          "preimage": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "postimage": "21d20336212bee594b80d3cd8a6424064998bb67",
+          "bytes": 16431,
+          "sha256": "242bd4d232d16c76b2a67051d1a73a60bf89a513df613c59ba965d5f8a946928"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "status": "M",
+          "preimage": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+          "postimage": "a81e87a3122aeb38d3c1059e21255879866e6cf6",
+          "bytes": 32579,
+          "sha256": "1b847800e1c259b3168aa3dc5b1661e0ecf0ee518dacac97790c934dc7c82c82"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "status": "M",
+          "preimage": "b7de9404461591ce0162d496ec917a47fb72a479",
+          "postimage": "fcf55e2b49e316a5fabfd92c1ae1d85195063447",
+          "bytes": 60958,
+          "sha256": "8e90f0bf9a3d63dc3fc3b82f45758c83ea6ec0b53848c9a65d6aed82b434c666"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "status": "M",
+          "preimage": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+          "postimage": "cb160ee21d22a311e4b5d77bfc34fc56ce6b9297",
+          "bytes": 97388,
+          "sha256": "0ca4a701414052f644ede7f16bb69f4c5c5793a32bce8e13d522b052fae685d1"
+        },
+        {
+          "path": ".ci-run.json",
+          "status": "A",
+          "preimage": null,
+          "postimage": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "bytes": 295,
+          "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+        }
+      ],
+      "sourceManifest": {
+        "gitSha": "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+        "bytes": 22710,
+        "sha256": "51311a693dd0a800f7043e2b9b5905defe1d834e6dc99d3e74e0e751ea7f1703",
+        "lf": 621
+      },
+      "sourceBinding": {
+        "gitBlob": "bea70840077fa85b7df5354dca2af349d2abd2c8",
+        "bytes": 14625,
+        "sha256": "bff1c05f5d9a334f9f1679b7dafc45711b7627e8726dcbc9a68b170ac98169f3"
+      },
+      "sourceBounds": {
+        "gitBlob": "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+        "bytes": 25207,
+        "sha256": "e5bf214a18ec9f5fb541b5eb2d0893341d92b688687d49a7cb9be2ad554abcab"
+      }
+    },
+    "originalReceipt": {
+      "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+      "bytes": 39804,
+      "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+    },
+    "finalBinding": {
+      "gitBlob": "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "bytes": 20196,
+      "sha256": "c4d3ad92186818965f4ac440dda80975dfa9f20da752b915971f55c593303623"
+    }
+  },
+  "rawEvidence": {
+    "manifest": {
+      "gitBlob": "6c7e604044384369588a098dad88394b6774144b",
+      "bytes": 6766,
+      "sha256": "6cc4ba46015aa52e75d33df5c25eebbbb26d39d5428753501e92bf13e20af347"
+    },
+    "main": {
+      "job": 140731695680,
+      "bytes": 3270463,
+      "sha256": "ce3843a1e6313b3f3e18f8e94bf0685d51eb296c370b483b605798b5b26a20cc",
+      "wholeBlobPersisted": false,
+      "literalReadback": true,
+      "lf": 1878,
+      "bomCodeUnitOffsets": [
+        0,
+        2118147
+      ],
+      "wholeGitBlobCalculated": "eabac61f8dfcb596d4abeeb54174713a1ec2af8b",
+      "allPartsPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "startCodeUnit": 0,
+          "endCodeUnit": 299998,
+          "bytes": 300000,
+          "gitBlob": "7b63fe118c0196aa66e9839294b56060cd39122d",
+          "sha256": "7298dffa40f27acee7176b939d30712da47b255e980dbecc08ba36cf75925e1d",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 2,
+          "startCodeUnit": 299998,
+          "endCodeUnit": 599998,
+          "bytes": 300000,
+          "gitBlob": "7fef01fc44c3ab53255e50461b8ba4f3fad75cc4",
+          "sha256": "f7416be22d3231ff1addd5db0f04fd612e4358a3961a49174f94094d7a5ea618",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 3,
+          "startCodeUnit": 599998,
+          "endCodeUnit": 899998,
+          "bytes": 300000,
+          "gitBlob": "ca6b98cd156c234727c152359fde1ef9d0624fe0",
+          "sha256": "a5aa79cc7d365727738d18dc431f9754162ef7b6a6376d22ebefe88479c430ea",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 4,
+          "startCodeUnit": 899998,
+          "endCodeUnit": 1199998,
+          "bytes": 300000,
+          "gitBlob": "f75321f23ec0c010e1ff9cbe04f2ab3bd407e2f8",
+          "sha256": "8138f7a3efa6d83d72754e410529ea4ed70ec6da6b11ed51ea27b2afd000a639",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 5,
+          "startCodeUnit": 1199998,
+          "endCodeUnit": 1499998,
+          "bytes": 300000,
+          "gitBlob": "c998152f85e4658a422b7e63de6338b7a5a7f982",
+          "sha256": "3242ce2f834cf2685c296e4bc79da1ceb73fe428b456bc8dffee5e4ca374147f",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 6,
+          "startCodeUnit": 1499998,
+          "endCodeUnit": 1799998,
+          "bytes": 300000,
+          "gitBlob": "f4e9b12cb2d3ce7fe6c495c438b4ce2d055fcef3",
+          "sha256": "b4451ad116980c1afa5352c1de33020240ac8be620e578afb42c3ef3c422849f",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 7,
+          "startCodeUnit": 1799998,
+          "endCodeUnit": 2099998,
+          "bytes": 300000,
+          "gitBlob": "63e1b277198984d954178930538698b1b2a6c020",
+          "sha256": "baef1b13a6b31a2130035865402c1e1095e7f874d811b3f76d6005d5401aefb4",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 8,
+          "startCodeUnit": 2099998,
+          "endCodeUnit": 2399996,
+          "bytes": 300000,
+          "gitBlob": "3ded36339c3861c342e6d1f7ba763b54eef48cb5",
+          "sha256": "95bc0e4d593a40cb243b1d5bc0b7b1225f52a1d349528f6a27b9edec5678e9b1",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 9,
+          "startCodeUnit": 2399996,
+          "endCodeUnit": 2699996,
+          "bytes": 300000,
+          "gitBlob": "723cc8167d23edc5c32dba9ed3793ef8bc5ee991",
+          "sha256": "ae8c2dbcceb2094520774c4eb1b2151a6e89f01c46c34a054077f0f59d00f8e3",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 10,
+          "startCodeUnit": 2699996,
+          "endCodeUnit": 2999996,
+          "bytes": 300000,
+          "gitBlob": "c29e2015d8c19145e144f2f56b946cd7928a105a",
+          "sha256": "5ce575ea9e1a8ec3295534c76749edea583a640f24d5dde75d895e78f2e247ea",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 11,
+          "startCodeUnit": 2999996,
+          "endCodeUnit": 3270459,
+          "bytes": 270463,
+          "gitBlob": "8a99ae2f779d31df317902e0fe49762b860d9a01",
+          "sha256": "0f897180e91c78380d21331e3fe71b0d5d5022c60c536ee28ad868ad3bc92923",
+          "persisted": true,
+          "literalReadback": true
+        }
+      ],
+      "bomByteOffsets": [
+        0,
+        2118149
+      ],
+      "peerReconstructedBytesVerifiedBeforeParse": true,
+      "wholeGitBlobGet": false
+    },
+    "originalJobGetsByRoot": 1,
+    "peerOriginalGets": 0,
+    "auditArtifactsMetadataOnly": [
+      {
+        "id": 15231435395,
+        "node_id": "MDg6QXJ0aWZhY3QxNTIzMTQzNTM5NQ==",
+        "name": "sf613-analytics-original-46063135555-receipt-1",
+        "size_in_bytes": 98232011,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15231435395",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15231435395/zip",
+        "expired": false,
+        "digest": "sha256:e4e02bf6888ce2bbe92f23420bfa7fb56a22306d7f60ed73ce7c452cfe294465",
+        "created_at": "2026-11-27T20:51:03Z",
+        "updated_at": "2026-11-27T20:51:03Z",
+        "expires_at": "2026-12-04T20:50:59Z",
+        "workflow_run": {
+          "id": 46066111400,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "sf613-artifact-e12cpu",
+          "head_sha": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa"
+        }
+      }
+    ],
+    "auditZipGets": 0
+  },
+  "exportedEvidence": {
+    "manifest": {
+      "gitBlob": "a8b91a57134d814c6d201083d0a0381a7edcda4a",
+      "bytes": 12090,
+      "sha256": "d0d783c1a92533334602c9abcbe4f65f78529c67739a64b46936afa8a3d10685"
+    },
+    "entries": [
+      {
+        "role": "profile",
+        "wire": {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 116,
+          "file": 7,
+          "firstLine": 1709,
+          "lastLine": 1824,
+          "firstChunk": 1,
+          "lastChunk": 116
+        },
+        "preserved": {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "wholeGitBlobCalculated": "35dfa571c490bc54be4e315be222c0920dce93c8",
+          "wholeBlobPersisted": false,
+          "literalReadback": true,
+          "originalFile": 7,
+          "lf": 1,
+          "bomCodeUnitOffsets": [],
+          "allPartsPersisted": true,
+          "parts": [
+            {
+              "index": 1,
+              "startCodeUnit": 0,
+              "endCodeUnit": 300000,
+              "bytes": 300000,
+              "gitBlob": "65d701ed6eba5d5d57b36662b05efe88251ad80e",
+              "sha256": "d18332ec42245840721befaba96464fdc37a1edb5cdb814b650a67246b417df7",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 2,
+              "startCodeUnit": 300000,
+              "endCodeUnit": 600000,
+              "bytes": 300000,
+              "gitBlob": "76e959fa191db41b60937492423df54458d0ed9d",
+              "sha256": "360f396b62c34fa037577dcb908ac5e88951bcd8f99d0b1398fe5c456cbb9bb3",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 3,
+              "startCodeUnit": 600000,
+              "endCodeUnit": 900000,
+              "bytes": 300000,
+              "gitBlob": "48daf30f84c08045af1fe82b7ae32971859d8343",
+              "sha256": "968faf5872eeebc71a0118642f7fbf9cd4ead78f0afb6adf5bd861be3963709b",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 4,
+              "startCodeUnit": 900000,
+              "endCodeUnit": 1200000,
+              "bytes": 300000,
+              "gitBlob": "71030b1e6e05ccba6360bb15ecef7127980fd468",
+              "sha256": "f8516307267cd477720537271e6057f2afe09e523d97ec6785ef3eac79695c0b",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 5,
+              "startCodeUnit": 1200000,
+              "endCodeUnit": 1500000,
+              "bytes": 300000,
+              "gitBlob": "3d84c939079bb105abd82bd8ae48ec2233a549f2",
+              "sha256": "206e403a85d96705cc0d8b4ed304afa49be3fa2c84c9f698d8f3ddf02fde82fe",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 6,
+              "startCodeUnit": 1500000,
+              "endCodeUnit": 1800000,
+              "bytes": 300000,
+              "gitBlob": "ad1dc50f14f6436549718e18cddb2a874654fd25",
+              "sha256": "fd9ad998a0b9b0967c37015534a7ce957affa94ccc244a0f4e1b4ff3ed64647e",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 7,
+              "startCodeUnit": 1800000,
+              "endCodeUnit": 2100000,
+              "bytes": 300000,
+              "gitBlob": "5a2f635f82453ec13d549a9f830f8aa6b1c54b17",
+              "sha256": "b5c7aae53dc2dfc5fa29f3bf25e6bb19cc9c66c600a818931f4054ee9dc59171",
+              "persisted": true,
+              "literalReadback": true
+            },
+            {
+              "index": 8,
+              "startCodeUnit": 2100000,
+              "endCodeUnit": 2120673,
+              "bytes": 20673,
+              "gitBlob": "7a22b971a21b10af8a410e8410778389733c6a49",
+              "sha256": "984e56552d3984f37bf2400201cef72bde8a1c005ebbf68f874b85b1357ccb47",
+              "persisted": true,
+              "literalReadback": true
+            }
+          ],
+          "bomByteOffsets": []
+        }
+      },
+      {
+        "role": "markers",
+        "wire": {
+          "name": "preview-e12-cpu-progress-markers.lf.log",
+          "bytes": 6580,
+          "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+          "mime": "text/plain",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 1,
+          "firstLine": 1825,
+          "lastLine": 1825,
+          "firstChunk": 117,
+          "lastChunk": 117
+        },
+        "preserved": {
+          "gitBlob": "eefa273ac1d2788994e6dc1ec0c7120411842126",
+          "bytes": 6580,
+          "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319"
+        }
+      },
+      {
+        "role": "collection",
+        "wire": {
+          "name": "original-cpu-collection.json",
+          "bytes": 1876,
+          "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 5,
+          "firstLine": 1826,
+          "lastLine": 1826,
+          "firstChunk": 118,
+          "lastChunk": 118
+        },
+        "preserved": {
+          "gitBlob": "8669ff010853eac62f014f0b2886b96e0b2f490c",
+          "bytes": 1876,
+          "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+        }
+      },
+      {
+        "role": "launcher",
+        "wire": {
+          "name": "original-cpu-launcher.json",
+          "bytes": 663,
+          "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 6,
+          "firstLine": 1827,
+          "lastLine": 1827,
+          "firstChunk": 119,
+          "lastChunk": 119
+        },
+        "preserved": {
+          "gitBlob": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+          "bytes": 663,
+          "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+        }
+      },
+      {
+        "role": "summary",
+        "wire": {
+          "name": "safe-summary.json",
+          "bytes": 48969,
+          "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 3,
+          "firstLine": 1828,
+          "lastLine": 1830,
+          "firstChunk": 120,
+          "lastChunk": 122
+        },
+        "preserved": {
+          "gitBlob": "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+          "bytes": 48969,
+          "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae"
+        }
+      },
+      {
+        "role": "inventory",
+        "wire": {
+          "name": "inventory.json",
+          "bytes": 105554,
+          "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 6,
+          "firstLine": 1831,
+          "lastLine": 1836,
+          "firstChunk": 123,
+          "lastChunk": 128
+        },
+        "preserved": {
+          "gitBlob": "9b8978e9079085bc789197aa91bb02c94700062b",
+          "bytes": 105554,
+          "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd"
+        }
+      },
+      {
+        "role": "receipt",
+        "wire": {
+          "name": "receipt.json",
+          "bytes": 57596,
+          "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 4,
+          "firstLine": 1837,
+          "lastLine": 1840,
+          "firstChunk": 129,
+          "lastChunk": 132
+        },
+        "preserved": {
+          "gitBlob": "c57b4a91ce564589732f7526afc11afce27b9f10",
+          "bytes": 57596,
+          "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66"
+        }
+      }
+    ],
+    "independentAuthentication": "All seven exports reconstructed from the authenticated main before parsing. Every payload bytes/SHA256 and terminal declaration verified. Root's eight profile part metadata matched exact decoded slices, with no whole-profile Git GET and no repeat profile-part acquisition.",
+    "rootManifestTerminalIdentical": true
+  },
+  "transport": {
+    "status": "ALL_EXPORT_BYTES_AUTHENTICATED_BEFORE_PARSE",
+    "exports": 7,
+    "chunks": 132,
+    "payloadBytes": 2341911,
+    "coreWireBytes": 3158748,
+    "terminalBytes": 2065,
+    "totalEmitterBytes": 3160813,
+    "wholeMainBytes": 3270463,
+    "terminalLine": 1841,
+    "emitterCap": 7340032,
+    "mainCap": 8388608,
+    "series": [
+      {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "gitBlobCalculated": "35dfa571c490bc54be4e315be222c0920dce93c8",
+        "chunks": 116,
+        "original": true,
+        "file": 7
+      },
+      {
+        "name": "preview-e12-cpu-progress-markers.lf.log",
+        "bytes": 6580,
+        "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+        "gitBlobCalculated": "eefa273ac1d2788994e6dc1ec0c7120411842126",
+        "chunks": 1,
+        "original": false,
+        "file": null
+      },
+      {
+        "name": "original-cpu-collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "gitBlobCalculated": "8669ff010853eac62f014f0b2886b96e0b2f490c",
+        "chunks": 1,
+        "original": true,
+        "file": 5
+      },
+      {
+        "name": "original-cpu-launcher.json",
+        "bytes": 663,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "gitBlobCalculated": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+        "chunks": 1,
+        "original": true,
+        "file": 6
+      },
+      {
+        "name": "safe-summary.json",
+        "bytes": 48969,
+        "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+        "gitBlobCalculated": "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+        "chunks": 3,
+        "original": false,
+        "file": null
+      },
+      {
+        "name": "inventory.json",
+        "bytes": 105554,
+        "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+        "gitBlobCalculated": "9b8978e9079085bc789197aa91bb02c94700062b",
+        "chunks": 6,
+        "original": false,
+        "file": null
+      },
+      {
+        "name": "receipt.json",
+        "bytes": 57596,
+        "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+        "gitBlobCalculated": "c57b4a91ce564589732f7526afc11afce27b9f10",
+        "chunks": 4,
+        "original": false,
+        "file": null
+      }
+    ]
+  },
+  "artifact": {
+    "original": 15229333864,
+    "bytes": 46003924,
+    "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+    "entries": 153,
+    "crcReports": 153,
+    "archives": 2,
+    "expandedBytes": 57674703
+  },
+  "semanticChecks": {
+    "count": 81,
+    "passed": 81,
+    "failed": 0,
+    "sections": [
+      {
+        "name": "identity/exports/inventory/namespace",
+        "count": 51
+      },
+      {
+        "name": "runtime/parities/tuple/closure",
+        "count": 30
+      }
+    ],
+    "checks": [
+      {
+        "id": 1,
+        "name": "reader identity",
+        "pass": true
+      },
+      {
+        "id": 2,
+        "name": "source and producer identity",
+        "pass": true
+      },
+      {
+        "id": 3,
+        "name": "producer jobs outcomes",
+        "pass": true
+      },
+      {
+        "id": 4,
+        "name": "artifact received bytes/hash",
+        "pass": true
+      },
+      {
+        "id": 5,
+        "name": "receipt terminal and qualification",
+        "pass": true
+      },
+      {
+        "id": 6,
+        "name": "frozen receipt transported",
+        "pass": true
+      },
+      {
+        "id": 7,
+        "name": "root export terminal equality",
+        "pass": true
+      },
+      {
+        "id": 8,
+        "name": "root export manifest linked",
+        "pass": true
+      },
+      {
+        "id": 9,
+        "name": "export descriptor profile",
+        "pass": true
+      },
+      {
+        "id": 10,
+        "name": "profile not whole blob",
+        "pass": true
+      },
+      {
+        "id": 11,
+        "name": "root profile part 1",
+        "pass": true
+      },
+      {
+        "id": 12,
+        "name": "root profile part 2",
+        "pass": true
+      },
+      {
+        "id": 13,
+        "name": "root profile part 3",
+        "pass": true
+      },
+      {
+        "id": 14,
+        "name": "root profile part 4",
+        "pass": true
+      },
+      {
+        "id": 15,
+        "name": "root profile part 5",
+        "pass": true
+      },
+      {
+        "id": 16,
+        "name": "root profile part 6",
+        "pass": true
+      },
+      {
+        "id": 17,
+        "name": "root profile part 7",
+        "pass": true
+      },
+      {
+        "id": 18,
+        "name": "root profile part 8",
+        "pass": true
+      },
+      {
+        "id": 19,
+        "name": "profile parts complete",
+        "pass": true
+      },
+      {
+        "id": 20,
+        "name": "export descriptor markers",
+        "pass": true
+      },
+      {
+        "id": 21,
+        "name": "root persisted locator markers",
+        "pass": true
+      },
+      {
+        "id": 22,
+        "name": "export descriptor collection",
+        "pass": true
+      },
+      {
+        "id": 23,
+        "name": "root persisted locator collection",
+        "pass": true
+      },
+      {
+        "id": 24,
+        "name": "export descriptor launcher",
+        "pass": true
+      },
+      {
+        "id": 25,
+        "name": "root persisted locator launcher",
+        "pass": true
+      },
+      {
+        "id": 26,
+        "name": "export descriptor summary",
+        "pass": true
+      },
+      {
+        "id": 27,
+        "name": "root persisted locator summary",
+        "pass": true
+      },
+      {
+        "id": 28,
+        "name": "export descriptor inventory",
+        "pass": true
+      },
+      {
+        "id": 29,
+        "name": "root persisted locator inventory",
+        "pass": true
+      },
+      {
+        "id": 30,
+        "name": "export descriptor receipt",
+        "pass": true
+      },
+      {
+        "id": 31,
+        "name": "root persisted locator receipt",
+        "pass": true
+      },
+      {
+        "id": 32,
+        "name": "summary receipt cpu",
+        "pass": true
+      },
+      {
+        "id": 33,
+        "name": "summary receipt cpuMarkers",
+        "pass": true
+      },
+      {
+        "id": 34,
+        "name": "summary receipt cpuPopulationInventory",
+        "pass": true
+      },
+      {
+        "id": 35,
+        "name": "summary receipt htmlArchives",
+        "pass": true
+      },
+      {
+        "id": 36,
+        "name": "summary receipt runtime",
+        "pass": true
+      },
+      {
+        "id": 37,
+        "name": "summary receipt selection",
+        "pass": true
+      },
+      {
+        "id": 38,
+        "name": "summary identities/header",
+        "pass": true
+      },
+      {
+        "id": 39,
+        "name": "inventory export linked",
+        "pass": true
+      },
+      {
+        "id": 40,
+        "name": "inventory unique IDs",
+        "pass": true
+      },
+      {
+        "id": 41,
+        "name": "inventory CRC and size coverage",
+        "pass": true
+      },
+      {
+        "id": 42,
+        "name": "inventory safe unique paths",
+        "pass": true
+      },
+      {
+        "id": 43,
+        "name": "inventory archive totals",
+        "pass": true
+      },
+      {
+        "id": 44,
+        "name": "archive root binding and embedded link",
+        "pass": true
+      },
+      {
+        "id": 45,
+        "name": "namespace exactly observed",
+        "pass": true
+      },
+      {
+        "id": 46,
+        "name": "all populations inventoried",
+        "pass": true
+      },
+      {
+        "id": 47,
+        "name": "extra launcher remains prepared",
+        "pass": true
+      },
+      {
+        "id": 48,
+        "name": "original inventory bytes and CRC 7",
+        "pass": true
+      },
+      {
+        "id": 49,
+        "name": "original inventory bytes and CRC 5",
+        "pass": true
+      },
+      {
+        "id": 50,
+        "name": "original inventory bytes and CRC 6",
+        "pass": true
+      },
+      {
+        "id": 51,
+        "name": "raw runtime/selection inventory links",
+        "pass": true
+      },
+      {
+        "id": 52,
+        "name": "original selection exact",
+        "pass": true
+      },
+      {
+        "id": 53,
+        "name": "per-case verdict bound",
+        "pass": true
+      },
+      {
+        "id": 54,
+        "name": "first preview waiter source",
+        "pass": true
+      },
+      {
+        "id": 55,
+        "name": "four parities against authenticated main",
+        "pass": true
+      },
+      {
+        "id": 56,
+        "name": "union exact lines",
+        "pass": true
+      },
+      {
+        "id": 57,
+        "name": "runtime section parity 1",
+        "pass": true
+      },
+      {
+        "id": 58,
+        "name": "runtime section parity 2",
+        "pass": true
+      },
+      {
+        "id": 59,
+        "name": "memberships exact",
+        "pass": true
+      },
+      {
+        "id": 60,
+        "name": "stream identity CPU",
+        "pass": true
+      },
+      {
+        "id": 61,
+        "name": "literal ordinals CPU",
+        "pass": true
+      },
+      {
+        "id": 62,
+        "name": "stream identity progress",
+        "pass": true
+      },
+      {
+        "id": 63,
+        "name": "literal ordinals progress",
+        "pass": true
+      },
+      {
+        "id": 64,
+        "name": "literal combined wire",
+        "pass": true
+      },
+      {
+        "id": 65,
+        "name": "family sequences independent",
+        "pass": true
+      },
+      {
+        "id": 66,
+        "name": "native tuple from six literals",
+        "pass": true
+      },
+      {
+        "id": 67,
+        "name": "selected tuple exact",
+        "pass": true
+      },
+      {
+        "id": 68,
+        "name": "finite snapshots",
+        "pass": true
+      },
+      {
+        "id": 69,
+        "name": "closed selection triplet",
+        "pass": true
+      },
+      {
+        "id": 70,
+        "name": "closed routes/cause/cleanup/state",
+        "pass": true
+      },
+      {
+        "id": 71,
+        "name": "collection source/native binding",
+        "pass": true
+      },
+      {
+        "id": 72,
+        "name": "runtime sampling pinned",
+        "pass": true
+      },
+      {
+        "id": 73,
+        "name": "launcher actual namespace",
+        "pass": true
+      },
+      {
+        "id": 74,
+        "name": "closure hashes actual bytes",
+        "pass": true
+      },
+      {
+        "id": 75,
+        "name": "point keys order range",
+        "pass": true
+      },
+      {
+        "id": 76,
+        "name": "shared and post-close points",
+        "pass": true
+      },
+      {
+        "id": 77,
+        "name": "computed completed-on-time",
+        "pass": true,
+        "detail": {
+          "profileCloseMs": 50202.3,
+          "collectionCloseMs": 50202.7
+        }
+      },
+      {
+        "id": 78,
+        "name": "actual profile basic schema",
+        "pass": true
+      },
+      {
+        "id": 79,
+        "name": "native profile collection parity",
+        "pass": true
+      },
+      {
+        "id": 80,
+        "name": "capture completed with originals",
+        "pass": true
+      },
+      {
+        "id": 81,
+        "name": "HTTP progress remains boundary only",
+        "pass": true
+      }
+    ],
+    "note": "These are the exact 81 completed data checks. The additional clock-domain observation below is separate, not a new execution gate."
+  },
+  "clockDomainObservation": {
+    "playwright": {
+      "startTime": "2026-11-27T20:24:01.928Z",
+      "startEpochMs": 1795811041928,
+      "durationMs": 224313,
+      "calculatedEndUtc": "2026-11-27T20:27:46.241Z",
+      "calculatedEndEpochMs": 1795811266241
+    },
+    "native": {
+      "cpuStartedUtcMs": 1795811288212,
+      "cpuStartedUtc": "2026-11-27T20:28:08.212Z",
+      "collectionUtcStartReturnMs": 1795811288212
+    },
+    "arithmeticDifferenceCpuStartedMinusPlaywrightCalculatedEndMs": 21971,
+    "reconciliationAttempted": false,
+    "clockSynchronizationProven": false,
+    "interpretation": "Arithmetic discrepancy across clock domains; retained literally. It does not disprove the case/result/stdout binding, establish event ordering across these clocks, or prove CPU ownership, overlap, delay, starvation or causality."
+  },
+  "capture": {
+    "complete": true,
+    "state": "completed-on-time",
+    "pending": 0,
+    "failures": 0,
+    "selectedNonce": "sf613-e12-cpu-sV3cAs",
+    "pid": 3729,
+    "parentPid": 3684,
+    "runtimeCase": 1,
+    "result": 1,
+    "stream": "stdout",
+    "cpuOrdinals": [
+      32,
+      36,
+      37
+    ],
+    "progressOrdinals": [
+      33,
+      34,
+      35
+    ],
+    "profileCloseMs": 50202.3,
+    "collectionCloseMs": 50202.7,
+    "profileNodes": 9269,
+    "profileSamples": 9687,
+    "profileWholeCalculatedOnly": "35dfa571c490bc54be4e315be222c0920dce93c8",
+    "profileActualParts": 8,
+    "runtime": [
+      "1.3.14",
+      "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    ],
+    "intervalUs": 5000,
+    "targetMs": 50000,
+    "acceptMs": 55000,
+    "profile": {
+      "bytes": 2120673,
+      "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+      "gitBlob": "35dfa571c490bc54be4e315be222c0920dce93c8"
+    },
+    "collection": {
+      "bytes": 1876,
+      "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+      "gitBlob": "8669ff010853eac62f014f0b2886b96e0b2f490c"
+    },
+    "launcher": {
+      "bytes": 663,
+      "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+      "gitBlob": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233"
+    },
+    "routes": {
+      "cap": 65535,
+      "counts": [
+        3917,
+        758,
+        1316
+      ],
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "scope": "pid-running-window"
+    },
+    "selection": {
+      "cap": 65535,
+      "identityLoop": [
+        633,
+        0,
+        1266,
+        1266,
+        0,
+        17724
+      ],
+      "loopOrder": [
+        "enumerated",
+        "not-enumerated",
+        "eligible",
+        "reduced",
+        "retained",
+        "known-fields-omitted"
+      ],
+      "nativeCopies": [
+        0,
+        0,
+        633
+      ],
+      "nativeOrder": [
+        "tag-refused",
+        "cases-complete",
+        "normalized-map"
+      ],
+      "saturated": false,
+      "scope": "pid-running-window",
+      "sourceOrder": [
+        "none",
+        "cases",
+        "preferences",
+        "case-identities"
+      ],
+      "sourceRequests": [
+        566,
+        1670,
+        702,
+        633
+      ]
+    },
+    "profileWholeGitObjectNotFetched": true,
+    "profileWholeGitObjectNotPersisted": true
+  },
+  "originalOutcome": {
+    "failed": 1,
+    "passed": 1,
+    "firstPreviewTimeoutMs": 60000,
+    "specLine": 72,
+    "specColumn": 32,
+    "UI42": "partial",
+    "UI43": "unreached",
+    "UI44": "unreached",
+    "BI": "passed"
+  },
+  "interpretationLimits": [
+    "81 semantic checks plus transport authentication; no whole-VM cost or hotspot analysis performed by this reviewer.",
+    "Raw runtime/selection and extra launcher content were not exported whole; their binding/CRC/parse facts are received reports from the previously reviewed reader, corroborated by inventory, parities and literal markers.",
+    "Three exported originals had independently recomputed CRC32 as well as bytes/SHA256; remaining ZIP CRC coverage is authenticated reader output, without a second ZIP download.",
+    "Root export manifest and eight profile part descriptors match exact slices of independently decoded profile; no whole-profile Git GET or repeated originals.",
+    "Source, native and loop counters retain distinct populations; zero tag-refused/cases-complete does not imply no other fallbacks or failed copies.",
+    "No production/UI pass, clean-source latency improvement, exclusive Request CPU or count conservation inferred.",
+    "Playwright case startTime + duration and native utcMs have a positive arithmetic difference of 21,971 ms; the streams are not time-synchronized by this evidence. No reconciliation, cross-clock event ordering, or causal/ownership inference is made.",
+    "captureComplete is supported by original files and finished/collection/stopped consistency, separately from successful byte transport. Successful capture does not qualify the first preview, UI43/UI44, Release or production.",
+    "The additional launcher is only prepared. Its namespace contains no profile or collection, and no selected Request/PID/start/stop/completion is inferred.",
+    "No snapshots or files are fabricated for missing data; all three selected originals are actually present in this receipt.",
+    "Whole-VM statistical cost analysis remains with /root/close_pr613; this receipt verifies basic profile schema/count parity only."
+  ],
+  "operations": {
+    "newGitBlobAuthorized": 1,
+    "treeCreates": 0,
+    "commitCreates": 0,
+    "refMutations": 0,
+    "workflowRuns": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "deviceCommands": 0,
+    "repositoryExecutions": 0
+  },
+  "storageLimit": "This JSON is a Git blob. No reference or reachability anchor is created by this operation; readback is reported separately after creation."
+}

@@ -1,0 +1,622 @@
+diff --git a/.ci-run.json b/.ci-run.json
+index eda49a023c07599de00f5af9642ee92b9d9adf3b..4a7b64a8392138f1b79d386557e48ac4453617f5 100644
+--- a/.ci-run.json
++++ b/.ci-run.json
+@@ -1,1 +1,1 @@
+-{"package":"app","directory":"packages/app-shell","packageSelector":"@orchestra/app","runner":"playwright","args":["e2e/sucafina/design-wave-five-analytics.spec.ts"],"env":{"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER":"strict","ORCHESTRA_CHANNEL":"prod"},"config":"e2e/playwright.production.config.ts"}
+\ No newline at end of file
++{"package":"cli","directory":"apps/cli","packageSelector":"@orchestra/cli","runner":"bun","args":["./test/sucafina-proof-verification.test.ts","--timeout","600000"],"env":{"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER":"strict","ORCHESTRA_CHANNEL":"prod"}}
+\ No newline at end of file
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a1ea764ca22bf91b05638836f3d6631751bae24a
+--- /dev/null
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -0,0 +1,192 @@
++// Snapshot-only verification. This driver is not part of the #613 product candidate.
++import { expect } from "bun:test"
++import path from "node:path"
++import { readFile } from "node:fs/promises"
++import { AppProcess } from "@orchestra/core/process"
++import { LayerNode } from "@orchestra/core/effect/layer-node"
++import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
++import { testEffect } from "@orchestra/core/test/lib/effect"
++import { Effect } from "effect"
++import { ChildProcess } from "effect/unstable/process"
++
++const repository = path.resolve(import.meta.dir, "../../..")
++const module = path.join(repository, "modules/sucafina/Sucafinav1")
++const source = "c061693ae9833819cd3afd2ae1b03805de6c82f9"
++const sourceTree = "26275bc9d4afcdfc9f4c062be58b715a294dbe56"
++const sourceBase = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
++const sourceBaseTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
++const checks = testEffect(LayerNode.compile(AppProcess.node))
++
++function requireHostedCandidate() {
++  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
++    throw new Error("E12 diagnostic source and tree must be bound to reviewed Git objects before execution")
++  if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
++      process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
++      !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
++      !/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA ?? "")) {
++    throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
++  }
++  process.stdout.write(JSON.stringify({
++    verification: "sf613-e12-selection-cpu-focal", source, sourceTree, sourceBase, sourceBaseTree,
++    snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
++    historicalCompositionBase,
++  }) + "\n")
++}
++
++function runCommand(label: string, executable: string, args: readonly string[], cwd: string, timeout = 180_000, printOutput = true) {
++  return Effect.gen(function* () {
++    const processes = yield* AppProcess.Service
++    const started = performance.now()
++    const result = yield* processes.run(ChildProcess.make(executable, [...args], {
++      cwd, env: { GUARDRAIL_APPROVED: "" }, extendEnv: true,
++      stdin: "ignore", stdout: "pipe", stderr: "pipe",
++      killSignal: "SIGTERM", forceKillAfter: "5 seconds",
++    }), { timeout, maxOutputBytes: 1_048_576, maxErrorBytes: 1_048_576 })
++    const output = result.stdout.toString("utf8")
++    const error = result.stderr.toString("utf8")
++    process.stdout.write(JSON.stringify({
++      gate: label, source, sourceTree, snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
++      command: [executable, ...args], cwd: path.relative(repository, cwd) || ".",
++      exitCode: result.exitCode, durationMs: Math.round(performance.now() - started),
++      stdoutTruncated: result.stdoutTruncated, stderrTruncated: result.stderrTruncated,
++    }) + "\n" + (printOutput ? output : "") + error + "\n")
++    if (result.stdoutTruncated || result.stderrTruncated)
++      throw new Error(label + " exceeded the bounded evidence capture")
++    expect(result.exitCode, label).toBe(0)
++    return output
++  })
++}
++
++checks.live("snapshot identifies the exact reviewed diagnostic source, tree and clean parent", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  process.stdout.write(JSON.stringify({ previewE12DiagnosticManifest: {
++    source, sourceTree, sourceBase, sourceBaseTree, qualification: false, diagnostic: true,
++    sourceOverlayPaths: 8, sourceOverlayAdded: 2, sourceOverlayModified: 6,
++    sourceWorkingPins: 16, snapshotOnlyControlPins: 1, workingPins: 17,
++    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,
++    expectedTestDeclarations: 13, preservedTestDeclarations: 12, addedTestDeclarations: 1,
++    expectedControlReports: 9, preservedControlReports: 8, addedControlReports: 1,
++    preservedC16Outcomes: 31, identityProjectionOracles: 9, e12SelectionChecks: 8, nameFilter: null,
++    mechanism: "bounded E12 observation of source selection, completed native child copies and identity-loop disposition; the separate control uses the real LocalStore with a synthetic Session and clock",
++    assertions: "all C17 functional controls remain selected; the E12 control verifies finite counters, copy and work failures, sensitive stop/closed counters and unchanged capture bytes; no actual CPU capture, preview completion or product qualification is established by this focal",
++    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },
++    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },
++    diagnosticControlMs: { cooperative: 12000, bun: 15000, selectedTests: 1, nominalSum: 15000, process: 45000, parent: 60000 },
++    diagnosticEvidence: { reportPrefix: "SF_E12_CPU_CONTROL", reportCapBytes: 65536, wireCapBytes: 15360, syntheticSession: true, syntheticClock: true },
++    typecheckMs: { process: 240000, parent: 300000 },
++    guardsMs: { defaultProcess: 180000, parent: 600000 },
++    sourceRequest: { path: ".ci-run.json", bytes: 295, gitBlob: "eda49a023c07599de00f5af9642ee92b9d9adf3b" },
++    snapshotOverlays: [{ path: ".ci-run.json", change: "M" },
++      { path: "apps/cli/test/sucafina-proof-verification.test.ts", change: "A" },
++      { path: "modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts", change: "A" }],
++  } }) + "\n")
++  yield* runCommand("fetch source parent", "git", [
++    "fetch", "--no-tags", "--depth=3", "origin", process.env.GITHUB_SHA!,
++  ], repository, 60_000)
++  const head = yield* runCommand("snapshot identity", "git", ["rev-parse", "HEAD"], repository, 30_000)
++  const snapshot = process.env.GITHUB_SHA
++  if (typeof snapshot !== "string") throw new Error("The Actions snapshot SHA is required")
++  expect(head.trim()).toBe(snapshot)
++  const candidate = yield* runCommand("source identity", "git", [
++    "show", "-s", "--format=%H%n%T%n%P", "HEAD^",
++  ], repository, 30_000)
++  expect(candidate.trim().split("\n")).toEqual([source, sourceTree, sourceBase])
++  const sourceFiles = [
++    ["modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","1017609000bdbdb39fc0510b045dc6dfde371faf"],
++    ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","fcf55e2b49e316a5fabfd92c1ae1d85195063447"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts","8b01895b0f3b1623646d14a82adb66bf13ca841b"],
++    ["modules/sucafina/Sucafinav1/runtime/local-store.ts","cb160ee21d22a311e4b5d77bfc34fc56ce6b9297"],
++    ["apps/cli/src/sucafina-product/planner-calculation-root.ts","244d46ee41e9ce288a7260938174a57161137bab"],
++    ["modules/sucafina/Sucafinav1/product/integration/source-inventory.ts","eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"],
++    ["modules/sucafina/Sucafinav1/product/integration/source-projections.ts","ccc5ea87046144843e1751b1288e907974d24ca5"],
++    ["modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts","f183dd1049ef205c38395bda99c83efa8eddc80a"],
++    ["modules/sucafina/Sucafinav1/product/integration/product-authority.ts","a81e87a3122aeb38d3c1059e21255879866e6cf6"],
++    ["modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts","5b453e1672aa98616e814ac64900517d1ae4f60a"],
++    ["modules/sucafina/Sucafinav1/runtime/contract.ts","39e6da84a3dd815721484affaf8315731ded073b"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","6bef21db9129db064b018f5f0bf632306e3a16ec"],
++    ["modules/sucafina/Sucafinav1/runtime/preview-cpu-e12-diagnostic.ts","11686520311978c09a66c1e5b1317d3a0a0347bc"],
++    ["apps/cli/src/sucafina-product/portfolio-http.ts","7c9f4a929842a97c4b4949aa4bf94226a22230e8"],
++    ["apps/cli/test/fixture/sucafina-native-installation.ts","0874435020bc8d000a99eb72db18f33f17010443"],
++    ["packages/app-shell/e2e/sucafina/design-support/installation.ts","21d20336212bee594b80d3cd8a6424064998bb67"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts","66971ae90c6aecf6836fb7d2150f920fdbf025b5"],
++  ] as const
++  const observed: { path: string; sha: string }[] = []
++  const gitBlob = (bytes: Uint8Array) => new Bun.CryptoHasher("sha1")
++    .update("blob " + bytes.byteLength + "\0").update(bytes).digest("hex")
++  for (const [file, expected] of sourceFiles) {
++    const bytes = yield* Effect.promise(() => readFile(path.join(repository, file)))
++    const actual = gitBlob(bytes)
++    expect(actual, file).toBe(expected)
++    observed.push({ path: file, sha: actual })
++  }
++  process.stdout.write(JSON.stringify({ gate: "reviewed working blobs", source, sourceTree, sourceBase, sourceBaseTree,
++    snapshot, files: observed, sourceWorkingPins: 16, snapshotOnlyControlPins: 1,
++    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,
++    expectedTestDeclarations: 13, expectedControlReports: 9 }) + "\n")
++}), 180_000)
++
++checks.live("CurrentChoice readonly composition preserves default and unfenced routes", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  yield* runCommand("CurrentChoice readonly composition", process.execPath,
++    ["test", "./test/product/wp10/integration/current-choice-readonly.test.ts"], module, 360_000)
++}), 420_000)
++
++checks.live("C14/C15/C16/C17 C08 projection and closed case selection preserve authorization and full-path equivalence", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  yield* runCommand("C14/C15/C16/C17 snapshot projection and closed case selection", process.execPath,
++    ["test", "./test/product/wp10/integration/c08-snapshot-projection.test.ts"], module, 300_000)
++}), 360_000)
++
++checks.live("the CLI package preserves its original types", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  yield* runCommand("CLI package typecheck", process.execPath, ["run", "typecheck"], path.join(repository, "apps/cli"), 240_000)
++}), 300_000)
++
++checks.live("the Sucafina package preserves its original types", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  yield* runCommand("Sucafina package typecheck", process.execPath, ["run", "typecheck"], module, 240_000)
++}), 300_000)
++
++checks.live("canonical guards use current origin dev and its actual merge base", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  const shallow = yield* runCommand("inspect history completeness", "git", [
++    "rev-parse", "--is-shallow-repository",
++  ], repository, 30_000)
++  yield* runCommand("fetch current dev and source ancestry", "git", [
++    "fetch", "--no-tags", ...(shallow.trim() === "true" ? ["--unshallow"] : []),
++    "origin", "+refs/heads/dev:refs/remotes/origin/dev", process.env.GITHUB_SHA!,
++  ], repository, 120_000)
++  const dev = (yield* runCommand("current dev identity", "git", [
++    "rev-parse", "--verify", "refs/remotes/origin/dev^{commit}",
++  ], repository, 30_000)).trim()
++  const mergeBase = (yield* runCommand("actual guard merge base", "git", [
++    "merge-base", "HEAD", "origin/dev",
++  ], repository, 30_000)).trim()
++  expect(dev).toMatch(/^[a-f0-9]{40}$/)
++  expect(mergeBase).toMatch(/^[a-f0-9]{40}$/)
++  process.stdout.write(JSON.stringify({ gate: "guard ancestry", source, sourceTree, dev, mergeBase,
++    historicalCompositionBase, command: "bun run check:guards --base origin/dev --json" }) + "\n")
++  const output = yield* runCommand("canonical guardrails", process.execPath, [
++    "run", "check:guards", "--base", "origin/dev", "--json",
++  ], repository)
++  const report: unknown = JSON.parse(output)
++  expect(report).toMatchObject({ base: mergeBase, bootstrap: false, errors: [], approved: [] })
++  if (!report || typeof report !== "object" || !("rules" in report) ||
++      typeof report.rules !== "number" || report.rules < 1)
++    throw new Error("Canonical guards did not evaluate rules from the actual merge base")
++}), 600_000)
++
++checks.live("E12 selection counters distinguish completed native copies and unenumerated fallback", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  const output = yield* runCommand("E12 selection observation control", process.execPath,
++    ["test", "./test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts"], module, 45_000)
++  expect(output).toContain("SF_E12_CPU_CONTROL ")
++}), 60_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..66971ae90c6aecf6836fb7d2150f920fdbf025b5
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/preview-cpu-e12-diagnostic.test.ts
+@@ -0,0 +1,409 @@
++// Snapshot-only E12 adapter controls. Select one exact title per fresh Bun process.
++// Session and monotonic time are simulated here; these controls do not sample real CPU.
++import { expect, mock, spyOn, test } from "bun:test"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { chmodSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, writeFileSync } from "node:fs"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { fileURLToPath } from "node:url"
++import type { Snapshot } from "../../../../runtime/contract.ts"
++
++type Api = typeof import("../../../../runtime/preview-cpu-e12-diagnostic.ts")
++type Mode = "target" | "short" | "late" | "timer-failure" | "preflight-busy" | "start-uncertain" | "stop-failure" | "binding-invalid"
++const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
++const sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++const prefix = "SF_PREVIEW_E12_CPU "
++const progressPrefix = "SF_PREVIEW_E12_PROGRESS "
++const reportPrefix = "SF_E12_CPU_CONTROL "
++const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR"
++const bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
++const repository = realpathSync(fileURLToPath(new URL("../../../../../../../", import.meta.url)))
++let controlStarted = false
++const selectionChecks: string[] = []
++
++function required<T>(value: T | undefined): T {
++  if (value === undefined) throw new Error("The E12 control did not reach its required boundary")
++  return value
++}
++function object(value: unknown): Record<string, unknown> {
++  if (value === null || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected a JSON object")
++  return Object.fromEntries(Object.entries(value))
++}
++function hash(value: string | Uint8Array) { return createHash("sha256").update(value).digest("hex") }
++
++async function fixture(mode: Mode) {
++  if (controlStarted) throw new Error("Select one E12 control per fresh process; sampler selection has no reset")
++  controlStarted = true
++  const base = path.join(repository, "test-ci-evidence")
++  mkdirSync(base, { recursive: true })
++  const directory = mkdtempSync(path.join(base, "sf613-e12-cpu-"))
++  chmodSync(directory, 0o700)
++  const privateRoot = mkdtempSync(path.join(realpathSync(tmpdir()), "sf-e12-control-"))
++  const oldCwd = process.cwd(), oldArgv = process.argv
++  const oldDirectory = process.env[directoryKey], oldBinding = process.env[bindingKey]
++  const binding = { schema: "sf-preview-e12-cpu-launch-v1", source, sourceTree, snapshot: source,
++    runId: "1", attempt: "1", nonce: path.basename(directory) }
++  const launcher = JSON.stringify({ ...binding, qualification: false, state: "synthetic-control",
++    processRole: "native-cli", profileName: "preview-first.cpuprofile" }) + "\n"
++  writeFileSync(path.join(directory, "launcher.json"), launcher, { flag: "wx", mode: 0o600 })
++  process.env[directoryKey] = directory
++  process.env[bindingKey] = JSON.stringify({ ...binding, launcherBytes: Buffer.byteLength(launcher, "utf8"),
++    launcherSha256: mode === "binding-invalid" ? "0".repeat(64) : hash(launcher) })
++  process.argv = [oldArgv[0]!, path.join(repository, "apps/cli/src/index.ts"), "serve"]
++  process.chdir(privateRoot)
++
++  const calls: string[] = [], intervals: unknown[] = [], lines: string[] = [], events: string[] = []
++  const timers = new Set<ReturnType<typeof setInterval>>()
++  const cleared = new Set<ReturnType<typeof setInterval>>()
++  let now = 1000, timerCalls = 0, requestGets = 0, pulseCalls = 0
++  let progressAttempts = 0, progressFailures = 0, progressBackpressure = 0
++  let progressOutput: "normal" | "false" | "throw" = "normal"
++  let samplerLive = mode === "preflight-busy"
++  let pulseCallback: (() => void) | undefined, stopHook: (() => void) | undefined
++  const profile = { nodes: [{ id: 1, callFrame: { functionName: "syntheticControl", scriptId: "0",
++    url: "e12-control-only", lineNumber: 0, columnNumber: 0 }, hitCount: 1 }],
++    samples: [1], timeDeltas: [5000], startTime: 1_000_000, endTime: 1_005_000 }
++  class ControlSession {
++    constructor() { calls.push("construct") }
++    connect() { calls.push("connect") }
++    disconnect() { calls.push("disconnect"); samplerLive = false }
++    post(method: string, params?: unknown): unknown {
++      calls.push(method)
++      events.push(method)
++      if (method === "Profiler.enable") return undefined
++      if (method === "Profiler.setSamplingInterval") {
++        intervals.push(params)
++        if (mode === "preflight-busy") throw new Error("Synthetic sampler already active")
++        return undefined
++      }
++      if (method === "Profiler.start") {
++        samplerLive = true
++        if (mode === "start-uncertain") throw new Error("Synthetic start outcome uncertain")
++        return undefined
++      }
++      if (method === "Profiler.stop") {
++        stopHook?.()
++        if (mode === "stop-failure") throw new Error("Synthetic stop failure")
++        samplerLive = false
++        return { profile }
++      }
++      throw new Error("Unexpected profiler method in the E12 control")
++    }
++  }
++  // Only this observational dependency is replaced, before importing the helper.
++  // Each named control runs in a different process; no reset or shared module mock is used.
++  mock.module("node:inspector", () => ({ default: { Session: ControlSession } }))
++  const originalWrite = process.stdout.write
++  const originalInterval = globalThis.setInterval, originalClear = globalThis.clearInterval
++  const clock = spyOn(performance, "now").mockImplementation(() => now)
++  const output = spyOn(process.stdout, "write").mockImplementation((...args) => {
++    const value = args[0]
++    if (typeof value === "string" && value.startsWith(prefix)) { events.push("cpu-write"); lines.push(value); return true }
++    if (typeof value === "string" && value.startsWith(progressPrefix)) {
++      events.push("progress-write")
++      progressAttempts++
++      if (progressOutput === "throw") { progressFailures++; throw new Error("Synthetic progress write failure") }
++      lines.push(value)
++      if (progressOutput === "false") { progressBackpressure++; return false }
++      return true
++    }
++    return Reflect.apply(originalWrite, process.stdout, args)
++  })
++  const interval = spyOn(globalThis as { setInterval: (...args: Parameters<typeof setInterval>) => ReturnType<typeof setInterval> }, "setInterval").mockImplementation((callback, ...args) => {
++    timerCalls++
++    if (mode === "timer-failure") throw new Error("Synthetic interval failure")
++    if (typeof callback !== "function") throw new Error("Expected a callable interval")
++    pulseCallback = () => { Reflect.apply(callback, undefined, []) }
++    const timer: ReturnType<typeof setInterval> = Reflect.apply(originalInterval, globalThis, [callback, ...args])
++    timers.add(timer)
++    return timer
++  })
++  const clear = spyOn(globalThis, "clearInterval").mockImplementation((timer) => {
++    if (timer !== undefined && timers.has(timer as ReturnType<typeof setInterval>)) cleared.add(timer as ReturnType<typeof setInterval>)
++    return Reflect.apply(originalClear, undefined, [timer])
++  })
++  const request = new Proxy(new Request("http://127.0.0.1/e12-cpu-control"), {
++    get() { requestGets++; throw new Error("Observer must not inspect the Request") },
++  })
++  const restore = () => {
++    for (const timer of timers) originalClear(timer)
++    clear.mockRestore()
++    interval.mockRestore()
++    output.mockRestore()
++    clock.mockRestore()
++    process.argv = oldArgv
++    process.chdir(oldCwd)
++    if (oldDirectory === undefined) delete process.env[directoryKey]
++    else process.env[directoryKey] = oldDirectory
++    if (oldBinding === undefined) delete process.env[bindingKey]
++    else process.env[bindingKey] = oldBinding
++    rmSync(directory, { recursive: true, force: true })
++    rmSync(privateRoot, { recursive: true, force: true })
++  }
++  try {
++    const inspector = await import("node:inspector")
++    expect<unknown>(inspector.default.Session).toBe(ControlSession)
++    const api: Api = await import("../../../../runtime/preview-cpu-e12-diagnostic.ts")
++    const records = () => lines.filter((line) => line.startsWith(prefix)).map((line) => object(JSON.parse(line.slice(prefix.length))))
++    const progressRecords = () => lines.filter((line) => line.startsWith(progressPrefix)).map((line) => object(JSON.parse(line.slice(progressPrefix.length))))
++    const latest = () => required(records().at(-1))
++    const pulse = (at: number) => { pulseCalls++; now = at; required(pulseCallback)() }
++    const textFile = (name: string) => readFileSync(path.join(directory, name), "utf8")
++    const fileNames = () => readdirSync(directory).sort()
++    const fileMeta = (name: string) => {
++      const bytes = readFileSync(path.join(directory, name)), info = statSync(path.join(directory, name))
++      return { name, bytes: bytes.length, sha256: hash(bytes), mode: info.mode & 0o777 }
++    }
++    const verifyWire = () => {
++      const values = records(), progress = progressRecords()
++      expect(values.length).toBeGreaterThanOrEqual(1)
++      expect(values.length).toBeLessThanOrEqual(3)
++      expect(progress.length).toBeLessThanOrEqual(3)
++      expect(lines.length).toBe(values.length + progress.length)
++      expect(progressAttempts).toBeLessThanOrEqual(3)
++      expect(Buffer.byteLength(lines.join(""), "utf8")).toBeLessThanOrEqual(15_360)
++      for (const family of [
++        { prefix, values, schema: "sf-preview-causal-e12-cpu-v1", cap: 4096 },
++        { prefix: progressPrefix, values: progress, schema: "sf-preview-causal-e12-progress-v1", cap: 1024 },
++      ]) {
++        const selected = lines.filter((line) => line.startsWith(family.prefix))
++        for (let index = 0; index < selected.length; index++) {
++          expect(selected[index]).toMatch(/^[\x20-\x7e]*\n$/)
++          expect(Buffer.byteLength(selected[index]!, "utf8")).toBeLessThanOrEqual(family.cap)
++          expect(family.values[index]).toMatchObject({ schema: family.schema, source, sourceTree,
++            qualification: false, pid: process.pid, request: 1, sequence: index + 1 })
++          expect(family.values[index]?.routes).toMatchObject({ scope: "pid-running-window",
++            order: ["sealed-read", "unfenced", "full-guard"], cap: 65_535 })
++        }
++      }
++      expect(requestGets).toBe(0)
++      expect(api.startSfE12CpuObservation(new Request("http://127.0.0.1/not-selected"))).toBeUndefined()
++      return values
++    }
++    const evidence = () => {
++      const wire = lines.join("")
++      return { qualification: false, syntheticClock: true, syntheticSession: true, pid: process.pid,
++        checksCompleted: true, selectionChecks: selectionChecks.slice(), records: lines.slice(), bytes: Buffer.byteLength(wire, "utf8"), sha256: hash(wire),
++        calls: calls.slice(), intervals: intervals.slice(), samplerLive, timerCalls, clearedTimers: cleared.size,
++        requestGets, pulseCalls, progressAttempts, progressFailures, progressBackpressure,
++        cpuRecords: records().length, progressRecords: progressRecords().length, events: events.slice(),
++        files: fileNames().map(fileMeta) }
++    }
++    const report = (scenario: string, value: ReturnType<typeof evidence>) => {
++      const text = reportPrefix + JSON.stringify({ scenario, ...value }) + "\n"
++      if (Buffer.byteLength(text, "utf8") > 65_536) throw new Error("E12 control evidence exceeded 64 KiB")
++      Reflect.apply(originalWrite, process.stdout, [text])
++    }
++    return { api, request, calls, intervals, profile, records, progressRecords, latest, pulse, events, textFile, fileNames, fileMeta,
++      verifyWire, evidence, report, restore, setTime: (value: number) => { now = value },
++      setStopHook: (value: () => void) => { stopHook = value },
++      setProgressOutput: (value: "normal" | "false" | "throw") => { progressOutput = value },
++      progressAttempts: () => progressAttempts, progressFailures: () => progressFailures,
++      progressBackpressure: () => progressBackpressure, pulseCalls: () => pulseCalls,
++      samplerLive: () => samplerLive, timerCalls: () => timerCalls, clearedTimers: () => cleared.size }
++  } catch (error) { restore(); throw error }
++}
++type Fixture = Awaited<ReturnType<typeof fixture>>
++
++async function control(name: string, mode: Mode, work: (f: Fixture) => void | Promise<void>) {
++  const f = await fixture(mode)
++  let evidence: ReturnType<Fixture["evidence"]> | undefined
++  try { await work(f); f.verifyWire(); evidence = f.evidence() }
++  finally { f.restore() }
++  f.report(name, required(evidence))
++}
++function verifyCompleted(f: Fixture, state: "completed-on-time" | "short-completed" | "completed-late", onTime: boolean) {
++  expect(f.records().map((entry) => entry.kind)).toEqual(["started", "stopped", "finished"])
++  expect(f.latest()).toMatchObject({ state, collectionWithinAccept: onTime, cleanupFailed: false })
++  expect(f.fileNames()).toEqual(["collection.json", "launcher.json", "preview-first.cpuprofile"])
++  expect(f.textFile("preview-first.cpuprofile")).toBe(JSON.stringify(f.profile) + "\n")
++  const collection = object(JSON.parse(f.textFile("collection.json")))
++  expect(collection).toMatchObject({ state, qualification: false, intervalUs: 5000, targetMs: 50000, acceptMs: 55000 })
++  const profileMeta = f.fileMeta("preview-first.cpuprofile"), collectionMeta = f.fileMeta("collection.json")
++  expect(profileMeta.mode).toBe(0o600)
++  expect(collectionMeta.mode).toBe(0o600)
++  expect(f.latest().profile).toMatchObject({ name: profileMeta.name, bytes: profileMeta.bytes, sha256: profileMeta.sha256 })
++  expect(f.latest().collection).toMatchObject({ name: collectionMeta.name, bytes: collectionMeta.bytes, sha256: collectionMeta.sha256 })
++  expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(1)
++  expect(f.calls.filter((call) => call === "disconnect")).toHaveLength(1)
++  expect(f.samplerLive()).toBe(false)
++  expect(f.clearedTimers()).toBe(1)
++}
++
++
++test("E12 selection counters distinguish completed native copies and unenumerated fallback", () => control(
++  "E12 selection counters distinguish completed native copies and unenumerated fallback", "target", async (f) => {
++    const { openLocalStore, observeLocalProductRead } = await import("../../../../runtime/local-store.ts")
++    const store = await openLocalStore(path.join(process.cwd(), "selection-store"))
++    const deadline = new AbortController()
++    const deadlineTimer = setTimeout(() => deadline.abort(new Error("E12 selection control cooperative deadline")), 12_000)
++    const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions",
++      "documents", "receipts", "atlas", "outbox", "bi-artifacts"]
++    const maps = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions",
++      "documents", "receipts", "atlas", "outbox", "transactions", "biArtifacts"]
++    const cases = {
++      good: { id: "good", incarnation: "good-incarnation", version: 1, participants: ["actor"],
++        objective: "known body", alternatives: [{ original: true }], unknown: { keep: ["unknown body"] } },
++      identityOnly: { id: "identityOnly", incarnation: "lean-incarnation", version: 0, participants: ["actor"] },
++      malformed: ["keep complete"],
++    }
++    const product = { schemaVersion: 1, incarnation: "e12-product", revision: 0,
++      versions: Object.fromEntries(namespaces.map((name) => [name, 0])),
++      ...Object.fromEntries(maps.map((name) => [name, {}])), cases, unknown: { preserved: true } }
++    const seed = (invalid = false) => store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.__sfProductV1 = structuredClone(invalid ? { ...product, versions: {} } : product)
++      snapshot.data.roleMap = { admin: ["actor"] }
++      snapshot.data.access = { actor: { assigned: [], domains: [] } }
++      return { commit: true, value: undefined }
++    }, { signal: deadline.signal })
++    const physical = async (failWork = false) => {
++      const owner = required(store.observeAuthority!([]))
++      const probe = async (snapshot: Snapshot) => {
++        if (failWork) throw undefined
++        const proof = observeLocalProductRead(snapshot)
++        return { commit: false, value: { snapshot, selection: proof?.selection, current: proof?.current() } }
++      }
++      return store.transaction("dashboard", probe, { signal: deadline.signal,
++        dashboardProductRead: { identity: owner.identity, work: probe, selection: "case-identities" } })
++    }
++    const graph = (snapshot: Snapshot) => object(object(snapshot.data.__sfProductV1).cases)
++    let handle: unknown
++    try {
++      if (!store.readSnapshotRoot || !store.holdTargetPreimage || !store.observeAuthority) throw new Error("Original native scopes required")
++      await seed()
++      f.api.markSfE12SourceSelection("case-identities")
++      f.api.markSfE12NativeCopy("case-identities", "case-identities", true,
++        { enumerated: true, eligible: 1, reduced: 1, retained: 0, omitted: 14 })
++      handle = required(f.api.startSfE12CpuObservation(f.request))
++      expect(f.latest()).toMatchObject({ kind: "started", selection: {
++        sourceRequests: [0, 0, 0, 0], nativeCopies: [0, 0, 0], identityLoop: [0, 0, 0, 0, 0, 0], saturated: false } })
++      for (const selection of [undefined, "cases", "preferences", "case-identities"] as const)
++        f.api.markSfE12SourceSelection(selection)
++      selectionChecks.push("source-classes-are-synthetic-and-running-only")
++      await store.readSnapshotRoot(async () => {
++        const result = await physical()
++        expect(result.selection).toBe("case-identities")
++        expect(result.current).toBe(true)
++        const copied = graph(result.snapshot), good = object(copied.good)
++        expect(Object.hasOwn(good, "objective")).toBe(false)
++        expect(Object.hasOwn(good, "alternatives")).toBe(false)
++        expect(good.unknown).toEqual(cases.good.unknown)
++        expect(copied.identityOnly).toEqual(cases.identityOnly)
++        expect(copied.malformed).toEqual(cases.malformed)
++      }, { signal: deadline.signal })
++      f.api.markSfE12HttpProgress(handle, f.request, "body-returned")
++      expect(f.progressRecords()[0]).toMatchObject({ selection: { sourceRequests: [1, 1, 1, 1],
++        nativeCopies: [0, 0, 1], identityLoop: [1, 0, 2, 1, 2, 2], saturated: false } })
++      selectionChecks.push("real-native-normalized-mixed-map-and-two-actual-omissions")
++      const held = store.holdTargetPreimage()
++      try {
++        await store.transaction("dashboard", async () => {
++          const result = await physical()
++          expect(result.selection).toBe("case-identities")
++          expect(result.current).toBe(true)
++          expect(graph(result.snapshot)).toEqual(cases)
++          return { commit: false, value: undefined }
++        }, { signal: deadline.signal, targetPreimageCurrent: held.current, sealedRead: true })
++      } finally { held.release() }
++      selectionChecks.push("real-preimage-complete-cases-not-enumerated")
++      await seed(true)
++      await store.readSnapshotRoot(async () => {
++        const result = await physical()
++        expect(result.selection).toBeUndefined()
++        expect(result.current).toBe(true)
++        expect(graph(result.snapshot)).toEqual(cases)
++      }, { signal: deadline.signal })
++      selectionChecks.push("real-invalid-envelope-tag-refused-not-enumerated")
++      await seed()
++      // Warm the legitimate byte plan without publishing a native child copy.
++      await store.readSnapshotRoot(async () => { expect(store.observeAuthority!([])?.current()).toBe(true) },
++        { signal: deadline.signal })
++      const parse = JSON.parse, descriptor = required(Object.getOwnPropertyDescriptor(JSON, "parse"))
++      const originalFailure = new Error("E12 original copy failure")
++      let intercepted = 0, bodyReads = 0, threw = false, caught: unknown
++      function record(value: unknown): value is Record<string, unknown> {
++        return value !== null && typeof value === "object" && !Array.isArray(value)
++      }
++      await store.readSnapshotRoot(async () => {
++        try {
++          Object.defineProperty(JSON, "parse", { ...descriptor, value: function(this: unknown, ...args: Parameters<typeof JSON.parse>) {
++            const value: unknown = Reflect.apply(parse, this, args)
++            if (record(value) && record(value.data) && record(value.data.__sfProductV1) &&
++                record(value.data.__sfProductV1.cases) && record(value.data.__sfProductV1.cases.good)) {
++              intercepted++
++              Object.defineProperty(JSON, "parse", descriptor)
++              Object.defineProperty(value.data.__sfProductV1.cases.good, "objective", { enumerable: true, configurable: true,
++                get: () => { bodyReads++; throw originalFailure } })
++            }
++            return value
++          } })
++          expect(store.observeAuthority!(["dashboard"])?.current()).toBe(true)
++        } finally { Object.defineProperty(JSON, "parse", descriptor) }
++        expect(intercepted).toBe(1)
++        expect(bodyReads).toBe(0)
++        try { await physical() } catch (error) { threw = true; caught = error }
++        expect(threw).toBe(true)
++        expect(caught).toBe(originalFailure)
++        expect(bodyReads).toBe(1)
++      }, { signal: deadline.signal })
++      selectionChecks.push("real-copy-failure-publishes-no-loop-or-native-count")
++      let workThrew = false, workFailure: unknown = "not caught"
++      await store.readSnapshotRoot(async () => {
++        try { await physical(true) } catch (error) { workThrew = true; workFailure = error }
++        expect(workThrew).toBe(true)
++        expect(workFailure).toBeUndefined()
++      }, { signal: deadline.signal })
++      f.api.markSfE12HttpProgress(handle, f.request, "admit-returned")
++      expect(f.progressRecords()[1]).toMatchObject({ selection: { sourceRequests: [1, 1, 1, 1],
++        nativeCopies: [1, 1, 2], identityLoop: [2, 2, 4, 2, 4, 4], saturated: false } })
++      selectionChecks.push("completed-copy-counted-before-original-throw-undefined")
++      // Saturate selected slots, leaving three slots sensitive to post-stop contributions.
++      const maxima = { enumerated: true, eligible: 65_535, reduced: 65_535, retained: 65_535, omitted: 65_535 }
++      f.api.markSfE12NativeCopy("case-identities", "case-identities", true, maxima)
++      for (let index = 0; index < 65_537; index++) {
++        for (const selection of [undefined, "cases", "preferences"] as const)
++          f.api.markSfE12SourceSelection(selection)
++        f.api.markSfE12NativeCopy("case-identities", undefined, undefined, undefined)
++        f.api.markSfE12NativeCopy("case-identities", "case-identities", false, undefined)
++      }
++      f.setStopHook(() => {
++        f.api.markSfE12SourceSelection("case-identities")
++        f.api.markSfE12NativeCopy("case-identities", "case-identities", true, maxima)
++        f.api.pumpSfE12CpuObservation()
++      })
++      f.setTime(51_000)
++      f.api.pumpSfE12CpuObservation()
++      verifyCompleted(f, "completed-on-time", true)
++      const expected = { sourceRequests: [65_535, 65_535, 65_535, 1], nativeCopies: [65_535, 65_535, 3],
++        identityLoop: [3, 65_535, 65_535, 65_535, 65_535, 65_535], saturated: true }
++      const collection = object(JSON.parse(f.textFile("collection.json")))
++      expect(f.latest().selection).toMatchObject(expected)
++      expect(collection.selection).toEqual(f.latest().selection)
++      expect(f.records()[1]?.selection).toEqual(f.latest().selection)
++      selectionChecks.push("selected-slots-saturate-without-overflow-and-three-remain-sensitive")
++      const frozen = { profile: f.textFile("preview-first.cpuprofile"), collection: f.textFile("collection.json"),
++        records: f.records(), profileMeta: f.fileMeta("preview-first.cpuprofile"), collectionMeta: f.fileMeta("collection.json") }
++      await store.readSnapshotRoot(async () => { expect((await physical()).current).toBe(true) }, { signal: deadline.signal })
++      f.api.markSfE12SourceSelection("case-identities")
++      f.api.markSfE12HttpProgress(handle, f.request, "case-callback-entered")
++      expect(f.progressRecords()[2]).toMatchObject({ cpuPhase: "finished", selection: expected })
++      f.pulse(52_000)
++      f.api.finishSfE12CpuObservation(handle, f.request)
++      f.api.finishSfE12CpuObservation(handle, f.request)
++      f.api.pumpSfE12CpuObservation()
++      expect(f.records()).toEqual(frozen.records)
++      expect(f.textFile("preview-first.cpuprofile")).toBe(frozen.profile)
++      expect(f.textFile("collection.json")).toBe(frozen.collection)
++      expect(f.fileMeta("preview-first.cpuprofile")).toEqual(frozen.profileMeta)
++      expect(f.fileMeta("collection.json")).toEqual(frozen.collectionMeta)
++      expect(f.calls.filter((call) => call === "Profiler.stop")).toHaveLength(1)
++      expect(f.calls.filter((call) => call === "disconnect")).toHaveLength(1)
++      selectionChecks.push("closed-cpu-and-late-http-do-not-rewrite-capture")
++      expect(selectionChecks).toHaveLength(8)
++    } finally {
++      clearTimeout(deadlineTimer)
++      if (handle !== undefined) f.api.finishSfE12CpuObservation(handle, f.request)
++      await store.dispose()
++    }
++  }), 15_000)
