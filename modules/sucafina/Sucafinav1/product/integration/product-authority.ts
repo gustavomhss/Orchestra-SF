@@ -16,6 +16,7 @@ import type { SfStateAuthority, SfStateNamespace } from "../contracts/state.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { createSfExecutionBindingRegistry } from "../host-binding/execution-context.ts"
 import { createSfProductState } from "../host-binding/state-provider.ts"
+import { createSfAclStateAuthorize } from "../host-binding/acl-state-authorize.ts"
 import { createSfDomainAuthority, createSfUiAuthority } from "./ui-authority.ts"
 import { createSfHumanAuthority, sfHumanActions, sfHumanReadActions } from "./human-authority.ts"
 import type { SfHumanAction } from "./human-authority.ts"
@@ -192,11 +193,11 @@ export function createSfProductAuthority(input: {
     reviewArtifactPersistence: input.assets?.persistence,
     persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites, analysisSelectionWrites: input.analysisSelectionWrites,
-    authorize: async (request, snapshot, namespace, mode) => {
+    authorize: createSfAclStateAuthorize(async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
       return { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
-    },
+    }),
     resolveTarget: async (request, snapshot, namespace, targetRef, command) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace)) return undefined

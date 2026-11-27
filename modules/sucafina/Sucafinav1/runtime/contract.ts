@@ -80,6 +80,9 @@ export type TransactionOptions = {
   dashboardSourceRoot?: object
   /** Authorize only against the detached ACL from an installed read root. */
   dashboardAclRoot?: object
+  // Fixed host-private C08 view, bound to the exact wrapped callback and owner.
+  // It grants no source/business authority and never permits a nested write.
+  dashboardProductRead?: Readonly<{ identity: object; work: object }>
   /** The callback cannot publish in a held installed preimage. */
   sealedRead?: true
 }

@@ -1,10 +1,11 @@
 import { types } from "node:util"
-import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads } from "../../runtime/local-store.ts"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
-import { currentChoiceReadonlyAuthorityData } from "../decisions/current-choice-preview.ts"
+import { currentChoiceReadonlyAuthorityData, isCurrentChoiceSnapshotAuthorityReader } from "../decisions/current-choice-preview.ts"
+import { isSfProductSnapshotRead } from "../host-binding/state-provider.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import type { HoldTargetPreimage, Persistence, SealedSnapshotRead, Snapshot, SnapshotAuthorityRead, TransactionOptions } from "../../runtime/contract.ts"
-import type { AssetPersistence } from "../../runtime/assets.ts"
+import type { AssetPersistence, BlobTransaction } from "../../runtime/assets.ts"
 import type { Surface } from "../../src/identity.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked, sfCanonicalCaptureRuntime } from "../contracts/canonical.ts"
 import { enumerateSfSources } from "./source-inventory.ts"
@@ -672,8 +673,37 @@ export function createSfSourcePersistence(input: {
       const checking = readCheckScope()
       const driver = input.persistence
       const method = !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
-      return driver.transaction(surface, async (snapshot, blobs) => {
+      const forwarded = { options }
+      const productCurrent = () => {
+        if (surface !== "dashboard" || types.isProxy(input) || Object.getPrototypeOf(input) !== Object.prototype ||
+          ownValue(input, "purpose") === "business-restore" || !dashboardProjectorCurrent() || !authorityCurrent()) return false
+        const fields = Object.getOwnPropertyDescriptors(input)
+        const source = ownValue(persistence, "transaction")
+        return Object.values(fields).every((field) => Object.hasOwn(field, "value")) &&
+          (Object.hasOwn(fields, "purpose") || !Object.hasOwn(Object.prototype, "purpose")) &&
+          typeof source === "function" && isSfProductSnapshotRead(work, source) &&
+          (isLocalSnapshotAuthorityReader(driver, readAuthority) || isCurrentChoiceSnapshotAuthorityReader(driver, readAuthority))
+      }
+      const productRead = <T>(execute: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>) => {
+        // This runs in the original work-argument position, after the method
+        // lookup. No selector or business authorization runs to choose a view.
+        if (!productCurrent()) return execute
+        if (options && (types.isProxy(options) || Object.getPrototypeOf(options) !== Object.prototype)) return execute
+        const fields = options ? Object.getOwnPropertyDescriptors(options) : {}
+        if (Object.values(fields).some((field) => !Object.hasOwn(field, "value") || !field.enumerable) ||
+          Object.hasOwn(fields, "dashboardProductRead")) return execute
+        const root = readAuthority?.([])
+        if (!root?.current()) return execute
+        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute }) }
+        return execute
+      }
+      return driver.transaction(surface, productRead(async (snapshot, blobs) => {
         if (checking) requireSourceChecks(checking)
+        const projection = observeLocalProductRead(snapshot)
+        const requireProduct = () => {
+          if (projection && (!productCurrent() || !projection.current())) throw new Error("SF_PRODUCT_READ_PROJECTION_CHANGED")
+        }
+        requireProduct()
         const seal = options?.sealedRead && input.purpose !== "business-restore" && authorityCurrent() && readAuthority?.([])
         if (seal && seal.current()) {
           // Only the Dashboard snapshot covered by the held durable preimage
@@ -687,6 +717,7 @@ export function createSfSourcePersistence(input: {
             return result
           }
           checkReadCommit(checking, false)
+          requireProduct()
           if (!seal.current() || !authorityCurrent() || identity && !sealedDigestsCurrent()) throw new Error("SF_SEALED_READ_CHANGED")
           return result
         }
@@ -699,6 +730,7 @@ export function createSfSourcePersistence(input: {
             snapshot.sfSources = { schemaVersion: 1, records: {} }
             synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, false)
           }
+          if (projection && !result.commit) requireProduct()
           return result
         }
         requireSourceIdentities(snapshot)
@@ -717,9 +749,10 @@ export function createSfSourcePersistence(input: {
             checkReadCommit(checking, result.commit)
           }
           if (result.commit) guarded.finish()
+          if (projection && !result.commit) requireProduct()
           return result
         } finally { guarded.dispose() }
-      }, options)
+      }), forwarded.options)
     },
     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
       const checking = readCheckScope()

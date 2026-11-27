@@ -3,9 +3,10 @@ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
 import { sfReviewArtifactBlobKey } from "../../runtime/artifact.ts"
 import { hasSfDashboardSourceFence, object } from "../../runtime/contract.ts"
-import { consumeLocalTransactionAbort, observeLocalTransactionAbort } from "../../runtime/local-store.ts"
+import { consumeLocalTransactionAbort, observeLocalTransactionAbort, observeLocalProductRead } from "../../runtime/local-store.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { isSfAclStateAuthorize } from "./acl-state-authorize.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
 
@@ -445,6 +446,12 @@ function caseIdentityMap(state: SfProductState) {
 }
 
 const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
+const productSnapshotReads = new WeakMap<object, (transaction: object) => boolean>()
+
+/** Only this factory's closed C08 read body can request the fixed native view. */
+export function isSfProductSnapshotRead(work: object, transaction: object) {
+  return productSnapshotReads.get(work)?.(transaction) === true
+}
 
 /** Authenticate the original read callback and its exact snapshot provider. */
 export function isSfProductStateReader(port: SfProductStatePort, persistence: Persistence) {
@@ -475,14 +482,42 @@ export function createSfProductState(input: {
   const artifactFence = () => artifacts && assetTransaction && input.reviewArtifactPersistence === artifacts &&
     artifacts.transaction === assetTransaction && Object.is(artifacts, input.persistence) &&
     hasSfDashboardSourceFence(input.persistence) ? input.persistence.dashboardSourceFence : undefined
+  const plainInput = !types.isProxy(input) && Object.getPrototypeOf(input) === Object.prototype
+  const readerAuthority = plainInput ? Object.getOwnPropertyDescriptor(input, "authorize") : undefined
+  const readerPersistence = plainInput ? Object.getOwnPropertyDescriptor(input, "persistence") : undefined
+  const projectionCurrent = () => {
+    if (!readerAuthority || !Object.hasOwn(readerAuthority, "value") || !isSfAclStateAuthorize(readerAuthority.value) ||
+      !readerPersistence || !Object.hasOwn(readerPersistence, "value") || !readerPersistence.value ||
+      typeof readerPersistence.value !== "object" || types.isProxy(readerPersistence.value) ||
+      Object.getPrototypeOf(readerPersistence.value) !== Object.prototype || types.isProxy(input) ||
+      Object.getPrototypeOf(input) !== Object.prototype) return false
+    const authority = Object.getOwnPropertyDescriptor(input, "authorize")
+    const persistence = Object.getOwnPropertyDescriptor(input, "persistence")
+    return !!authority && Object.hasOwn(authority, "value") && authority.value === readerAuthority.value &&
+      !!persistence && Object.hasOwn(persistence, "value") && persistence.value === readerPersistence.value &&
+      isSfProductStateReader(port, persistence.value)
+  }
+  const productRead = <T>(work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: SfStateResult<T> }>) => {
+    productSnapshotReads.set(work, (transaction) => {
+      if (!projectionCurrent()) return false
+      const method = Object.getOwnPropertyDescriptor(readerPersistence!.value, "transaction")
+      return !!method && Object.hasOwn(method, "value") && method.value === transaction
+    })
+    return work
+  }
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
-      input.persistence.transaction<SfStateResult<T>>("dashboard", async (snapshot) => {
+      input.persistence.transaction<SfStateResult<T>>("dashboard", productRead<T>(async (snapshot) => {
+        const projection = observeLocalProductRead(snapshot)
+        if (projection && (!projectionCurrent() || !projection.current()))
+          return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const candidate = readinessReads.get(read)
         const readiness = candidate?.namespace === namespace ? candidate : undefined
         const mode = readiness?.mode ?? "read"
         const authority = await input.authorize(request, snapshot, namespace, mode)
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
+        if (projection && (!projectionCurrent() || !projection.current()))
+          return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
         const selection = namespace === "cases" ? caseReads.get(read) : undefined
@@ -525,11 +560,13 @@ export function createSfProductState(input: {
           : await read(receipts ?? structuredClone(state), authority)
         if (sealed && !sealCurrent()) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+        if (projection && (!projectionCurrent() || !projection.current()))
+          return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         const current = await input.authorize(request, snapshot, namespace, mode)
-        if (!sameAuthority(authority, current) || sealed && !sealCurrent())
+        if (!sameAuthority(authority, current) || sealed && !sealCurrent() || projection && (!projectionCurrent() || !projection.current()))
           return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         return { commit: false, value: { status: "ok", storageVersion: state.versions[namespace], aggregateRevision: state.revision, incarnation: state.incarnation, value } }
-      }, { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
+      }), { signal: request.signal, ...(input.stagedReviewThreadTarget && hasSfDashboardSourceFence(input.persistence)
         ? { targetPreimageCurrent: input.persistence.dashboardSourceFence?.holdTargetPreimage().current, sealedRead: true } : {}) }),
     transaction: <T>(request: Request, command: SfStateMutation, work: (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>) => {
       if (command.idempotencyKey.startsWith(abortJournalPrefix) && !abortJournalWrites.has(work))

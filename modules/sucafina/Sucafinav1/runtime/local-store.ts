@@ -24,6 +24,22 @@ type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => Readon
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
+type LocalProductRead = Readonly<{ current: () => boolean }>
+const localProductReads = new WeakMap<object, LocalProductRead>()
+const productReadGet = WeakMap.prototype.get, productReadSet = WeakMap.prototype.set, productReadApply = Reflect.apply
+const localSnapshotAuthorities = new WeakMap<object, { read: object; current: () => boolean }>()
+
+/** Query a snapshot constructed by this store; callers cannot register one. */
+export function observeLocalProductRead(snapshot: object): LocalProductRead | undefined {
+  return productReadApply(productReadGet, localProductReads, [snapshot])
+}
+
+/** Authenticate the actual store/observer pair without invoking the observer. */
+export function isLocalSnapshotAuthorityReader(owner: object, read: unknown) {
+  const registered = localSnapshotAuthorities.get(owner)
+  return !!registered && registered.read === read && registered.current()
+}
+
 type LocalSnapshotStability = Readonly<{
   mutable?: { surface: Surface; snapshot: Snapshot }
   current: () => boolean
@@ -269,6 +285,11 @@ export async function openLocalStore(directory: string, options: {
     // audit are outside the installed Dashboard source projector's input.
     return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
       versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
+  }
+  const dashboardProductSnapshot = (scope: ReadScope, identity: object) => {
+    const snapshot = requireDashboardSource(scope, identity)
+    if (!snapshot) throw new Error("Local Dashboard product view unavailable")
+    return productSnapshotView.copy(snapshot)
   }
   const requireScope = (scope: ReadScope) => {
     let current: ReadScope | undefined = scope
@@ -586,16 +607,33 @@ export async function openLocalStore(directory: string, options: {
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
         const sourceRoot = transactionOptions?.dashboardSourceRoot
         const aclRoot = transactionOptions?.dashboardAclRoot
-        if ((sourceRoot || aclRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
-        const materialize = sourceRoot || aclRoot ? undefined : currentCopy(parent, surface)
-        const staged = sourceRoot || aclRoot || materialize ? undefined : parent.root.snapshots[surface]
-        const row = sourceRoot || aclRoot || materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const productField = transactionOptions && !types.isProxy(transactionOptions)
+          ? productSnapshotView.property(transactionOptions, "dashboardProductRead") : undefined
+        const product = productField && productSnapshotView.own(productField, "value") ? productField.value : undefined
+        const identity = product && typeof product === "object" && !types.isProxy(product)
+          ? productSnapshotView.property(product, "identity") : undefined
+        const callback = identity ? productSnapshotView.property(product, "work") : undefined
+        // CurrentChoice's wrapped route changes work and retains the full path.
+        const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
+          callback && productSnapshotView.own(callback, "value") && callback.value === work &&
+          sameStore() && productSnapshotView.current() ? identity.value as object : undefined
+        if ((sourceRoot || aclRoot || productRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
+        const materialize = sourceRoot || aclRoot || productRoot ? undefined : currentCopy(parent, surface)
+        const staged = sourceRoot || aclRoot || productRoot || materialize ? undefined : parent.root.snapshots[surface]
+        const row = sourceRoot || aclRoot || productRoot || materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
         if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || rootIdentities.get(parent.root) !== aclRoot))
           throw new Error("Local Dashboard ACL root changed")
         // The callback obtains ACL fields separately via observeAuthority.
         const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
+          : productRoot ? dashboardProductSnapshot(parent, productRoot)
           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
+        if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({ current: () => {
+          requireScope(scope)
+          if (context.getStore() !== scope || !sameStore() || !productSnapshotView.current()) return false
+          requireDashboardSource(scope, productRoot)
+          return true
+        } })])
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
@@ -616,6 +654,10 @@ export async function openLocalStore(directory: string, options: {
           }
           if (scope.root.poisoned) throw new Error("Nested local write attempted")
           if (sourceRoot) requireDashboardSource(scope, sourceRoot)
+          if (productRoot) {
+            if (!sameStore() || !productSnapshotView.current()) throw new Error("Local Dashboard product root changed")
+            requireDashboardSource(scope, productRoot)
+          }
           return result.value
         } finally {
           scope.open = false
@@ -905,6 +947,11 @@ export async function openLocalStore(directory: string, options: {
       const descriptor = Object.getOwnPropertyDescriptor(store, name)
       return descriptor && Object.hasOwn(descriptor, "value") && descriptor.value === original[index]
     })
+  const authorityReader = store.observeAuthority
+  if (authorityReader) localSnapshotAuthorities.set(store, { read: authorityReader, current: () => {
+    const active = Object.getOwnPropertyDescriptor(store, "observeAuthority")
+    return !!active && Object.hasOwn(active, "value") && active.value === authorityReader && sameStore()
+  } })
   snapshotStabilityReaders.set(store, () => {
     const scope = context.getStore()
     if (!scope) return undefined
@@ -1234,6 +1281,49 @@ const readonlyAuthorityAclCodec = (() => {
       } catch { return false }
     }
   } catch { return undefined }
+})()
+
+// The new fixed projection never passes its private source graph to a replaced
+// clone/enumerator. Keep codec fallback separate from the existing full path.
+const productSnapshotView = (() => {
+  const property = Object.getOwnPropertyDescriptor, descriptors = Object.getOwnPropertyDescriptors
+  const keys = Object.keys, define = Object.defineProperty, own = Object.hasOwn
+  const clone = globalThis.structuredClone, prototype = Object.prototype
+  const pins = [
+    { owner: globalThis, key: "structuredClone", value: clone },
+    { owner: Object, key: "getOwnPropertyDescriptors", value: descriptors },
+    { owner: WeakMap.prototype, key: "get", value: WeakMap.prototype.get },
+  ]
+  const current = () => {
+    if (!readonlyAuthorityAclCodec?.() || !snapshotDecoderCurrent() ||
+      property(prototype, "__sfProductV1") || property(prototype, "roleMap") || property(prototype, "access")) return false
+    for (let index = 0; index < pins.length; index++) {
+      const pin = pins[index]!
+      const active = property(pin.owner, pin.key)
+      if (!active || !own(active, "value") || active.value !== pin.value) return false
+    }
+    return true
+  }
+  const copy = (snapshot: Snapshot) => {
+    const data: Record<string, unknown> = {}
+    const fields = descriptors(snapshot.data), names = keys(fields)
+    for (let index = 0; index < names.length; index++) {
+      const name = names[index]!
+      if (name !== "__sfProductV1" && name !== "roleMap" && name !== "access") continue
+      const field = fields[name]!
+      if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
+      define(data, name, { value: field.value, enumerable: true, writable: true, configurable: true })
+    }
+    const view: Record<string, unknown> = {}
+    const top = descriptors(snapshot), topNames = keys(top)
+    for (let index = 0; index < topNames.length; index++) {
+      const name = topNames[index]!, field = top[name]!
+      if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
+      define(view, name, { value: name === "data" ? data : field.value, enumerable: true, writable: true, configurable: true })
+    }
+    return validateSnapshot(clone(view))
+  }
+  return { current, copy, property, own }
 })()
 
 type SnapshotMaterialization = Readonly<{

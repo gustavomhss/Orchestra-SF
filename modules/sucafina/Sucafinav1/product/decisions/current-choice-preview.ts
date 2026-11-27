@@ -1,5 +1,5 @@
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
-import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, isLocalSnapshotAuthorityReader, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../contracts/decisions.ts"
@@ -266,6 +266,12 @@ export type CurrentChoiceFence = {
 const currentChoiceFences = new WeakSet<object>()
 const currentChoiceStorage = new WeakMap<CurrentChoiceFence, () => CurrentChoicePersistence | undefined>()
 const currentChoiceReadonlyReaders = new WeakMap<object, <S extends Surface>(surfaces: readonly S[], mode?: "unfenced") => ReadonlyAuthorityData<S> | undefined>()
+const currentChoiceSnapshotAuthorities = new WeakMap<object, (read: unknown) => boolean>()
+
+/** Factory provenance only; no scope, authorization or external callback runs. */
+export function isCurrentChoiceSnapshotAuthorityReader(owner: object, read: unknown) {
+  return currentChoiceSnapshotAuthorities.get(owner)?.(read) === true
+}
 
 /** Query only the exact forwarding object emitted by this factory. Unfenced
  * admission requires its direct transaction route and no CurrentChoice scope;
@@ -500,6 +506,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     }
     if (originals.every(({ base, wrapped }) => !!base && Object.hasOwn(base, "value") && typeof base.value === "function" &&
       !!wrapped && Object.hasOwn(wrapped, "value") && typeof wrapped.value === "function") && pinned()) {
+      currentChoiceSnapshotAuthorities.set(persistence, (read) => pinned() && isLocalSnapshotAuthorityReader(driver, read))
       currentChoiceReadonlyReaders.set(persistence, <S extends Surface>(surfaces: readonly S[], mode?: "unfenced"): ReadonlyAuthorityData<S> | undefined => {
         if (!pinned()) return undefined
         const scope = scopes.getStore()
