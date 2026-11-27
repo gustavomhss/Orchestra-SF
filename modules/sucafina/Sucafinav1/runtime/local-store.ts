@@ -24,7 +24,7 @@ type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => Readon
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
-type LocalProductRead = Readonly<{ current: () => boolean; selection: "cases" | "preferences" | undefined }>
+type LocalProductRead = Readonly<{ current: () => boolean; selection: "cases" | "preferences" | "case-identities" | undefined }>
 const localProductReads = new WeakMap<object, LocalProductRead>()
 const productReadGet = WeakMap.prototype.get, productReadSet = WeakMap.prototype.set, productReadApply = Reflect.apply
 const localSnapshotAuthorities = new WeakMap<object, { read: object; current: () => boolean }>()
@@ -201,6 +201,7 @@ export async function openLocalStore(directory: string, options: {
     freshPlan?: { units: number; copy: () => Snapshot }
     copyAcl?: (requireComplete?: true) => Snapshot["data"] | undefined
     bytesIdentity?: object
+    normalizedSource?: () => boolean
   } => {
     const prior = materializations.get(surface)
     if (payload !== undefined && typeof payload !== "string") {
@@ -218,7 +219,7 @@ export async function openLocalStore(directory: string, options: {
         ? fingerprintSnapshotCopy(prior) : () => materializeSnapshot(prior, payload)
       const acl = prior.acl
       const complete = prior.copy !== undefined
-      return { materialize, bytesIdentity: prior.identity,
+      return { materialize, bytesIdentity: prior.identity, normalizedSource: () => identitySnapshotBirth.planCurrent(prior),
         ...(!prior.fingerprint || prior.copy ? { copy: materialize } : {}),
         ...(acl === undefined ? {} : { copyAcl: (requireComplete?: true) =>
           (!requireComplete || complete) && aclCodecCurrent() ? decodeSnapshot(acl).data : undefined }) }
@@ -227,10 +228,14 @@ export async function openLocalStore(directory: string, options: {
     snapshotSql.reconcile(materializations)
     if (payload === undefined) {
       const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
-      return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity }
+      return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity, normalizedSource: identitySnapshotBirth.current }
     }
+    const beforeDecode = identitySnapshotBirth.current()
     const snapshot = decodeSnapshot(payload)
+    const decoded = beforeDecode && identitySnapshotBirth.current()
     const plan = planSnapshotMaterialization(snapshot, payload, fingerprint)
+    const normalized = decoded && identitySnapshotBirth.current()
+    identitySnapshotBirth.rememberPlan(plan, normalized)
     if (plan) {
       const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
       for (const [name, entry] of materializations) {
@@ -242,7 +247,7 @@ export async function openLocalStore(directory: string, options: {
       materializations.set(surface, plan)
       snapshotSql.reconcile(materializations)
     }
-    return { materialize: () => snapshot, bytesIdentity: plan?.identity,
+    return { materialize: () => snapshot, bytesIdentity: plan?.identity, normalizedSource: () => normalized,
       ...(plan && (!plan.fingerprint || plan.copy) ? { freshPlan: { units: plan.units,
         copy: plan.fingerprint ? fingerprintSnapshotCopy(plan) : () => materializeSnapshot(plan, payload) } } : {}),
     }
@@ -269,13 +274,15 @@ export async function openLocalStore(directory: string, options: {
     open: boolean
     signal?: AbortSignal
   }
+  const ownersPrivate = { current: identitySnapshotBirth.ownerCurrent() }
   const context = new AsyncLocalStorage<ReadScope>()
   const rootIdentities = new WeakMap<object, object>()
+  const retainOwnerPrivacy = () => { ownersPrivate.current &&= identitySnapshotBirth.ownerCurrent(context, rootIdentities) }
   const preimages = new WeakSet<() => boolean>()
   const requireDashboardSource = (scope: ReadScope, identity: object) => {
-    const preimage = Object.hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
-    if (scope.root.poisoned || rootIdentities.get(scope.root) !== identity ||
-      !(Object.hasOwn(scope.root, "readOnly") && scope.root.readOnly === true || preimage?.current() === true)) throw new Error("Local Dashboard source root changed")
+    const preimage = (retainOwnerPrivacy(), Object).hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
+    if (scope.root.poisoned || (retainOwnerPrivacy(), rootIdentities).get(scope.root) !== identity ||
+      !((retainOwnerPrivacy(), Object).hasOwn(scope.root, "readOnly") && scope.root.readOnly === true || preimage?.current() === true)) throw new Error("Local Dashboard source root changed")
     return preimage?.surface === "dashboard" ? preimage.snapshot() : scope.root.snapshots.dashboard
   }
   const dashboardSourceSnapshot = (scope: ReadScope, identity: object) => {
@@ -286,10 +293,11 @@ export async function openLocalStore(directory: string, options: {
     return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
       versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
   }
-  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: "cases" | "preferences") => {
+  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: "cases" | "preferences" | "case-identities") => {
     const snapshot = requireDashboardSource(scope, identity)
     if (!snapshot) throw new Error("Local Dashboard product view unavailable")
-    return productSnapshotView.copy(snapshot, selection)
+    return productSnapshotView.copy(snapshot, selection,
+      ownersPrivate.current && scope.root.readOnly === true && identitySnapshotBirth.isReadonlySnapshot(scope.root, snapshot))
   }
   const requireScope = (scope: ReadScope) => {
     let current: ReadScope | undefined = scope
@@ -301,7 +309,7 @@ export async function openLocalStore(directory: string, options: {
     requireDatabaseFile()
   }
   const currentCopy = (scope: ReadScope, surface: Surface) =>
-    Object.hasOwn(scope.root, "preimage") && scope.root.preimage?.surface === surface && !scope.root.preimage.current()
+    (retainOwnerPrivacy(), Object).hasOwn(scope.root, "preimage") && scope.root.preimage?.surface === surface && !scope.root.preimage.current()
       ? undefined : scope.root.copies?.[surface]
   const copyCurrentSnapshot = (scope: ReadScope, surface: Surface): Snapshot => {
     const materialize = currentCopy(scope, surface)
@@ -350,13 +358,13 @@ export async function openLocalStore(directory: string, options: {
   const abortRoots = new WeakMap<Database, LocalTransactionAbort>()
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
     if (lifecycle.closed) {
-      const scope = context.getStore()
+      const scope = (retainOwnerPrivacy(), context).getStore()
       // An admitted readonly root may drain during disposal, but a rejected
       // write must not disappear when its caller catches the disposed error.
       if (write && scope?.root.readOnly) scope.root.poisoned = true
       return Promise.reject(new Error("Local store is disposed"))
     }
-    const inherited = context.getStore()
+    const inherited = (retainOwnerPrivacy(), context).getStore()
     if (inherited) {
       try {
         requireScope(inherited)
@@ -435,7 +443,7 @@ export async function openLocalStore(directory: string, options: {
   }
 
   const hasCurrentSnapshots = () => {
-    const scope = context.getStore()
+    const scope = (retainOwnerPrivacy(), context).getStore()
     if (!scope) return false
     requireScope(scope)
     return true
@@ -455,10 +463,10 @@ export async function openLocalStore(directory: string, options: {
     // Only current credential/policy reads are admitted here. Business authority is
     // observed by the session producer in the already-held, separate Team partition.
     authorityRead: async (db, work, signal) => {
-      if (context.getStore() || !db.inTransaction) throw new Error("Invalid private connection authority scope")
+      if ((retainOwnerPrivacy(), context).getStore() || !db.inTransaction) throw new Error("Invalid private connection authority scope")
       const scope: ReadScope = { root: { identity: {}, db, snapshots: {}, poisoned: false, readers: 0, readOnly: true }, open: true, signal }
       try {
-        const result = await context.run(scope, work)
+        const result = await (retainOwnerPrivacy(), context).run(scope, work)
         requireScope(scope)
         if (scope.root.poisoned) throw new Error("Nested local write attempted")
         if (scope.root.readers) throw new Error("Nested local read still active")
@@ -481,21 +489,21 @@ export async function openLocalStore(directory: string, options: {
       return Object.freeze({ current, release: () => { state.active = false } })
     },
     observeAuthority: (surfaces) => {
-      const scope = context.getStore()
+      const scope = (retainOwnerPrivacy(), context).getStore()
       if (!scope) return undefined
       const fields = snapshotAclFields
       const absent = new Set<string>()
-      const sealed = () => Object.hasOwn(scope.root, "readOnly") && scope.root.readOnly === true ||
-        Object.hasOwn(scope.root, "preimage") && scope.root.preimage?.current() === true
+      const sealed = () => (retainOwnerPrivacy(), Object).hasOwn(scope.root, "readOnly") && scope.root.readOnly === true ||
+        (retainOwnerPrivacy(), Object).hasOwn(scope.root, "preimage") && scope.root.preimage?.current() === true
       const active = () => {
         requireScope(scope)
-        return context.getStore() === scope && !scope.root.poisoned && sealed()
+        return (retainOwnerPrivacy(), context).getStore() === scope && !scope.root.poisoned && sealed()
       }
       requireScope(scope)
       if (!sealed()) return undefined
       if (scope.root.poisoned) throw new Error("Local transaction is poisoned")
       const entries = surfaces.map((surface) => {
-        const preimage = Object.hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
+        const preimage = (retainOwnerPrivacy(), Object).hasOwn(scope.root, "preimage") ? scope.root.preimage : undefined
         const copiedAcl = scope.root.aclCopies?.[surface]?.()
         const data = copiedAcl ?? (preimage?.surface === surface ? preimage.snapshot() : scope.root.snapshots[surface])?.data
         if (!data || Object.getPrototypeOf(data) !== Object.prototype) return undefined
@@ -509,8 +517,8 @@ export async function openLocalStore(directory: string, options: {
       })
       if (entries.some((entry) => !entry)) return undefined
       const snapshots = Object.fromEntries(entries.filter((entry) => entry !== undefined)) as Record<(typeof surfaces)[number], Pick<Snapshot, "data">>
-      const identity = rootIdentities.get(scope.root) ?? {}
-      rootIdentities.set(scope.root, identity)
+      const identity = (retainOwnerPrivacy(), rootIdentities).get(scope.root) ?? {}
+      ;(retainOwnerPrivacy(), rootIdentities).set(scope.root, identity)
       const validity = { current: true }
       const bytesIdentity = snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined
       return { snapshots, identity, bytesIdentity, current: () => {
@@ -520,6 +528,7 @@ export async function openLocalStore(directory: string, options: {
     },
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {
+        const normalized: Partial<Record<Surface, Snapshot>> = {}
         const copies: SnapshotCopies = {}
         const aclCopies: AclCopies = {}
         const byteKeys: Partial<Record<Surface, object>> = {}
@@ -542,8 +551,15 @@ export async function openLocalStore(directory: string, options: {
           }
           const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
           return () => {
-            if (observed.value) return observed.value
+            if (observed.value) {
+              // Once a private graph may have crossed a changed intrinsic, it
+              // cannot regain normalization merely because the hook is restored.
+              if (!identitySnapshotBirth.current()) delete normalized[surface]
+              return observed.value
+            }
+            const birth = source.normalizedSource?.() === true && identitySnapshotBirth.current()
             observed.value = observed.materialize!()
+            if (birth && source.normalizedSource?.() === true && identitySnapshotBirth.current()) normalized[surface] = observed.value
             observed.materialize = undefined
             return observed.value
           }
@@ -554,8 +570,9 @@ export async function openLocalStore(directory: string, options: {
           get procurement() { return observed.procurement() },
         }
         const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }
+        identitySnapshotBirth.bindReadonly(scope.root, normalized)
         try {
-          const value = await context.run(scope, work)
+          const value = await (retainOwnerPrivacy(), context).run(scope, work)
           requireScope(scope)
           if (scope.root.poisoned) throw new Error("Nested local write attempted")
           if (scope.root.readers) throw new Error("Nested local read still active")
@@ -564,6 +581,7 @@ export async function openLocalStore(directory: string, options: {
           scope.open = false
           // This root never exposes its private observations. Closed descendants
           // need neither their graphs/getters nor the initial memo's copy plans.
+          identitySnapshotBirth.releaseReadonly(scope.root)
           scope.root.snapshots = {}
           delete copies.dashboard
           delete copies.planner
@@ -574,27 +592,27 @@ export async function openLocalStore(directory: string, options: {
         }
       }, transactionOptions?.signal),
     currentSnapshotScope: () => {
-      const scope = context.getStore()
+      const scope = (retainOwnerPrivacy(), context).getStore()
       if (!scope) return undefined
       requireScope(scope)
       return { identity: scope.root.identity, bytesIdentity: snapshotDecoderCurrent() ? scope.root.bytesIdentity : undefined, readOnly: scope.root.readOnly === true, poisoned: scope.root.poisoned }
     },
     hasCurrentSnapshots,
     currentSnapshots: () => {
-      const scope = context.getStore()
+      const scope = (retainOwnerPrivacy(), context).getStore()
       if (!scope) return undefined
       requireScope(scope)
       return { dashboard: copyCurrentSnapshot(scope, "dashboard"), planner: copyCurrentSnapshot(scope, "planner"),
         procurement: copyCurrentSnapshot(scope, "procurement") }
     },
     currentSnapshot: (surface) => {
-      const scope = context.getStore()
+      const scope = (retainOwnerPrivacy(), context).getStore()
       if (!scope) return undefined
       requireScope(scope)
       return copyCurrentSnapshot(scope, surface)
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
-      const parent = context.getStore()
+      const parent = (retainOwnerPrivacy(), context).getStore()
       if (parent) return (async () => {
         if (lifecycle.closed) {
           // No callback can be admitted after disposal to establish read-only
@@ -614,8 +632,8 @@ export async function openLocalStore(directory: string, options: {
           ? productSnapshotView.property(product, "identity") : undefined
         const callback = identity ? productSnapshotView.property(product, "work") : undefined
         const selected = callback ? productSnapshotView.property(product, "selection") : undefined
-        const selection: "cases" | "preferences" | undefined = selected && productSnapshotView.own(selected, "value") &&
-          (selected.value === "cases" || selected.value === "preferences") ? selected.value : undefined
+        const selection: "cases" | "preferences" | "case-identities" | undefined = selected && productSnapshotView.own(selected, "value") &&
+          (selected.value === "cases" || selected.value === "preferences" || selected.value === "case-identities") ? selected.value : undefined
         // CurrentChoice's wrapped route changes work and retains the full path.
         const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
           callback && productSnapshotView.own(callback, "value") && callback.value === work &&
@@ -624,7 +642,7 @@ export async function openLocalStore(directory: string, options: {
         const materialize = sourceRoot || aclRoot || productRoot ? undefined : currentCopy(parent, surface)
         const staged = sourceRoot || aclRoot || productRoot || materialize ? undefined : parent.root.snapshots[surface]
         const row = sourceRoot || aclRoot || productRoot || materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || rootIdentities.get(parent.root) !== aclRoot))
+        if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || (retainOwnerPrivacy(), rootIdentities).get(parent.root) !== aclRoot))
           throw new Error("Local Dashboard ACL root changed")
         // The callback obtains ACL fields separately via observeAuthority.
         const projected = productRoot ? dashboardProductSnapshot(parent, productRoot, selection) : undefined
@@ -636,8 +654,9 @@ export async function openLocalStore(directory: string, options: {
           selection: projected?.selection,
           current: () => {
             requireScope(scope)
-            if (context.getStore() !== scope || !sameStore() || !productSnapshotView.current() ||
-              projected?.selection && !productSnapshotView.selectionCurrent()) return false
+            if ((retainOwnerPrivacy(), context).getStore() !== scope || !sameStore() || !productSnapshotView.current() ||
+              projected?.selection && !productSnapshotView.selectionCurrent() ||
+              projected?.normalizedIdentities && (!ownersPrivate.current || !identitySnapshotBirth.current())) return false
             requireDashboardSource(scope, productRoot)
             return true
           },
@@ -645,7 +664,7 @@ export async function openLocalStore(directory: string, options: {
         const blobs: BlobTransaction = {
           get: async (key) => {
             requireScope(scope)
-            if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+            if ((retainOwnerPrivacy(), context).getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
             const blob = scope.root.db.query<{ payload: Uint8Array }, [string, string]>("SELECT payload FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
             return blob ? new Uint8Array(blob.payload) : undefined
           },
@@ -654,7 +673,7 @@ export async function openLocalStore(directory: string, options: {
         }
         scope.root.readers++
         try {
-          const result = await context.run(scope, () => work(snapshot, blobs))
+          const result = await (retainOwnerPrivacy(), context).run(scope, () => work(snapshot, blobs))
           requireScope(scope)
           if (result.commit) {
             scope.root.poisoned = true
@@ -663,7 +682,8 @@ export async function openLocalStore(directory: string, options: {
           if (scope.root.poisoned) throw new Error("Nested local write attempted")
           if (sourceRoot) requireDashboardSource(scope, sourceRoot)
           if (productRoot) {
-            if (!sameStore() || !productSnapshotView.current() || projected?.selection && !productSnapshotView.selectionCurrent())
+            if (!sameStore() || !productSnapshotView.current() || projected?.selection && !productSnapshotView.selectionCurrent() ||
+              projected?.normalizedIdentities && (!ownersPrivate.current || !identitySnapshotBirth.current()))
               throw new Error("Local Dashboard product root changed")
             requireDashboardSource(scope, productRoot)
           }
@@ -748,7 +768,7 @@ export async function openLocalStore(directory: string, options: {
         const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), mutableSurface: surface, ...(currentPreimage && preimage ? { preimage: { surface, current: currentPreimage, snapshot: preimage } } : {}), poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
           requireScope(scope)
-          if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+          if ((retainOwnerPrivacy(), context).getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
         }
         const requireWritable = () => {
           requireScope(scope)
@@ -756,7 +776,7 @@ export async function openLocalStore(directory: string, options: {
             scope.root.poisoned = true
             throw new Error("Blob writes are forbidden in a sealed read")
           }
-          if (context.getStore() !== scope || scope.root.readers > 0) {
+          if ((retainOwnerPrivacy(), context).getStore() !== scope || scope.root.readers > 0) {
             scope.root.poisoned = true
             throw new Error("Nested blob writes are forbidden")
           }
@@ -790,7 +810,7 @@ export async function openLocalStore(directory: string, options: {
         }
         const result = await (async () => {
           try {
-            return await context.run(scope, () => work(snapshot, blobs))
+            return await (retainOwnerPrivacy(), context).run(scope, () => work(snapshot, blobs))
           } finally {
             scope.open = false
             scope.root.snapshots = {}
@@ -833,7 +853,7 @@ export async function openLocalStore(directory: string, options: {
         surfaces.forEach((surface) => localTransactions.set(snapshots[surface], transaction))
         const result = await (async () => {
           try {
-            const result = await context.run(scope, () => work(snapshots))
+            const result = await (retainOwnerPrivacy(), context).run(scope, () => work(snapshots))
             transaction.phase = "callback-completed"
             return result
           } catch (error) {
@@ -937,7 +957,7 @@ export async function openLocalStore(directory: string, options: {
       }),
     },
     dispose: () => {
-      if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+      if ((retainOwnerPrivacy(), context).getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true
       lifecycle.disposing ??= Promise.allSettled([...active]).then(() => {
         try { closeWriter() } finally {
@@ -962,19 +982,19 @@ export async function openLocalStore(directory: string, options: {
     return !!active && Object.hasOwn(active, "value") && active.value === authorityReader && sameStore()
   } })
   snapshotStabilityReaders.set(store, () => {
-    const scope = context.getStore()
+    const scope = (retainOwnerPrivacy(), context).getStore()
     if (!scope) return undefined
     requireScope(scope)
     const root = scope.root
-    const mutable = Object.hasOwn(root, "mutableSurface") ? root.mutableSurface : undefined
-    const readonly = Object.hasOwn(root, "readOnly") && root.readOnly === true
+    const mutable = (retainOwnerPrivacy(), Object).hasOwn(root, "mutableSurface") ? root.mutableSurface : undefined
+    const readonly = (retainOwnerPrivacy(), Object).hasOwn(root, "readOnly") && root.readOnly === true
     // transactionAll exposes all surfaces, and a target preimage may switch
     // the view of the owning callback. Keep both on the complete observation.
-    if (!(readonly || mutable) || root.poisoned || Object.hasOwn(root, "preimage") || !sameStore() || !snapshotDecoderCurrent()) return undefined
+    if (!(readonly || mutable) || root.poisoned || (retainOwnerPrivacy(), Object).hasOwn(root, "preimage") || !sameStore() || !snapshotDecoderCurrent()) return undefined
     if (!root.snapshots.dashboard || !root.snapshots.planner || !root.snapshots.procurement)
       throw new Error("Local transaction snapshots unavailable")
     const current = () => {
-      if (context.getStore() !== scope || scope.root !== root || root.poisoned || Object.hasOwn(root, "preimage") ||
+      if ((retainOwnerPrivacy(), context).getStore() !== scope || scope.root !== root || root.poisoned || (retainOwnerPrivacy(), Object).hasOwn(root, "preimage") ||
           !sameStore() || !snapshotDecoderCurrent()) return false
       requireScope(scope)
       return true
@@ -982,18 +1002,18 @@ export async function openLocalStore(directory: string, options: {
     return Object.freeze({ current, ...(mutable ? { mutable: { surface: mutable, snapshot: copyCurrentSnapshot(scope, mutable) } } : {}) })
   })
   readonlyAuthorityReaders.set(store, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
-    const scope = context.getStore()
+    const scope = (retainOwnerPrivacy(), context).getStore()
     if (!scope) return undefined
     // Match currentSnapshots exactly: an ended/aborted known scope is an error,
     // not an unsupported optimization. Poison and dispose retain their original
     // transaction/root egress checks and do not suppress authentication callbacks.
     requireScope(scope)
-    if (!Object.hasOwn(scope.root, "readOnly") || scope.root.readOnly !== true || !sameStore()) return undefined
+    if (!(retainOwnerPrivacy(), Object).hasOwn(scope.root, "readOnly") || scope.root.readOnly !== true || !sameStore()) return undefined
     const fields = ["roleMap", "access"] as const
     const observed = surfaces.map((surface) => {
       let data: Snapshot["data"] | undefined
       if (typeof surface === "string" && readonlyAuthorityAclCodec?.()) {
-        const copies = Object.getOwnPropertyDescriptor(scope.root, "aclCopies")
+        const copies = (retainOwnerPrivacy(), Object).getOwnPropertyDescriptor(scope.root, "aclCopies")
         const stored: unknown = copies && Object.hasOwn(copies, "value") ? copies.value : undefined
         const copy = stored && typeof stored === "object" ? Object.getOwnPropertyDescriptor(stored, surface) : undefined
         const read: unknown = copy && Object.hasOwn(copy, "value") ? copy.value : undefined
@@ -1023,7 +1043,7 @@ export async function openLocalStore(directory: string, options: {
     const current = (requirement?: "unpoisoned") => {
       requireScope(scope)
       if (integrity.failed) return false
-      const valid = context.getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
+      const valid = (retainOwnerPrivacy(), context).getStore() === scope && (requirement !== "unpoisoned" || !scope.root.poisoned) && sameStore() &&
         (!scope.root.bytesIdentity || snapshotDecoderCurrent()) && absent.every((field) => Object.getOwnPropertyDescriptor(Object.prototype, field) === undefined)
       if (!valid) integrity.failed = true
       return valid
@@ -1292,6 +1312,110 @@ const readonlyAuthorityAclCodec = (() => {
   } catch { return undefined }
 })()
 
+// Normalization belongs to the actual decoder/plan birth, never to a later
+// lookup with restored globals. Only readonly roots bind private graph slots;
+// mutable targets, held preimages and their copies are never certified here.
+const identitySnapshotBirth = (() => {
+  const property = Object.getOwnPropertyDescriptor, own = Object.hasOwn, parentOf = Object.getPrototypeOf
+  const ownKeys = Reflect.ownKeys, apply = Reflect.apply, PrivateMap = WeakMap
+  const get = WeakMap.prototype.get, set = WeakMap.prototype.set, remove = WeakMap.prototype.delete
+  const read = <T>(registry: WeakMap<object, T>, key: object): T | undefined => apply(get, registry, [key])
+  const plans = new PrivateMap<object, () => boolean>()
+  const roots = new PrivateMap<object, Partial<Record<Surface, Snapshot>>>()
+  const Context = AsyncLocalStorage, contextPrototype = Context.prototype, mapPrototype = WeakMap.prototype
+  const isProxy = types.isProxy
+  const ownerPins = [
+    { owner: Context, key: "prototype", expected: property(Context, "prototype") },
+    { owner: globalThis, key: "WeakMap", expected: property(globalThis, "WeakMap") },
+    { owner: globalThis, key: "Object", expected: property(globalThis, "Object") },
+    { owner: Object, key: "hasOwn", expected: property(Object, "hasOwn") },
+    { owner: Object, key: "getOwnPropertyDescriptor", expected: property(Object, "getOwnPropertyDescriptor") },
+    { owner: contextPrototype, key: "getStore", expected: property(contextPrototype, "getStore") },
+    { owner: contextPrototype, key: "run", expected: property(contextPrototype, "run") },
+    { owner: mapPrototype, key: "get", expected: property(mapPrototype, "get") },
+    { owner: mapPrototype, key: "set", expected: property(mapPrototype, "set") },
+  ]
+  const prototypes = [Object.prototype, Array.prototype, Set.prototype].map((owner) => ({
+    owner, parent: parentOf(owner), keys: ownKeys(owner),
+  }))
+  const pins: { owner: object; key: PropertyKey; expected: PropertyDescriptor | undefined }[] = []
+  for (const group of prototypes) for (const key of group.keys) pins.push({ owner: group.owner, key, expected: property(group.owner, key) })
+  // In addition to the decoder/ACL pins, these intrinsics build copy plans or
+  // can receive the private graph on existing full-copy/observation paths.
+  const groups = [
+    { owner: Object, keys: ["is", "freeze", "entries", "getOwnPropertyDescriptors", "getOwnPropertySymbols"] },
+    { owner: Array, keys: ["from"] },
+    { owner: globalThis, keys: ["structuredClone"] },
+  ]
+  for (const group of groups) for (const key of group.keys) pins.push({ owner: group.owner, key, expected: property(group.owner, key) })
+  const same = (active: PropertyDescriptor | undefined, expected: PropertyDescriptor | undefined) =>
+    active === undefined || expected === undefined ? active === expected :
+      active.enumerable === expected.enumerable && active.configurable === expected.configurable &&
+      own(active, "value") === own(expected, "value") && (own(expected, "value")
+        ? active.value === expected.value && active.writable === expected.writable
+        : active.get === expected.get && active.set === expected.set)
+  const current = () => {
+    try {
+      if (!readonlyAuthorityAclCodec?.() || !snapshotDecoderCurrent()) return false
+      for (let index = 0; index < prototypes.length; index++) {
+        const group = prototypes[index]!
+        if (parentOf(group.owner) !== group.parent || ownKeys(group.owner).length !== group.keys.length) return false
+      }
+      for (let index = 0; index < pins.length; index++) {
+        const pin = pins[index]!
+        if (!same(property(pin.owner, pin.key), pin.expected)) return false
+      }
+      return true
+    } catch { return false }
+  }
+  const rememberPlan = (plan: SnapshotMaterialization | undefined, normalized: boolean) => {
+    if (!plan || !normalized || !current()) return
+    const copy = property(plan, "copy")?.value
+    const records: { owner: object; key: string; expected: PropertyDescriptor | undefined }[] = []
+    for (const key of ["identity", "payload", "fingerprint", "payloadUnits", "copy", "acl", "units"])
+      records.push({ owner: plan, key, expected: property(plan, key) })
+    if (copy !== undefined) for (const key of ["json", "missing", "largeStrings"])
+      records.push({ owner: copy, key, expected: property(copy, key) })
+    // A memo may have crossed a replaced Map method. Its own immutable strings
+    // must still be precisely those captured at the trusted plan construction.
+    const valid = () => {
+      for (let index = 0; index < records.length; index++) {
+        const record = records[index]!
+        if (!same(property(record.owner, record.key), record.expected)) return false
+      }
+      return true
+    }
+    apply(set, plans, [plan, valid])
+  }
+  return {
+    current, rememberPlan,
+    // Existing calls still use their original lookup, receiver and result. Only
+    // this new optimization loses eligibility if a mutable primitive can retain
+    // its owner. The store latch cannot recover after a hook restores itself.
+    ownerCurrent: (context?: object, identities?: object) => {
+      try {
+        if (AsyncLocalStorage !== Context || context && isProxy(context) || identities && isProxy(identities)) return false
+        for (let index = 0; index < ownerPins.length; index++) {
+          const pin = ownerPins[index]!
+          if (!same(property(pin.owner, pin.key), pin.expected)) return false
+        }
+        return (!context || parentOf(context) === contextPrototype && !property(context, "getStore") && !property(context, "run")) &&
+          (!identities || parentOf(identities) === mapPrototype && !property(identities, "get") && !property(identities, "set"))
+      } catch { return false }
+    },
+    planCurrent: (plan: SnapshotMaterialization) => {
+      const valid = read(plans, plan)
+      return !!valid && current() && valid()
+    },
+    bindReadonly: (root: object, snapshots: Partial<Record<Surface, Snapshot>>) => { apply(set, roots, [root, snapshots]) },
+    releaseReadonly: (root: object) => { apply(remove, roots, [root]) },
+    isReadonlySnapshot: (root: object, snapshot: Snapshot) => {
+      const snapshots = read(roots, root)
+      return !!snapshots && property(snapshots, "dashboard")?.value === snapshot
+    },
+  }
+})()
+
 // The new fixed projection never passes its private source graph to a replaced
 // clone/enumerator. Keep codec fallback separate from the existing full path.
 const productSnapshotView = (() => {
@@ -1334,7 +1458,50 @@ const productSnapshotView = (() => {
   }
   const plain = (value: unknown): value is Record<string, unknown> =>
     !!value && typeof value === "object" && parentOf(value) === prototype
-  const selectedState = (value: unknown, selection: "cases" | "preferences") => {
+  // The fixed identity factory reads only these four fields. Unknown fields
+  // and malformed entries remain complete; only known DecisionCase bodies may
+  // be omitted from a graph whose readonly birth proves a normalized tree.
+  const caseBodies = ["state", "objective", "horizon", "currency", "criteria", "sourceRefs", "alternatives", "costCoverageBases",
+    "assumptions", "questions", "choices", "preparedChanges", "receipts", "ledger"] as const
+  const identityCases = (cases: Record<string, unknown>) => {
+    const fields = descriptors(cases), names = keys(fields), selected: Record<string, unknown> = {}
+    for (let index = 0; index < names.length; index++) {
+      const name = names[index]!, field = fields[name]!
+      const entry: unknown = field.value
+      let value = entry
+      if (plain(entry)) {
+        const parts = descriptors(entry)
+        const id = own(parts, "id") ? parts.id : undefined, incarnation = own(parts, "incarnation") ? parts.incarnation : undefined
+        const version = own(parts, "version") ? parts.version : undefined, participants = own(parts, "participants") ? parts.participants : undefined
+        const members: unknown = participants?.value
+        let simple = !!id?.enumerable && own(id, "value") && typeof id.value === "string" &&
+          !!incarnation?.enumerable && own(incarnation, "value") && typeof incarnation.value === "string" &&
+          !!version?.enumerable && own(version, "value") && integer(version.value) && Number(version.value) >= 0 &&
+          !!participants?.enumerable && own(participants, "value") && Array.isArray(members) && parentOf(members) === Array.prototype
+        if (simple && Array.isArray(members)) {
+          const elements = descriptors(members)
+          simple = keys(elements).length === members.length + 1
+          for (let item = 0; simple && item < members.length; item++) {
+            const element = own(elements, item) ? elements[item] : undefined
+            simple = !!element?.enumerable && own(element, "value") && typeof element.value === "string"
+          }
+        }
+        if (simple) {
+          const reduced: Record<string, unknown> = {}, partNames = keys(parts)
+          for (let item = 0; item < partNames.length; item++) {
+            const key = partNames[item]!
+            let body = false
+            for (let known = 0; known < caseBodies.length; known++) if (caseBodies[known] === key) body = true
+            if (!body) define(reduced, key, { value: parts[key]!.value, enumerable: true, writable: true, configurable: true })
+          }
+          value = reduced
+        }
+      }
+      define(selected, name, { value, enumerable: true, writable: true, configurable: true })
+    }
+    return selected
+  }
+  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean) => {
     if (!current() || !selectionCurrent() || !plain(value)) return undefined
     const state = descriptors(value), names = keys(state)
     for (let index = 0; index < names.length; index++) {
@@ -1366,16 +1533,19 @@ const productSnapshotView = (() => {
       let map = false
       for (let item = 0; item < maps.length; item++) if (maps[item] === name) map = true
       for (let item = 0; item < additive.length; item++) if (additive[item] === name) map = true
-      define(selected, name, { value: map && name !== selection && value !== undefined ? {} : value,
+      const retained = selection === "case-identities" ? "cases" : selection
+      define(selected, name, { value: name === "cases" && normalizedIdentities && plain(value) ? identityCases(value) :
+        map && name !== retained && value !== undefined ? {} : value,
         enumerable: true, writable: true, configurable: true })
     }
     return selected
   }
-  const copy = (snapshot: Snapshot, selection?: "cases" | "preferences") => {
+  const copy = (snapshot: Snapshot, selection?: "cases" | "preferences" | "case-identities", normalized = false) => {
+    const normalizedIdentities = selection === "case-identities" && normalized && identitySnapshotBirth.current()
     const data: Record<string, unknown> = {}
     const fields = descriptors(snapshot.data), names = keys(fields)
     const product = own(fields, "__sfProductV1") ? fields.__sfProductV1 : undefined
-    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection) : undefined
+    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection, normalizedIdentities) : undefined
     for (let index = 0; index < names.length; index++) {
       const name = names[index]!
       if (name !== "__sfProductV1" && name !== "roleMap" && name !== "access") continue
@@ -1391,7 +1561,7 @@ const productSnapshotView = (() => {
       if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
       define(view, name, { value: name === "data" ? data : field.value, enumerable: true, writable: true, configurable: true })
     }
-    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined }
+    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities }
   }
   return { current, selectionCurrent, copy, property, own }
 })()

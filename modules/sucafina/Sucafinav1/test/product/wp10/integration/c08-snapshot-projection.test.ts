@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -987,14 +988,103 @@ test("C16 closed case factories preserve selection, fallback, late observations 
       const state = object(snapshot.data.__sfProductV1)
       object(state.cases).c16Malformed = ["original malformed entry"]
       object(state.reviews).c16Unselected = { nested: ["must remain outside the declared cases read-set"] }
+      const entry = object(object(state.cases)[caseRef.id])
+      entry.c17Unknown = { keep: ["unknown case fields stay complete"] }
+      entry.c17OwnUndefined = undefined
+      Object.defineProperty(object(state.cases), "__proto__", { value: { ...structuredClone(entry), id: "__proto__" },
+        enumerable: true, writable: true, configurable: true })
+      object(state.cases).c17MixedParticipants = { ...structuredClone(entry), id: "c17MixedParticipants", participants: ["person", 7] }
+      object(state.cases).c17MissingFields = { id: "c17MissingFields", objective: "ambiguous entry stays complete", ownUndefined: undefined }
+      state.c17Unknown = { keep: ["unknown product fields stay complete"] }
       return { commit: true, value: undefined }
     }, { signal: deadline })
     const before = await fixture.durable(), product = object(before.data.__sfProductV1)
     const cases = object(product.cases)
     const outcomes: { scenario: string; authentication: number; outcome: string }[] = []
+    const identities: string[] = []
+    const physicalIdentity = async (current: Fixture, incoming: Request) => {
+      const owner = required(current.store.observeAuthority!([]), "C17 original native owner")
+      const probe = async (snapshot: Snapshot) => {
+        const observed = observeLocalProductRead(snapshot)
+        return { commit: false, value: { snapshot, selection: observed?.selection, current: observed?.current() } }
+      }
+      return current.store.transaction("dashboard", probe, { signal: incoming.signal,
+        dashboardProductRead: { identity: owner.identity, work: probe, selection: "case-identities" } })
+    }
+    const physicalCases = (snapshot: unknown) => object(object(object(object(snapshot).data).__sfProductV1).cases)
     await fixture.ui(async (call, incoming) => {
       const factory = (kind: "case" | "identity", id: string = caseRef.id, context: TrustedDomainContext = call) =>
         kind === "case" ? selectSfCase(id, context) : selectSfCaseIdentity({ ...caseRef, id }, context)
+      // The native contract is inspected independently of the closed C08 factory.
+      // A held preimage deliberately keeps complete cases under the same tag.
+      for (const mode of ["readonly", "preimage"] as const) {
+        await inContext(fixture, mode, incoming.signal, async () => {
+          const first = await physicalIdentity(fixture, incoming)
+          expect(first.selection).toBe("case-identities")
+          expect(first.current).toBe(true)
+          const graph = physicalCases(first.snapshot), selected = object(graph[caseRef.id])
+          const bodies = ["state", "objective", "horizon", "currency", "criteria", "sourceRefs", "alternatives", "costCoverageBases",
+            "assumptions", "questions", "choices", "preparedChanges", "receipts", "ledger"]
+          if (mode === "readonly") for (const name of bodies) expect(Object.hasOwn(selected, name)).toBe(false)
+          else expect<unknown>(graph).toEqual(cases)
+          expect(selected).toMatchObject({ ...caseRef, participants: ["person"], c17Unknown: object(cases[caseRef.id]).c17Unknown })
+          expect(Object.hasOwn(selected, "c17OwnUndefined")).toBe(true)
+          expect(selected.c17OwnUndefined).toBeUndefined()
+          expect(Object.keys(graph)).toEqual(Object.keys(cases))
+          expect(Object.getPrototypeOf(graph)).toBe(Object.prototype)
+          expect(Object.hasOwn(graph, "__proto__")).toBe(true)
+          expect(object(graph.__proto__).id).toBe("__proto__")
+          expect<unknown>(graph.c16Malformed).toEqual(cases.c16Malformed)
+          expect<unknown>(graph.c17MixedParticipants).toEqual(cases.c17MixedParticipants)
+          expect<unknown>(graph.c17MissingFields).toEqual(cases.c17MissingFields)
+          expect(Object.hasOwn(object(graph.c17MissingFields), "participants")).toBe(false)
+          expect(object(first.snapshot.data.__sfProductV1).c17Unknown).toEqual(product.c17Unknown)
+          expect(first.snapshot.data.roleMap).toEqual(before.data.roleMap)
+          expect(first.snapshot.data.access).toEqual(before.data.access)
+          expect({ ...first.snapshot, data: before.data }).toEqual(before)
+          expect(first.snapshot.data.c14DomainOnly).toBeUndefined()
+          const participants = selected.participants
+          if (!Array.isArray(participants)) throw new Error("C17 participants array required")
+          participants.push("detached first copy")
+          object(selected.c17Unknown).keep = ["detached unknown field"]
+          const second = await physicalIdentity(fixture, incoming)
+          expect(second.selection).toBe("case-identities")
+          expect(second.current).toBe(true)
+          expect(second.snapshot).not.toBe(first.snapshot)
+          const next = object(physicalCases(second.snapshot)[caseRef.id])
+          expect(next.participants).toEqual(["person"])
+          expect(next.c17Unknown).toEqual(object(cases[caseRef.id]).c17Unknown)
+          identities.push("mixed-map-and-detached-" + mode)
+        })
+      }
+      // This prototype name is outside C15's additive gate. Only the extra
+      // normalized identity route refuses it, proving the actual C08 path.
+      for (const phase of ["first", "second"] as const) {
+        let hooks = 0, inheritedReads = 0, failure: unknown, result: SfStateResult<unknown> | undefined
+        const start = fixture.authentication.length
+        await inContext(fixture, "readonly", incoming.signal, async () => {
+          const change = () => Object.defineProperty(Object.prototype, "c17IdentityBirthProbe", {
+            configurable: true, get: () => { inheritedReads++; throw new Error("C17 inherited field must not be invoked") },
+          })
+          fixture.control.afterDashboard = () => {
+            hooks++
+            if (phase === "first") change()
+            else fixture.control.afterDashboard = () => { hooks++; change() }
+          }
+          try { result = await fixture.authority.state.read(incoming, "cases", factory("identity")) }
+          catch (error) { failure = error }
+          finally {
+            fixture.control.afterDashboard = undefined
+            Reflect.deleteProperty(Object.prototype, "c17IdentityBirthProbe")
+          }
+        })
+        expect(result).toBeUndefined()
+        expect(failure instanceof Error ? failure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
+        expect(hooks).toBe(phase === "first" ? 1 : 2)
+        expect(inheritedReads).toBe(0)
+        expect(fixture.authentication.length - start).toBe(phase === "first" ? 3 : 6)
+        identities.push("composed-identity-" + phase + "-authorization-drift")
+      }
       for (const kind of ["case", "identity"] as const) for (const mode of ["readonly", "preimage"] as const) {
         deadline.throwIfAborted()
         await inContext(fixture, mode, incoming.signal, async () => {
@@ -1184,12 +1274,188 @@ test("C16 closed case factories preserve selection, fallback, late observations 
       expect(rootAccepted).toBe(false)
       outcomes.push({ scenario: "poisoned-native-root", authentication: fixture.authentication.length - poisonStart,
         outcome: "no child result or root accepted after caught commit:true" })
+
+      // A restored codec cannot certify a graph created under the hook, nor a
+      // previously trusted private graph subsequently exposed through a hook.
+      for (const stage of ["birth", "exposure"] as const) {
+        let bodyReads = 0, intercepted = 0
+        const parse = JSON.parse, parseDescriptor = required(Object.getOwnPropertyDescriptor(JSON, "parse"), "JSON.parse descriptor")
+        const parentOf = Object.getPrototypeOf, parentDescriptor = required(Object.getOwnPropertyDescriptor(Object, "getPrototypeOf"), "prototype descriptor")
+        const restore = () => {
+          Object.defineProperty(JSON, "parse", parseDescriptor)
+          Object.defineProperty(Object, "getPrototypeOf", parentDescriptor)
+        }
+        const decorate = (data: Record<string, unknown>) => {
+          const entry = object(object(object(data.__sfProductV1).cases)[caseRef.id])
+          Object.defineProperty(entry, "objective", { configurable: true, enumerable: true,
+            get: () => { bodyReads++; return "C17 body getter must remain observable" } })
+        }
+        await fixture.store.readSnapshotRoot!(async () => {
+          if (stage === "exposure") {
+            const healthy = await physicalIdentity(fixture, incoming)
+            expect(Object.hasOwn(object(physicalCases(healthy.snapshot)[caseRef.id]), "objective")).toBe(false)
+          }
+          try {
+            Object.defineProperty(JSON, "parse", { ...parseDescriptor, value: function(this: unknown, ...args: Parameters<typeof JSON.parse>) {
+              const value: unknown = Reflect.apply(parse, this, args)
+              if (stage === "birth" && value && typeof value === "object" && !Array.isArray(value) &&
+                Object.hasOwn(object(object(value).data), "__sfProductV1")) {
+                intercepted++
+                restore()
+                decorate(object(object(value).data))
+              }
+              return value
+            } })
+            if (stage === "exposure") Object.defineProperty(Object, "getPrototypeOf", { ...parentDescriptor, value: function(this: unknown, value: unknown) {
+              if (value && typeof value === "object" && Object.hasOwn(value, "__sfProductV1")) {
+                intercepted++
+                restore()
+                decorate(object(value))
+              }
+              return Reflect.apply(parentOf, this, [value])
+            } })
+            // The ACL codec refuses the hook; its original fallback demands
+            // precisely this root's private dashboard graph.
+            expect(fixture.store.observeAuthority!(["dashboard"])?.current()).toBe(true)
+          } finally { restore() }
+          expect(intercepted).toBe(1)
+          expect(bodyReads).toBe(0)
+          const copied = await physicalIdentity(fixture, incoming)
+          expect(copied.selection).toBe("case-identities")
+          expect(copied.current).toBe(true)
+          expect(object(physicalCases(copied.snapshot)[caseRef.id]).objective).toBe("C17 body getter must remain observable")
+          expect(bodyReads).toBe(1)
+        }, { signal: incoming.signal })
+        expect(await fixture.durable()).toEqual(before)
+        identities.push("restored-codec-" + stage + "-keeps-complete-case")
+      }
+
+      // This cold decode restores parse from inside the hook. The subsequent
+      // plan is built with normal globals, but must retain its untrusted origin.
+      await fixture.store.transaction("dashboard", async (snapshot) => {
+        snapshot.data.c17PlanBirth = "force a changed SQL payload"
+        return { commit: true, value: undefined }
+      }, { signal: deadline })
+      const parse = JSON.parse, parseDescriptor = required(Object.getOwnPropertyDescriptor(JSON, "parse"), "C17 cold parse descriptor")
+      let coldHooks = 0
+      try {
+        Object.defineProperty(JSON, "parse", { ...parseDescriptor, value: function(this: unknown, ...args: Parameters<typeof JSON.parse>) {
+          const value: unknown = Reflect.apply(parse, this, args)
+          if (Array.isArray(value) && value[0] === "sucafina-snapshot" && args[0].includes("c17PlanBirth")) {
+            coldHooks++
+            Object.defineProperty(JSON, "parse", parseDescriptor)
+          }
+          return value
+        } })
+        for (let phase = 0; phase < 2; phase++) {
+          await fixture.store.readSnapshotRoot!(async () => {
+            const copied = await physicalIdentity(fixture, incoming)
+            expect(copied.selection).toBe("case-identities")
+            expect(copied.current).toBe(true)
+            expect<unknown>(physicalCases(copied.snapshot)).toEqual(cases)
+          }, { signal: incoming.signal })
+          expect(coldHooks).toBe(1)
+          expect(JSON.parse).toBe(parse)
+        }
+      } finally {
+        Object.defineProperty(JSON, "parse", parseDescriptor)
+        await fixture.store.transaction("dashboard", async (snapshot) => {
+          Reflect.deleteProperty(snapshot.data, "c17PlanBirth")
+          return { commit: true, value: undefined }
+        }, { signal: deadline })
+      }
+      await fixture.store.readSnapshotRoot!(async () => {
+        const recovered = await physicalIdentity(fixture, incoming)
+        expect(Object.hasOwn(object(physicalCases(recovered.snapshot)[caseRef.id]), "objective")).toBe(false)
+      }, { signal: incoming.signal })
+      expect(await fixture.durable()).toEqual(before)
+      identities.push("cold-plan-birth-survives-restore-and-memo")
+
+      // Root identities cross the old WeakMap method exactly as before. A
+      // hook that retains the owner must permanently disable only C17's extra
+      // body reduction, even if it restores itself before touching the graph.
+      let retainedRoot: object | undefined, ownerHooks = 0, ownerBodyReads = 0
+      const get = WeakMap.prototype.get, getDescriptor = required(Object.getOwnPropertyDescriptor(WeakMap.prototype, "get"), "WeakMap.get descriptor")
+      await fixture.store.readSnapshotRoot!(async () => {
+        const healthy = await physicalIdentity(fixture, incoming)
+        expect(Object.hasOwn(object(physicalCases(healthy.snapshot)[caseRef.id]), "objective")).toBe(false)
+        try {
+          Object.defineProperty(WeakMap.prototype, "get", { ...getDescriptor, value: function(this: WeakMap<object, unknown>, key: object) {
+            const value: unknown = Reflect.apply(get, this, [key])
+            if (key && typeof key === "object" && Object.getOwnPropertyDescriptor(key, "readOnly")?.value === true &&
+              Object.getOwnPropertyDescriptor(key, "snapshots")?.value) {
+              ownerHooks++
+              retainedRoot = key
+              Object.defineProperty(WeakMap.prototype, "get", getDescriptor)
+            }
+            return value
+          } })
+          fixture.store.observeAuthority!([])
+        } finally { Object.defineProperty(WeakMap.prototype, "get", getDescriptor) }
+        expect(ownerHooks).toBe(1)
+        const source = object(object(required(retainedRoot, "retained native owner")).snapshots).dashboard
+        const entry = object(physicalCases(source)[caseRef.id])
+        Object.defineProperty(entry, "objective", { configurable: true, enumerable: true,
+          get: () => { ownerBodyReads++; return "C17 retained owner body" } })
+        const copied = await physicalIdentity(fixture, incoming)
+        expect(copied.selection).toBe("case-identities")
+        expect(object(physicalCases(copied.snapshot)[caseRef.id]).objective).toBe("C17 retained owner body")
+        expect(ownerBodyReads).toBe(1)
+      }, { signal: incoming.signal })
+      await fixture.store.readSnapshotRoot!(async () => {
+        const later = await physicalIdentity(fixture, incoming)
+        expect<unknown>(physicalCases(later.snapshot)).toEqual(cases)
+      }, { signal: incoming.signal })
+      identities.push("owner-weakmap-escape-latches-across-roots")
+
+      // Use a fresh store so ALS exposure is independently the first owner
+      // failure, rather than testing it after the WeakMap latch already failed.
+      await withFixture(deadline, false, async (isolated) => {
+        const request = isolated.request(), original = await isolated.durable()
+        const getStore = AsyncLocalStorage.prototype.getStore
+        const descriptor = required(Object.getOwnPropertyDescriptor(AsyncLocalStorage.prototype, "getStore"), "ALS.getStore descriptor")
+        let retained: object | undefined, hooks = 0, bodyReads = 0
+        await isolated.store.readSnapshotRoot!(async () => {
+          const healthy = await physicalIdentity(isolated, request)
+          expect(Object.hasOwn(object(physicalCases(healthy.snapshot)[caseRef.id]), "objective")).toBe(false)
+          try {
+            Object.defineProperty(AsyncLocalStorage.prototype, "getStore", { ...descriptor, value: function(this: object) {
+              const value: unknown = Reflect.apply(getStore, this, [])
+              const root: unknown = value && typeof value === "object" ? Object.getOwnPropertyDescriptor(value, "root")?.value : undefined
+              if (root && typeof root === "object" && Object.getOwnPropertyDescriptor(root, "readOnly")?.value === true) {
+                hooks++
+                retained = root
+                Object.defineProperty(AsyncLocalStorage.prototype, "getStore", descriptor)
+              }
+              return value
+            } })
+            isolated.store.observeAuthority!([])
+          } finally { Object.defineProperty(AsyncLocalStorage.prototype, "getStore", descriptor) }
+          expect(hooks).toBe(1)
+          const source = object(object(required(retained, "ALS retained owner")).snapshots).dashboard
+          const entry = object(physicalCases(source)[caseRef.id])
+          Object.defineProperty(entry, "objective", { configurable: true, enumerable: true,
+            get: () => { bodyReads++; return "C17 retained ALS owner body" } })
+          const copied = await physicalIdentity(isolated, request)
+          expect(copied.selection).toBe("case-identities")
+          expect(object(physicalCases(copied.snapshot)[caseRef.id]).objective).toBe("C17 retained ALS owner body")
+          expect(bodyReads).toBe(1)
+        }, { signal: request.signal })
+        await isolated.store.readSnapshotRoot!(async () => {
+          const later = await physicalIdentity(isolated, request)
+          expect<unknown>(physicalCases(later.snapshot)).toEqual(object(original.data.__sfProductV1).cases)
+        }, { signal: request.signal })
+        expect(await isolated.durable()).toEqual(original)
+      })
+      identities.push("owner-als-escape-latches-across-roots")
     })
     expect(await fixture.durable()).toEqual(before)
     expect(Object.getOwnPropertyDescriptor(Object.prototype, "commandProposals")).toBeUndefined()
     expect(outcomes).toHaveLength(31)
+    expect(identities).toHaveLength(9)
     console.log("SF_C16_SELECTION_CONTROL " + JSON.stringify({
       scenario: "closed-case-factories", qualification: false, outcomes,
+      identityProjection: { cases: identities, limit: "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases" },
       limits: "composed functional and refusal oracles; no latency or current Analytics qualification",
     }))
   })

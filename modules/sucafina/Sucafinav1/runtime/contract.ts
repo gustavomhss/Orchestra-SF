@@ -82,7 +82,7 @@ export type TransactionOptions = {
   dashboardAclRoot?: object
   // Fixed host-private C08 view, bound to the exact wrapped callback and owner.
   // It grants no source/business authority and never permits a nested write.
-  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: "cases" | "preferences" }>
+  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: "cases" | "preferences" | "case-identities" }>
   /** The callback cannot publish in a held installed preimage. */
   sealedRead?: true
 }

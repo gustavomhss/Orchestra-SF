@@ -447,7 +447,7 @@ function caseIdentityMap(state: SfProductState) {
 
 const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
 const productSnapshotReads = new WeakMap<object, (transaction: object) => boolean>()
-const productSnapshotSelections = new WeakMap<object, (transaction: object) => "cases" | "preferences" | undefined>()
+const productSnapshotSelections = new WeakMap<object, (transaction: object) => "cases" | "preferences" | "case-identities" | undefined>()
 const selectionGet = WeakMap.prototype.get, selectionSet = WeakMap.prototype.set, selectionApply = Reflect.apply
 const selectionValue = <T>(registry: WeakMap<object, T>, read: object): T | undefined =>
   selectionApply(selectionGet, registry, [read])
@@ -461,7 +461,8 @@ function productReadSelection(namespace: SfStateNamespace, read: object) {
     const identity = selectionValue(caseIdentityReads, read)
     // Concurrent declarations retain the full path; later registration invalidates
     // an already materialized selection instead of changing its callback route.
-    if (selected ? !graph && !identity : identity ? !graph : graph === read) return "cases" as const
+    if (selected ? !graph && !identity : !identity && graph === read) return "cases" as const
+    if (identity && !selected && !graph) return "case-identities" as const
   }
   if (namespace === "preferences" && selectionValue(preferencesReads, read) === read) return "preferences" as const
   return undefined
@@ -577,11 +578,14 @@ export function createSfProductState(input: {
           if (!selectionCurrent() || (projection.selection === "cases"
             ? readiness || resultSelection || scenarioSelection ||
               (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)
+            : projection.selection === "case-identities"
+            ? readiness || selection || resultSelection || casesSelection || scenarioSelection || !identitySelection
             : readiness || preferencesSelection !== read))
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
           if (projection.selection === "cases" && casesSelection === read) selectedCases = projectCasesRead(state)
           if (projection.selection === "preferences") selectedPreferences = projectPreferencesRead(state)
-          if (projection.selection === "cases" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases : !selectedPreferences)
+          if (projection.selection === "cases" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases
+            : projection.selection === "case-identities" ? !identityCases : !selectedPreferences)
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         }
         // Keep missing/inherited, accessor and malformed lookups on the original
