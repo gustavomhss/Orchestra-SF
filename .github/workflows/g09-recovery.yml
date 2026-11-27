@@ -1,0 +1,424 @@
+name: G09 preserved candidate recovery
+
+on:
+  push:
+    branches: [g09-recovery]
+    paths:
+      - .github/workflows/g09-recovery.yml
+      - .github/ci/g09-*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: g09-preserved-recovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preserved-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      SOURCE_REVISION: 3ef84da65d6b8ad7cd3250412bbcabdf90924172
+      SOURCE_TREE: 48d57887656fd2e325dee97a7c066bcb8e84bbc8
+      PRODUCER_REVISION: b1e3c29c1b7462872aa3d23b2777a5b619dfb6cb
+      SCANNER_REVISION: ebed903a650cd979d30faa5f4ba6d1f1b175036a
+      G09_HARNESS: ${{ github.workspace }}/harness
+      SF_G09_SOURCE_DIR: ${{ github.workspace }}/candidate
+      G09_CANDIDATE: ${{ github.workspace }}/candidate
+    steps:
+      - name: Bind the current execution identity
+        id: identity
+        shell: bash
+        env:
+          G09_ACTUAL_JOB_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$G09_ACTUAL_JOB_ID" =~ ^[1-9][0-9]*$ ]]
+          printf 'G09_CHECK_RUN_ID=%s\nG09_JOB_ID=%s\nCHECK_RUN_ID=%s\n' \
+            "$G09_ACTUAL_JOB_ID" "$G09_ACTUAL_JOB_ID" "$G09_ACTUAL_JOB_ID" >> "$GITHUB_ENV"
+
+      - name: Checkout supplementary harness
+        id: harness
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          path: harness
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout exact candidate source
+        id: candidate
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: 3ef84da65d6b8ad7cd3250412bbcabdf90924172
+          path: candidate
+          persist-credentials: false
+
+      - name: Checkout exact producer helper
+        id: producer
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: b1e3c29c1b7462872aa3d23b2777a5b619dfb6cb
+          path: producer
+          persist-credentials: false
+
+      - name: Checkout published diagnostic scanner
+        id: scanner
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ebed903a650cd979d30faa5f4ba6d1f1b175036a
+          path: scanner
+          persist-credentials: false
+
+      - name: Setup Node
+        id: node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24.15"
+
+      - name: Install the producer's exact Bun baseline
+        id: bun
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_bun_zip="$RUNNER_TEMP/g09-bun.zip"
+          curl --fail --location --retry 3 \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.1/bun-linux-x64-baseline.zip \
+            --output "$g09_bun_zip"
+          printf '%s  %s\n' a8c9c6738202e2fced555dd860a953c56c0cd059f75041e7010ae81a32802646 "$g09_bun_zip" | sha256sum --check
+          unzip -q "$g09_bun_zip" -d "$RUNNER_TEMP/g09-bun"
+          g09_bun_dir="$RUNNER_TEMP/g09-bun/bun-linux-x64-baseline"
+          test "$("$g09_bun_dir/bun" --revision)" = 1.4.1+4661e494f
+          printf '%s\n' "$g09_bun_dir" >> "$GITHUB_PATH"
+
+      - name: Check unchanged guard rules against the recovery branch
+        id: guards
+        if: ${{ !cancelled() && steps.harness.outcome == 'success' && steps.bun.outcome == 'success' }}
+        working-directory: harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/g09-out"
+          git show-ref --verify refs/remotes/origin/dev
+          bun run check:guards --base origin/dev | tee "$RUNNER_TEMP/g09-out/guardrail.log"
+
+      - name: Acquire and verify preserved artifacts
+        id: inputs
+        if: ${{ !cancelled() && steps.harness.outcome == 'success' && steps.candidate.outcome == 'success' && steps.producer.outcome == 'success' && steps.scanner.outcome == 'success' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out" "$RUNNER_TEMP/g09-runtime/release"
+          g09_input="$RUNNER_TEMP/g09-input"
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806 > "$g09_input/artifact.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/runs/44944208924/attempts/1 > "$g09_input/producer-run.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14722264806/zip > "$g09_input/original.zip"
+          python3 -B "$G09_HARNESS/.github/ci/g09-preserved-inputs.py" "$g09_input" "$RUNNER_TEMP/g09-out/preserved-inputs.json"
+          gh api repos/gustavomhss/Orchestra-SF/actions/artifacts/14726642873/zip > "$g09_input/supplement.zip"
+          printf '%s  %s\n' ab96ca57d1447f882328b54a1ae31b51fe3c3f6274803bae7ea57c268163a29e "$g09_input/supplement.zip" | sha256sum --check
+          unzip -p "$g09_input/supplement.zip" proof.json > "$g09_input/supplement-proof.json"
+          printf '%s  %s\n' 80ea2faec0de396115ffcd120bbeda2ceba837f336072cf2dc2277a89f7d1380 "$g09_input/supplement-proof.json" | sha256sum --check
+          gh api 'repos/gustavomhss/Orchestra-SF/contents/packages/core/test/permission.test.ts?ref=a90fcb86b2909249a54adbc8a23d5c4d4ee104d8' \
+            --jq .content | base64 --decode > "$g09_input/pr589-permission.test.ts"
+          printf '%s  %s\n' 14057ce742638f142a993e77a1b46dc39ad8a3f3b4ca471ed30be017a65bce36 "$g09_input/pr589-permission.test.ts" | sha256sum --check
+          test "$(git -C candidate rev-parse HEAD)" = "$SOURCE_REVISION"
+          test "$(git -C candidate rev-parse HEAD^{tree})" = "$SOURCE_TREE"
+          test "$(git -C producer rev-parse HEAD)" = "$PRODUCER_REVISION"
+          test "$(git -C scanner rev-parse HEAD)" = "$SCANNER_REVISION"
+          git -C candidate cat-file commit HEAD > "$g09_input/source.commit"
+          git -C candidate ls-tree -r -z HEAD > "$g09_input/source.tree"
+          git -C scanner cat-file commit HEAD > "$g09_input/scanner.commit"
+          git -C scanner ls-tree -r -z HEAD > "$g09_input/scanner.tree"
+          python3 -B candidate/sf/azure/vm/install-factory-distribution.py verify \
+            --artifact "$g09_input/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            --receipt "$g09_input/orchestra-sf-entra-package-receipt.json" \
+            --candidate "$SOURCE_REVISION" \
+            --sha256 dc11455bbcce4565b24cdca53ce3e5ab05f883757f6c0765910a0e4c98147d83
+          tar -xzf "$g09_input/orchestra-sf-entra-linux-x64-baseline.tar.gz" -C "$RUNNER_TEMP/g09-runtime/release"
+          python3 -B "$G09_HARNESS/.github/ci/g09-installation-modes.py" \
+            "$RUNNER_TEMP/g09-runtime/release" "$g09_input/orchestra-sf-entra-package-receipt.json" \
+            "$SF_G09_SOURCE_DIR/sf/azure/vm/install-factory-distribution.py" "$RUNNER_TEMP/g09-out/installation-modes.json"
+          mkdir "$g09_input/maps"
+          tar -xzf "$g09_input/cli-source-maps.tar.gz" -C "$g09_input/maps"
+          ln -s "$RUNNER_TEMP/g09-runtime/release/bin/orchestra" "$g09_input/orchestra"
+          cp "$g09_input/artifact.json" "$g09_input/producer-run.json" "$g09_input/source.commit" "$g09_input/source.tree" \
+            "$g09_input/scanner.commit" "$g09_input/scanner.tree" "$g09_input/supplement-proof.json" "$RUNNER_TEMP/g09-out/"
+
+      - name: Install frozen transform and fixture dependencies
+        id: dependencies
+        if: ${{ !cancelled() && steps.candidate.outcome == 'success' && steps.bun.outcome == 'success' }}
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun install --frozen-lockfile
+          git diff --exit-code HEAD --
+
+      - name: Install the diagnostic parser separately
+        id: parser
+        if: ${{ !cancelled() && steps.node.outcome == 'success' && steps.scanner.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/g09-parser"
+          npm install --prefix "$RUNNER_TEMP/g09-parser" --ignore-scripts --no-package-lock --no-save typescript@5.9.3
+          ln -s "$RUNNER_TEMP/g09-parser/node_modules" "$GITHUB_WORKSPACE/scanner/node_modules"
+
+      - name: Run focused attribution negative controls
+        id: solid_controls
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/g09-out"
+          cd "$RUNNER_TEMP"
+          bun test "$G09_HARNESS/.github/ci/g09-solid-attribution.test.mjs" 2>&1 | tee "$RUNNER_TEMP/g09-out/solid-controls.log"
+
+      - name: Recover exact Solid intermediates and supplementary maps
+        id: solid
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun "$G09_HARNESS/.github/ci/g09-recover-solid.mjs" "$SF_G09_SOURCE_DIR" \
+            "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out/solid" 2>&1 | tee "$RUNNER_TEMP/g09-out/solid-recovery.log"
+
+      - name: Run supplementary AST origin negative controls
+        id: origin_controls
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          bun test "$G09_HARNESS/.github/ci/g09-solid-origin.test.mjs" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/solid-origin-controls.log"
+
+      - name: Examine exact structural origins without changing map criteria
+        id: origin
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun "$G09_HARNESS/.github/ci/g09-solid-origin.mjs" "$SF_G09_SOURCE_DIR" \
+            "$RUNNER_TEMP/g09-input" "$RUNNER_TEMP/g09-out/solid" "$RUNNER_TEMP/g09-out/solid-origin" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/solid-origin.log"
+
+      - name: Run controls of the published diagnostic scanner
+        id: scanner_controls
+        if: ${{ !cancelled() && steps.parser.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/g09-out"
+          node --test scanner/script/sf-ci/team-profile-residue.test.mjs 2>&1 | tee "$RUNNER_TEMP/g09-out/scanner-controls.log"
+
+      - name: Produce independent complete diagnostic inventory
+        id: inventory
+        if: ${{ !cancelled() && steps.parser.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --max-old-space-size=5120 "$G09_HARNESS/.github/ci/g09-current-inventory.mjs" \
+            "$SF_G09_SOURCE_DIR" "$GITHUB_WORKSPACE/scanner" "$RUNNER_TEMP/g09-input" \
+            "$RUNNER_TEMP/g09-out" 2>&1 | tee "$RUNNER_TEMP/g09-out/inventory.log"
+
+      - name: Run structural evidence negative controls
+        id: structural_controls
+        if: ${{ !cancelled() && steps.node.outcome == 'success' && steps.harness.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/g09-out"
+          node --test "$G09_HARNESS/.github/ci/g09-structural-supplement.test.mjs" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/structural-controls.log"
+
+      - name: Bind the nested workspace and locked export evidence by finding ID
+        id: structural
+        if: ${{ !cancelled() && steps.inventory.outcome == 'success' && steps.parser.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --max-old-space-size=5120 "$G09_HARNESS/.github/ci/g09-structural-supplement.mjs" \
+            "$SF_G09_SOURCE_DIR" "$GITHUB_WORKSPACE/scanner" "$RUNNER_TEMP/g09-input" \
+            "$RUNNER_TEMP/g09-out" "$RUNNER_TEMP/g09-out/structural" \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/structural.log"
+
+      - name: Exercise the exact installed TUI against the Microsoft host
+        id: tui
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        env:
+          CI_PORT: "41673"
+        run: |
+          set -euo pipefail
+          umask 077
+          export CI_RUNTIME="$RUNNER_TEMP/g09-runtime/host"
+          export CI_PROOF="$(openssl rand -hex 32)"
+          mkdir -m 0700 "$CI_RUNTIME"
+          bun "$G09_HARNESS/.github/ci/g09-tui-setup.mjs"
+          g09_config="$CI_RUNTIME/installation"
+          g09_installed="$RUNNER_TEMP/g09-runtime/release/bin"
+          g09_provider="$GITHUB_WORKSPACE/producer/.github/ci/entra-native-provider.mjs"
+          cd "$CI_RUNTIME/workspace"
+          env -i PATH="$PATH" HOME="$CI_RUNTIME" \
+            XDG_DATA_HOME="$g09_config/host-data" XDG_CONFIG_HOME="$g09_config/host-config" \
+            XDG_CACHE_HOME="$g09_config/host-cache" XDG_STATE_HOME="$g09_config/host-state" \
+            TMPDIR="$g09_config/host-tmp" ORCHESTRA_CONFIG_DIR="$g09_config/host-config" \
+            ORCHESTRA_CREDENTIAL_KEY_FILE="$g09_config/host-credential.key" ORCHESTRA_DB="$g09_config/host-data/orchestra.db" \
+            ORCHESTRA_INHERIT_CREDENTIALS=0 ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            SUCAFINA_NATIVE_TEAM_DECISIONS=1 SUCAFINA_NATIVE_TEAM_WEB=1 \
+            SUCAFINA_MICROSOFT_CONFIG="$g09_config/installation.json" SF_PROOF_FACTORY="$g09_installed/local/entry.mjs" \
+            "$g09_installed/orchestra" serve --hostname 127.0.0.1 --port "$CI_PORT" \
+            --installation "$g09_provider" > "$CI_RUNTIME/server.log" 2>&1 &
+          g09_server=$!
+          trap 'kill "$g09_server" 2>/dev/null || true; wait "$g09_server" 2>/dev/null || true' EXIT
+          g09_ready=0
+          for g09_tick in {1..60}; do
+            if ! kill -0 "$g09_server" 2>/dev/null; then break; fi
+            g09_status="$(curl --silent --output /dev/null --write-out '%{http_code}' \
+              --max-time 2 -H "Host: sf-ingress.example.test:$CI_PORT" \
+              "http://127.0.0.1:$CI_PORT/sucafina/dashboard" || true)"
+            if [ "$g09_status" = 403 ]; then g09_ready=1; break; fi
+            sleep 1
+          done
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ['CI_RUNTIME'])
+          raw = (root / 'server.log').read_bytes()
+          text = raw[-65536:].decode('utf-8', errors='replace')
+          secrets = [os.environ['CI_PROOF'], 'hosted-ci-only']
+          for name in ('client-secret.txt', 'ingress-secret.txt', 'host-credential.key'):
+              file = root / 'installation' / name
+              if file.is_file() and file.stat().st_size <= 131072:
+                  secrets.append(file.read_text().strip())
+          for value in secrets:
+              if value:
+                  text = text.replace(value, '[fixture-secret-redacted]')
+          out = Path(os.environ['RUNNER_TEMP']) / 'g09-out'
+          (out / 'tui-startup.log').write_text(text)
+          (out / 'tui-startup-log.json').write_text(json.dumps({
+              'schema': 'g09-tui-startup-log-v1', 'phase': 'before-oauth-and-tui',
+              'originalSha256': hashlib.sha256(raw).hexdigest(), 'originalBytes': len(raw),
+              'redactedSha256': hashlib.sha256(text.encode()).hexdigest(),
+              'truncated': len(raw) > 65536, 'formalG09Pass': False,
+          }, indent=2) + '\n')
+          PY
+          test "$g09_ready" = 1
+          python3 -B "$G09_HARNESS/.github/ci/g09-tui-boundary-proof.py" \
+            --binary "$g09_installed/orchestra" --factory "$g09_installed/local/entry.mjs" \
+            --provider "$g09_provider" --archive "$RUNNER_TEMP/g09-input/orchestra-sf-entra-linux-x64-baseline.tar.gz" \
+            --runtime-dir "$CI_RUNTIME" --server-pid "$g09_server" --port "$CI_PORT" \
+            --output-dir "$CI_RUNTIME/tui-evidence" 2>&1 | tee "$RUNNER_TEMP/g09-out/tui-proof.log"
+
+      - name: Observe the candidate source against the focused permission regressions
+        id: permissions
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' && steps.inputs.outcome == 'success' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          g09_probe="$SF_G09_SOURCE_DIR/packages/core/test/g09-permission-pr589.test.ts"
+          test ! -e "$g09_probe"
+          printf '%s  %s\n' 19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6 \
+            "$SF_G09_SOURCE_DIR/packages/core/src/permission.ts" | sha256sum --check
+          cp "$RUNNER_TEMP/g09-input/pr589-permission.test.ts" "$g09_probe"
+          trap 'rm -f "$g09_probe"' EXIT
+          cd "$SF_G09_SOURCE_DIR/packages/core"
+          set +e
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=strict \
+            ORCHESTRA_OMNI_CONTROL=declared ORCHESTRA_OMNI_CONTROL_NONCE="$(openssl rand -hex 16)" \
+            NO_COLOR=1 bun test ./test/g09-permission-pr589.test.ts \
+            -t 'denies calls without resources even under configured and saved allows|enforces recorded Session denies while keeping order within each configured ruleset' \
+            2>&1 | tee "$RUNNER_TEMP/g09-out/permission-regression.log"
+          g09_pipeline_status=("${PIPESTATUS[@]}")
+          g09_permission_exit=${g09_pipeline_status[0]}
+          set -e
+          test "${g09_pipeline_status[1]}" = 0
+          export G09_PERMISSION_EXIT="$g09_permission_exit"
+          printf '%s  %s\n' 19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6 \
+            "$SF_G09_SOURCE_DIR/packages/core/src/permission.ts" | sha256sum --check
+          git -C "$SF_G09_SOURCE_DIR" diff --exit-code HEAD --
+          python3 -B - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          output = Path(os.environ['RUNNER_TEMP']) / 'g09-out'
+          log = (output / 'permission-regression.log').read_bytes()
+          result = {
+              'schema': 'g09-candidate-source-permission-observation-v1',
+              'sourceSHA': os.environ['SOURCE_REVISION'], 'workflowSHA': os.environ['GITHUB_SHA'],
+              'runId': os.environ['GITHUB_RUN_ID'], 'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'jobId': os.environ['CHECK_RUN_ID'], 'testSourceSHA': 'a90fcb86b2909249a54adbc8a23d5c4d4ee104d8',
+              'testSha256': '14057ce742638f142a993e77a1b46dc39ad8a3f3b4ca471ed30be017a65bce36',
+              'permissionImplementationSha256': '19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6',
+              'exitCode': int(os.environ['G09_PERMISSION_EXIT']), 'logSha256': hashlib.sha256(log).hexdigest(),
+              'caseNames': ['denies calls without resources even under configured and saved allows',
+                            'enforces recorded Session denies while keeping order within each configured ruleset'],
+              'scope': 'Original PermissionV2 source with the two later regression cases; inspect logs for actual selected-case results',
+              'trackedProductUnchanged': True, 'installedElfExecutedByThisCase': False,
+              'teamsBypassProven': False, 'formalG09Pass': False,
+          }
+          (output / 'permission-regression-observed.json').write_text(json.dumps(result, indent=2) + '\n')
+          PY
+          exit "$g09_permission_exit"
+
+      - name: Preserve bounded TUI evidence and execution manifest
+        id: manifest
+        if: ${{ always() }}
+        shell: bash
+        env:
+          G09_STEP_RESULTS: ${{ toJSON(steps) }}
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          set -euo pipefail
+          python3 -B - <<'PY'
+          import hashlib, json, os, shutil
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          output = root / 'g09-out'
+          output.mkdir(exist_ok=True)
+          tui = root / 'g09-runtime/host/tui-evidence'
+          if tui.is_dir():
+              target = output / 'tui'
+              target.mkdir(exist_ok=True)
+              for file in sorted(tui.iterdir()):
+                  if file.is_file() and not file.is_symlink() and file.suffix in ('.json', '.raw'):
+                      shutil.copyfile(file, target / file.name)
+          files = []
+          for file in sorted(output.rglob('*')):
+              if file.is_file() and not file.is_symlink():
+                  with file.open('rb') as stream:
+                      sha = hashlib.file_digest(stream, 'sha256').hexdigest()
+                  files.append({'path': str(file.relative_to(output)), 'sha256': sha, 'bytes': file.stat().st_size})
+          steps = json.loads(os.environ['G09_STEP_RESULTS'])
+          value = {'schema': 'g09-supplementary-execution-v1', 'formalG09Pass': False,
+                   'candidateRebuilt': False, 'inheritedSignatures': 0,
+                   'classifiedOccurrenceIds': [], 'classifiedFindingIds': [],
+                   'sourceSHA': os.environ['SOURCE_REVISION'], 'sourceTreeSHA': os.environ['SOURCE_TREE'],
+                   'artifactId': '14722264806', 'workflowSHA': os.environ['GITHUB_SHA'],
+                   'runId': os.environ['GITHUB_RUN_ID'], 'runAttempt': os.environ['GITHUB_RUN_ATTEMPT'],
+                   'jobId': os.environ['CHECK_RUN_ID'],
+                   'steps': {key: {'outcome': item['outcome'], 'conclusion': item['conclusion']} for key,item in steps.items()},
+                   'files': files,
+                   'scope': 'Supplementary attribution, independent diagnostic, and installed TUI negative boundary',
+                   'missingAuthority': 'Current signed checkpoint and its exact local verifier were not recovered'}
+          (output / 'execution-manifest.json').write_text(json.dumps(value, indent=2) + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## G09 preserved candidate recovery\n\n')
+              summary.write('Supplementary evidence only. No formal G09 PASS, inherited signatures, rebuilt candidate, or automatic ID dispositions.\n\n')
+              for key,item in value['steps'].items():
+                  summary.write('- ' + key + ': ' + item['outcome'] + '\n')
+          PY
+
+      - name: Upload supplementary evidence including failures
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: g09-preserved-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/g09-out
+          if-no-files-found: error
+          retention-days: 30
