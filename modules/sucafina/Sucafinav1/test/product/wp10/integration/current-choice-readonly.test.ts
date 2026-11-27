@@ -9,7 +9,7 @@ import { createSfPlannerCalculationRoot } from "../../../../../../../apps/cli/sr
 import { createSfSourceFenceReader } from "../../../../../../../apps/cli/src/sucafina-product/source-fence-read.ts"
 import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions, currentChoiceReadonlyAuthorityData } from "../../../../product/decisions/current-choice-preview.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
-import { createSfSourcePersistence, currentSfReadonlyAuthorityData, currentSfReadonlySnapshotScope, plannerScopeAuthority } from "../../../../product/integration/source-lifecycle.ts"
+import { bindCreatedSourceIdentity, createSfSourcePersistence, currentSfReadonlyAuthorityData, currentSfReadonlySnapshotScope, plannerScopeAuthority } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector, sfPlannerProjectionSelector } from "../../../../product/integration/source-projections.ts"
 import { createPlannerProduct } from "../../../../product/planner/product.ts"
@@ -401,5 +401,290 @@ test("CurrentChoice readonly calculation roots refuse aborted requests and repla
       expect(work).toBe(1)
       expect(replacements).toBe(0)
     }, abort.signal)
+  })
+}, 45_000)
+
+
+// C13 uses the original composition and clock above. It qualifies the generic
+// transaction's readonly provenance, not a canonical Planner proof or UI latency.
+test("C13 unfenced generic reads preserve later CurrentChoice fences and source reservations", async () => {
+  await withChain(false, async (fixture) => {
+    await fixture.ui(async (call) => {
+      expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+      const value = { route: "mutable full guard" }
+      expect(await fixture.persistence.transaction("planner", async () => {
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+        return { commit: false, value }
+      })).toBe(value)
+      let callbacks = 0, guards = 0, sentinelCalls = 0
+      let routeGets = 0, wrappedCallbacks = 0, authorizeCalls = 0
+      let escaped: Snapshot | undefined
+      const incarnation = await fixture.persistence.readSnapshotRoot!(async () => {
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [])?.current()).toBe(true)
+        return fixture.persistence.transaction("planner", async (snapshot) => {
+          callbacks++
+          escaped = snapshot
+          const observed = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")
+          const originalMode = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [])
+          if (!observed || !originalMode) throw new Error("Original readonly facade must be admitted")
+          expect(observed.current("unpoisoned")).toBe(true)
+          const authorize = Object.getOwnPropertyDescriptor(fixture.choiceInput, "authorizeCommit")
+          const sentinelValue = { route: "wrapper chosen before property disappeared" }
+          Object.defineProperty(fixture.choiceInput, "authorizeCommit", {
+            configurable: true, enumerable: true,
+            get: () => {
+              routeGets++
+              Reflect.deleteProperty(fixture.choiceInput, "authorizeCommit")
+              return async () => { authorizeCalls++; return true }
+            },
+          })
+          try {
+            expect(await fixture.persistence.transaction("planner", async () => {
+              wrappedCallbacks++
+              expect(Object.hasOwn(fixture.choiceInput, "authorizeCommit")).toBe(false)
+              expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+              expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [])?.current("unpoisoned")).toBe(true)
+              return { commit: false, value: sentinelValue }
+            })).toBe(sentinelValue)
+          } finally {
+            if (authorize) Object.defineProperty(fixture.choiceInput, "authorizeCommit", authorize)
+            else Reflect.deleteProperty(fixture.choiceInput, "authorizeCommit")
+          }
+          expect(routeGets).toBe(1)
+          expect(wrappedCallbacks).toBe(1)
+          expect(authorizeCalls).toBe(0)
+          expect(observed.current("unpoisoned")).toBe(true)
+          expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")?.current()).toBe(true)
+          const created = await fixture.choice.run(call, async () => {
+            const identity = fixture.choiceInput.identity
+            const sentinel = new Error("Active fence identity must not be consulted by unfenced admission")
+            let caught: unknown
+            fixture.choiceInput.identity = () => { sentinelCalls++; throw sentinel }
+            try {
+              expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+              expect(sentinelCalls).toBe(0)
+              try { currentChoiceReadonlyAuthorityData(fixture.choice.persistence, []) } catch (error) { caught = error }
+              expect(caught).toBe(sentinel)
+              expect(sentinelCalls).toBe(1)
+            } finally { fixture.choiceInput.identity = identity }
+            // Only the CurrentChoice lexical scope changed. The native child did not.
+            expect(observed.current("unpoisoned")).toBe(true)
+            expect(originalMode.current()).toBe(false)
+            const versions = snapshot.data.versions
+            if (!Array.isArray(versions) || versions.length !== 1) throw new Error("Original Planner fixture unavailable")
+            snapshot.data.versions = [...versions, { ...structuredClone(versions[0]), id: "c13-reserved" }]
+            const reserved = bindCreatedSourceIdentity(snapshot, "planner-version", "c13-reserved")
+            expect(reserved.length).toBeGreaterThan(0)
+            fixture.choice.observe(call, (snapshots) => {
+              guards++
+              return Array.isArray(snapshots.planner.data.versions) && snapshots.planner.data.versions.length === 1
+            })
+            expect(observed.current("unpoisoned")).toBe(true)
+            return reserved
+          })
+          expect(observed.current("unpoisoned")).toBe(true)
+          expect(originalMode.current()).toBe(false)
+          return { commit: false, value: created }
+        })
+      })
+      expect(incarnation.length).toBeGreaterThan(0)
+      expect(callbacks).toBe(1)
+      expect(guards).toBeGreaterThan(0)
+      expect(sentinelCalls).toBe(1)
+      if (!escaped) throw new Error("Original callback was not entered")
+      expect(() => bindCreatedSourceIdentity(escaped!, "planner-version", "c13-reserved"))
+        .toThrow("SF_SOURCE_CREATION_OUTSIDE_TRANSACTION")
+      expect(await fixture.persistence.transaction("planner", async (snapshot) =>
+        ({ commit: false, value: Array.isArray(snapshot.data.versions) && snapshot.data.versions.length }))).toBe(1)
+      console.log("SF_C13_UNFENCED_CONTROL " + JSON.stringify({
+        scenario: "later-fence-and-reservation", qualification: false, outerDirectCallbacks: callbacks, guards,
+        activeUnfencedIdentityCalls: 0, originalModeSentinelCalls: sentinelCalls, durableVersionCount: 1,
+        routeGets, wrappedCallbacks, authorizeCalls,
+      }))
+    })
+  })
+}, 45_000)
+
+test("C13 unfenced admission rejects opaque or changed providers and preserves exact native lifetimes", async () => {
+  await withChain(true, async (fixture) => {
+    let callbacks = 0
+    expect(await fixture.persistence.readSnapshotRoot!(async () => {
+      expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+      expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [])).toBeUndefined()
+      return fixture.persistence.transaction("planner", async () => {
+        callbacks++
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [])).toBeUndefined()
+        return { commit: false, value: "opaque full producer" }
+      })
+    })).toBe("opaque full producer")
+    expect(callbacks).toBe(1)
+  })
+  await withChain(false, async (fixture) => {
+    let replacements = 0, driftChecks = 0
+    for (const boundary of ["provider", "facade-method", "native-method", "provider-getter"] as const) {
+      await fixture.persistence.readSnapshotRoot!(async () => fixture.persistence.transaction("planner", async () => {
+        const observed = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")
+        if (!observed) throw new Error("Original readonly observation missing")
+        expect(observed.current()).toBe(true)
+        const owner = boundary === "provider" || boundary === "provider-getter" ? fixture.choiceInput
+          : boundary === "native-method" ? fixture.store : fixture.choice.persistence
+        const name = boundary === "provider" || boundary === "provider-getter" ? "persistence" : "transaction"
+        const descriptor = Object.getOwnPropertyDescriptor(owner, name)
+        if (!descriptor) throw new Error("Original data descriptor missing")
+        try {
+          if (boundary === "provider") Object.defineProperty(owner, name, { ...descriptor, value: { ...fixture.store } })
+          else if (boundary === "provider-getter") Object.defineProperty(owner, name, {
+            configurable: true, enumerable: descriptor.enumerable,
+            get: () => { replacements++; throw new Error("Provider getter must not run") },
+          })
+          else Object.defineProperty(owner, name, { ...descriptor, value: () => {
+            replacements++
+            throw new Error("Changed method must not execute")
+          } })
+          expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+          expect(observed.current()).toBe(false)
+          expect(replacements).toBe(0)
+        } finally { Object.defineProperty(owner, name, descriptor) }
+        expect(observed.current()).toBe(false)
+        expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")?.current()).toBe(true)
+        driftChecks++
+        return { commit: false, value: undefined }
+      }))
+    }
+    let child: ReturnType<typeof currentChoiceReadonlyAuthorityData>
+    await fixture.persistence.readSnapshotRoot!(async () => fixture.persistence.transaction("planner", async () => {
+      const parent = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")
+      if (!parent) throw new Error("Original parent observation missing")
+      expect(parent.current()).toBe(true)
+      await fixture.persistence.transaction("planner", async () => {
+        child = currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")
+        expect(child?.current()).toBe(true)
+        expect(parent.current()).toBe(false)
+        return { commit: false, value: undefined }
+      })
+      expect(parent.current()).toBe(false)
+      if (!child) throw new Error("Original child observation missing")
+      expect(() => child!.current()).toThrow()
+      expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")?.current()).toBe(true)
+      return { commit: false, value: undefined }
+    }))
+    const release = Promise.withResolvers<void>(), late: { read?: Promise<unknown> } = {}
+    await fixture.persistence.readSnapshotRoot!(async () => fixture.persistence.transaction("planner", async () => {
+      expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")?.current()).toBe(true)
+      late.read = release.promise.then(() => currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced"))
+      return { commit: false, value: undefined }
+    }))
+    release.resolve()
+    if (!late.read) throw new Error("Closed native continuation was not captured")
+    await expect(late.read).rejects.toThrow()
+    const abort = new AbortController(), reason = new Error("C13 original native abort")
+    await fixture.ui(async (_call, request) => {
+      let rejected: unknown
+      try {
+        await fixture.persistence.readSnapshotRoot!(async () => fixture.persistence.transaction("planner", async () => {
+          expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")?.current()).toBe(true)
+          abort.abort(reason)
+          let caught: unknown
+          try { currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced") } catch (error) { caught = error }
+          expect(caught).toBe(reason)
+          return { commit: false, value: undefined }
+        }), { signal: request.signal })
+      } catch (error) { rejected = error }
+      expect(rejected).toBe(reason)
+    }, abort.signal)
+    expect(replacements).toBe(0)
+    expect(driftChecks).toBe(4)
+    console.log("SF_C13_UNFENCED_CONTROL " + JSON.stringify({
+      scenario: "eligibility-and-native-lifetime", qualification: false, opaqueCallbacks: 1,
+      driftChecks, replacements, childScopeMismatchRejected: true, closedRejected: true, abortIdentityPreserved: true,
+    }))
+  })
+}, 45_000)
+
+test("C13 generic facade writes retain native poison after caught source or audit corruption", async () => {
+  await withChain(false, async (fixture) => {
+    // The installed composition has no custom authorizeCommit callback. A custom
+    // callback may refuse before LocalStore receives commit:true; no claim is made for it.
+    await fixture.persistence.transaction("planner", async (snapshot) => {
+      snapshot.audit.push({ who: "person", at, record: "c13-readonly-audit-prefix", was: null, became: "present" })
+      return { commit: true, value: undefined }
+    })
+    const durable = () => fixture.persistence.transaction("planner", async (snapshot) =>
+      ({ commit: false, value: structuredClone(snapshot) }))
+    const original = await durable()
+    expect(original.audit.length).toBeGreaterThan(0)
+    const direct = createSfSourcePersistence({ ...fixture.sourceInput, persistence: fixture.store })
+    const corrupt = (snapshot: Snapshot, field: "sources" | "audit") => {
+      if (field === "sources") {
+        const record = snapshot.sfSources && Object.values(snapshot.sfSources.records)[0]
+        if (!record) throw new Error("Original source metadata required")
+        record.version++
+      } else {
+        if (snapshot.audit.length === 0) throw new Error("Durable audit prefix required")
+        snapshot.audit = []
+      }
+    }
+    const outcomes: { route: string; field: string; writeCallbacks: number; reuseCallbacks: number; accepted: false }[] = []
+    for (const route of ["native", "facade"] as const) for (const field of ["sources", "audit"] as const) {
+      await fixture.ui(async (call) => {
+        const root = createSfPlannerCalculationRoot({ host: fixture.authority.host })
+        const prepared = await root.prepare(call, async () => true, () => true)
+        if (!prepared) throw new Error("Original calculation root unavailable")
+        const persistence = route === "native" ? direct : fixture.persistence
+        let writeCallbacks = 0, reuseCallbacks = 0, completed = false
+        const result = await prepared.run(async () => {
+          const observed = currentSfReadonlyAuthorityData(fixture.persistence, [])
+          if (!observed) throw new Error("Original facade observation missing")
+          expect(root.allows(call)).toBe(true)
+          expect(observed.current("unpoisoned")).toBe(true)
+          await expect(persistence.transaction("planner", async (snapshot) => {
+            writeCallbacks++
+            corrupt(snapshot, field)
+            return { commit: true, value: "must never publish" }
+          })).rejects.toThrow("Nested local writes are forbidden")
+          expect(observed.current("unpoisoned")).toBe(false)
+          expect(root.allows(call)).toBe(false)
+          // A read callback may run before native egress refuses the poisoned root.
+          await expect(persistence.transaction("planner", async () => {
+            reuseCallbacks++
+            return { commit: false, value: "must never be accepted" }
+          })).rejects.toThrow("Nested local write attempted")
+          expect(root.allows(call)).toBe(false)
+          completed = true
+          return { status: "ok", value: "must never be accepted by the owner" }
+        })
+        // Assertions inside prepared.run can be caught by its unavailable path.
+        expect(completed).toBe(true)
+        expect(result).toEqual({ status: "unavailable", reason: "calculation-read-root-unavailable" })
+        expect(writeCallbacks).toBe(1)
+        expect(reuseCallbacks).toBeLessThanOrEqual(1)
+        expect(await durable()).toEqual(original)
+        outcomes.push({ route, field, writeCallbacks, reuseCallbacks, accepted: false })
+      })
+    }
+    let activeCallbacks = 0
+    await fixture.ui(async (call) => {
+      expect(await fixture.persistence.readSnapshotRoot!(async () => {
+        // A fence already present before generic transaction keeps its full
+        // source preflight. Its refusal remains distinct from native poison.
+        await expect(fixture.choice.run(call, () => fixture.persistence.transaction("planner", async (snapshot) => {
+          activeCallbacks++
+          expect(currentChoiceReadonlyAuthorityData(fixture.choice.persistence, [], "unfenced")).toBeUndefined()
+          corrupt(snapshot, "sources")
+          return { commit: true, value: "source guard must refuse" }
+        }))).rejects.toThrow("SF_SOURCE_IDENTITY_MUTATION")
+        expect(fixture.store.currentSnapshotScope?.()?.poisoned).toBe(false)
+        return fixture.persistence.transaction("planner", async () => ({ commit: false, value: "original fallback retained" }))
+      })).toBe("original fallback retained")
+    })
+    expect(activeCallbacks).toBe(1)
+    expect(await durable()).toEqual(original)
+    expect(outcomes).toHaveLength(4)
+    console.log("SF_C13_UNFENCED_CONTROL " + JSON.stringify({
+      scenario: "native-poison-and-active-fallback", qualification: false, outcomes, activeCallbacks,
+      activeFallback: "original source guard refusal", durableUnchanged: true,
+    }))
   })
 }, 45_000)

@@ -265,11 +265,13 @@ export type CurrentChoiceFence = {
 }
 const currentChoiceFences = new WeakSet<object>()
 const currentChoiceStorage = new WeakMap<CurrentChoiceFence, () => CurrentChoicePersistence | undefined>()
-const currentChoiceReadonlyReaders = new WeakMap<object, <S extends Surface>(surfaces: readonly S[]) => ReadonlyAuthorityData<S> | undefined>()
+const currentChoiceReadonlyReaders = new WeakMap<object, <S extends Surface>(surfaces: readonly S[], mode?: "unfenced") => ReadonlyAuthorityData<S> | undefined>()
 
-/** Query only the exact forwarding object emitted by this factory. */
-export function currentChoiceReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined {
-  return currentChoiceReadonlyReaders.get(owner)?.(surfaces)
+/** Query only the exact forwarding object emitted by this factory. Unfenced
+ * admission requires its direct transaction route and no CurrentChoice scope;
+ * it never grants authority. */
+export function currentChoiceReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[], mode?: "unfenced"): ReadonlyAuthorityData<S> | undefined {
+  return currentChoiceReadonlyReaders.get(owner)?.(surfaces, mode)
 }
 
 /** Prove that the factory's original wrappers still delegate to this driver. */
@@ -312,6 +314,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     pending: number
   }
   const scopes = new AsyncLocalStorage<Scope>()
+  const directTransactions = new AsyncLocalStorage<boolean>()
   const denied = () => new Error("SF_CURRENT_CHOICE_FENCE_CHANGED")
   const currentScope = (scope: Scope): boolean => {
     const identity = input.identity()
@@ -387,7 +390,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
       options?: TransactionOptions,
     ) => {
       const scope = scopes.getStore()
-      if (!scope && !input.authorizeCommit) return input.persistence.transaction(surface, work, options)
+      if (!scope && !input.authorizeCommit) return directTransactions.run(true, () => input.persistence.transaction(surface, work, options))
       const run = () => input.persistence.transaction(surface, async (snapshot, blobs) => {
         if (scope && !currentScope(scope)) throw denied()
         const result = await work(snapshot, blobs)
@@ -399,7 +402,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
         if (!publication(scope, authorized)) throw denied()
         return result
       }, options)
-      return scope ? track(scope, run) : run()
+      return directTransactions.run(false, () => scope ? track(scope, run) : run())
     },
     ...(input.persistence.transactionAll ? {
       transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
@@ -497,17 +500,20 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
     }
     if (originals.every(({ base, wrapped }) => !!base && Object.hasOwn(base, "value") && typeof base.value === "function" &&
       !!wrapped && Object.hasOwn(wrapped, "value") && typeof wrapped.value === "function") && pinned()) {
-      currentChoiceReadonlyReaders.set(persistence, <S extends Surface>(surfaces: readonly S[]): ReadonlyAuthorityData<S> | undefined => {
+      currentChoiceReadonlyReaders.set(persistence, <S extends Surface>(surfaces: readonly S[], mode?: "unfenced"): ReadonlyAuthorityData<S> | undefined => {
         if (!pinned()) return undefined
         const scope = scopes.getStore()
+        if (mode === "unfenced" && (directTransactions.getStore() !== true || scope)) return undefined
         // Keep LocalStore's error for a known closed or aborted scope. Unknown
         // drivers and mutable roots retain the original, unsupported path.
         const observed = currentLocalReadonlyAuthorityData(driver, surfaces)
         if (!observed) return undefined
         const integrity = { failed: false }
         const current = (requirement?: "unpoisoned") => {
-          const valid = observed.current(requirement) && !integrity.failed && pinned() && scopes.getStore() === scope &&
-            (!scope || currentScope(scope))
+          // An initially absent fence may be entered by work. Its wrappers still
+          // enforce that fence; the native observation retains its exact scope.
+          const valid = observed.current(requirement) && !integrity.failed && pinned() &&
+            (mode === "unfenced" || scopes.getStore() === scope && (!scope || currentScope(scope)))
           if (!valid) integrity.failed = true
           return valid
         }

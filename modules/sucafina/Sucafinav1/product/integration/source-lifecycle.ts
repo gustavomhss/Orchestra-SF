@@ -134,8 +134,8 @@ const authorityMethods = ["currentSnapshots", "currentSnapshot", "hasCurrentSnap
 const sourceAuthorityReaders = new WeakMap<object, { base: object; current: (owner: object) => boolean; plannerCurrent: () => boolean;
   plannerReaders: Pick<SfScopedSourcePort, "readScopedSource" | "readScopedSourcePrepared"> }>()
 
-function currentDriverReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[]) {
-  return currentLocalReadonlyAuthorityData(owner, surfaces) ?? currentChoiceReadonlyAuthorityData(owner, surfaces)
+function currentDriverReadonlyAuthorityData<S extends Surface>(owner: object, surfaces: readonly S[], mode?: "unfenced") {
+  return currentLocalReadonlyAuthorityData(owner, surfaces) ?? currentChoiceReadonlyAuthorityData(owner, surfaces, mode)
 }
 
 /** Read lexical presence without copying data for a registered local adapter. */
@@ -706,7 +706,7 @@ export function createSfSourcePersistence(input: {
         // A writable or opaque driver still needs the full preflight before work.
         const sealed = input.purpose !== "business-restore" && method && Object.hasOwn(method, "value") &&
           active && Object.hasOwn(active, "value") && active.value === method.value ?
-          currentLocalReadonlyAuthorityData(driver, []) : undefined
+          currentDriverReadonlyAuthorityData(driver, [], "unfenced") : undefined
         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
         const guarded = guard(surface, snapshot, sealedPreimage)
         try {
