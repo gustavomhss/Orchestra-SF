@@ -1,4 +1,7 @@
 import { mkdtemp, realpath, rm } from "node:fs/promises"
+import { createHash } from "node:crypto"
+import { Buffer } from "node:buffer"
+import { lstatSync, readFileSync, realpathSync } from "node:fs"
 import { tmpdir, userInfo } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -62,6 +65,7 @@ export function withNativeInstallation(input: {
       return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }
     })
     const app = yield* AppProcess.Service
+    const cpuEnvironment = nativePreviewE11CpuEnvironment(root)
     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", factory,
     ], {
@@ -79,13 +83,18 @@ export function withNativeInstallation(input: {
         XDG_STATE_HOME: path.join(root, "host-state"),
         ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),
         ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),
+        ...cpuEnvironment,
       },
     }))
     const ready = yield* Deferred.make<void>()
     const diagnostic = { last: "" }
-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
-    )))
+    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+      if (((line.startsWith("SF_PREVIEW_E12_CPU ") && line.length + 1 <= 4096) ||
+          (line.startsWith("SF_PREVIEW_E12_PROGRESS ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }
+      }
+      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+    })))
     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
     )))
@@ -118,4 +127,58 @@ export function withNativeInstallation(input: {
       },
     }
   })
+}
+
+
+/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */
+function nativePreviewE11CpuEnvironment(privateRoot: string): Record<string, string> {
+  const directoryKey = "SF_PREVIEW_E12_CPU_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING"
+  const disabled = { [directoryKey]: "", [bindingKey]: "" }
+  const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598", sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+  let stage = "binding"
+  try {
+    const directory = process.env[directoryKey], encoded = process.env[bindingKey]
+    if (!directory && !encoded) return disabled
+    if (!directory || !encoded || encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
+        Bun.version !== "1.3.14" || Bun.revision !== "0d9b296af33f2b851fcbf4df3e9ec89751734ba4") throw new Error("cpu-binding")
+    const value: unknown = JSON.parse(encoded)
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("cpu-binding")
+    const binding = value as Record<string, unknown>
+    if (binding.schema !== "sf-preview-e12-cpu-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
+        typeof binding.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||
+        typeof binding.runId !== "string" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== "1" ||
+        typeof binding.nonce !== "string" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
+        typeof binding.launcherBytes !== "number" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||
+        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))
+      throw new Error("cpu-binding")
+    stage = "directory"
+    const repository = realpathSync(path.resolve(path.dirname(entry), "../../.."))
+    const base = path.join(repository, "test-ci-evidence"), info = lstatSync(directory)
+    const relative = path.relative(realpathSync(privateRoot), directory)
+    if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== binding.nonce ||
+        realpathSync(base) !== base || realpathSync(directory) !== directory || !info.isDirectory() || info.isSymbolicLink() ||
+        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
+      throw new Error("cpu-directory")
+    stage = "launcher"
+    const launcherPath = path.join(directory, "launcher.json"), launcherInfo = lstatSync(launcherPath)
+    if (!launcherInfo.isFile() || launcherInfo.isSymbolicLink() || launcherInfo.size !== binding.launcherBytes)
+      throw new Error("cpu-launcher")
+    const text = readFileSync(launcherPath, "utf8")
+    if (Buffer.byteLength(text, "utf8") !== binding.launcherBytes ||
+        createHash("sha256").update(text, "utf8").digest("hex") !== binding.launcherSha256) throw new Error("cpu-launcher-hash")
+    const parsed: unknown = JSON.parse(text)
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("cpu-launcher-shape")
+    const launcher = parsed as Record<string, unknown>
+    for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
+      if (launcher[key] !== binding[key]) throw new Error("cpu-launcher-binding")
+    if (launcher.processRole !== "native-cli" || launcher.profileName !== "preview-first.cpuprofile")
+      throw new Error("cpu-launcher-role")
+    return { [directoryKey]: directory, [bindingKey]: encoded }
+  } catch {
+    try {
+      console.info("SF_PREVIEW_E12_CPU " + JSON.stringify({ schema: "sf-preview-causal-e12-cpu-v1", source, sourceTree,
+        qualification: false, role: "native-launcher", kind: "disabled", reason: stage }))
+    } catch { /* The original child must still be spawned with its original settings. */ }
+    return disabled
+  }
 }

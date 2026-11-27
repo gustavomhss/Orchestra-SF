@@ -1,5 +1,6 @@
 import { Database } from "bun:sqlite"
 import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
+import { markSfE12NativeCopy } from "./preview-cpu-e12-diagnostic.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { createHash, randomUUID } from "node:crypto"
 import { types } from "node:util"
@@ -650,6 +651,7 @@ export async function openLocalStore(directory: string, options: {
           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
           : projected ? projected.snapshot
           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
+        markSfE12NativeCopy(selection, projected?.selection, projected?.normalizedIdentities, projected?.identityCounts)
         if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
           selection: projected?.selection,
           current: () => {
@@ -1463,12 +1465,15 @@ const productSnapshotView = (() => {
   // be omitted from a graph whose readonly birth proves a normalized tree.
   const caseBodies = ["state", "objective", "horizon", "currency", "criteria", "sourceRefs", "alternatives", "costCoverageBases",
     "assumptions", "questions", "choices", "preparedChanges", "receipts", "ledger"] as const
-  const identityCases = (cases: Record<string, unknown>) => {
+  type IdentityLoopCounts = { enumerated: boolean; eligible: number; reduced: number; retained: number; omitted: number }
+  const identityCases = (cases: Record<string, unknown>, identityCounts: IdentityLoopCounts | undefined) => {
+    if (identityCounts) identityCounts.enumerated = true
     const fields = descriptors(cases), names = keys(fields), selected: Record<string, unknown> = {}
     for (let index = 0; index < names.length; index++) {
       const name = names[index]!, field = fields[name]!
       const entry: unknown = field.value
       let value = entry
+      let omittedEntry = false
       if (plain(entry)) {
         const parts = descriptors(entry)
         const id = own(parts, "id") ? parts.id : undefined, incarnation = own(parts, "incarnation") ? parts.incarnation : undefined
@@ -1487,21 +1492,31 @@ const productSnapshotView = (() => {
           }
         }
         if (simple) {
+          if (identityCounts && identityCounts.eligible < 65_535) identityCounts.eligible++
           const reduced: Record<string, unknown> = {}, partNames = keys(parts)
           for (let item = 0; item < partNames.length; item++) {
             const key = partNames[item]!
             let body = false
             for (let known = 0; known < caseBodies.length; known++) if (caseBodies[known] === key) body = true
+            if (body) {
+              omittedEntry = true
+              if (identityCounts && identityCounts.omitted < 65_535) identityCounts.omitted++
+            }
             if (!body) define(reduced, key, { value: parts[key]!.value, enumerable: true, writable: true, configurable: true })
           }
           value = reduced
         }
       }
+      if (identityCounts) {
+        const slot = omittedEntry ? "reduced" : "retained"
+        if (identityCounts[slot] < 65_535) identityCounts[slot]++
+      }
       define(selected, name, { value, enumerable: true, writable: true, configurable: true })
     }
     return selected
   }
-  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean) => {
+  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean,
+    identityCounts: IdentityLoopCounts | undefined) => {
     if (!current() || !selectionCurrent() || !plain(value)) return undefined
     const state = descriptors(value), names = keys(state)
     for (let index = 0; index < names.length; index++) {
@@ -1534,7 +1549,7 @@ const productSnapshotView = (() => {
       for (let item = 0; item < maps.length; item++) if (maps[item] === name) map = true
       for (let item = 0; item < additive.length; item++) if (additive[item] === name) map = true
       const retained = selection === "case-identities" ? "cases" : selection
-      define(selected, name, { value: name === "cases" && normalizedIdentities && plain(value) ? identityCases(value) :
+      define(selected, name, { value: name === "cases" && normalizedIdentities && plain(value) ? identityCases(value, identityCounts) :
         map && name !== retained && value !== undefined ? {} : value,
         enumerable: true, writable: true, configurable: true })
     }
@@ -1542,10 +1557,12 @@ const productSnapshotView = (() => {
   }
   const copy = (snapshot: Snapshot, selection?: "cases" | "preferences" | "case-identities", normalized = false) => {
     const normalizedIdentities = selection === "case-identities" && normalized && identitySnapshotBirth.current()
+    const identityCounts: IdentityLoopCounts | undefined = selection === "case-identities"
+      ? { enumerated: false, eligible: 0, reduced: 0, retained: 0, omitted: 0 } : undefined
     const data: Record<string, unknown> = {}
     const fields = descriptors(snapshot.data), names = keys(fields)
     const product = own(fields, "__sfProductV1") ? fields.__sfProductV1 : undefined
-    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection, normalizedIdentities) : undefined
+    const selected = selection && product && own(product, "value") ? selectedState(product.value, selection, normalizedIdentities, identityCounts) : undefined
     for (let index = 0; index < names.length; index++) {
       const name = names[index]!
       if (name !== "__sfProductV1" && name !== "roleMap" && name !== "access") continue
@@ -1561,7 +1578,8 @@ const productSnapshotView = (() => {
       if (!own(field, "value")) throw new Error("Unsupported snapshot accessor")
       define(view, name, { value: name === "data" ? data : field.value, enumerable: true, writable: true, configurable: true })
     }
-    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities }
+    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities,
+      identityCounts }
   }
   return { current, selectionCurrent, copy, property, own }
 })()

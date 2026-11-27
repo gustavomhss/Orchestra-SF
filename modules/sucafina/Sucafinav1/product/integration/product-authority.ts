@@ -1,3 +1,4 @@
+import { pumpSfE12CpuObservation } from "../../runtime/preview-cpu-e12-diagnostic.ts"
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import { types } from "node:util"
 import { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from "./source-lifecycle.ts"
@@ -139,6 +140,7 @@ export function createSfProductAuthority(input: {
     const observe = async (surface: Surface, snapshot: Pick<Snapshot, "data">) => {
       if (currentRead && !currentRead()) return undefined
       const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+      pumpSfE12CpuObservation()
       if (!actor || (currentRead && !currentRead())) return undefined
       const access = object(object(snapshot.data.access)[actor.id])
       if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== "string"))) ||
