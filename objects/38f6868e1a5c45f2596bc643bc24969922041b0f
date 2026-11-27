@@ -1,0 +1,492 @@
+{
+  "schema": "orchestra-sf.d27-c18-manifest-supplement.v1",
+  "status": "DRAFT_UNBOUND_REVIEWABLE_NO_FINAL_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "authority": "Root explicitly authorized the minimal D27 G1/G2 revision and supporting Git blobs. Only the wrapper changes; root retains source/snapshot/tree/ref/run operations and original-evidence acquisition.",
+  "basis": {
+    "manifest": {
+      "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "bytes": 50155,
+      "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f",
+      "lf": 1284
+    },
+    "bounds": {
+      "gitBlob": "da41241cfe00ef5e482d652e041451a30c63dfbb",
+      "bytes": 35765,
+      "sha256": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be",
+      "lf": 1019
+    },
+    "documentaryDerivation": {
+      "gitBlob": "57197162a4fec1a7795cb2dd2b679aee008238ac",
+      "bytes": 47965,
+      "sha256": "a5f26920ab89b5eb3c6db9c3bc8781595d2dd77fb6af47d268632815f631797c"
+    },
+    "rootReview": {
+      "gitBlob": "ce6090bad72629a9eab229a997f60aa16677cd09",
+      "bytes": 4747,
+      "sha256": "62c08d25a9b7053a4e96d51d03d8258082ec6bbb08308d08a4d1cee26508675c",
+      "lf": 203
+    },
+    "originalExecutableAnchors": {
+      "gitSha": "b58cc51511374d11c9d09d49ba98e336aaa3bf25",
+      "bytes": 158134,
+      "sha256": "c5531fa7a00d493b7164e4f2cae279b95dda503a07f4b0197e68362ce677d4ee",
+      "lf": 277,
+      "createdAndLiteralReadback": true
+    },
+    "originalExecutableDiff": {
+      "gitSha": "80e367ade08d085499d6509e1ff1436dc610a706",
+      "bytes": 15087,
+      "sha256": "40347fe08cb4c8edf7ed4e4803efc96058f27cbde6de78941381d838ba5c6ba8",
+      "lf": 203,
+      "createdAndLiteralReadback": true
+    },
+    "policy": "Immutable D26 history is not rewritten. This supplement overrides only the current wrapper artifact and the C18-specific metadata/intake additions; all earlier references and outcomes retain their original cuts."
+  },
+  "artifacts": {
+    "wrapper": {
+      "path": "apps/cli/test/sf613-final-verification.test.ts",
+      "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "bytes": 18381,
+      "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+      "lf": 344,
+      "createdAndLiteralReadback": true,
+      "changed": true
+    },
+    "envelope": {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "literalD26": true
+    },
+    "finalizer": {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "literalD26": true
+    },
+    "workflow": {
+      "path": ".github/workflows/sf613-final-qualification.yml",
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "literalD26": true
+    }
+  },
+  "supports": {
+    "derivation": {
+      "gitBlob": "47556eb9858b70ceddb4467f71ae5e489e647864",
+      "bytes": 17079,
+      "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d",
+      "lf": 441
+    },
+    "diff": {
+      "gitBlob": "6ec0e57314ae488dff083262bfce7fdaa4b853f7",
+      "bytes": 3223,
+      "sha256": "f0480bd3ec1f70e00e51fe09cf757da2534221572c0446cf781ca5112d803c7e",
+      "lf": 49,
+      "hunks": 4,
+      "added": 11,
+      "removed": 4
+    },
+    "bounds": {
+      "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+      "bytes": 13126,
+      "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+      "lf": 395
+    }
+  },
+  "delta": {
+    "filesChanged": 1,
+    "uniqueReversibleSubstitutions": 5,
+    "changes": [
+      "D27 comment and verification label identify the package revision independently of the existing receipt protocol.",
+      "G1 captureCases changes26→27; the11 loading modes, original receiptOwner and loading assertions are literal.",
+      "G1 gains a separate lazyCaptureControlManifest sibling naming one lazy fixture child, one public report and eight ordered oracles.",
+      "G2 command label changes26→27 captured cases. Its five whole-file argv entries, cwd, process120s and parent180s are literal."
+    ],
+    "preserved": "runCommand, G1 original git commands/parent, G2 argv/cwd/deadlines, G3–G26, existing tests, all process/output/global limits and the three companion executables.",
+    "noNewGroup": true,
+    "noNewCommand": true,
+    "noNewParser": true,
+    "noSourceOrTestEdit": true
+  },
+  "protocol": {
+    "wrapperVerificationBefore": "sf613-final-composition-literal-c-d26-r1",
+    "wrapperVerificationAfter": "sf613-final-composition-literal-c-d27-r1",
+    "verificationConsumedByEnvelopeFinalizerOrWorkflow": false,
+    "preservedEnvelopeReceiptSchema": "sf613-final-technical-literal-c-d26-r1",
+    "preservedFinalizerSchema": "sf613-final-technical-finalizer-v1",
+    "conclusion": "D27 is a package revision, not27 outer cases and not a renamed technical receipt protocol. Consumer inspection and exact embedding proofs are recorded in the derivation; workflow and companions remain literal."
+  },
+  "target": {
+    "source": "__SF613_SOURCE_SHA__",
+    "sourceTree": "__SF613_SOURCE_TREE__",
+    "sourceState": "UNBOUND",
+    "driver": "UNBOUND_PENDING_FINAL_C613_AND_CONCRETE_REVIEW",
+    "soleParent": "__SF613_SOURCE_SHA__",
+    "branch": "sf613-final-ci",
+    "futureDelta": [
+      {
+        "path": ".github/workflows/sf613-final-qualification.yml",
+        "status": "A",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sf613-final-verification.test.ts",
+        "status": "A",
+        "mode": "100644"
+      }
+    ],
+    "companionsAreBlobsNotAdditionalDriverPaths": true,
+    "unchangedUIRequestInsideSource": true
+  },
+  "placeholders": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFourBindingParameters": true,
+    "currentReferencePinsDoNotBindC613": true
+  },
+  "sourceReference": {
+    "role": "C18 reference, not final C613",
+    "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceManifest": {
+      "gitBlob": "4744d16a0cf65d664fd9df6fbd693a6d32af32fa",
+      "bytes": 13996,
+      "sha256": "2005755ace761265de05aa66d6708fd44c119be9d7de707bf32e3999aea3415d",
+      "lf": 264
+    },
+    "sourceBounds": {
+      "gitBlob": "c208552d0801fae41fb4aca8336d042a16124d51",
+      "bytes": 7503,
+      "sha256": "093208d3514f642b37ccca823c7111d444ccfebaef1823d3572466d05ada103d",
+      "lf": 181
+    },
+    "pins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+        "bytes": 8386,
+        "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+        "lf": 185
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+        "gitBlob": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+        "bytes": 23870,
+        "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+        "lf": 483
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+        "gitBlob": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+        "bytes": 13598,
+        "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+        "lf": 231
+      }
+    ],
+    "preservedLoadingFixture": {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+      "gitBlob": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+      "bytes": 10087,
+      "sha256": "65d27049c422b388b91a6030440725e2b8e8e4e3f4dd2a7cbd49eddd16b687bc",
+      "lf": 198
+    },
+    "finalC613Pins": "UNBOUND_RECONCILE_AFTER_SOURCE_ACCEPTANCE"
+  },
+  "historicalC18Focal": {
+    "receipt": {
+      "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+      "bytes": 48035,
+      "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4",
+      "lf": 1420
+    },
+    "status": "PASS_BOUNDED_FOCAL_NOT_INSTALLED_ANALYTICS",
+    "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "run": "46074917314",
+    "innerCases": 39,
+    "innerAssertions": 1432,
+    "outerCases": 7,
+    "outerAssertions": 35,
+    "commands": 13,
+    "truncationFlagsRequiredFalse": 26,
+    "reports": 9,
+    "runtime": {
+      "bun": "1.3.14",
+      "setupVersion": "1.3.14+0d9b296af",
+      "fullRevision": null
+    },
+    "captureWholeFileCases": 27,
+    "captureProcessMs": 906,
+    "meaning": "A received, bounded focal prerequisite. Its39 cases/nine reports and duration do not describe the complete final suite or transfer qualification to final C613, D27, Analytics, FinalUI6 or Release."
+  },
+  "selection": {
+    "groups": 26,
+    "expectSpawnSites": 26,
+    "syntacticCommandSites": 32,
+    "englishReadLoopExecutions": 6,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "fullSuiteUniqueFunctionalCount": null,
+    "proofChildren": 6,
+    "G2": {
+      "group": 2,
+      "priorReferenceCases": 47,
+      "currentReferenceCases": 48,
+      "captureCases": 27,
+      "otherCases": [
+        2,
+        13,
+        3,
+        3
+      ],
+      "wholeFileSelectionAlreadyPresent": true,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+          "gitBlob": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+          "bytes": 23870,
+          "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+          "lf": 483,
+          "cases": 27
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/canonical-native.test.ts",
+          "gitBlob": "0f6a69f8ea36ba6fb04c9346b91246bd536216b2",
+          "bytes": 1013,
+          "sha256": "0f3f411a6daca7422045d4f634889e25bb8abed3f7156cfd18262815e93f1dfe",
+          "lf": 16,
+          "cases": 2
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+          "gitBlob": "dc90cc3f75b1444c825d46ee5678e9e65d542e8f",
+          "bytes": 23244,
+          "sha256": "2ecec796aed9935125435ac9e93d04861d83c1b79e5c6fa41c58dc56db11c26a",
+          "lf": 473,
+          "cases": 13
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/canonical-clone-bytes.test.ts",
+          "gitBlob": "6a98dd975bfbb2c7b0eba8fd1bdd067c3085b4b5",
+          "bytes": 6385,
+          "sha256": "3e759e54f3685806c2bcad90df7c031b4498907b56035729712f9e463d7d5e24",
+          "lf": 141,
+          "cases": 3
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-source-preparation.test.ts",
+          "gitBlob": "3c2dede5030ebee40f2ef6dad0f8016da68cfd81",
+          "bytes": 15143,
+          "sha256": "fb434f1ec94d1b7fcc21c773f7bc5eb2d2b2873c49d4a36831f36e30a25d1f89",
+          "lf": 257,
+          "cases": 3
+        }
+      ],
+      "processMs": 120000,
+      "parentMs": 180000
+    },
+    "captureChildren": {
+      "loading": 11,
+      "lazy": 1,
+      "total": 12,
+      "loadingModesUnchanged": true,
+      "notAddedToOuterOmni": true,
+      "notAddedToSixProofChildren": true
+    },
+    "G6": "Unchanged whole-file selection and300s/360s.",
+    "G25": "Unchanged comparison-proof whole-file and150s/180s.",
+    "G26": "Unchanged five declarations/five reports,31 C16 outcomes plus9 nested C17 identityProjection cases,290s nominal Bun/264s cooperative/300s process/360s parent.",
+    "addedGroup": null
+  },
+  "futureIntake": {
+    "inheritedRequirements": {
+      "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "bytes": 50155,
+      "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f",
+      "lf": 1284
+    },
+    "inheritedFutureIntakeIsPreserved": true,
+    "outerPassRequired": 26,
+    "failRequired": 0,
+    "skipRequired": 0,
+    "plannedCommands": 37,
+    "truncationFlagsRequiredFalse": 74,
+    "proofChildrenSeparately": 6,
+    "C18": {
+      "report": "SF_C18_CAPTURE_LAZY",
+      "count": 1,
+      "title": "capture defers its private baseline once and closes materialization failures without replay",
+      "completePayloadRequired": true,
+      "syntheticBootstrapMustRemainExplicit": true,
+      "oracleNames": [
+        "deferred",
+        "primitiveUndefined",
+        "allocationFailure",
+        "undefinedFailure",
+        "hashRetry",
+        "prebuildDrift",
+        "constructionDrift",
+        "setterIsolation"
+      ],
+      "oracleCount": 8,
+      "loadingChildren": 11,
+      "lazyChildren": 1,
+      "privateLoadingReceiptsAreNotPublicReports": true,
+      "nativeOuterOmniAndNonceStillRequired": true
+    },
+    "fullSuiteFunctionalCount": null,
+    "fullSuiteReportTotal": null,
+    "noNewRuntimeParser": true,
+    "countsArePlanningUntilExecuted": true,
+    "referencePinsAndHistoricalPassDoNotQualifyFinalSource": true
+  },
+  "budgets": {
+    "bounds": {
+      "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+      "bytes": 13126,
+      "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+      "lf": 395
+    },
+    "G2ProcessMs": 120000,
+    "G2ParentMs": 180000,
+    "newCaseBunMs": 10000,
+    "newNestedChildMs": 3000,
+    "newNestedChildForceKillMs": 1000,
+    "newNestedChildStdoutCap": 65536,
+    "newNestedChildStderrCap": 65536,
+    "existingCaseTimeoutsLiteral": true,
+    "global": {
+      "processMs": 2100000,
+      "technicalStepMinutes": 40,
+      "jobMinutes": 45,
+      "alwaysFinalizerMinutes": 3,
+      "termGraceMs": 5000,
+      "killGraceMs": 5000,
+      "stdioDrainMs": 10000,
+      "unchanged": true,
+      "noBudgetIncrease": true
+    },
+    "commandCapture": {
+      "stdoutMaxBytes": 1048576,
+      "stderrMaxBytes": 1048576,
+      "truncationFails": true,
+      "scope": "Each runCommand capture, unchanged; not a cumulative log cap.",
+      "expectedFlagCount": 74,
+      "notCumulative": true
+    },
+    "workflowRunCharacterLimit": 21000,
+    "unchangedMaximumWidthModelRunCharacters": 15930,
+    "wrapperWidthOnlyBytes": 18420,
+    "G1MetadataModel": {
+      "oldBytes": 671,
+      "newBytes": 1163,
+      "deltaBytes": 492,
+      "sourceWidth": 40,
+      "treeWidth": 40,
+      "exactCompactJsonWithLFModel": true,
+      "notRuntimeEvidence": true
+    },
+    "noBudgetIncrease": true,
+    "noAggregateDeadlineFitClaim": true
+  },
+  "uiRequest": {
+    "inheritsLiteral": {
+      "path": ".ci-run.json",
+      "bytes": 390,
+      "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+      "state": "REQUIRED_FINAL_C613_BYTES_NOT_CREATED_BY_THIS_PACKAGE",
+      "mustBeInsideFinalC613": true,
+      "unchangedByD": true,
+      "finalUI": "Three original specs/six cases remain separate qualification on the literal final candidate. D26 neither modifies nor runs FinalUI."
+    },
+    "changed": false
+  },
+  "concretization": [
+    "Root first accepts and freezes actual final C613 under its source/UI requirements; this supplement does not create that candidate.",
+    "Reconcile the three C18 reference leaves and preserved loading fixture along with the existing C17/other final-selection references against actual final C613. Do not restore a historical whole file merely to force a pin match.",
+    "Bind only the four existing source SHA/tree and wrapper blob/SHA256 parameters. Binding the wrapper source/tree creates a new concrete wrapper identity; c2d665 is only the parametric reference.",
+    "Apply the inherited exact envelope/finalizer/checkout binding recipe and regenerate derived embeddings/digest only when those four values become concrete; review that bound delta.",
+    "Only root may construct and activate a sole-child final driver with the unchanged two added paths. No workflow or driver is added to the source by this package.",
+    "Receive the final technical execution and separate original UI6 under their future authorities, including the C18 report's eight complete oracles. No focal result substitutes for them."
+  ],
+  "limits": [
+    "The source-local48-case G2 count is not a total functional count for the complete26-group suite.",
+    "The new report is synthetic bootstrap evidence; it does not measure installed preview latency or prove native-runtime purity.",
+    "A separate final runtime/Release qualification remains necessary; this package transfers no Bun1.3 focal result.",
+    "Analytics status is outside this supplement. No current or future Analytics acceptance is asserted.",
+    "No new parser, observer, sampler, source optimization or test deadline is introduced.",
+    "Original evidence remains under root's one-acquisition protocol; this author used only preserved Git data."
+  ],
+  "actions": {
+    "newGitBlobArtifacts": 5,
+    "newExecutableBlobs": 1,
+    "companionBlobsChanged": 0,
+    "sourceOrTestChanges": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "repositoryCodeExecuted": false,
+    "originalLogGets": 0,
+    "zipGets": 0
+  },
+  "independentReview": {
+    "reviewer": "/root/teams_product",
+    "state": "PENDING_AT_AUTHORING_CUT",
+    "rootReviewRequired": true
+  }
+}

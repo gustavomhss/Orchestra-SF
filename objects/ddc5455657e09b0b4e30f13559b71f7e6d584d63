@@ -1,0 +1,248 @@
+{
+  "schema": "sf613-c18-focal-binding/v1",
+  "status": "BOUND_LITERAL_SOURCE_OBJECT_CI_PENDING",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "preparedAtUtc": "2026-11-27 22:08:03 UTC",
+  "scope": "Only two sentinel replacements in the already reviewed C18 wrapper. No product/test/package reauthorization, source edit, tree, commit, ref or run.",
+  "input": {
+    "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+    "git": "042b4a3020f1395dddbf5ef7598cd00e2b0956a3",
+    "bytes": 11981,
+    "sha256": "be433f43995816cfda4a59aaa3fc92fc7268b9a728af5806d8e7b27aee3d256a",
+    "lf": 182,
+    "finalLF": true,
+    "created": true,
+    "readbackLiteral": true,
+    "retained": true
+  },
+  "output": {
+    "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+    "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+    "bytes": 12024,
+    "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+    "lf": 182,
+    "finalLF": true,
+    "created": true,
+    "readbackLiteral": true
+  },
+  "source": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "rootReportedAudit": {
+      "by": "/root",
+      "treePairs": 14,
+      "unchangedSiblings": 317,
+      "delta": "1A2M",
+      "reviewedWorkingPins": 16,
+      "requestAbsent": true,
+      "driverAbsent": true,
+      "provenance": "Root's current binding instruction; this agent did not repeat the tree audit."
+    },
+    "sourceManifest": {
+      "git": "4744d16a0cf65d664fd9df6fbd693a6d32af32fa",
+      "bytes": 13996,
+      "sha256": "2005755ace761265de05aa66d6708fd44c119be9d7de707bf32e3999aea3415d",
+      "lf": 264,
+      "finalLF": true
+    },
+    "sourceBounds": {
+      "git": "c208552d0801fae41fb4aca8336d042a16124d51",
+      "bytes": 7503,
+      "sha256": "093208d3514f642b37ccca823c7111d444ccfebaef1823d3572466d05ada103d",
+      "lf": 181,
+      "finalLF": true
+    }
+  },
+  "acceptedParametricPackage": {
+    "manifest": {
+      "git": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+      "bytes": 31420,
+      "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed",
+      "lf": 784,
+      "finalLF": true
+    },
+    "bounds": {
+      "git": "7c8f78f2cae4b09a01690b3eb364242c8fb58df9",
+      "bytes": 22701,
+      "sha256": "edfb2faa9317eec915cfe61651c2b76da1eb858c47061f2de690b3495a7c62ac",
+      "lf": 729,
+      "finalLF": true
+    },
+    "anchors": {
+      "git": "b76ff37ca62b7e45a98041ff8a2dd50ec534392c",
+      "bytes": 15013,
+      "sha256": "0f4564584d598739d6d0edb1fe49b199c8d18b200fabf85e18df12f21c7ca861",
+      "lf": 288,
+      "finalLF": true
+    },
+    "retargetDiff": {
+      "git": "d818de080a1a1fb9ec3267bc403faa13a3be3526",
+      "bytes": 7160,
+      "sha256": "0ab07b06fa9a907103689eabfea22595e81dbdec50d607ec3bdae8a17bc56cbe",
+      "lf": 90,
+      "finalLF": true
+    },
+    "snapshotAdditionDiff": {
+      "git": "0bc4a392a1b4567628daf93eb6c7de0210957028",
+      "bytes": 12773,
+      "sha256": "2c1e1935f48508f1005969f859288cce10c4b38de959cbb52acf24f05c86628c",
+      "lf": 194,
+      "finalLF": true
+    },
+    "staticRootReview": {
+      "git": "b24001d0cb5acbe7fdeaae9d394662afdfa91f97",
+      "bytes": 7203,
+      "sha256": "e23af0cc279265fb43cb23e5fc5259aff4e0e6c77caf426b85deeb2662053c2c",
+      "lf": 274,
+      "finalLF": true
+    },
+    "staticRootReviewStatus": "ACK_STATIC_SOURCE_CONTROLS_AND_PARAMETRIC_FOCAL",
+    "staticRootReviewScope": "This prior review authorizes subsequent binding; its source objects were still future. Actual source audit is attributed separately to root above.",
+    "allPriorDocumentsRetainedLiteral": true
+  },
+  "operations": [
+    {
+      "name": "source",
+      "old": "UNBOUND_SOURCE_SHA",
+      "new": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "oldOccurrences": 1,
+      "newOccurrences": 1,
+      "preimage": {
+        "git": "042b4a3020f1395dddbf5ef7598cd00e2b0956a3",
+        "bytes": 11981,
+        "sha256": "be433f43995816cfda4a59aaa3fc92fc7268b9a728af5806d8e7b27aee3d256a",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "041214adaa925555422aa9982dd8fa5405c1bbf7",
+        "bytes": 12003,
+        "sha256": "f5f267ca6b9eceafd121599c56658a6dcd4fb5d510adefdcfb0429a7081ee0b3",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "name": "sourceTree",
+      "old": "UNBOUND_SOURCE_TREE",
+      "new": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "oldOccurrences": 1,
+      "newOccurrences": 1,
+      "preimage": {
+        "git": "041214adaa925555422aa9982dd8fa5405c1bbf7",
+        "bytes": 12003,
+        "sha256": "f5f267ca6b9eceafd121599c56658a6dcd4fb5d510adefdcfb0429a7081ee0b3",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "checks": {
+    "templateGitBytesSha256Authenticated": true,
+    "boundCreatedAndLiteralReadback": true,
+    "operationsExactlyTwo": true,
+    "oldOccurrencesEach": 1,
+    "newOccurrencesEach": 1,
+    "sourceValuesFullFortyLowerHex": true,
+    "noRemainingSentinels": true,
+    "forwardLiteral": true,
+    "inverseRestoresTemplateExactly": true,
+    "bytesMatchReviewedWidthOnlyModel": true,
+    "widthOnlyModelBytes": 12024,
+    "allOtherBytesLiteral": true,
+    "groupsAndCommandsUnchanged": true,
+    "workingPinsUnchanged": true,
+    "noTimeoutCapFilterParserOrRequestChange": true
+  },
+  "bindingDiff": {
+    "text": "diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts\n--- a/apps/cli/test/sucafina-proof-verification.test.ts\n+++ b/apps/cli/test/sucafina-proof-verification.test.ts\n@@ -11,8 +11,8 @@\n \n const repository = path.resolve(import.meta.dir, \"../../..\")\n const module = path.join(repository, \"modules/sucafina/Sucafinav1\")\n-const source = \"UNBOUND_SOURCE_SHA\"\n-const sourceTree = \"UNBOUND_SOURCE_TREE\"\n+const source = \"455c02a7a05a6dd3262ae15b184419897366fde4\"\n+const sourceTree = \"ae1c0977057e45853f3dc240140e5f221057f49d\"\n const historicalCompositionBase = \"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"\n const checks = testEffect(LayerNode.compile(AppProcess.node))\n \n",
+    "hunks": 1,
+    "added": 2,
+    "removed": 2,
+    "bytes": 722,
+    "sha256": "6c193c2506952ef3280dfc2ec041d5a643a81c79e77a768f3e2be8dc2c99a2d8",
+    "calculatedGitBlobHash": "0ab80a247a6c1951de80c738a15339914fb0e174",
+    "separateBlobCreated": false,
+    "representation": "Embedded literal diff data; calculated identity is not an additional Git object claim.",
+    "forwardAndInverseAppliedExactly": true
+  },
+  "preservedExpectations": {
+    "groups": 7,
+    "commands": 13,
+    "truncationFlagsRequiredFalse": 26,
+    "workingPins": 16,
+    "functionalDeclarations": 39,
+    "controlReports": 9,
+    "c16Outcomes": 31,
+    "c17IdentityOracles": 9,
+    "c18SyntheticOracleGroups": 8,
+    "nestedChildrenSeparate": {
+      "loading": 11,
+      "lazy": 1
+    },
+    "runtimeAssertions": null,
+    "g7ProcessMs": 180000,
+    "g7ParentMs": 240000,
+    "parentBudgetSumMs": 2400000,
+    "mainJobMs": 2700000,
+    "nominalSetupHooksExitAllowanceMs": 300000,
+    "guaranteedFinalization": false
+  },
+  "futureSnapshot": {
+    "commit": null,
+    "tree": null,
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "expectedDelta": "2A",
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "finalLF": false
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "finalLF": true
+      }
+    ],
+    "creationAndAuthorityOwner": "/root",
+    "requiresIndependentBindingAckAndRootSnapshotAudit": true
+  },
+  "peerReview": {
+    "owner": "/root/teams_product",
+    "requested": true,
+    "status": "Pending at receipt serialization; no execution authority asserted."
+  },
+  "effects": {
+    "gitBlobsOnly": true,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalLogs": 0,
+    "zips": 0,
+    "repositoryExecutions": 0
+  },
+  "limits": [
+    "All counts are future intake requirements from the selected text, not runtime results.",
+    "The C18 report uses a synthetic bootstrap; no native purity, performance, Analytics or Release result is transferred.",
+    "The unchanged40minute sum of parent budgets leaves only a nominal5minute allowance within the45minute main job; no finalization guarantee is added.",
+    "Source/template/package documents remain immutable; this receipt records the exact concrete source binding without rewriting their historical UNBOUND states."
+  ]
+}

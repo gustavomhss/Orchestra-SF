@@ -1,0 +1,491 @@
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts b/modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts
+@@ -2,10 +2,49 @@
+ 
+ // The helper performs no reflective work while loading. Its earlier canonical
+ // anchor decides whether any private-copy operation can run.
+-const opaque = {}
++const opaque = { kind: "opaque" } as const
+ 
++type PlanValue = undefined | null | string | boolean | number | PlanNode
++type PlanField = {
++  name: string
++  enumerable: boolean | undefined
++  value: PlanValue
++  next: PlanField | undefined
++}
++type PlanNode = {
++  array: boolean
++  nullPrototype: boolean
++  fields: PlanField | undefined
++  next: PlanNode | undefined
++  materialized: object | undefined
++}
++type Plan = { root: PlanValue; nodes: PlanNode | undefined }
++type Allocation = {
++  define: typeof Object.defineProperty
++  create: typeof Object.create
++  objectPrototype: object
++}
++type Baseline =
++  | { kind: "pending"; plan: Plan }
++  | { kind: "building" }
++  | { kind: "refused" }
++  | { kind: "materialized"; value: unknown }
++  | { kind: "hashed"; expected: string }
++  | { kind: "failed"; error: unknown }
++type CapturedIdentity = {
++  runtime: NonNullable<ReturnType<typeof sfCanonicalCaptureRuntime>>
++  allocation: Allocation
++  baseline: Baseline
++}
++
++function isOpaque(value: PlanValue | typeof opaque): value is typeof opaque {
++  return value === opaque
++}
++
+ /** No getters, Proxy traps, custom iterators or serializer hooks run in this walk.
+- * Aliases are copied once; an active ancestor is not mistaken for an alias. */
++ * Aliases are captured once; an active ancestor is not mistaken for an alias.
++ * Every retained object is a private node. Descriptors and input objects remain
++ * only in this preparation frame; their values become primitives or private edges. */
+ function capture(value: unknown) {
+   const runtime = sfCanonicalCaptureRuntime()
+   if (!runtime) return undefined
+@@ -15,9 +54,10 @@
+   const define = Object.defineProperty, create = Object.create
+   const isArray = Array.isArray, finite = Number.isFinite, isProxy = runtime.isProxy
+   const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
+-  const copies = new WeakMap<object, object>()
++  const copies = new WeakMap<object, PlanNode>()
+   const active = new WeakSet<object>()
+-  const visit = (item: unknown): unknown => {
++  let nodes: PlanNode | undefined, lastNode: PlanNode | undefined
++  const visit = (item: unknown): PlanValue | typeof opaque => {
+     if (item === undefined || item === null || typeof item === "string" || typeof item === "boolean") return item
+     if (typeof item === "number") return finite(item) ? item : opaque
+     if (typeof item !== "object" || isProxy(item) || active.has(item)) return opaque
+@@ -38,14 +78,22 @@
+       for (let index = 0; index < length; index++)
+         if (!own(fields, index) || !own(fields[index]!, "value")) return opaque
+     }
+-    const copied: object = array ? [] : create(parent)
++    const copied: PlanNode = { array, nullPrototype: parent === null,
++      fields: undefined, next: undefined, materialized: undefined }
++    if (lastNode) lastNode.next = copied
++    else nodes = copied
++    lastNode = copied
++    let lastField: PlanField | undefined
+     active.add(item)
+     for (let index = 0; index < names.length; index++) {
+       const name = names[index]!
+       if (array && name === "length") continue
+       const field = fields[name]!, value = visit(field.value)
+-      if (value === opaque) return opaque
+-      define(copied, name, { value, enumerable: field.enumerable, writable: true, configurable: true })
++      if (isOpaque(value)) return opaque
++      const retained: PlanField = { name, enumerable: field.enumerable, value, next: undefined }
++      if (lastField) lastField.next = retained
++      else copied.fields = retained
++      lastField = retained
+     }
+     active.delete(item)
+     copies.set(item, copied)
+@@ -53,27 +101,85 @@
+   }
+   try {
+     const copied = visit(value)
+-    return copied !== opaque && runtime.current() ? { value: copied, runtime } : undefined
++    return !isOpaque(copied) && runtime.current()
++      ? { plan: { root: copied, nodes }, runtime, allocation: { define, create, objectPrototype } } : undefined
+   } catch {
+-    // Native allocation/depth failures do not replace canonical admission.
++    // Native allocation/depth failures in preparation still use canonical admission.
+     return undefined
+   }
+ }
+ 
+-/** The private copy binds the original observation before the caller receives it.
+- * Ambiguity performs canonical admission immediately. The admitted path defers
+- * only its baseline digest; every comparison still digests the live value. */
++/** Reconstruct only the closed plan, never the caller's current graph.
++ * Allocate all nodes first so aliases remain shared without recursive rebuilding. */
++function materialize(plan: Plan, allocation: Allocation): unknown {
++  const root = plan.root
++  if (root === null || typeof root !== "object") return root
++  const define = allocation.define, create = allocation.create
++  const objectPrototype = allocation.objectPrototype
++  // All linked-list and copy slots were initialized as own data properties.
++  // No new array-index assignment can publish a private object to an inherited setter.
++  for (let node = plan.nodes; node; node = node.next)
++    node.materialized = node.array ? [] : create(node.nullPrototype ? null : objectPrototype)
++  for (let node = plan.nodes; node; node = node.next) {
++    const copied = node.materialized!
++    for (let field = node.fields; field; field = field.next) {
++      const retained = field.value
++      const value = retained !== null && typeof retained === "object" ? retained.materialized! : retained
++      define(copied, field.name, { value, enumerable: field.enumerable, writable: true, configurable: true })
++    }
++  }
++  return root.materialized
++}
++
++function capturedIdentity(state: CapturedIdentity): (current: unknown) => boolean {
++  return (current) => {
++    if (!state.runtime.current()) return false
++    // A trusted bootstrap primitive can still reenter. Never construct a second copy.
++    if (state.baseline.kind === "building" || state.baseline.kind === "refused") return false
++    if (state.baseline.kind === "failed") throw state.baseline.error
++    if (state.baseline.kind === "pending") {
++      const plan = state.baseline.plan
++      state.baseline = { kind: "building" }
++      let value: unknown
++      try {
++        value = materialize(plan, state.allocation)
++      } catch (error) {
++        // This is a new late failure boundary. Preserve even throw undefined,
++        // close this baseline, and never substitute or recapture the live value.
++        state.baseline = { kind: "failed", error }
++        throw error
++      }
++      // A bootstrap primitive may change the realm while constructing the copy.
++      // Never hash it under drift or accept it later merely because globals return.
++      if (!state.runtime.current()) {
++        state.baseline = { kind: "refused" }
++        return false
++      }
++      state.baseline = { kind: "materialized", value }
++    }
++    if (state.baseline.kind === "materialized") {
++      // A hash failure retains this same private copy for a later explicit call.
++      // Only successful hashing releases both the plan and the materialized graph.
++      const expected = digestSfValue(state.baseline.value)
++      state.baseline = { kind: "hashed", expected }
++    }
++    if (state.baseline.kind !== "hashed") return false
++    const expected = state.baseline.expected
++    const actual = digestSfValue(current)
++    return state.runtime.current() && expected === actual
++  }
++}
++
++/** The private plan binds the original observation before the caller receives it.
++ * Ambiguity performs canonical admission immediately. Only reconstruction and
++ * the baseline digest are deferred; every comparison still digests the live value. */
+ export function prepareSfCapturedContextIdentity(value: unknown): (current: unknown) => boolean {
+   const captured = capture(value)
+   if (!captured) {
+     const expected = digestSfValue(value)
+     return (current) => expected === digestSfValue(current)
+   }
+-  let expected: string | undefined
+-  return (current) => {
+-    if (!captured.runtime.current()) return false
+-    expected ??= digestSfValue(captured.value)
+-    const actual = digestSfValue(current)
+-    return captured.runtime.current() && expected === actual
+-  }
++  // The returned closure owns only this private state, never the preparation frame.
++  return capturedIdentity({ runtime: captured.runtime, allocation: captured.allocation,
++    baseline: { kind: "pending", plan: captured.plan } })
+ }
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts
+@@ -7,6 +7,7 @@
+ import { AbsolutePath } from "@orchestra/core/schema"
+ import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+ import { capturedContextLoadingModes, runSfCaptureLoadingControl } from "../../../../../../../apps/cli/test/fixture/sucafina-captured-context-loading.ts"
++import { runSfCaptureLazyControl } from "../../../../../../../apps/cli/test/fixture/sucafina-captured-context-lazy.ts"
+ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+ import { prepareSfCapturedContextIdentity } from "../../../../product/host-binding/captured-context-identity.ts"
+ import { readSfMemoryCaptureIntegrity } from "../../../../product/host-binding/business-context.ts"
+@@ -432,3 +433,51 @@
+     await rm(directory, { recursive: true, force: true })
+   }
+ })
++
++test("capture defers its private baseline once and closes materialization failures without replay", async () => {
++  const result = await runSfCaptureLazyControl(import.meta.path)
++  expect(result.pid).toBeGreaterThan(0)
++  expect(result.pid).not.toBe(process.pid)
++  expect(result.omniSpawns).toBe(1)
++  expect(result.omniDelegations).toBe(0)
++  expect<unknown>(result.report).toEqual({
++    mode: "deferred-baseline", pid: result.pid, syntheticBootstrap: true, admitted: true,
++    deferred: {
++      prepared: { create: 0, define: 0, hash: 0 },
++      first: true, firstCounts: { create: 4, define: 13, hash: 2 }, firstLiveReads: 0,
++      second: true, secondCounts: { create: 4, define: 13, hash: 3 }, secondLiveReads: 0,
++      changed: false, changedCounts: { create: 4, define: 13, hash: 4 }, changedLiveReads: 1,
++      reentries: 1, reentryMatches: false,
++      shape: { alias: true, detached: true, nullPrototype: true, ownProto: true,
++        ownUndefined: true, hidden: true, negativeZero: true },
++    },
++    primitiveUndefined: {
++      prepared: { create: 0, define: 0, hash: 0 }, undefinedMatches: true, first: { create: 0, define: 0, hash: 2 },
++      nullMatches: false, last: { create: 0, define: 0, hash: 3 },
++    },
++    allocationFailure: {
++      firstThrew: true, firstExact: true, first: { create: 1, define: 1, hash: 0 },
++      againThrew: true, againExact: true, last: { create: 1, define: 1, hash: 0 },
++    },
++    undefinedFailure: {
++      firstThrew: true, firstUndefined: true, first: { create: 1, define: 0, hash: 0 },
++      againThrew: true, againUndefined: true, last: { create: 1, define: 0, hash: 0 },
++    },
++    hashRetry: {
++      firstThrew: true, firstExact: true, first: { create: 1, define: 1, hash: 1 },
++      changedAfterRetry: false, retried: { create: 1, define: 1, hash: 3 },
++      originalAfterRetry: true, last: { create: 1, define: 1, hash: 4 },
++    },
++    prebuildDrift: {
++      beforeDrift: false, before: { create: 0, define: 0, hash: 0 }, unexpectedCreate: 0,
++      afterRestore: true, after: { create: 1, define: 1, hash: 2 },
++    },
++    constructionDrift: {
++      duringDrift: false, during: { create: 1, define: 1, hash: 0 },
++      refusedAfterRestore: false, after: { create: 1, define: 1, hash: 0 }, stringifyCalls: 0, liveReads: 0,
++    },
++    setterIsolation: { historicalStringsObserved: true, objectWrites: 0 },
++  })
++  console.log("SF_C18_CAPTURE_LAZY " + JSON.stringify({ control: result.report, omniSpawns: result.omniSpawns,
++    omniDelegations: result.omniDelegations }))
++}, 10_000)
+diff --git a/apps/cli/test/fixture/sucafina-captured-context-lazy.ts b/apps/cli/test/fixture/sucafina-captured-context-lazy.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/cli/test/fixture/sucafina-captured-context-lazy.ts
+@@ -0,0 +1,231 @@
++/** Test-only isolated process. Bootstrap spies precede canonical initialization;
++ * they prove ordering and failure handling, not native runtime purity or speed. */
++export async function runSfCaptureLazyControl(file: string) {
++  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([
++    import("@orchestra/core/process"), import("@orchestra/core/effect/layer-node"),
++    import("@orchestra/core/test/fixture/omni-expect"), import("effect"), import("effect/unstable/process"),
++    import("@orchestra/core/omni"),
++  ])
++  expectSpawn(file)
++  const before = Omni.snapshot()
++  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {
++    const processes = yield* AppProcess.Service
++    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path], {
++      cwd: import.meta.dir, extendEnv: true, stdin: "ignore", stdout: "pipe", stderr: "pipe",
++      killSignal: "SIGTERM", forceKillAfter: "1 second",
++    }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })
++  }), LayerNode.compile(AppProcess.node))))
++  const after = Omni.snapshot()
++  const stdout = result.stdout.toString("utf8"), stderr = result.stderr.toString("utf8")
++  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)
++    throw new Error("Captured context lazy child did not complete: " + JSON.stringify({
++      exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,
++      stderrTruncated: result.stderrTruncated, stdout, stderr,
++    }))
++  const receipt: unknown = JSON.parse(stdout)
++  if (!receipt || typeof receipt !== "object" || !("mode" in receipt) || receipt.mode !== "deferred-baseline" ||
++    !("pid" in receipt) || typeof receipt.pid !== "number" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0)
++    throw new Error("Captured context lazy child returned an invalid receipt")
++  return { pid: receipt.pid, report: receipt,
++    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }
++}
++
++async function child() {
++  const property = Object.getOwnPropertyDescriptor, define = Object.defineProperty
++  const create = Object.create, parent = Object.getPrototypeOf, own = Object.hasOwn
++  const remove = Reflect.deleteProperty, apply = Reflect.apply, construct = Reflect.construct
++  const savedCreate = property(Object, "create"), savedDefine = property(Object, "defineProperty")
++  const savedHasher = property(Bun, "CryptoHasher"), savedIndex = property(Array.prototype, "0")
++  const savedLength = property(Array.prototype, "length"), savedStringify = property(JSON, "stringify")
++  if (!savedCreate || !savedDefine || !savedHasher || !savedLength || !savedStringify)
++    throw new Error("The original bootstrap descriptors are required")
++  let observing = false, createCalls = 0, defineCalls = 0, hashCalls = 0
++  let stringSlots = 0, objectSlots = 0, captureAliases = false
++  let copiedRoot: object | undefined, copiedLeft: unknown, copiedRight: unknown
++  let createAction: (() => void) | undefined, defineAction: (() => void) | undefined
++  let hashAction: (() => void) | undefined
++  const counts = () => ({ create: createCalls, define: defineCalls, hash: hashCalls })
++  const reset = () => { createCalls = 0; defineCalls = 0; hashCalls = 0 }
++  const thrown = (work: () => unknown): { threw: boolean; error: unknown } => {
++    try { work(); return { threw: false, error: undefined } }
++    catch (error) { return { threw: true, error } }
++  }
++  const createSpy = new Proxy(Object.create, { apply(target, receiver, args) {
++    if (observing) {
++      createCalls++
++      const action = createAction
++      createAction = undefined
++      action?.()
++    }
++    return apply(target, receiver, args)
++  } })
++  const defineSpy = new Proxy(Object.defineProperty, { apply(target, receiver, args) {
++    if (observing) {
++      defineCalls++
++      const action = defineAction
++      defineAction = undefined
++      action?.()
++      const owner: unknown = args[0], key: unknown = args[1], descriptor: unknown = args[2]
++      if (captureAliases && owner && typeof owner === "object" &&
++        descriptor && typeof descriptor === "object" && "value" in descriptor) {
++        if (key === "left") { copiedRoot = owner; copiedLeft = descriptor.value }
++        if (key === "right") copiedRight = descriptor.value
++      }
++    }
++    return apply(target, receiver, args)
++  } })
++  const hasherSpy = new Proxy(Bun.CryptoHasher, { construct(target, args) {
++    if (observing) {
++      hashCalls++
++      const action = hashAction
++      hashAction = undefined
++      action?.()
++    }
++    return construct(target, args)
++  } })
++  try {
++    // The setter preserves ordinary writes. Only observation is disabled during imports.
++    // New private nodes/edges/copies must never arrive here; historical names are strings.
++    define(Array.prototype, "0", { configurable: true, get() { return undefined },
++      set(this: object, value: unknown) {
++        if (observing) {
++          if (typeof value === "string") stringSlots++
++          if (value !== null && (typeof value === "object" || typeof value === "function")) objectSlots++
++        }
++        define(this, "0", { value, enumerable: true, writable: true, configurable: true })
++      } })
++    define(Object, "create", { ...savedCreate, value: createSpy })
++    define(Object, "defineProperty", { ...savedDefine, value: defineSpy })
++    define(Bun, "CryptoHasher", { ...savedHasher, value: hasherSpy })
++    const canonical = await import("../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts")
++    const helper = await import("../../../../modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts")
++    const runtime = canonical.sfCanonicalCaptureRuntime()
++    if (!runtime) throw new Error("The synthetic bootstrap must be admitted")
++    const makeSource = () => {
++      const source: object = create(null)
++      const shared = { amount: -0, optional: undefined, nested: [null, true, "quoted"] }
++      const special = { zero: -0 }, hidden = { value: 7 }
++      define(source, "left", { value: shared, enumerable: true, writable: true, configurable: true })
++      define(source, "right", { value: shared, enumerable: true, writable: true, configurable: true })
++      define(source, "__proto__", { value: special, enumerable: true, writable: true, configurable: true })
++      define(source, "optional", { value: undefined, enumerable: true, writable: true, configurable: true })
++      define(source, "hidden", { value: hidden, enumerable: false, writable: true, configurable: true })
++      return { source, shared, special }
++    }
++    const input = makeSource(), equivalent = makeSource()
++    let liveGetterCalls = 0, reentries = 0, reentryMatches: boolean | undefined
++    observing = true
++    captureAliases = true
++    const same = helper.prepareSfCapturedContextIdentity(input.source)
++    const prepared = counts()
++    input.shared.nested[0] = "changed"
++    input.special.zero = 1
++    remove(input.source, "optional")
++    define(input.source, "left", { configurable: true, enumerable: true,
++      get() { liveGetterCalls++; return input.shared } })
++    createAction = () => { reentries++; reentryMatches = same(equivalent.source) }
++    const first = same(equivalent.source), firstCounts = counts(), firstLiveReads = liveGetterCalls
++    const second = same(equivalent.source), secondCounts = counts(), secondLiveReads = liveGetterCalls
++    const changed = same(input.source), changedCounts = counts()
++    captureAliases = false
++    const root = copiedRoot, left = copiedLeft
++    const specialDescriptor = root && property(root, "__proto__")
++    const optionalDescriptor = root && property(root, "optional")
++    const hiddenDescriptor = root && property(root, "hidden")
++    const shape = {
++      alias: left !== undefined && left === copiedRight,
++      detached: left !== input.shared && left !== equivalent.shared,
++      nullPrototype: !!root && parent(root) === null,
++      ownProto: !!specialDescriptor && own(specialDescriptor, "value") &&
++        specialDescriptor.value !== input.special && specialDescriptor.value !== equivalent.special,
++      ownUndefined: !!optionalDescriptor && own(optionalDescriptor, "value") && optionalDescriptor.value === undefined,
++      hidden: !!hiddenDescriptor && hiddenDescriptor.enumerable === false,
++      negativeZero: !!left && typeof left === "object" && Object.is(property(left, "amount")?.value, -0),
++    }
++    const deferred = { prepared, first, firstCounts, firstLiveReads, second, secondCounts, secondLiveReads,
++      changed, changedCounts, changedLiveReads: liveGetterCalls, reentries, reentryMatches, shape }
++
++    reset()
++    const sameUndefined = helper.prepareSfCapturedContextIdentity(undefined)
++    const undefinedPrepared = counts()
++    const undefinedMatches = sameUndefined(undefined), undefinedFirst = counts()
++    const nullMatches = sameUndefined(null), undefinedLast = counts()
++    const primitiveUndefined = { prepared: undefinedPrepared, undefinedMatches, first: undefinedFirst,
++      nullMatches, last: undefinedLast }
++
++    reset()
++    const allocationSentinel = new Error("capture-allocation-sentinel")
++    const failSource = { value: 1 }, sameFailure = helper.prepareSfCapturedContextIdentity(failSource)
++    failSource.value = 2
++    defineAction = () => { throw allocationSentinel }
++    const failedFirst = thrown(() => sameFailure({ value: 1 })), failedFirstCounts = counts()
++    const failedAgain = thrown(() => sameFailure(failSource)), failedLastCounts = counts()
++    const allocationFailure = { firstThrew: failedFirst.threw, firstExact: failedFirst.error === allocationSentinel,
++      first: failedFirstCounts, againThrew: failedAgain.threw, againExact: failedAgain.error === allocationSentinel,
++      last: failedLastCounts }
++
++    reset()
++    const sameUndefinedFailure = helper.prepareSfCapturedContextIdentity({ value: 1 })
++    createAction = () => { throw undefined }
++    const undefinedFailureFirst = thrown(() => sameUndefinedFailure({ value: 1 })), undefinedFailureFirstCounts = counts()
++    const undefinedFailureAgain = thrown(() => sameUndefinedFailure({ value: 2 })), undefinedFailureLastCounts = counts()
++    const undefinedFailure = { firstThrew: undefinedFailureFirst.threw, firstUndefined: undefinedFailureFirst.error === undefined,
++      first: undefinedFailureFirstCounts, againThrew: undefinedFailureAgain.threw,
++      againUndefined: undefinedFailureAgain.error === undefined, last: undefinedFailureLastCounts }
++
++    reset()
++    const hashSentinel = new Error("capture-hash-sentinel")
++    const hashSource = { value: 10 }, sameHash = helper.prepareSfCapturedContextIdentity(hashSource)
++    hashSource.value = 20
++    hashAction = () => { throw hashSentinel }
++    const hashFailureFirst = thrown(() => sameHash(hashSource)), hashFailureFirstCounts = counts()
++    const changedAfterRetry = sameHash(hashSource), retriedCounts = counts()
++    const originalAfterRetry = sameHash({ value: 10 }), hashLastCounts = counts()
++    const hashRetry = { firstThrew: hashFailureFirst.threw, firstExact: hashFailureFirst.error === hashSentinel,
++      first: hashFailureFirstCounts, changedAfterRetry, retried: retriedCounts, originalAfterRetry, last: hashLastCounts }
++
++    reset()
++    const sameBeforeDrift = helper.prepareSfCapturedContextIdentity({ value: 1 })
++    let unexpectedCreate = 0
++    define(Object, "create", { ...savedCreate, value: () => { unexpectedCreate++; return {} } })
++    const beforeDrift = sameBeforeDrift({ value: 1 }), beforeDriftCounts = counts()
++    define(Object, "create", { ...savedCreate, value: createSpy })
++    const afterRestore = sameBeforeDrift({ value: 1 }), afterRestoreCounts = counts()
++    const prebuildDrift = { beforeDrift, before: beforeDriftCounts, unexpectedCreate, afterRestore, after: afterRestoreCounts }
++
++    reset()
++    const sameDuringDrift = helper.prepareSfCapturedContextIdentity({ value: 1 })
++    let stringifyCalls = 0, driftLiveReads = 0
++    const stringifySpy = new Proxy(JSON.stringify, { apply(target, receiver, args) {
++      stringifyCalls++
++      return apply(target, receiver, args)
++    } })
++    defineAction = () => { define(JSON, "stringify", { ...savedStringify, value: stringifySpy }) }
++    const currentWithGetter = { get value() { driftLiveReads++; return 1 } }
++    const duringDrift = sameDuringDrift(currentWithGetter), duringCounts = counts()
++    define(JSON, "stringify", savedStringify)
++    const refusedAfterRestore = sameDuringDrift(currentWithGetter), refusedCounts = counts()
++    const constructionDrift = { duringDrift, during: duringCounts, refusedAfterRestore, after: refusedCounts,
++      stringifyCalls, liveReads: driftLiveReads }
++
++    const setterIsolation = { historicalStringsObserved: stringSlots > 0, objectWrites: objectSlots }
++    observing = false
++    return { mode: "deferred-baseline", pid: process.pid, syntheticBootstrap: true, admitted: runtime.current(),
++      deferred, primitiveUndefined, allocationFailure, undefinedFailure, hashRetry, prebuildDrift, constructionDrift,
++      setterIsolation }
++  } finally {
++    observing = false
++    define(JSON, "stringify", savedStringify)
++    define(Object, "create", savedCreate)
++    define(Object, "defineProperty", savedDefine)
++    define(Bun, "CryptoHasher", savedHasher)
++    if (savedIndex) define(Array.prototype, "0", savedIndex)
++    else remove(Array.prototype, "0")
++    define(Array.prototype, "length", savedLength)
++  }
++}
++
++if (import.meta.main) {
++  const receipt = await child()
++  process.stdout.write(JSON.stringify(receipt) + "\n")
++}

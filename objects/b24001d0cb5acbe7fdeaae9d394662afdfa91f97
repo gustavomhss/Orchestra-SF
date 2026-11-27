@@ -1,0 +1,274 @@
+{
+  "schema": "sf613-c18-root-static-review-v1",
+  "status": "ACK_STATIC_SOURCE_CONTROLS_AND_PARAMETRIC_FOCAL",
+  "reviewedAt": "2026-11-27 22:05:43 UTC",
+  "reviewer": "/root",
+  "repository": "gustavomhss/Orchestra-SF",
+  "sourceManifest": {
+    "gitBlob": "4744d16a0cf65d664fd9df6fbd693a6d32af32fa",
+    "bytes": 13996,
+    "sha256": "2005755ace761265de05aa66d6708fd44c119be9d7de707bf32e3999aea3415d"
+  },
+  "sourceBounds": {
+    "gitBlob": "c208552d0801fae41fb4aca8336d042a16124d51",
+    "bytes": 7503,
+    "sha256": "093208d3514f642b37ccca823c7111d444ccfebaef1823d3572466d05ada103d"
+  },
+  "sourceDerivation": {
+    "gitBlob": "4db2a037f06ec8542003f208fa1e195b6cc39869",
+    "bytes": 40736,
+    "sha256": "12ceaa7936bc75dd9d0089671876640cb5359c8f7457d41e6ed2d844a9e6f485"
+  },
+  "sourceDiff": {
+    "gitBlob": "ba4c7b40eb2fa145067eb0f56bf978336f6da4fe",
+    "bytes": 26857,
+    "sha256": "90edb5b9631ac923d96e0faf2e34a98cbf7d7e6ac80bb0dc33d0e22a6a8633b1"
+  },
+  "focalManifest": {
+    "gitBlob": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+    "bytes": 31420,
+    "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed"
+  },
+  "focalBounds": {
+    "gitBlob": "7c8f78f2cae4b09a01690b3eb364242c8fb58df9",
+    "bytes": 22701,
+    "sha256": "edfb2faa9317eec915cfe61651c2b76da1eb858c47061f2de690b3495a7c62ac"
+  },
+  "focalTemplate": {
+    "gitBlob": "042b4a3020f1395dddbf5ef7598cd00e2b0956a3",
+    "bytes": 11981,
+    "sha256": "be433f43995816cfda4a59aaa3fc92fc7268b9a728af5806d8e7b27aee3d256a"
+  },
+  "checks": [
+    {
+      "name": "source post 0",
+      "pass": true
+    },
+    {
+      "name": "source post 1",
+      "pass": true
+    },
+    {
+      "name": "source post 2",
+      "pass": true
+    },
+    {
+      "name": "source exact parent",
+      "pass": true
+    },
+    {
+      "name": "source docs linked",
+      "pass": true
+    },
+    {
+      "name": "source derivation proved",
+      "pass": true
+    },
+    {
+      "name": "source late error and metadata limits explicit",
+      "pass": true
+    },
+    {
+      "name": "8 anchors forward",
+      "pass": true
+    },
+    {
+      "name": "8 anchors inverse",
+      "pass": true
+    },
+    {
+      "name": "retarget patch exact",
+      "pass": true
+    },
+    {
+      "name": "full 2A addition literal",
+      "pass": true
+    },
+    {
+      "name": "runCommand literal",
+      "pass": true
+    },
+    {
+      "name": "G2 to G6 literal",
+      "pass": true
+    },
+    {
+      "name": "working pins16 preserved12",
+      "pass": true
+    },
+    {
+      "name": "7 groups13sites",
+      "pass": true
+    },
+    {
+      "name": "two exact sentinels",
+      "pass": true
+    },
+    {
+      "name": "bounded capture",
+      "pass": true
+    },
+    {
+      "name": "budgets40vs45",
+      "pass": true
+    },
+    {
+      "name": "counts static not qualification",
+      "pass": true
+    }
+  ],
+  "sourceDerivationChecks": [
+    {
+      "role": "helper",
+      "anchors": 4,
+      "hunks": 4,
+      "added": 125,
+      "removed": 19,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "role": "test",
+      "anchors": 2,
+      "hunks": 2,
+      "added": 49,
+      "removed": 0,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "role": "fixture",
+      "anchors": 0,
+      "hunks": 1,
+      "added": 231,
+      "removed": 0,
+      "fullAdditionLiteral": true,
+      "inverseIsAbsence": true
+    }
+  ],
+  "sourceHistoryChecks": {
+    "anchors": 9,
+    "forward": true,
+    "inverse": true,
+    "old": {
+      "gitBlob": "69ff8e1b2118d4a105dc436f506b12c3cd94e5ed",
+      "bytes": 7653,
+      "sha256": "c521bc4d0c0586a40d566e77e8c0248d54513f31314e0ff9e8ee7b4c0c0a31d1"
+    },
+    "current": {
+      "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+      "bytes": 8386,
+      "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa"
+    }
+  },
+  "controlChecks": [
+    {
+      "name": "fixture uses AppProcess scoped process",
+      "pass": true
+    },
+    {
+      "name": "original child stdout and stderr bounded",
+      "pass": true
+    },
+    {
+      "name": "both truncation flags and nonzero exit rejected",
+      "pass": true
+    },
+    {
+      "name": "child receipt mode and positive safe pid",
+      "pass": true
+    },
+    {
+      "name": "isolation and one spawn tested",
+      "pass": true
+    },
+    {
+      "name": "full expected receipt before exactly one report",
+      "pass": true
+    },
+    {
+      "name": "thrown discriminates undefined from no throw",
+      "pass": true
+    },
+    {
+      "name": "synthetic bootstrap explicitly labeled",
+      "pass": true
+    },
+    {
+      "name": "finally restores all mutated descriptors",
+      "pass": true
+    },
+    {
+      "name": "postbuild drift hashes0 live0 before and after restore",
+      "pass": true
+    },
+    {
+      "name": "setter oracle demands observed historical strings and zero objects",
+      "pass": true
+    },
+    {
+      "name": "materialization counts actual graph independently counted",
+      "pass": true
+    },
+    {
+      "name": "shape and mutated original tested",
+      "pass": true
+    },
+    {
+      "name": "primitive undefined has explicit value case",
+      "pass": true
+    },
+    {
+      "name": "materialization failure never repeats counts",
+      "pass": true
+    },
+    {
+      "name": "hash retry retains same graph and computes live",
+      "pass": true
+    },
+    {
+      "name": "reentry refuses without second allocation",
+      "pass": true
+    },
+    {
+      "name": "prebuild drift preserves old restoration behavior",
+      "pass": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/teams_product",
+    "source": "ACK final source/control/documentation, literal forward/inverse six anchors+addition, seven hunks and R1->R2 nine anchors.",
+    "focal": "ACK final template/derivation/documents, eight anchors, six hunks, exact original247B noLF request, 16pins/7groups/13commands/26flags/39functional/9reports expected. No static blocker.",
+    "scope": "No repository execution, objects, refs, runs or originals by reviewer."
+  },
+  "next": {
+    "source": {
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "baseTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "delta": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "0b9b7b786ab1c327104f25b9945aa79e9b857c03"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56"
+        }
+      ]
+    },
+    "focal": "Bind only two sentinels to actual audited S18/T18 then audit 2A snapshot; separate fresh root authority is required before activation."
+  },
+  "qualification": false,
+  "performanceClaim": null,
+  "productionApproval": null
+}

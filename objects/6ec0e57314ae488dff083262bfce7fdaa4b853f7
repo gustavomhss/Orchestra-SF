@@ -1,0 +1,49 @@
+diff --git a/apps/cli/test/sf613-final-verification.test.ts b/apps/cli/test/sf613-final-verification.test.ts
+--- a/apps/cli/test/sf613-final-verification.test.ts
++++ b/apps/cli/test/sf613-final-verification.test.ts
+@@ -1,4 +1,4 @@
+-// D26 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
++// D27 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
+ import { expect } from "bun:test"
+ import path from "node:path"
+ import { readFile } from "node:fs/promises"
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires Linux GitHub Actions with the actual driver SHA in GITHUB_SHA")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-final-composition-literal-c-d26-r1", source, sourceTree,
++    verification: "sf613-final-composition-literal-c-d27-r1", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -60,13 +60,20 @@
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+   process.stdout.write(JSON.stringify({ loadingControlManifest: {
+-    source, sourceTree, captureCases: 26, originalCanonicalCases: 2,
++    source, sourceTree, captureCases: 27, originalCanonicalCases: 2,
+     modes: ["clean", "object-tojson", "array-tojson", "stateful-map", "stateful-keys",
+       "copy-descriptors", "reflection-descriptor", "proxy-checker", "stateful-hasher",
+       "bootstrap-api-absent", "bootstrap-api-accessor"],
+     receiptOwner: "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+     assertions: "distinct child PID; canonical before hook before helper; one own Omni spawn; zero delegations; intact output; positive and cold negative comparisons",
+     outerOmniDoesNotCountLoadingChildren: true,
++  }, lazyCaptureControlManifest: {
++    source, sourceTree, cases: 1, childProcesses: 1,
++    fixture: "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
++    report: "SF_C18_CAPTURE_LAZY", reports: 1, syntheticBootstrap: true,
++    oracles: ["deferred", "primitiveUndefined", "allocationFailure", "undefinedFailure",
++      "hashRetry", "prebuildDrift", "constructionDrift", "setterIsolation"],
++    outerOmniDoesNotCountLazyChild: true,
+   } }) + "\n")
+   const snapshot = process.env.GITHUB_SHA
+   if (typeof snapshot !== "string" || snapshot === source)
+@@ -87,7 +94,7 @@
+ checks.live("captured context preparation and original canonical bytes preserve admission", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  yield* runCommand("26 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls", process.execPath, [
++  yield* runCommand("27 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls", process.execPath, [
+     "test", "./test/product/wp10/integration/captured-context-identity.test.ts", "./test/canonical-native.test.ts",
+     "./test/product/wp10/integration/canonical-clone.test.ts", "./test/canonical-clone-bytes.test.ts", "./test/product/wp10/integration/planner-source-preparation.test.ts",
+   ], module, 120_000)

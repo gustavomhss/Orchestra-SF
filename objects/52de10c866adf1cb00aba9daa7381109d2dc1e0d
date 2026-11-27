@@ -1,0 +1,371 @@
+{
+  "schema": "sf613-evidence-r3-publication-receipt-v1",
+  "at": "2026-11-27 21:30:46 UTC",
+  "status": "PUBLISHED_NONFORCE_VERIFIED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "ref": "refs/heads/sf613-evidence",
+  "previous": {
+    "commit": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+    "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3"
+  },
+  "publication": {
+    "commit": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+    "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+    "objectsTree": "66a8ef82632894d999368443f93636fbf26b8505",
+    "message": "docs(sucafina): preserve E12 diagnostic evidence",
+    "parents": [
+      "6f8690ed690b3271f312e8954c1229ac5ec07176",
+      "73677353c81e17ac1b80a98b066ff4c505430cde",
+      "428c850ffe85c2c454d43910fa9f8e7637c9bcfa"
+    ],
+    "nonforce": true,
+    "expectedShaLease": true,
+    "actualRefReadback": true,
+    "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/tree/e35ef28919b7be00d1fd6e37bf547ad649c07bf0"
+  },
+  "documents": {
+    "index": {
+      "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+      "bytes": 508677,
+      "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5"
+    },
+    "readme": {
+      "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+      "bytes": 15563,
+      "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77"
+    },
+    "authorPackage": {
+      "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
+      "bytes": 53884,
+      "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793"
+    },
+    "rootReview": {
+      "gitBlob": "41fd42fc295bc963ab63469850b77df5cc35c2c7",
+      "bytes": 7063,
+      "sha256": "079088909bbf730c4a65571a3d30cb8813cefeaba2c2e9f86bedf13754bd0be5"
+    },
+    "catalog": {
+      "gitBlob": "dfc7d22a350ad8f99151f840994f2ece71750c58",
+      "bytes": 60482,
+      "sha256": "aadccbbd785cb02261d4a2a82b6bdbd18b81c5678a98e56036cc83b2cdaccf2a"
+    }
+  },
+  "corpus": {
+    "objects": 379,
+    "objectBytes": 42875582,
+    "memberships": 420,
+    "streams": 35,
+    "partReferences": 131,
+    "catalogAlreadyInR2": 2
+  },
+  "ownTree": {
+    "rootEntries": [
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931"
+      },
+      {
+        "path": "index.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0"
+      },
+      {
+        "path": "objects",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "66a8ef82632894d999368443f93636fbf26b8505"
+      }
+    ],
+    "files": 381,
+    "fileBytes": 43399822,
+    "allFiles100644": true,
+    "noExecutableLayout": true,
+    "noWorkflow": true,
+    "bothTreeBinaryHashesVerified": true,
+    "allEntriesReadback": true,
+    "delta": {
+      "pairs": 2,
+      "literalSiblings": 271,
+      "added": 108,
+      "modified": [
+        "README.md",
+        "index.json"
+      ],
+      "deleted": 0
+    }
+  },
+  "reviews": {
+    "authorChecks": 33,
+    "rootDocumentChecks": 34,
+    "rootChecks": [
+      {
+        "name": "exact379 unique actual objects",
+        "pass": true
+      },
+      {
+        "name": "all paths modes types and expected metadata",
+        "pass": true
+      },
+      {
+        "name": "exact object byte sum",
+        "pass": true
+      },
+      {
+        "name": "all271 prior object order and metadata literal",
+        "pass": true
+      },
+      {
+        "name": "all310 prior membership prefixes literal",
+        "pass": true
+      },
+      {
+        "name": "only two existing request objects gain memberships",
+        "pass": true
+      },
+      {
+        "name": "420 actual memberships",
+        "pass": true
+      },
+      {
+        "name": "old group stream documentary history prefixes literal",
+        "pass": true
+      },
+      {
+        "name": "all old derived evidence fields literal",
+        "pass": true
+      },
+      {
+        "name": "all old proof states literal",
+        "pass": true
+      },
+      {
+        "name": "catalog source memberships exact once",
+        "pass": true
+      },
+      {
+        "name": "prior R2 docs and new catalog are actual objects",
+        "pass": true
+      },
+      {
+        "name": "group role object mapping both directions",
+        "pass": true
+      },
+      {
+        "name": "new group source pointers match exact memberships",
+        "pass": true
+      },
+      {
+        "name": "23 groups correct distinct counts",
+        "pass": true
+      },
+      {
+        "name": "35 streams and131 actual part references",
+        "pass": true
+      },
+      {
+        "name": "new14 streams copy every catalog field",
+        "pass": true
+      },
+      {
+        "name": "every new stream part matches exact object",
+        "pass": true
+      },
+      {
+        "name": "calculated multi-part whole hashes excluded",
+        "pass": true
+      },
+      {
+        "name": "ordered three parent pins exact and not object entries",
+        "pass": true
+      },
+      {
+        "name": "only own record tree contract",
+        "pass": true
+      },
+      {
+        "name": "full previous README literal exactly once in history",
+        "pass": true
+      },
+      {
+        "name": "all new README object links exist",
+        "pass": true
+      },
+      {
+        "name": "current outputs not recursively indexed",
+        "pass": true
+      },
+      {
+        "name": "381 files total43399822B",
+        "pass": true
+      },
+      {
+        "name": "package output identities match authenticated documents",
+        "pass": true
+      },
+      {
+        "name": "all33 author checks positive with scoped provenance",
+        "pass": true
+      },
+      {
+        "name": "E12 reader transport separate measured domains",
+        "pass": true
+      },
+      {
+        "name": "E12 linked root and independent final receipts exact",
+        "pass": true
+      },
+      {
+        "name": "negative original no product acceptance and no production",
+        "pass": true
+      },
+      {
+        "name": "five final gates and D26 stay unqualified",
+        "pass": true
+      },
+      {
+        "name": "author effects onlythree blobs no originals or execution",
+        "pass": true
+      },
+      {
+        "name": "prior unresolved scope preserved except current archive anchor",
+        "pass": true
+      },
+      {
+        "name": "previous resolved reference prefix preserved",
+        "pass": true
+      }
+    ],
+    "actualParentChecks": {
+      "count": 3,
+      "matched": true,
+      "focalSourceReachable": true,
+      "readerCleanS17Reachable": true
+    },
+    "actualTreeAndCommit": "Exact planned tree hashes, all379 object entries, three root entries, full R2 delta, message and three ordered parents read back before ref update."
+  },
+  "preserved": {
+    "oldObjects": 271,
+    "oldMemberships": 310,
+    "oldGroups": 14,
+    "oldStreams": 21,
+    "oldPartReferences": 84,
+    "oldMetadataAndMembershipPrefixesLiteral": true,
+    "oldGroupStreamHistoryAndDocumentaryPrefixesLiteral": true,
+    "oldReadmeFullLiteralExactlyOnce": true,
+    "oldIndexReadmePackageAndPublicationReceiptActualObjects": true
+  },
+  "new": {
+    "catalogObjects": 106,
+    "uniqueNewObjects": 108,
+    "newMemberships": 110,
+    "newStreams": 14,
+    "newPartReferences": 47,
+    "allCatalogAndExtraDocumentMetadataMatched": true,
+    "streamFieldsAndPartOrderExact": true,
+    "authorIndependentlyRecomposedNewStreams": true,
+    "rootReusedAlreadyAuthenticatedCatalogWithoutOriginalReacquisition": true
+  },
+  "evidence": {
+    "focal": {
+      "run": 46061092039,
+      "head": "73677353c81e17ac1b80a98b066ff4c505430cde",
+      "receipt": {
+        "gitBlob": "d8b2fa28d316464793095bf0b03c2327e86a847e",
+        "bytes": 77171,
+        "sha256": "d4da7ebb71f85c80eb612a4505b847943c5135700a77cea862d10496056f1326"
+      },
+      "verdict": "PASS_DIAGNOSTIC_ONLY"
+    },
+    "analytics": {
+      "run": 46063135555,
+      "head": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "receipt": {
+        "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+        "bytes": 39804,
+        "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+      },
+      "verdict": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED"
+    },
+    "reader": {
+      "run": 46066111400,
+      "head": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+      "receipt": {
+        "gitBlob": "e915589dca6fe5434b2924814617592fdd270f0a",
+        "bytes": 43139,
+        "sha256": "6e9121d4d540de023b6f08c165ee957c19100ef57184cac0abce5cca306d0575"
+      },
+      "peer": {
+        "gitBlob": "79ac6e4b5a9894dd68870c965d80a031788273cb",
+        "bytes": 39979,
+        "sha256": "835ee8c5263ffeecc0be00c7f0204cf58d069fcec040dfb83b6a5ae3cd68b80a"
+      },
+      "verdict": "ORIGINAL_BYTES_AND_CAPTURE_VERIFIED"
+    },
+    "profileAnalysis": {
+      "gitBlob": "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+      "bytes": 328258,
+      "sha256": "22a4ac9a4c6a37a42d8b49d7ec9e93eba6dd65df34b2020808a436fbe649ca58"
+    }
+  },
+  "refObservation": {
+    "preflight": "2026-11-27 21:27:42 UTC",
+    "postflight": "2026-11-27 21:30:46 UTC",
+    "protected": {
+      "dev": {
+        "before": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "after": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "unchanged": true
+      },
+      "public": {
+        "before": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+        "after": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+        "unchanged": true
+      },
+      "private": {
+        "before": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+        "after": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+        "unchanged": true
+      },
+      "ledger": {
+        "before": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+        "after": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+        "unchanged": true
+      }
+    },
+    "archiveActionRuns": 0
+  },
+  "operations": {
+    "createdTrees": 2,
+    "createdArchiveCommits": 1,
+    "updatedArchiveRef": 1,
+    "force": false,
+    "productRefWrites": 0,
+    "devMerges": 0,
+    "requestedRuns": 0,
+    "originalJobLogReacquisitions": 0,
+    "zipDownloads": 0,
+    "repositoryCodeExecutedLocally": false
+  },
+  "limits": [
+    "Published own tree is a documentary archive, not a product candidate or Release artifact.",
+    "The current index and README record the proposal cut; this receipt binds them to the actual published commit/ref.",
+    "This publication receipt and the current review/package are separate post-index documents; no recursive self-inclusion is claimed.",
+    "All original and audit ZIPs remain outside the tree. Runtime/selection/extra launcher files merely inventoried are not asserted as exported payload.",
+    "Calculated whole hashes of multi-part streams are not asserted as persisted blobs.",
+    "No transitive closure is claimed for every historical SHA mentioned inside preserved evidence.",
+    "No new UI acceptance: historical12/15 remains, original preview negative.",
+    "No retention/garbage-collection schedule guarantee is asserted."
+  ],
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "finalGatesQualified": 0,
+    "requiredFinalGates": 5,
+    "readiness": "NOT_READY",
+    "productionAuthorized": false
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "schema": "sf613-d27-root-and-peer-review-v1",
+  "status": "ACK_STATIC_PARAMETRIC_FINAL_QUALIFICATION_PACKAGE",
+  "at": "2026-11-27 22:46:48 UTC",
+  "rootChecks": [
+    {
+      "name": "five exact unique anchors forward inverse",
+      "pass": true
+    },
+    {
+      "name": "full patch4h+11-4 forward inverse",
+      "pass": true
+    },
+    {
+      "name": "preimage wrapper-comment",
+      "pass": true
+    },
+    {
+      "name": "postimage wrapper-comment",
+      "pass": true
+    },
+    {
+      "name": "preimage wrapper-verification-label",
+      "pass": true
+    },
+    {
+      "name": "postimage wrapper-verification-label",
+      "pass": true
+    },
+    {
+      "name": "preimage captured-context-case-count",
+      "pass": true
+    },
+    {
+      "name": "postimage captured-context-case-count",
+      "pass": true
+    },
+    {
+      "name": "preimage separate-lazy-control-metadata",
+      "pass": true
+    },
+    {
+      "name": "postimage separate-lazy-control-metadata",
+      "pass": true
+    },
+    {
+      "name": "preimage captured-context-command-label",
+      "pass": true
+    },
+    {
+      "name": "postimage captured-context-command-label",
+      "pass": true
+    },
+    {
+      "name": "G3-G26 literal",
+      "pass": true
+    },
+    {
+      "name": "runCommand literal",
+      "pass": true
+    },
+    {
+      "name": "G2 only label",
+      "pass": true
+    },
+    {
+      "name": "G1 git tail literal",
+      "pass": true
+    },
+    {
+      "name": "26groups32sites",
+      "pass": true
+    },
+    {
+      "name": "capture counts and separated lazy",
+      "pass": true
+    },
+    {
+      "name": "full counts not invented",
+      "pass": true
+    },
+    {
+      "name": "unchanged consumer envelope",
+      "pass": true
+    },
+    {
+      "name": "no verification property protocol envelope",
+      "pass": true
+    },
+    {
+      "name": "unchanged consumer finalizer",
+      "pass": true
+    },
+    {
+      "name": "no verification property protocol finalizer",
+      "pass": true
+    },
+    {
+      "name": "unchanged consumer workflow",
+      "pass": true
+    },
+    {
+      "name": "no verification property protocol workflow",
+      "pass": true
+    },
+    {
+      "name": "four bindings unbound",
+      "pass": true
+    },
+    {
+      "name": "budgets unchanged",
+      "pass": true
+    },
+    {
+      "name": "C18 source pins tied to accepted focal only",
+      "pass": true
+    },
+    {
+      "name": "UI6 original unchanged",
+      "pass": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_D27_STATIC_PARAMETRIC_ONLY",
+    "checks": 70,
+    "artifacts": {
+      "manifest": {
+        "gitBlob": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+        "bytes": 18729,
+        "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1"
+      },
+      "bounds": {
+        "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+        "bytes": 13126,
+        "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56"
+      },
+      "wrapper": {
+        "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+        "bytes": 18381,
+        "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232"
+      },
+      "derivation": {
+        "gitBlob": "47556eb9858b70ceddb4467f71ae5e489e647864",
+        "bytes": 17079,
+        "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d"
+      },
+      "diff": {
+        "gitBlob": "6ec0e57314ae488dff083262bfce7fdaa4b853f7",
+        "bytes": 3223,
+        "sha256": "f0480bd3ec1f70e00e51fe09cf757da2534221572c0446cf781ca5112d803c7e"
+      }
+    },
+    "roundTrip": {
+      "anchors": 5,
+      "intermediateHashes": true,
+      "hunks": 4,
+      "added": 11,
+      "removed": 4,
+      "forward": true,
+      "inverse": true
+    },
+    "preserved": {
+      "runCommand": true,
+      "G3G26": true,
+      "G2ArgvCwdBudgets": true,
+      "companions": true,
+      "completeEmbeddings": true,
+      "noCoupledVerificationProperty": true
+    },
+    "counts": {
+      "groups": 26,
+      "sites": 32,
+      "commands": 37,
+      "falseTruncationFlags": 74,
+      "G2CasesReference": 48,
+      "G2ProcessMs": 120000,
+      "G2ParentMs": 180000
+    },
+    "models": {
+      "G1OldBytes": 671,
+      "G1NewBytes": 1163,
+      "wrapperBoundWidthOnlyBytes": 18420,
+      "runBlocksCharacters": [
+        1300,
+        716,
+        139,
+        3689,
+        15833
+      ],
+      "maximumBoundRunCharacters": 15930,
+      "runLimitCharacters": 21000
+    },
+    "finalBindingsUnbound": 4,
+    "children": {
+      "loading": 11,
+      "lazy": 1,
+      "proof": 6,
+      "countsSeparated": true
+    },
+    "qualifiesAnalytics": false,
+    "qualifiesRelease": false,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "base": {
+    "manifest": {
+      "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "bytes": 50155,
+      "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f"
+    },
+    "wrapper": {
+      "gitBlob": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577"
+    }
+  },
+  "current": {
+    "manifest": {
+      "gitBlob": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+      "bytes": 18729,
+      "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1"
+    },
+    "bounds": {
+      "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+      "bytes": 13126,
+      "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56"
+    },
+    "wrapper": {
+      "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "bytes": 18381,
+      "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232"
+    },
+    "derivation": {
+      "gitBlob": "47556eb9858b70ceddb4467f71ae5e489e647864",
+      "bytes": 17079,
+      "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d"
+    },
+    "diff": {
+      "gitBlob": "6ec0e57314ae488dff083262bfce7fdaa4b853f7",
+      "bytes": 3223,
+      "sha256": "f0480bd3ec1f70e00e51fe09cf757da2534221572c0446cf781ca5112d803c7e"
+    }
+  },
+  "sourceReference": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "focal": {
+      "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+      "bytes": 48035,
+      "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4"
+    },
+    "originalAnalytics": {
+      "gitBlob": "bba2ff1e6015b6ec877240d4a4f4e524b630bc39",
+      "bytes": 26424,
+      "sha256": "e4e1fd13c6e6f72ed135025053c0ceeff2fc86efe309d4fcf76fdeae2cb5f066"
+    },
+    "analyticsStatus": "NEGATIVE_FIRST_PREVIEW_TIMEOUT_BI_PASS"
+  },
+  "future": {
+    "source": "UNBOUND",
+    "sourceTree": "UNBOUND",
+    "wrapperBlob": "UNBOUND",
+    "wrapperSha256": "UNBOUND",
+    "driverCommit": null,
+    "driverTree": null,
+    "ref": null,
+    "run": null,
+    "finalUI6": "Original390Brequest and6journeys unchanged; not created or run by this review."
+  },
+  "limits": [
+    "Five wrapper substitutions only; no new group/command/parser/timeout or product/test delta.",
+    "D27 updates metadata for already-selected whole-file C18, preserving original final qualification receipt schemas and three companion blobs.",
+    "Technical package acceptance does not qualify C18 installed Analytics, #613 final head, go-live or production."
+  ],
+  "productionApproval": null
+}

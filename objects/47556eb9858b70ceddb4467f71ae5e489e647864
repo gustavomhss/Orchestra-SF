@@ -1,0 +1,441 @@
+{
+  "schema": "orchestra-sf.d27-c18-wrapper-derivation.v1",
+  "status": "STATIC_DERIVATION_UNBOUND_NOT_EXECUTED",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized only the D27 G1/G2 metadata revision and compact supporting blobs. No tree, commit, ref, run, original log or ZIP acquisition.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "manifest": {
+      "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "bytes": 50155,
+      "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f",
+      "lf": 1284
+    },
+    "bounds": {
+      "gitBlob": "da41241cfe00ef5e482d652e041451a30c63dfbb",
+      "bytes": 35765,
+      "sha256": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be",
+      "lf": 1019
+    },
+    "rootReview": {
+      "gitBlob": "ce6090bad72629a9eab229a997f60aa16677cd09",
+      "bytes": 4747,
+      "sha256": "62c08d25a9b7053a4e96d51d03d8258082ec6bbb08308d08a4d1cee26508675c",
+      "lf": 203
+    },
+    "documentaryDerivation": {
+      "gitBlob": "57197162a4fec1a7795cb2dd2b679aee008238ac",
+      "bytes": 47965,
+      "sha256": "a5f26920ab89b5eb3c6db9c3bc8781595d2dd77fb6af47d268632815f631797c"
+    },
+    "originalExecutableAnchors": {
+      "gitSha": "b58cc51511374d11c9d09d49ba98e336aaa3bf25",
+      "bytes": 158134,
+      "sha256": "c5531fa7a00d493b7164e4f2cae279b95dda503a07f4b0197e68362ce677d4ee",
+      "lf": 277,
+      "createdAndLiteralReadback": true
+    },
+    "originalExecutableDiff": {
+      "gitSha": "80e367ade08d085499d6509e1ff1436dc610a706",
+      "bytes": 15087,
+      "sha256": "40347fe08cb4c8edf7ed4e4803efc96058f27cbde6de78941381d838ba5c6ba8",
+      "lf": 203,
+      "createdAndLiteralReadback": true
+    },
+    "historyPolicy": "These immutable D26 documents and their earlier historical records are referenced, not rewritten. Their prior literal-preservation statements retain their historical cut."
+  },
+  "path": "apps/cli/test/sf613-final-verification.test.ts",
+  "preimage": {
+    "gitBlob": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+    "bytes": 17940,
+    "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+    "lf": 337
+  },
+  "postimage": {
+    "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+    "bytes": 18381,
+    "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+    "lf": 344,
+    "createdAndLiteralReadback": true
+  },
+  "operations": [
+    {
+      "id": "wrapper-comment",
+      "before": "// D26 parametric draft: driver-only verification at literal C613; final source and pins remain pending.",
+      "after": "// D27 parametric draft: driver-only verification at literal C613; final source and pins remain pending.",
+      "beforeOccurrencesAtStep": 1,
+      "afterOccurrencesAtStep": 1,
+      "preimageHash": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "postimageHash": "aa3221f16610b5db98b215a39b7d8664522d2e04",
+      "preimageSha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "postimageSha256": "30e72e4a91750f5cafd3e22b97d046e5ec65527da1dd858e5fd7bc5e9ebe0543"
+    },
+    {
+      "id": "wrapper-verification-label",
+      "before": "verification: \"sf613-final-composition-literal-c-d26-r1\", source, sourceTree,",
+      "after": "verification: \"sf613-final-composition-literal-c-d27-r1\", source, sourceTree,",
+      "beforeOccurrencesAtStep": 1,
+      "afterOccurrencesAtStep": 1,
+      "preimageHash": "aa3221f16610b5db98b215a39b7d8664522d2e04",
+      "postimageHash": "0c24d790348cee30906001e8fd09413e90d7b054",
+      "preimageSha256": "30e72e4a91750f5cafd3e22b97d046e5ec65527da1dd858e5fd7bc5e9ebe0543",
+      "postimageSha256": "a258a2cd461925632c31cb0a48e95c408e61abae69f1dc5a13d518a196c9f3ac"
+    },
+    {
+      "id": "captured-context-case-count",
+      "before": "source, sourceTree, captureCases: 26, originalCanonicalCases: 2,",
+      "after": "source, sourceTree, captureCases: 27, originalCanonicalCases: 2,",
+      "beforeOccurrencesAtStep": 1,
+      "afterOccurrencesAtStep": 1,
+      "preimageHash": "0c24d790348cee30906001e8fd09413e90d7b054",
+      "postimageHash": "b181297e7b9fced80dbdfd0d98f2bf5ba8b58f29",
+      "preimageSha256": "a258a2cd461925632c31cb0a48e95c408e61abae69f1dc5a13d518a196c9f3ac",
+      "postimageSha256": "eca8018c58e28dabe13e925c2b271dbd50419b0d148703811754ae2fb2a4a00d"
+    },
+    {
+      "id": "separate-lazy-control-metadata",
+      "before": "    outerOmniDoesNotCountLoadingChildren: true,\n  } }) + \"\\n\")",
+      "after": "    outerOmniDoesNotCountLoadingChildren: true,\n  }, lazyCaptureControlManifest: {\n    source, sourceTree, cases: 1, childProcesses: 1,\n    fixture: \"apps/cli/test/fixture/sucafina-captured-context-lazy.ts\",\n    report: \"SF_C18_CAPTURE_LAZY\", reports: 1, syntheticBootstrap: true,\n    oracles: [\"deferred\", \"primitiveUndefined\", \"allocationFailure\", \"undefinedFailure\",\n      \"hashRetry\", \"prebuildDrift\", \"constructionDrift\", \"setterIsolation\"],\n    outerOmniDoesNotCountLazyChild: true,\n  } }) + \"\\n\")",
+      "beforeOccurrencesAtStep": 1,
+      "afterOccurrencesAtStep": 1,
+      "preimageHash": "b181297e7b9fced80dbdfd0d98f2bf5ba8b58f29",
+      "postimageHash": "8604afbb123234ba3f9f5182c57243f8abde358a",
+      "preimageSha256": "eca8018c58e28dabe13e925c2b271dbd50419b0d148703811754ae2fb2a4a00d",
+      "postimageSha256": "f15ddf00b98d5efe9d42289e642fb98d8381387614f651120218cca55bc1d29c"
+    },
+    {
+      "id": "captured-context-command-label",
+      "before": "\"26 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls\"",
+      "after": "\"27 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls\"",
+      "beforeOccurrencesAtStep": 1,
+      "afterOccurrencesAtStep": 1,
+      "preimageHash": "8604afbb123234ba3f9f5182c57243f8abde358a",
+      "postimageHash": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "preimageSha256": "f15ddf00b98d5efe9d42289e642fb98d8381387614f651120218cca55bc1d29c",
+      "postimageSha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232"
+    }
+  ],
+  "operationCount": 5,
+  "intermediateHashStatus": "Intermediate pre/post hashes identify pure in-memory text states; only the named base and final wrapper are persisted artifacts.",
+  "validation": {
+    "wholeForwardLiteral": true,
+    "wholeInverseLiteral": true,
+    "uniqueAtEveryForwardAndInverseStep": true,
+    "completeUnifiedDiffForwardLiteral": true,
+    "completeUnifiedDiffInverseLiteral": true
+  },
+  "unifiedDiff": {
+    "gitBlob": "6ec0e57314ae488dff083262bfce7fdaa4b853f7",
+    "bytes": 3223,
+    "sha256": "f0480bd3ec1f70e00e51fe09cf757da2534221572c0446cf781ca5112d803c7e",
+    "lf": 49,
+    "hunks": 4,
+    "added": 11,
+    "removed": 4,
+    "createdAndLiteralReadback": true
+  },
+  "literalPreservation": {
+    "runCommand": {
+      "calculatedGitBlobHash": "b7c6dda6b8c64ffe7ce6260e959ea1735ef1217b",
+      "bytes": 1347,
+      "sha256": "21960f990ead91989aaecb2be661ed297b71dfb2fdba2e0f5086b2e2fb214a80",
+      "lf": 24,
+      "notCreatedByThisPackage": true
+    },
+    "G1OriginalCommandTail": {
+      "calculatedGitBlobHash": "830239a32952b69d910b0bebdb7052f80f3ba0da",
+      "bytes": 778,
+      "sha256": "668b8f34ebbd8c3d07624bd4a8d7743d7b31e264bebfb867743fef86096d21a2",
+      "lf": 16,
+      "notCreatedByThisPackage": true
+    },
+    "G2": {
+      "before": {
+        "calculatedGitBlobHash": "a9c0f09f2917853c77d15360258d7273399f38c2",
+        "bytes": 659,
+        "sha256": "5c003cac2402475f623045431e2475cfffd1b8154b89bf0777bc839612acf9a4",
+        "lf": 9,
+        "notCreatedByThisPackage": true
+      },
+      "after": {
+        "calculatedGitBlobHash": "42f15be285d2f09c8738a0c8dd9cb79bc8c4b3b4",
+        "bytes": 659,
+        "sha256": "05c17d2cd9ff38fe45df10bc9fdb49752a322ebce95d6f4fe5731a737977b9c7",
+        "lf": 9,
+        "notCreatedByThisPackage": true
+      },
+      "onlyLeadingCaptureCountLabelChanged": true,
+      "argvCwdProcessParentLiteral": true
+    },
+    "groups3Through26": {
+      "calculatedGitBlobHash": "3a270d53a5160ce5847f013c9ff5ab7964cf8630",
+      "bytes": 12636,
+      "sha256": "b27daf5152004b1a19322cedac8569fa99a4cd27ca9ca597f2bb0a46eb2f2418",
+      "lf": 242,
+      "notCreatedByThisPackage": true
+    },
+    "loadingModes": {
+      "count": 11,
+      "values": [
+        "clean",
+        "object-tojson",
+        "array-tojson",
+        "stateful-map",
+        "stateful-keys",
+        "copy-descriptors",
+        "reflection-descriptor",
+        "proxy-checker",
+        "stateful-hasher",
+        "bootstrap-api-absent",
+        "bootstrap-api-accessor"
+      ],
+      "text": {
+        "calculatedGitBlobHash": "a5b1cd9be2e809f107e8fd33e43bb0440d91852a",
+        "bytes": 218,
+        "sha256": "7e0d720e5e2f006cc37796ac9245f497383ec1ccbaa9760b2553b5d397c223d8",
+        "lf": 2,
+        "notCreatedByThisPackage": true
+      },
+      "literal": true
+    },
+    "loadingReceiptOwner": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+    "originalLoadingAssertionsLiteral": true,
+    "lazyMetadataIsSeparateSibling": true,
+    "onlyNewSibling": "lazyCaptureControlManifest"
+  },
+  "independentProtocolReview": {
+    "consumers": [
+      {
+        "role": "envelope",
+        "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+        "bytes": 43811,
+        "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+        "lf": 723,
+        "verificationPropertyReferences": 0,
+        "oldWrapperLabelOccurrences": 0,
+        "newWrapperLabelOccurrences": 0,
+        "textOccurrencesAllInWrapperPath": true,
+        "textOccurrences": [
+          {
+            "line": 17,
+            "text": "const SLOT = \"apps/cli/test/sf613-final-verification.test.ts\""
+          },
+          {
+            "line": 484,
+            "text": "  const prefix = tag + \" pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \""
+          },
+          {
+            "line": 590,
+            "text": "    runner: \"bun\", args: [\"./test/sf613-final-verification.test.ts\", \"--timeout\", \"600000\"],"
+          },
+          {
+            "line": 657,
+            "text": "  need(originalVerdict.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"),"
+          }
+        ]
+      },
+      {
+        "role": "finalizer",
+        "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "bytes": 15782,
+        "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+        "lf": 250,
+        "verificationPropertyReferences": 0,
+        "oldWrapperLabelOccurrences": 0,
+        "newWrapperLabelOccurrences": 0,
+        "textOccurrencesAllInWrapperPath": true,
+        "textOccurrences": [
+          {
+            "line": 10,
+            "text": "const SLOT = \"apps/cli/test/sf613-final-verification.test.ts\""
+          },
+          {
+            "line": 175,
+            "text": "    main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \") &&"
+          }
+        ]
+      },
+      {
+        "role": "workflow",
+        "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "bytes": 80067,
+        "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+        "lf": 1154,
+        "verificationPropertyReferences": 0,
+        "oldWrapperLabelOccurrences": 0,
+        "newWrapperLabelOccurrences": 0,
+        "textOccurrencesAllInWrapperPath": true,
+        "textOccurrences": [
+          {
+            "line": 119,
+            "text": "            const SLOT = \"apps/cli/test/sf613-final-verification.test.ts\""
+          },
+          {
+            "line": 586,
+            "text": "              const prefix = tag + \" pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \""
+          },
+          {
+            "line": 692,
+            "text": "                runner: \"bun\", args: [\"./test/sf613-final-verification.test.ts\", \"--timeout\", \"600000\"],"
+          },
+          {
+            "line": 759,
+            "text": "              need(originalVerdict.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"),"
+          },
+          {
+            "line": 904,
+            "text": "          const SLOT = \"apps/cli/test/sf613-final-verification.test.ts\""
+          },
+          {
+            "line": 1069,
+            "text": "              main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \") &&"
+          }
+        ]
+      }
+    ],
+    "interpretation": "The only 'verification' words in the three consumers occur inside the wrapper path; none reads the wrapper verification property or compares either wrapper label.",
+    "envelopeGate": {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "lines": [
+        465,
+        493
+      ],
+      "inputs": [
+        "original outer stderr case counts",
+        "original outer stdout nonce-bound Omni verdict"
+      ],
+      "outerCases": 26
+    },
+    "finalizerGate": {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "lines": [
+        169,
+        177
+      ],
+      "inputs": [
+        "source-bound main technical receipt",
+        "26 outer cases",
+        "nonce-bound original Omni verdict",
+        "successful technical step",
+        "owned slot cleanup"
+      ]
+    },
+    "independentPreservedReceiptSchema": "sf613-final-technical-literal-c-d26-r1",
+    "wrapperLabelBefore": "sf613-final-composition-literal-c-d26-r1",
+    "wrapperLabelAfter": "sf613-final-composition-literal-c-d27-r1",
+    "protocolRenamed": false,
+    "embeddedEnvelope": {
+      "literal": true,
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723
+    },
+    "embeddedFinalizer": {
+      "literal": true,
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250
+    },
+    "envelopeTransportDigestLiteral": true
+  },
+  "unchangedCompanions": [
+    {
+      "role": "envelope",
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "literal": true
+    },
+    {
+      "role": "finalizer",
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "literal": true
+    },
+    {
+      "role": "workflow",
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "literal": true
+    }
+  ],
+  "fourBindings": {
+    "state": "UNBOUND",
+    "tokens": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "currentC18ReferencesDoNotBindC613": true
+  },
+  "inventory": {
+    "groups": 26,
+    "expectSpawnSites": 26,
+    "syntacticCommandSites": 32,
+    "englishReadLoopExecutions": 6,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "fullSuiteUniqueFunctionalCount": null,
+    "proofChildren": 6
+  },
+  "boundsPolicy": "G2 remains120000ms/180000ms; all other group/case/process/output/global limits remain as D26. The name D27 is a package revision, not a27th group.",
+  "actions": {
+    "createdSourceOrTest": false,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

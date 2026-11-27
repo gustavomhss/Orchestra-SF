@@ -1,0 +1,79 @@
+{
+  "schema": "sf613-c18-focal-original-intake-v1",
+  "status": "ORIGINALS_CLOSED_PRESERVED_BEFORE_PARSE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": {
+    "id": 46074917314,
+    "attempt": 1,
+    "sha": "54e99dbebb37030c94c9054a2195baa186e621a9",
+    "conclusion": "success"
+  },
+  "source": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d"
+  },
+  "snapshot": {
+    "commit": "54e99dbebb37030c94c9054a2195baa186e621a9",
+    "tree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+  },
+  "authority": {
+    "gitBlob": "91bb3d4812c65cd0734918845d02d5d1d20a6c47",
+    "bytes": 30559,
+    "sha256": "103327d46c0a933bafb377b511ff9d54a2e9f3f5da32e068aede18f49721af45"
+  },
+  "jobs": [
+    {
+      "id": 140760292305,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-27T22:10:00Z",
+      "completedAt": "2026-11-27T22:12:55Z"
+    },
+    {
+      "id": 140761311126,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-27T22:12:57Z",
+      "completedAt": "2026-11-27T22:13:01Z"
+    }
+  ],
+  "main": {
+    "job": 140760292305,
+    "gitBlob": "5caff1d5520ef621278457cdbce32b4a1b20123d",
+    "bytes": 112385,
+    "sha256": "3cef82cf326732040b7b2cd5cf9db0c661bb73d70a974830e547b474265c0f41",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 913,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "cleanup": {
+    "job": 140761311126,
+    "gitBlob": "f94480c34318a510206e89a7b02f2e1da00389b5",
+    "bytes": 2281,
+    "sha256": "ef5e2e2e8d1c5d071cf5a686bb835eaa2af53dfd18744d24b779aa39f4985782",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "originalGetsEach": 1,
+  "artifactMetadata": {
+    "total_count": 0,
+    "artifacts": []
+  },
+  "zipGets": 0,
+  "branchDeletedObserved": true,
+  "derivedReports": {
+    "gitBlob": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+    "bytes": 11979,
+    "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8"
+  }
+}

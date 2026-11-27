@@ -1,0 +1,494 @@
+{
+  "schema": "sf613-c18-analytics-execution-authority-v1",
+  "status": "READY_ONE_ORIGINAL_INSTALLED_ANALYTICS_EXECUTION",
+  "at": "2026-11-27 22:19:47 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "authorization": "User mandate to finish #613. One justified original installed Analytics execution after reviewed product source C18 and accepted focal; no production cutover.",
+  "source": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "binding": {
+      "gitBlob": "768bd77768d59a8eae6964a105f092086ca6a45b",
+      "bytes": 9045,
+      "sha256": "a90ffe2e60208fe101b92176066aba92140a7bce23fb8aa749fd4a548b483e7f"
+    }
+  },
+  "snapshot": {
+    "commit": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
+    "tree": "87540d426b735b692429de2a6fc350a760a56d27",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "delta": "1A100644 .ci-run.json",
+    "treeAudit": {
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "ae1c0977057e45853f3dc240140e5f221057f49d",
+          "after": "87540d426b735b692429de2a6fc350a760a56d27"
+        }
+      ],
+      "literalSiblings": 45,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "before": null,
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+            "size": 295,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+          }
+        }
+      ]
+    },
+    "commitReadback": {
+      "soleParentExact": true,
+      "treeExact": true,
+      "messageExact": true
+    }
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "firstPreviewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "pins": [
+      {
+        "bytes": 56661,
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+      },
+      {
+        "bytes": 4384,
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+      },
+      {
+        "bytes": 21102,
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+      }
+    ],
+    "unchangedSubtrees": [
+      {
+        "path": "packages",
+        "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "type": "tree",
+        "literal": true,
+        "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "verified": true
+      },
+      {
+        "path": ".github",
+        "sha": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "type": "tree",
+        "literal": true,
+        "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "verified": true
+      }
+    ],
+    "observer": false,
+    "profiler": false,
+    "originalTimeoutsUnchanged": true
+  },
+  "originalityChecks": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "type": "blob",
+      "literal": true,
+      "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "verified": true
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "type": "blob",
+      "literal": true,
+      "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "verified": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "type": "blob",
+      "literal": true,
+      "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "verified": true
+    },
+    {
+      "path": "packages",
+      "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+      "type": "tree",
+      "literal": true,
+      "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "verified": true
+    },
+    {
+      "path": ".github",
+      "sha": "7663f4b9fe0fdee867137b9e719f29058339317d",
+      "type": "tree",
+      "literal": true,
+      "actualTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "verified": true
+    }
+  ],
+  "sourcePinChecks": [
+    {
+      "name": "analytics",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "expected": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "present": true,
+      "actual": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b"
+      ]
+    },
+    {
+      "name": "productionConfig",
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "expected": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "present": true,
+      "actual": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+      ]
+    },
+    {
+      "name": "baseConfig",
+      "path": "packages/app-shell/playwright.config.ts",
+      "expected": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "present": true,
+      "actual": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+      ]
+    },
+    {
+      "name": "workflow",
+      "path": ".github/workflows/test-ci.yml",
+      "expected": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "present": true,
+      "actual": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7"
+      ]
+    },
+    {
+      "name": "requestRunner",
+      "path": "script/test-ci-request.ts",
+      "expected": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "present": true,
+      "actual": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "8260a6fff2f4a343e3b599b0056ebe3841e0c3b0"
+      ]
+    },
+    {
+      "name": "outerInstallation",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "expected": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "present": true,
+      "actual": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b",
+        "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+      ]
+    },
+    {
+      "name": "innerInstallation",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "expected": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "present": true,
+      "actual": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "pass": true,
+      "treePath": [
+        "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "97f6afed0e864fca3fad5302f28098863f0ec75c",
+        "efeb9bbff12872095eb348700a38b1208df130d8",
+        "29adf3d3ce3e264321f60112c1d354313c5fa7a9",
+        "f4d268326af2ae64a3c35d4c8c7e465eead81138"
+      ]
+    }
+  ],
+  "focalPrerequisite": {
+    "run": 46074917314,
+    "attempt": 1,
+    "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "status": "CLOSED_PASS_INDEPENDENTLY_RECEIVED",
+    "receipt": {
+      "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+      "bytes": 48035,
+      "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4"
+    },
+    "raw": {
+      "gitBlob": "0ca6904886452b70c4576cb3f23db330c49cdc7f",
+      "bytes": 2228,
+      "sha256": "2beaae287515d3df7933495a980b5b29b0af3ae10bde5341cbde73f87c7a4b33"
+    },
+    "functional": {
+      "pass": 39,
+      "assertions": 1432
+    },
+    "outer": {
+      "pass": 7,
+      "assertions": 35
+    },
+    "peerChecks": 54
+  },
+  "review": {
+    "sourceStatic": {
+      "gitBlob": "b24001d0cb5acbe7fdeaae9d394662afdfa91f97",
+      "bytes": 7203,
+      "sha256": "e23af0cc279265fb43cb23e5fc5259aff4e0e6c77caf426b85deeb2662053c2c"
+    },
+    "sourceAndFocalIndependent": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_CONCRETE_SOURCE_BINDING_AND_SNAPSHOT",
+      "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "sourceTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "sourceAudit": {
+        "treePairs": 14,
+        "literalSiblings": 317,
+        "delta": "1A2M",
+        "pins": 16
+      },
+      "snapshot": "54e99dbebb37030c94c9054a2195baa186e621a9",
+      "snapshotTree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+      "snapshotAudit": {
+        "treePairs": 4,
+        "literalSiblings": 124,
+        "delta": "2A",
+        "mode": "100644"
+      },
+      "binding": "ddc5455657e09b0b4e30f13559b71f7e6d584d63",
+      "bindingProof": "Two exact replacements and intermediate hashes; embedded1h+2-2 forward/inverse literal. Source receipt768bd777 authenticated and matched independent actual tree audit.",
+      "noStaticBlocker": true,
+      "qualification": false,
+      "refsRunsOriginalsZipsByReviewer": 0
+    },
+    "focalReception": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_FOCAL_PASS_ONLY",
+      "checks": 54,
+      "originalBytesAuthenticatedBeforeParse": true,
+      "rawManifestAuthenticated": true,
+      "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "snapshot": "54e99dbebb37030c94c9054a2195baa186e621a9",
+      "snapshotTree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+      "identities": 7,
+      "pins": 16,
+      "commands": 13,
+      "falseTruncationFlags": 26,
+      "outer": {
+        "pass": 7,
+        "assertions": 35
+      },
+      "functional": {
+        "pass": 39,
+        "assertions": 1432,
+        "groups": [
+          [
+            7,
+            295
+          ],
+          [
+            5,
+            757
+          ],
+          [
+            27,
+            380
+          ]
+        ]
+      },
+      "reports": 9,
+      "c16Outcomes": 31,
+      "c17IdentityOracles": 9,
+      "c18OracleGroups": 8,
+      "controlPid": 3313,
+      "reportUnionLiteral": {
+        "gitBlob": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+        "bytes": 11979,
+        "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8"
+      },
+      "types": {
+        "cliMs": 28016,
+        "sucafinaMs": 29501,
+        "exitCodes": [
+          0,
+          0
+        ]
+      },
+      "guards": {
+        "rules": 78,
+        "files": 857,
+        "warnings": 40,
+        "warningBreakdown": {
+          "test-timeout-raised": 38,
+          "test-globalthis": 2
+        },
+        "errors": 0,
+        "approved": 0,
+        "bootstrap": false,
+        "touchesGuards": false,
+        "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+      },
+      "omni": {
+        "nonce": "028a61e0a81ab8c088b3a76eea3b29a4",
+        "declared": 7,
+        "spawns": 13,
+        "delegated": 0
+      },
+      "runtime": "1.3.14+0d9b296af",
+      "cleanupComplete": true,
+      "artifactCount": 0,
+      "branchDeletedObservedByRoot": true,
+      "originalGetsByPeer": 0,
+      "zipGetsByPeer": 0,
+      "limits": "Synthetic C18 oracles; no native purity, performance or installed Analytics acceptance transferred."
+    },
+    "originalAnalyticsReadOnlyPreflight": {
+      "reviewer": "/root/close_pr613",
+      "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "requestAbsent": true,
+      "driverAbsent": true,
+      "pins": {
+        "analytics": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "productionConfig": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "baseConfig": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "workflow": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "requestRunner": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "outerInstallation": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "innerInstallation": "9d2351aaed9549f876a072ced264d9429924ab61"
+      },
+      "request": {
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "finalLF": false
+      },
+      "cases": 2,
+      "caseTimeoutMs": [
+        780000,
+        660000
+      ],
+      "previewMs": 60000,
+      "sensitivityMs": 120000,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "observerOverlay": false,
+      "conditionalOnly": "After accepted focal; actual A must be soleS18 +1A original request; no refs/runs/originals by reviewer."
+    },
+    "requestOriginalUnchanged": true
+  },
+  "preflight": {
+    "at": "2026-11-27 22:19:26 UTC",
+    "branch": "ci-run-sf613c18a",
+    "branchAbsent": true,
+    "priorRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0"
+    },
+    "maximumActivations": 1,
+    "automaticReruns": false,
+    "run": null,
+    "jobs": null
+  },
+  "intake": {
+    "onlyAfterBothJobsTerminal": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "preserveCompleteOriginalBeforeInterpretation": true,
+    "artifactsFirstAction": "metadata only",
+    "originalZip": "Only if needed through separately reviewed bounded reader for the actual artifact",
+    "auditZipDownloads": 0,
+    "automaticRetries": false,
+    "agentsAcquireOriginals": false
+  },
+  "priorNegativeAnalytics": {
+    "cleanC17Run": 46052118180,
+    "diagnosticE12Run": 46063135555,
+    "status": "first preview timeout; second BI case pass; UI42partial/UI43UI44unreached; previous receipts remain negative"
+  },
+  "qualification": {
+    "areasHistorical": 12,
+    "totalAreas": 15,
+    "currentInstalledAnalytics": false,
+    "finalGoLiveQualified": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "This is original installed Analytics on a reviewed changed clean source, not an automatic rerun of unchanged failure.",
+    "The request is295B/noLF and spec/helper/config/workers1/retries0/repeat1/60s preview/120s sensitivity are unchanged. No CPU profile or diagnostic overlay exists in this snapshot.",
+    "Focal acceptance establishes bounded technical controls only; no performance or UI result transfers.",
+    "Main and cleanup originals may each be obtained once after both are terminal, fully preserved and read back before interpretation. Artifacts metadata first; no ZIP retrieval without a separately reviewed need and scoped reader.",
+    "Final #613 composition, same-head UI6 and final technical CI/review, reviewed dev merge, Migration/Release shared candidate, G05-G10 and explicit production approval remain separate outstanding requirements."
+  ]
+}

@@ -1,0 +1,185 @@
+import { digestSfValue, sfCanonicalCaptureRuntime } from "../contracts/canonical.ts"
+
+// The helper performs no reflective work while loading. Its earlier canonical
+// anchor decides whether any private-copy operation can run.
+const opaque = { kind: "opaque" } as const
+
+type PlanValue = undefined | null | string | boolean | number | PlanNode
+type PlanField = {
+  name: string
+  enumerable: boolean | undefined
+  value: PlanValue
+  next: PlanField | undefined
+}
+type PlanNode = {
+  array: boolean
+  nullPrototype: boolean
+  fields: PlanField | undefined
+  next: PlanNode | undefined
+  materialized: object | undefined
+}
+type Plan = { root: PlanValue; nodes: PlanNode | undefined }
+type Allocation = {
+  define: typeof Object.defineProperty
+  create: typeof Object.create
+  objectPrototype: object
+}
+type Baseline =
+  | { kind: "pending"; plan: Plan }
+  | { kind: "building" }
+  | { kind: "refused" }
+  | { kind: "materialized"; value: unknown }
+  | { kind: "hashed"; expected: string }
+  | { kind: "failed"; error: unknown }
+type CapturedIdentity = {
+  runtime: NonNullable<ReturnType<typeof sfCanonicalCaptureRuntime>>
+  allocation: Allocation
+  baseline: Baseline
+}
+
+function isOpaque(value: PlanValue | typeof opaque): value is typeof opaque {
+  return value === opaque
+}
+
+/** No getters, Proxy traps, custom iterators or serializer hooks run in this walk.
+ * Aliases are captured once; an active ancestor is not mistaken for an alias.
+ * Every retained object is a private node. Descriptors and input objects remain
+ * only in this preparation frame; their values become primitives or private edges. */
+function capture(value: unknown) {
+  const runtime = sfCanonicalCaptureRuntime()
+  if (!runtime) return undefined
+  // No callback or await separates the earlier admission from these native aliases.
+  const descriptors = Object.getOwnPropertyDescriptors, ownKeys = Reflect.ownKeys
+  const prototype = Object.getPrototypeOf, own = Object.hasOwn
+  const define = Object.defineProperty, create = Object.create
+  const isArray = Array.isArray, finite = Number.isFinite, isProxy = runtime.isProxy
+  const objectPrototype = Object.prototype, arrayPrototype = Array.prototype
+  const copies = new WeakMap<object, PlanNode>()
+  const active = new WeakSet<object>()
+  let nodes: PlanNode | undefined, lastNode: PlanNode | undefined
+  const visit = (item: unknown): PlanValue | typeof opaque => {
+    if (item === undefined || item === null || typeof item === "string" || typeof item === "boolean") return item
+    if (typeof item === "number") return finite(item) ? item : opaque
+    if (typeof item !== "object" || isProxy(item) || active.has(item)) return opaque
+    const prior = copies.get(item)
+    if (prior) return prior
+    const array = isArray(item), parent = prototype(item)
+    if (array ? parent !== arrayPrototype : parent !== objectPrototype && parent !== null) return opaque
+    const fields = descriptors(item), incoming = ownKeys(fields), names: string[] = []
+    for (let index = 0; index < incoming.length; index++) {
+      const name = incoming[index]!
+      if (typeof name !== "string" || !own(fields[name]!, "value")) return opaque
+      names[index] = name
+    }
+    if (array) {
+      const length: unknown = fields.length?.value
+      if (typeof length !== "number" || names.length !== length + 1) return opaque
+      // Sparse or inherited slots retain the original Array.map behavior.
+      for (let index = 0; index < length; index++)
+        if (!own(fields, index) || !own(fields[index]!, "value")) return opaque
+    }
+    const copied: PlanNode = { array, nullPrototype: parent === null,
+      fields: undefined, next: undefined, materialized: undefined }
+    if (lastNode) lastNode.next = copied
+    else nodes = copied
+    lastNode = copied
+    let lastField: PlanField | undefined
+    active.add(item)
+    for (let index = 0; index < names.length; index++) {
+      const name = names[index]!
+      if (array && name === "length") continue
+      const field = fields[name]!, value = visit(field.value)
+      if (isOpaque(value)) return opaque
+      const retained: PlanField = { name, enumerable: field.enumerable, value, next: undefined }
+      if (lastField) lastField.next = retained
+      else copied.fields = retained
+      lastField = retained
+    }
+    active.delete(item)
+    copies.set(item, copied)
+    return copied
+  }
+  try {
+    const copied = visit(value)
+    return !isOpaque(copied) && runtime.current()
+      ? { plan: { root: copied, nodes }, runtime, allocation: { define, create, objectPrototype } } : undefined
+  } catch {
+    // Native allocation/depth failures in preparation still use canonical admission.
+    return undefined
+  }
+}
+
+/** Reconstruct only the closed plan, never the caller's current graph.
+ * Allocate all nodes first so aliases remain shared without recursive rebuilding. */
+function materialize(plan: Plan, allocation: Allocation): unknown {
+  const root = plan.root
+  if (root === null || typeof root !== "object") return root
+  const define = allocation.define, create = allocation.create
+  const objectPrototype = allocation.objectPrototype
+  // All linked-list and copy slots were initialized as own data properties.
+  // No new array-index assignment can publish a private object to an inherited setter.
+  for (let node = plan.nodes; node; node = node.next)
+    node.materialized = node.array ? [] : create(node.nullPrototype ? null : objectPrototype)
+  for (let node = plan.nodes; node; node = node.next) {
+    const copied = node.materialized!
+    for (let field = node.fields; field; field = field.next) {
+      const retained = field.value
+      const value = retained !== null && typeof retained === "object" ? retained.materialized! : retained
+      define(copied, field.name, { value, enumerable: field.enumerable, writable: true, configurable: true })
+    }
+  }
+  return root.materialized
+}
+
+function capturedIdentity(state: CapturedIdentity): (current: unknown) => boolean {
+  return (current) => {
+    if (!state.runtime.current()) return false
+    // A trusted bootstrap primitive can still reenter. Never construct a second copy.
+    if (state.baseline.kind === "building" || state.baseline.kind === "refused") return false
+    if (state.baseline.kind === "failed") throw state.baseline.error
+    if (state.baseline.kind === "pending") {
+      const plan = state.baseline.plan
+      state.baseline = { kind: "building" }
+      let value: unknown
+      try {
+        value = materialize(plan, state.allocation)
+      } catch (error) {
+        // This is a new late failure boundary. Preserve even throw undefined,
+        // close this baseline, and never substitute or recapture the live value.
+        state.baseline = { kind: "failed", error }
+        throw error
+      }
+      // A bootstrap primitive may change the realm while constructing the copy.
+      // Never hash it under drift or accept it later merely because globals return.
+      if (!state.runtime.current()) {
+        state.baseline = { kind: "refused" }
+        return false
+      }
+      state.baseline = { kind: "materialized", value }
+    }
+    if (state.baseline.kind === "materialized") {
+      // A hash failure retains this same private copy for a later explicit call.
+      // Only successful hashing releases both the plan and the materialized graph.
+      const expected = digestSfValue(state.baseline.value)
+      state.baseline = { kind: "hashed", expected }
+    }
+    if (state.baseline.kind !== "hashed") return false
+    const expected = state.baseline.expected
+    const actual = digestSfValue(current)
+    return state.runtime.current() && expected === actual
+  }
+}
+
+/** The private plan binds the original observation before the caller receives it.
+ * Ambiguity performs canonical admission immediately. Only reconstruction and
+ * the baseline digest are deferred; every comparison still digests the live value. */
+export function prepareSfCapturedContextIdentity(value: unknown): (current: unknown) => boolean {
+  const captured = capture(value)
+  if (!captured) {
+    const expected = digestSfValue(value)
+    return (current) => expected === digestSfValue(current)
+  }
+  // The returned closure owns only this private state, never the preparation frame.
+  return capturedIdentity({ runtime: captured.runtime, allocation: captured.allocation,
+    baseline: { kind: "pending", plan: captured.plan } })
+}

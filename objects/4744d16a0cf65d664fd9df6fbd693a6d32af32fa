@@ -1,0 +1,264 @@
+{
+  "schema": "sf613-c18-source-manifest-v1",
+  "status": "SOURCE_TEXT_STATIC_ACK_OBJECTS_AND_CI_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "existingPullRequest": 613,
+  "authority": "Root explicitly authorized helper/controls proposal blobs on S17; root alone creates source/tree/ref/run and receives Actions originals. This manifest authorizes no operation.",
+  "proposedSource": {
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "baseTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "delta": {
+      "modified": 2,
+      "added": 1,
+      "mode": "100644"
+    }
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "operation": "M",
+      "pre": {
+        "gitSha": "d1589afbeae46b465883f610bae1d2ddd0aaf8c2",
+        "bytes": 3779,
+        "sha256": "86bc2963b6ae82cdbeb070cc12e65f415ce53e8afcef5a1a449a92deb8cda628",
+        "lf": 79
+      },
+      "post": {
+        "gitSha": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+        "bytes": 8386,
+        "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+        "lf": 185
+      },
+      "createdAndLiteralReadback": true,
+      "review": "Root + Teams static ACK of R2; no execution."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+      "operation": "M",
+      "pre": {
+        "gitSha": "15abbb9618b5e4a424a9a1a4e209751100d56f1f",
+        "bytes": 21220,
+        "sha256": "4de7625bb3122a3514e0a1387ce7c3e72fa7fcd650d4071ffb9ce402d1700ab9",
+        "lf": 434
+      },
+      "post": {
+        "gitSha": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+        "bytes": 23870,
+        "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+        "lf": 483
+      },
+      "createdAndLiteralReadback": true,
+      "review": "Root + Teams static ACK; one import + one appended test, old file otherwise literal."
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+      "operation": "A",
+      "pre": null,
+      "absence": "404 Git contents at exact S17, independently confirmed by root.",
+      "post": {
+        "gitSha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+        "bytes": 13598,
+        "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+        "lf": 231
+      },
+      "createdAndLiteralReadback": true,
+      "review": "Root + Teams static ACK; isolated bootstrap-only synthetic control."
+    }
+  ],
+  "supports": {
+    "derivation": {
+      "gitSha": "4db2a037f06ec8542003f208fa1e195b6cc39869",
+      "bytes": 40736,
+      "sha256": "12ceaa7936bc75dd9d0089671876640cb5359c8f7457d41e6ed2d844a9e6f485",
+      "lf": 194
+    },
+    "fullDiff": {
+      "gitSha": "ba4c7b40eb2fa145067eb0f56bf978336f6da4fe",
+      "bytes": 26857,
+      "sha256": "90edb5b9631ac923d96e0faf2e34a98cbf7d7e6ac80bb0dc33d0e22a6a8633b1",
+      "lf": 491
+    },
+    "bounds": {
+      "gitSha": "c208552d0801fae41fb4aca8336d042a16124d51",
+      "bytes": 7503,
+      "sha256": "093208d3514f642b37ccca823c7111d444ccfebaef1823d3572466d05ada103d",
+      "lf": 181
+    },
+    "allCreatedAndLiteralReadback": true
+  },
+  "derivationSummary": {
+    "baseToFinalAnchors": 6,
+    "fixtureFullAddition": true,
+    "helperHunks": 4,
+    "helperAdded": 125,
+    "helperRemoved": 19,
+    "testHunks": 2,
+    "testAdded": 49,
+    "testRemoved": 0,
+    "fixtureHunks": 1,
+    "fixtureAdded": 231,
+    "fixtureRemoved": 0,
+    "totalHunks": 7,
+    "totalAdded": 405,
+    "totalRemoved": 19,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "historyR1": {
+      "gitSha": "69ff8e1b2118d4a105dc436f506b12c3cd94e5ed",
+      "bytes": 7653,
+      "sha256": "c521bc4d0c0586a40d566e77e8c0248d54513f31314e0ff9e8ee7b4c0c0a31d1",
+      "lf": 169,
+      "status": "SUPERSEDED_STATIC_PROPOSAL_NOT_EXECUTED",
+      "r2AnchorCount": 9,
+      "r2ForwardInverseLiteral": true,
+      "findings": [
+        "Runtime drift during deferred construction needed a current() check before hashing and terminal refusal.",
+        "Private PlanNode/edge/copy writes to holes in arrays could escape through inherited numeric setters. R2 uses own initialized linked-list slots."
+      ]
+    }
+  },
+  "rationale": {
+    "currentEvidence": {
+      "capture": "E12 whole-VM first-preview diagnostic, not C18 performance.",
+      "profileExportManifest": "a8b91a57134d814c6d201083d0a0381a7edcda4a",
+      "profileBytes": 2120673,
+      "profileSha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+      "profileWholeGitCalculatedOnly": "35dfa571c490bc54be4e315be222c0920dce93c8",
+      "profileActualGitParts": 8,
+      "wholeCalculatedObjectWasNotFetched": true,
+      "rootAnalysis": "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+      "samples": 9687,
+      "nodes": 9269,
+      "scope": "Whole VM/PID; memberships and clocks remain separate; inclusive stack populations overlap unless explicitly partitioned."
+    },
+    "observedBoundary": "prepareSfCapturedContextIdentity is reached from business-context capture registration. The earlier implementation constructs a complete private ordinary graph eagerly, even though its baseline digest is already lazy.",
+    "sampleSupport": {
+      "captureInclusive": 664,
+      "captureVisitSelf": 415,
+      "captureDescriptorsSelf": 214,
+      "captureOtherInclusive": 35,
+      "cloneSfCanonicalValuesInclusive": 679,
+      "disjointIndexUnion": 1343,
+      "limits": "664 and 679 were separately partitioned sample sets in E12, not predicted work removable by C18. The descriptor/DFS walk remains eager. No samples*interval latency or savings claim is made."
+    },
+    "chosenChange": "Keep the same eager observation/admission and fallback; defer only construction of the ordinary private baseline graph until a comparison actually needs it.",
+    "alternativesNotIncluded": [
+      "No clone-to-capture capability, clone registry or Bun pin change.",
+      "No LocalStore plan cache, new selection, authority reuse or positive result cache.",
+      "No procurement selector change, batch-clone change, producer/fanout or Analytics change."
+    ]
+  },
+  "contract": {
+    "preparation": [
+      "Same primitive and finite-number admission, Proxy rejection, active-before-memo cycle refusal, prototype gates, own descriptor/data requirements, array density and name order.",
+      "Input descriptor values are immediately converted to immutable primitive values or private node edges. Input objects/descriptors and names arrays are not retained by the returned closure.",
+      "Each private node/field/next/materialized slot is initialized as an own data slot. The only inherited numeric assignment retained is the original names[index] string write.",
+      "Preparation ambiguity and caught preparation failures still call the same eager digestSfValue(value) fallback immediately; an opaque walk is not a new automatic rejection."
+    ],
+    "baseline": [
+      "State is explicitly pending, building, refused, materialized, hashed or failed.",
+      "Primitive undefined is a valid pending root and materialized value; failure status is independent of thrown value undefined.",
+      "Materialize only from private nodes/fields, never reread the caller's graph; allocate all private objects before linking data fields so aliases remain shared without accepting cycles.",
+      "Reentry while building returns false; construction cannot start a second time.",
+      "A current() failure before construction returns false without latching, preserving the previous guard behavior.",
+      "A current() failure immediately after construction, while still building, transitions to terminal refused before any baseline/live digest. Restoring globals does not reaccept the copy.",
+      "A construction exception records the exact thrown value in failed and rethrows it; future calls under an admitted runtime rethrow the same value without rematerialization/live fallback.",
+      "A baseline hash exception leaves the same private materialized copy available for an explicit hash retry. Successful baseline hashing discards plan/copy references and keeps only the expected digest.",
+      "Every completed comparison still freshly digests its live argument and applies current() at the original final boundary."
+    ],
+    "newErrorBoundary": "Delayed Object.create/Object.defineProperty errors now occur on first use and fail closed instead of being caught during eager preparation and falling back to an eager digest. This is intentionally not claimed as complete error-timing equivalence.",
+    "retainedMetadata": "The node/field plan may use more retained metadata before first comparison than the former ordinary copy. Walk cost remains eager; unused baselines avoid ordinary reconstruction, but consumed baselines still reconstruct once.",
+    "untouched": [
+      "canonical.ts",
+      "canonical-clone.ts",
+      "Bun version/revision and capture runtime pins",
+      "business-context.ts and its ownership/revalidation/capture timing",
+      "SourcePersistence/CurrentChoice/LocalStore",
+      "producer callbacks/authorizations/abort/error/poison outside the documented helper boundary",
+      "all Analytics original assertions, seed, request, 60s preview/120s sensitivity deadlines, worker1/retry0/repeat1"
+    ]
+  },
+  "controls": {
+    "testPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+    "fixturePath": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+    "newTitle": "capture defers its private baseline once and closes materialization failures without replay",
+    "originalCases": 26,
+    "appendedCases": 1,
+    "wholeFileExpectedCases": 27,
+    "oldTestSites": 16,
+    "newTestSites": 17,
+    "newExpectSites": 5,
+    "oldExpectSites": 98,
+    "newWholeFileExpectSites": 103,
+    "oldFileLf": 434,
+    "newFileLf": 483,
+    "importLfAdded": 1,
+    "appendLfAdded": 48,
+    "newReport": "SF_C18_CAPTURE_LAZY",
+    "newReports": 1,
+    "oracleGroups": 8,
+    "newTestTimeoutMs": 10000,
+    "childProcessTimeoutMs": 3000,
+    "childOutputCapsBytes": {
+      "stdout": 65536,
+      "stderr": 65536
+    },
+    "expectedChildOmniSpawns": 1,
+    "expectedChildOmniDelegations": 0,
+    "expectedNewControl": "Preparation0 create/define/hash; first ordinary reconstruction4create/13define; one baseline hash and every live hash; alias/__proto__/nullproto/ownundefined/-0/hidden descriptor preservation; late mutation; reentryfalse; Error/undefined latch; same-copy hash retry; prebuild transient drift versus postbuild terminal refusal; Array.prototype[0] setter sees strings but no private object.",
+    "scope": "Actual helper implementation in one fresh process with bootstrap primitives instrumented before imports. This is a synthetic proof of ordering and state behavior, not native purity, timing or production performance.",
+    "oldCasesAndTimeoutsLiteral": true,
+    "oldLoadingFixture": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+    "oldLoadingFixtureUnchanged": true,
+    "cleanup": "Exact descriptor restoration in finally including Array.prototype length; AppProcess uses scoped lifecycle with existing Omni contract; assertions outside catches and after receipt.",
+    "evidenceStatus": "Static only; no runtime result is transferred."
+  },
+  "focalHandoff": {
+    "owner": "/root/focal_migration",
+    "baseDriver": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+    "preserve": "Six C17 groups, original 12 functional cases/eight reports, CLI/SF typecheck, guard origin/dev, runner/Omni/AppProcess/finalizer.",
+    "append": "One group selecting entire captured-context-identity.test.ts, no filter.",
+    "plannedGroups": 7,
+    "plannedCommands": 13,
+    "plannedExpectedTruncationFlags": 26,
+    "expectedFunctionalCases": 39,
+    "expectedReports": 9,
+    "plannedNewGroupProcessMs": 180000,
+    "plannedNewGroupParentMs": 240000,
+    "sourceTreeBindings": "UNBOUND pending root source object.",
+    "noExecutedResultsInTotals": true
+  },
+  "instructions": {
+    "rootAgentFile": {
+      "path": "AGENTS.md",
+      "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "readAt": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+    },
+    "applicable": "Tests only in GitHub Actions; no direct repository execution here. Focal retains package bun run typecheck and guard base origin/dev. No generated code changed. Process creation uses existing AppProcess/Omni surface.",
+    "appAncestorsVerifiedAbsent": [
+      "apps/AGENTS.md",
+      "apps/cli/AGENTS.md",
+      "apps/cli/test/AGENTS.md",
+      "apps/cli/test/fixture/AGENTS.md"
+    ],
+    "moduleAncestors": "Root previously audited module/product/host-binding/test/product/wp10/integration ancestors; root AGENTS only, same unchanged ancestry.",
+    "deliberateStyleExceptions": "Linked loops and explicit states preserve read order/no iterator hooks; isolated bootstrap mocks are the authorized causal control for delayed errors and private-slot exposure."
+  },
+  "verification": {
+    "method": "Pure author-written JavaScript text/hash/LCS processing plus Git copies and readbacks; no compiler/runtime/repository test execution.",
+    "sourcePostimagesReadback": true,
+    "preimagesAndAdditionAbsenceConfirmed": true,
+    "rootStaticReview": true,
+    "teamsStaticReview": true,
+    "derivationReview": "Forward/inverse support provided; independent final support linkage pending.",
+    "rootSourceCommitCreatedByWriter": false,
+    "treeCreatedByWriter": false,
+    "refsMoved": false,
+    "runsTriggered": false,
+    "actionsOriginalsAcquired": false,
+    "zipAcquired": false
+  },
+  "nextGate": "Root audits complete source derivation and creates S18/T18; focal owner binds only concrete source/tree; independent executable review precedes root-only activation. Analytics original remains the later acceptance gate."
+}

@@ -1,0 +1,1491 @@
+{
+  "schema": "orchestra.sf613-evidence.increment-package.v3",
+  "revision": "THIRD_E12_COMPLETE",
+  "status": "BLOBS_CREATED_READBACK_ROOT_PUBLICATION_PENDING",
+  "preparedAtUtc": "2026-11-27 21:15:17 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized index, README and package manifest blobs only. Root alone creates or publishes trees, commits and refs. The complete E12 catalog was the bounded input; no original logs, ZIPs, repository code or test runs were acquired/executed by this author.",
+  "base": {
+    "publishedCommit": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+    "publishedTree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+    "objectsTree": "5f2955ef46fbf11066c45ff8416cf289f8b30c3f",
+    "index": {
+      "gitBlob": "4fcb157a6da2f7ca0b78cfbf30fcb9a5beda8e4c",
+      "bytes": 344397,
+      "sha256": "f7434bbefab66a6d2e8f93fd9a88aeae0c27412f1849dfe7b7af2921f59ee639"
+    },
+    "readme": {
+      "gitBlob": "3c7a84c85e23aca17e520f411ffa1e08a82f548e",
+      "bytes": 7643,
+      "sha256": "01efaf8309b00bcb6527c4b3a4f3c7f682ded3dabe1cb376cc0bffd92e53e993"
+    },
+    "manifest": {
+      "gitBlob": "3e297a73cee1b65a4ddfb5953c4b86cf681b4d88",
+      "bytes": 29598,
+      "sha256": "d92a677950c70e24b5ef60a31b18e3e8d3d70d6e2fab61a8ffb6c2fb114e4d69"
+    },
+    "publicationReceipt": {
+      "gitBlob": "29ceb9ceb103bcaea66103d38fee93b4a90e441c",
+      "bytes": 13889,
+      "sha256": "af7d1daecf4c595161d650532f61d5920b1416ed75c2632eeb8c42ffbb870059"
+    },
+    "priorPublicationObserved": {
+      "sourceReceipt": "29ceb9ceb103bcaea66103d38fee93b4a90e441c",
+      "atUtc": "2026-11-27 19:35:56 UTC",
+      "head": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+      "scope": "Historical publication observation; root must recheck the ref before any nonforce update."
+    },
+    "actualBaseMetadataRead": true,
+    "objectTreeComparedToIndex": {
+      "notTruncated": true,
+      "entries271": true,
+      "plainBlobs": true,
+      "namesMatchSha": true,
+      "allIndexed": true,
+      "indexTotal271": true,
+      "uniqueIndex": true
+    },
+    "expectedRefBeforeUpdate": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+    "liveRefRecheckStillRequiredByRoot": true
+  },
+  "outputs": {
+    "index": {
+      "path": "index.json",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+      "bytes": 508677,
+      "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5",
+      "lf": 15136,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    "readme": {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+      "bytes": 15563,
+      "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77",
+      "lf": 138,
+      "endsWithLF": true,
+      "literalReadback": true
+    }
+  },
+  "inputCatalog": {
+    "gitBlob": "dfc7d22a350ad8f99151f840994f2ece71750c58",
+    "bytes": 60482,
+    "sha256": "aadccbbd785cb02261d4a2a82b6bdbd18b81c5678a98e56036cc83b2cdaccf2a",
+    "catalogObjects": 106,
+    "catalogMemberships": 106,
+    "catalogObjectBytes": 13106746,
+    "actualBodiesIndependentlyAuthenticated": 106,
+    "streams": 14,
+    "partReferences": 47,
+    "allStreamsRecomposedAndRehashed": true,
+    "scope": "Only actual catalog objects plus the catalog itself and R2 index/README/package/publication receipt. Historical references inside objects are not recursively acquired.",
+    "authentication": "All106 catalog bodies, the catalog itself and all four previous documentary inputs were fetched only as preserved Git blobs and independently checked for Git SHA, UTF-8 bytes, SHA256, LF and final LF. Shared requests were checked against retained R2 metadata."
+  },
+  "inventory": {
+    "objects": 379,
+    "objectBytes": 42875582,
+    "previousObjects": 271,
+    "newObjects": 108,
+    "objectsWithAppendedMemberships": 2,
+    "memberships": 420,
+    "previousMemberships": 310,
+    "newMemberships": 110,
+    "groups": 23,
+    "previousGroups": 14,
+    "newGroups": 9,
+    "streams": 35,
+    "previousStreams": 21,
+    "newStreams": 14,
+    "streamPartReferences": 131,
+    "previousPartReferences": 84,
+    "newPartReferences": 47,
+    "originalLogStreams": 18,
+    "exportStreams": 14,
+    "derivedMarkerUnionStreams": 2,
+    "derivedReportUnionStreams": 1,
+    "treeFileCount": 381,
+    "treeFileBytes": 43399822,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "allFilesMode": "100644",
+    "oneObjectsEntryPerSha": true,
+    "exactTreeContract": "Exactly root README.md, root index.json, and objects/<sha> for every object below. All files are 100644 blobs; objects is a tree. No executable repository layout or workflow. Current index/README/package manifest do not recursively list themselves; package manifest remains a separate review artifact.",
+    "arithmetic": {
+      "uniqueObjects": "271 +106 -2 shared requests +3 prior index/README/package +1 catalog =379; the prior publication receipt is already one of the106 catalog objects.",
+      "uniqueObjectBytes": "29327258 +13106746 -295 -247 +344397 +7643 +29598 +60482 =42875582.",
+      "memberships": "310 +106 catalog roles +3 prior index/README/package roles +1 catalog role =420."
+    }
+  },
+  "plannedOrderedParents": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+      "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+      "role": "previous published archive R2"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "73677353c81e17ac1b80a98b066ff4c505430cde",
+      "tree": "290887ae4cae508f11ef472bf2b22d9b3b918c17",
+      "role": "E12 executed focal",
+      "soleParent": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+      "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+      "role": "E12 executed reader",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+    }
+  ],
+  "reachability": {
+    "rootArchiveCommit": null,
+    "rootArchiveTree": null,
+    "rootObjectsTree": null,
+    "refUpdatedByAuthor": false,
+    "diagnosticSourceAndAnalyticsAncestorThroughE12Focal": true,
+    "cleanS17Ancestor": true,
+    "previousArchiveFirstParent": true,
+    "actualParentCommitMetadataAuthenticated": true,
+    "rootMustAuditNewActualParentsAndTree": true,
+    "noNewPublishedReachabilityClaimBeforeRootPublication": true,
+    "calculatedHashesAreNotObjects": true,
+    "noRetentionOrGarbageCollectionScheduleAssumed": true,
+    "noSourceOrDiagnosticMergeIntoDev": true
+  },
+  "preservation": {
+    "all271PreviousObjectMetadataLiteral": true,
+    "oldObjectOrderPreserved": true,
+    "all310PreviousMembershipPrefixesLiteral": true,
+    "first14GroupsLiteral": true,
+    "first21StreamsLiteral": true,
+    "previousDerivedEvidenceFieldsLiteral": true,
+    "previousDocumentarySnapshotsLiteral": true,
+    "previousRevisionHistoryPrefixLiteral": true,
+    "previousIndexFullTextActualObject": {
+      "gitBlob": "4fcb157a6da2f7ca0b78cfbf30fcb9a5beda8e4c",
+      "bytes": 344397,
+      "sha256": "f7434bbefab66a6d2e8f93fd9a88aeae0c27412f1849dfe7b7af2921f59ee639"
+    },
+    "previousReadmeFullTextActualObject": {
+      "gitBlob": "3c7a84c85e23aca17e520f411ffa1e08a82f548e",
+      "bytes": 7643,
+      "sha256": "01efaf8309b00bcb6527c4b3a4f3c7f682ded3dabe1cb376cc0bffd92e53e993"
+    },
+    "previousManifestActualObject": {
+      "gitBlob": "3e297a73cee1b65a4ddfb5953c4b86cf681b4d88",
+      "bytes": 29598,
+      "sha256": "d92a677950c70e24b5ef60a31b18e3e8d3d70d6e2fab61a8ffb6c2fb114e4d69"
+    },
+    "previousPublicationReceiptActualObject": {
+      "gitBlob": "29ceb9ceb103bcaea66103d38fee93b4a90e441c",
+      "bytes": 13889,
+      "sha256": "af7d1daecf4c595161d650532f61d5920b1416ed75c2632eeb8c42ffbb870059"
+    },
+    "oldReadmeExactlyOnceInHistoricalDetails": true,
+    "priorHistoryExplicitlyHistorical": true,
+    "R7CutRetained": "2026-11-27 19:08:31 UTC",
+    "noLaterExternalFactsSilentlyMergedIntoR7": true,
+    "historicD26FourBindingsUnboundAndExecutablesUnchanged": true,
+    "historicNegativeAndPositiveLimitedEvidencePreserved": true,
+    "originalAcquisitionProtocolPreserved": "Prior receivers acquired originals once, preserved/readback before parsing. This archive task used only those Git copies, without any original-log or ZIP reacquisition."
+  },
+  "delta": {
+    "changedTopLevelIndexFields": [
+      "state",
+      "revision",
+      "preparedAtUtc",
+      "authority",
+      "archiveProposal",
+      "coverage",
+      "groups",
+      "streams",
+      "derivedEvidence",
+      "objects",
+      "excluded",
+      "unresolvedReferences",
+      "verification",
+      "authorEffects",
+      "revisionHistory",
+      "resolvedReferences"
+    ],
+    "newObjectShas": [
+      "13c0a291fad3e1f2da0ee72f9d3de2cf0d107035",
+      "89659e9bc2dc92ecde3bda72ec061b7712c10d67",
+      "bea70840077fa85b7df5354dca2af349d2abd2c8",
+      "e8a2145067b15cbfbb8f2efdc63cde9c69798ebe",
+      "6399946ab73cfe5d410d4d667036e166dce29d2e",
+      "5a1321f0625e70734b5357b8bd39dbb30a13fd88",
+      "11686520311978c09a66c1e5b1317d3a0a0347bc",
+      "7c9f4a929842a97c4b4949aa4bf94226a22230e8",
+      "0874435020bc8d000a99eb72db18f33f17010443",
+      "21d20336212bee594b80d3cd8a6424064998bb67",
+      "a81e87a3122aeb38d3c1059e21255879866e6cf6",
+      "fcf55e2b49e316a5fabfd92c1ae1d85195063447",
+      "cb160ee21d22a311e4b5d77bfc34fc56ce6b9297",
+      "74c932e341327ad61f1238adc0e93f29688a761d",
+      "66971ae90c6aecf6836fb7d2150f920fdbf025b5",
+      "c9ce44b0bffce27ac48d90ce5f0e3308b263ad6d",
+      "99b2b20ba85c6c04424ee03d59db673ee665c425",
+      "599352b157ff15756f26cb15a84a2dfc580d1fd9",
+      "3d9409d0f0c199530bcb912699dd4854b3f7f5f8",
+      "d0d82a948c455f3cc6df695841700b49c55899f0",
+      "8b1e90e76fc9aaf5462d2e232d43df2aa75bc7f2",
+      "d022d5826b55e06c2384b4125e9af4ca23fc4a9f",
+      "95fd4036b63ff760c87a743e21d29f86f6513a95",
+      "909d79330551681dbb469c1d8ba9fd885cda03ec",
+      "949136662a68f7c4ae6b6b741064adfc0524dca6",
+      "6fd3c1ab9253330e860758d9c38147985fa7b66c",
+      "ced64456c2b91b759b9c441cdb77dd2cb205ee27",
+      "a1ea764ca22bf91b05638836f3d6631751bae24a",
+      "5ee75fe53aba86e3af44a21a8cc9aca5e1f42349",
+      "7c36c206cb91de27b0277bb207471d65d53ce25b",
+      "6423db9cc40f8b4b8e2376a0c82176490ce8841a",
+      "4e7b00b1b38fb6149bd09093ce29a5b644ce3c82",
+      "87b3e4c54c05a291bfccea49352088a0d5eb12a1",
+      "a0788f4feff15d843b2d842dcde48b99412815b0",
+      "c1ff78e24ad1841ab0d88af541028bac3b238508",
+      "b06dac1b95db0a73b1324741bdbbe9e435dfe804",
+      "d8b2fa28d316464793095bf0b03c2327e86a847e",
+      "6d73e49f094ea26e52531ee3ee327e9593c40628",
+      "3055168a5fe6fef93d51ce1e493a97188871ddc4",
+      "8d32eea292feb652b324ce7049dc2c9169acd73f",
+      "29ceb9ceb103bcaea66103d38fee93b4a90e441c",
+      "2406d1d4c3ea0150ab227b8544255df804439984",
+      "433709288a8e6b527487ed965a66e6aa66ebf6f5",
+      "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "9434da0c0189c4cdd794411b03df2ef933a1e928",
+      "21bf036f2ef43c9bf9adfad0ced06e4188889bef",
+      "3a24e92ac6ef10134de8329eada032a5194c462d",
+      "053034631c7d8fab74fd2dbc031b23cec93759a2",
+      "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "13db57775b23b9603ea1018dc734ffd314942811",
+      "b78923d1feacecb724cc46a65184f1b5c786d7a0",
+      "4f028fea6be02f3abbc616b12cff23688ddbf112",
+      "ae73a71983e8dea651972aca299bc6e828f250f7",
+      "dd7f1811082b9f35a7a0e14a25ea722755a70934",
+      "11dfae470a69e24ae43027ae687965811eccdc38",
+      "6786b07bf3420446cec5aa4e343df99ad60fac70",
+      "b015986c8724d969f6632d5e36b072fec9b44bf3",
+      "0f396aadb27ad2ab70f9e5fb04e1c1a7e378cf52",
+      "370d608151ca7166988209431f99825028dc3ce8",
+      "06aefbc863319f2cec226535ca52a6ebabcd995e",
+      "ea17661245bd50d7dbd0f194d3663cc0a2ae42f2",
+      "551c97e99f2c9c6b020bdb81dab70e430b06f106",
+      "0f6cca15da3eebbc6bf11a031815b9c53d619dbc",
+      "c442519325203dc57c51b3a3cd4b0a4454a37ad8",
+      "3239e9f76877c98032725263ec11111dcf25ccb1",
+      "54ecec089b7624099245b2d3211a2aa54f2ff5cf",
+      "fb59bb10d0cd306ed060ae4eddf640f6efb8464c",
+      "c481c19a3c56bae0839792e770f45b97b5131e60",
+      "a45879dce1f80cff6c7fa35c6427bddea9a06786",
+      "00950faaa923f2e364bb1cd7d9527244fabb522a",
+      "cdacbf4bdbb159c87201867547f3a27517db9776",
+      "23c217be216bfd7c2481745729c071bd391abb0b",
+      "8af34d7b3cb7e8c894f045202ae1857b52f8a393",
+      "fa600cd1e26932b0446fb90eea434a6b7955fc1f",
+      "6c7e604044384369588a098dad88394b6774144b",
+      "a8b91a57134d814c6d201083d0a0381a7edcda4a",
+      "79ac6e4b5a9894dd68870c965d80a031788273cb",
+      "e915589dca6fe5434b2924814617592fdd270f0a",
+      "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+      "7b63fe118c0196aa66e9839294b56060cd39122d",
+      "7fef01fc44c3ab53255e50461b8ba4f3fad75cc4",
+      "ca6b98cd156c234727c152359fde1ef9d0624fe0",
+      "f75321f23ec0c010e1ff9cbe04f2ab3bd407e2f8",
+      "c998152f85e4658a422b7e63de6338b7a5a7f982",
+      "f4e9b12cb2d3ce7fe6c495c438b4ce2d055fcef3",
+      "63e1b277198984d954178930538698b1b2a6c020",
+      "3ded36339c3861c342e6d1f7ba763b54eef48cb5",
+      "723cc8167d23edc5c32dba9ed3793ef8bc5ee991",
+      "c29e2015d8c19145e144f2f56b946cd7928a105a",
+      "8a99ae2f779d31df317902e0fe49762b860d9a01",
+      "eefa273ac1d2788994e6dc1ec0c7120411842126",
+      "8669ff010853eac62f014f0b2886b96e0b2f490c",
+      "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+      "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+      "9b8978e9079085bc789197aa91bb02c94700062b",
+      "c57b4a91ce564589732f7526afc11afce27b9f10",
+      "65d701ed6eba5d5d57b36662b05efe88251ad80e",
+      "76e959fa191db41b60937492423df54458d0ed9d",
+      "48daf30f84c08045af1fe82b7ae32971859d8343",
+      "71030b1e6e05ccba6360bb15ecef7127980fd468",
+      "3d84c939079bb105abd82bd8ae48ec2233a549f2",
+      "ad1dc50f14f6436549718e18cddb2a874654fd25",
+      "5a2f635f82453ec13d549a9f830f8aa6b1c54b17",
+      "7a22b971a21b10af8a410e8410778389733c6a49",
+      "4fcb157a6da2f7ca0b78cfbf30fcb9a5beda8e4c",
+      "3c7a84c85e23aca17e520f411ffa1e08a82f548e",
+      "3e297a73cee1b65a4ddfb5953c4b86cf681b4d88",
+      "dfc7d22a350ad8f99151f840994f2ece71750c58"
+    ],
+    "existingMembershipAdditions": [
+      {
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "oldMembershipCount": 3,
+        "appended": [
+          {
+            "group": "E12-focal",
+            "role": "request",
+            "from": {
+              "blob": "dfc7d22a350ad8f99151f840994f2ece71750c58",
+              "pointer": "objects[33]"
+            },
+            "prefix": "e12_root_focal_request"
+          }
+        ]
+      },
+      {
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "oldMembershipCount": 4,
+        "appended": [
+          {
+            "group": "E12-source",
+            "role": "Analytics-request",
+            "from": {
+              "blob": "dfc7d22a350ad8f99151f840994f2ece71750c58",
+              "pointer": "objects[13]"
+            },
+            "prefix": "c17_root_analytics_request"
+          }
+        ]
+      }
+    ],
+    "newGroups": [
+      "E12-source",
+      "E12-control",
+      "E12-focal",
+      "E12-Analytics",
+      "archive-R2",
+      "E12-reader",
+      "E12-analysis",
+      "E12-reader-exports",
+      "ARCHIVE-INCREMENT-3"
+    ],
+    "newStreams": [
+      "E12-focal-main",
+      "E12-focal-cleanup",
+      "E12-focal-report_union",
+      "E12-Analytics-main",
+      "E12-Analytics-cleanup",
+      "E12-Analytics-marker_union",
+      "E12-reader-main",
+      "E12-reader-exports-profile",
+      "E12-reader-exports-markers",
+      "E12-reader-exports-collection",
+      "E12-reader-exports-launcher",
+      "E12-reader-exports-summary",
+      "E12-reader-exports-inventory",
+      "E12-reader-exports-receipt"
+    ],
+    "baseGroupsUnchanged": 14,
+    "baseStreamsUnchanged": 21,
+    "fullRollbackAvailableAsActualBaseIndexAndReadme": true,
+    "metadataMutation": "No previous object metadata changed. Only ordered memberships append on the two shared request objects. Every other new object is appended to the old object array.",
+    "indexReversion": "Use the preserved exact R2 index object for byte-exact rollback; previous object metadata/membership prefixes, group/stream prefixes and documentary snapshots are additionally checked individually.",
+    "readmeReversion": "The exact R2 README is a single contiguous substring in the final historical details block and is also an actual archive object."
+  },
+  "newStreamChecks": [
+    {
+      "catalogIndex": 0,
+      "id": "E12-focal-main",
+      "group": "E12-focal",
+      "role": "main",
+      "git": "6d73e49f094ea26e52531ee3ee327e9593c40628",
+      "bytes": 119099,
+      "sha256": "0d8505d868ef00477f86711a3dccde155499bbf9f210854b47897029fb68bd7d",
+      "lf": 900,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "bomByteOffsets": [
+        0
+      ],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 1,
+      "id": "E12-focal-cleanup",
+      "group": "E12-focal",
+      "role": "cleanup",
+      "git": "3055168a5fe6fef93d51ce1e493a97188871ddc4",
+      "bytes": 2281,
+      "sha256": "b31d71a16e9d3f56cfc9018641ce8794ceea88e7fd89899e6ceb09046ef0278b",
+      "lf": 39,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "bomByteOffsets": [
+        0
+      ],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 2,
+      "id": "E12-focal-report_union",
+      "group": "E12-focal",
+      "role": "report_union",
+      "git": "c1ff78e24ad1841ab0d88af541028bac3b238508",
+      "bytes": 19188,
+      "sha256": "0e5bc0f64625025e2ae53a19b76bbade3b51eb6376a05e46d68122bff241736f",
+      "lf": 9,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 3,
+      "id": "E12-Analytics-main",
+      "group": "E12-Analytics",
+      "role": "main",
+      "git": "43e102cf0c76057eb80c5f936e724e82d61b6516",
+      "bytes": 4872232,
+      "sha256": "d649941b2c9fd3d8b15ab69091f5dd75be29fc3362f782e92070f25ae1d7b69f",
+      "lf": 1974,
+      "endsWithLF": true,
+      "parts": 17,
+      "bomCodeUnitOffsets": [
+        0,
+        2106435,
+        4224937
+      ],
+      "bomByteOffsets": [
+        0,
+        2111248,
+        4229761
+      ],
+      "verified": true,
+      "wholeGitBlobPersisted": false
+    },
+    {
+      "catalogIndex": 4,
+      "id": "E12-Analytics-cleanup",
+      "group": "E12-Analytics",
+      "role": "cleanup",
+      "git": "433709288a8e6b527487ed965a66e6aa66ebf6f5",
+      "bytes": 2281,
+      "sha256": "8e2c0c2e2278e6f478dd40dc644cadfdf8fe043f90e61beb4617364c141e2b56",
+      "lf": 39,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "bomByteOffsets": [
+        0
+      ],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 5,
+      "id": "E12-Analytics-marker_union",
+      "group": "E12-Analytics",
+      "role": "marker_union",
+      "git": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+      "bytes": 40862,
+      "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+      "lf": 103,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 6,
+      "id": "E12-reader-main",
+      "group": "E12-reader",
+      "role": "main",
+      "git": "eabac61f8dfcb596d4abeeb54174713a1ec2af8b",
+      "bytes": 3270463,
+      "sha256": "ce3843a1e6313b3f3e18f8e94bf0685d51eb296c370b483b605798b5b26a20cc",
+      "lf": 1878,
+      "endsWithLF": true,
+      "parts": 11,
+      "bomCodeUnitOffsets": [
+        0,
+        2118147
+      ],
+      "bomByteOffsets": [
+        0,
+        2118149
+      ],
+      "verified": true,
+      "wholeGitBlobPersisted": false
+    },
+    {
+      "catalogIndex": 7,
+      "id": "E12-reader-exports-profile",
+      "group": "E12-reader-exports",
+      "role": "profile",
+      "git": "35dfa571c490bc54be4e315be222c0920dce93c8",
+      "bytes": 2120673,
+      "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+      "lf": 1,
+      "endsWithLF": true,
+      "parts": 8,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": false
+    },
+    {
+      "catalogIndex": 8,
+      "id": "E12-reader-exports-markers",
+      "group": "E12-reader-exports",
+      "role": "markers",
+      "git": "eefa273ac1d2788994e6dc1ec0c7120411842126",
+      "bytes": 6580,
+      "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+      "lf": 6,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 9,
+      "id": "E12-reader-exports-collection",
+      "group": "E12-reader-exports",
+      "role": "collection",
+      "git": "8669ff010853eac62f014f0b2886b96e0b2f490c",
+      "bytes": 1876,
+      "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+      "lf": 1,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 10,
+      "id": "E12-reader-exports-launcher",
+      "group": "E12-reader-exports",
+      "role": "launcher",
+      "git": "b8dcc5a3da8ef40aa8b0ffa8db7702580fb53233",
+      "bytes": 663,
+      "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+      "lf": 1,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 11,
+      "id": "E12-reader-exports-summary",
+      "group": "E12-reader-exports",
+      "role": "summary",
+      "git": "a3eaa8a1b1445b54e1182d79033516d79a99a962",
+      "bytes": 48969,
+      "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+      "lf": 806,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 12,
+      "id": "E12-reader-exports-inventory",
+      "group": "E12-reader-exports",
+      "role": "inventory",
+      "git": "9b8978e9079085bc789197aa91bb02c94700062b",
+      "bytes": 105554,
+      "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+      "lf": 2175,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    },
+    {
+      "catalogIndex": 13,
+      "id": "E12-reader-exports-receipt",
+      "group": "E12-reader-exports",
+      "role": "receipt",
+      "git": "c57b4a91ce564589732f7526afc11afce27b9f10",
+      "bytes": 57596,
+      "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+      "lf": 1022,
+      "endsWithLF": true,
+      "parts": 1,
+      "bomCodeUnitOffsets": [],
+      "bomByteOffsets": [],
+      "verified": true,
+      "wholeGitBlobPersisted": true
+    }
+  ],
+  "transportE12": {
+    "readerRun": 46066111400,
+    "originalArtifact": {
+      "bytes": 46003924,
+      "downloadCount": 1,
+      "expired": false,
+      "id": 15229333864,
+      "name": "playwright-ubuntu-24.04-1",
+      "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+      "verifiedBytes": 46003924,
+      "verifiedSha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+      "acquisition": "One reader-side download, authenticated as the producer original; closed and never reacquired."
+    },
+    "archive": {
+      "allEntriesVerified": true,
+      "archives": 2,
+      "crcVerified": 153,
+      "entries": 153,
+      "expandedBytes": 57674703
+    },
+    "coreFiles": 7,
+    "coreChunks": 132,
+    "corePayloadBytes": 2341911,
+    "coreEmissionBytes": 3158748,
+    "terminalBytes": 2065,
+    "totalEmitterBytesIncludingTerminal": 3160813,
+    "wholeReaderMainBytes": 3270463,
+    "pending": 0,
+    "failures": [],
+    "rootReceipt": {
+      "gitBlob": "e915589dca6fe5434b2924814617592fdd270f0a",
+      "bytes": 43139,
+      "sha256": "6e9121d4d540de023b6f08c165ee957c19100ef57184cac0abce5cca306d0575"
+    },
+    "peer": {
+      "gitBlob": "79ac6e4b5a9894dd68870c965d80a031788273cb",
+      "bytes": 39979,
+      "sha256": "835ee8c5263ffeecc0be00c7f0204cf58d069fcec040dfb83b6a5ae3cd68b80a"
+    },
+    "peerDataChecks": 81,
+    "verificationProvenance": "Root and independent Teams intake receipts preserved; all seven export payload hashes and actual Git parts independently rehashed for this archive. This author did not acquire the original ZIP.",
+    "terminal": {
+      "status": "ORIGINAL_BYTES_VERIFIED",
+      "coreBytesComplete": true,
+      "receiptBase64Complete": true,
+      "captureComplete": true,
+      "readerExitCode": 0,
+      "coreFiles": 7,
+      "coreChunks": 132,
+      "corePayloadBytes": 2341911,
+      "coreLogBytes": 3158748,
+      "terminalBytes": 2065,
+      "totalEmitterBytes": 3160813,
+      "emitterCapBytes": 7340032,
+      "wholeMainReviewCapBytes": 8388608
+    },
+    "exportDescriptors": [
+      {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 2120673,
+        "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 116,
+        "file": 7
+      },
+      {
+        "name": "preview-e12-cpu-progress-markers.lf.log",
+        "bytes": 6580,
+        "sha256": "09036edf3bd2f4b8e8bb2fdd1337ac03847fa0d1fb8b44bd040ea08025fd8319",
+        "mime": "text/plain",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 1
+      },
+      {
+        "name": "original-cpu-collection.json",
+        "bytes": 1876,
+        "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 5
+      },
+      {
+        "name": "original-cpu-launcher.json",
+        "bytes": 663,
+        "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0",
+        "mime": "application/json",
+        "original": true,
+        "encoding": "base64",
+        "chunks": 1,
+        "file": 6
+      },
+      {
+        "name": "safe-summary.json",
+        "bytes": 48969,
+        "sha256": "af1706570ee0f2b6e1c0ba18b8af3917177c2bc3613814b51afd3301770741ae",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 3
+      },
+      {
+        "name": "inventory.json",
+        "bytes": 105554,
+        "sha256": "d6d50bf81e4b0b2ef5748f41df415fcf4777276a01101e6e485242441f32b0fd",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 6
+      },
+      {
+        "name": "receipt.json",
+        "bytes": 57596,
+        "sha256": "3c4f37550f6bfc8263e218745b3a01265d6a8553b96e58685a0a7a753f328f66",
+        "mime": "application/json",
+        "original": false,
+        "encoding": "base64",
+        "chunks": 4
+      }
+    ],
+    "accounting": "Payload, core emission, terminal, total emission and whole Actions main are separate byte measurements; no normalization or counting substitution.",
+    "authorsReviewScope": "This archive author authenticated all catalog blobs and reconstructed all seven export payloads. Root and Teams own the already-closed semantic intake; the peer's81 checks are linked, not newly rerun or claimed as this author's checks."
+  },
+  "E12": {
+    "closure": {
+      "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "sourceTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "cleanSource": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "cleanTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "focal": {
+        "run": 46061092039,
+        "result": "success",
+        "receipt": {
+          "gitBlob": "d8b2fa28d316464793095bf0b03c2327e86a847e",
+          "bytes": 77171,
+          "sha256": "d4da7ebb71f85c80eb612a4505b847943c5135700a77cea862d10496056f1326"
+        }
+      },
+      "analytics": {
+        "run": 46063135555,
+        "result": "failure",
+        "receipt": {
+          "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+          "bytes": 39804,
+          "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+        }
+      },
+      "reader": {
+        "run": 46066111400,
+        "result": "success",
+        "captureComplete": true,
+        "receipt": {
+          "gitBlob": "e915589dca6fe5434b2924814617592fdd270f0a",
+          "bytes": 43139,
+          "sha256": "6e9121d4d540de023b6f08c165ee957c19100ef57184cac0abce5cca306d0575"
+        },
+        "peer": {
+          "gitBlob": "79ac6e4b5a9894dd68870c965d80a031788273cb",
+          "bytes": 39979,
+          "sha256": "835ee8c5263ffeecc0be00c7f0204cf58d069fcec040dfb83b6a5ae3cd68b80a"
+        }
+      },
+      "profileAnalysis": {
+        "gitBlob": "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+        "bytes": 328258,
+        "sha256": "22a4ac9a4c6a37a42d8b49d7ec9e93eba6dd65df34b2020808a436fbe649ca58"
+      }
+    },
+    "originalAnalytics": {
+      "run": 46063135555,
+      "attempt": 1,
+      "source": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+      "sourceTree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56",
+      "cleanSource": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "cleanTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "rawManifest": "2406d1d4c3ea0150ab227b8544255df804439984",
+      "receipt": {
+        "gitBlob": "053034631c7d8fab74fd2dbc031b23cec93759a2",
+        "bytes": 39804,
+        "sha256": "daf2dbc4940ab28f008864353f67dbadfcfea3f1f443d766043a1b54ff75cba6"
+      },
+      "outcome": {
+        "BI": "passed;40 captures and original complete UI45/UI46 scope",
+        "UI42": "partial;6 captures before first preview response",
+        "UI43": "not reached",
+        "UI44": "not reached",
+        "failed": 1,
+        "passed": 1
+      },
+      "historicalQualified": 12,
+      "totalAreas": 15,
+      "newAreasAccepted": 0,
+      "markerUnion": {
+        "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "bytes": 40862,
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+        "lines": 103,
+        "persisted": true
+      }
+    },
+    "fourParities": {
+      "allFour": true,
+      "originalMarkerUnion": {
+        "gitBlob": "5f261425b64f891e8cb4f9f60b88a20d1e6d1235",
+        "bytes": 40862,
+        "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+      },
+      "runtime": {
+        "allFour": true,
+        "analytics": {
+          "bytes": 34282,
+          "counts": {
+            "SF_ANALYTICS_CAPTURE": 46,
+            "SF_ANALYTICS_SCOPE": 1,
+            "SF_ANALYTICS_SOURCE": 45,
+            "SF_DESIGN_DIAGNOSTICS": 5
+          },
+          "expectedBytes": 34282,
+          "expectedSha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679",
+          "matchesOriginalMainSequence": true,
+          "sha256": "5aa6c9d6711f511e055e147ae958fedd0cdefbb12faeb89b0a7c50173c155679"
+        },
+        "cpu": {
+          "bytes": 3817,
+          "counts": {
+            "SF_PREVIEW_E12_CPU": 3
+          },
+          "expectedBytes": 3817,
+          "expectedSha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b",
+          "matchesOriginalMainSequence": true,
+          "sha256": "0f8ccea81be5f1f43e9724ddd9a7d34ad115290e73d5cf755a150189a5e7ad3b"
+        },
+        "progress": {
+          "bytes": 2763,
+          "counts": {
+            "SF_PREVIEW_E12_PROGRESS": 3
+          },
+          "expectedBytes": 2763,
+          "expectedSha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a",
+          "matchesOriginalMainSequence": true,
+          "sha256": "f7ad0145c1b204dd1be185332f5b74248b0b276a268a7ff1c502de84186ece7a"
+        },
+        "union": {
+          "bytes": 40862,
+          "counts": {
+            "SF_ANALYTICS_CAPTURE": 46,
+            "SF_ANALYTICS_SCOPE": 1,
+            "SF_ANALYTICS_SOURCE": 45,
+            "SF_DESIGN_DIAGNOSTICS": 5,
+            "SF_PREVIEW_E12_CPU": 3,
+            "SF_PREVIEW_E12_PROGRESS": 3
+          },
+          "expectedBytes": 40862,
+          "expectedSha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e",
+          "matchesOriginalMainSequence": true,
+          "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+          "sha256": "bb64f608a67a52df1356c88dc9367909533f9d506343826fd7890f1e4f84e99e"
+        }
+      },
+      "cpuMembership": {
+        "case": 1,
+        "result": 1,
+        "stream": "stdout",
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "ordinals": [
+          32,
+          36,
+          37
+        ],
+        "kinds": [
+          "started",
+          "stopped",
+          "finished"
+        ]
+      },
+      "progressMembership": {
+        "case": 1,
+        "result": 1,
+        "stream": "stdout",
+        "sourceBytes": 747811,
+        "sourceSha256": "3d51efabf26390733b248c55b7cc2688336df1b573adaf5e31f48832e060533e",
+        "ordinals": [
+          33,
+          34,
+          35
+        ],
+        "kinds": [
+          "body-returned",
+          "admit-returned",
+          "case-callback-entered"
+        ]
+      }
+    },
+    "capture": {
+      "complete": true,
+      "state": "completed-on-time",
+      "pid": 3729,
+      "parentPid": 3684,
+      "nonce": "sf613-e12-cpu-sV3cAs",
+      "runtime": [
+        "1.3.14",
+        "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+      ],
+      "intervalUs": 5000,
+      "targetMs": 50000,
+      "acceptMs": 55000,
+      "profile": {
+        "endTime": 1795811338210359.2,
+        "nodes": 9269,
+        "samples": 9687,
+        "startTime": 1795811288211997.2
+      },
+      "collectionWithinAccept": true,
+      "postCloseFilesVerified": [
+        "preview-first.cpuprofile",
+        "collection.json"
+      ],
+      "profileClosedAfterFrameStartMs": 50202.3,
+      "collectionClosedAfterFrameStartMs": 50202.7,
+      "selection": {
+        "cap": 65535,
+        "identityLoop": [
+          633,
+          0,
+          1266,
+          1266,
+          0,
+          17724
+        ],
+        "loopOrder": [
+          "enumerated",
+          "not-enumerated",
+          "eligible",
+          "reduced",
+          "retained",
+          "known-fields-omitted"
+        ],
+        "nativeCopies": [
+          0,
+          0,
+          633
+        ],
+        "nativeOrder": [
+          "tag-refused",
+          "cases-complete",
+          "normalized-map"
+        ],
+        "saturated": false,
+        "scope": "pid-running-window",
+        "sourceOrder": [
+          "none",
+          "cases",
+          "preferences",
+          "case-identities"
+        ],
+        "sourceRequests": [
+          566,
+          1670,
+          702,
+          633
+        ]
+      },
+      "routes": {
+        "cap": 65535,
+        "counts": [
+          3917,
+          758,
+          1316
+        ],
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "scope": "pid-running-window"
+      },
+      "graph": {
+        "nodes": 9269,
+        "samples": 9687,
+        "timeDeltas": 9687,
+        "totalLocations": 701,
+        "positiveSelfLocations": 314,
+        "maxDepth": 60,
+        "connected": true,
+        "uniqueIds": true,
+        "singleParent": true,
+        "allSampleIdsPresent": true
+      }
+    },
+    "clockDomains": {
+      "playwright": {
+        "startTime": "2026-11-27T20:24:01.928Z",
+        "durationMs": 224313,
+        "arithmeticEndUtc": "2026-11-27T20:27:46.241Z"
+      },
+      "native": {
+        "utcStartReturnMs": 1795811288212,
+        "utcStartReturnIso": "2026-11-27T20:28:08.212Z",
+        "utcStopEnterMs": 1795811338211,
+        "utcStopEnterIso": "2026-11-27T20:28:58.211Z"
+      },
+      "differenceStartMinusPlaywrightArithmeticEndMs": 21971,
+      "limit": "Clock fields preserved in distinct domains; no interval reconciliation, exclusive request CPU attribution or cause inferred."
+    },
+    "namespaceLimits": {
+      "directories": [
+        {
+          "collection": [],
+          "directory": "test-ci-evidence/sf613-e12-cpu-9X8SQP",
+          "launcher": [
+            {
+              "bytes": 663,
+              "file": 4,
+              "name": "launcher.json",
+              "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb"
+            }
+          ],
+          "nonce": "sf613-e12-cpu-9X8SQP",
+          "profile": [],
+          "unclassified": []
+        },
+        {
+          "collection": [
+            {
+              "bytes": 1876,
+              "file": 5,
+              "name": "collection.json",
+              "sha256": "61c555cd0dbed3e4931b1187a53ed10263e694d9f1fde55b27ea649e564fb3b7"
+            }
+          ],
+          "directory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+          "launcher": [
+            {
+              "bytes": 663,
+              "file": 6,
+              "name": "launcher.json",
+              "sha256": "89e9280abb7d385103e50238e9267bc9da67aa60faa17ef91238740730919fa0"
+            }
+          ],
+          "nonce": "sf613-e12-cpu-sV3cAs",
+          "profile": [
+            {
+              "bytes": 2120673,
+              "file": 7,
+              "name": "preview-first.cpuprofile",
+              "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632"
+            }
+          ],
+          "unclassified": []
+        }
+      ],
+      "extraLauncherFiles": [
+        {
+          "bytes": 663,
+          "file": 4,
+          "limit": "No profile/collection in this directory; no case/PID/Request/start/stop/completion is inferred.",
+          "name": "launcher.json",
+          "nonce": "sf613-e12-cpu-9X8SQP",
+          "parseStatus": "JSON_OBJECT",
+          "preparedBindingVerified": true,
+          "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb",
+          "stateObserved": "prepared",
+          "trailingLF": true
+        }
+      ],
+      "launcherLimit": "Launcher preparation is not Request/start/profile/close proof; absent files are not fabricated.",
+      "populationCount": 1,
+      "scope": "all outer archive E12 nonce directories",
+      "selectedDirectory": "test-ci-evidence/sf613-e12-cpu-sV3cAs",
+      "selectedNonce": "sf613-e12-cpu-sV3cAs"
+    },
+    "profileAnalysis": {
+      "receipt": {
+        "gitBlob": "bda2cf668bd1dbc7352c77643ac0e89a2c3ccd3e",
+        "bytes": 328258,
+        "sha256": "22a4ac9a4c6a37a42d8b49d7ec9e93eba6dd65df34b2020808a436fbe649ca58"
+      },
+      "status": "AUTHENTICATED_PROFILE_DESCRIPTIVE_ANALYSIS",
+      "scope": "Whole native process/PID. No exclusive Request attribution, invocation counts, samples*5ms conversion, cross-run speedup or causal product claim."
+    },
+    "interpretationLimits": [
+      "Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+      "Zero bytes is a present inventory file with the empty SHA256, not an absent-file placeholder.",
+      "A ZIP CRC/hash proves received bytes, not producer fsync/close; only a later verified finished can attest that.",
+      "Collection contents alone do not attest their own close, even when its JSON and profile hash are valid.",
+      "Malformed JSON, missing LF or missing files remains explicit negative evidence and never capture completion.",
+      "Whole-VM samples include unrelated backend work; no exclusive/async/browser/child-process cost is inferred.",
+      "No samples*5ms estimate, causal bottleneck or product qualification is inferred.",
+      "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+      "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+      "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
+      "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
+      "Source token decisions and requested case-identities child copies have distinct populations; no conservation or fallback rate is inferred.",
+      "Native counts are published only after snapshot copy/validation completes; callback failure afterward still counts.",
+      "Loop local arithmetic can run outside the CPU window, but only running owned capture accepts its completed-copy contribution.",
+      "Native counts exclude top-level materializations, other requested classes and failed copies; the CPU profile may still include them.",
+      "All clocks retain their domains; no reconciliation with Playwright startTime/duration.",
+      "Successful transport and CPU collection do not qualify UI42/UI43/UI44 or change the original negative Analytics result.",
+      "The clean product remains S17; diagnostic source and reader are excluded from final product lineage.",
+      "No new test execution or rerun is authorized by this receipt."
+    ]
+  },
+  "exclusions": {
+    "historicalExclusionsRetained": true,
+    "current": {
+      "calculatedWholes": [
+        {
+          "kind": "calculated-whole-only",
+          "group": "E12-Analytics",
+          "role": "main",
+          "gitHash": "43e102cf0c76057eb80c5f936e724e82d61b6516",
+          "bytes": 4872232,
+          "sha256": "d649941b2c9fd3d8b15ab69091f5dd75be29fc3362f782e92070f25ae1d7b69f",
+          "parts": [
+            "0f396aadb27ad2ab70f9e5fb04e1c1a7e378cf52",
+            "370d608151ca7166988209431f99825028dc3ce8",
+            "06aefbc863319f2cec226535ca52a6ebabcd995e",
+            "ea17661245bd50d7dbd0f194d3663cc0a2ae42f2",
+            "551c97e99f2c9c6b020bdb81dab70e430b06f106",
+            "0f6cca15da3eebbc6bf11a031815b9c53d619dbc",
+            "c442519325203dc57c51b3a3cd4b0a4454a37ad8",
+            "3239e9f76877c98032725263ec11111dcf25ccb1",
+            "54ecec089b7624099245b2d3211a2aa54f2ff5cf",
+            "fb59bb10d0cd306ed060ae4eddf640f6efb8464c",
+            "c481c19a3c56bae0839792e770f45b97b5131e60",
+            "a45879dce1f80cff6c7fa35c6427bddea9a06786",
+            "00950faaa923f2e364bb1cd7d9527244fabb522a",
+            "cdacbf4bdbb159c87201867547f3a27517db9776",
+            "23c217be216bfd7c2481745729c071bd391abb0b",
+            "8af34d7b3cb7e8c894f045202ae1857b52f8a393",
+            "fa600cd1e26932b0446fb90eea434a6b7955fc1f"
+          ],
+          "reason": "Only the listed actual parts are archive objects; this whole identity is calculated, not a persisted blob, and was not fetched."
+        },
+        {
+          "kind": "calculated-whole-only",
+          "group": "E12-reader",
+          "role": "main",
+          "gitHash": "eabac61f8dfcb596d4abeeb54174713a1ec2af8b",
+          "bytes": 3270463,
+          "sha256": "ce3843a1e6313b3f3e18f8e94bf0685d51eb296c370b483b605798b5b26a20cc",
+          "parts": [
+            "7b63fe118c0196aa66e9839294b56060cd39122d",
+            "7fef01fc44c3ab53255e50461b8ba4f3fad75cc4",
+            "ca6b98cd156c234727c152359fde1ef9d0624fe0",
+            "f75321f23ec0c010e1ff9cbe04f2ab3bd407e2f8",
+            "c998152f85e4658a422b7e63de6338b7a5a7f982",
+            "f4e9b12cb2d3ce7fe6c495c438b4ce2d055fcef3",
+            "63e1b277198984d954178930538698b1b2a6c020",
+            "3ded36339c3861c342e6d1f7ba763b54eef48cb5",
+            "723cc8167d23edc5c32dba9ed3793ef8bc5ee991",
+            "c29e2015d8c19145e144f2f56b946cd7928a105a",
+            "8a99ae2f779d31df317902e0fe49762b860d9a01"
+          ],
+          "reason": "Only the listed actual parts are archive objects; this whole identity is calculated, not a persisted blob, and was not fetched."
+        },
+        {
+          "kind": "calculated-whole-only",
+          "group": "E12-reader-exports",
+          "role": "profile",
+          "gitHash": "35dfa571c490bc54be4e315be222c0920dce93c8",
+          "bytes": 2120673,
+          "sha256": "327a77dacadd939be2f99fd3ce9607b5117281503557bf52669ce6b220b9d632",
+          "parts": [
+            "65d701ed6eba5d5d57b36662b05efe88251ad80e",
+            "76e959fa191db41b60937492423df54458d0ed9d",
+            "48daf30f84c08045af1fe82b7ae32971859d8343",
+            "71030b1e6e05ccba6360bb15ecef7127980fd468",
+            "3d84c939079bb105abd82bd8ae48ec2233a549f2",
+            "ad1dc50f14f6436549718e18cddb2a874654fd25",
+            "5a2f635f82453ec13d549a9f830f8aa6b1c54b17",
+            "7a22b971a21b10af8a410e8410778389733c6a49"
+          ],
+          "reason": "Only the listed actual parts are archive objects; this whole identity is calculated, not a persisted blob, and was not fetched."
+        }
+      ],
+      "producerZip": {
+        "bytes": 46003924,
+        "downloadCount": 1,
+        "expired": false,
+        "id": 15229333864,
+        "name": "playwright-ubuntu-24.04-1",
+        "sha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+        "verifiedBytes": 46003924,
+        "verifiedSha256": "6c0f77340fcd26380ba32a1b9cdf7a47fb4403d4b5ba17628685cb8609f90aff",
+        "acquisition": "One reader-side download, authenticated as the producer original; closed and never reacquired.",
+        "archiveObject": false,
+        "limit": "Received once inside the authorized reader. This archive does not download or include the ZIP payload."
+      },
+      "auditArtifacts": [
+        {
+          "id": 15231435395,
+          "name": "sf613-analytics-original-46063135555-receipt-1",
+          "bytes": 98232011,
+          "sha256": "e4e02bf6888ce2bbe92f23420bfa7fb56a22306d7f60ed73ce7c452cfe294465",
+          "expired": false,
+          "mode": "METADATA_ONLY",
+          "downloads": 0,
+          "archiveObject": false
+        }
+      ],
+      "inventoryOnlyFiles": {
+        "runtime": {
+          "file": 0,
+          "bytes": 4813218,
+          "sha256": "961c1aa0140e28f0875669f11b9d650ab574a574c3918e37fb606b856491acf1"
+        },
+        "selection": {
+          "file": 3,
+          "bytes": 3056,
+          "sha256": "cfdd4ace7dd1dd2c2c4c0ba378cbeca443912ffb6cdf1d137a4f457aad6b387c"
+        },
+        "extraLauncher": [
+          {
+            "bytes": 663,
+            "file": 4,
+            "limit": "No profile/collection in this directory; no case/PID/Request/start/stop/completion is inferred.",
+            "name": "launcher.json",
+            "nonce": "sf613-e12-cpu-9X8SQP",
+            "parseStatus": "JSON_OBJECT",
+            "preparedBindingVerified": true,
+            "sha256": "7dfbb932bc9fa5ceec3599aa0a2c2190e7df83f3fe49bbd1281749c2940efafb",
+            "stateObserved": "prepared",
+            "trailingLF": true
+          }
+        ],
+        "limit": "Inventoried metadata and safe summaries do not mean these raw file payloads are exported or inserted as objects."
+      },
+      "partialArtifactScope": "Only the seven exported payloads and enumerated preserved log/document objects are included; no claim of full raw runtime, complete PNG set, full outer ZIP or audit ZIP.",
+      "commitsAndTrees": [
+        {
+          "role": "previous published archive R2",
+          "commit": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+          "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3"
+        },
+        {
+          "role": "E12 executed focal",
+          "commit": "73677353c81e17ac1b80a98b066ff4c505430cde",
+          "tree": "290887ae4cae508f11ef472bf2b22d9b3b918c17"
+        },
+        {
+          "role": "E12 executed reader",
+          "commit": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+          "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d"
+        }
+      ],
+      "source": {
+        "commit": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+        "tree": "26275bc9d4afcdfc9f4c062be58b715a294dbe56"
+      },
+      "clean": {
+        "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+        "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+      }
+    },
+    "noZipBlobs": true,
+    "originalOrAuditZipGetsByAuthor": 0,
+    "wholeCalculatedHashesNeverFetchedOrCreated": true,
+    "commitsAndTreesAreMetadataOnly": true,
+    "notTransitiveHistoricalClosure": true,
+    "currentIndexReadmeAndPackageNotRecursiveObjectEntries": true,
+    "completeArtifactArchive": false,
+    "completeRawRuntimeExport": false,
+    "completePngSet": false
+  },
+  "checks": [
+    {
+      "name": "379 unique real objects with exact objects/<sha> path, 100644/blob",
+      "pass": true
+    },
+    {
+      "name": "Object byte sum equals 42875582",
+      "pass": true
+    },
+    {
+      "name": "420 ordered memberships",
+      "pass": true
+    },
+    {
+      "name": "All271 previous object metadata and order literal",
+      "pass": true
+    },
+    {
+      "name": "All310 previous membership prefixes literal",
+      "pass": true
+    },
+    {
+      "name": "Only two original requests gain inherited-object memberships",
+      "pass": true,
+      "details": [
+        "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+      ]
+    },
+    {
+      "name": "First14 groups and first21 streams literal",
+      "pass": true
+    },
+    {
+      "name": "Documentary snapshots preserved literally",
+      "pass": true
+    },
+    {
+      "name": "Historical derived evidence fields preserved",
+      "pass": true
+    },
+    {
+      "name": "Previous revisionHistory prefix literal",
+      "pass": true
+    },
+    {
+      "name": "106 catalog identities present with identical bytes/hashes/LF",
+      "pass": true
+    },
+    {
+      "name": "106 catalog bodies independently authenticated",
+      "pass": true
+    },
+    {
+      "name": "Complete catalog is actual object",
+      "pass": true
+    },
+    {
+      "name": "R2 index/README/package/publication are actual objects",
+      "pass": true
+    },
+    {
+      "name": "108 new actual objects and110 membership additions",
+      "pass": true
+    },
+    {
+      "name": "Group items match memberships in both directions",
+      "pass": true
+    },
+    {
+      "name": "23 groups with declared uniqueBlob counts correct",
+      "pass": true
+    },
+    {
+      "name": "35 streams and131 part references",
+      "pass": true
+    },
+    {
+      "name": "Every stream part points to matching actual object metadata",
+      "pass": true
+    },
+    {
+      "name": "All14 added streams preserve each catalog field",
+      "pass": true
+    },
+    {
+      "name": "14 new streams/47 part references recomposed and authenticated",
+      "pass": true
+    },
+    {
+      "name": "Seven export payloads total2341911B",
+      "pass": true
+    },
+    {
+      "name": "Three E12 calculated whole identities excluded from actual objects",
+      "pass": true
+    },
+    {
+      "name": "Three ordered parents exact and absent from blob objects",
+      "pass": true
+    },
+    {
+      "name": "Only root README/index/objects proposed and all files100644",
+      "pass": true
+    },
+    {
+      "name": "R2 README retained exactly once byte-for-byte",
+      "pass": true
+    },
+    {
+      "name": "R2 original index remains full literal actual object",
+      "pass": true
+    },
+    {
+      "name": "Root and Teams81 semantic receipts preserved",
+      "pass": true
+    },
+    {
+      "name": "Core3158748 + terminal2065 = emitter3160813, not whole Actions main3270463",
+      "pass": true
+    },
+    {
+      "name": "Original ZIP reader-only one acquisition; auditZIP metadata only; author zero",
+      "pass": true
+    },
+    {
+      "name": "Current archive outputs not recursive object entries",
+      "pass": true
+    },
+    {
+      "name": "No tree/commit/ref/run or product qualification attributed to author",
+      "pass": true
+    },
+    {
+      "name": "Index and README actual Git blobs created and literal readback complete",
+      "pass": true
+    }
+  ],
+  "effects": {
+    "createdIndexBlobs": 1,
+    "createdReadmeBlobs": 1,
+    "createdPackageManifestBlobs": 1,
+    "createdTrees": 0,
+    "createdCommits": 0,
+    "changedRefs": 0,
+    "runs": 0,
+    "comments": 0,
+    "repositoryExecutions": 0,
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "noProfileAnalyzerExecutedForThisIncrement": true
+  },
+  "qualification": {
+    "productQualified": false,
+    "cleanSource": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "diagnosticSource": "c061693ae9833819cd3afd2ae1b03805de6c82f9",
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "finalGatesQualified": 0,
+    "requiredFinalGates": 5,
+    "readiness": "NOT_READY",
+    "D26Executed": false,
+    "D26FinalBindings": "FOUR_UNBOUND",
+    "productionAuthorized": false,
+    "focalPassDoesNotQualifyOriginalPreview": true,
+    "readerCaptureCompleteDoesNotChangeNegativeAnalytics": true
+  },
+  "nextStep": "Root reviews these exact output blobs,379 actual object identities,35 streams and three ordered parents, rechecks the expected current ref, and alone may create/publish the documentary archive. This package grants no new product test execution, diagnostic campaign or production approval."
+}

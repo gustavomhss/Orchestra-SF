@@ -1,0 +1,181 @@
+{
+  "schema": "sf613-c18-source-control-bounds-v1",
+  "status": "STATIC_ACK_CANDIDATE_NOT_EXECUTED",
+  "base": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+  },
+  "files": {
+    "helper": {
+      "gitSha": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+      "bytes": 8386,
+      "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+      "lf": 185
+    },
+    "test": {
+      "gitSha": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+      "bytes": 23870,
+      "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+      "lf": 483
+    },
+    "fixture": {
+      "gitSha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "bytes": 13598,
+      "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+      "lf": 231
+    }
+  },
+  "sourceScope": {
+    "modifications": 2,
+    "additions": 1,
+    "unchanged": [
+      "canonical.ts",
+      "canonical-clone.ts",
+      "business-context.ts",
+      "Bun version/revision pins",
+      "authorizations",
+      "C13-C17 functional files",
+      "Analytics spec, fixtures, request, deadlines, worker/retry/repeat settings"
+    ]
+  },
+  "allocationModel": {
+    "inputNodes": 5,
+    "objectNodes": 4,
+    "arrayNodes": 1,
+    "definedProperties": 13,
+    "rootProperties": 5,
+    "sharedProperties": 3,
+    "arrayIndices": 3,
+    "protoValueProperties": 1,
+    "hiddenProperties": 1,
+    "aliases": "left and right share one private node",
+    "preparedCreates": 0,
+    "preparedDefines": 0,
+    "preparedHashes": 0,
+    "firstComparisonCreates": 4,
+    "firstComparisonDefines": 13,
+    "firstComparisonHashes": 2,
+    "secondComparisonAdditionalCreates": 0,
+    "secondComparisonAdditionalDefines": 0,
+    "secondComparisonAdditionalHashes": 1
+  },
+  "countersAreSynthetic": true,
+  "cases": [
+    {
+      "name": "deferred",
+      "proof": "Preparation does not allocate the baseline; late mutation is detected; pristine equivalent remains equal; the same private alias is preserved; no original getter is read while materializing; reentry while building returns false.",
+      "checks": "4 create / 13 define on first comparison only; baseline hash once, every live comparison hashes."
+    },
+    {
+      "name": "primitiveUndefined",
+      "proof": "An undefined baseline is distinct from absence; no object materialization; subsequent null differs."
+    },
+    {
+      "name": "allocationFailure",
+      "proof": "A define failure throws the exact Error and latches without a second materialization or hash."
+    },
+    {
+      "name": "undefinedFailure",
+      "proof": "A create failure throwing undefined remains an actual throw and latches independently of the error value."
+    },
+    {
+      "name": "hashRetry",
+      "proof": "A baseline hash failure retains the same private materialized graph; explicit retry hashes it without reconstruction or live-baseline substitution."
+    },
+    {
+      "name": "prebuildDrift",
+      "proof": "Drift observed before construction returns false without building; restoring the runtime can allow the first construction, preserving the previous guard behavior."
+    },
+    {
+      "name": "constructionDrift",
+      "proof": "Drift introduced by define is detected before any digest; permanent refused state survives restoration, without another build or live getter."
+    },
+    {
+      "name": "setterIsolation",
+      "proof": "An Array.prototype[0] setter installed before bootstrap receives historical string names but no private nodes, edges or copies from preparation/materialization."
+    }
+  ],
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+    "fixture": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+    "title": "capture defers its private baseline once and closes materialization failures without replay",
+    "testTimeoutMs": 10000,
+    "childTimeoutMs": 3000,
+    "childForceKillAfterMs": 1000,
+    "childKillSignal": "SIGTERM",
+    "childStdoutCapBytes": 65536,
+    "childStderrCapBytes": 65536,
+    "requiredStdoutTruncated": false,
+    "requiredStderrTruncated": false,
+    "processes": 1,
+    "expectedOmniSpawns": 1,
+    "expectedOmniDelegations": 0,
+    "reportPrefix": "SF_C18_CAPTURE_LAZY ",
+    "reports": 1,
+    "oracleGroups": 8,
+    "fixtureStaticSfImports": 0,
+    "bootstrapSpies": "Object.create/Object.defineProperty/Bun.CryptoHasher proxies and Array.prototype[0] setter precede canonical imports; observation enabled only after imports.",
+    "cleanup": "finally restores JSON.stringify, Object.create, Object.defineProperty, Bun.CryptoHasher, Array.prototype[0] and Array.prototype.length; parent uses existing AppProcess scoped lifecycle.",
+    "catches": "Only expected thrown values are recorded; all assertions run in parent after child completion.",
+    "textCounts": {
+      "oldFile": {
+        "lf": 434,
+        "testSites": 16,
+        "expectSites": 98,
+        "awaitTokens": 15
+      },
+      "newFile": {
+        "lf": 483,
+        "testSites": 17,
+        "expectSites": 103,
+        "awaitTokens": 16
+      },
+      "append": {
+        "lf": 48,
+        "testSites": 1,
+        "expectSites": 5,
+        "awaitTokens": 1
+      },
+      "fixture": {
+        "lf": 231,
+        "testSites": 0,
+        "expectSites": 0,
+        "awaitTokens": 5
+      }
+    },
+    "inheritedCases": 26,
+    "existingLoadingModes": 11,
+    "totalWholeFileCases": 27,
+    "existingCasesLiteralExceptNewImport": true,
+    "existingTimeoutsUnchanged": true
+  },
+  "focalInterface": {
+    "owner": "focal_migration; root creates/binds/activates",
+    "baseDriver": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+    "originalGroups": 6,
+    "originalCommands": 12,
+    "originalExpectedTruncationFlags": 24,
+    "originalFunctionalCases": 12,
+    "originalReports": 8,
+    "plannedGroups": 7,
+    "plannedCommands": 13,
+    "plannedExpectedTruncationFlags": 26,
+    "expectedFunctionalCases": 39,
+    "expectedReports": 9,
+    "newGroupWholeFile": true,
+    "newGroupProcessBudgetMs": 180000,
+    "newGroupParentBudgetMs": 240000,
+    "budgetsStatus": "Prepared by the focal owner; executable binding and exact driver receipt are separate.",
+    "totalsAreExpectationsNotResults": true
+  },
+  "limitations": [
+    "No repository code, compiler or tests were executed in this authoring phase.",
+    "The synthetic bootstrap demonstrates ordering/privacy/failure state behavior; it does not attest native purity, the absence of previously modified runtime hooks, or speed.",
+    "Complete descriptor/DFS admission remains eager and proportional to the input graph. Metadata per node/field may retain more memory than the old private copy until first comparison.",
+    "Materialization is deferred, not eliminated for consumed baselines. Each successfully materialized baseline is hashed once; all live values remain freshly hashed.",
+    "Late materialization failure is a documented new fail-closed error boundary. It no longer enters the eager preparation fallback.",
+    "A failed baseline digest may be retried against the same materialized private copy. No cached live result or authority is reused.",
+    "The new test timeout and child process/output caps bound this control only; they do not establish performance or deadline compliance for Analytics.",
+    "No C18 source commit/tree/ref/run or Analytics result is authorized or claimed by this file."
+  ]
+}

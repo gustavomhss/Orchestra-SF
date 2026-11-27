@@ -1,0 +1,90 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -11,14 +11,14 @@
+ 
+ const repository = path.resolve(import.meta.dir, "../../..")
+ const module = path.join(repository, "modules/sucafina/Sucafinav1")
+-const source = "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+-const sourceTree = "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
++const source = "UNBOUND_SOURCE_SHA"
++const sourceTree = "UNBOUND_SOURCE_TREE"
+ const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+ const checks = testEffect(LayerNode.compile(AppProcess.node))
+ 
+ function requireHostedCandidate() {
+   if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
+-    throw new Error("C17 source and tree must be bound to reviewed Git objects before execution")
++    throw new Error("C18 source and tree must be bound to reviewed Git objects before execution")
+   if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+       process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+       !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-c17-case-identity-selection-focal", source, sourceTree,
++    verification: "sf613-c18-captured-context-identity-focal", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -59,16 +59,17 @@
+ checks.live("snapshot identifies the exact reviewed product source and tree", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  process.stdout.write(JSON.stringify({ c08SnapshotProjectionManifest: {
+-    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 3, candidateDeltaPaths: 4,
+-    deltaBase: "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+-    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,
+-    expectedTestDeclarations: 12, preservedTestDeclarations: 12, addedTestDeclarations: 0,
+-    expectedControlReports: 8, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,
+-    mechanism: "private case-identities child selection over attested readonly snapshots with mixed-map entry reduction; preimage and uncertain provenance keep complete cases through the preserved LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition",
+-    assertions: "preserved C13/C14/C15/C16 controls and 31 C16 outcomes plus nine identity projection oracles for mixed maps, detached reads, fresh authorization, restored codecs and retained owner escape; no latency or current Analytics qualification",
++  process.stdout.write(JSON.stringify({ capturedContextIdentityManifest: {
++    source, sourceTree, qualification: false, sourcePaths: 16, productDeltaPaths: 1, candidateDeltaPaths: 3,
++    deltaBase: "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
++    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,
++    expectedTestDeclarations: 39, preservedTestDeclarations: 12, newlySelectedExistingTestDeclarations: 26, addedTestDeclarations: 1,
++    expectedControlReports: 9, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,
++    mechanism: "reviewed captured-context identity change with preserved canonical fallback, whole-file capture regressions and an isolated lazy-capture control; clean C17 composition remains selected",
++    assertions: "C13/C14/C15/C16/C17 controls remain literal; capture selection includes 15 original direct cases, 11 original loading modes and one C18 case with eight declared oracles; no latency or current Analytics qualification",
+     readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },
+     projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },
++    captureControlsMs: { preservedTests: 26, addedTests: 1, selectedTests: 27, inheritedTimeoutsUnchanged: true, addedBunPerTest: 10000, loadingChildren: 11, addedChildren: 1, childProcess: 3000, process: 180000, parent: 240000 },
+     typecheckMs: { process: 240000, parent: 300000 },
+     guardsMs: { defaultProcess: 180000, parent: 600000 },
+     snapshotOverlays: [".ci-run.json", "apps/cli/test/sucafina-proof-verification.test.ts"],
+@@ -97,6 +98,10 @@
+     ["modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts","5b453e1672aa98616e814ac64900517d1ae4f60a"],
+     ["modules/sucafina/Sucafinav1/runtime/contract.ts","39e6da84a3dd815721484affaf8315731ded073b"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","6bef21db9129db064b018f5f0bf632306e3a16ec"],
++    ["modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts","11661b32f4dc782558b39902c0f396145cbe8a4a"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts","0b9b7b786ab1c327104f25b9945aa79e9b857c03"],
++    ["apps/cli/test/fixture/sucafina-captured-context-loading.ts","ecd3af6b2d0b5a41a58959855e7e93bc09522c39"],
++    ["apps/cli/test/fixture/sucafina-captured-context-lazy.ts","b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56"],
+   ] as const
+   const observed: { path: string; sha: string }[] = []
+   const gitBlob = (bytes: Uint8Array) => new Bun.CryptoHasher("sha1")
+@@ -108,8 +113,8 @@
+     observed.push({ path: file, sha: actual })
+   }
+   process.stdout.write(JSON.stringify({ gate: "reviewed source blobs", source, sourceTree,
+-    snapshot, files: observed, expectedGroups: 6, expectedCommands: 12,
+-    functionalProcessesLaunched: 2, expectedTestDeclarations: 12, expectedControlReports: 8 }) + "\n")
++    snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,
++    functionalProcessesLaunched: 3, expectedTestDeclarations: 39, expectedControlReports: 9 }) + "\n")
+ }), 180_000)
+ 
+ checks.live("CurrentChoice readonly composition preserves default and unfenced routes", () => Effect.gen(function* () {
+@@ -167,3 +172,11 @@
+       typeof report.rules !== "number" || report.rules < 1)
+     throw new Error("Canonical guards did not evaluate rules from the actual merge base")
+ }), 600_000)
++
++checks.live("C18 whole-file captured context identity preserves canonical fallback and lazy capture", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  const output = yield* runCommand("C18 captured context identity whole-file", process.execPath,
++    ["test", "./test/product/wp10/integration/captured-context-identity.test.ts"], module, 180_000)
++  expect(output).toContain("SF_C18_CAPTURE_LAZY ")
++}), 240_000)

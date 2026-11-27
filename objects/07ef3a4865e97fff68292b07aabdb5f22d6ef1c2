@@ -1,0 +1,395 @@
+{
+  "schema": "orchestra-sf.d27-c18-bounds-supplement.v1",
+  "status": "UNBOUND_STATIC_BOUNDS_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inherits": {
+    "baseBounds": {
+      "gitBlob": "da41241cfe00ef5e482d652e041451a30c63dfbb",
+      "bytes": 35765,
+      "sha256": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be",
+      "lf": 1019
+    },
+    "baseManifest": {
+      "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "bytes": 50155,
+      "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f",
+      "lf": 1284
+    },
+    "baseRootReview": {
+      "gitBlob": "ce6090bad72629a9eab229a997f60aa16677cd09",
+      "bytes": 4747,
+      "sha256": "62c08d25a9b7053a4e96d51d03d8258082ec6bbb08308d08a4d1cee26508675c",
+      "lf": 203
+    },
+    "policy": "All D26 limits and their historical qualifications remain applicable except the explicitly updated metadata and source-local G2 selection counts below; no limit is increased."
+  },
+  "wrapper": {
+    "before": {
+      "gitBlob": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "lf": 337
+    },
+    "after": {
+      "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "bytes": 18381,
+      "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+      "lf": 344
+    },
+    "utf8Delta": 441,
+    "lfDelta": 7,
+    "widthOnlyModel": {
+      "utf8Bytes": 18420,
+      "characters": 18420,
+      "sha256": "77964f51794407530b25b9312a79def965616699ce211074eebe2b79ca7ee26a",
+      "calculatedGitBlobHash": "677d24212edfe348906f914d6bc3aba63f6a2420",
+      "lf": 344,
+      "substitutions": [
+        {
+          "token": "__SF613_SOURCE_SHA__",
+          "width": 40,
+          "valueKind": "nonhex x"
+        },
+        {
+          "token": "__SF613_SOURCE_TREE__",
+          "width": 40,
+          "valueKind": "nonhex y"
+        }
+      ],
+      "createdAsGitObject": false,
+      "passesFinalHexGates": false
+    }
+  },
+  "derivation": {
+    "gitBlob": "47556eb9858b70ceddb4467f71ae5e489e647864",
+    "bytes": 17079,
+    "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d",
+    "lf": 441
+  },
+  "counts": {
+    "groups": 26,
+    "expectSpawnSites": 26,
+    "syntacticCommandSites": 32,
+    "englishReadLoopExecutions": 6,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "fullSuiteUniqueFunctionalCount": null,
+    "proofChildren": 6,
+    "newGroups": 0,
+    "newWrapperCommandSites": 0,
+    "newWrapperCommands": 0,
+    "newWrapperTruncationFlags": 0,
+    "wholeSuiteFunctionalTotal": null,
+    "D27MeansRevisionNot27Groups": true
+  },
+  "G2": {
+    "group": 2,
+    "wholeFiles": true,
+    "nameFilter": false,
+    "directorySelection": false,
+    "processMs": 120000,
+    "parentMs": 180000,
+    "executable": "process.execPath",
+    "cwd": "modules/sucafina/Sucafinav1",
+    "argv": [
+      "test",
+      "./test/product/wp10/integration/captured-context-identity.test.ts",
+      "./test/canonical-native.test.ts",
+      "./test/product/wp10/integration/canonical-clone.test.ts",
+      "./test/canonical-clone-bytes.test.ts",
+      "./test/product/wp10/integration/planner-source-preparation.test.ts"
+    ],
+    "priorSourceLocalCases": 47,
+    "currentSourceLocalCases": 48,
+    "caseDelta": 1,
+    "sourceReference": {
+      "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "role": "Current C18 reference only; final C613 remains UNBOUND"
+    },
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+        "gitBlob": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+        "bytes": 23870,
+        "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+        "lf": 483,
+        "cases": 27
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/canonical-native.test.ts",
+        "gitBlob": "0f6a69f8ea36ba6fb04c9346b91246bd536216b2",
+        "bytes": 1013,
+        "sha256": "0f3f411a6daca7422045d4f634889e25bb8abed3f7156cfd18262815e93f1dfe",
+        "lf": 16,
+        "cases": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/canonical-clone.test.ts",
+        "gitBlob": "dc90cc3f75b1444c825d46ee5678e9e65d542e8f",
+        "bytes": 23244,
+        "sha256": "2ecec796aed9935125435ac9e93d04861d83c1b79e5c6fa41c58dc56db11c26a",
+        "lf": 473,
+        "cases": 13
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/canonical-clone-bytes.test.ts",
+        "gitBlob": "6a98dd975bfbb2c7b0eba8fd1bdd067c3085b4b5",
+        "bytes": 6385,
+        "sha256": "3e759e54f3685806c2bcad90df7c031b4498907b56035729712f9e463d7d5e24",
+        "lf": 141,
+        "cases": 3
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-source-preparation.test.ts",
+        "gitBlob": "3c2dede5030ebee40f2ef6dad0f8016da68cfd81",
+        "bytes": 15143,
+        "sha256": "fb434f1ec94d1b7fcc21c773f7bc5eb2d2b2873c49d4a36831f36e30a25d1f89",
+        "lf": 257,
+        "cases": 3
+      }
+    ],
+    "captureCasesBefore": 26,
+    "captureCasesAfter": 27,
+    "captureExistingCaseDeadlinesChanged": false,
+    "newCaptureCase": {
+      "title": "capture defers its private baseline once and closes materialization failures without replay",
+      "bunMs": 10000,
+      "appendedExpectSites": 5,
+      "completeReportAfterAssertions": true,
+      "report": "SF_C18_CAPTURE_LAZY",
+      "reportCount": 1,
+      "oracles": [
+        "deferred",
+        "primitiveUndefined",
+        "allocationFailure",
+        "undefinedFailure",
+        "hashRetry",
+        "prebuildDrift",
+        "constructionDrift",
+        "setterIsolation"
+      ],
+      "syntheticBootstrap": true
+    },
+    "combinedNominalCaseDeadlineSumMs": null,
+    "deadlineReason": "No aggregate nominal value is invented for inherited tests without an explicit timeout. Existing per-case deadlines and the shared120s/180s G2 limits are unchanged.",
+    "factualBudgetReference": {
+      "receipt": {
+        "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+        "bytes": 48035,
+        "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4",
+        "lf": 1420
+      },
+      "run": "46074917314",
+      "gate": "C18 captured context identity whole-file",
+      "selectedCaptureCases": 27,
+      "processDurationMs": 906,
+      "exitCode": 0,
+      "scope": "Historical bounded focal on S18; does not establish combined final G2 duration, final runtime qualification or Analytics result."
+    }
+  },
+  "captureChildren": {
+    "oldLoading": {
+      "count": 11,
+      "modesLiteral": true,
+      "fixture": {
+        "path": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+        "gitBlob": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+        "bytes": 10087,
+        "sha256": "65d27049c422b388b91a6030440725e2b8e8e4e3f4dd2a7cbd49eddd16b687bc",
+        "lf": 198
+      },
+      "processMs": 3000,
+      "forceKillAfterMs": 1000,
+      "stdoutMaxBytes": 65536,
+      "stderrMaxBytes": 65536,
+      "truncationFlagsRequiredFalse": 22,
+      "receiptTransport": "Private JSON consumed by each test; not eleven public report lines."
+    },
+    "newLazy": {
+      "count": 1,
+      "fixture": {
+        "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+        "gitBlob": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+        "bytes": 13598,
+        "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+        "lf": 231
+      },
+      "processMs": 3000,
+      "forceKillAfterMs": 1000,
+      "stdoutMaxBytes": 65536,
+      "stderrMaxBytes": 65536,
+      "truncationFlagsRequiredFalse": 2,
+      "expectedPrivateOmni": {
+        "spawns": 1,
+        "delegated": 0
+      }
+    },
+    "loadingAndLazyProcesses": 12,
+    "childTruncationFlagsRequiredFalse": 24,
+    "childFlagsIncludedInOuter74": false,
+    "childrenIncludedInOuterOmni": false,
+    "proofChildrenStillSeparate": 6,
+    "nestedLimitsDoNotProveStartupDisposalOrReapFit": true
+  },
+  "G1Metadata": {
+    "oldBytes": 671,
+    "newBytes": 1163,
+    "deltaBytes": 492,
+    "sourceWidth": 40,
+    "treeWidth": 40,
+    "exactCompactJsonWithLFModel": true,
+    "notRuntimeEvidence": true,
+    "description": "One existing compact JSON line gains a separate lazyCaptureControlManifest sibling. The old11 loading modes and receiptOwner remain literal. Models substitute40-character source/tree strings only; no runtime output is fabricated."
+  },
+  "global": {
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "unchanged": true,
+    "noBudgetIncrease": true
+  },
+  "commandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "scope": "Each runCommand capture, unchanged; not a cumulative log cap.",
+    "expectedFlagCount": 74,
+    "notCumulative": true
+  },
+  "unchangedOtherBudgets": {
+    "allOtherGroups": true,
+    "G6ProcessMs": 300000,
+    "G6ParentMs": 360000,
+    "G26ProcessMs": 300000,
+    "G26ParentMs": 360000,
+    "G26BunNominalMs": 290000,
+    "G26CooperativeNominalMs": 264000,
+    "G26NominalMarginMs": 10000
+  },
+  "unchangedWorkflowTransport": {
+    "workflow": {
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154
+    },
+    "envelope": {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723
+    },
+    "finalizer": {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250
+    },
+    "loader": {
+      "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "literal": true,
+      "literalD25": true
+    },
+    "embeddedBytesLiteral": true,
+    "derivedEnvelopeDigestLiteral": true,
+    "runCharacterLimit": 21000,
+    "maximumDraftRunChars": 15833,
+    "maximumWidthModelRunChars": 15930,
+    "allDraftAndWidthModelWithinLimit": true,
+    "inheritanceReason": "The three companion blobs and all workflow run texts are byte-literal D26; wrapper is a separate fetched blob and is not inserted into a workflow run block."
+  },
+  "independentCeilings": {
+    "commandTimeoutSumMs": 5490000,
+    "parentTimeoutSumMs": 7200000,
+    "meaning": "Unchanged independent ceiling sums; neither predicts duration nor proves fit inside the fixed35-minute process."
+  },
+  "finalBindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFour": true
+  },
+  "futureIntake": {
+    "inheritsD26RequirementsLiterally": true,
+    "outerCases": 26,
+    "plannedCommands": 37,
+    "truncationFlagsRequiredFalse": 74,
+    "proofChildren": 6,
+    "additionalReportRequired": "SF_C18_CAPTURE_LAZY",
+    "additionalReportCount": 1,
+    "completeEightOraclePayloadRequired": true,
+    "expectSyntheticBootstrap": true,
+    "noNewParser": true,
+    "totalReportsOrFunctionalCountForWholeSuite": null
+  },
+  "qualifications": {
+    "finalC613Bound": false,
+    "D27Executed": false,
+    "AnalyticsAccepted": false,
+    "FinalUI6Accepted": false,
+    "ReleaseQualified": false
+  },
+  "actions": {
+    "repositoryCodeExecuted": false,
+    "sourceChanges": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

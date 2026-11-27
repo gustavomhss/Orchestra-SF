@@ -1,0 +1,251 @@
+{
+  "schema": "sf613-evidence-r3-root-review-v1",
+  "at": "2026-11-27T21:27:42Z",
+  "status": "ACK_DOCUMENTS_AND_PLANNED_OWN_TREE",
+  "reviewer": "/root",
+  "author": "/root/focal_migration",
+  "package": {
+    "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
+    "bytes": 53884,
+    "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793"
+  },
+  "index": {
+    "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+    "bytes": 508677,
+    "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5"
+  },
+  "readme": {
+    "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+    "bytes": 15563,
+    "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77"
+  },
+  "catalog": {
+    "gitBlob": "dfc7d22a350ad8f99151f840994f2ece71750c58",
+    "bytes": 60482,
+    "sha256": "aadccbbd785cb02261d4a2a82b6bdbd18b81c5678a98e56036cc83b2cdaccf2a"
+  },
+  "totals": {
+    "objects": 379,
+    "objectBytes": 42875582,
+    "memberships": 420,
+    "streams": 35,
+    "partReferences": 131,
+    "catalogAlreadyInR2": 2
+  },
+  "checks": [
+    {
+      "name": "exact379 unique actual objects",
+      "pass": true
+    },
+    {
+      "name": "all paths modes types and expected metadata",
+      "pass": true
+    },
+    {
+      "name": "exact object byte sum",
+      "pass": true
+    },
+    {
+      "name": "all271 prior object order and metadata literal",
+      "pass": true
+    },
+    {
+      "name": "all310 prior membership prefixes literal",
+      "pass": true
+    },
+    {
+      "name": "only two existing request objects gain memberships",
+      "pass": true
+    },
+    {
+      "name": "420 actual memberships",
+      "pass": true
+    },
+    {
+      "name": "old group stream documentary history prefixes literal",
+      "pass": true
+    },
+    {
+      "name": "all old derived evidence fields literal",
+      "pass": true
+    },
+    {
+      "name": "all old proof states literal",
+      "pass": true
+    },
+    {
+      "name": "catalog source memberships exact once",
+      "pass": true
+    },
+    {
+      "name": "prior R2 docs and new catalog are actual objects",
+      "pass": true
+    },
+    {
+      "name": "group role object mapping both directions",
+      "pass": true
+    },
+    {
+      "name": "new group source pointers match exact memberships",
+      "pass": true
+    },
+    {
+      "name": "23 groups correct distinct counts",
+      "pass": true
+    },
+    {
+      "name": "35 streams and131 actual part references",
+      "pass": true
+    },
+    {
+      "name": "new14 streams copy every catalog field",
+      "pass": true
+    },
+    {
+      "name": "every new stream part matches exact object",
+      "pass": true
+    },
+    {
+      "name": "calculated multi-part whole hashes excluded",
+      "pass": true
+    },
+    {
+      "name": "ordered three parent pins exact and not object entries",
+      "pass": true
+    },
+    {
+      "name": "only own record tree contract",
+      "pass": true
+    },
+    {
+      "name": "full previous README literal exactly once in history",
+      "pass": true
+    },
+    {
+      "name": "all new README object links exist",
+      "pass": true
+    },
+    {
+      "name": "current outputs not recursively indexed",
+      "pass": true
+    },
+    {
+      "name": "381 files total43399822B",
+      "pass": true
+    },
+    {
+      "name": "package output identities match authenticated documents",
+      "pass": true
+    },
+    {
+      "name": "all33 author checks positive with scoped provenance",
+      "pass": true
+    },
+    {
+      "name": "E12 reader transport separate measured domains",
+      "pass": true
+    },
+    {
+      "name": "E12 linked root and independent final receipts exact",
+      "pass": true
+    },
+    {
+      "name": "negative original no product acceptance and no production",
+      "pass": true
+    },
+    {
+      "name": "five final gates and D26 stay unqualified",
+      "pass": true
+    },
+    {
+      "name": "author effects onlythree blobs no originals or execution",
+      "pass": true
+    },
+    {
+      "name": "prior unresolved scope preserved except current archive anchor",
+      "pass": true
+    },
+    {
+      "name": "previous resolved reference prefix preserved",
+      "pass": true
+    }
+  ],
+  "actualParents": {
+    "count": 3,
+    "matched": true,
+    "focalSourceReachable": true,
+    "readerCleanS17Reachable": true
+  },
+  "parents": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+      "tree": "bae05823c4f69f8a3d2ad9f1c76eb74f216fa2c3",
+      "role": "previous published archive R2"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "73677353c81e17ac1b80a98b066ff4c505430cde",
+      "tree": "290887ae4cae508f11ef472bf2b22d9b3b918c17",
+      "role": "E12 executed focal",
+      "soleParent": "c061693ae9833819cd3afd2ae1b03805de6c82f9"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "428c850ffe85c2c454d43910fa9f8e7637c9bcfa",
+      "tree": "d264e417f1afbc69c6730c8ef22e93030f82f49d",
+      "role": "E12 executed reader",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+    }
+  ],
+  "treePlan": {
+    "objectsTree": "66a8ef82632894d999368443f93636fbf26b8505",
+    "objects": 379,
+    "rootTree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+    "rootEntries": [
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931"
+      },
+      {
+        "path": "index.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0"
+      },
+      {
+        "path": "objects",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "66a8ef82632894d999368443f93636fbf26b8505"
+      }
+    ],
+    "files": 381,
+    "fileBytes": 43399822
+  },
+  "preflight": {
+    "at": "2026-11-27 21:27:42 UTC",
+    "refs": {
+      "archive": "6f8690ed690b3271f312e8954c1229ac5ec07176",
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe"
+    },
+    "archiveRuns": 0
+  },
+  "limits": [
+    "34 documentary checks verify the new index against the already authenticated complete E12 catalog and immutable R2 metadata; no repeat original acquisition.",
+    "The group mapping checks group/role/SHA in both directions. Historical group records omitting source pointers remain literal; new group pointers are checked exactly against memberships.",
+    "Every new stream field and ordered part list matches the previously authenticated catalog; R3 author independently recomposed all14 new streams.",
+    "All whole multi-part Git hashes calculated only remain outside actual object entries.",
+    "Actual trees/commit/ref publication still pending at this receipt cut.",
+    "No workflow, repository source layout, product qualification or production authorization."
+  ],
+  "productionAuthorized": false
+}

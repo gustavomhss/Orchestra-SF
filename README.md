@@ -1,5 +1,71 @@
 # Evidências do Orchestra-SF — arquivo do #613
 
+Este quarto incremento documental preserva R3 e acrescenta o corpus C18 enumerado: fonte e controles, focal aprovado, Analytics original negativo, proposta estática D27, recepção e fundamento da próxima pergunta diagnóstica. A árvore de `sf613-evidence` contém apenas este README, o índice e blobs em `objects/`. O conteúdo não constitui candidato final de Release, instalação QA, aceite de Migração ou autorização de produção.
+
+## Conteúdo e preservação
+
+O [index.json](index.json) relaciona **442 blobs reais**, **49.076.567 B** de conteúdo em `objects/<git-sha>`, **491 memberships**, **29 grupos** e **41 streams**, com **153 referências de partes**. São **63 objetos novos** e **71 memberships novos** em relação a R3. Os metadados dos 379 objetos anteriores, os prefixos dos 420 memberships, os 23 grupos e os 35 streams de R3 permanecem literais.
+
+Os 70 objetos reais do [catálogo C18](objects/d44e77a41e70fd6c20de23f963249a5e4121a227) foram autenticados individualmente. O catálogo compartilha oito blobs com R3: o driver focal C17, os dois requests e cinco arquivos do pacote final D26/D27. Cada objeto compartilhado conserva seus metadados e recebe somente o novo membership. Os outros 62 objetos e o próprio catálogo completam as 63 adições. O catálogo pertence ao grupo `C18-reception-and-next-question`, papel `actual-input-catalog`.
+
+Os seis streams acrescentados foram recompostos a partir de 22 referências de partes reais, sem separadores ou normalização de BOM e LF. Os quatro streams de logs originais representam main e cleanup de focal e Analytics; os outros dois são as uniões derivadas dos reports focais e dos marcadores Analytics. Os 35 streams herdados mantêm o recibo de auditoria de R3; este incremento não alega uma nova aquisição de seus originais.
+
+Os cinco controles documentais de R3 também são objetos deste incremento: [índice](objects/5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0), [README](objects/d99de8ea7152a68b51a4f6c66eb8d50ef0514931), [manifesto](objects/db8864acbf3f0e6d736138a00e8494af1b33f137), [revisão da raiz](objects/41fd42fc295bc963ab63469850b77df5cc35c2c7) e [recibo de publicação](objects/52de10c866adf1cb00aba9daa7381109d2dc1e0d). O README publicado em R3 está reproduzido integral e literalmente na seção histórica ao final. Seus estados, totais e pais descrevem aquele corte.
+
+## C18: fonte, focal e jornada original
+
+| Conjunto | Resultado preservado | Alcance |
+|---|---|---|
+| Fonte C18 | S18 `455c02a7a05a6dd3262ae15b184419897366fde4`, árvore `ae1c0977057e45853f3dc240140e5f221057f49d`, pai único S17 | Fonte limpa com helper R2 revisado; sem overlay diagnóstico E12 |
+| Focal `46074917314/1` | **39 controles, 1.432 assertions e nove reports**; sete testes externos com 35 assertions; 13 comandos e 26 flags de truncamento falsas | Focal aprovado na composição e limites executados |
+| Analytics `46075966101/1` | **Um caso reprovado e um aprovado** | Primeiro preview UI42 excedeu o waiter original de 60.000 ms em `design-wave-five-analytics.spec.ts:72:32`; UI43/UI44 não foram alcançadas; BI passou nesta fonte |
+| D27 | Revisão estática aceita; quatro bindings finais `UNBOUND` | Proposta final ainda não executada; mantém 26 grupos, 32 sites, 37 comandos efetivos, 74 flags e seis filhos de proof |
+| Próxima pergunta diagnóstica | Fundamento de fonte e evidência preservado | Não é resultado de execução E13 nem prova de uma causa interna |
+
+O [recibo focal](objects/08e8d47abb38d6e1dc96e497e54b8dd8e160b37e) conserva o controle `SF_C18_CAPTURE_LAZY` e seus oito oráculos. Esse controle usa bootstrap sintético. Seus onze filhos históricos de loading e um novo filho lazy são populações distintas dos nove reports observados. O resultado não mede benefício de desempenho na jornada UI. O helper R1 permanece arquivado como proposta **supersedida e não executada**; a fonte testada usa R2.
+
+O [recibo Analytics](objects/bba2ff1e6015b6ec877240d4a4f4e524b630bc39) conserva as duas respostas anteriores de `decision-portfolio-results`, ambas **HTTP 200 / status ok** neste run. Depois delas, a requisição nativa `decision-portfolio-preview` da sequência 3 foi observada, mas sua resposta não foi recebida dentro do waiter. Não se transfere a falha de aquisição de corpo observada no corte histórico E12 para C18.
+
+As seis capturas parciais UI42 correspondem a lista e configuração. O caso BI aprovado contém sete capturas UI45 e 33 UI46, incluindo as verificações originais registradas no recibo. Isso não prova sensibilidade UI44 concluída nem qualifica o primeiro caso reprovado. Timeout sem resposta não estabelece causa de CPU, lock, transporte ou fase interna; os dados não demonstram uma economia quantitativa de C18.
+
+O estado histórico continua **12 de 15 áreas**, com **zero novas áreas aceitas** e **produção não autorizada**. As propostas e cortes negativos anteriores ficam preservados. O [review D27](objects/02e39f88126bef9ed7f70f3a09eb7ee2005b752a) não cria um grupo 27: G2 já seleciona o arquivo capture inteiro, agora com 48 casos na referência S18. A contagem funcional da futura composição permanece indeterminada até os bindings e a execução reais.
+
+## Logs, uniões e exclusões
+
+| Stream novo | Partes reais | Bytes | Identidade / limite |
+|---|---:|---:|---|
+| C18 focal main | 1 | 112.385 | Blob real `5caff1d5520ef621278457cdbce32b4a1b20123d` |
+| C18 focal cleanup | 1 | 2.281 | Blob real `f94480c34318a510206e89a7b02f2e1da00389b5` |
+| C18 focal reports | 1 | 11.979 | Nove linhas; blob real `89d79a30e13f46df8cb481536a9e41862eda07e5` |
+| C18 Analytics main | 17 | 4.867.325 | Inteiro `4060971fa1492f50be0fae5089d0ca58eda518f6` **somente calculado**, excluído de `objects` |
+| C18 Analytics cleanup | 1 | 2.281 | Blob real `2dbdf9d6af6921ccc407b0e9e8837f87dae56034` |
+| C18 Analytics marcadores | 1 | 34.166 | 96 linhas; blob real `85954ebc570a1c068be1f046c47ca76d9ab6ec04` |
+
+O main Analytics concatenado tem SHA256 `c27f0f52bc3bdff4b250d558a1fcfba075123e44426e0692ebabed3e3c0c0d91`. A união dos marcadores tem SHA256 `7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e`; a união focal tem SHA256 `dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8`. Os hashes inteiros calculados servem à verificação das partes; não criam objetos Git.
+
+Os originais C18 foram adquiridos uma vez cada pela raiz, preservados e relidos antes do parse. Esta autoria usa exclusivamente essas cópias Git e não readquire Actions ou ZIP. O artefato **15235941403**, **45.839.284 B**, digest `sha256:bf45432ad9c72fc8fd754b71fd01ac081817667ce13a1ea4e591cdcaa331ce46`, permanece **metadata-only, zero ZIP GET**. Nenhum conteúdo interno, trace, screenshot ou perfil desse artefato é afirmado como recebido. A ausência de uma aquisição de ZIP não prova ausência desses arquivos em seu conteúdo.
+
+As identidades de caso, stream e PID e os relógios dos cortes anteriores mantêm seus próprios limites. Este arquivo não concatena relógios para atribuir causalidade e não transforma amostragem histórica E11/E12 em custo atual de C18. O [fundamento da próxima pergunta](objects/5723337efebc6761d256ad80f5202d6509947dbd) permanece uma proposta de discriminação causal.
+
+## Publicação proposta
+
+A ordem de pais proposta é:
+
+1. R3 publicado: `e35ef28919b7be00d1fd6e37bf547ad649c07bf0`.
+2. Focal C18: `54e99dbebb37030c94c9054a2195baa186e621a9`.
+3. Analytics original C18: `9124afd5a28cd93bc6568973d8bda5bb5afb2ccf`.
+
+Focal e Analytics têm S18 como pai único; a fonte permanece ancestral, sem copiar seu layout executável para a árvore documental. A raiz deve verificar novamente a ref esperada R3 e publicar por atualização nonforce. Neste corte foram autorizados somente os três blobs de proposta; árvore, commit e ref R4 ainda são responsabilidades da raiz.
+
+A árvore própria deve conter exatamente `README.md`, `index.json` e `objects/<sha>`, todos os arquivos em modo `100644`. Não inclui `.github`, `.ci-run.json`, `apps`, `modules` ou `packages` na raiz. O manifesto deste pacote fica separado para revisão; index, README e manifesto atuais não se incluem recursivamente em `objects`. Nenhuma ref de produto, execução ou autorização de produção é criada por este documento.
+
+## README R3 completo — corte histórico preservado
+
+<details>
+<summary>Texto publicado em R3; totais e estados abaixo pertencem ao corte anterior</summary>
+
+# Evidências do Orchestra-SF — arquivo do #613
+
 Este terceiro incremento documental preserva R2 e acrescenta o corpus E12 enumerado: fonte e controle diagnósticos, focal, Analytics original, reader, sete exports completos e análise descritiva do perfil. A ref `sf613-evidence` mantém árvore própria. Seu conteúdo não constitui candidato de Release, instalação QA, aprovação de Migração ou autorização de produção.
 
 ## Conteúdo e preservação
@@ -132,6 +198,8 @@ O índice distingue referências históricas de evidências efetivamente incluí
 A fonte limpa C16 é `0860b3404ca54235997c4cdaee63bbe0659d5a7a`, árvore `194690fc63c26ac7feb690e44d0fea70742da88c`. Os snapshots executados são o focal `30890fcdcfd4e255185f443d128fe85ba21299ff` e a Analytics `dfa5cca0f7e20b92c23ea45897301c2327dc60ea`. A publicação do arquivo manterá esses commits como pais da cadeia documental, além dos blobs como entradas reais de árvore.
 
 Esta ref deverá ser mantida enquanto as evidências forem necessárias. Atualizações avançam a mesma cadeia sem reescrever a história. O ledger histórico `sf613-ledger`, o PR #613 e as refs de produto permanecem separados. A integração em `dev` segue pelo PR revisado; qualquer virada de produção continua exigindo o aval explícito do usuário.
+
+</details>
 
 </details>
 
