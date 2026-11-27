@@ -1,0 +1,258 @@
+{
+  "schema": "sf613-e11-diagnostic-bounds-v1",
+  "status": "static-data-model-and-textual-derivation-only",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+  },
+  "helper": {
+    "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+    "bytes": 22169,
+    "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+    "lf": 374
+  },
+  "proposalShape": {
+    "additions": 2,
+    "modifications": 6,
+    "paths": 8
+  },
+  "linkedDerivation": {
+    "gitSha": "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+    "bytes": 105938,
+    "sha256": "cfef9b7f6761136fe51591cdee0cbcc1809e4697924b874f3c46eb2636d8fd40",
+    "lf": 549
+  },
+  "linkedDiff": {
+    "gitSha": "073c035995a98db8f1b824c163532a904aecb17d",
+    "bytes": 50026,
+    "sha256": "bec2eed1baaa7ae6a72231090fb63dde018aed25aa1e8f055bd9f3df0ddf607f",
+    "lf": 732
+  },
+  "observation": {
+    "profiler": "Bun inspector Session; one attempted sampler per backend process, reusing the E10 ownership/start/stop/serialize/fsync lifecycle",
+    "scope": "The selected first HTTP preview starts a whole-VM CPU sampler. CPU samples and Source/native counters are PID/window aggregates, not Request-exclusive or case-exclusive work.",
+    "intervalUs": 5000,
+    "targetMs": 50000,
+    "acceptStrictlyBeforeMs": 55000,
+    "timerPulseMs": 10000,
+    "existingCooperativePumps": [
+      "HTTP progress after the three original boundaries",
+      "Source route after the already-decided sealed-read or unfenced/full-guard path",
+      "ProductAuthority immediately after fulfilled authenticate, before its original guard"
+    ],
+    "newCounterFunctionsPump": false,
+    "completionLimits": [
+      "Timer and cooperative boundaries can be delayed or never reached.",
+      "A target is not a deadline guarantee. Starvation, termination, invalid clock, start/stop failure or a nonreturning operation can leave capture incomplete.",
+      "short-completed, completed-late, completed-on-time and incomplete remain distinct observational states; none is a successful HTTP or Analytics outcome.",
+      "HTTP progress remains eligible after CPU closure until the selected handle's HTTP finally. Late progress cannot rewrite profile or collection bytes already closed."
+    ],
+    "runtime": {
+      "platform": "linux",
+      "arch": "x64",
+      "bunVersion": "1.3.14",
+      "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "revisionBytes": 40,
+      "releaseRuntimeNotRetargeted": true
+    },
+    "ownership": [
+      "Timer is installed and unref attempted before Session ownership.",
+      "Profiler preflight and start remain synchronous; no new await, then, ALS, root or product callback.",
+      "An uncertain start or failed stop does not receive cleanup that could stop a sampler not proven owned.",
+      "Native output uses the existing wx/0600, fsync, fstat and close sequence outside fixture cleanup roots."
+    ]
+  },
+  "counters": {
+    "cap": 65535,
+    "existingRoutes": {
+      "slots": 3,
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "unchangedSemantics": true
+    },
+    "selection": {
+      "slots": 12,
+      "order": [
+        "none",
+        "cases",
+        "preferences"
+      ],
+      "sourceRequests": 3,
+      "nativePairs": 9,
+      "matrixLayout": "row-major; index = requestedClass * 3 + materializedClass",
+      "saturatedMeaning": "true when at least one of the twelve new slots is at 65535. It does not prove an event beyond the cap.",
+      "saturatedDoesNotCover": "the three historical route slots"
+    },
+    "population": {
+      "sourceRequests": "Only after the original qualified Source path has computed its private selection query and constructed the forwarded dashboardProductRead option. The hook receives that existing local value, without a second query.",
+      "nativePairs": "All native child snapshots actually copied while this PID's sampler is running. The hook is after the snapshot expression completes and before work; it includes all surfaces, ACL/source projected copies, ordinary materializations and non-C08 callers.",
+      "requestedAxis": "Existing normalized local selection derived from the transaction option, not a fresh inspection of the source graph.",
+      "materializedAxis": "Existing projected?.selection returned by the physical copy. undefined maps to none.",
+      "noneNone": "Includes unrelated native child copies and ACL/source copies. It cannot be interpreted as a C08 fallback total or a full-snapshot materialization total.",
+      "casesNoneOrPreferencesNone": "The native copy did not return the requested narrow selection; the counter does not identify which eligibility/shape/route condition was responsible.",
+      "sourceNone": "Qualified Source token without a narrow cases/preferences selection. This is not proof of an opaque callback or a particular consumer.",
+      "excluded": [
+        "Top-level root materializations are outside the native child matrix.",
+        "Copy failures before snapshot construction completes are not counted.",
+        "A copy count does not prove work entry, authorization success, commit acceptance or durable publication."
+      ],
+      "conservation": "No equality, conservation, one-to-one correspondence or subtraction between Source requests, native child pairs, historical route counts or profiler samples is asserted."
+    },
+    "overhead": {
+      "perSourceHook": "constant guard plus one bounded numeric increment",
+      "perNativeHook": "constant guard, row/column classification and at most one bounded numeric increment",
+      "counterMemory": "three existing route counters plus twelve new counters; no per-call retained graph or log",
+      "snapshotSerialization": "small fixed arrays only at bounded CPU/progress/collection emission points",
+      "addedDomainReads": 0,
+      "addedAuthorityCalls": 0,
+      "addedPumpsFromNewCounterHooks": 0
+    },
+    "passivity": "No graph, record ID, Request property or authority predicate is inspected to count. Outside the owned running sampler the new hooks return. Exceptions in the observer are contained without replaying product work."
+  },
+  "wire": {
+    "cpu": {
+      "prefix": "SF_PREVIEW_E11_CPU ",
+      "maximumAttempts": 3,
+      "perLineCapBytes": 4096,
+      "includesLF": true
+    },
+    "progress": {
+      "prefix": "SF_PREVIEW_E11_PROGRESS ",
+      "maximumUniqueAttempts": 3,
+      "perLineCapBytes": 1024,
+      "includesLF": true,
+      "kinds": [
+        "body-returned",
+        "admit-returned",
+        "case-callback-entered"
+      ],
+      "identity": "same captured handle and exact Request; no Request property read",
+      "writeFailure": "Slot is consumed once before the write; false/backpressure or throw does not block the cooperative pump or trigger a replay."
+    },
+    "helperMaximumBytes": 15360,
+    "scopeOfQuota": "Per helper/backend process. This is not a bound for the entire two-case CI log or a promise that all attempted lines reach the reader. Existing launcher disabled/prepared records are separately attributable.",
+    "futureCombinedCpuProgressMarkerSlotBytes": 65536,
+    "capsUnchanged": true,
+    "model": {
+      "method": "Literal data objects only, JSON serialization and independent UTF-8 byte counts; neither repository helper nor tests were executed.",
+      "numericWidths": {
+        "pidAndParentPidDigits": 9,
+        "pointAndElapsedTenthMsDigits": 9,
+        "runIdDigits": 20,
+        "utcMax": 8640000000000000,
+        "sha1HexDigits": 40,
+        "sha256HexDigits": 64,
+        "attempt": "1",
+        "sequenceMaximum": 3
+      },
+      "counterWidths": {
+        "totalSlots": 15,
+        "valuePerSlot": 65535,
+        "saturated": false,
+        "explanation": "false is one byte longer than true. Combining false with all new counters at cap is deliberately unreachable but conservative for field width."
+      },
+      "pointKeys": [
+        "frameStart",
+        "startEnter",
+        "startReturn",
+        "stopCheckpoint",
+        "stopEnter",
+        "stopReturn",
+        "serializeEnter",
+        "serializeReturn",
+        "profileWriteEnter",
+        "profileFsync",
+        "profileClose"
+      ],
+      "pointScope": "All eleven keys are included in every CPU size model, including started and stopped, although those earlier states ordinarily have fewer points.",
+      "maximumStringChoices": {
+        "progressKind": "case-callback-entered",
+        "cpuPhase": "unavailable",
+        "nonce": "sf613-e11-cpu-ZZZZZZ",
+        "finishedState": "completed-on-time"
+      },
+      "resultBytes": {
+        "started": 1178,
+        "stopped": 1106,
+        "finished": 1482,
+        "incomplete": 1313,
+        "unavailable": 792,
+        "progress": 803
+      },
+      "lines": {
+        "started": "SF_PREVIEW_E11_CPU {\"schema\":\"sf-preview-causal-e11-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"started\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\",\"runtime\":[\"1.3.14\",\"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"],\"parentPid\":999999999,\"intervalUs\":5000,\"targetMs\":50000,\"acceptMs\":55000,\"utcMs\":8640000000000000,\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999}}\n",
+        "stopped": "SF_PREVIEW_E11_CPU {\"schema\":\"sf-preview-causal-e11-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"stopped\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\",\"cause\":\"target\",\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"nodesBounded\":999999999,\"samplesBounded\":999999999,\"cleanupFailed\":false}\n",
+        "finished": "SF_PREVIEW_E11_CPU {\"schema\":\"sf-preview-causal-e11-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\",\"state\":\"completed-on-time\",\"cause\":\"target\",\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":4194304,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"collection\":{\"name\":\"collection.json\",\"bytes\":16384,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"collectionWithinAccept\":false,\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"cleanupFailed\":false}\n",
+        "incomplete": "SF_PREVIEW_E11_CPU {\"schema\":\"sf-preview-causal-e11-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"finished\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\",\"state\":\"incomplete\",\"reason\":\"collection-write\",\"cause\":\"target\",\"points\":{\"frameStart\":999999999,\"startEnter\":999999999,\"startReturn\":999999999,\"stopCheckpoint\":999999999,\"stopEnter\":999999999,\"stopReturn\":999999999,\"serializeEnter\":999999999,\"serializeReturn\":999999999,\"profileWriteEnter\":999999999,\"profileFsync\":999999999,\"profileClose\":999999999},\"profile\":{\"name\":\"preview-first.cpuprofile\",\"bytes\":4194304,\"sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fsyncTenthMs\":999999999,\"closeTenthMs\":999999999},\"stopReturned\":false,\"cleanupFailed\":false}\n",
+        "unavailable": "SF_PREVIEW_E11_CPU {\"schema\":\"sf-preview-causal-e11-cpu-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"sequence\":3,\"kind\":\"unavailable\",\"request\":1,\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\",\"reason\":\"late-or-invalid-clock\",\"elapsedTenthMs\":-999999999}\n",
+        "progress": "SF_PREVIEW_E11_PROGRESS {\"schema\":\"sf-preview-causal-e11-progress-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"pid\":999999999,\"request\":1,\"sequence\":3,\"kind\":\"case-callback-entered\",\"elapsedTenthMs\":999999999,\"cpuPhase\":\"unavailable\",\"routes\":{\"scope\":\"pid-running-window\",\"order\":[\"sealed-read\",\"unfenced\",\"full-guard\"],\"cap\":65535,\"counts\":[65535,65535,65535]},\"selection\":{\"scope\":\"pid-running-window\",\"order\":[\"none\",\"cases\",\"preferences\"],\"cap\":65535,\"sourceRequests\":[65535,65535,65535],\"nativePairs\":[65535,65535,65535,65535,65535,65535,65535,65535,65535],\"saturated\":false},\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e11-cpu-ZZZZZZ\"}\n"
+      },
+      "interpretation": "These width models demonstrate headroom inside unchanged per-line hard caps. They do not predict any event, health, counter value, runtime result, duration or final capture."
+    }
+  },
+  "files": {
+    "profile": {
+      "name": "preview-first.cpuprofile",
+      "capBytes": 4194304
+    },
+    "collection": {
+      "name": "collection.json",
+      "capBytes": 16384
+    },
+    "launcher": {
+      "name": "launcher.json",
+      "capBytes": 8192
+    },
+    "namespace": "test-ci-evidence/sf613-e11-cpu-<six alphanumeric characters>, outside the private roots removed by the fixture",
+    "originalByteChecks": "Existing SHA256/byte counts and post-write fsync/fstat/close remain. Closed CPU snapshots are immutable receipts of that instant; late HTTP progress is separate."
+  },
+  "unchangedOriginalSelection": {
+    "request": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    },
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "newExtraRepeats": 0,
+    "firstPreviewWaitMs": 60000,
+    "specOraclesChanged": false,
+    "seedChanged": false,
+    "clockChanged": false,
+    "deadlinesChanged": false
+  },
+  "focalPlan": {
+    "owner": "/root/focal_migration",
+    "groups": 6,
+    "commands": 12,
+    "flags": 24,
+    "functionalTests": 11,
+    "reports": 7,
+    "wholeFiles": 2,
+    "readonly": {
+      "tests": 7,
+      "processMs": 360000,
+      "parentMs": 420000
+    },
+    "projection": {
+      "tests": 4,
+      "processMs": 300000,
+      "parentMs": 360000
+    },
+    "note": "These are planned selection/envelope counts inherited from the reviewed C15R focal. No execution or PASS is claimed; the bound driver is a separate artifact."
+  },
+  "verification": {
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "profilerExecuted": false,
+    "originalActionsOrZipAcquired": false,
+    "modelsArePureData": true
+  }
+}

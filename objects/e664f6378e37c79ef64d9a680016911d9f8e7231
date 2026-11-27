@@ -1,0 +1,401 @@
+{
+  "schema": "orchestra-sf.e11-reader-observed-inputs.v1",
+  "at": "2026-11-27 16:04:41 UTC",
+  "status": "OBSERVED_ORIGINAL_LOG_FACTS_FOR_REVIEW_NOT_EXECUTION_AUTHORITY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "readerBranch": "sf613-artifact-e11cpu",
+  "readerSoleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+  "readerParentTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+  "original": {
+    "run": 46028127606,
+    "attempt": 1,
+    "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "snapshotTree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "mainJob": 140604695368,
+    "cleanupJob": 140609271563,
+    "conclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "testStepConclusion": "failure"
+  },
+  "artifactMetadata": {
+    "id": 15214066673,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 46001766,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15214066673",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15214066673/zip",
+    "expired": false,
+    "created_at": "2026-11-27T15:57:37Z",
+    "expires_at": "2026-12-04T15:57:34Z",
+    "updated_at": "2026-11-27T15:57:37Z",
+    "digest": "sha256:98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef",
+    "workflow_run": {
+      "id": 46028127606,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613e11a",
+      "head_sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
+    }
+  },
+  "rawManifest": {
+    "gitBlob": "7f812dc6bb1d37138c441552614ef6d87f791b2a",
+    "bytes": 19347,
+    "sha256": "68c96f5ddeeef960b23414b9fb566e3c61142f368ae73e9ec0485bc17d7b19bc"
+  },
+  "markerCopy": {
+    "lines": 102,
+    "bytes": 39486,
+    "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+    "gitBlobCalculated": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+    "gitBlobPersisted": true,
+    "gitBlob": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+    "literalReadback": true
+  },
+  "parities": {
+    "analytics": {
+      "lines": 96,
+      "bytes": 34162,
+      "sha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1",
+      "gitBlobCalculated": "92860230bee25fba7f6736f88e956a1ecb900c20",
+      "gitBlobPersisted": false
+    },
+    "cpu": {
+      "lines": 3,
+      "bytes": 3180,
+      "sha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+      "gitBlobCalculated": "803d37eaef11afaec29ebdaee8aac1eb9a955d64",
+      "gitBlobPersisted": false
+    },
+    "progress": {
+      "lines": 3,
+      "bytes": 2144,
+      "sha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7",
+      "gitBlobCalculated": "5a304af4b1b25b86c936acd7acb199bbcafcc4dd",
+      "gitBlobPersisted": false
+    },
+    "union": {
+      "lines": 102,
+      "bytes": 39486,
+      "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+      "gitBlobCalculated": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "gitBlobPersisted": false
+    }
+  },
+  "semanticCounts": {
+    "SF_ANALYTICS_SOURCE": 44,
+    "SF_ANALYTICS_CAPTURE": 46,
+    "SF_PREVIEW_E11_CPU": 3,
+    "SF_PREVIEW_E11_PROGRESS": 3,
+    "SF_DESIGN_DIAGNOSTICS": 5,
+    "SF_ANALYTICS_SCOPE": 1
+  },
+  "outcomesFromMain": {
+    "failed": 1,
+    "passed": 1,
+    "firstWaiterFailure": {
+      "timeoutMs": 60000,
+      "file": "design-wave-five-analytics.spec.ts",
+      "line": 72,
+      "column": 32
+    },
+    "ui": {
+      "UI42": "partial;6 captures before first preview response",
+      "UI43": "not reached",
+      "UI44": "not reached"
+    },
+    "BI": "passed;40 captures and original complete UI45/UI46 scope",
+    "expectedArtifactStatusesToVerify": [
+      [
+        "failed"
+      ],
+      [
+        "passed"
+      ]
+    ]
+  },
+  "cpuMarkerClaim": {
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "pid": 3713,
+    "parentPid": 3668,
+    "nonce": "sf613-e11-cpu-RIlIZr",
+    "kinds": [
+      "started",
+      "stopped",
+      "finished"
+    ],
+    "finished": {
+      "schema": "sf-preview-causal-e11-cpu-v1",
+      "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+      "qualification": false,
+      "pid": 3713,
+      "sequence": 3,
+      "kind": "finished",
+      "request": 1,
+      "routes": {
+        "scope": "pid-running-window",
+        "order": [
+          "sealed-read",
+          "unfenced",
+          "full-guard"
+        ],
+        "cap": 65535,
+        "counts": [
+          3943,
+          758,
+          1386
+        ]
+      },
+      "selection": {
+        "scope": "pid-running-window",
+        "order": [
+          "none",
+          "cases",
+          "preferences"
+        ],
+        "cap": 65535,
+        "sourceRequests": [
+          2167,
+          702,
+          702
+        ],
+        "nativePairs": [
+          15114,
+          0,
+          0,
+          0,
+          702,
+          0,
+          0,
+          0,
+          702
+        ],
+        "saturated": false
+      },
+      "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "runId": "46028127606",
+      "attempt": "1",
+      "nonce": "sf613-e11-cpu-RIlIZr",
+      "state": "completed-on-time",
+      "cause": "target",
+      "profile": {
+        "name": "preview-first.cpuprofile",
+        "bytes": 1888001,
+        "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+        "fsyncTenthMs": 2376439,
+        "closeTenthMs": 2376439
+      },
+      "collection": {
+        "name": "collection.json",
+        "bytes": 1661,
+        "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+        "fsyncTenthMs": 2376442,
+        "closeTenthMs": 2376442
+      },
+      "collectionWithinAccept": true,
+      "points": {
+        "frameStart": 1874548,
+        "startEnter": 1874559,
+        "startReturn": 1874560,
+        "stopCheckpoint": 2374549,
+        "stopEnter": 2374553,
+        "stopReturn": 2376372,
+        "serializeEnter": 2376374,
+        "serializeReturn": 2376397,
+        "profileWriteEnter": 2376405,
+        "profileFsync": 2376439,
+        "profileClose": 2376439
+      },
+      "cleanupFailed": false
+    },
+    "actualFilesVerified": false
+  },
+  "progressMarkers": [
+    {
+      "line": 1239,
+      "value": {
+        "schema": "sf-preview-causal-e11-progress-v1",
+        "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+        "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+        "qualification": false,
+        "pid": 3713,
+        "request": 1,
+        "sequence": 1,
+        "kind": "body-returned",
+        "elapsedTenthMs": 22,
+        "cpuPhase": "running",
+        "routes": {
+          "scope": "pid-running-window",
+          "order": [
+            "sealed-read",
+            "unfenced",
+            "full-guard"
+          ],
+          "cap": 65535,
+          "counts": [
+            0,
+            0,
+            0
+          ]
+        },
+        "selection": {
+          "scope": "pid-running-window",
+          "order": [
+            "none",
+            "cases",
+            "preferences"
+          ],
+          "cap": 65535,
+          "sourceRequests": [
+            0,
+            0,
+            0
+          ],
+          "nativePairs": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "saturated": false
+        },
+        "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+        "runId": "46028127606",
+        "attempt": "1",
+        "nonce": "sf613-e11-cpu-RIlIZr"
+      }
+    },
+    {
+      "line": 1241,
+      "value": {
+        "schema": "sf-preview-causal-e11-progress-v1",
+        "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+        "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+        "qualification": false,
+        "pid": 3713,
+        "request": 1,
+        "sequence": 2,
+        "kind": "admit-returned",
+        "elapsedTenthMs": 91,
+        "cpuPhase": "running",
+        "routes": {
+          "scope": "pid-running-window",
+          "order": [
+            "sealed-read",
+            "unfenced",
+            "full-guard"
+          ],
+          "cap": 65535,
+          "counts": [
+            1,
+            0,
+            0
+          ]
+        },
+        "selection": {
+          "scope": "pid-running-window",
+          "order": [
+            "none",
+            "cases",
+            "preferences"
+          ],
+          "cap": 65535,
+          "sourceRequests": [
+            0,
+            0,
+            0
+          ],
+          "nativePairs": [
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "saturated": false
+        },
+        "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+        "runId": "46028127606",
+        "attempt": "1",
+        "nonce": "sf613-e11-cpu-RIlIZr"
+      }
+    },
+    {
+      "line": 1243,
+      "value": {
+        "schema": "sf-preview-causal-e11-progress-v1",
+        "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+        "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+        "qualification": false,
+        "pid": 3713,
+        "request": 1,
+        "sequence": 3,
+        "kind": "case-callback-entered",
+        "elapsedTenthMs": 2245,
+        "cpuPhase": "running",
+        "routes": {
+          "scope": "pid-running-window",
+          "order": [
+            "sealed-read",
+            "unfenced",
+            "full-guard"
+          ],
+          "cap": 65535,
+          "counts": [
+            3,
+            0,
+            18
+          ]
+        },
+        "selection": {
+          "scope": "pid-running-window",
+          "order": [
+            "none",
+            "cases",
+            "preferences"
+          ],
+          "cap": 65535,
+          "sourceRequests": [
+            0,
+            0,
+            0
+          ],
+          "nativePairs": [
+            131,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "saturated": false
+        },
+        "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+        "runId": "46028127606",
+        "attempt": "1",
+        "nonce": "sf613-e11-cpu-RIlIZr"
+      }
+    }
+  ],
+  "rootAndIndependentParitiesMatch": true,
+  "zipGets": 0,
+  "limits": [
+    "This binding document records preserved main and API metadata; the actual ZIP, selection/runtime JSON, profile, collection and launcher remain unacquired.",
+    "Case statuses are a validation target derived from the main failure/pass and first response waiter; the reader must verify the actual original runtime report.",
+    "Reader must retain exact SOURCE sole-parent and exact-one-workflow addition checks; it runs from clean S15R, not instrumented snapshot S_E11.",
+    "One bounded original ZIP acquisition requires a separate fully bound reviewed workflow and root execution authority."
+  ]
+}

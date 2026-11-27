@@ -1,0 +1,73 @@
+{
+  "schema": "orchestra-sf.c17-focal-raw-intake.v1",
+  "status": "CLOSED_PRESERVED_BEFORE_PARSE",
+  "at": "2026-11-27 18:43:02 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": 46051100090,
+  "attempt": 1,
+  "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+  "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+  "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+  "snapshotTree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+  "authority": {
+    "gitBlob": "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+    "bytes": 19576,
+    "sha256": "8d7b2e77fb3cfa540a1be864be1906b004a03d6e1208da6298c8fac306dfb6b9"
+  },
+  "streams": [
+    {
+      "name": "main",
+      "job": 140682318133,
+      "gitBlob": "3fc0baf11dccadaaa8a12d9ee246e7471327e524",
+      "bytes": 104973,
+      "sha256": "5e3964930eed8f5f89428427b0f6b71fd8db909c5ce4251aed01fda06dbcb76b",
+      "wholeBlobPersisted": true,
+      "literalReadback": true,
+      "lf": 871,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "originalGetCount": 1
+    },
+    {
+      "name": "cleanup",
+      "job": 140683398461,
+      "gitBlob": "9117f3e935ca0e814aaba9302d041e21133af3e7",
+      "bytes": 2281,
+      "sha256": "1dcad47a209a012fd6dea8476b2d6e665f4d682883ffa2ebcd467e8e91f13fe8",
+      "wholeBlobPersisted": true,
+      "literalReadback": true,
+      "lf": 39,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "originalGetCount": 1
+    }
+  ],
+  "jobs": [
+    {
+      "id": 140682318133,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started": "2026-11-27T18:39:32Z",
+      "completed": "2026-11-27T18:42:08Z"
+    },
+    {
+      "id": 140683398461,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started": "2026-11-27T18:42:10Z",
+      "completed": "2026-11-27T18:42:15Z"
+    }
+  ],
+  "runStatus": "completed",
+  "runConclusion": "success",
+  "artifacts": [],
+  "ephemeralBranchRemoved": true,
+  "semanticAnalysisStarted": false,
+  "interpretation": "Terminal success is metadata only until complete current-log intake; all originals were preserved and read back literally before parsing.",
+  "originalZipGets": 0,
+  "auditZipGets": 0
+}

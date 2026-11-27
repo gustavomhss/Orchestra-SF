@@ -1,0 +1,279 @@
+{
+  "schema": "sf613-e11-reader-parametric-bounds-v1",
+  "status": "NON_EXECUTABLE_UNBOUND_TEMPLATE_R2",
+  "python": {
+    "gitSha": "31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+    "bytes": 97270,
+    "sha256": "15b1726506ff787d1a3edbcde5a5e0f8621c620aaffb4dc2e5d27cd8ccffd8d9",
+    "lf": 1636
+  },
+  "workflow": {
+    "gitSha": "832214bc2430294b321918ebe2b25834fceabc1e",
+    "bytes": 118904,
+    "sha256": "8bc89bd9d70e8c1eb39ec402008b280567fbce828e6743faed36c035a2fe847c",
+    "lf": 1691
+  },
+  "base": {
+    "gitSha": "fe21695f18e751c8f4de76bd275742223507e7f8",
+    "bytes": 14536,
+    "sha256": "735b1c01a2e59fd6ef70045b4ee577ed50651251c6d5cecf98c44086b8ecd365",
+    "lf": 446
+  },
+  "capsLiteral": true,
+  "coreRawCaps": {
+    "profile": 4194304,
+    "cpuMarkers": 65536,
+    "collection": 16384,
+    "launcher": 8192,
+    "summary": 131072,
+    "inventory": 262144,
+    "receipt": 131072
+  },
+  "transport": {
+    "chunkBase64Bytes": 24576,
+    "chunkEnvelopeOverheadCap": 1024,
+    "terminalReservationBytes": 32768,
+    "terminalReservationMeaning": "Conservative size-model allowance, not a new code cap; actual frozen terminal and all payload lines are jointly measured before emission.",
+    "emitterCapBytes": 7340032,
+    "wholeMainReceiptCapBytes": 8388608,
+    "exportsMin": 4,
+    "exportsMax": 7,
+    "actualJointPreflightIncludesPriorLog": true
+  },
+  "maximumArithmetic": {
+    "presence": [
+      "profile",
+      "collection",
+      "launcher"
+    ],
+    "exportCount": 7,
+    "order": [
+      "profile",
+      "cpuMarkers",
+      "collection",
+      "launcher",
+      "summary",
+      "inventory",
+      "receipt"
+    ],
+    "payloadBytes": 4808704,
+    "base64Bytes": 6411620,
+    "chunks": 265,
+    "envelopeBeforePriorLog": 6715748
+  },
+  "spareBeforePriorLog": 624284,
+  "presenceModels": [
+    {
+      "presence": [],
+      "exportCount": 4,
+      "order": [
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 589824,
+      "base64Bytes": 786440,
+      "chunks": 35,
+      "envelopeBeforePriorLog": 855048
+    },
+    {
+      "presence": [
+        "profile"
+      ],
+      "exportCount": 5,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4784128,
+      "base64Bytes": 6378848,
+      "chunks": 263,
+      "envelopeBeforePriorLog": 6680928
+    },
+    {
+      "presence": [
+        "collection"
+      ],
+      "exportCount": 5,
+      "order": [
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 606208,
+      "base64Bytes": 808288,
+      "chunks": 36,
+      "envelopeBeforePriorLog": 877920
+    },
+    {
+      "presence": [
+        "profile",
+        "collection"
+      ],
+      "exportCount": 6,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4800512,
+      "base64Bytes": 6400696,
+      "chunks": 264,
+      "envelopeBeforePriorLog": 6703800
+    },
+    {
+      "presence": [
+        "launcher"
+      ],
+      "exportCount": 5,
+      "order": [
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 598016,
+      "base64Bytes": 797364,
+      "chunks": 36,
+      "envelopeBeforePriorLog": 866996
+    },
+    {
+      "presence": [
+        "profile",
+        "launcher"
+      ],
+      "exportCount": 6,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4792320,
+      "base64Bytes": 6389772,
+      "chunks": 264,
+      "envelopeBeforePriorLog": 6692876
+    },
+    {
+      "presence": [
+        "collection",
+        "launcher"
+      ],
+      "exportCount": 6,
+      "order": [
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 614400,
+      "base64Bytes": 819212,
+      "chunks": 37,
+      "envelopeBeforePriorLog": 889868
+    },
+    {
+      "presence": [
+        "profile",
+        "collection",
+        "launcher"
+      ],
+      "exportCount": 7,
+      "order": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "payloadBytes": 4808704,
+      "base64Bytes": 6411620,
+      "chunks": 265,
+      "envelopeBeforePriorLog": 6715748
+    }
+  ],
+  "zeroByteModel": {
+    "allThreeOriginalsPresentWithZeroBytes": true,
+    "originalInventoryIdRequired": true,
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "emptyBase64ChunksPerPresentZeroByteOriginal": 1,
+    "payloadBytes": 589824,
+    "base64Bytes": 786440,
+    "chunks": 38,
+    "envelopeBeforePriorLog": 858120,
+    "noPayloadForAbsentName": true
+  },
+  "selection": {
+    "scope": "pid-running-window",
+    "order": [
+      "none",
+      "cases",
+      "preferences"
+    ],
+    "cap": 65535,
+    "sourceSlots": 3,
+    "nativeSlots": 9,
+    "strictIntegerNotBoolean": true,
+    "saturatedType": "bool",
+    "saturatedRule": "exactly any of the twelve selection counts ==65535; historical routes excluded",
+    "unknownExtraKeysRejected": true,
+    "noConservation": true,
+    "noPositivityRequired": true,
+    "noCrossFamilyMonotonicityRequired": true
+  },
+  "markerTransport": {
+    "cpuLineCap": 4096,
+    "progressLineCap": 1024,
+    "cpuMaxAttemptsPerPid": 3,
+    "progressMaxAttemptsPerPid": 3,
+    "combinedRawSlot": 65536,
+    "lateProgressIndependent": true,
+    "parities": [
+      "Analytics",
+      "CPU",
+      "Progress",
+      "complete union"
+    ],
+    "newExportSeries": 0
+  },
+  "closeRules": {
+    "finiteCollectionIfPresent": true,
+    "presentContradictionCollectionFinished": "hard failure for valid supplied selection fields bound to the same capture, even if another file is absent",
+    "missingSelection": "pending; captureComplete cannot become true",
+    "completeOnly": "collection/stopped/finished equality required only in complete CPU path; HTTP progress is excluded",
+    "captureIsNotTransport": true
+  },
+  "unknowns": {
+    "currentMarkerCounts": "UNBOUND",
+    "currentMarkerHashes": "UNBOUND",
+    "currentCpuTuple": "UNBOUND",
+    "currentFilePresence": "UNBOUND",
+    "currentCaptureState": "UNBOUND",
+    "currentOutcomes": "UNBOUND"
+  },
+  "preserved": [
+    "One authorized original ZIP only; no checkout or repo import/execution",
+    "All-entry CRC/hash/safe-path/expanded inventory",
+    "Unclassified namespace and present contradictions are hard failures",
+    "Prepared-only namespaces inventoried without selecting first/latest",
+    "4–7 real exports with file IDs and raw malformed/non-LF bytes preserved",
+    "Receipt frozen before exact joint preflight and first emission",
+    "No complete transport from job badge alone; whole main and all listed series/terminal required"
+  ],
+  "method": "Pure data arithmetic and literal text comparison only; reader/helper/tests were not executed"
+}

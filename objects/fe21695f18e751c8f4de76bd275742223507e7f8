@@ -1,0 +1,446 @@
+{
+  "schema": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Static text/data arithmetic only; neither Python nor repository code was executed.",
+  "python": {
+    "bytes": 93747,
+    "sha256": "cd5054c21b6376031c313b65d49d7fdc40462ac6d174042648f97bbcf71a33b7",
+    "gitBlob": "52b20e75154f7b4235d880c0e1a6d35e092fe966"
+  },
+  "workflow": {
+    "bytes": 114943,
+    "sha256": "9bbaa7e55b22d2cb71ab4ff186137fcdbf687b69bec685209045a676368625e6",
+    "gitBlob": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5"
+  },
+  "capsUnchangedFromE9R2": true,
+  "coreRawCaps": {
+    "profile": 4194304,
+    "cpuMarkers": 65536,
+    "collection": 16384,
+    "launcher": 8192,
+    "summary": 131072,
+    "inventory": 262144,
+    "receipt": 131072
+  },
+  "capRows": [
+    {
+      "key": "profile",
+      "bytes": 4194304,
+      "base64Bytes": 5592408,
+      "chunks": 228
+    },
+    {
+      "key": "cpuMarkers",
+      "bytes": 65536,
+      "base64Bytes": 87384,
+      "chunks": 4
+    },
+    {
+      "key": "collection",
+      "bytes": 16384,
+      "base64Bytes": 21848,
+      "chunks": 1
+    },
+    {
+      "key": "launcher",
+      "bytes": 8192,
+      "base64Bytes": 10924,
+      "chunks": 1
+    },
+    {
+      "key": "summary",
+      "bytes": 131072,
+      "base64Bytes": 174764,
+      "chunks": 8
+    },
+    {
+      "key": "inventory",
+      "bytes": 262144,
+      "base64Bytes": 349528,
+      "chunks": 15
+    },
+    {
+      "key": "receipt",
+      "bytes": 131072,
+      "base64Bytes": 174764,
+      "chunks": 8
+    }
+  ],
+  "maximumArithmetic": {
+    "payloadBytes": 4808704,
+    "base64Bytes": 6411620,
+    "chunks": 265,
+    "metadataAndFramingBytes": 271360,
+    "terminalBytes": 32768,
+    "emitterUpperBoundBeforeAnyPriorOutput": 6715748,
+    "emitterCap": 7340032,
+    "spareBytes": 624284,
+    "scope": "Same conservative seven-slot maxima as E9 R2. Concrete preflight adds LOG_BYTES and encodes every complete actual payload plus terminal before first core emission."
+  },
+  "currentMarkerBindings": {
+    "actualMainOnly": true,
+    "readerRuntimePending": true,
+    "analytics": {
+      "bytes": 34315,
+      "sha256": "6d90b394432d45b541b24d2693a841a688da59f80a87cf1e3e6e3821d9362c59",
+      "gitBlob": "4e0e77463b63e85895f6d306841a8a57831e517c"
+    },
+    "cpu": {
+      "bytes": 2637,
+      "sha256": "30d3394df656b7e344712e5cb5cdf01eadd244d488d36cb843b9420528e8beb0",
+      "gitBlob": "7634ba7cf7f9848cb0d8a636631e3a6fe5e8c32b"
+    },
+    "progress": {
+      "bytes": 1629,
+      "sha256": "0dbcab8a4be406292e96565504d98552c6f1791a150e6d4e1b2f8a9afc2911cd",
+      "gitBlob": "6e22ae6cab73ff5b2b18f2a5ffb759ff7c9a7e42"
+    },
+    "wire": {
+      "bytes": 4266,
+      "sha256": "d0e09cb6b19fab034c879206b1288a8bbbbc311a557f7c8e897654d8ee771a85",
+      "gitBlob": "0bfc9ee58397c704b056615212d218569d0b97b2"
+    },
+    "union": {
+      "bytes": 38581,
+      "sha256": "47a3b9435307cd16a4d6ab6c5d00b38ee2c5e231e100a04135b9215d02ce3e3e",
+      "gitBlob": "df8df605c3086cb6bdb80faea1589582b02ccbc5"
+    },
+    "families": {
+      "SF_ANALYTICS_SOURCE": 45,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_PREVIEW_E10_CPU": 3,
+      "SF_PREVIEW_E10_PROGRESS": 3,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "records": [
+      {
+        "family": "cpu",
+        "sequence": 1,
+        "kind": "started",
+        "bytes": 712,
+        "sha256": "6b8f5e579558983ff78e258a95ae8431e6b5b50993d6974d7ed99228dd57b743"
+      },
+      {
+        "family": "cpu",
+        "sequence": 2,
+        "kind": "stopped",
+        "bytes": 712,
+        "sha256": "7fd4ba98eb50ad1a2a5d8a7d5f75f297a87f8a0d5bc3c4ba6ab198db78b95e97"
+      },
+      {
+        "family": "cpu",
+        "sequence": 3,
+        "kind": "finished",
+        "bytes": 1213,
+        "sha256": "786a590f4ebc2f0c14f63b4396b86c2fe859e3bf3134584fa2756e21295b8de0"
+      },
+      {
+        "family": "progress",
+        "sequence": 1,
+        "kind": "body-returned",
+        "bytes": 539,
+        "sha256": "46c277bed2a314d3fff1d4580da9ec55d7307e2c9e8a95cca3c6be16037cde47"
+      },
+      {
+        "family": "progress",
+        "sequence": 2,
+        "kind": "admit-returned",
+        "bytes": 540,
+        "sha256": "2d6064b2cf8ccb921ddfa60238719d2e360bbd561e74bc25ac806a8519229d2e"
+      },
+      {
+        "family": "progress",
+        "sequence": 3,
+        "kind": "case-callback-entered",
+        "bytes": 550,
+        "sha256": "597acfe4cb82bf64f7118de66c407cd4061adceb5dd7f3088fe6566f573cc18b"
+      }
+    ],
+    "combinedWireBytes": 4266,
+    "combinedWireCap": 65536,
+    "currentCpuCount": 3,
+    "currentProgressCount": 3,
+    "perProcessCpuAttemptCap": 3,
+    "perProcessProgressAttemptCap": 3,
+    "sequenceMeaning": "Two independent attempted-write sequences. Literal order and membership are checked within each original stream, without inventing absent sequence members or interleaving streams."
+  },
+  "routes": {
+    "scope": "pid-running-window",
+    "order": [
+      "sealed-read",
+      "unfenced",
+      "full-guard"
+    ],
+    "cap": 65535,
+    "width": 3,
+    "elementType": "exact Python int, not bool",
+    "sourceHelper": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+    "limits": [
+      "Counts at cap are lower bounds.",
+      "No per-Request cost, work completion, CPU exclusivity, authority result or conservation is inferred.",
+      "Closed collection snapshots must agree with the current stopped/finished snapshots when capture completion is accepted; later progress does not rewrite them."
+    ]
+  },
+  "presenceModels": [
+    {
+      "presentOriginalKeys": [],
+      "exportKeys": [
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 4,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 0,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "profile"
+      ],
+      "exportKeys": [
+        "profile",
+        "cpuMarkers",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 5,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 1,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "collection"
+      ],
+      "exportKeys": [
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 5,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 1,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "profile",
+        "collection"
+      ],
+      "exportKeys": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 6,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 2,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "launcher"
+      ],
+      "exportKeys": [
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 5,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 1,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "profile",
+        "launcher"
+      ],
+      "exportKeys": [
+        "profile",
+        "cpuMarkers",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 6,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 2,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "collection",
+        "launcher"
+      ],
+      "exportKeys": [
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 6,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 2,
+      "captureCompleteWithoutFinished": false
+    },
+    {
+      "presentOriginalKeys": [
+        "profile",
+        "collection",
+        "launcher"
+      ],
+      "exportKeys": [
+        "profile",
+        "cpuMarkers",
+        "collection",
+        "launcher",
+        "summary",
+        "inventory",
+        "receipt"
+      ],
+      "files": 7,
+      "absentOriginalExports": 0,
+      "realZeroByteOriginalsWouldAddChunks": 3,
+      "captureCompleteWithoutFinished": false
+    }
+  ],
+  "zeroByteModel": {
+    "hypotheticalInventoryFileId": 19999,
+    "notAnActualArtifactObservation": true,
+    "expectedPayloadBytes": 0,
+    "expectedPayloadSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "expectedChunks": 1,
+    "expectedBase64Data": "",
+    "wire": "SF613_ARTIFACT_BYTES {\"schema\":1,\"name\":\"original-cpu-preview-first.cpuprofile\",\"bytes\":0,\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"mime\":\"application/octet-stream\",\"original\":true,\"encoding\":\"base64\",\"chunks\":1,\"file\":19999,\"index\":1,\"data\":\"\"}\n",
+    "wireBytes": 281,
+    "wireFitsMetadata1024": true,
+    "meaning": "One line envelope has its own LF, but base64 decodes to exactly zero payload bytes. The real reader requires file ID, size and SHA to match actual FILES entry. An absent file never calls the exporter."
+  },
+  "readerStateRules": {
+    "missingFile": "No series or synthetic file ID; explicit present=false in receipt.",
+    "presentZeroBytes": "Raw preserved and emitted once with empty data; EMPTY_BYTES; capture not promoted.",
+    "malformedOrNonObjectJson": "Raw preserved, original=true with actual file ID, explicit parseStatus, no inferred source/close.",
+    "missingKnownFields": "Partial binding recorded as unverified/pending; exact bytes remain exportable.",
+    "presentContradictoryKnownFields": "Hard receipt failure; no successful transport terminal.",
+    "collectionProfileVsReceivedBytes": "Present name/bytes/sha256 must match known name and actual profile bytes whenever the profile is received, independently of finished.",
+    "extraNamespaceFile": "Hard failure for unclassified member; duplicate members/directories/unselected capture populations also hard failure.",
+    "noFinished": "captureComplete=false even if profile/collection/launcher all exist and parse.",
+    "finishedIncomplete": "Explicit negative state, not capture completion.",
+    "completedFinished": "A completed marker alone is insufficient. Missing originals, invalid/non-object JSON or missing verified binding/close fields stay pending; present identity/hash/close contradictions hardfail. Complete receipt still requires native profile/collection/hash/point parity.",
+    "transport": "coreBytesComplete attests only all planned present series after joint preflight, complete chunks, terminal and job success. It never promotes captureComplete.",
+    "progressFinished": "Never substitutes for CPU finished or durable file close.",
+    "partialProgress": "Present contradictory identity fields hardfail; missing tuple fields remain partial. A complete tuple is needed for namespace selection. Current immutable main has six complete records, so no new zero-wire fallback or guessed directory is added.",
+    "sourceAndSnapshot": "Wire source/tree remains clean7d26/b90f; producer snapshotS8f85/590f has seven exact leaves. Reader has a separate sole-clean-source1Aworkflow topology.",
+    "runtime": "Case/result/stdio and ordinal are taken from original runtime JSON and must reproduce all four main-derived parities; reporter sections and workerIndex do not supply PID or case binding."
+  },
+  "literalInfrastructure": {
+    "same": [
+      "ReceiptFailure",
+      "need",
+      "digest",
+      "canonical",
+      "write_bytes",
+      "save_json",
+      "checked",
+      "pending",
+      "wire_line",
+      "write_wire",
+      "NoRedirect",
+      "bounded_read",
+      "api",
+      "pages",
+      "storage_url_allowed",
+      "download_original",
+      "path_parts",
+      "inspect_zip",
+      "read_file",
+      "locate_suffix",
+      "one_original_json",
+      "unpack_html_reports",
+      "tests_from_report",
+      "report_configuration",
+      "error_summary",
+      "safe_time",
+      "safe_failure",
+      "network_row",
+      "trace_operation",
+      "trace_rows",
+      "inventory_error_context_and_pngs",
+      "cpu_json_object",
+      "cpu_present_fields",
+      "ensure_inventory",
+      "prepare_core_export"
+    ],
+    "changed": [
+      "check_original_and_reader",
+      "marker_stream",
+      "parse_runtime_and_selection",
+      "parse_cpu_originals",
+      "finalize_core",
+      "report_failure",
+      "main"
+    ],
+    "removed": [
+      "parse_e9_markers"
+    ],
+    "added": [
+      "e10_routes",
+      "e10_unique_object",
+      "parse_e10_markers"
+    ],
+    "baseDefinitions": 43
+  },
+  "bootstrap": {
+    "bytes": 738,
+    "sha256": "8d3485fcc0f67552a24c09426e2d8e75ef2622ce1614c24487f351e979ba7078",
+    "gitBlob": "eebbd181dfe9b859c05a8280779799b12d5a8cf9"
+  },
+  "declaredRuntimeCaps": {
+    "apiBytes": 16777216,
+    "entries": 20000,
+    "archives": 64,
+    "entryBytes": 134217728,
+    "expandedBytes": 1073741824,
+    "depth": 3,
+    "jsonBytes": 33554432,
+    "htmlBytes": 67108864,
+    "jsonlLineBytes": 4194304,
+    "traceRows": 200000,
+    "summaryRows": 4000,
+    "logBytes": 7340032,
+    "mainLogReviewCapBytes": 8388608,
+    "chunkBytes": 24576
+  },
+  "executionState": {
+    "readerTree": "UNBOUND",
+    "readerCommit": "UNBOUND",
+    "readerRun": "UNBOUND",
+    "readerArtifactIntake": "NOT_ACQUIRED",
+    "zipAcquisitionsByAuthor": 0,
+    "originalLogAcquisitionsByAuthor": 0,
+    "repositoryExecutionByAuthor": 0
+  },
+  "limits": [
+    "All cap models are arithmetic on data, not an execution or an observed native artifact.",
+    "Profile/collection/launcher sizes and hashes in current stdout are claims to verify against the one future ZIP; their bytes are not yet received.",
+    "One original ZIP download, inventory of every entry and all CRCs remain mandatory.",
+    "summary/inventory/receipt caps and exact preflight can still reject actual output. This bound does not promise that any arbitrary archive fits.",
+    "The complete original Actions main must independently be received and remain within8MiB; emitter7MiB alone cannot prove that.",
+    "Short, late, incomplete and unavailable are factual states; no product qualification or latency gain is conferred by transport success."
+  ]
+}

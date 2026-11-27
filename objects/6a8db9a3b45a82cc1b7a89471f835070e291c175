@@ -1,0 +1,366 @@
+{
+  "schema": "sf613-e11-focal-bounds.v1",
+  "status": "STATIC_TEXT_AND_ARITHMETIC_ONLY",
+  "driver": {
+    "git": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+    "bytes": 11630,
+    "sha256": "695b530195644d96cfd3f8f0f0e4b0073aa8860d98f57033c9cbae24d87470c1",
+    "lines": 178,
+    "finalLF": true
+  },
+  "baseDriver": {
+    "git": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+    "bytes": 10668,
+    "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf"
+  },
+  "source": {
+    "sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "soleBase": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "baseTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "overlayPaths": 8,
+    "added": 2,
+    "modified": 6,
+    "workingPins": 16
+  },
+  "counts": {
+    "outerGroups": 6,
+    "commandSites": 12,
+    "plannedCommands": 12,
+    "expectedTruncationFlagsFalse": 24,
+    "functionalChildProcesses": 2,
+    "selectedExistingTestDeclarations": 11,
+    "selectedExistingControlReports": 7,
+    "newControlDeclarations": 0,
+    "projectedAssertions": null
+  },
+  "groupBudgets": [
+    {
+      "group": 1,
+      "parentMs": 180000,
+      "processMs": [
+        60000,
+        30000,
+        30000
+      ],
+      "description": "Source identity then sixteen literal blob reads; file-read/setup overhead is inside the parent."
+    },
+    {
+      "group": 2,
+      "parentMs": 420000,
+      "processMs": [
+        360000
+      ],
+      "selectedTests": 7,
+      "bunPerTestMs": 45000,
+      "nominalBunSumMs": 315000,
+      "nominalProcessHeadroomMs": 45000,
+      "description": "Original whole readonly file, no name filter. Nominal sum is not a runtime guarantee."
+    },
+    {
+      "group": 3,
+      "parentMs": 360000,
+      "processMs": [
+        300000
+      ],
+      "selectedTests": 4,
+      "originalC14": {
+        "tests": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "originalC15": {
+        "tests": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      },
+      "nominalBunSumMs": 280000,
+      "nominalProcessHeadroomMs": 20000,
+      "description": "Original whole projection file, including C14 and C15. No deadline or loop altered."
+    },
+    {
+      "group": 4,
+      "parentMs": 300000,
+      "processMs": [
+        240000
+      ]
+    },
+    {
+      "group": 5,
+      "parentMs": 300000,
+      "processMs": [
+        240000
+      ]
+    },
+    {
+      "group": 6,
+      "parentMs": 600000,
+      "processMs": [
+        30000,
+        120000,
+        30000,
+        30000,
+        180000
+      ]
+    }
+  ],
+  "request": {
+    "focal": {
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "finalLF": false,
+      "runner": "bun",
+      "args": [
+        "./test/sucafina-proof-verification.test.ts",
+        "--timeout",
+        "600000"
+      ]
+    },
+    "parentAnalytics": {
+      "git": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "finalLF": false,
+      "runner": "playwright",
+      "original": true
+    }
+  },
+  "capture": {
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "streams": 24,
+    "arithmeticMaxChildCapturedBytes": 25165824,
+    "aggregateActionsLogCap": null,
+    "explanation": "The 24 MiB arithmetic covers the twelve child stdout/stderr captures only. Receipt framing, wrapper/Bun/setup/cleanup output and service limits are separate; this is not a bound on the complete Actions log.",
+    "rejectAnyTruncation": true,
+    "printOriginalChildOutput": true,
+    "missingLogsNeverPositive": true
+  },
+  "process": {
+    "runner": "AppProcess.node / LayerNode / ChildProcess.make",
+    "engineLiteralToBase": true,
+    "stdin": "ignore",
+    "stdout": "pipe",
+    "stderr": "pipe",
+    "killSignal": "SIGTERM",
+    "forceKillAfter": "5 seconds",
+    "environment": {
+      "GUARDRAIL_APPROVED": ""
+    },
+    "extendEnv": true,
+    "deadlineLimitsChanged": false,
+    "limits": "Timeout/termination/finalization preserve the existing engine. Successful cleanup or a complete log is not guaranteed by a parent timer; actual terminal intake remains required."
+  },
+  "expectedCommands": [
+    {
+      "group": 1,
+      "label": "fetch source parent",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "--depth=3",
+        "origin",
+        "<actual D SHA>"
+      ],
+      "cwd": ".",
+      "timeoutMs": 60000
+    },
+    {
+      "group": 1,
+      "label": "snapshot identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 1,
+      "label": "source identity",
+      "executable": "git",
+      "args": [
+        "show",
+        "-s",
+        "--format=%H%n%T%n%P",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 2,
+      "label": "CurrentChoice readonly composition",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 360000
+    },
+    {
+      "group": 3,
+      "label": "C14/C15 snapshot projection and whole graph selection",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 300000
+    },
+    {
+      "group": 4,
+      "label": "CLI package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "timeoutMs": 240000
+    },
+    {
+      "group": 5,
+      "label": "Sucafina package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 240000
+    },
+    {
+      "group": 6,
+      "label": "inspect history completeness",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "fetch current dev and source ancestry",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "<--unshallow iff previous output is true>",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "<actual D SHA>"
+      ],
+      "cwd": ".",
+      "timeoutMs": 120000
+    },
+    {
+      "group": 6,
+      "label": "current dev identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "actual guard merge base",
+      "executable": "git",
+      "args": [
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "canonical guardrails",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "timeoutMs": 180000
+    }
+  ],
+  "identity": {
+    "headMustEqualActualActionsSha": true,
+    "sourceShowExpectedLines": [
+      "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+      "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+    ],
+    "sourceBaseTreeRole": "Root-authenticated metadata of the exact parent commit; no separate tree probe.",
+    "sourceParentRequestRole": "Parent tree audited by root. It is replaced in D and not incorrectly claimed as a working-file pin.",
+    "fetchDepth": 3,
+    "newProbe": false,
+    "recursiveTreeWalk": false,
+    "futureSnapshot": {
+      "sha": null,
+      "tree": null,
+      "soleParent": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "added": 1,
+      "modified": 1,
+      "objectAuditRequired": true
+    }
+  },
+  "guards": {
+    "command": [
+      "run",
+      "check:guards",
+      "--base",
+      "origin/dev",
+      "--json"
+    ],
+    "expectedBase": "actual git merge-base HEAD origin/dev",
+    "bootstrap": false,
+    "errors": [],
+    "approved": [],
+    "rulesRequiredPositive": true,
+    "expectedRuleCount": null,
+    "expectedFileCount": null,
+    "expectedWarningCount": null,
+    "historicalCompositionBaseIsMetadataOnly": true
+  },
+  "expectedIntake": [
+    "Six actual outer groups, twelve exact command argv/cwd receipts, exit0 and twenty-four false truncation flags.",
+    "Sixteen observed working blob hashes equal this frozen driver; source command returns exact S/tree/sole S15R parent.",
+    "Seven readonly controls plus four projection controls completed with no failure/skip; receive their three plus four original control reports, including both C15 outcome sets4+15.",
+    "CLI and Sucafina typechecks completed successfully; actual current-dev/merge-base and complete canonical guards received.",
+    "Actual Omni inventory6 declarations/12 process spawns/0 delegated, with its real nonce; do not infer the nonce or runtime from prior runs.",
+    "Both jobs through cleanup terminal and complete original logs must be preserved by root before interpreting outcomes.",
+    "Actual Bun/toolchain must be observed; no qualification on Release1.4.1 is transferred from this focal."
+  ],
+  "notMeasured": [
+    "No new observer control or CPU collection assertion is added.",
+    "No inference that the E11 sampler started, finished, wrote a profile, or populated the finite3x3/source3 matrix.",
+    "Native child counters include all snapshots constructed before work, not only C08; running owned PID-window counters are not per-Request attribution.",
+    "This focal cannot replace the original Analytics request, prove preview completion/latency, or qualify clean S15R/final composition."
+  ],
+  "effects": {
+    "repoCodeExecuted": false,
+    "originalLogsAcquired": false,
+    "zipAcquired": false,
+    "treesCreated": false,
+    "commitsCreated": false,
+    "refsCreated": false,
+    "runsCreated": false
+  }
+}

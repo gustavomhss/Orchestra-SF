@@ -1,0 +1,873 @@
+{
+  "schema": "orchestra-sf.c17-original-analytics-receipt.v1",
+  "at": "2026-11-27 19:08:29 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "CLOSED_NEGATIVE",
+  "qualification": false,
+  "productionCutoverAuthorized": false,
+  "source": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "role": "clean S17",
+    "focalReceipt": {
+      "gitBlob": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+      "bytes": 63985,
+      "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b"
+    }
+  },
+  "snapshot": {
+    "sha": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+    "tree": "aa774f70dc197926561857711a9faf5c080f008c",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "delta": "1A original request"
+  },
+  "run": {
+    "id": 46052118180,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46052118180",
+    "head": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 140685741835,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure",
+        "started": "2026-11-27T18:48:02Z",
+        "completed": "2026-11-27T18:57:39Z"
+      },
+      {
+        "id": 140689486169,
+        "name": "cleanup",
+        "conclusion": "success",
+        "started": "2026-11-27T18:57:41Z",
+        "completed": "2026-11-27T18:57:44Z"
+      }
+    ]
+  },
+  "authority": {
+    "gitBlob": "8c79663544e9794a05d52860964ad7a41697464d",
+    "bytes": 6881,
+    "sha256": "aa0fd2e8e6b7808fa4b88eeb377abc77b497769e57c0df0ad5f71d308b1deb37"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "firstPreviewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "pins": [
+      {
+        "bytes": 56661,
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+      },
+      {
+        "bytes": 4384,
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+      },
+      {
+        "bytes": 21102,
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+      }
+    ],
+    "unchangedSubtrees": [
+      {
+        "path": "packages",
+        "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "unchangedFromClean069a": true
+      },
+      {
+        "path": ".github",
+        "sha": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "unchangedFromClean069a": true
+      }
+    ],
+    "observer": false,
+    "profiler": false,
+    "originalTimeoutsUnchanged": true,
+    "actualInvocation": {
+      "line": 991,
+      "text": "$ playwright test --config \"e2e/playwright.production.config.ts\" --workers \"1\" --retries \"0\" --repeat-each \"1\" \"(^|[\\\\\\\\/])e2e[\\\\\\\\/]sucafina[\\\\\\\\/]design-wave-five-analytics\\\\.spec\\\\.ts\\$\" --trace retain-on-failure \"--reporter=html,line,json,/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts\""
+    },
+    "actualExecution": {
+      "line": 1019,
+      "text": "Running 2 tests using 1 worker"
+    },
+    "checkout": {
+      "line": 135,
+      "sha": "7603f10c7d10a76f901425f659ee40448ee6cdfd"
+    }
+  },
+  "rawManifest": {
+    "gitBlob": "0031a8430373df98e4fff6f5ad458301a9e29654",
+    "bytes": 8148,
+    "sha256": "65b94be5e1368a644299749c6c74df716ff6cc0969205489bf51c912adfb3afe"
+  },
+  "main": {
+    "job": 140685741835,
+    "bytes": 4869189,
+    "sha256": "3b58e6e78c33bf6579fda19bb4e060886a7b9e71604e4290ccb727b244b9961d",
+    "wholeBlobPersisted": false,
+    "literalReadback": true,
+    "lf": 1964,
+    "bomCodeUnitOffsets": [
+      0,
+      2099939,
+      4220814
+    ],
+    "wholeGitBlobCalculated": "ed3a1b751c8ab2f91238534e396c0cccbbe2875e",
+    "parts": [
+      {
+        "index": 1,
+        "startCodeUnit": 0,
+        "endCodeUnit": 297350,
+        "bytes": 300000,
+        "gitBlob": "a30fe9ee396718427fa6058eb06e539364396a16",
+        "sha256": "6f5ffdca4a230b470bff1b2c4eb53cf600e2806895ae0870191904d3357becf5",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 2,
+        "startCodeUnit": 297350,
+        "endCodeUnit": 597350,
+        "bytes": 300000,
+        "gitBlob": "65abc787941189bb408c1ae4386b4c117cd3850e",
+        "sha256": "0262f8f6fac1fbbcebdcbd15fe1aa60a88de51698f3be5b8ba30c4f63f3f9edf",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 3,
+        "startCodeUnit": 597350,
+        "endCodeUnit": 895187,
+        "bytes": 300000,
+        "gitBlob": "9791852a50081b19a70f0a82aa0053a9b41a898d",
+        "sha256": "261bf315e8a7d09b83acc0f0c32be2db37f4e643b9d758828469a3919c493b26",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 4,
+        "startCodeUnit": 895187,
+        "endCodeUnit": 1195187,
+        "bytes": 300000,
+        "gitBlob": "c69ee89ba5885b3abc5a91817c1f53320b182a5c",
+        "sha256": "4ea66d15571509f7f4e05b10dad3b4bbef51410d34826392606e2a2d3f5cc4e3",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 5,
+        "startCodeUnit": 1195187,
+        "endCodeUnit": 1495187,
+        "bytes": 300000,
+        "gitBlob": "d3a81e28717aeb750542a7ce21390e401199acd4",
+        "sha256": "724b27582f6d0e8cacd6feb6af74cbe7aaa45628dc3204c31fa48f49eca84ad0",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 6,
+        "startCodeUnit": 1495187,
+        "endCodeUnit": 1795187,
+        "bytes": 300000,
+        "gitBlob": "6b53d5b91654f08ad44f84ca3b900d8ce631b8c5",
+        "sha256": "a21f329faa89881e1ab3f098173bf99ed310007a9cf3615b22368eaebb9d1181",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 7,
+        "startCodeUnit": 1795187,
+        "endCodeUnit": 2095187,
+        "bytes": 300000,
+        "gitBlob": "2a87de700ced984b6b658fc890ad0eb78ee37dc0",
+        "sha256": "7d173864059895bf83eca00916c5cfd8321c12956ef2bea70f1376a8fc973ec5",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 8,
+        "startCodeUnit": 2095187,
+        "endCodeUnit": 2395185,
+        "bytes": 300000,
+        "gitBlob": "dcd588401c233dd9687820f10f94add0d2157f5a",
+        "sha256": "5ac7c668cb3327e3835c3e44b8978678df2b09d5c2904936d715002b4578b2cf",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 9,
+        "startCodeUnit": 2395185,
+        "endCodeUnit": 2695182,
+        "bytes": 300000,
+        "gitBlob": "2fb99cb5ba64ed36ef93384b46704b235ef20786",
+        "sha256": "fa5fbd3f5650898997ebcd4285a3623baa76c5c2447ea62118fabe9d07ebdbe8",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 10,
+        "startCodeUnit": 2695182,
+        "endCodeUnit": 2995179,
+        "bytes": 300000,
+        "gitBlob": "836e0a0032c6bb51bc5c7da25822d21743a3d71c",
+        "sha256": "7d23b016c65c17b8b4da48aa1394a63a2a9a16701f1e8af1e3aab8b2b5f3eef8",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 11,
+        "startCodeUnit": 2995179,
+        "endCodeUnit": 3295179,
+        "bytes": 300000,
+        "gitBlob": "44d32600657b5ef2f4ccf79a3bc2b770b1d76544",
+        "sha256": "438e32aa0faea287ac8ebaa7f6fca027c2646f38b1ea329e99c564748c32141a",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 12,
+        "startCodeUnit": 3295179,
+        "endCodeUnit": 3595179,
+        "bytes": 300000,
+        "gitBlob": "0ba413a0dc6153dc34f940aa8d172c6649b8a41b",
+        "sha256": "5500cdc9cb051799df84ae4b006efb9a10a757b31fc25e6a6d1599419cf37104",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 13,
+        "startCodeUnit": 3595179,
+        "endCodeUnit": 3895179,
+        "bytes": 300000,
+        "gitBlob": "92632021c87495b62b0debd337214923a4ab2cda",
+        "sha256": "12ad4f817f59eb2bdc6f51004620e46f52f9951f20dcbc83eb0cf39aca5bb1b5",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 14,
+        "startCodeUnit": 3895179,
+        "endCodeUnit": 4195176,
+        "bytes": 300000,
+        "gitBlob": "c5f48a4b305e4d3e3626a5023a4a154c8907905a",
+        "sha256": "fd9eda500676daec59b67b1236e34db5d18aa6d59ac1ee99188258c07edb3659",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 15,
+        "startCodeUnit": 4195176,
+        "endCodeUnit": 4495174,
+        "bytes": 300000,
+        "gitBlob": "07a22d34eb812b8ee539561d6bc1fb35a99d98ca",
+        "sha256": "8247c61fcae6dd75e641435d35cfd996ae264f76d5a2f7159e52c810bc64097a",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 16,
+        "startCodeUnit": 4495174,
+        "endCodeUnit": 4795174,
+        "bytes": 300000,
+        "gitBlob": "1076c79d317aa075c4388b748f2e7fedacd94645",
+        "sha256": "7531511e5d6623eb9d2207a7bfceeb54999216bdd41fc3e8be0ff4d05ea32026",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 17,
+        "startCodeUnit": 4795174,
+        "endCodeUnit": 4864359,
+        "bytes": 69189,
+        "gitBlob": "c4495a8fa670ba05e5db6745cb6ff510abd73148",
+        "sha256": "aa4a9da7a25c32c08a7cf7d715fc27378b0e3103620216580cc38e98ca824d86",
+        "persisted": true,
+        "literalReadback": true
+      }
+    ],
+    "allPartsPersisted": true,
+    "bomByteOffsets": [
+      0,
+      2104752,
+      4225638
+    ]
+  },
+  "cleanup": {
+    "job": 140689486169,
+    "gitBlob": "5f5382e2b394ca2a9bb6880229ac0f7436363488",
+    "bytes": 2281,
+    "sha256": "73b3e73aa2862574776b3135405bea2e75d89465d6b1d5793a7d7041ecb55376",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "originalGets": {
+    "main": 1,
+    "cleanup": 1,
+    "artifactZip": 0,
+    "auditZip": 0
+  },
+  "originalsClosed": true,
+  "preservedBeforeInterpretation": true,
+  "branchAfterCleanup": "NOT_FOUND/404",
+  "result": {
+    "passed": 1,
+    "failed": 1,
+    "total": 2,
+    "reportedTotalElapsed": "8.0m",
+    "newAreasAccepted": 0,
+    "historicalQualifiedAreas": 12,
+    "historicalTotalAreas": 15
+  },
+  "firstCase": {
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts:12:1",
+    "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "status": "failed",
+    "failure": {
+      "line": 1259,
+      "kind": "TimeoutError",
+      "operation": "page.waitForResponse",
+      "timeoutMs": 60000,
+      "site": "design-wave-five-analytics.spec.ts:72:32",
+      "siteLogLine": 1268
+    },
+    "previewRequest": {
+      "line": 1235,
+      "logTimestamp": "2026-11-27T18:54:14.9878088Z",
+      "operation": "decision-portfolio-preview",
+      "phase": "native-request",
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    "matchingNativeResponseObserved": false,
+    "priorResults": [
+      {
+        "line": 1197,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 269,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "line": 1217,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 509,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "seedTimings": [
+      {
+        "line": 1131,
+        "operation": "decision-criteria",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 992
+      },
+      {
+        "line": 1139,
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 34871
+      },
+      {
+        "line": 1145,
+        "operation": "decision-select-portfolio",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 20848
+      },
+      {
+        "line": 1151,
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 33191
+      },
+      {
+        "line": 1197,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 269,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "line": 1217,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 509,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "captures": [
+      {
+        "line": 1169,
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1181,
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1187,
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1193,
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1213,
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "line": 1233,
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    ],
+    "diagnostics": [
+      {
+        "line": 1237,
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      },
+      {
+        "line": 1239,
+        "kind": "native-view",
+        "state": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "text": "Context and access⁨127.0.0.1:39357⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.76af2218-9396-4419-b040-1711f2f0b28d · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+        }
+      },
+      {
+        "line": 1255,
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    ],
+    "ui42": "six partial list/configure captures; original preview has no received response",
+    "ui43": "not reached",
+    "ui44": "not reached",
+    "scopeLimit": "No internal-stage cost, current physical projection admission, CPU attribution or causal benefit is established by this log."
+  },
+  "secondCase": {
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts:443:1",
+    "title": "wave five analytics: question catalog and original contextual BI",
+    "status": "passed",
+    "captures": {
+      "total": 40,
+      "UI45": 7,
+      "UI46": 33
+    },
+    "nativeBI06Completions": [
+      {
+        "line": 1645,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      },
+      {
+        "line": 1849,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      }
+    ],
+    "readbacks": [
+      {
+        "line": 1475,
+        "operation": "bi-data-readback",
+        "view": "BI01",
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22
+      },
+      {
+        "line": 1653,
+        "operation": "bi-data-readback",
+        "view": "BI06",
+        "http": 200,
+        "rows": 3,
+        "numericValues": 3,
+        "missing": 1
+      },
+      {
+        "line": 1857,
+        "operation": "bi-data-readback",
+        "view": "BI06",
+        "http": 200,
+        "rows": 3,
+        "numericValues": 3,
+        "missing": 1
+      }
+    ],
+    "localizedOriginalAcquisition": [
+      {
+        "line": 1645,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      },
+      {
+        "line": 1647,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "http": 200,
+        "acquisition": "native-response-cdp"
+      },
+      {
+        "line": 1849,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      },
+      {
+        "line": 1851,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "locale": "pt-BR",
+        "http": 200,
+        "acquisition": "native-response-cdp"
+      }
+    ],
+    "negativeSource": {
+      "line": 1789,
+      "http": 200,
+      "negativeHttp": 403,
+      "negative": {
+        "status": "denied",
+        "reason": "bi-source-outside-selected-value"
+      }
+    },
+    "scope": {
+      "line": 1893,
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "catalogViews": 11,
+      "originalFinancialRead": true,
+      "originalOperationalRead": true,
+      "originalSourceResolution": true,
+      "originalOperationalSourceResolution": true,
+      "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+      "originalSensitivityChoices": 0,
+      "invalidatedOnPeriodChange": true,
+      "fabricatedResult": false
+    },
+    "scopeLimit": "This original BI case passed on this source/run; no causal correction of earlier abort or qualification of UI42–44 is inferred."
+  },
+  "markerEvidence": {
+    "union": {
+      "gitBlob": "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "bytes": 34168,
+      "sha256": "2bc4682e592e5742deea6e4ad1ba84218191263633a136188c5f2563ae2bbf8f"
+    },
+    "records": 96,
+    "families": {
+      "SF_ANALYTICS_SOURCE": 44,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "sections": [
+      {
+        "case": 1,
+        "records": 33,
+        "bytes": 5856,
+        "sha256": "c3fe82a57eec2ccdfdd28e4c9df8d93ffa7ea117013f427789a68d303e7758e5"
+      },
+      {
+        "case": 2,
+        "records": 63,
+        "bytes": 28312,
+        "sha256": "c70a03151fe79f13a6aa523df0433bc63242ef5eec93ab1b9c7da8c84ca8650d"
+      }
+    ],
+    "orderedSectionsOnly": true,
+    "artifactRuntimeCaseResultStdoutBinding": false,
+    "contextMarkersExcludedFromUnion": 2,
+    "diagnosticExcerpt": {
+      "gitBlob": "f45d4a97f4a489456267123f9470e8c8382baaae",
+      "bytes": 4518,
+      "sha256": "a2e00873796cdca4fc1ba787c4510cf9fa77571a15ad596e48915d18841ae6fc"
+    }
+  },
+  "artifact": {
+    "id": 15225815949,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 45840255,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15225815949",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15225815949/zip",
+    "expired": false,
+    "created_at": "2026-11-27T18:57:35Z",
+    "expires_at": "2026-12-04T18:57:32Z",
+    "updated_at": "2026-11-27T18:57:35Z",
+    "digest": "sha256:7c4be14b501bd7b516502269e57f858c8f6de1b273d764d5686e9496d0868e9e",
+    "workflow_run": {
+      "id": 46052118180,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613c17a",
+      "head_sha": "7603f10c7d10a76f901425f659ee40448ee6cdfd"
+    },
+    "state": "METADATA_ONLY",
+    "zipGets": 0,
+    "crcVerified": false,
+    "runtimeJsonReceived": false,
+    "visualReviewPerformed": false,
+    "traceOrNetworkAvailability": "not inspected",
+    "uploaderFileCount": 147,
+    "uploaderCountIsZipInventory": false
+  },
+  "runtime": {
+    "observed": "1.3.14+0d9b296af",
+    "fullRevisionObserved": false,
+    "omniNonce": "4046da0df121bd5589938b0cd63112ae",
+    "declaredSpawnCounts": null,
+    "historicalFocalCountsTransferred": false
+  },
+  "rootChecks": [
+    {
+      "label": "runAttemptAndHead",
+      "pass": true
+    },
+    {
+      "label": "snapshotSoleSourceParent",
+      "pass": true
+    },
+    {
+      "label": "exact1AOverlay",
+      "pass": true
+    },
+    {
+      "label": "terminalJobs",
+      "pass": true
+    },
+    {
+      "label": "originalsClosedPreservedBeforeParse",
+      "pass": true
+    },
+    {
+      "label": "17PartsWholeNotPersisted",
+      "pass": true
+    },
+    {
+      "label": "originalBOMLf",
+      "pass": true
+    },
+    {
+      "label": "checkoutActualA",
+      "pass": true
+    },
+    {
+      "label": "originalSelectionConfigWorkerRetryRepeat",
+      "pass": true
+    },
+    {
+      "label": "twoTestsOneWorker",
+      "pass": true
+    },
+    {
+      "label": "oneFailureOnePass",
+      "pass": true
+    },
+    {
+      "label": "firstPreviewWaiter60000Spec72",
+      "pass": true
+    },
+    {
+      "label": "onePreviewNativeRequestNoResponse",
+      "pass": true
+    },
+    {
+      "label": "priorResultsBoth200",
+      "pass": true
+    },
+    {
+      "label": "markers96FourFamilies",
+      "pass": true
+    },
+    {
+      "label": "markerSections33And63",
+      "pass": true
+    },
+    {
+      "label": "onlySixFirstCaseUI42Captures",
+      "pass": true
+    },
+    {
+      "label": "noUI43Or44Capture",
+      "pass": true
+    },
+    {
+      "label": "BI40Captures7And33",
+      "pass": true
+    },
+    {
+      "label": "readyViewStillRunning",
+      "pass": true
+    },
+    {
+      "label": "diagnosticsNoConsoleOrPageErrors",
+      "pass": true
+    },
+    {
+      "label": "BI2NativeCompleted200",
+      "pass": true
+    },
+    {
+      "label": "BI06BothReadbacks",
+      "pass": true
+    },
+    {
+      "label": "BIOutsideSelectedValueDenied",
+      "pass": true
+    },
+    {
+      "label": "ScopeFinancialOperationalAndSourceOriginal",
+      "pass": true
+    },
+    {
+      "label": "BunVersionObserved",
+      "pass": true
+    },
+    {
+      "label": "ArtifactMetadataOnly",
+      "pass": true
+    },
+    {
+      "label": "branchRemoved",
+      "pass": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/focal_migration",
+    "status": "ACK",
+    "findings": [],
+    "copiesAuthenticatedBeforeParse": true,
+    "originalGets": 0,
+    "zipGets": 0,
+    "all17PartsAndCleanup": true,
+    "oneFailOnePass": true,
+    "preview60000AtSpec72": true,
+    "previewSequence3NoResponse": true,
+    "BICompletedEnglishAndPortuguese": true,
+    "scopeAndNegativeSource": true,
+    "markerUnionMatches": {
+      "gitBlob": "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "bytes": 34168,
+      "sha256": "2bc4682e592e5742deea6e4ad1ba84218191263633a136188c5f2563ae2bbf8f"
+    },
+    "sectionHashes": [
+      {
+        "case": 1,
+        "records": 33,
+        "bytes": 5856,
+        "sha256": "c3fe82a57eec2ccdfdd28e4c9df8d93ffa7ea117013f427789a68d303e7758e5"
+      },
+      {
+        "case": 2,
+        "records": 63,
+        "bytes": 28312,
+        "sha256": "c70a03151fe79f13a6aa523df0433bc63242ef5eec93ab1b9c7da8c84ca8650d"
+      }
+    ],
+    "sourceAndSelection": true,
+    "artifactMetadataOnly": true,
+    "limits": "No causal latency claim; no ZIP/visual/runtime artifact binding inferred from logs."
+  },
+  "next": "Diagnose remaining original preview work on S17 before a single justified changed candidate or bounded diagnostic run; no automatic rerun.",
+  "limits": [
+    "C17 focal remains CLOSED_PASS for its exact contract selection; this installed negative does not erase it.",
+    "E11 is historical whole-PID diagnostic evidence, not a C17 measurement or request-exclusive cost.",
+    "Current logs establish no preview response before the waiter fails, not the final fate of a server operation after the browser closes.",
+    "No current original artifact bytes were acquired; no visual or artifact-level runtime binding claimed.",
+    "Final C613/UI6/D26 and final Migration/Release candidate qualification remain pending; no production approval."
+  ]
+}

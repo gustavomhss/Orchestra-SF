@@ -1,0 +1,119 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+index b89bc6e..9cbc7f2 100644
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -1,4 +1,4 @@
+-// Snapshot-only verification. This driver is not part of the #613 product candidate.
++// Snapshot-only E11 diagnostic verification. This driver does not qualify the #613 product candidate.
+ import { expect } from "bun:test"
+ import path from "node:path"
+ import { readFile } from "node:fs/promises"
+@@ -11,14 +11,16 @@
+ 
+ const repository = path.resolve(import.meta.dir, "../../..")
+ const module = path.join(repository, "modules/sucafina/Sucafinav1")
+-const source = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+-const sourceTree = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++const source = "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
++const sourceTree = "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4"
++const sourceBase = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
++const sourceBaseTree = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+ const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+ const checks = testEffect(LayerNode.compile(AppProcess.node))
+ 
+ function requireHostedCandidate() {
+-  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
+-    throw new Error("C15 source and tree must be bound to reviewed Git objects before execution")
++  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree) || !/^[a-f0-9]{40}$/.test(sourceBase))
++    throw new Error("E11 diagnostic source, tree and clean base must be bound to reviewed Git objects before execution")
+   if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+       process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+       !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+@@ -26,7 +28,7 @@
+     throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-c15-snapshot-projection-focal", source, sourceTree,
++    verification: "sf613-e11-diagnostic-focal", source, sourceTree, sourceBase,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -56,47 +58,54 @@
+   })
+ }
+ 
+-checks.live("snapshot identifies the exact reviewed product source and tree", () => Effect.gen(function* () {
++checks.live("snapshot identifies the exact reviewed E11 diagnostic source, tree and clean base", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  process.stdout.write(JSON.stringify({ c08SnapshotProjectionManifest: {
+-    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 4, candidateDeltaPaths: 5,
+-    deltaBase: "372cbc152bc1361168de9efcd4262770105670c5",
++  process.stdout.write(JSON.stringify({ e11DiagnosticFocalManifest: {
++    source, sourceTree, sourceBase, sourceBaseTree, qualification: false, diagnosticOnly: true,
++    workingSourcePins: 16, sourceOverlayPaths: 8, sourceOverlayDelta: { added: 2, modified: 6 },
++    sourceParentRequest: { path: ".ci-run.json", git: "eda49a023c07599de00f5af9642ee92b9d9adf3b", bytes: 295 },
+     expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,
+-    expectedTestDeclarations: 11, preservedTestDeclarations: 9, addedTestDeclarations: 2,
++    expectedTestDeclarations: 11, preservedTestDeclarations: 11, addedTestDeclarations: 0,
+     expectedControlReports: 7, nameFilter: null,
+-    mechanism: "fixed detached C08 child snapshot and private whole cases/preferences selections through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition",
+-    assertions: "complete shape and metadata, fresh selected graphs and authorization, opaque full routes, selector precedence and late registration, invalid and legacy fallback, live drift, scoped checks, inherited ACL timing, lifetime, error, abort and native poison",
++    mechanism: "passive E11 CPU and finite branch observation over clean S15R, retaining the original C13/C14/C15 regression selections",
++    assertions: "existing authorization, graph, fallback, lifetime, error, abort and poison oracles; no assertion of CPU capture, route population, installed preview completion or product qualification",
++    observationLimits: "counters cover the running owned PID window; native child snapshots are not restricted to C08; CPU and HTTP progress have separate lifetimes",
+     readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },
+     projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, addedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, selectedTests: 4, nominalSum: 280000, process: 300000, parent: 360000 },
+     typecheckMs: { process: 240000, parent: 300000 },
+     guardsMs: { defaultProcess: 180000, parent: 600000 },
+     snapshotOverlays: [".ci-run.json", "apps/cli/test/sucafina-proof-verification.test.ts"],
++    snapshotDelta: { added: 1, modified: 1 },
+   } }) + "\n")
+   yield* runCommand("fetch source parent", "git", [
+-    "fetch", "--no-tags", "--depth=2", "origin", process.env.GITHUB_SHA!,
++    "fetch", "--no-tags", "--depth=3", "origin", process.env.GITHUB_SHA!,
+   ], repository, 60_000)
+   const head = yield* runCommand("snapshot identity", "git", ["rev-parse", "HEAD"], repository, 30_000)
+   const snapshot = process.env.GITHUB_SHA
+   if (typeof snapshot !== "string") throw new Error("The Actions snapshot SHA is required")
+   expect(head.trim()).toBe(snapshot)
+   const candidate = yield* runCommand("source identity", "git", [
+-    "show", "-s", "--format=%H%n%T", "HEAD^",
++    "show", "-s", "--format=%H%n%T%n%P", "HEAD^",
+   ], repository, 30_000)
+-  expect(candidate.trim().split("\n")).toEqual([source, sourceTree])
++  expect(candidate.trim().split("\n")).toEqual([source, sourceTree, sourceBase])
+   const sourceFiles = [
+     ["modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","1017609000bdbdb39fc0510b045dc6dfde371faf"],
+-    ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","b7de9404461591ce0162d496ec917a47fb72a479"],
++    ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","8148a7fdd70621aa41a0978efdaf330202f2ba73"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts","8b01895b0f3b1623646d14a82adb66bf13ca841b"],
+-    ["modules/sucafina/Sucafinav1/runtime/local-store.ts","d02bcbfc770719935dcaca97cc20045b656f784d"],
++    ["modules/sucafina/Sucafinav1/runtime/local-store.ts","d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"],
+     ["apps/cli/src/sucafina-product/planner-calculation-root.ts","244d46ee41e9ce288a7260938174a57161137bab"],
+     ["modules/sucafina/Sucafinav1/product/integration/source-inventory.ts","eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"],
+     ["modules/sucafina/Sucafinav1/product/integration/source-projections.ts","ccc5ea87046144843e1751b1288e907974d24ca5"],
+     ["modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts","f183dd1049ef205c38395bda99c83efa8eddc80a"],
+-    ["modules/sucafina/Sucafinav1/product/integration/product-authority.ts","dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"],
++    ["modules/sucafina/Sucafinav1/product/integration/product-authority.ts","c35042473a5a1f5416253a3c5bf6b8450c44673b"],
+     ["modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts","ff9d23fe68d779e518d4a09ca00ba1768d3f824a"],
+     ["modules/sucafina/Sucafinav1/runtime/contract.ts","8bdc12d191a76137cd2244e01990f7a780091216"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","a55818797ecf9fa6801393762bbe3261a1812576"],
++    ["modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts","b5e2f218117a0f30e803a8b251922e92b6da2332"],
++    ["apps/cli/src/sucafina-product/portfolio-http.ts","347edd5292d86537451507026236f27f2488a06a"],
++    ["apps/cli/test/fixture/sucafina-native-installation.ts","46dab966dbb2631fcc65f5cf730e792f9e7e94da"],
++    ["packages/app-shell/e2e/sucafina/design-support/installation.ts","b989a4fa1b4ecfcc8800e9df07e823e93d77009a"],
+   ] as const
+   const observed: { path: string; sha: string }[] = []
+   const gitBlob = (bytes: Uint8Array) => new Bun.CryptoHasher("sha1")
+@@ -107,8 +116,8 @@
+     expect(actual, file).toBe(expected)
+     observed.push({ path: file, sha: actual })
+   }
+-  process.stdout.write(JSON.stringify({ gate: "reviewed source blobs", source, sourceTree,
+-    snapshot, files: observed, expectedGroups: 6, expectedCommands: 12,
++  process.stdout.write(JSON.stringify({ gate: "reviewed source blobs", source, sourceTree, sourceBase,
++    snapshot, files: observed, workingSourcePins: 16, sourceOverlayPaths: 8, expectedGroups: 6, expectedCommands: 12,
+     functionalProcessesLaunched: 2, expectedTestDeclarations: 11, expectedControlReports: 7 }) + "\n")
+ }), 180_000)
+ 

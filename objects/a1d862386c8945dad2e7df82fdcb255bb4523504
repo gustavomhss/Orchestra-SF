@@ -1,0 +1,215 @@
+{
+  "schema": "orchestra.sf613.evidence.archive.publication.v1",
+  "observedAtUtc": "2026-11-27T18:13:03Z",
+  "state": "PUBLISHED_REVIEWED_DOCUMENTARY_ARCHIVE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf613-evidence",
+  "commit": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+  "tree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+  "index": {
+    "gitBlob": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+    "bytes": 97079,
+    "sha256": "5c775351a7f9514448860bbeff8026023c4ed6136c10979721eed9c57c554582"
+  },
+  "readme": {
+    "gitBlob": "b2f9409d8e6f665207c67fb118fd5d1e6506b06c",
+    "bytes": 2234,
+    "sha256": "5517679ff81af35a9c1e6c1a2d78f715e57c017a2d95dd500b0baa17f0a694c5"
+  },
+  "treeAudit": {
+    "rootTree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+    "objectsTree": "07ef0dd78c40210be2d3ecbee172817ab6ec6b21",
+    "rootHashRecomputedByResolver": true,
+    "objectsHashRecomputedByResolver": true,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "dataObjects": 83,
+    "treeFiles": 85,
+    "bytes": 8034432,
+    "checks": [
+      {
+        "name": "exact root entries",
+        "pass": true
+      },
+      {
+        "name": "no truncated trees",
+        "pass": true
+      },
+      {
+        "name": "all 83 exact original leaves",
+        "pass": true
+      },
+      {
+        "name": "README exact leaf",
+        "pass": true
+      },
+      {
+        "name": "index exact leaf",
+        "pass": true
+      }
+    ]
+  },
+  "commitAudit": {
+    "sha": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+    "tree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+    "parents": [
+      "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+      "30890fcdcfd4e255185f443d128fe85ba21299ff",
+      "dfa5cca0f7e20b92c23ea45897301c2327dc60ea"
+    ],
+    "treeExact": true,
+    "parentsExact": true,
+    "messageExactExceptOneTerminalLf": true,
+    "messageNormalization": "GitHub API stored submitted commit message without the one terminal LF; body otherwise literal",
+    "refCreated": false
+  },
+  "rootIndexChecks": [
+    {
+      "name": "unique 83 paths",
+      "pass": true
+    },
+    {
+      "name": "all data blob entries",
+      "pass": true
+    },
+    {
+      "name": "byte sum",
+      "pass": true
+    },
+    {
+      "name": "calculated whole and commit/tree exclusions",
+      "pass": true
+    },
+    {
+      "name": "go_live_docs_r5_status included exact",
+      "pass": true
+    },
+    {
+      "name": "go_live_docs_r5_readme included exact",
+      "pass": true
+    },
+    {
+      "name": "go_live_docs_r5_execution included exact",
+      "pass": true
+    },
+    {
+      "name": "go_live_docs_r5_manifest included exact",
+      "pass": true
+    },
+    {
+      "name": "go_live_docs_r5_review included exact",
+      "pass": true
+    },
+    {
+      "name": "c16_root_focal_final_receipt included exact",
+      "pass": true
+    },
+    {
+      "name": "c16_root_focal_raw_manifest included exact",
+      "pass": true
+    },
+    {
+      "name": "c16_root_analytics_final_receipt included exact",
+      "pass": true
+    },
+    {
+      "name": "c16_root_analytics_raw_manifest included exact",
+      "pass": true
+    },
+    {
+      "name": "c16_root_analytics_marker_blob included exact",
+      "pass": true
+    },
+    {
+      "name": "d26_c16_root_manifest included exact",
+      "pass": true
+    },
+    {
+      "name": "d26_c16_root_bounds included exact",
+      "pass": true
+    },
+    {
+      "name": "d26_c16_root_derivation included exact",
+      "pass": true
+    },
+    {
+      "name": "d26_c16_root_review included exact",
+      "pass": true
+    },
+    {
+      "name": "three ordered execution parents",
+      "pass": true
+    },
+    {
+      "name": "exact original bytes C16-focal-main",
+      "pass": true
+    },
+    {
+      "name": "exact original bytes C16-focal-cleanup",
+      "pass": true
+    },
+    {
+      "name": "exact original bytes C16-Analytics-main",
+      "pass": true
+    },
+    {
+      "name": "exact original bytes C16-Analytics-cleanup",
+      "pass": true
+    },
+    {
+      "name": "logical inventory 90",
+      "pass": true
+    }
+  ],
+  "rootBlobChecks": {
+    "passed": 83,
+    "failed": 0,
+    "gitSha": true,
+    "bytes": true,
+    "sha256": true
+  },
+  "peer": {
+    "status": "ACK_DOCUMENTARY_ARCHIVE",
+    "reviewer": "teams_product",
+    "commit": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+    "tree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+    "objectsTree": "07ef0dd78c40210be2d3ecbee172817ab6ec6b21",
+    "files": 85,
+    "bytes": 8034432,
+    "objectLeaves": 83,
+    "exactTreesRehashed": true,
+    "parentsExact": true,
+    "readmeRehashed": true,
+    "failures": [],
+    "qualification": false,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "refsPreserved": [
+    {
+      "ref": "refs/heads/sf613-ledger",
+      "sha": "b6278bcd02c544a5583d978a8b48583798bf6ebe"
+    },
+    {
+      "ref": "refs/heads/dev",
+      "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+    },
+    {
+      "ref": "refs/heads/sf-design-next",
+      "sha": "0a1247db9a16f9eead04788a76d25723672c7e6a"
+    },
+    {
+      "ref": "refs/heads/sf613-astra-finish",
+      "sha": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+    }
+  ],
+  "runsObserved": 0,
+  "originalActionsGets": 0,
+  "zipGets": 0,
+  "qualification": false,
+  "productionAuthorized": false,
+  "scope": "C16/R5/D26 typed inventory only; E11 full corpus explicitly pending; this publication receipt is not itself included in the first archive tree and must be added in a later increment."
+}

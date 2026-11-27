@@ -1,0 +1,553 @@
+{
+  "schema": "sf613-e11-source-proposal-manifest-v1",
+  "status": "complete textual proposal; all source and support blobs preserved and read back; runtime qualification pending",
+  "repository": "gustavomhss/Orchestra-SF",
+  "task": "Temporary current-profile diagnostic for the first original Analytics preview on clean S15R, with finite C15 selection counters",
+  "scope": {
+    "writer": "/root/close_pr613",
+    "authoringAuthority": "Root authorized reviewable Git blobs and pure data supports only. Root alone operates source/snapshot objects, refs/runs and original Actions/ZIP acquisition.",
+    "cleanBase": {
+      "commit": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+    },
+    "diagnosticDelta": {
+      "additions": 2,
+      "modifications": 6,
+      "deletions": 0,
+      "paths": 8,
+      "mode": "100644"
+    },
+    "sourceObjectReportedByRoot": {
+      "commit": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+      "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "audit": {
+        "treePairs": 18,
+        "unchangedSiblings": 564,
+        "exactLeafDelta": "2A6M"
+      },
+      "provenance": "Root coordination message after essential static ACK; writer did not create or independently re-audit this tree/commit. Teams separately reported matching object audit."
+    },
+    "executableChanges": "Only the reviewed temporary observer and its bounded call sites. Clean product behavior, tests, data seed, spec, authority/guard predicates, transaction callbacks and existing deadlines are not revised by this proposal.",
+    "productionPromotion": false,
+    "automaticExecutionAuthorization": false
+  },
+  "files": [
+    {
+      "key": "helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+        "bytes": 22169,
+        "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+        "lf": 374
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134
+      },
+      "postimage": {
+        "gitSha": "347edd5292d86537451507026236f27f2488a06a",
+        "bytes": 13818,
+        "sha256": "44ca1d564841f44bf6a5ae87584f105078006bd72f8826b0f6409836ff3e6191",
+        "lf": 141
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "inner",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121
+      },
+      "postimage": {
+        "gitSha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+        "bytes": 10333,
+        "sha256": "c08630983e3fd7617f06e268f4176490b730b0396c826289e2420b28c5230b70",
+        "lf": 184
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "outer",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206
+      },
+      "postimage": {
+        "gitSha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+        "bytes": 16431,
+        "sha256": "6f7233c1763c0223f47d3b119848003240816770a6ae95abb023686b72325fbe",
+        "lf": 267
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "authority",
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "bytes": 32461,
+        "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+        "lf": 404
+      },
+      "postimage": {
+        "gitSha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+        "bytes": 32579,
+        "sha256": "16ae187fc9138f1ecd79110244a54cd114d49e18fc68ee163c3690b97e5ad801",
+        "lf": 406
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "source",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891
+      },
+      "postimage": {
+        "gitSha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+        "bytes": 60958,
+        "sha256": "133f88604f6972360051b97ae8daf04c3df0f9100e2cba5a906c06ad8b3a65af",
+        "lf": 895
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "store",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+        "bytes": 83955,
+        "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+        "lf": 1515
+      },
+      "postimage": {
+        "gitSha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+        "bytes": 84086,
+        "sha256": "ee7ddbb5607c6bb88d312bcdbe5dac0a7b5593a82562f0a2dae1ad3b287a5119",
+        "lf": 1517
+      },
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "key": "request",
+      "path": ".ci-run.json",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0
+      },
+      "created": false,
+      "readbackLiteral": true
+    }
+  ],
+  "supports": {
+    "derivation": {
+      "gitSha": "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+      "bytes": 105938,
+      "sha256": "cfef9b7f6761136fe51591cdee0cbcc1809e4697924b874f3c46eb2636d8fd40",
+      "lf": 549
+    },
+    "diff": {
+      "gitSha": "073c035995a98db8f1b824c163532a904aecb17d",
+      "bytes": 50026,
+      "sha256": "bec2eed1baaa7ae6a72231090fb63dde018aed25aa1e8f055bd9f3df0ddf607f",
+      "lf": 732
+    },
+    "reuseDiff": {
+      "gitSha": "0881f785a09710fb1d897feae2d642f560266c62",
+      "bytes": 24334,
+      "sha256": "63feb6b2eaa75e391280826cb07d4ad05ff47f032e458b67aef3372693941ef1",
+      "lf": 342
+    },
+    "bounds": {
+      "gitSha": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+      "bytes": 18474,
+      "sha256": "3659b3bf3bb4fcd28be64e181db71cbc9569e6b5a4d2b55681de9978a886b2ee",
+      "lf": 258
+    }
+  },
+  "derivation": {
+    "cleanBaseToProposal": {
+      "modified": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "postimage": "347edd5292d86537451507026236f27f2488a06a",
+          "anchors": 2,
+          "hunks": 2,
+          "added": 41,
+          "removed": 34,
+          "awaitTokensBefore": 7,
+          "awaitTokensAfter": 7,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "preimage": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "postimage": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+          "anchors": 4,
+          "hunks": 4,
+          "added": 66,
+          "removed": 3,
+          "awaitTokensBefore": 13,
+          "awaitTokensAfter": 13,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "preimage": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "postimage": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+          "anchors": 4,
+          "hunks": 4,
+          "added": 62,
+          "removed": 1,
+          "awaitTokensBefore": 16,
+          "awaitTokensAfter": 16,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "preimage": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+          "postimage": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+          "anchors": 2,
+          "hunks": 2,
+          "added": 2,
+          "removed": 0,
+          "awaitTokensBefore": 26,
+          "awaitTokensAfter": 26,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "preimage": "b7de9404461591ce0162d496ec917a47fb72a479",
+          "postimage": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+          "anchors": 4,
+          "hunks": 4,
+          "added": 4,
+          "removed": 0,
+          "awaitTokensBefore": 21,
+          "awaitTokensAfter": 21,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "preimage": "d02bcbfc770719935dcaca97cc20045b656f784d",
+          "postimage": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+          "anchors": 2,
+          "hunks": 2,
+          "added": 2,
+          "removed": 0,
+          "awaitTokensBefore": 21,
+          "awaitTokensAfter": 21,
+          "forwardLiteral": true,
+          "inverseLiteral": true
+        }
+      ],
+      "added": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+          "bytes": 22169,
+          "lf": 374,
+          "fullContentInDerivation": true
+        },
+        {
+          "path": ".ci-run.json",
+          "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "bytes": 295,
+          "lf": 0,
+          "fullContentInDerivation": true
+        }
+      ],
+      "modifiedAnchors": 18,
+      "totalHunks": 20,
+      "addedLines": 552,
+      "removedLines": 38,
+      "requestNoFinalLF": true
+    },
+    "mechanismBase": {
+      "source": "8f85aa7653693a1fb73e37f497e2795fc4da66e0",
+      "tree": "590f5e9ca2fa18fa3981c55f56a542efd017daf2",
+      "helper": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+      "http": "30d9fac161b3fe3c862b96280bf339064d574cd9",
+      "inner": "65b34f4b17401ee49196a518008dbe1c952f5d67",
+      "outer": "56a06415240134d4d36a0620cb38d574846e7675"
+    },
+    "e10Reuse": {
+      "anchors": 23,
+      "hunks": 23,
+      "addedLines": 77,
+      "removedLines": 45,
+      "method": "Explicit E10/E11 identifiers and protocol/path renames, new source/tree bindings, runtime relocation, fixed numeric counters and three selection snapshots. Immutable hash strings are preserved.",
+      "helper": "E10 CPU lifecycle/Session/ownership/file core remains literal after reversing delimited retargets and the added selection snapshots.",
+      "bridges": "HTTP and both launchers reconstruct the complete E10 bytes after reversing their delimited retargets and runtime import path.",
+      "currentProductBodies": "Authority, Source and LocalStore hooks are inserted into their actual S15R preimages. Historical product bodies from E10 are not transplanted."
+    },
+    "verificationMethod": "Own pure UTF-8/hash/text/LCS functions only; complete forward and inverse reconstruction. No repository source or test was executed.",
+    "guardsAgainstRenameDamage": {
+      "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "revisionBytes": 40,
+      "originalRequest": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "requestBytes": 295,
+      "requestLF": 0
+    }
+  },
+  "contracts": {
+    "helper": {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+      "relocation": "Four parent segments resolve the repository from runtime, replacing the five segments from E10 product/contracts.",
+      "dependencyDirection": "LocalStore imports only the sibling runtime helper. Product Source/Authority and CLI import this same lower-layer helper; runtime has no product import.",
+      "retainedMechanism": [
+        "One attempted profiler selection per process.",
+        "Private lexical Request handle; no observer ALS or domain context.",
+        "Same synchronous profiler ownership/preflight/start/stop rules.",
+        "Same timer/finally and cooperative pump seams.",
+        "Same caps, clock validation, wx0600/fsync/fstat/close and cleanup ownership.",
+        "HTTP progress lifetime independent from CPU closure, ending in the original HTTP finally."
+      ],
+      "addedData": "Three Source counters and a row-major 3x3 native child-copy matrix, values 0..65535, snapshots in CPU records, HTTP progress and collection only.",
+      "newHooks": "Constant numeric operations inside non-throw guards. The two new selection-counter hooks do not invoke a pump or inspect graph/Request/ID/authority.",
+      "newSessionsOrRoots": 0,
+      "newPromiseReactions": 0,
+      "newProductCallbacks": 0,
+      "newDomainQueries": 0
+    },
+    "http": {
+      "requestSelection": "The same first preview route after existing guards/mode and before boundedJson/human.admit.",
+      "boundaries": [
+        "body-returned after the original boundedJson await fulfills",
+        "admit-returned after the original human.admit await fulfills",
+        "case-callback-entered as the first instruction inside the original withCase callback"
+      ],
+      "meaning": "A fulfilled await or entered callback only; these labels do not prove valid payload, successful admission, producer entry or delivered Response.",
+      "identity": "Captured handle and exact Request equality; Request properties are not inspected by the observer.",
+      "passivity": "Original body, seven awaits, returns and finally cleanup remain. A progress write is attempted before the existing pump; write failure/backpressure never triggers replay or blocks that pump."
+    },
+    "authority": {
+      "seam": "Immediately after fulfilled input.authenticate and before the original guard.",
+      "input": "Zero arguments to the observer.",
+      "preserved": "Original actor/Request access order, receiver/arguments, rejection behavior, guards and all 26 awaits.",
+      "interpretation": "Reaching this seam does not establish an admitted principal or an active readonly owner."
+    },
+    "source": {
+      "retainedRouteSeams": [
+        "sealed-read only inside the already-accepted seal && seal.current() branch",
+        "unfenced/full-guard from the already-computed sealed local before the original guard"
+      ],
+      "selectionSeam": "After the original private sfProductSnapshotReadSelection query and construction of forwarded.options.dashboardProductRead, before the original return execute.",
+      "countedValue": "The existing selection local; no new query, predicate, descriptor access or callback.",
+      "sourcePopulation": "Only qualified Source calls reaching this particular forwarding path. The hook may be a no-op unless the process sampler is currently owned/running.",
+      "preserved": "C14/C15 provenance, metadata, read-check scope, guards, callback/order, poison, authorizations, return/throw/await and Source fences."
+    },
+    "native": {
+      "seam": "After the existing child snapshot expression has successfully copied a snapshot and before original observation marking/work.",
+      "arguments": "Existing normalized selection and projected?.selection locals.",
+      "population": "All successfully copied native children in the owned running sampler interval/PID, across all surfaces and branches.",
+      "actualSelection": "The materializer's returned narrow selection, not an inference from a requested option or a successful callback.",
+      "preserved": "All original root/preimage/codec/pins/shape gates, snapshot copy expression, fresh graph semantics, commit:true poison, native scopes, callbacks, error/cleanup and durable publication.",
+      "excluded": "Top-level materializations are not counted by this child seam."
+    },
+    "interpretation": {
+      "order": [
+        "none",
+        "cases",
+        "preferences"
+      ],
+      "nativeIndex": "requested * 3 + materialized",
+      "sourceVersusNative": "Separate populations with no required equality or conservation. Their totals cannot be paired per Request, callback, surface or owner.",
+      "noneNone": "Includes ACL/source projections and other native copies; not a measure of all full materializations or C08 fallbacks.",
+      "requestedNarrowActualNone": "A narrow request did not materialize as that class, but the matrix alone does not identify its gate/fallback reason.",
+      "countersAreNotOutcomes": "Neither count means authorization/work/commit success or delivered HTTP output.",
+      "saturation": "The twelve new slots set selection.saturated when any reaches65535. Reaching the cap does not prove additional events were dropped; this flag does not cover the historical three routes.",
+      "profiler": "Whole backend VM, not exclusive to this Request. Cross-version/historical samples and timings cannot be transferred to this source.",
+      "laterDecision": "Only complete current originals, memberships, artifact bytes and the actual profile can support the next product decision. No new optimization, cache, deadline change or authority reuse is selected here."
+    }
+  },
+  "bounds": {
+    "support": {
+      "gitSha": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+      "bytes": 18474,
+      "sha256": "3659b3bf3bb4fcd28be64e181db71cbc9569e6b5a4d2b55681de9978a886b2ee",
+      "lf": 258
+    },
+    "sampling": {
+      "intervalUs": 5000,
+      "targetMs": 50000,
+      "acceptBeforeMs": 55000,
+      "timerMs": 10000
+    },
+    "hardCaps": {
+      "cpuLineBytes": 4096,
+      "cpuAttempts": 3,
+      "progressLineBytes": 1024,
+      "progressUniqueAttempts": 3,
+      "helperWireBytes": 15360,
+      "profileBytes": 4194304,
+      "collectionBytes": 16384,
+      "launcherBytes": 8192,
+      "futureCpuProgressMarkerSlotBytes": 65536
+    },
+    "conservativeLiteralModels": {
+      "progressBytes": 803,
+      "startedBytes": 1178,
+      "stoppedBytes": 1106,
+      "finishedBytes": 1482,
+      "incompleteBytes": 1313,
+      "unavailableBytes": 792,
+      "allElevenPoints": true,
+      "allFifteenCountersAt65535": true,
+      "falseForConservativeSaturationWidth": true,
+      "runIdDigits": 20,
+      "pidDigits": 9
+    },
+    "unchangedLimits": true,
+    "guarantees": "Caps are upper bounds and target/acceptance rules, not guarantees of sampler completion, timely stop, line delivery or collected files.",
+    "overhead": "Fixed numeric increments without per-call logging; serialization of fixed arrays only at already bounded record/file points. Profiling and diagnostics still add overhead, so this is a diagnostic campaign rather than the clean original Analytics outcome."
+  },
+  "originalAnalytics": {
+    "request": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    },
+    "requestContent": "{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"packageSelector\":\"@orchestra/app\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/design-wave-five-analytics.spec.ts\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"strict\",\"ORCHESTRA_CHANNEL\":\"prod\"},\"config\":\"e2e/playwright.production.config.ts\"}",
+    "spec": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "specPin": "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "productionConfigPin": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+    "baseConfigPin": "d935c68f5b996c0e53195ec832b969c217fcf858",
+    "workflowPin": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "provenance": "Previously received full original spec/config/workflow pins remain outside this 2A6M delta; request bytes are independently preserved and read back in this package.",
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "extraRepeats": 0,
+    "firstPreviewWaitMs": 60000,
+    "seedClockSpecOraclesDeadlinesChanged": false,
+    "diagnosticSelectionDifference": "E11 observes the same original suite with an overlay; it is not a new positive functional oracle or a rerun of an old captured profile."
+  },
+  "focal": {
+    "owner": "/root/focal_migration",
+    "driverReceived": {
+      "gitSha": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+      "bytes": 11630,
+      "sha256": "695b530195644d96cfd3f8f0f0e4b0073aa8860d98f57033c9cbae24d87470c1",
+      "lf": 178
+    },
+    "receivedByWriter": "Git blob downloaded and independently hashed; source/tree strings present. Semantic/derivation review of the driver remains with root and its assigned peer.",
+    "driverSource": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "driverTree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "sourcePins": 16,
+    "groups": 6,
+    "commands": 12,
+    "flags": 24,
+    "existingWholeFiles": {
+      "readonlyTests": 7,
+      "projectionTests": 4,
+      "functionalTotal": 11,
+      "reportsTotal": 7,
+      "readonlyProcessParentSeconds": [
+        360,
+        420
+      ],
+      "projectionProcessParentSeconds": [
+        300,
+        360
+      ]
+    },
+    "requestDifference": "The diagnostic source carries original Analytics295B. A separately reviewed focal snapshot replaces it with the existing247B request and adds only its driver.",
+    "newFunctionalTestsAuthoredByThisWriter": false,
+    "result": "No E11 execution result exists in this manifest. Earlier C14/C15/E10 PASS or negative outcomes remain history, not a transferred result."
+  },
+  "priorEvidence": {
+    "currentCleanOriginal": {
+      "run": "46016341104",
+      "attempt": 1,
+      "rawManifest": "3fc45054881ca59c5872b1de9c07344f209ba428",
+      "markerUnion": "5714b7696291253e892b2397a48910c5213c936f",
+      "result": "first preview wait60000/spec72:32 failed; separate BI case passed",
+      "receivedBy": "root and designated peers; no original acquired for this proposal"
+    },
+    "historicalProfile": {
+      "report": "64ce6ef1fe1bb8ce8f0f442b92ded0afeeefaf33",
+      "meaning": "E10 whole-VM evidence motivated a new measurement. It is not a current profile or a quantitative prediction for S15R."
+    },
+    "unresolved": "No current measurement yet establishes how often the cases/preferences projection is requested/materialized or its share of current CPU cost."
+  },
+  "instructions": {
+    "rootAgents": {
+      "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223
+    },
+    "scope": "Root previously audited the applicable runtime/product/test ancestors and reported no additional AGENTS. Writer did not duplicate that tree audit.",
+    "applied": [
+      "Repository tests only through authorized Actions.",
+      "Typecheck via package bun run route; guard baseline origin/dev.",
+      "No dependency, generated-source, seed, deadline or unrelated product change.",
+      "No local repository execution in authoring or support verification."
+    ]
+  },
+  "review": {
+    "root": "Essential static ACK for helper, hooks and bridges; independently reproduced wire models and reported source object audit.",
+    "teams": "Essential static ACK for seven postimages; full18+23anchors/diffs and source object subsequently confirmed. Final bounds/manifest linkage requested separately.",
+    "writer": "Every listed code/request/support blob is read back literally; forward/inverse fulltext derivation and pure data models are complete.",
+    "incomplete": [
+      "E11 focal runtime/types/guards intake",
+      "E11 current Analytics diagnostic intake",
+      "Current profiler/artifact completeness and parities"
+    ],
+    "executionOrAcquisitionPerformedByWriter": false
+  }
+}

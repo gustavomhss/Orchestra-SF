@@ -1,0 +1,993 @@
+{
+  "schema": "orchestra-sf.e11-reader-root-final-intake.v1",
+  "at": "2026-11-27 16:32:56 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "CLOSED_CURRENT_CPU_CAPTURE_VERIFIED",
+  "qualification": false,
+  "scope": "Current diagnostic E11 original bytes, transport, runtime membership and CPU capture only",
+  "cleanSource": {
+    "sha": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+  },
+  "producer": {
+    "sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "run": 46028127606,
+    "attempt": 1,
+    "analyticsOutcome": {
+      "failed": 1,
+      "passed": 1,
+      "UI42": "partial",
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "BI": "passed"
+    }
+  },
+  "reader": {
+    "attempt": 1,
+    "branch": "sf613-artifact-e11cpu",
+    "driver": "e63cffcea872aa538bc7ee1d6ed2768ecad80862",
+    "driverTree": "41f942de834bb4dedeb94fcbd4b1f6b93ef12f80",
+    "event": "push",
+    "noCheckout": true,
+    "repositoryCodeExecuted": false,
+    "run": 46032200409,
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "workflow": ".github/workflows/sf613-artifact-read.yml",
+    "workflowBlob": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+    "job": 140618529353,
+    "jobConclusion": "success",
+    "authority": {
+      "gitBlob": "0b7923ba98342a861e6e4b9ba608169caf783dcd",
+      "bytes": 7945,
+      "sha256": "fd802dd4b82a5c66fad4bc0f280acf9bf125661757e34a6596b407a6036cc820"
+    },
+    "manifest": {
+      "gitBlob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "bytes": 13422,
+      "sha256": "2ba9ff69b8ecead402f51452d7852144356ab5069cf3d4ab8a2256b4a21cbdae"
+    },
+    "rawManifest": {
+      "gitBlob": "94bff195a4e55f169ddebeeacc09d320153e73d2",
+      "bytes": 9078,
+      "sha256": "b50651dd548d9c4392b7554c5a3e18be3f038c8c90e5beb7144b3cd9d7cfc10d"
+    },
+    "originalMain": {
+      "job": 140618529353,
+      "bytes": 2938896,
+      "sha256": "f2e4145baf527fc89066ac1406a92fc3f151cb3e904bfeda0a7049625d57fb26",
+      "wholeGitBlobCalculated": "9b09b5d3cd2a70e1b336a0bb45c30180720f9770",
+      "wholeBlobPersisted": false,
+      "literalReadback": true,
+      "lf": 1851,
+      "bomCodeUnitOffsets": [
+        0,
+        2116449
+      ],
+      "bomByteOffsets": [
+        0,
+        2116451
+      ],
+      "allPartsPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "startCodeUnit": 0,
+          "endCodeUnit": 299998,
+          "bytes": 300000,
+          "gitBlob": "6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+          "sha256": "f6ad415a23935a14f8f08fe4395243ba161d4e6a4a4d3b7663aa047a65bc4c73",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 2,
+          "startCodeUnit": 299998,
+          "endCodeUnit": 599998,
+          "bytes": 300000,
+          "gitBlob": "ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+          "sha256": "acbeef6285568fc955c4aa00b467c6b565a2f96680e2310f349f4f4fd916dd9c",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 3,
+          "startCodeUnit": 599998,
+          "endCodeUnit": 899998,
+          "bytes": 300000,
+          "gitBlob": "31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+          "sha256": "6c64acf1089b7e4d4cf04ec394f654f149a56ff9014b8cf766db039f332369e4",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 4,
+          "startCodeUnit": 899998,
+          "endCodeUnit": 1199998,
+          "bytes": 300000,
+          "gitBlob": "32955aba8923908437f8a5e40d2900d47307d7e8",
+          "sha256": "d6160eb7e96fa70ce410a6f62b535c1b9fd77c38472ffc287fc4127c8825331b",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 5,
+          "startCodeUnit": 1199998,
+          "endCodeUnit": 1499998,
+          "bytes": 300000,
+          "gitBlob": "d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+          "sha256": "5d289dcbc6602f48349f7aa6573b688fc6791f07a5ac4ad41afb2865e16b7f31",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 6,
+          "startCodeUnit": 1499998,
+          "endCodeUnit": 1799998,
+          "bytes": 300000,
+          "gitBlob": "bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+          "sha256": "aac2fc67f0046d745d11ef07883150c3432e2c451361d27bc8533b0f34d093db",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 7,
+          "startCodeUnit": 1799998,
+          "endCodeUnit": 2099998,
+          "bytes": 300000,
+          "gitBlob": "aee006454f953ba5bd9ffad59597e425b313d312",
+          "sha256": "4b001457aafb4943e210c6b7b361293349213d0002d7cdc92d5ed608ff841ad6",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 8,
+          "startCodeUnit": 2099998,
+          "endCodeUnit": 2399996,
+          "bytes": 300000,
+          "gitBlob": "2d3ff19c71816688b9843b2dc942d238fa9845e7",
+          "sha256": "1190856a31a1a5b66d7dbf10f514643cfe0b5f769b9f43d8180f449f16c97edd",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 9,
+          "startCodeUnit": 2399996,
+          "endCodeUnit": 2699996,
+          "bytes": 300000,
+          "gitBlob": "7bf8887e36f712624d6521adb2e56d2a27d27da5",
+          "sha256": "5a325e4f41677cf776cab2e9a83090e53009597dfe65b74803cc50ebe2b9134f",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 10,
+          "startCodeUnit": 2699996,
+          "endCodeUnit": 2938892,
+          "bytes": 238896,
+          "gitBlob": "38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+          "sha256": "8b88fbec952cdd4a2aa9a116c4277981e5634f98d1d6f12043d151dd48c7bec0",
+          "persisted": true,
+          "literalReadback": true
+        }
+      ]
+    },
+    "originalMainGets": 1,
+    "acquisitionClosed": true,
+    "branchRetained": true
+  },
+  "originalArtifact": {
+    "bytes": 46001766,
+    "downloadCount": 1,
+    "expired": false,
+    "id": 15214066673,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef",
+    "verifiedBytes": 46001766,
+    "verifiedSha256": "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef"
+  },
+  "exportManifest": {
+    "gitBlob": "7af030aab7cb129a256019038909950bc7fa988f",
+    "bytes": 11701,
+    "sha256": "c47fd873429578a52e55172444a09932618001896dfb62296df059044b73f572"
+  },
+  "exports": [
+    {
+      "name": "original-cpu-preview-first.cpuprofile",
+      "bytes": 1888001,
+      "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+      "mime": "application/json",
+      "original": true,
+      "encoding": "base64",
+      "chunks": 103,
+      "file": 7,
+      "gitBlobCalculated": "ac668b238261f78cb262228599e36bbb13a72a19",
+      "gitBlobPersisted": false,
+      "lines": [
+        1696,
+        1697,
+        1698,
+        1699,
+        1700,
+        1701,
+        1702,
+        1703,
+        1704,
+        1705,
+        1706,
+        1707,
+        1708,
+        1709,
+        1710,
+        1711,
+        1712,
+        1713,
+        1714,
+        1715,
+        1716,
+        1717,
+        1718,
+        1719,
+        1720,
+        1721,
+        1722,
+        1723,
+        1724,
+        1725,
+        1726,
+        1727,
+        1728,
+        1729,
+        1730,
+        1731,
+        1732,
+        1733,
+        1734,
+        1735,
+        1736,
+        1737,
+        1738,
+        1739,
+        1740,
+        1741,
+        1742,
+        1743,
+        1744,
+        1745,
+        1746,
+        1747,
+        1748,
+        1749,
+        1750,
+        1751,
+        1752,
+        1753,
+        1754,
+        1755,
+        1756,
+        1757,
+        1758,
+        1759,
+        1760,
+        1761,
+        1762,
+        1763,
+        1764,
+        1765,
+        1766,
+        1767,
+        1768,
+        1769,
+        1770,
+        1771,
+        1772,
+        1773,
+        1774,
+        1775,
+        1776,
+        1777,
+        1778,
+        1779,
+        1780,
+        1781,
+        1782,
+        1783,
+        1784,
+        1785,
+        1786,
+        1787,
+        1788,
+        1789,
+        1790,
+        1791,
+        1792,
+        1793,
+        1794,
+        1795,
+        1796,
+        1797,
+        1798
+      ],
+      "key": "profile",
+      "parts": [
+        {
+          "index": 1,
+          "startCodeUnit": 0,
+          "endCodeUnit": 300000,
+          "bytes": 300000,
+          "gitBlob": "8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+          "sha256": "01ba00457c461014b59c524ca32ae6c572bb4864efb936ec41bba82b50e9e702",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 2,
+          "startCodeUnit": 300000,
+          "endCodeUnit": 600000,
+          "bytes": 300000,
+          "gitBlob": "14f241caaf0393d27439a4a983a0697ae7ade42e",
+          "sha256": "ea00c93b471b37c23574b8ddf4771d32332beaf085897377ab4dd6a5346b7399",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 3,
+          "startCodeUnit": 600000,
+          "endCodeUnit": 900000,
+          "bytes": 300000,
+          "gitBlob": "7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+          "sha256": "0e2c98b7b36306a30932a854f61fd3f60280620b773e30e56322cef5ce8319a8",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 4,
+          "startCodeUnit": 900000,
+          "endCodeUnit": 1200000,
+          "bytes": 300000,
+          "gitBlob": "44610d70e50484d2f7177ff94e9d1af50a39cee0",
+          "sha256": "8aeb0781645b87214e1c3c380da7d0eb3b0ea6f872942a6f2acc0f05fc5038b0",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 5,
+          "startCodeUnit": 1200000,
+          "endCodeUnit": 1500000,
+          "bytes": 300000,
+          "gitBlob": "ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+          "sha256": "74b321ec56809401ed620116ccc3e45fbd9691fd975cfa6c224320982ee7486e",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 6,
+          "startCodeUnit": 1500000,
+          "endCodeUnit": 1800000,
+          "bytes": 300000,
+          "gitBlob": "36a47a4d844139854c31f461822115339e5c0487",
+          "sha256": "66c925163aad4c1edf07cb9add6cbe48a59bf457a6b5961ccdd43866eb03b7b4",
+          "persisted": true,
+          "literalReadback": true
+        },
+        {
+          "index": 7,
+          "startCodeUnit": 1800000,
+          "endCodeUnit": 1888001,
+          "bytes": 88001,
+          "gitBlob": "54d146487581b34ec68cffda4e089b5453804162",
+          "sha256": "7957eb963c1a3335637ca1143b3c8555f8092059c76e3cc7e72789b772dbc1c6",
+          "persisted": true,
+          "literalReadback": true
+        }
+      ],
+      "allPartsPersisted": true,
+      "literalReadback": true,
+      "wholeBlobPersisted": false
+    },
+    {
+      "name": "preview-e11-cpu-progress-markers.lf.log",
+      "bytes": 5324,
+      "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+      "mime": "text/plain",
+      "original": false,
+      "encoding": "base64",
+      "chunks": 1,
+      "gitBlobCalculated": "2e908cb17714359dea5281357f956ff89f66d7da",
+      "gitBlobPersisted": true,
+      "lines": [
+        1799
+      ],
+      "key": "markers",
+      "gitBlob": "2e908cb17714359dea5281357f956ff89f66d7da",
+      "literalReadback": true
+    },
+    {
+      "name": "original-cpu-collection.json",
+      "bytes": 1661,
+      "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+      "mime": "application/json",
+      "original": true,
+      "encoding": "base64",
+      "chunks": 1,
+      "file": 5,
+      "gitBlobCalculated": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+      "gitBlobPersisted": true,
+      "lines": [
+        1800
+      ],
+      "key": "collection",
+      "gitBlob": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+      "literalReadback": true
+    },
+    {
+      "name": "original-cpu-launcher.json",
+      "bytes": 663,
+      "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+      "mime": "application/json",
+      "original": true,
+      "encoding": "base64",
+      "chunks": 1,
+      "file": 6,
+      "gitBlobCalculated": "4180de318a5d5642ebb65b9190393179480c7275",
+      "gitBlobPersisted": true,
+      "lines": [
+        1801
+      ],
+      "key": "launcher",
+      "gitBlob": "4180de318a5d5642ebb65b9190393179480c7275",
+      "literalReadback": true
+    },
+    {
+      "name": "safe-summary.json",
+      "bytes": 43963,
+      "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+      "mime": "application/json",
+      "original": false,
+      "encoding": "base64",
+      "chunks": 3,
+      "gitBlobCalculated": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+      "gitBlobPersisted": true,
+      "lines": [
+        1802,
+        1803,
+        1804
+      ],
+      "key": "summary",
+      "gitBlob": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+      "literalReadback": true
+    },
+    {
+      "name": "inventory.json",
+      "bytes": 105553,
+      "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+      "mime": "application/json",
+      "original": false,
+      "encoding": "base64",
+      "chunks": 6,
+      "gitBlobCalculated": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+      "gitBlobPersisted": true,
+      "lines": [
+        1805,
+        1806,
+        1807,
+        1808,
+        1809,
+        1810
+      ],
+      "key": "inventory",
+      "gitBlob": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+      "literalReadback": true
+    },
+    {
+      "name": "receipt.json",
+      "bytes": 52546,
+      "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+      "mime": "application/json",
+      "original": false,
+      "encoding": "base64",
+      "chunks": 3,
+      "gitBlobCalculated": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+      "gitBlobPersisted": true,
+      "lines": [
+        1811,
+        1812,
+        1813
+      ],
+      "key": "receipt",
+      "gitBlob": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+      "literalReadback": true
+    }
+  ],
+  "transport": {
+    "all7ExportsDecodedAndHashVerified": true,
+    "exact118Chunks": true,
+    "coreBytes": 2829285,
+    "payloadBytes": 2097711,
+    "terminalBytes": 2065,
+    "totalEmitterBytes": 2831350,
+    "coreMetadataExact": true,
+    "base64Canonical": true,
+    "receiptTerminalHashMatches": true,
+    "allUtf8Roundtrip": true,
+    "decodedPreservationPending": false,
+    "allDecodedBytesPreservedAndLiteralReadback": true,
+    "fullEmissionSha256": "de479d11b6a3883429426c93825fbd9f56d44e6fd6e7e48718b84392177ae95e",
+    "maxChunkLineBytes": 24855,
+    "terminal": {
+      "schema": 1,
+      "kind": "e11-core-terminal",
+      "qualification": false,
+      "status": "ORIGINAL_BYTES_VERIFIED",
+      "coreBytesComplete": true,
+      "receiptBase64Complete": true,
+      "captureComplete": true,
+      "cpuState": "completed-on-time",
+      "coreFiles": 7,
+      "coreChunks": 118,
+      "corePayloadBytes": 2097711,
+      "coreLogBytes": 2829285,
+      "logBytesBeforeCore": 0,
+      "logBytesBeforeTerminal": 2829285,
+      "emitterCapBytes": 7340032,
+      "mainLogReviewCapBytes": 8388608,
+      "receiptBytes": 52546,
+      "receiptSha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+      "exports": [
+        {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "bytes": 1888001,
+          "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 103,
+          "file": 7
+        },
+        {
+          "name": "preview-e11-cpu-progress-markers.lf.log",
+          "bytes": 5324,
+          "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+          "mime": "text/plain",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 1
+        },
+        {
+          "name": "original-cpu-collection.json",
+          "bytes": 1661,
+          "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 5
+        },
+        {
+          "name": "original-cpu-launcher.json",
+          "bytes": 663,
+          "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+          "mime": "application/json",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 6
+        },
+        {
+          "name": "safe-summary.json",
+          "bytes": 43963,
+          "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 3
+        },
+        {
+          "name": "inventory.json",
+          "bytes": 105553,
+          "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 6
+        },
+        {
+          "name": "receipt.json",
+          "bytes": 52546,
+          "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 3
+        }
+      ],
+      "entries": 153,
+      "crcVerified": 153,
+      "expandedBytes": 57469984,
+      "pending": 0,
+      "failures": [],
+      "readerExitCode": 0
+    }
+  },
+  "inventory": {
+    "allEntriesVerified": true,
+    "archives": 2,
+    "crcVerified": 153,
+    "entries": 153,
+    "expandedBytes": 57469984
+  },
+  "selection": {
+    "bytes": 3066,
+    "config": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "file": 2,
+    "sha256": "48d2d072a7a9291652f65f02d4e1161837962ba2afea7c6204b4bc6bfaf2139d",
+    "tests": 2,
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ]
+  },
+  "runtime": {
+    "file": 1,
+    "bytes": 4814721,
+    "sha256": "7e49169de9afac9e406ffcd775dbc020b15bd5423051c880df91e2551cddde6d",
+    "config": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "cases": [
+      {
+        "attachmentCount": 9,
+        "durationMs": 214933,
+        "errors": [
+          {
+            "messageBytes": 769,
+            "messageSha256": "ef98b217daca065793bb20e3e848a9671eeb071ac4762cc2a4ece35c09eb230b",
+            "source": {
+              "column": 32,
+              "file": "design-wave-five-analytics.spec.ts",
+              "line": 72
+            },
+            "stackBytes": 0,
+            "stackSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timeout60000": true,
+            "waitForResponse": true
+          }
+        ],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T15:50:26.160Z",
+        "status": "failed",
+        "stdioStreams": [
+          {
+            "bytes": 746513,
+            "case": 1,
+            "markerBytes": 11180,
+            "markerLines": 39,
+            "markerPath": "derived/runtime-case-1-result-1-stdout-semantic-markers.lf.log",
+            "markerSha256": "f1d9102817115a8bc23338742f8327cd40b68689d38a2ba6f411a53383d916da",
+            "result": 1,
+            "sha256": "d62e8c53001f8de7c49bd39e06506fa7cc1ada2178174e26913016667f4a299e",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 1,
+            "markerBytes": 0,
+            "markerLines": 0,
+            "markerPath": "derived/runtime-case-1-result-1-stderr-semantic-markers.lf.log",
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+        "workerIndex": 0
+      },
+      {
+        "attachmentCount": 40,
+        "durationMs": 53970,
+        "errors": [],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-27T15:55:23.481Z",
+        "status": "passed",
+        "stdioStreams": [
+          {
+            "bytes": 3994728,
+            "case": 2,
+            "markerBytes": 28306,
+            "markerLines": 63,
+            "markerPath": "derived/runtime-case-2-result-1-stdout-semantic-markers.lf.log",
+            "markerSha256": "ef267ed3420ab73c3806b4674f08ef08f242d1518c9dfde4837be56fad0834d1",
+            "result": 1,
+            "sha256": "265561498a969684f8c9a8590eaf3addec7ad254048fadc33eefba45ddada081",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 2,
+            "markerBytes": 0,
+            "markerLines": 0,
+            "markerPath": "derived/runtime-case-2-result-1-stderr-semantic-markers.lf.log",
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: question catalog and original contextual BI",
+        "workerIndex": 1
+      }
+    ],
+    "verdict": {
+      "BI": "passed;40 captures and original complete UI45/UI46 scope",
+      "UI42": "partial;6 captures before first preview response",
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "failed": 1,
+      "passed": 1
+    },
+    "parities": {
+      "allFour": true,
+      "analytics": {
+        "bytes": 34162,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 44,
+          "SF_DESIGN_DIAGNOSTICS": 5
+        },
+        "expectedBytes": 34162,
+        "expectedSha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1",
+        "matchesOriginalMainSequence": true,
+        "sha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1"
+      },
+      "cpu": {
+        "bytes": 3180,
+        "counts": {
+          "SF_PREVIEW_E11_CPU": 3
+        },
+        "expectedBytes": 3180,
+        "expectedSha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+        "matchesOriginalMainSequence": true,
+        "sha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb"
+      },
+      "progress": {
+        "bytes": 2144,
+        "counts": {
+          "SF_PREVIEW_E11_PROGRESS": 3
+        },
+        "expectedBytes": 2144,
+        "expectedSha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7",
+        "matchesOriginalMainSequence": true,
+        "sha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7"
+      },
+      "union": {
+        "bytes": 39486,
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_ANALYTICS_SCOPE": 1,
+          "SF_ANALYTICS_SOURCE": 44,
+          "SF_DESIGN_DIAGNOSTICS": 5,
+          "SF_PREVIEW_E11_CPU": 3,
+          "SF_PREVIEW_E11_PROGRESS": 3
+        },
+        "expectedBytes": 39486,
+        "expectedSha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+        "matchesOriginalMainSequence": true,
+        "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+        "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6"
+      }
+    }
+  },
+  "capture": {
+    "captureComplete": true,
+    "state": "completed-on-time",
+    "tuple": {
+      "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+      "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "run": 46028127606,
+      "attempt": 1,
+      "pid": 3713,
+      "parentPid": 3668,
+      "nonce": "sf613-e11-cpu-RIlIZr",
+      "request": 1
+    },
+    "runtime": [
+      "1.3.14",
+      "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+    ],
+    "targetMs": 50000,
+    "acceptMs": 55000,
+    "intervalUs": 5000,
+    "profileSchemaValid": true,
+    "postCloseFilesVerified": [
+      "preview-first.cpuprofile",
+      "collection.json"
+    ],
+    "collectionProfileBytesMatched": true,
+    "selectionFinite": true,
+    "collectionSelection": {
+      "cap": 65535,
+      "nativePairs": [
+        15114,
+        0,
+        0,
+        0,
+        702,
+        0,
+        0,
+        0,
+        702
+      ],
+      "order": [
+        "none",
+        "cases",
+        "preferences"
+      ],
+      "saturated": false,
+      "scope": "pid-running-window",
+      "sourceRequests": [
+        2167,
+        702,
+        702
+      ]
+    },
+    "collectionRoutes": {
+      "cap": 65535,
+      "counts": [
+        3943,
+        758,
+        1386
+      ],
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "scope": "pid-running-window"
+    },
+    "native": {
+      "endTime": 1795794910057365.8,
+      "nodes": 8246,
+      "samples": 9682,
+      "startTime": 1795794860059719.8
+    },
+    "caseMembership": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout",
+      "cpuOrdinals": [
+        31,
+        35,
+        36
+      ],
+      "progressOrdinals": [
+        32,
+        33,
+        34
+      ],
+      "allSixLiteralRecordsMatched": true
+    },
+    "clockDomains": {
+      "playwrightStart": "2026-11-27T15:50:26.160Z",
+      "playwrightDurationMs": 214933,
+      "playwrightArithmeticEnd": "2026-11-27T15:54:01.093Z",
+      "cpuStartedUtcMs": 1795794860059,
+      "cpuStartedUtc": "2026-11-27T15:54:20.059Z",
+      "interpretation": "Clock domains are not reconciled. Literal case/result/stdout membership establishes the received linkage; no wall-clock causality or exclusive interval is inferred."
+    },
+    "originalFileIds": {
+      "profile": 7,
+      "collection": 5,
+      "launcher": 6
+    },
+    "crc32IndependentlyRecomputed": {
+      "profile": "6b3bfce1",
+      "collection": "a193dcda",
+      "launcher": "1adfad15"
+    }
+  },
+  "otherPreparedLauncher": [
+    {
+      "bytes": 663,
+      "file": 4,
+      "limit": "No profile/collection in this directory; no case/PID/Request/start/stop/completion is inferred.",
+      "name": "launcher.json",
+      "nonce": "sf613-e11-cpu-1lfYPA",
+      "parseStatus": "JSON_OBJECT",
+      "preparedBindingVerified": true,
+      "sha256": "ac2f7ae0c7fa49cdd4595f8eff1a819dfd929a1f56d596c79d4936327953f6fa",
+      "stateObserved": "prepared",
+      "trailingLF": true
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "auditArtifact": {
+    "id": 15215046581,
+    "name": "sf613-analytics-original-46028127606-receipt-1",
+    "size_in_bytes": 98228184,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15215046581",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15215046581/zip",
+    "expired": false,
+    "created_at": "2026-11-27T16:18:10Z",
+    "expires_at": "2026-12-04T16:18:06Z",
+    "updated_at": "2026-11-27T16:18:10Z",
+    "digest": "sha256:2bf8c6625355e7c55bb2162f33e013672dbdc7c8e2a6013de4e18517bb120901",
+    "workflow_run": {
+      "id": 46032200409,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "sf613-artifact-e11cpu",
+      "head_sha": "e63cffcea872aa538bc7ee1d6ed2768ecad80862"
+    },
+    "contentAcquired": false,
+    "gets": 0
+  },
+  "reviews": {
+    "root": {
+      "status": "ACK_CAPTURE_AND_FULL_TRANSPORT",
+      "allBytesPreservedBeforeParse": true,
+      "allExportsPreserved": true,
+      "sourceRuntimeAndInventoryBindingsVerified": true
+    },
+    "independent": {
+      "reviewer": "/root/focal_migration",
+      "status": "ACK_CAPTURE_AND_FULL_TRANSPORT",
+      "checks": 36,
+      "failures": [],
+      "allOriginalCopiesAuthenticatedBeforeParse": true,
+      "threeOriginalFileCrcsRecomputed": true,
+      "originalGets": 0,
+      "zipGets": 0
+    },
+    "static": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_FINAL_CODE_BINDINGS_SUPPORTS_AND_ACTUAL_OBJECT",
+      "finalManifest": "13c59828c65a1dcaef34f5e810c175c078e396c3"
+    }
+  },
+  "next": "Analyze current verified profile against clean S15R and implement a reviewed causal correction; qualify the new clean candidate with its own focal and original Analytics.",
+  "limits": [
+    "Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+    "Zero bytes is a present inventory file with the empty SHA256, not an absent-file placeholder.",
+    "A ZIP CRC/hash proves received bytes, not producer fsync/close; only a later verified finished can attest that.",
+    "Collection contents alone do not attest their own close, even when its JSON and profile hash are valid.",
+    "Malformed JSON, missing LF or missing files remains explicit negative evidence and never capture completion.",
+    "Whole-VM samples include unrelated backend work; no exclusive/async/browser/child-process cost is inferred.",
+    "No samples*5ms estimate, causal bottleneck or product qualification is inferred.",
+    "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+    "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+    "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
+    "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
+    "Source token decisions and all-surface native copied-child pairs have distinct populations; no conservation or fallback rate is inferred.",
+    "Native pairs exclude top-level materializations and copies that threw before completion; the CPU profile may still include them.",
+    "All clocks retain their domains; no reconciliation with Playwright startTime/duration.",
+    "The reader success and capture do not change the original functional result of one failed and one passed case. #613 remains 12/15 historical.",
+    "Whole reader-main and whole-profile Git hashes are calculated identities only; their actual persisted objects are the listed parts.",
+    "Raw selection/runtime JSON remain in the audit artifact with authenticated hashes and summaries; they are not claimed as fully exported in this main.",
+    "Original Analytics and reader log acquisitions are closed; the original artifact acquisition occurred once inside this reader. Audit artifact must not be downloaded.",
+    "No final candidate, final tar, Release qualification, G08/G10 acceptance or production authorization is implied."
+  ]
+}

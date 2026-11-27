@@ -1,0 +1,1019 @@
+{
+  "schema": "sf613-d26-parametric-bounds/v1",
+  "status": "TEXT_ONLY_UNBOUND_NOT_EXECUTED",
+  "baseManifest": {
+    "git": "333ca6f1b6bfaea1e823e0d475e63a7e75547eb1",
+    "bytes": 15697,
+    "sha256": "fc4a0917b2eca5ca640ab8ee23755c2ad8a4c6965e35b6295170443739aaa1c8",
+    "lf": 447
+  },
+  "baseBounds": {
+    "gitSha": "fc1ddfb0cdcb7901cbee5981130863a0c044ca22",
+    "bytes": 9795,
+    "sha256": "0caee4089ac39a99596f9c5a88f22cf2331b135d8cf90467b6b3408e0135bc09"
+  },
+  "parameters": [
+    {
+      "token": "__SF613_SOURCE_SHA__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_SOURCE_TREE__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_BLOB__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_SHA256__",
+      "concreteWidth": 64,
+      "state": "UNBOUND"
+    }
+  ],
+  "occurrences": {
+    "wrapper": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 0,
+      "__SF613_WRAPPER_SHA256__": 0
+    },
+    "envelope": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "finalizer": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "workflow": {
+      "__SF613_SOURCE_SHA__": 3,
+      "__SF613_SOURCE_TREE__": 2,
+      "__SF613_WRAPPER_BLOB__": 2,
+      "__SF613_WRAPPER_SHA256__": 2
+    }
+  },
+  "wrapper": {
+    "draft": {
+      "gitSha": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "lf": 337
+    },
+    "outerGroups": 26,
+    "expectSpawnSites": 26,
+    "syntacticRunCommands": 32,
+    "plannedRunCommands": 37,
+    "expectedTruncationFlags": 74,
+    "arithmetic": "26 groups + two extra identity command sites + four extra guard command sites =32 sites. G12's one site executes six English reads, adding five:37 commands.",
+    "preservedD25Groups": 25,
+    "preservedD25PlannedCommands": 36,
+    "addedGroups": 1,
+    "addedCommands": 1,
+    "addedFunctionalDeclarations": 5,
+    "addedControlReports": 5,
+    "addedProcessMs": 300000,
+    "addedOuterMs": 360000,
+    "addedCooperativePerTestMs": null,
+    "addedBunPerTestMs": null,
+    "proofParentControls": 10,
+    "proofIsolatedChildren": 6,
+    "proofCountsAreSeparate": true,
+    "fullSuiteUniqueFunctionalCount": null,
+    "groupInventory": [
+      {
+        "group": 1,
+        "plannedCommands": 3,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 2,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 3,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 4,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 5,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 6,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 360000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 7,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 8,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 9,
+        "plannedCommands": 5,
+        "outerTimeoutMs": 600000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 10,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 11,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 12,
+        "plannedCommands": 6,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 13,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 14,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 15,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 240000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 16,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 17,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 18,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 19,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 20,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 21,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 22,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 7,
+        "literalD25": true
+      },
+      {
+        "group": 23,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2,
+        "literalD25": true
+      },
+      {
+        "group": 24,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2,
+        "literalD25": true
+      },
+      {
+        "group": 25,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "processTimeoutMs": 150000,
+        "literalQualifiedFocalBlock": true,
+        "literalD25": true
+      },
+      {
+        "group": 26,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 360000,
+        "singleProcessTimeoutMs": 300000,
+        "declarations": 5,
+        "reports": 5,
+        "literalReviewedC14FocalBlock": true,
+        "c17NestedIdentityProjectionOracles": 9
+      }
+    ],
+    "originalGroupHashProof": {
+      "gitSha": "d435b940cf0fbe87bc5fb5451bf35392db7bc92d",
+      "bytes": 14567,
+      "sha256": "7364b4c54cc0e3e6849774e58d319a2b13a2f047cf0bec13543c80ea93b5ecbe",
+      "lf": 272,
+      "beforeAfterLiteral": true
+    },
+    "runCommandHashProof": {
+      "gitSha": "b7c6dda6b8c64ffe7ce6260e959ea1735ef1217b",
+      "bytes": 1347,
+      "sha256": "21960f990ead91989aaecb2be661ed297b71dfb2fdba2e0f5086b2e2fb214a80",
+      "lf": 24,
+      "beforeAfterLiteral": true
+    },
+    "addedPerTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      },
+      "addedC16": {
+        "declarations": 1,
+        "cooperativePerTestMs": 8000,
+        "bunPerTestMs": 10000
+      }
+    },
+    "addedNominalBunSumMs": 290000,
+    "addedNominalCooperativeSumMs": 264000,
+    "addedNominalMarginToProcessMs": 10000
+  },
+  "global": {
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "unchanged": true,
+    "noBudgetIncrease": true
+  },
+  "runBlocks": [
+    {
+      "name": "Initialize external evidence",
+      "line": 25,
+      "draftCharacters": 1300,
+      "draftUtf8Bytes": 1300,
+      "fourPinWidthModelCharacters": 1300,
+      "literalD25": true
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "line": 70,
+      "draftCharacters": 716,
+      "draftUtf8Bytes": 716,
+      "fourPinWidthModelCharacters": 716,
+      "literalD25": true
+    },
+    {
+      "name": "Configure git identity",
+      "line": 88,
+      "draftCharacters": 139,
+      "draftUtf8Bytes": 139,
+      "fourPinWidthModelCharacters": 139,
+      "literalD25": true
+    },
+    {
+      "name": "Run source-bound technical qualification",
+      "line": 826,
+      "draftCharacters": 3689,
+      "draftUtf8Bytes": 3689,
+      "fourPinWidthModelCharacters": 3689,
+      "literalD25": true
+    },
+    {
+      "name": "Finalize owned slot and evidence",
+      "line": 893,
+      "draftCharacters": 15833,
+      "draftUtf8Bytes": 15833,
+      "fourPinWidthModelCharacters": 15930,
+      "literalD25": false
+    }
+  ],
+  "runCharacterLimit": 21000,
+  "maximumDraftRunChars": 15833,
+  "maximumWidthModelRunChars": 15930,
+  "allDraftAndWidthModelWithinLimit": true,
+  "envelope": {
+    "draft": {
+      "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723
+    },
+    "fourPinWidthModelUtf8Bytes": 43908,
+    "embeddedLiteral": true,
+    "derivedHashMatches": true,
+    "hexGatePreserved": true
+  },
+  "finalizer": {
+    "draft": {
+      "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250
+    },
+    "fourPinWidthModelUtf8Bytes": 15879,
+    "embeddedLiteral": true
+  },
+  "loader": {
+    "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+    "bytes": 3638,
+    "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+    "literal": true,
+    "literalD25": true
+  },
+  "emittedTestCommandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "scope": "Each runCommand capture, unchanged; not a cumulative log cap.",
+    "expectedFlagCount": 74,
+    "notCumulative": true
+  },
+  "c14Reference": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "gitBlob": "1df97636d7c9f913d333040456ac0593c87959d7",
+    "bytes": 35882,
+    "sha256": "8ee6942eabbfa443af1f584019cd51ec0ea2718b5eee58bfafb62ae52aa9629e",
+    "declarations": 2,
+    "reportPrefix": "SF_C14_SNAPSHOT_CONTROL",
+    "reports": 2,
+    "cooperativeMs": 110000,
+    "bunPerTestMs": 120000,
+    "nominalBunSumMs": 240000,
+    "wholeProcessMs": 300000,
+    "parentMs": 360000,
+    "finalC613Blob": "UNBOUND",
+    "referenceIsQualification": false
+  },
+  "arithmeticOnly": {
+    "individualCommandTimeoutSumBeforeMs": 5190000,
+    "individualCommandTimeoutSumAfterMs": 5490000,
+    "parentTimeoutSumBeforeMs": 6840000,
+    "parentTimeoutSumAfterMs": 7200000,
+    "meaning": "Independent ceiling sums, not runtime estimates or job allocations. They do not increase or establish fit within the retained35-minute process limit."
+  },
+  "boundaryNotes": [
+    "G1–25 and their budgets, including G6 at300/360s, remain literal. G26's unchanged whole-file command now covers five declarations (two C14,two C15,one C16), without a name filter or directory selection.",
+    "The seven-test CurrentChoice file is not edited or rerun in a duplicate group. The six isolated proof children retain their separate accounting.",
+    "G26 retains two C14 declarations at110s cooperative/120s Bun and two C15 at18s/20s, and selects one C16 at8s/10s. Nominal Bun290s/cooperative264s leaves10s inside the unchanged300s process and360s parent, without guaranteeing startup, setup, disposal, scheduling or reap. Null uniform per-test fields still mean mixed budgets.",
+    "Global process35minutes/technical step40minutes/job45minutes/finalizer3minutes, term5s/kill5s/drain10s remain literal. No performance result or sufficient runtime budget is claimed.",
+    "The per-command1MiB stdout/1MiB stderr caps and truncation rejection remain unchanged. These are not an aggregate log budget.",
+    "The same four parameters remain UNBOUND. Width-only models use nonhex x characters in memory, never actual source/driver identities.",
+    "The first four workflow run blocks and the loader remain byte-literal. Envelope/finalizer embeddings are exact, with only authorized count/schema changes.",
+    "The envelope still verifies the outer26-case summary and native Omni verdict. Intake must reconcile37 actual commands/74false truncation flags,six proof children,two C14 reports,two C15 reports (four and fifteen outcomes),and one C16 report with31 outcomes plus9 nested identityProjection.cases for C17. No new report family or parser is added. Twelve functional tests/eight reports describe only the separate focal; whole D26 functional count remains null.",
+    "FinalUI6 and its390-byte source request remain separate and unchanged. No focal or historical result qualifies D26, C613, Cgo or Release.",
+    "The preserved c14Reference,c15Reference,c16Reference and earlier revisions are historical. c17Reference supplies the active documentary contract/LocalStore/Provider/test pins and source/focal locators. Reconcile those and the unchanged clean reference leaves against actual final C613 before resolving the four bindings; no source qualification follows from a reference pin."
+  ],
+  "diffStats": [
+    {
+      "artifact": "wrapper",
+      "hunks": 3,
+      "added": 9,
+      "deleted": 2,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "envelope",
+      "hunks": 4,
+      "added": 10,
+      "deleted": 10,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "finalizer",
+      "hunks": 1,
+      "added": 3,
+      "deleted": 3,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "workflow",
+      "hunks": 7,
+      "added": 15,
+      "deleted": 15,
+      "forwardInverse": true
+    }
+  ],
+  "c15Reference": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "gitBlob": "a55818797ecf9fa6801393762bbe3261a1812576",
+    "bytes": 56757,
+    "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "sourceManifest": {
+      "gitSha": "75791541a1c268fbb24c4f6aa8f9d37e8160e20f",
+      "bytes": 11823,
+      "sha256": "eabcbe18c44d211d383965b7b80b70457397ca3437c153de5caf87e5786fa3ec"
+    },
+    "declarations": 4,
+    "reportFamilies": {
+      "SF_C14_SNAPSHOT_CONTROL": 2,
+      "SF_C15_SELECTION_CONTROL": 2
+    },
+    "reports": 4,
+    "perTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      }
+    },
+    "nominalBunSumMs": 280000,
+    "nominalMarginToProcessMs": 20000,
+    "wholeProcessMs": 300000,
+    "parentMs": 360000,
+    "newReportOutcomeRows": [
+      4,
+      15
+    ],
+    "finalC613Blob": "UNBOUND",
+    "referenceIsQualification": false,
+    "focalExpectationOnly": {
+      "functionalDeclarations": 11,
+      "controlReports": 7,
+      "notWholeD26Count": true
+    }
+  },
+  "documentaryRevision": {
+    "author": "/root/teams_product",
+    "authority": "Root authorized only the D26 documentary amendment for the existing whole-file C15 controls; no executable, final binding, tree, commit, ref or run is changed.",
+    "baseManifest": {
+      "gitSha": "bc41111eb043414a799f024c69621b1da3eb4053",
+      "bytes": 23064,
+      "sha256": "05e96e810ca91716f883ceab3563f94d42455b6ce0822d4afb2b20f6b7b30c92",
+      "lf": 615
+    },
+    "baseBounds": {
+      "gitSha": "06aa6bba68129c772ea498b81dc0bddddbb856d2",
+      "bytes": 13385,
+      "sha256": "fa42f372c6ace60b17ee4a37d6a5eedfb86b2f6ebb517287a2b4f04c04aff9f8",
+      "lf": 457
+    },
+    "scope": "The original D26 executable derivation, artifacts, anchors, diff, authority and action record remain historical and literal. Only the active G26 source/control references, declaration/report expectations, mixed per-test budgets and future-intake notes are updated.",
+    "originalG26Reference": {
+      "declarations": 2,
+      "reports": 2,
+      "nominalBunSumMs": 240000,
+      "processMarginMs": 60000
+    },
+    "currentG26Reference": {
+      "declarations": 4,
+      "reports": 4,
+      "nominalBunSumMs": 280000,
+      "processMarginMs": 20000
+    },
+    "executableChanges": 0,
+    "finalBindingsState": "UNBOUND",
+    "wholeD26FunctionalCount": null,
+    "qualificationTransferred": false,
+    "originalC14ReferenceIsHistorical": true
+  },
+  "typeRepairRevision": {
+    "authority": "Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.",
+    "previousManifest": {
+      "gitSha": "5244ae34d7ad5827e89b013e709e123a726eea12",
+      "bytes": 29616,
+      "sha256": "f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b",
+      "lf": 776
+    },
+    "previousBounds": {
+      "gitSha": "2f01f5cfd420a4ef40ea4121043f201bd4190349",
+      "bytes": 16996,
+      "sha256": "e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91",
+      "lf": 549
+    },
+    "repairSupport": {
+      "gitSha": "e781c4c2f0cb114fdd03167b9e7e0db4d70749e1",
+      "bytes": 8711,
+      "sha256": "76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7"
+    },
+    "previousSource": "86a724371c42f6be640fcf1108900e6fe49edea6",
+    "previousTree": "2c6e05fb1ffc700b25815aa4c64964fe7740308c",
+    "previousTest": "86b2dd03f894e10a5c6a787771544a2c10a972b2",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "soleParent": "86a724371c42f6be640fcf1108900e6fe49edea6",
+    "test": "a55818797ecf9fa6801393762bbe3261a1812576",
+    "sourceDeltaAgainstParent": "1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.",
+    "cumulativeDeltaAgainstS14": "4 product files and1 existing test; the four product postimages are unchanged by this repair.",
+    "limits": "No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.",
+    "qualificationTransferred": false,
+    "finalC613State": "UNBOUND"
+  },
+  "c16Reference": {
+    "scope": "Current documentary C16 reference only; final C613 and D26 remain UNBOUND. Preserved currentC14Reference and currentC15Reference are historical cuts.",
+    "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceManifest": {
+      "gitSha": "57acd565b321ac9ddbf6c84b5d2fe32d41726bf4",
+      "bytes": 11710,
+      "sha256": "2dec3a125a24f315d8cf2ff250e11980936b3d075076f7e0ca27239503b7d7e8"
+    },
+    "sourceBounds": {
+      "gitSha": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+      "bytes": 3863,
+      "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870"
+    },
+    "changedProductPin": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+      "gitBlob": "550236df66f1e02e5111a1eee23579e76178bc6b",
+      "bytes": 66998,
+      "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+      "finalC613Blob": "UNBOUND"
+    },
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "preimage": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196,
+      "declarations": 5,
+      "preservedDeclarations": 4,
+      "addedC16Declarations": 1,
+      "reports": 5,
+      "reportFamilies": {
+        "SF_C14_SNAPSHOT_CONTROL": 2,
+        "SF_C15_SELECTION_CONTROL": 2,
+        "SF_C16_SELECTION_CONTROL": 1
+      },
+      "c15OutcomeRows": [
+        4,
+        15
+      ],
+      "c16OutcomeRows": [
+        31
+      ],
+      "wholeFileNoNameFilter": true,
+      "finalC613Blob": "UNBOUND"
+    },
+    "perTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      },
+      "addedC16": {
+        "declarations": 1,
+        "cooperativePerTestMs": 8000,
+        "bunPerTestMs": 10000
+      }
+    },
+    "nominalBunSumMs": 290000,
+    "nominalCooperativeSumMs": 264000,
+    "nominalMarginToProcessMs": 10000,
+    "processMs": 300000,
+    "outerMs": 360000,
+    "unchangedReferencePaths": "Other C15R and C14 product references remain in the preserved historical objects. Only Provider and the selected test changed from clean069a; no E11 file is included.",
+    "focalExpectationOnly": {
+      "functionalDeclarations": 12,
+      "controlReports": 8,
+      "notWholeD26Count": true
+    },
+    "qualificationTransferred": false,
+    "limits": [
+      "Reference pins do not bind final C613 or establish a result for D26.",
+      "Readonly admission oracles and preimage equivalence remain distinct; no latency guarantee or original Analytics acceptance is inferred.",
+      "The 10-second nominal process margin does not guarantee startup, setup, scheduling, disposal or reap."
+    ]
+  },
+  "c16DocumentaryRevision": {
+    "author": "/root/focal_migration",
+    "authority": "Root authorized exactly three documentary blobs from the last accepted D26 C15R manifest/bounds. No executable, final binding, object, ref, run, original log or ZIP changes.",
+    "baseManifest": {
+      "git": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+      "bytes": 31541,
+      "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+      "lf": 808
+    },
+    "baseBounds": {
+      "git": "cab7769368a73d850f59e98cadfb947b58cee02c",
+      "bytes": 18921,
+      "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+      "lf": 581
+    },
+    "baseDerivation": {
+      "git": "79b09955504ea67ac944e68bb0143e29078ec200",
+      "bytes": 22479,
+      "sha256": "2385121adfbc45226a7d9e0ff60e53fe5c75eaf86a4ed245835f3e3df1e95298",
+      "lf": 137
+    },
+    "scope": "Update only active G26 whole-file selection, reference pins, mixed budgets and future report intake for C16; preserve all earlier reference and revision objects literally.",
+    "previousG26": {
+      "declarations": 4,
+      "reports": 4,
+      "bunNominalMs": 280000,
+      "cooperativeNominalMs": 256000,
+      "nominalProcessMarginMs": 20000
+    },
+    "currentG26": {
+      "declarations": 5,
+      "reports": 5,
+      "bunNominalMs": 290000,
+      "cooperativeNominalMs": 264000,
+      "nominalProcessMarginMs": 10000,
+      "processMs": 300000,
+      "parentMs": 360000,
+      "c16Reports": 1,
+      "c16Outcomes": 31
+    },
+    "preserved": {
+      "executables": 4,
+      "outerGroups": 26,
+      "syntacticSites": 32,
+      "commands": 37,
+      "truncationFlags": 74,
+      "proofChildren": 6,
+      "G6Literal": true,
+      "globalMinutes": [
+        35,
+        40,
+        45
+      ],
+      "finalBindingParameters": 4,
+      "finalBindingsState": "UNBOUND",
+      "wholeD26FunctionalCount": null
+    },
+    "history": "The prior currentC14/currentC15 reference objects and documentaryRevision/typeRepairRevision records remain byte-literal at their JSON object boundaries; their internal 'current' labels describe those preserved cuts.",
+    "qualificationTransferred": false,
+    "derivation": "A separate immutable field-delta receipt accompanies these two documents; it records exact pre/post bytes and reversible JSON field changes.",
+    "actions": {
+      "plannedDocumentBlobs": 3,
+      "executableChanges": 0,
+      "trees": 0,
+      "commits": 0,
+      "refs": 0,
+      "runs": 0,
+      "originalLogGets": 0,
+      "zipGets": 0
+    }
+  },
+  "c17Reference": {
+    "scope": "Current C17 documentary reference only. Final C613 and the four D26 binding parameters remain UNBOUND. C14/C15/C16 objects are preserved historical cuts.",
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceManifest": {
+      "gitSha": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+      "bytes": 18155,
+      "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78"
+    },
+    "sourceBounds": {
+      "gitSha": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+      "bytes": 9394,
+      "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8"
+    },
+    "sourceObjectSupplement": {
+      "gitSha": "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+      "bytes": 5487,
+      "sha256": "97592ee88f59998c7dfd6caaa66b11570428f612338fbdca3d757be7d0cf502e"
+    },
+    "changedProductPins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "preimage": "8bdc12d191a76137cd2244e01990f7a780091216",
+        "gitBlob": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "finalC613Blob": "UNBOUND"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "preimage": "d02bcbfc770719935dcaca97cc20045b656f784d",
+        "gitBlob": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "finalC613Blob": "UNBOUND"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "preimage": "550236df66f1e02e5111a1eee23579e76178bc6b",
+        "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "finalC613Blob": "UNBOUND"
+      }
+    ],
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "preimage": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+      "lf": 1462,
+      "declarations": 5,
+      "preservedDeclarations": 5,
+      "addedC17Declarations": 0,
+      "reports": 5,
+      "addedC17ReportFamilies": 0,
+      "reportFamilies": {
+        "SF_C14_SNAPSHOT_CONTROL": 2,
+        "SF_C15_SELECTION_CONTROL": 2,
+        "SF_C16_SELECTION_CONTROL": 1
+      },
+      "c15OutcomeRows": [
+        4,
+        15
+      ],
+      "c16OutcomeRows": [
+        31
+      ],
+      "c17IdentityProjection": {
+        "report": "SF_C16_SELECTION_CONTROL",
+        "path": "identityProjection.cases",
+        "expectedCount": 9,
+        "expectedNames": [
+          "mixed-map-and-detached-readonly",
+          "mixed-map-and-detached-preimage",
+          "composed-identity-first-authorization-drift",
+          "composed-identity-second-authorization-drift",
+          "restored-codec-birth-keeps-complete-case",
+          "restored-codec-exposure-keeps-complete-case",
+          "cold-plan-birth-survives-restore-and-memo",
+          "owner-weakmap-escape-latches-across-roots",
+          "owner-als-escape-latches-across-roots"
+        ]
+      },
+      "wholeFileNoNameFilter": true,
+      "finalC613Blob": "UNBOUND"
+    },
+    "perTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      },
+      "addedC16": {
+        "declarations": 1,
+        "cooperativePerTestMs": 8000,
+        "bunPerTestMs": 10000
+      }
+    },
+    "nominalBunSumMs": 290000,
+    "nominalCooperativeSumMs": 264000,
+    "nominalMarginToProcessMs": 10000,
+    "processMs": 300000,
+    "outerMs": 360000,
+    "unchangedReferencePaths": "SourceLifecycle, CurrentChoice, ACL authorizer and ProductAuthority remain the preserved clean references; no observer is added. Reconcile all referenced paths against actual final C613.",
+    "focalReference": {
+      "manifest": {
+        "gitSha": "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+        "bytes": 24170,
+        "sha256": "cb9b8a30c9354ce9f9fb8d5cf4ea354b33b741c8d23c49d00a40e548b62ae8be"
+      },
+      "bounds": {
+        "gitSha": "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+        "bytes": 16947,
+        "sha256": "cb18c136132293550141ffe93f303d37eb7a16aec191a9933ffc1a22a9cdffc8"
+      },
+      "driver": {
+        "gitSha": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+        "bytes": 10891,
+        "sha256": "eb2ea447e2e95f53a96660c6db64cc68a0df06e3efbe423c7f52dfd321f32b77"
+      },
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+      "authority": {
+        "gitSha": "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+        "bytes": 19576,
+        "sha256": "8d7b2e77fb3cfa540a1be864be1906b004a03d6e1208da6298c8fac306dfb6b9"
+      },
+      "reportedRun": "46051100090",
+      "reportedAttempt": 1,
+      "functionalDeclarationsExpected": 12,
+      "controlReportsExpected": 8,
+      "notWholeD26Count": true,
+      "result": {
+        "status": "CLOSED_PASS_LIMITED_FOCAL",
+        "scope": "Historical prerequisite from this exact C17 focal; not a D26, original Analytics, Release or product qualification.",
+        "rootReceipt": {
+          "gitSha": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+          "bytes": 63985,
+          "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b",
+          "locatorProvenance": "root reported; independent same-log intake by focal_migration"
+        },
+        "rawManifest": {
+          "gitSha": "3a7ce980f7863c3fd3cf27766e65302de09046a0",
+          "bytes": 2227,
+          "sha256": "20d7f0437e5d0b96d93cffb637374301c835f13a70c804bb0953e7fc460e3d8a"
+        },
+        "functionalPass": 12,
+        "functionalFail": 0,
+        "functionalAssertions": 1052,
+        "outerPass": 6,
+        "outerFail": 0,
+        "outerAssertions": 29,
+        "reports": 8,
+        "c16Outcomes": 31,
+        "c17IdentityProjectionCases": 9,
+        "commandsExitZero": 12,
+        "truncationFlagsFalse": 24,
+        "cliTypesExit": 0,
+        "sucafinaTypesExit": 0,
+        "guards": {
+          "rules": 78,
+          "files": 856,
+          "warnings": 40,
+          "errors": 0,
+          "approved": 0
+        },
+        "omni": {
+          "declared": 6,
+          "spawned": 12,
+          "delegated": 0
+        },
+        "resultTransferredToD26": false
+      },
+      "assertionCount": 1052,
+      "completedAt": "2026-11-27T18:42:15Z"
+    },
+    "qualificationTransferred": false,
+    "limits": [
+      "Reference pins do not bind final C613 or establish a D26 result.",
+      "The same five whole-file declarations retain their original deadlines; nine C17 cases are nested in the existing C16 report.",
+      "Readonly body reduction and full preimage fallback are distinct oracles; no current CPU/latency or original Analytics acceptance is inferred.",
+      "The nominal10-second process margin does not guarantee setup, scheduling, teardown or reap."
+    ]
+  },
+  "c17DocumentaryRevision": {
+    "author": "/root/focal_migration",
+    "authority": "Root requested the documentary C16-to-C17 draft and then authorized incorporation of the closed C17 focal as a historical prerequisite only. No executable or final binding changes.",
+    "status": "DRAFT_UNBOUND_FOCAL_RECEIVED_NO_QUALIFICATION_TRANSFER",
+    "baseManifest": {
+      "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+      "bytes": 38243,
+      "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+      "lf": 981
+    },
+    "baseBounds": {
+      "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+      "bytes": 25101,
+      "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+      "lf": 744
+    },
+    "baseDerivation": {
+      "git": "ae3a5e6705de8c80ffdb8f0715c666710809c922",
+      "bytes": 40977,
+      "sha256": "c22de64650824484c9158f4b6cbe329dde3fca0a364c39164f2d29f1aea30fc7",
+      "lf": 1101
+    },
+    "scope": "Update only active source/test references, nine nested C17 report oracles and related locators. Record the received C17 focal as historical prerequisite without qualifying D26 or Analytics. Preserve all earlier reference/revision objects literally.",
+    "selectionUnchanged": {
+      "wholeFileDeclarations": 5,
+      "wholeFileReports": 5,
+      "c16Outcomes": 31,
+      "addedC17Declarations": 0,
+      "addedC17Reports": 0
+    },
+    "nestedC17Expected": {
+      "report": "SF_C16_SELECTION_CONTROL",
+      "field": "identityProjection.cases",
+      "count": 9,
+      "names": [
+        "mixed-map-and-detached-readonly",
+        "mixed-map-and-detached-preimage",
+        "composed-identity-first-authorization-drift",
+        "composed-identity-second-authorization-drift",
+        "restored-codec-birth-keeps-complete-case",
+        "restored-codec-exposure-keeps-complete-case",
+        "cold-plan-birth-survives-restore-and-memo",
+        "owner-weakmap-escape-latches-across-roots",
+        "owner-als-escape-latches-across-roots"
+      ]
+    },
+    "preserved": {
+      "executables": 4,
+      "outerGroups": 26,
+      "syntacticSites": 32,
+      "commands": 37,
+      "truncationFlags": 74,
+      "proofChildren": 6,
+      "G1Through25Literal": true,
+      "G26Literal": true,
+      "G6Literal": true,
+      "globalMinutes": [
+        35,
+        40,
+        45
+      ],
+      "finalBindingParameters": 4,
+      "finalBindingsState": "UNBOUND",
+      "wholeD26FunctionalCount": null,
+      "bunNominalMs": 290000,
+      "cooperativeNominalMs": 264000,
+      "processMs": 300000,
+      "parentMs": 360000
+    },
+    "history": "Internal 'current' labels in preserved reference/revision objects describe their own historical cuts; the appended C17 reference is active only as documentary input.",
+    "qualificationTransferred": false,
+    "actions": {
+      "plannedDocumentBlobs": 3,
+      "executableChanges": 0,
+      "trees": 0,
+      "commits": 0,
+      "refs": 0,
+      "runs": 0,
+      "originalLogGets": 0,
+      "zipGets": 0
+    }
+  }
+}

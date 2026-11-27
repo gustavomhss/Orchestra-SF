@@ -1,0 +1,408 @@
+{
+  "schema": "sf613-e11-reader-parametric-manifest-v1",
+  "status": "NON_EXECUTABLE_UNBOUND_TEMPLATE_R2",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "authority": {
+    "author": "/root/close_pr613",
+    "scope": "Reviewable unreferenced template/support blobs only; root alone binds operational facts and operates source/tree/commit/ref/run and original acquisition.",
+    "rootKnownRunMessage": "Analytics46028127606/1, sourceace9/tree f8e25, main140604695368 announced while in progress.",
+    "automaticExecutionAuthorized": false
+  },
+  "base": {
+    "python": {
+      "gitSha": "52b20e75154f7b4235d880c0e1a6d35e092fe966",
+      "bytes": 93747,
+      "sha256": "cd5054c21b6376031c313b65d49d7fdc40462ac6d174042648f97bbcf71a33b7",
+      "lf": 1600
+    },
+    "workflow": {
+      "gitSha": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "bytes": 114943,
+      "sha256": "9bbaa7e55b22d2cb71ab4ff186137fcdbf687b69bec685209045a676368625e6",
+      "lf": 1655
+    },
+    "manifest": {
+      "gitSha": "e9a9692952d9156b9ce5f0d9d65e6335fcc196a0",
+      "bytes": 18197,
+      "sha256": "f20b69809a14f292be8d6edd94c820d789141fb61760a0d72f5afa455ab20fb4",
+      "lf": 488
+    },
+    "bounds": {
+      "gitSha": "fe21695f18e751c8f4de76bd275742223507e7f8",
+      "bytes": 14536,
+      "sha256": "735b1c01a2e59fd6ef70045b4ee577ed50651251c6d5cecf98c44086b8ecd365",
+      "lf": 446
+    },
+    "review": "cb581f7145d3fbca2e54350d730fe1ee1ec067f4",
+    "closedReceipt": "8ae301494906aa374c708c0d4f0b18692fbb77a4"
+  },
+  "files": {
+    "python": {
+      "gitSha": "31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+      "bytes": 97270,
+      "sha256": "15b1726506ff787d1a3edbcde5a5e0f8621c620aaffb4dc2e5d27cd8ccffd8d9",
+      "lf": 1636,
+      "logicalPath": "sf613-artifact-reader.py",
+      "repositoryPath": null,
+      "created": true,
+      "literalReadback": true
+    },
+    "workflow": {
+      "gitSha": "832214bc2430294b321918ebe2b25834fceabc1e",
+      "bytes": 118904,
+      "sha256": "8bc89bd9d70e8c1eb39ec402008b280567fbce828e6743faed36c035a2fe847c",
+      "lf": 1691,
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "created": true,
+      "literalReadback": true
+    }
+  },
+  "supports": {
+    "derivation": {
+      "gitSha": "b9988a8b966b627904454e530233daf8b2e567c4",
+      "bytes": 371062,
+      "sha256": "06c76e2f3c9d5a3725a2c832ec1067489f9817bfd08bca002068b87aecb65ba7",
+      "lf": 269,
+      "created": true,
+      "literalReadback": true
+    },
+    "diff": {
+      "gitSha": "a20597fc20bf61f8bb989f6358b688387bf5228b",
+      "bytes": 83771,
+      "sha256": "1423b07fac28ed7c233de7dd976d6f1c18ebd766af9cea230befdf2a77e4fcb8",
+      "lf": 1119,
+      "created": true,
+      "literalReadback": true
+    },
+    "bounds": {
+      "gitSha": "54a44996d95457c85e2273b5368f578223a6825b",
+      "bytes": 7234,
+      "sha256": "9460ab995a64e0bb8ee020abed5fa2453e3e392f7ca766dd9293eeb075892858",
+      "lf": 279,
+      "created": true,
+      "literalReadback": true
+    }
+  },
+  "binding": {
+    "known": {
+      "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+      "snapshot": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "snapshotTree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+      "originalRun": 46028127606,
+      "attempt": 1,
+      "mainJob": 140604695368,
+      "originalRequest": "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+    },
+    "provenance": "Actual source/run/main are parent-announced metadata; no terminal status, original main/cleanup or ZIP received by this author.",
+    "pendingTokens": [
+      "UNBOUND_READER_BRANCH",
+      "UNBOUND_CLEANUP_JOB",
+      "UNBOUND_ARTIFACT_ID",
+      "UNBOUND_ARTIFACT_NAME",
+      "UNBOUND_ARTIFACT_BYTES",
+      "UNBOUND_ARTIFACT_SHA256",
+      "UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE",
+      "UNBOUND_ORIGINAL_CONCLUSION",
+      "UNBOUND_MAIN_CONCLUSION",
+      "UNBOUND_CLEANUP_CONCLUSION",
+      "UNBOUND_TEST_STEP_CONCLUSION",
+      "UNBOUND_CASE_1_STATUS",
+      "UNBOUND_CASE_2_STATUS",
+      "UNBOUND_FIRST_WAITER_FAILURE",
+      "UNBOUND_FAILED",
+      "UNBOUND_PASSED",
+      "UNBOUND_UI42",
+      "UNBOUND_UI43",
+      "UNBOUND_UI44",
+      "UNBOUND_BI",
+      "UNBOUND_UNION_SHA256",
+      "UNBOUND_UNION_BYTES",
+      "UNBOUND_SOURCE_COUNT",
+      "UNBOUND_CAPTURE_COUNT",
+      "UNBOUND_CPU_COUNT",
+      "UNBOUND_PROGRESS_COUNT",
+      "UNBOUND_DIAGNOSTICS_COUNT",
+      "UNBOUND_SCOPE_COUNT",
+      "UNBOUND_ANALYTICS_SHA256",
+      "UNBOUND_ANALYTICS_BYTES",
+      "UNBOUND_CPU_NONCE",
+      "UNBOUND_CPU_PID",
+      "UNBOUND_CPU_PARENT_PID",
+      "UNBOUND_CPU_MARKER_BYTES",
+      "UNBOUND_CPU_MARKER_SHA256",
+      "UNBOUND_PROGRESS_MARKER_BYTES",
+      "UNBOUND_PROGRESS_MARKER_SHA256"
+    ],
+    "pendingTokenKinds": 37,
+    "operationalGuard": "E11_BINDINGS_COMPLETE = \"UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE\"; first instruction of check_original_and_reader requires is True.",
+    "guardBefore": [
+      "TOKEN validation",
+      "all API requests",
+      "original ZIP download"
+    ],
+    "futureFreeze": "Root must provide and authenticate actual terminal jobs/artifact/outcomes/main-derived parities and CPU marker identities; no historical E10 fact substitutes for a missing current value.",
+    "currentTupleAndStartedGates": "The inherited complete-tuple and started requirements are explicitly marked pending current evidence. If actual E11 has no started/complete tuple, root must review the minimal incomplete-receipt adaptation before binding; this template does not claim that unobserved branch.",
+    "readerBranchCommitTreeRunJob": "UNBOUND_NOT_CREATED"
+  },
+  "sourceTopology": {
+    "producer": {
+      "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "exactDelta": "2A6M",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "status": "A",
+          "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "status": "M",
+          "gitSha": "347edd5292d86537451507026236f27f2488a06a"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "status": "M",
+          "gitSha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "status": "M",
+          "gitSha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "status": "M",
+          "gitSha": "c35042473a5a1f5416253a3c5bf6b8450c44673b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "status": "M",
+          "gitSha": "8148a7fdd70621aa41a0978efdaf330202f2ba73"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "status": "M",
+          "gitSha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"
+        },
+        {
+          "path": ".ci-run.json",
+          "status": "A",
+          "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+        }
+      ],
+      "sourceManifest": "4df0056061887fa81c60138ca4bb677ff4fcb091"
+    },
+    "futureReader": {
+      "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "baseTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+      "exactDelta": "1A .github/workflows/sf613-artifact-read.yml",
+      "mode": "100644",
+      "noSeparatePythonPath": true,
+      "objectAuthorityPending": true
+    }
+  },
+  "deltas": {
+    "python": {
+      "anchors": 11,
+      "hunks": 32,
+      "added": 135,
+      "removed": 99,
+      "fullForwardInverse": true
+    },
+    "workflow": {
+      "anchors": 5,
+      "hunks": 35,
+      "added": 139,
+      "removed": 103,
+      "fullForwardInverse": true,
+      "embeddingLiteral": true
+    },
+    "protocol": "Delimited E10→E11 protocol/function labels and exact source/run/topology retargets; only new parser logic is finite selection validation, selection retention and CPU-close evidence checks.",
+    "selection": {
+      "exactKeys": [
+        "scope",
+        "order",
+        "cap",
+        "sourceRequests",
+        "nativePairs",
+        "saturated"
+      ],
+      "scope": "pid-running-window",
+      "order": [
+        "none",
+        "cases",
+        "preferences"
+      ],
+      "cap": 65535,
+      "sourceRequestsLength": 3,
+      "nativePairsLength": 9,
+      "integerNotBool": true,
+      "saturated": "exactly any of the twelve new slots at65535; never the three historical routes",
+      "invalidExtraKeys": "hard failure"
+    },
+    "marker": "Validate selection for every CPU/progress record, and add its key to the existing finite progress allowlist. Preserve all literal records and stream ordinals.",
+    "collection": "Validate selection whenever supplied; retain value and validation status in the derived CPU summary.",
+    "evidenceRule": "A supplied valid collection.selection contradicting the same capture's finished.selection is a hard failure, even when another file is absent. Missing selection remains pending. Only the complete CPU path requires equality across collection/stopped/finished.",
+    "progress": "Late HTTP progress is excluded from both CPU-close equality checks. It remains its own literal record/lifetime snapshot.",
+    "interpretation": "Source3 token decisions and native3x3 completed-child copies are distinct PID/window populations. Native includes all surfaces/non-C08 and excludes top-level or failed-copy work. No positivity, conservation, cross-family monotonicity, per-Request ownership or count-to-sample pairing is required."
+  },
+  "supersession": {
+    "r1Python": {
+      "gitSha": "39faa5753dee705fd89a8262e6d0713a351f20d6",
+      "bytes": 97257,
+      "sha256": "61931dc569e1babcb09560e0b24ca7beefabece846a3e764e30ee2525ae09b40",
+      "lf": 1636
+    },
+    "r1Workflow": {
+      "gitSha": "2c9a0497590fc1ab9dd4c087b76f65ad0e6be9da",
+      "bytes": 118891,
+      "sha256": "f610fcb5d94fef89d688b98597e2937a388a73bd9acf05b43ea083f7a269beb8",
+      "lf": 1691
+    },
+    "executed": false,
+    "reason": "Teams identified that present contradictory selection fields could otherwise remain merely pending when another original file was absent; root authorized the existing present-field comparison extension.",
+    "exactCorrection": {
+      "id": "R2-present-selection-contradiction",
+      "before": "            expected_collection = {name: finished[name] for name in (\"state\", \"cause\", \"cleanupFailed\", \"routes\")",
+      "after": "            expected_collection = {name: finished[name] for name in (\"state\", \"cause\", \"cleanupFailed\", \"routes\", \"selection\")"
+    },
+    "pythonDelta": {
+      "bytes": 13,
+      "hunks": 1,
+      "added": 1,
+      "removed": 1,
+      "forwardInverse": true
+    },
+    "workflowDelta": {
+      "hunks": 2,
+      "added": 2,
+      "removed": 2,
+      "meaning": "Python hash and that single embedded tuple only",
+      "forwardInverse": true
+    }
+  },
+  "preserved": {
+    "infrastructureDefinitions": [
+      "ReceiptFailure",
+      "need",
+      "digest",
+      "canonical",
+      "write_bytes",
+      "save_json",
+      "checked",
+      "pending",
+      "wire_line",
+      "write_wire",
+      "NoRedirect",
+      "bounded_read",
+      "api",
+      "pages",
+      "storage_url_allowed",
+      "download_original",
+      "path_parts",
+      "inspect_zip",
+      "read_file",
+      "locate_suffix",
+      "one_original_json",
+      "unpack_html_reports",
+      "tests_from_report",
+      "report_configuration",
+      "error_summary",
+      "safe_time",
+      "safe_failure",
+      "network_row",
+      "trace_operation",
+      "trace_rows",
+      "inventory_error_context_and_pngs",
+      "cpu_json_object",
+      "cpu_present_fields",
+      "ensure_inventory",
+      "prepare_core_export"
+    ],
+    "count": 35,
+    "CAP": {
+      "literal": true,
+      "gitSha": "92b9b25ee96290db2bfee3f40d6b93ccaa56e638",
+      "bytes": 1052,
+      "sha256": "374018d73c30c10a0520968fbda0a94c6b5671dcbde1084e95420823e8ddbd6a",
+      "lf": 21,
+      "calculatedIdentityOnly": true,
+      "separateGitBlobCreated": false
+    },
+    "CORE_CAP": {
+      "literal": true,
+      "gitSha": "f190df8df4ec4199bec6daa9107f7867e09c0cb2",
+      "bytes": 206,
+      "sha256": "dffc4b8b2115377234541c1e859e3f0310176b3ec7b00478309b0718254872d0",
+      "lf": 2,
+      "calculatedIdentityOnly": true,
+      "separateGitBlobCreated": false
+    },
+    "bootstrap": {
+      "literal": true,
+      "gitSha": "59dec771490878b17d6e6b4b66f4a8f590de1147",
+      "bytes": 943,
+      "sha256": "1b4011502b73c6403e71599f98625b117500b70e0e7bea5fd1ccca6f540151a1",
+      "lf": 20,
+      "calculatedIdentityOnly": true,
+      "separateGitBlobCreated": false,
+      "region": "Exact YAML substring including the 'run: |' header, indentation and trailing newline before the upload step; 943 B here is not the 738 B unindented bootstrap-body metric."
+    },
+    "runtimeRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "originalRequest": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "trailingLF": false
+    },
+    "infrastructure": [
+      "One authorized original ZIP download only",
+      "API/redirect constraints and safe ZIP inventory/CRC/hash/expanded caps",
+      "Case/result/stdout-stderr memberships and literal ordinal among all six families",
+      "Four separate hard parities: Analytics, CPU, Progress, union",
+      "Independent attempted CPU/progress sequences; no fill or replay",
+      "Prepared-only namespaces inventoried; no first-directory or workerIndex PID inference",
+      "Raw present zero-byte/malformed/non-LF originals retained, absent names never fabricated",
+      "4–7 real exports; fixed CPU+progress64KiB slot, no new export family",
+      "Frozen receipt, exact joint preflight including prior log, checked writes and separate terminal",
+      "Whole original reader main preserved and checked before parse; job success alone does not establish transport/capture"
+    ]
+  },
+  "bounds": {
+    "profileBytes": 4194304,
+    "collectionBytes": 16384,
+    "launcherBytes": 8192,
+    "combinedMarkersBytes": 65536,
+    "emitterBytes": 7340032,
+    "mainBytes": 8388608,
+    "payloadMaximum": 4808704,
+    "base64Maximum": 6411620,
+    "chunksMaximum": 265,
+    "conservativeEnvelopeBeforePriorLog": 6715748,
+    "actualPreflightRequired": true
+  },
+  "review": {
+    "root": "Blueprint and R2 present-contradiction distinction accepted; final static/binding authority remains separate.",
+    "teams": "Essential R2 Python/YAML ACK received; supports sent for final documentary linkage.",
+    "writer": "Complete text forward/inverse, immutable identities,35literal definitions, embedding and caps checked as data.",
+    "runtime": "NONE; no Python/helper/repository code executed."
+  },
+  "performed": {
+    "gitProposalBlobsOnly": true,
+    "workflowInstalled": false,
+    "treeCommitRefRunCreated": false,
+    "originalActionsOrZipAcquired": false,
+    "pythonExecuted": false,
+    "repositoryExecuted": false
+  },
+  "next": "Wait for root's actual Analytics intake. Bind only those authenticated facts, rederive the exact final delta and preserve new readback; object/activation authority remains with root.",
+  "documentationDraftSuperseded": {
+    "gitSha": "7738836dacbe9e0c63166560f087bc235392e0a1",
+    "bytes": 15165,
+    "sha256": "74046814bbbb550a40880049f2b3a054b4b767fae7b643b1e7d5186dfd1f53b0",
+    "lf": 394,
+    "reason": "Clarify that CAP/CORE_CAP/bootstrap are calculated identities of literal text fragments, and define the bootstrap943B region. No Python/YAML/support change."
+  }
+}

@@ -1,0 +1,623 @@
+{
+  "schema": "orchestra-sf.c17-focal-execution-authority.v1",
+  "at": "2026-11-27 18:39:25 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "REVIEWED_CONCRETE_SINGLE_FOCAL_AUTHORITY",
+  "qualification": false,
+  "mandate": "User-authorized completion of #613 and go-live preparation by reviewed integration into dev; production requires explicit user approval.",
+  "operator": "/root",
+  "source": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "delta": "4M mode100644",
+    "treeAudit": {
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "194690fc63c26ac7feb690e44d0fea70742da88c",
+          "after": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+        },
+        {
+          "path": "modules/",
+          "before": "3b7a8bb8bd1614c963586728b8befe29a7ecf0e3",
+          "after": "37c8b4bd64f206698c985abdc044c0e9af2e51ec"
+        },
+        {
+          "path": "modules/sucafina/",
+          "before": "4d95b472466e4e66070ca0de2a38c6b3d5c4b86a",
+          "after": "80201ebacd1d396b5767e18ace7c2caf634a2e7b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/",
+          "before": "3591881d0f19192d27cb83fb89b399b9e1215b88",
+          "after": "9c7576c3a8dd04e014d4ed209250d545472cff0c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/",
+          "before": "001cb84a19bbfb887fb0f999d2d009aef939be66",
+          "after": "ac270d3e60db920976ebc96da8bf17839adf24f9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/",
+          "before": "251ee52d7822e533543db9f9bcaf6791b6ad0637",
+          "after": "8057ba3633b379c8a4dfa7674121da1ded0bd5e2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/",
+          "before": "ef3683b35efa78bc4b709cd554bb2fb9c4055980",
+          "after": "c30dec48a959d4c06babec291decb306205d16dc"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/",
+          "before": "ccf9f70f212885f1c83739b798ff955b22f04663",
+          "after": "c736f032fbaf37d931b61b54e62567705cc8baf2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/",
+          "before": "f14b9327661e17fbfcef984b4f0ffb13e16faebf",
+          "after": "a12037c7dba4901d77e770224ef300aae225a9f9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/",
+          "before": "771c37d1926a31819cbba377e67c7f96f1356d57",
+          "after": "594f3930172fc9990a637454ad9aabc4651bd0eb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/",
+          "before": "5ae86c1e7a957b3e8960018aac4011eff4aaef6a",
+          "after": "d64a3808c4cdd8a2dda47d5c704c2929de6c2346"
+        }
+      ],
+      "literalSiblings": 265,
+      "changes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "before": {
+            "path": "contract.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "8bdc12d191a76137cd2244e01990f7a780091216",
+            "size": 8953,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8bdc12d191a76137cd2244e01990f7a780091216"
+          },
+          "after": {
+            "path": "contract.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "39e6da84a3dd815721484affaf8315731ded073b",
+            "size": 8973,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/39e6da84a3dd815721484affaf8315731ded073b"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "before": {
+            "path": "local-store.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+            "size": 83955,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d02bcbfc770719935dcaca97cc20045b656f784d"
+          },
+          "after": {
+            "path": "local-store.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+            "size": 96231,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5fc0028474aa52c148a30c093d39bc9a471f9a24"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "before": {
+            "path": "state-provider.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "550236df66f1e02e5111a1eee23579e76178bc6b",
+            "size": 66998,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/550236df66f1e02e5111a1eee23579e76178bc6b"
+          },
+          "after": {
+            "path": "state-provider.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+            "size": 67334,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5b453e1672aa98616e814ac64900517d1ae4f60a"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "before": {
+            "path": "c08-snapshot-projection.test.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+            "size": 70284,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/548fa992a4e5c5b25380d3e0e798993bac3e622c"
+          },
+          "after": {
+            "path": "c08-snapshot-projection.test.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+            "size": 87176,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6bef21db9129db064b018f5f0bf632306e3a16ec"
+          }
+        }
+      ]
+    }
+  },
+  "snapshot": {
+    "sha": "276fe1688727c5859a20cf393adc698c5c544d7d",
+    "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "delta": "2A mode100644",
+    "treeAudit": {
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+          "after": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5"
+        },
+        {
+          "path": "apps/",
+          "before": "3a22d64d99b41141f8dcc24f88f0f4241f9dbdb3",
+          "after": "d6d505dfab924e82ffc804cef21e9955f996165a"
+        },
+        {
+          "path": "apps/cli/",
+          "before": "d874815dd13f98a2e7d8a1990421ac83bf4e9f2a",
+          "after": "b98547a000d61771bda7e8cca231cb745a2a5b7f"
+        },
+        {
+          "path": "apps/cli/test/",
+          "before": "4c6dd27c9dc2644df6d83f23dc2f912a461b2669",
+          "after": "778b4c0c4c9b08e12c9ebb2960295975136cf4fd"
+        }
+      ],
+      "literalSiblings": 124,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "before": null,
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+            "size": 247,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4a7b64a8392138f1b79d386557e48ac4453617f5"
+          }
+        },
+        {
+          "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+          "before": null,
+          "after": {
+            "path": "sucafina-proof-verification.test.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+            "size": 10891,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1d1af1f73dace7c7603f4e41323919c892b781a7"
+          }
+        }
+      ]
+    }
+  },
+  "branch": "ci-run-sf613c17f",
+  "request": {
+    "path": ".ci-run.json",
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "finalLF": false,
+    "existingBlobReused": true,
+    "readbackLiteral": true
+  },
+  "driver": {
+    "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+    "git": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+    "bytes": 10891,
+    "sha256": "eb2ea447e2e95f53a96660c6db64cc68a0df06e3efbe423c7f52dfd321f32b77",
+    "lf": 169,
+    "finalLF": true,
+    "created": true,
+    "readbackLiteral": true
+  },
+  "provenance": {
+    "product_manifest": {
+      "gitBlob": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+      "bytes": 18155,
+      "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78"
+    },
+    "product_bounds": {
+      "gitBlob": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+      "bytes": 9394,
+      "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8"
+    },
+    "product_binding": {
+      "gitBlob": "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+      "bytes": 5487,
+      "sha256": "97592ee88f59998c7dfd6caaa66b11570428f612338fbdca3d757be7d0cf502e"
+    },
+    "source_support": {
+      "gitBlob": "8c183026ca67546b52c40cce43112dd29e306717",
+      "bytes": 73845,
+      "sha256": "0627ddf107dd6bc163e35a9d3d5c993cc3b035428b9b1cc61cb6c066fae86445"
+    },
+    "source_diff": {
+      "gitBlob": "db2ac5dd889300137fbc54ca8747b69f60e33209",
+      "bytes": 45710,
+      "sha256": "c681df8dbcd0edc47e68cda84fb6ec78bc28f50f71d14bf9fb85cb6df4ca192c"
+    },
+    "test_support": {
+      "gitBlob": "dfb919efa8a9dc7ef7262bbf6ff57f9e357787dd",
+      "bytes": 22284,
+      "sha256": "e27d67e3668a94cdd8a7a3d5cc4185fbff2ad445a5f216024211a45c524b8bc9"
+    },
+    "test_diff": {
+      "gitBlob": "d5171b6513a775ee2b5abdbdfac4f334a4141480",
+      "bytes": 19537,
+      "sha256": "95824464039f5e5eba1d0f50639e27b8688177862d3f8f77f500b90ef46dd07d"
+    },
+    "focal_template": {
+      "gitBlob": "4c33f46e4f67bbcd053a1e074e9863e9dbf8124f",
+      "bytes": 10856,
+      "sha256": "d5d75239c127592b950963a23c2ad3b6ebc697cec790889978688783dbb74a8b"
+    },
+    "focal_anchors": {
+      "gitBlob": "9a0700a45d2148762970a2b140533cd834dd1470",
+      "bytes": 16354,
+      "sha256": "0ef5683dc20a47eadb9995302d50d908af77a0ff5f133f8274741b86dcc90231"
+    },
+    "focal_retarget_diff": {
+      "gitBlob": "9695827af84432f0a78d74763901c72660585f34",
+      "bytes": 7549,
+      "sha256": "4a5b066fd67865682027cbcfad6979821e1f6d41ab5ec3d8f76ffc22813e8aaf"
+    },
+    "focal_binding_support": {
+      "gitBlob": "76a51f7600a90c7edc5bf939180ec8f88f22e546",
+      "bytes": 3382,
+      "sha256": "9c54ad20c056b298f2dadc63092fa37bd9bbd458b046c393403ed2e11569f9b9"
+    },
+    "focal_binding_diff": {
+      "gitBlob": "e8ff707c3c5b4a6f8d3d0f0139225d66416f5a44",
+      "bytes": 730,
+      "sha256": "cfccba3153d7f1f305b4d1bd5f97ddb85a2cc93654161bffb84f1b5ed2d1f0ad"
+    },
+    "focal_full_diff": {
+      "gitBlob": "a6e589633307f1f09d5d602cee05d4f1686e2d0e",
+      "bytes": 11672,
+      "sha256": "2791cf8111a9874f3763a8150581f3b39c33d4eb691fa32ecbb9609ba7684078"
+    },
+    "focal_manifest": {
+      "gitBlob": "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+      "bytes": 24170,
+      "sha256": "cb9b8a30c9354ce9f9fb8d5cf4ea354b33b741c8d23c49d00a40e548b62ae8be"
+    },
+    "focal_bounds": {
+      "gitBlob": "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+      "bytes": 16947,
+      "sha256": "cb18c136132293550141ffe93f303d37eb7a16aec191a9933ffc1a22a9cdffc8"
+    }
+  },
+  "rootVerification": {
+    "template": {
+      "anchorCount": 10,
+      "forward": true,
+      "inverse": true,
+      "hunks": 5,
+      "adds": 17,
+      "removes": 17,
+      "sourceTokens": 1,
+      "treeTokens": 1,
+      "reviewedByTeams": true
+    },
+    "binding": {
+      "exactTokens": 2,
+      "fullLiteral": true,
+      "forward": true,
+      "inverse": true,
+      "hunks": 1,
+      "adds": 2,
+      "removes": 2,
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+    },
+    "snapshotAddition": {
+      "requestLiteral": true,
+      "requestNoLF": true,
+      "driverAdditionLiteral": true,
+      "hunks": 2,
+      "adds": 170,
+      "removes": 0
+    },
+    "pinsAndPreimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "present": true,
+        "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "present": true,
+        "sha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "present": true,
+        "sha": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "present": true,
+        "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "pass": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "present": true,
+        "sha": "244d46ee41e9ce288a7260938174a57161137bab",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "present": true,
+        "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "present": true,
+        "sha": "ccc5ea87046144843e1751b1288e907974d24ca5",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "present": true,
+        "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "present": true,
+        "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "present": true,
+        "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "present": true,
+        "sha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "present": true,
+        "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "pass": true
+      },
+      {
+        "path": ".ci-run.json",
+        "present": false,
+        "sha": null,
+        "pass": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "present": false,
+        "sha": null,
+        "pass": true
+      }
+    ],
+    "documents": [
+      [
+        "sourceSha",
+        true
+      ],
+      [
+        "sourceTree",
+        true
+      ],
+      [
+        "soleParent",
+        true
+      ],
+      [
+        "fourChanges",
+        true
+      ],
+      [
+        "sourceManifest",
+        true
+      ],
+      [
+        "sourceBounds",
+        true
+      ],
+      [
+        "sourceSupplement",
+        true
+      ],
+      [
+        "driver",
+        true
+      ],
+      [
+        "requestLiteral",
+        true
+      ],
+      [
+        "workingPinsPreserved",
+        true
+      ],
+      [
+        "selectionPreserved",
+        true
+      ],
+      [
+        "budgetsPreserved",
+        true
+      ],
+      [
+        "capturePreserved",
+        true
+      ],
+      [
+        "futureIntakeOnlySourceBinding",
+        true
+      ],
+      [
+        "boundsselectionPreserved",
+        true
+      ],
+      [
+        "boundsgroupsPreserved",
+        true
+      ],
+      [
+        "boundscommandsPreserved",
+        true
+      ],
+      [
+        "boundsreportsPreserved",
+        true
+      ],
+      [
+        "boundscapturePreserved",
+        true
+      ],
+      [
+        "boundsbudgetsPreserved",
+        true
+      ],
+      [
+        "bindingBound",
+        true
+      ],
+      [
+        "notQualified",
+        true
+      ]
+    ]
+  },
+  "independentReview": {
+    "reviewer": "/root/teams_product",
+    "template": true,
+    "binding": true,
+    "source": true,
+    "sourceTreePairs": 11,
+    "sourceLiteralSiblings": 265,
+    "exact4M": true,
+    "manifest": true,
+    "bounds": true,
+    "findings": [],
+    "receivedAt": "2026-11-27 18:39:25 UTC"
+  },
+  "expected": {
+    "groups": 6,
+    "commands": 12,
+    "outputTruncationFlags": 24,
+    "functionalProcesses": 2,
+    "functionalDeclarations": 12,
+    "controlReports": 8,
+    "retainedC16Outcomes": 31,
+    "c17NestedIdentityProjectionCases": 9,
+    "c17ExpectedNames": [
+      "mixed-map-and-detached-readonly",
+      "mixed-map-and-detached-preimage",
+      "composed-identity-first-authorization-drift",
+      "composed-identity-second-authorization-drift",
+      "restored-codec-birth-keeps-complete-case",
+      "restored-codec-exposure-keeps-complete-case",
+      "cold-plan-birth-survives-restore-and-memo",
+      "owner-weakmap-escape-latches-across-roots",
+      "owner-als-escape-latches-across-roots"
+    ],
+    "innerAssertions": null,
+    "outerAssertions": null,
+    "runtime": "pending"
+  },
+  "bounds": {
+    "readonly": {
+      "tests": 7,
+      "bunPerTestMs": 45000,
+      "nominalMs": 315000,
+      "processMs": 360000,
+      "parentMs": 420000
+    },
+    "projection": {
+      "tests": 5,
+      "bunMs": [
+        120000,
+        120000,
+        20000,
+        20000,
+        10000
+      ],
+      "cooperativeMs": [
+        110000,
+        110000,
+        18000,
+        18000,
+        8000
+      ],
+      "nominalMs": 290000,
+      "processMs": 300000,
+      "parentMs": 360000,
+      "nominalMarginMs": 10000,
+      "overheadGuaranteed": false
+    },
+    "types": {
+      "processMs": 240000,
+      "parentMs": 300000
+    },
+    "guards": {
+      "defaultProcessMs": 180000,
+      "parentMs": 600000
+    },
+    "childCaptureBytesPerStream": 1048576,
+    "termThenForceKillMs": 5000,
+    "wholeFiles": true,
+    "nameFilter": null,
+    "retries": 0
+  },
+  "acquisitionPolicy": {
+    "terminalJobsBeforeOriginals": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "fullLiteralPreservationBeforeSemanticParsing": true,
+    "rawGitReadbackRequired": true,
+    "rerunAuthorized": false,
+    "zipGets": 0,
+    "auditZipGets": 0,
+    "agentsMayAcquireOriginals": false
+  },
+  "freshRefs": {
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+    "branchWasAbsent": true,
+    "observedAt": "2026-11-27 18:36 UTC"
+  },
+  "scopeLimits": [
+    "Focal outcome applies to exact S17 through exact D17; no Analytics or installed acceptance transferred.",
+    "No E11 instrumentation or final candidate/dev advancement.",
+    "Only Linux GitHub Actions executes repository code.",
+    "G08/G10 access/reservations unconfirmed; production not authorized."
+  ]
+}

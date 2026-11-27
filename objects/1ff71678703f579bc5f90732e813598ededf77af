@@ -1,0 +1,204 @@
+{
+  "schema": "orchestra-sf.go-live-r6-root-review.v1",
+  "status": "ACK_DOCUMENTARY_DRAFT",
+  "at": "2026-11-27 18:59:37 UTC",
+  "reviewer": "/root",
+  "manifest": {
+    "gitBlob": "7d573ea99fc7436dcb1583800615693243832576",
+    "bytes": 35566,
+    "sha256": "df60d0babb6cf0b8697e3c8bd7675b020ffd32d682bf70ceda49dbd3000fbf10"
+  },
+  "files": [
+    {
+      "name": "status",
+      "gitBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+      "bytes": 621005,
+      "sha256": "94dbcd707ea5d7d8d035c91c7b3a24e3ee004f6f09f255bbb901e810ea58dad5"
+    },
+    {
+      "name": "readme",
+      "gitBlob": "b0f3f8abaf52dc71a1612adba2e8096f6e6e7650",
+      "bytes": 83544,
+      "sha256": "e109fed78a92b5662d5e967669bdadcb293045f31560c3b06318f2981b0f0ed9"
+    },
+    {
+      "name": "execution",
+      "gitBlob": "a93fe8ee7205652db5ec5caa0325a4d23059d06d",
+      "bytes": 177911,
+      "sha256": "e842e62bee94d24aaca6f2c005225b8cebb75a05db837138e79c31c9f36c71ec"
+    }
+  ],
+  "prior": {
+    "revision": "R5",
+    "manifest": {
+      "gitBlob": "f48a4422db0b5d0902a89a5e2e99ec9e92a7be79",
+      "bytes": 13982,
+      "sha256": "c05c854ece7764fd898b264f68d4501d1c977ce8271f80b461b4d56a1364a525"
+    },
+    "review": {
+      "gitBlob": "3ba2c9127a084bb3995f1d4cab4a7886a6d9df59",
+      "bytes": 5422,
+      "sha256": "4724d642454a9ad688404b1c5edd8afcade55fd14effbc80e1ca72a0e69daf88"
+    }
+  },
+  "checks": [
+    {
+      "label": "gatesLiteral",
+      "pass": true
+    },
+    {
+      "label": "migrationObservationsLiteral",
+      "pass": true
+    },
+    {
+      "label": "authorizationLiteral",
+      "pass": true
+    },
+    {
+      "label": "finalCandidateLiteral",
+      "pass": true
+    },
+    {
+      "label": "environmentsLiteral",
+      "pass": true
+    },
+    {
+      "label": "overallLiteral",
+      "pass": true
+    },
+    {
+      "label": "executionThisFrontLiteral",
+      "pass": true
+    },
+    {
+      "label": "first91EvidenceLiteral",
+      "pass": true
+    },
+    {
+      "label": "entireR5ReadmeOnce",
+      "pass": true
+    },
+    {
+      "label": "executionAppendOnly",
+      "pass": true
+    },
+    {
+      "label": "17HashReferencedOperations",
+      "pass": true
+    },
+    {
+      "label": "wholeForwardInverseLiteral",
+      "pass": true
+    },
+    {
+      "label": "prosePrefixSuffixAppendExact",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.gates",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.migrationObservations",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.authorization",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.finalCandidate",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.environments",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.overall",
+      "pass": true
+    },
+    {
+      "label": "protectedHash.executionThisFront",
+      "pass": true
+    },
+    {
+      "label": "oldDesignObservationArchivedLiteral",
+      "pass": true
+    },
+    {
+      "label": "oldDocumentReviewArchivedLiteral",
+      "pass": true
+    },
+    {
+      "label": "latestInstalledC16Unchanged",
+      "pass": true
+    },
+    {
+      "label": "sourceS17T17Bound",
+      "pass": true
+    },
+    {
+      "label": "focalReceiptBound",
+      "pass": true
+    },
+    {
+      "label": "AnalyticsPendingBound",
+      "pass": true
+    },
+    {
+      "label": "D26DocsBoundNoExecution",
+      "pass": true
+    },
+    {
+      "label": "historical12of15",
+      "pass": true
+    },
+    {
+      "label": "finalGatesNotReady",
+      "pass": true
+    },
+    {
+      "label": "noProductionApproval",
+      "pass": true
+    },
+    {
+      "label": "cutLiteral",
+      "pass": true
+    }
+  ],
+  "derivation": {
+    "operations": 17,
+    "structuralChangedPaths": 49,
+    "valueHashFormat": 0,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "readmePrefixBytes": 8682,
+    "executionAppendBytes": 10118
+  },
+  "currentSource": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+  "currentSourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+  "focalReceipt": {
+    "gitBlob": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+    "bytes": 63985,
+    "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b"
+  },
+  "pendingAnalytics": {
+    "run": 46052118180,
+    "snapshot": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+    "authority": {
+      "gitBlob": "8c79663544e9794a05d52860964ad7a41697464d",
+      "bytes": 6881,
+      "sha256": "aa0fd2e8e6b7808fa4b88eeb377abc77b497769e57c0df0ad5f71d308b1deb37"
+    },
+    "verdict": null,
+    "cut": "2026-11-27T18:48:04Z"
+  },
+  "d26Review": {
+    "gitBlob": "ce6090bad72629a9eab229a997f60aa16677cd09",
+    "bytes": 4747,
+    "sha256": "62c08d25a9b7053a4e96d51d03d8258082ec6bbb08308d08a4d1cee26508675c"
+  },
+  "findings": [],
+  "scope": "Only three documentary drafts; no source/ref/product promotion. First91 evidence items, seven protected objects, R5 observation/review and full prose preserved. 12/15 historical areas, 0/5 NOT_READY, no production approval."
+}

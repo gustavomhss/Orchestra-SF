@@ -1,0 +1,530 @@
+{
+  "schema": "sf613-e11-focal-driver-package.v1",
+  "status": "REVIEWABLE_BOUND_SOURCE_DRIVER_BLOBS_ONLY_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "scope": "Retarget the already qualified C15R focal driver as text to the root-reviewed E11 diagnostic source. Preserve the original two whole control files, types, canonical guards and process engine. This package cannot qualify the clean product or claim profiler capture.",
+  "authority": "Root authorized driver/support/bounds/manifest Git blobs only; root separately owns source and execution objects, refs, activation and one-time original acquisition.",
+  "base": {
+    "driver": {
+      "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+      "git": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+      "bytes": 10668,
+      "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf"
+    },
+    "cleanSource": {
+      "sha": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+    },
+    "historicalFocalRun": 46015077546,
+    "historicalFocalReceipt": "f2d39b82fffab4cbd3d28a96164da41076c502b6",
+    "priorResultsTransferred": false
+  },
+  "diagnosticSource": {
+    "sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "parentTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "overlayPaths": 8,
+    "added": 2,
+    "modified": 6,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+        "change": "A",
+        "mode": "100644",
+        "pre": null,
+        "post": {
+          "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+          "bytes": 22169,
+          "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+          "lf": 374
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "bytes": 13217,
+          "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+          "lf": 134
+        },
+        "post": {
+          "gitSha": "347edd5292d86537451507026236f27f2488a06a",
+          "bytes": 13818,
+          "sha256": "44ca1d564841f44bf6a5ae87584f105078006bd72f8826b0f6409836ff3e6191",
+          "lf": 141
+        }
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "bytes": 5823,
+          "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+          "lf": 121
+        },
+        "post": {
+          "gitSha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+          "bytes": 10333,
+          "sha256": "c08630983e3fd7617f06e268f4176490b730b0396c826289e2420b28c5230b70",
+          "lf": 184
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "bytes": 12321,
+          "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+          "lf": 206
+        },
+        "post": {
+          "gitSha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+          "bytes": 16431,
+          "sha256": "6f7233c1763c0223f47d3b119848003240816770a6ae95abb023686b72325fbe",
+          "lf": 267
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+          "bytes": 32461,
+          "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+          "lf": 404
+        },
+        "post": {
+          "gitSha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+          "bytes": 32579,
+          "sha256": "16ae187fc9138f1ecd79110244a54cd114d49e18fc68ee163c3690b97e5ad801",
+          "lf": 406
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+          "bytes": 60735,
+          "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+          "lf": 891
+        },
+        "post": {
+          "gitSha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+          "bytes": 60958,
+          "sha256": "133f88604f6972360051b97ae8daf04c3df0f9100e2cba5a906c06ad8b3a65af",
+          "lf": 895
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "change": "M",
+        "mode": "100644",
+        "pre": {
+          "gitSha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+          "bytes": 83955,
+          "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+          "lf": 1515
+        },
+        "post": {
+          "gitSha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+          "bytes": 84086,
+          "sha256": "ee7ddbb5607c6bb88d312bcdbe5dac0a7b5593a82562f0a2dae1ad3b287a5119",
+          "lf": 1517
+        }
+      },
+      {
+        "path": ".ci-run.json",
+        "change": "A",
+        "mode": "100644",
+        "pre": null,
+        "post": {
+          "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "bytes": 295,
+          "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+          "lf": 0
+        }
+      }
+    ],
+    "sourcePackage": {
+      "git": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+      "bytes": 24771,
+      "sha256": "15f9df4237fe766309b5c3670ec503f2142379b5ab7b1523ad8f37e3de1c0df1"
+    },
+    "sourcePackageByteAuthenticated": true,
+    "rootReportedObjectAudit": {
+      "nonRecursiveTreePairs": 18,
+      "unchangedSiblingEntries": 564,
+      "soleParent": true,
+      "exact2A6M": true
+    },
+    "rootObjectReviewIndependentOfThisDriver": true,
+    "qualifiedProduct": false,
+    "CPUCollectionReceived": false
+  },
+  "outputFiles": [
+    {
+      "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+      "change": "A",
+      "mode": "100644",
+      "git": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+      "bytes": 11630,
+      "sha256": "695b530195644d96cfd3f8f0f0e4b0073aa8860d98f57033c9cbae24d87470c1",
+      "lines": 178,
+      "finalLF": true,
+      "created": true,
+      "readbackLiteral": true
+    },
+    {
+      "path": ".ci-run.json",
+      "change": "M",
+      "mode": "100644",
+      "pre": {
+        "git": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+      },
+      "post": {
+        "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e"
+      },
+      "postCreatedPreviously": true,
+      "preAndPostReadbackLiteral": true,
+      "finalLfBefore": false,
+      "finalLfAfter": false
+    }
+  ],
+  "sourceAndDriverSeparation": {
+    "sourceCarriesOriginalAnalyticsRequest": true,
+    "originalRequestBytes": 295,
+    "focalRequestBytes": 247,
+    "sourceBaseIsCleanS15R": true,
+    "workingSourcePins": 16,
+    "sourceOverlayPaths": 8,
+    "workingRequestNotComparedToParentAnalyticsRequest": true,
+    "futureOrSeparatelyBoundExecutionSnapshot": {
+      "sha": null,
+      "tree": null,
+      "soleParent": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "delta": {
+        "added": 1,
+        "modified": 1
+      },
+      "bindingRole": "Root separate object review and activation authority; not embedded in this package. Null here is not a claim that root has created no object."
+    },
+    "productSourceDoesNotIncludeFocalDriver": true,
+    "rootMustConfirmDriverAbsenceAndActualExactSnapshotDelta": true
+  },
+  "supports": {
+    "anchors": {
+      "git": "c17f04f979d0aff336c00170986f1b39db389689",
+      "bytes": 22320,
+      "sha256": "42eb28a8faf593c9e3f28b80172c94bb2f157caf8c6ec4738f0154217b863b08",
+      "created": true,
+      "readbackLiteral": true,
+      "substitutions": 10,
+      "forwardInverseLiteral": true
+    },
+    "retargetDiff": {
+      "git": "2c1c53ddc942ffe7782652e55d008203cbb02daf",
+      "bytes": 9119,
+      "sha256": "72b1ef29e7c9f1649516b5e91ef8d2565f8792d686ddbc901a32029c626e5f6c",
+      "hunks": 5,
+      "added": 30,
+      "deleted": 21,
+      "created": true,
+      "readbackLiteral": true,
+      "forwardInverseLiteral": true
+    },
+    "fullSnapshotDiff": {
+      "git": "f252beb029d4f40b8932445ec7dfd7f9bfadea95",
+      "bytes": 12782,
+      "sha256": "690f7f2c5f494f8ff444cfa007005a7701ef18b5522a986550b0e8b2034c3730",
+      "hunks": 2,
+      "added": 179,
+      "deleted": 1,
+      "created": true,
+      "readbackLiteral": true,
+      "forwardInverseLiteral": true,
+      "noLfRequestMarkers": true
+    },
+    "bounds": {
+      "git": "6a8db9a3b45a82cc1b7a89471f835070e291c175",
+      "bytes": 10482,
+      "sha256": "346612daef1ab52698bc25ccd33ffcfde6946b186a7f6f2e1ff431d7baca3612",
+      "created": true,
+      "readbackLiteral": true
+    }
+  },
+  "workingPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "git": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "git": "8148a7fdd70621aa41a0978efdaf330202f2ba73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+      "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "git": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "git": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "git": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "git": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "git": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "git": "c35042473a5a1f5416253a3c5bf6b8450c44673b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "git": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "git": "8bdc12d191a76137cd2244e01990f7a780091216"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "git": "a55818797ecf9fa6801393762bbe3261a1812576"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+      "git": "b5e2f218117a0f30e803a8b251922e92b6da2332"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "git": "347edd5292d86537451507026236f27f2488a06a"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "git": "46dab966dbb2631fcc65f5cf730e792f9e7e94da"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "git": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a"
+    }
+  ],
+  "unchangedNinePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "git": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+      "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "git": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "git": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "git": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "git": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "git": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "git": "8bdc12d191a76137cd2244e01990f7a780091216"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "git": "a55818797ecf9fa6801393762bbe3261a1812576"
+    }
+  ],
+  "retargets": [
+    "Bind E11 source/tree and clean S15R parent without inventing a future candidate.",
+    "Label all identity/manifest records as diagnostic focal; replace C15-specific delta counts with source-overlay8 versus working-pins16.",
+    "Update three existing code pins and add helper/HTTP/native-fixture/installation pins; nine existing pins literal.",
+    "Root-approved fetch depth2->3 and source format%H/%T->%H/%T/%P; compare exactly [S_E11,Ts_E11,S15R] in the same command.",
+    "Document original295B request in the source parent and literal247B focal request in D; exact future snapshot delta1A1M."
+  ],
+  "unchanged": {
+    "imports": true,
+    "runCommand": true,
+    "groups2Through6": true,
+    "functionalArgvAndCwd": true,
+    "packageTypecheckArgvAndCwd": true,
+    "guardArgvAndCwd": true,
+    "guardCurrentOriginAndActualMergeBase": true,
+    "processCaptureKillAndEnvironment": true,
+    "testFilesAndAssertions": true,
+    "deadlines": true,
+    "sourceOriginalAnalyticsRequest": true,
+    "focalRequest": true,
+    "addsObserverTest": false,
+    "addsParser": false,
+    "addsCommand": false,
+    "addsSelectionFilter": false,
+    "changesRuntime": false
+  },
+  "selection": {
+    "outerGroups": 6,
+    "syntacticRunCommandSites": 12,
+    "plannedCommands": 12,
+    "truncationFlagsRequiredFalse": 24,
+    "declaredOmniContexts": 6,
+    "expectedSpawnedProcesses": 12,
+    "expectedDelegatedSpawns": 0,
+    "functionalProcesses": 2,
+    "existingTestDeclarations": 11,
+    "existingControlReports": 7,
+    "newTestDeclarations": 0,
+    "projectedAssertionCount": null,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+        "wholeFile": true,
+        "nameFilter": null,
+        "expectedTests": 7,
+        "expectedReports": 3,
+        "processMs": 360000,
+        "parentMs": 420000
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "git": "a55818797ecf9fa6801393762bbe3261a1812576",
+        "wholeFile": true,
+        "nameFilter": null,
+        "expectedTests": 4,
+        "expectedReports": 4,
+        "c14Reports": 2,
+        "c15Reports": 2,
+        "c15OutcomeCounts": [
+          4,
+          15
+        ],
+        "processMs": 300000,
+        "parentMs": 360000
+      }
+    ],
+    "types": {
+      "cliProcessMs": 240000,
+      "sucafinaProcessMs": 240000,
+      "parentEachMs": 300000
+    },
+    "guards": {
+      "parentMs": 600000,
+      "base": "actual origin/dev merge-base",
+      "requiredErrors": 0,
+      "requiredApproved": 0,
+      "ruleAndFileAndWarningCountsNotProjected": true
+    },
+    "requestBunTimeoutMs": 600000,
+    "nominalBudgetsNotForecast": true,
+    "sevenReportsMustBeReceivedFromCurrentRun": true,
+    "reportCountNotNewParser": "Existing driver verifies process exits/truncation and original tests enforce their own oracles. Actual file/test/report completeness remains required in the independent original-log intake."
+  },
+  "runtimeIdentity": {
+    "actualActionsHead": "D",
+    "checkout": "D",
+    "sourceObservedVia": "git show -s --format=%H%n%T%n%P HEAD^",
+    "expectedLines": [
+      "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+      "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+    ],
+    "sourceBaseTree": "Root-authenticated metadata of the exact parent commit; no new runtime probe.",
+    "rootSnapshotSoleParentAndModesAuditRequired": true,
+    "requiresLinuxHostedCI": true,
+    "actualBunAndNonceMustBeReceived": true,
+    "historicalCompositionBaseIsOnlyMetadata": true,
+    "releaseQualification": false
+  },
+  "capture": {
+    "stdoutPerCommand": 1048576,
+    "stderrPerCommand": 1048576,
+    "arithmeticChildStreamBytes": 25165824,
+    "aggregateActionsLogCap": null,
+    "noClaimAllRawOutputFits": true,
+    "forceKillAfter": "5 seconds",
+    "killSignal": "SIGTERM",
+    "completeRootAcquisition": "Root receives each original main and cleanup once after both terminal, preserves and reads back before parse; reviewers use those same Git copies."
+  },
+  "intake": [
+    "Authenticate root-preserved complete main and cleanup bytes and actual source/snapshot/run/attempt identities.",
+    "Six outer groups and twelve commands with exact argv/cwd/limits and all24 truncation flags false; failures are not relabelled.",
+    "Read exact source/tree/sole clean parent three-line identity and all16 working pins.",
+    "Receive all11 existing controls and7 original reports, including C15 outcome sets4+15; record actual assertions without transferring the prior768.",
+    "Both typechecks exit0; complete guard JSON against actual current origin/dev and actual merge base, errors[] and approved[].",
+    "Actual Omni6/12/0 and nonce, runtime, main and cleanup conclusions; no badge-only acceptance.",
+    "Diagnostic focal success is separate from a later original Analytics execution and any CPU file receipt."
+  ],
+  "limits": [
+    "No new CPU-helper control or lifecycle failure test is added; E11 capture is not proved by these11 existing controls.",
+    "The finite3x3/source3 population belongs to the E11 observational protocol, not extra focal tests or expected nonzero runtime counts.",
+    "Counters are limited to the running owned PID window; native cells include all constructed child snapshots, not only C08 and not exclusively the selected Request.",
+    "HTTP progress and CPU capture have separate lifetimes; absence/presence of one is not inferred from the other.",
+    "No installed preview completion, latency reduction, clean-product qualification, final composition or Release1.4.1 result is claimed.",
+    "Per-command output caps and inherited timeouts remain; overall Actions log delivery and cleanup still require actual complete receipt.",
+    "Root independently owns source/tree/snapshot/ref/run binding and one activation; no such mutation is performed by this author."
+  ],
+  "staticChecks": {
+    "anchorsUniqueForwardInverse": true,
+    "fullRetargetDiffAppliedAndInverted": true,
+    "fullSnapshotDiffAppliedAndInverted": true,
+    "runCommandLiteral": true,
+    "groups2Through6Literal": true,
+    "sixGroupsTwelveCommands": true,
+    "sourcePins16WithNinePreserved": true,
+    "sourceManifestSevenCodePinsAndRequestExact": true,
+    "bothRequestsNoLfPreserved": true,
+    "repoCodeExecuted": false
+  },
+  "reviews": {
+    "root": "PENDING_FINAL_PACKAGE_LINKAGE",
+    "teams": "EXECUTABLE_AND_DERIVATION_ACK_REPORTED; BOUNDS_MANIFEST_LINKAGE_PENDING",
+    "dynamicQualification": false
+  },
+  "authorEffects": {
+    "gitBlobsOnly": true,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsCreated": 0,
+    "repoExecutions": 0,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "externalMessages": 0
+  }
+}

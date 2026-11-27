@@ -1,0 +1,394 @@
+{
+  "schema": "sf613-e11-focal-retarget-anchors.v1",
+  "status": "TEXT_DERIVATION_ONLY_NOT_EXECUTED",
+  "authority": "Root authorized this bounded retarget and the depth=3 plus %H/%T/%P identity adjustment; objects/refs/runs remain root-only.",
+  "base": {
+    "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+    "git": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+    "bytes": 10668,
+    "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+  },
+  "post": {
+    "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+    "git": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+    "bytes": 11630,
+    "sha256": "695b530195644d96cfd3f8f0f0e4b0073aa8860d98f57033c9cbae24d87470c1",
+    "source": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "sourceTree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4"
+  },
+  "anchors": [
+    {
+      "id": "diagnostic-driver-scope",
+      "before": "// Snapshot-only verification. This driver is not part of the #613 product candidate.",
+      "after": "// Snapshot-only E11 diagnostic verification. This driver does not qualify the #613 product candidate.",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "9b3144fb748caf30db3f5bae4906573ccd3d4f01",
+        "bytes": 85,
+        "sha256": "642844e203c4696cedbf8a3a9fb6ce1fb17bfb2c2e42bb0846b17947269b58b5"
+      },
+      "afterIdentity": {
+        "git": "d14e49f5604518e8166975e26cea4cc3feac4b0e",
+        "bytes": 102,
+        "sha256": "1e640d469585e0b875e9de7ec8754df5b14be6542a34a8ec0da0d09e819b10db"
+      }
+    },
+    {
+      "id": "source-tree-clean-base",
+      "before": "const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"",
+      "after": "const source = \"ace9cecb0c03cf3f1c5287a81570b508d8116aab\"\nconst sourceTree = \"f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4\"\nconst sourceBase = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceBaseTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "9eebdfe9cc65d631f63215dbd1959940ee8be0b6",
+        "bytes": 119,
+        "sha256": "6ae8bab7c658d5e272b1180bdeebdfd94b5432f702a26690ce5c7db8964c59f3"
+      },
+      "afterIdentity": {
+        "git": "6068614d5d1fa06a8d97c5d8f20bb0b35e30807e",
+        "bytes": 247,
+        "sha256": "76443e3e9fc0cdf38592daee7260359bd2fdb908212af96eccf10798f40fc3ea"
+      }
+    },
+    {
+      "id": "hosted-diagnostic-binding",
+      "before": "  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))\n    throw new Error(\"C15 source and tree must be bound to reviewed Git objects before execution\")",
+      "after": "  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree) || !/^[a-f0-9]{40}$/.test(sourceBase))\n    throw new Error(\"E11 diagnostic source, tree and clean base must be bound to reviewed Git objects before execution\")",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "ef1eb1d4ef34b7b69bab874cb7a13e6bf2c74584",
+        "bytes": 173,
+        "sha256": "6aa46c2e8b7e9f8710add9e141c6e71c59d0233576b9342e74c845cd728dea80"
+      },
+      "afterIdentity": {
+        "git": "243510f0da403cfa7680ded391c743fca09c6c05",
+        "bytes": 234,
+        "sha256": "ee62cf0dc79f291873e8e4b7822bf21fb2b28da49cba57e9cb90e5c8f78839cb"
+      }
+    },
+    {
+      "id": "diagnostic-receipt-label",
+      "before": "    verification: \"sf613-c15-snapshot-projection-focal\", source, sourceTree,",
+      "after": "    verification: \"sf613-e11-diagnostic-focal\", source, sourceTree, sourceBase,",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "89e64c5b2ab7e3813a160f377fa6d8fc33ae4095",
+        "bytes": 76,
+        "sha256": "ef263967ddddd490d7a613f52aef743abf4ebae761145c63ae04a1e9f14fec4a"
+      },
+      "afterIdentity": {
+        "git": "27fff29ce6b2f6187783d048ea347daff7653c75",
+        "bytes": 79,
+        "sha256": "b7a9a4e7c221c9c6cf52d9f36ebc465bf8d7ceee0863eedc511b3bfef1fd3c17"
+      }
+    },
+    {
+      "id": "source-group-label",
+      "before": "checks.live(\"snapshot identifies the exact reviewed product source and tree\",",
+      "after": "checks.live(\"snapshot identifies the exact reviewed E11 diagnostic source, tree and clean base\",",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "382e829f3bdd31db778ba28b52e0e65325e3437a",
+        "bytes": 77,
+        "sha256": "300d390a6e00ce0cd7fcee684223e42fae57fad8570a9a1b38bdcc0b40353729"
+      },
+      "afterIdentity": {
+        "git": "62ffeaf3d51f0eefec6838e2597640940a88a005",
+        "bytes": 96,
+        "sha256": "8c4e99bf5037b777b3ba9d2d7dfd95c7c85f59b7ca85d139681d55018ed29564"
+      }
+    },
+    {
+      "id": "e11-manifest-and-count-meaning",
+      "before": "  process.stdout.write(JSON.stringify({ c08SnapshotProjectionManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 4, candidateDeltaPaths: 5,\n    deltaBase: \"372cbc152bc1361168de9efcd4262770105670c5\",\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 11, preservedTestDeclarations: 9, addedTestDeclarations: 2,\n    expectedControlReports: 7, nameFilter: null,\n    mechanism: \"fixed detached C08 child snapshot and private whole cases/preferences selections through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition\",\n    assertions: \"complete shape and metadata, fresh selected graphs and authorization, opaque full routes, selector precedence and late registration, invalid and legacy fallback, live drift, scoped checks, inherited ACL timing, lifetime, error, abort and native poison\",\n    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, addedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, selectedTests: 4, nominalSum: 280000, process: 300000, parent: 360000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "after": "  process.stdout.write(JSON.stringify({ e11DiagnosticFocalManifest: {\n    source, sourceTree, sourceBase, sourceBaseTree, qualification: false, diagnosticOnly: true,\n    workingSourcePins: 16, sourceOverlayPaths: 8, sourceOverlayDelta: { added: 2, modified: 6 },\n    sourceParentRequest: { path: \".ci-run.json\", git: \"eda49a023c07599de00f5af9642ee92b9d9adf3b\", bytes: 295 },\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 11, preservedTestDeclarations: 11, addedTestDeclarations: 0,\n    expectedControlReports: 7, nameFilter: null,\n    mechanism: \"passive E11 CPU and finite branch observation over clean S15R, retaining the original C13/C14/C15 regression selections\",\n    assertions: \"existing authorization, graph, fallback, lifetime, error, abort and poison oracles; no assertion of CPU capture, route population, installed preview completion or product qualification\",\n    observationLimits: \"counters cover the running owned PID window; native child snapshots are not restricted to C08; CPU and HTTP progress have separate lifetimes\",\n    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, addedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, selectedTests: 4, nominalSum: 280000, process: 300000, parent: 360000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n    snapshotDelta: { added: 1, modified: 1 },\n  } }) + \"\\n\")\n",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "152cdccb997f2311e3f6cce95ab3cc5bf5b1bad3",
+        "bytes": 1527,
+        "sha256": "9ec96e3e55fab8173297258c2cc1a53a01b0be47effb5564b79a0c7cacf92de3"
+      },
+      "afterIdentity": {
+        "git": "9e6a81e6279afbe6eb2af2d16eb6fc49b124c9dd",
+        "bytes": 1748,
+        "sha256": "eba16328b6bcaf7fafd6fca4fba7d7b873aa94bc8ab64fa7f8074d0a2cf2d7e1"
+      }
+    },
+    {
+      "id": "fetch-clean-grandparent",
+      "before": "    \"fetch\", \"--no-tags\", \"--depth=2\", \"origin\", process.env.GITHUB_SHA!,",
+      "after": "    \"fetch\", \"--no-tags\", \"--depth=3\", \"origin\", process.env.GITHUB_SHA!,",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "794a7b2617f10ff6c2da61d8e3f40ed7f081c7bf",
+        "bytes": 73,
+        "sha256": "fee0ffe3606cdaf6996a449075d167de99ceceb480dc599eea949ad1123cac5e"
+      },
+      "afterIdentity": {
+        "git": "9de4967662614eb5d6a4e28aa9f1ebf4c3d3ec18",
+        "bytes": 73,
+        "sha256": "2d0a67b45a3fcda4275993e327b665d21884ad9d2677d7811c40955de7b43750"
+      }
+    },
+    {
+      "id": "source-sole-parent-observation",
+      "before": "    \"show\", \"-s\", \"--format=%H%n%T\", \"HEAD^\",\n  ], repository, 30_000)\n  expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree])",
+      "after": "    \"show\", \"-s\", \"--format=%H%n%T%n%P\", \"HEAD^\",\n  ], repository, 30_000)\n  expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree, sourceBase])",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "39c400137eb51a9f02cdf23413eec5b01c168916",
+        "bytes": 139,
+        "sha256": "a0ee5670282d8d147b19b7183f33483f47868430a7023f9af79b45a658d769e3"
+      },
+      "afterIdentity": {
+        "git": "7470d6c25554352f820ceb473e353ff6217530a4",
+        "bytes": 155,
+        "sha256": "4f84aaa41bb8834f67777ab53e46c7b8da65263f880d6f6d5ce3206913b0747b"
+      }
+    },
+    {
+      "id": "sixteen-working-pins-nine-literal-three-updated-four-added",
+      "before": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"1017609000bdbdb39fc0510b045dc6dfde371faf\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"b7de9404461591ce0162d496ec917a47fb72a479\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts\",\"8b01895b0f3b1623646d14a82adb66bf13ca841b\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"d02bcbfc770719935dcaca97cc20045b656f784d\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"ff9d23fe68d779e518d4a09ca00ba1768d3f824a\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"8bdc12d191a76137cd2244e01990f7a780091216\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"a55818797ecf9fa6801393762bbe3261a1812576\"],\n  ] as const\n",
+      "after": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"1017609000bdbdb39fc0510b045dc6dfde371faf\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"8148a7fdd70621aa41a0978efdaf330202f2ba73\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts\",\"8b01895b0f3b1623646d14a82adb66bf13ca841b\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"c35042473a5a1f5416253a3c5bf6b8450c44673b\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"ff9d23fe68d779e518d4a09ca00ba1768d3f824a\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"8bdc12d191a76137cd2244e01990f7a780091216\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"a55818797ecf9fa6801393762bbe3261a1812576\"],\n    [\"modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts\",\"b5e2f218117a0f30e803a8b251922e92b6da2332\"],\n    [\"apps/cli/src/sucafina-product/portfolio-http.ts\",\"347edd5292d86537451507026236f27f2488a06a\"],\n    [\"apps/cli/test/fixture/sucafina-native-installation.ts\",\"46dab966dbb2631fcc65f5cf730e792f9e7e94da\"],\n    [\"packages/app-shell/e2e/sucafina/design-support/installation.ts\",\"b989a4fa1b4ecfcc8800e9df07e823e93d77009a\"],\n  ] as const\n",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "6943a618dd04c7a8fb5a315d2063e4205445898c",
+        "bytes": 1484,
+        "sha256": "56d5a0e75c20ab60ec3be028672379e870312d77b279e549e62019279f34af5a"
+      },
+      "afterIdentity": {
+        "git": "622e1a4ea3e5c2292672f6b6acfe880272b31c28",
+        "bytes": 1923,
+        "sha256": "eb76c1c709a093eff16aafee2d61915cf0408caafa292801f0f3b8b0f79c7d90"
+      }
+    },
+    {
+      "id": "source-blob-receipt-scope",
+      "before": "  process.stdout.write(JSON.stringify({ gate: \"reviewed source blobs\", source, sourceTree,\n    snapshot, files: observed, expectedGroups: 6, expectedCommands: 12,",
+      "after": "  process.stdout.write(JSON.stringify({ gate: \"reviewed source blobs\", source, sourceTree, sourceBase,\n    snapshot, files: observed, workingSourcePins: 16, sourceOverlayPaths: 8, expectedGroups: 6, expectedCommands: 12,",
+      "uniqueForward": 1,
+      "uniqueInverse": 1,
+      "beforeIdentity": {
+        "git": "6e816c71ed2081d9855fded8fb802448dd748db3",
+        "bytes": 162,
+        "sha256": "5715700943f8292598a127aff326c6c1b421b45218d13485d5ee7fb003138cae"
+      },
+      "afterIdentity": {
+        "git": "12030bdb1dcc22c6e0997829a37a3859e22177c3",
+        "bytes": 220,
+        "sha256": "3c97f4dfa8b645369e1a3cc15aada1f2ba8d8519e3f3828c3bc04a4fc8877fb0"
+      }
+    }
+  ],
+  "invariants": {
+    "uniqueForwardInverse": true,
+    "wholeDriverForwardInverse": true,
+    "runCommand": {
+      "literal": true,
+      "git": "f0fd9269ee3a64962a1c24b5bcc029247cfc4018",
+      "bytes": 1346,
+      "sha256": "baf6ee61cdc859ea79a4dd3b4bd6e5bdd1823ea131785c43fcd9b47b93ca16b1"
+    },
+    "groups2Through6": {
+      "literal": true,
+      "git": "9fbd102be0c58e0e29038e5ba385a012f8f0a36a",
+      "bytes": 3055,
+      "sha256": "74b8d60631f3ae8be5877be3dea179ef18a87a34f7e30a135f7af374705847da"
+    },
+    "importsLiteral": true,
+    "sourcePins": {
+      "before": 12,
+      "after": 16,
+      "preserved": 9,
+      "updated": 3,
+      "added": 4,
+      "exact": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "git": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "git": "8148a7fdd70621aa41a0978efdaf330202f2ba73"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+          "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "git": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "git": "244d46ee41e9ce288a7260938174a57161137bab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "git": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "git": "ccc5ea87046144843e1751b1288e907974d24ca5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "git": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "git": "c35042473a5a1f5416253a3c5bf6b8450c44673b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "git": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "git": "8bdc12d191a76137cd2244e01990f7a780091216"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "git": "a55818797ecf9fa6801393762bbe3261a1812576"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "git": "b5e2f218117a0f30e803a8b251922e92b6da2332"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "git": "347edd5292d86537451507026236f27f2488a06a"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "git": "46dab966dbb2631fcc65f5cf730e792f9e7e94da"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "git": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a"
+        }
+      ]
+    },
+    "groups": 6,
+    "commands": 12,
+    "truncationFlags": 24,
+    "functionalProcesses": 2,
+    "testDeclarationsExpected": 11,
+    "controlReportsExpected": 7,
+    "originalTestBodiesChanged": false,
+    "typesAndGuardsLiteral": true,
+    "newExecution": false
+  },
+  "identityDelta": {
+    "fetch": {
+      "before": [
+        "fetch",
+        "--no-tags",
+        "--depth=2",
+        "origin",
+        "ACTUAL_D_SHA"
+      ],
+      "after": [
+        "fetch",
+        "--no-tags",
+        "--depth=3",
+        "origin",
+        "ACTUAL_D_SHA"
+      ],
+      "sameCommandCount": true,
+      "timeoutMs": 60000
+    },
+    "source": {
+      "before": [
+        "show",
+        "-s",
+        "--format=%H%n%T",
+        "HEAD^"
+      ],
+      "after": [
+        "show",
+        "-s",
+        "--format=%H%n%T%n%P",
+        "HEAD^"
+      ],
+      "expectedLines": [
+        "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+        "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+        "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+      ],
+      "timeoutMs": 30000,
+      "reason": "Include clean grandparent before observing the sole parent of S_E11; no additional probe."
+    }
+  },
+  "requests": {
+    "source": {
+      "path": ".ci-run.json",
+      "git": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "finalLF": false,
+      "role": "Literal Analytics request in S_E11; root object audit, not a separate focal working-file read."
+    },
+    "focal": {
+      "path": ".ci-run.json",
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "finalLF": false,
+      "role": "Literal existing focal request replaces the source request in future D."
+    }
+  },
+  "diffFacts": {
+    "retarget": {
+      "hunks": 5,
+      "added": 30,
+      "deleted": 21
+    },
+    "snapshot": {
+      "hunks": 2,
+      "added": 179,
+      "deleted": 1
+    },
+    "retargetForwardInverse": true,
+    "snapshotForwardInverse": true,
+    "requestNoLfPreserved": true
+  },
+  "futureSnapshot": {
+    "commit": null,
+    "tree": null,
+    "soleParent": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "changes": [
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "change": "A",
+        "mode": "100644",
+        "git": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b"
+      },
+      {
+        "path": ".ci-run.json",
+        "change": "M",
+        "mode": "100644",
+        "preGit": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "postGit": "4a7b64a8392138f1b79d386557e48ac4453617f5"
+      }
+    ],
+    "rootObjectAndActivationReviewRequired": true
+  },
+  "limits": [
+    "No dynamic assertion count is predicted.",
+    "Expected eleven controls and seven reports must be received from this actual execution; no C15R PASS is transferred.",
+    "The preserved test groups do not validate E11 profiler capture, matrix population, installed preview completion or latency.",
+    "Counters describe the running owned PID window, including all native child snapshots; no C08-only or Request ownership is inferred.",
+    "D sole-parent/exact1A1M and source request identity remain root object-review obligations; the focal observes S/tree/sole clean parent and its sixteen working pins."
+  ]
+}

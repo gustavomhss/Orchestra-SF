@@ -1,0 +1,42 @@
+2026-11-27T18:54:14.9877180Z [1A[2KSF_ANALYTICS_CAPTURE {"name":"UI42-configure-focused-candidate-test-data","width":1440,"surface":"UI42","stage":"configure"}
+2026-11-27T18:54:14.9877555Z 
+2026-11-27T18:54:14.9878088Z [1A[2KSF_ANALYTICS_SOURCE {"operation":"decision-portfolio-preview","phase":"native-request","sequence":3,"method":"POST","ownerBinding":"exact"}
+2026-11-27T18:54:14.9878481Z 
+2026-11-27T18:55:15.1026809Z [1A[2KSF_DESIGN_DIAGNOSTICS {"kind":"wave-three-failure","consoleErrors":[],"pageErrors":[]}
+2026-11-27T18:55:15.1027393Z 
+2026-11-27T18:55:15.1095113Z [1A[2KSF_DESIGN_DIAGNOSTICS {"kind":"native-view","state":{"discovery":"ready","provider":"ready","view":"ready","text":"Context and access⁨127.0.0.1:39357⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.76af2218-9396-4419-b040-1711f2f0b28d · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."}}
+2026-11-27T18:55:15.1098770Z 
+2026-11-27T18:55:15.4613802Z 
+2026-11-27T18:55:15.4879265Z 
+2026-11-27T18:55:15.5085014Z 
+2026-11-27T18:55:15.5304945Z 
+2026-11-27T18:55:15.5508506Z 
+2026-11-27T18:55:15.5711729Z 
+2026-11-27T18:55:15.5741391Z 
+2026-11-27T18:55:15.5741962Z [1A[2KSF_DESIGN_DIAGNOSTICS {"kind":"wave-three-page-closed","consoleErrors":[],"pageErrors":[]}
+2026-11-27T18:55:15.5742258Z 
+2026-11-27T18:55:17.6350342Z [1A[2K  1) [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity 
+2026-11-27T18:55:17.6350876Z 
+2026-11-27T18:55:17.6351236Z     TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event "response"
+2026-11-27T18:55:17.6351721Z 
+2026-11-27T18:55:17.6351983Z       70 |   await expect(limit).toHaveCSS("outline-style", "solid")
+2026-11-27T18:55:17.6352570Z       71 |   await captureAnalytics(page, info, "UI42-configure-focused-candidate-test-data")
+2026-11-27T18:55:17.6353346Z     > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), "decision-portfolio-preview"), { timeout: 60_000 })
+2026-11-27T18:55:17.6354039Z          |                                ^
+2026-11-27T18:55:17.6354840Z       73 |   await page.getByRole("button", { name: "Preview combinations", exact: true }).click()
+2026-11-27T18:55:17.6355362Z       74 |   const originalPreview = await previewResponse
+2026-11-27T18:55:17.6355766Z       75 |   expect(originalPreview.status()).toBe(200)
+2026-11-27T18:55:17.6356449Z         at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32
+2026-11-27T18:57:31.8694766Z 
+2026-11-27T18:57:31.8695206Z [1A[2KSF_DESIGN_DIAGNOSTICS {"kind":"wave-three-page-closed","consoleErrors":[],"pageErrors":[]}
+2026-11-27T18:57:31.8695507Z 
+2026-11-27T18:57:31.8723291Z [1A[2KSF_ANALYTICS_SCOPE {"surfaces":["UI45","UI46"],"catalogViews":11,"originalFinancialRead":true,"originalOperationalRead":true,"originalSourceResolution":true,"originalOperationalSourceResolution":true,"originalOperationalSourceNegative":"bi-source-outside-selected-value","originalSensitivityChoices":0,"invalidatedOnPeriodChange":true,"fabricatedResult":false}
+2026-11-27T18:57:31.8724632Z 
+2026-11-27T18:57:32.0677651Z [1A[2KSF_DESIGN_DIAGNOSTICS {"kind":"wave-three-page-closed","consoleErrors":[],"pageErrors":[]}
+2026-11-27T18:57:32.0685216Z 
+2026-11-27T18:57:32.5887820Z [1A[2K  1 failed
+2026-11-27T18:57:32.5888475Z     [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity 
+2026-11-27T18:57:32.5888972Z   1 passed (8.0m)
+2026-11-27T18:57:32.6363451Z error: script "test:e2e:local" exited with code 1
+2026-11-27T18:57:32.6409610Z ##[error]Process completed with exit code 1.
+2026-11-27T18:57:32.6839877Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

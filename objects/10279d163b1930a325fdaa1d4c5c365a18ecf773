@@ -1,0 +1,138 @@
+{
+  "schema": "sf613-c17-source-object-binding-supplement-v1",
+  "status": "SOURCE_OBJECT_BOUND_CI_PENDING",
+  "purpose": "Bind the reviewed C17 source package to the object created and audited by root; no source, tests, limits or prior documents are rewritten.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "historicalPackage": {
+    "manifest": {
+      "gitSha": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+      "bytes": 18155,
+      "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78",
+      "lf": 469
+    },
+    "bounds": {
+      "gitSha": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+      "bytes": 9394,
+      "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8",
+      "lf": 251
+    },
+    "preservation": "Both original blobs remain literal; this supplement resolves only their source-object placeholders."
+  },
+  "source": {
+    "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "parents": [
+      "0860b3404ca54235997c4cdaee63bbe0659d5a7a"
+    ],
+    "parentTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "message": "fix(sucafina): reduce normalized case identity payloads",
+    "delta": "4M",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "mode": "100644",
+        "preimage": "8bdc12d191a76137cd2244e01990f7a780091216",
+        "postimage": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "preimage": "d02bcbfc770719935dcaca97cc20045b656f784d",
+        "postimage": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "mode": "100644",
+        "preimage": "550236df66f1e02e5111a1eee23579e76178bc6b",
+        "postimage": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "mode": "100644",
+        "preimage": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+        "postimage": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "bytes": 87176,
+        "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69"
+      }
+    ]
+  },
+  "evidence": {
+    "rootAudit": {
+      "reportedBy": "/root",
+      "treePairs": 11,
+      "unchangedSiblings": 265,
+      "modifiedLeaves": 4,
+      "soleParentConfirmed": true,
+      "treeAndModesConfirmed": true,
+      "scope": "Root's direct object/tree audit, as communicated in the task; not represented as a second tree walk by the writer."
+    },
+    "writerReadback": {
+      "method": "GitHub fetch_commit and compare_commits; no repository execution",
+      "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "messageConfirmed": true,
+      "compare": {
+        "base": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+        "head": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+        "status": "ahead",
+        "aheadBy": 1,
+        "behindBy": 0,
+        "totalCommits": 1,
+        "mergeBase": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "status": "modified",
+            "added": 7,
+            "removed": 3
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+            "status": "modified",
+            "added": 1,
+            "removed": 1
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "status": "modified",
+            "added": 225,
+            "removed": 55
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+            "status": "modified",
+            "added": 266,
+            "removed": 0
+          }
+        ]
+      },
+      "result": "Exact planned four modified paths, +499/-59; source reviews remain closed."
+    }
+  },
+  "reviews": {
+    "sourceAndControl": "Root and Teams accepted the final four postimages and forward/inverse derivations; Focal accepted LocalStore R4 provenance. Documentary linkage was acknowledged by Teams and Focal before this object binding.",
+    "newSemanticReview": false
+  },
+  "continuation": {
+    "focalOwner": "focal_migration",
+    "focalTemplate": "4c33f46e4f67bbcd053a1e074e9863e9dbf8124f",
+    "sourceBinding": {
+      "commit": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906"
+    },
+    "expectedFunctionalTests": 12,
+    "expectedReports": 8,
+    "c16Outcomes": 31,
+    "identityProjectionCases": 9,
+    "projectionFileNominalSeconds": 290,
+    "projectionProcessSeconds": 300,
+    "projectionParentSeconds": 360,
+    "runtimeResults": null,
+    "authority": "Root retains object/ref/run and original acquisition authority. This supplement neither activates a run nor transfers any prior PASS or Analytics result."
+  }
+}

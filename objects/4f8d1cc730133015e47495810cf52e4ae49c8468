@@ -1,0 +1,226 @@
+diff --git a/reader-e11.py b/reader-e11.py
+--- a/reader-e11.py
++++ b/reader-e11.py
+@@ -18,7 +18,7 @@
+ import zlib
+ 
+ REPO = "gustavomhss/Orchestra-SF"
+-BRANCH = "UNBOUND_READER_BRANCH"
++BRANCH = "sf613-artifact-e11cpu"
+ WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+ SOURCE = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+ SOURCE_TREE = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+@@ -27,11 +27,11 @@
+ ORIGINAL_RUN = 46028127606
+ ORIGINAL_ATTEMPT = 1
+ MAIN_JOB = 140604695368
+-CLEANUP_JOB = "UNBOUND_CLEANUP_JOB"
+-ARTIFACT_ID = "UNBOUND_ARTIFACT_ID"
+-ARTIFACT_NAME = "UNBOUND_ARTIFACT_NAME"
+-ARTIFACT_BYTES = "UNBOUND_ARTIFACT_BYTES"
+-ARTIFACT_SHA = "UNBOUND_ARTIFACT_SHA256"
++CLEANUP_JOB = 140609271563
++ARTIFACT_ID = 15214066673
++ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
++ARTIFACT_BYTES = 46001766
++ARTIFACT_SHA = "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef"
+ REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+ REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+ SOURCE_SELECTION_PINS = [
+@@ -48,28 +48,28 @@
+         "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+     }
+ ]
+-# NON-EXECUTABLE TEMPLATE: source and announced live run/main only; terminal intake facts remain UNBOUND.
+-E11_BINDINGS_COMPLETE = "UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE"
+-ORIGINAL_CONCLUSION = "UNBOUND_ORIGINAL_CONCLUSION"
+-MAIN_CONCLUSION = "UNBOUND_MAIN_CONCLUSION"
+-CLEANUP_CONCLUSION = "UNBOUND_CLEANUP_CONCLUSION"
+-TEST_STEP_CONCLUSION = "UNBOUND_TEST_STEP_CONCLUSION"
+-EXPECTED_CASE_STATUSES = [["UNBOUND_CASE_1_STATUS"], ["UNBOUND_CASE_2_STATUS"]]
+-EXPECTED_FIRST_WAITER_FAILURE = "UNBOUND_FIRST_WAITER_FAILURE"
+-EXPECTED_VERDICT = {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42", "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44", "BI": "UNBOUND_BI"}
+-SEMANTIC_SHA = "UNBOUND_UNION_SHA256"
+-SEMANTIC_BYTES = "UNBOUND_UNION_BYTES"
+-SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_PREVIEW_E11_CPU":"UNBOUND_CPU_COUNT","SF_PREVIEW_E11_PROGRESS":"UNBOUND_PROGRESS_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
+-ANALYTICS_SHA = "UNBOUND_ANALYTICS_SHA256"
+-ANALYTICS_BYTES = "UNBOUND_ANALYTICS_BYTES"
+-ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
+-CPU_COUNTS = {"SF_PREVIEW_E11_CPU": "UNBOUND_CPU_COUNT"}
+-PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": "UNBOUND_PROGRESS_COUNT"}
++# Current E11 main and API metadata are bound; original runtime and CPU files remain verification targets.
++E11_BINDINGS_COMPLETE = True
++ORIGINAL_CONCLUSION = "failure"
++MAIN_CONCLUSION = "failure"
++CLEANUP_CONCLUSION = "success"
++TEST_STEP_CONCLUSION = "failure"
++EXPECTED_CASE_STATUSES = [["failed"], ["passed"]]
++EXPECTED_FIRST_WAITER_FAILURE = True
++EXPECTED_VERDICT = {"failed": 1, "passed": 1, "UI42": "partial;6 captures before first preview response", "UI43": "not reached", "UI44": "not reached", "BI": "passed;40 captures and original complete UI45/UI46 scope"}
++SEMANTIC_SHA = "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6"
++SEMANTIC_BYTES = 39486
++SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE": 44, "SF_ANALYTICS_CAPTURE": 46, "SF_PREVIEW_E11_CPU": 3, "SF_PREVIEW_E11_PROGRESS": 3, "SF_DESIGN_DIAGNOSTICS": 5, "SF_ANALYTICS_SCOPE": 1}
++ANALYTICS_SHA = "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1"
++ANALYTICS_BYTES = 34162
++ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE": 44, "SF_ANALYTICS_CAPTURE": 46, "SF_DESIGN_DIAGNOSTICS": 5, "SF_ANALYTICS_SCOPE": 1}
++CPU_COUNTS = {"SF_PREVIEW_E11_CPU": 3}
++PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": 3}
+ CPU = {
+-    "nonce": "UNBOUND_CPU_NONCE", "pid": "UNBOUND_CPU_PID", "parentPid": "UNBOUND_CPU_PARENT_PID",
+-    "markerBytes": "UNBOUND_CPU_MARKER_BYTES", "markerSha256": "UNBOUND_CPU_MARKER_SHA256",
++    "nonce": "sf613-e11-cpu-RIlIZr", "pid": 3713, "parentPid": 3668,
++    "markerBytes": 3180, "markerSha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+ }
+-PROGRESS = {"markerBytes": "UNBOUND_PROGRESS_MARKER_BYTES", "markerSha256": "UNBOUND_PROGRESS_MARKER_SHA256"}
++PROGRESS = {"markerBytes": 2144, "markerSha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7"}
+ CPU_NAMES = ("preview-first.cpuprofile", "collection.json", "launcher.json")
+ CORE_CAP = {"profile": 4 * 1024 * 1024, "cpuMarkers": 64 * 1024,
+             "collection": 16 * 1024, "launcher": 8 * 1024,
+@@ -721,9 +721,9 @@
+     RECEIPT["parsers"]["runtime"] = {
+         "file": runtime_item["id"], "bytes": len(runtime_raw), "sha256": digest(runtime_raw),
+         "tests": 2, "config": runtime_config, "cases": cases,
+-        "verdict": {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42",
+-                    "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44",
+-                    "BI": "UNBOUND_BI"},
++        "verdict": {"failed": 1, "passed": 1, "UI42": "partial;6 captures before first preview response",
++                    "UI43": "not reached", "UI44": "not reached",
++                    "BI": "passed;40 captures and original complete UI45/UI46 scope"},
+         "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                             "matchesOriginalMainSequence": parity,
+                             "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+@@ -1129,7 +1129,7 @@
+ 
+ 
+ def parse_cpu_originals(marker_data):
+-    # UNBOUND CURRENT FACT: retain this started/tuple gate only after the actual E11 intake supports it; never choose first/latest directory.
++    # Current E11 main provides the complete selected tuple and started marker; never choose first/latest directory.
+     binding = marker_data["selectedBinding"]
+     need(binding is not None and binding["nonce"] == CPU["nonce"] and binding["pid"] == CPU["pid"],
+          "E11_CURRENT_COMPLETE_CAPTURE_BINDING")
+diff --git a/.github/workflows/sf613-artifact-read.yml b/.github/workflows/sf613-artifact-read.yml
+--- a/.github/workflows/sf613-artifact-read.yml
++++ b/.github/workflows/sf613-artifact-read.yml
+@@ -2,14 +2,14 @@
+ 
+ on:
+   push:
+-    branches: [UNBOUND_READER_BRANCH]
++    branches: [sf613-artifact-e11cpu]
+ 
+ permissions:
+   contents: read
+   actions: read
+ 
+ concurrency:
+-  group: UNBOUND_READER_BRANCH-${{ github.sha }}
++  group: sf613-artifact-e11cpu-${{ github.sha }}
+   cancel-in-progress: false
+ 
+ jobs:
+@@ -20,7 +20,7 @@
+       - name: Verify original immutable artifact without checkout
+         env:
+           GH_TOKEN: ${{ github.token }}
+-          SF613_ARTIFACT_READER_SHA256: 15b1726506ff787d1a3edbcde5a5e0f8621c620aaffb4dc2e5d27cd8ccffd8d9
++          SF613_ARTIFACT_READER_SHA256: 740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290
+           SF613_ARTIFACT_READER_SOURCE: |
+             #!/usr/bin/env python3
+             """Receipt of one immutable Analytics artifact. Never imports or executes repository code."""
+@@ -42,7 +42,7 @@
+             import zlib
+             
+             REPO = "gustavomhss/Orchestra-SF"
+-            BRANCH = "UNBOUND_READER_BRANCH"
++            BRANCH = "sf613-artifact-e11cpu"
+             WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+             SOURCE = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+             SOURCE_TREE = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+@@ -51,11 +51,11 @@
+             ORIGINAL_RUN = 46028127606
+             ORIGINAL_ATTEMPT = 1
+             MAIN_JOB = 140604695368
+-            CLEANUP_JOB = "UNBOUND_CLEANUP_JOB"
+-            ARTIFACT_ID = "UNBOUND_ARTIFACT_ID"
+-            ARTIFACT_NAME = "UNBOUND_ARTIFACT_NAME"
+-            ARTIFACT_BYTES = "UNBOUND_ARTIFACT_BYTES"
+-            ARTIFACT_SHA = "UNBOUND_ARTIFACT_SHA256"
++            CLEANUP_JOB = 140609271563
++            ARTIFACT_ID = 15214066673
++            ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
++            ARTIFACT_BYTES = 46001766
++            ARTIFACT_SHA = "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef"
+             REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+             REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+             SOURCE_SELECTION_PINS = [
+@@ -72,28 +72,28 @@
+                     "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+                 }
+             ]
+-            # NON-EXECUTABLE TEMPLATE: source and announced live run/main only; terminal intake facts remain UNBOUND.
+-            E11_BINDINGS_COMPLETE = "UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE"
+-            ORIGINAL_CONCLUSION = "UNBOUND_ORIGINAL_CONCLUSION"
+-            MAIN_CONCLUSION = "UNBOUND_MAIN_CONCLUSION"
+-            CLEANUP_CONCLUSION = "UNBOUND_CLEANUP_CONCLUSION"
+-            TEST_STEP_CONCLUSION = "UNBOUND_TEST_STEP_CONCLUSION"
+-            EXPECTED_CASE_STATUSES = [["UNBOUND_CASE_1_STATUS"], ["UNBOUND_CASE_2_STATUS"]]
+-            EXPECTED_FIRST_WAITER_FAILURE = "UNBOUND_FIRST_WAITER_FAILURE"
+-            EXPECTED_VERDICT = {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42", "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44", "BI": "UNBOUND_BI"}
+-            SEMANTIC_SHA = "UNBOUND_UNION_SHA256"
+-            SEMANTIC_BYTES = "UNBOUND_UNION_BYTES"
+-            SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_PREVIEW_E11_CPU":"UNBOUND_CPU_COUNT","SF_PREVIEW_E11_PROGRESS":"UNBOUND_PROGRESS_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
+-            ANALYTICS_SHA = "UNBOUND_ANALYTICS_SHA256"
+-            ANALYTICS_BYTES = "UNBOUND_ANALYTICS_BYTES"
+-            ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
+-            CPU_COUNTS = {"SF_PREVIEW_E11_CPU": "UNBOUND_CPU_COUNT"}
+-            PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": "UNBOUND_PROGRESS_COUNT"}
++            # Current E11 main and API metadata are bound; original runtime and CPU files remain verification targets.
++            E11_BINDINGS_COMPLETE = True
++            ORIGINAL_CONCLUSION = "failure"
++            MAIN_CONCLUSION = "failure"
++            CLEANUP_CONCLUSION = "success"
++            TEST_STEP_CONCLUSION = "failure"
++            EXPECTED_CASE_STATUSES = [["failed"], ["passed"]]
++            EXPECTED_FIRST_WAITER_FAILURE = True
++            EXPECTED_VERDICT = {"failed": 1, "passed": 1, "UI42": "partial;6 captures before first preview response", "UI43": "not reached", "UI44": "not reached", "BI": "passed;40 captures and original complete UI45/UI46 scope"}
++            SEMANTIC_SHA = "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6"
++            SEMANTIC_BYTES = 39486
++            SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE": 44, "SF_ANALYTICS_CAPTURE": 46, "SF_PREVIEW_E11_CPU": 3, "SF_PREVIEW_E11_PROGRESS": 3, "SF_DESIGN_DIAGNOSTICS": 5, "SF_ANALYTICS_SCOPE": 1}
++            ANALYTICS_SHA = "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1"
++            ANALYTICS_BYTES = 34162
++            ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE": 44, "SF_ANALYTICS_CAPTURE": 46, "SF_DESIGN_DIAGNOSTICS": 5, "SF_ANALYTICS_SCOPE": 1}
++            CPU_COUNTS = {"SF_PREVIEW_E11_CPU": 3}
++            PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": 3}
+             CPU = {
+-                "nonce": "UNBOUND_CPU_NONCE", "pid": "UNBOUND_CPU_PID", "parentPid": "UNBOUND_CPU_PARENT_PID",
+-                "markerBytes": "UNBOUND_CPU_MARKER_BYTES", "markerSha256": "UNBOUND_CPU_MARKER_SHA256",
++                "nonce": "sf613-e11-cpu-RIlIZr", "pid": 3713, "parentPid": 3668,
++                "markerBytes": 3180, "markerSha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+             }
+-            PROGRESS = {"markerBytes": "UNBOUND_PROGRESS_MARKER_BYTES", "markerSha256": "UNBOUND_PROGRESS_MARKER_SHA256"}
++            PROGRESS = {"markerBytes": 2144, "markerSha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7"}
+             CPU_NAMES = ("preview-first.cpuprofile", "collection.json", "launcher.json")
+             CORE_CAP = {"profile": 4 * 1024 * 1024, "cpuMarkers": 64 * 1024,
+                         "collection": 16 * 1024, "launcher": 8 * 1024,
+@@ -745,9 +745,9 @@
+                 RECEIPT["parsers"]["runtime"] = {
+                     "file": runtime_item["id"], "bytes": len(runtime_raw), "sha256": digest(runtime_raw),
+                     "tests": 2, "config": runtime_config, "cases": cases,
+-                    "verdict": {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42",
+-                                "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44",
+-                                "BI": "UNBOUND_BI"},
++                    "verdict": {"failed": 1, "passed": 1, "UI42": "partial;6 captures before first preview response",
++                                "UI43": "not reached", "UI44": "not reached",
++                                "BI": "passed;40 captures and original complete UI45/UI46 scope"},
+                     "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                                         "matchesOriginalMainSequence": parity,
+                                         "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+@@ -1153,7 +1153,7 @@
+             
+             
+             def parse_cpu_originals(marker_data):
+-                # UNBOUND CURRENT FACT: retain this started/tuple gate only after the actual E11 intake supports it; never choose first/latest directory.
++                # Current E11 main provides the complete selected tuple and started marker; never choose first/latest directory.
+                 binding = marker_data["selectedBinding"]
+                 need(binding is not None and binding["nonce"] == CPU["nonce"] and binding["pid"] == CPU["pid"],
+                      "E11_CURRENT_COMPLETE_CAPTURE_BINDING")

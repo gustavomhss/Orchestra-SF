@@ -1,0 +1,4817 @@
+{
+  "schema": "sf613-evidence-e11-increment-inventory-v1",
+  "state": "PROPOSED_INVENTORY_BLOB_ONLY_NOT_INDEXED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "index": {
+      "gitSha": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+      "bytes": 97079,
+      "sha256": "5c775351a7f9514448860bbeff8026023c4ed6136c10979721eed9c57c554582",
+      "lf": 2983,
+      "preservedLiteral": true
+    },
+    "readme": {
+      "gitSha": "b2f9409d8e6f665207c67fb118fd5d1e6506b06c",
+      "bytes": 2234,
+      "sha256": "5517679ff81af35a9c1e6c1a2d78f715e57c017a2d95dd500b0baa17f0a694c5",
+      "lf": 17,
+      "preservedLiteral": true
+    },
+    "indexRef": "refs/heads/sf613-evidence",
+    "currentRefNotReadOrChanged": true
+  },
+  "coverage": {
+    "closedScope": "E11 diagnostic source and direct preimages/reuse inputs; focal driver/support/authority/current originals/final receipt; Analytics current original parts/cleanup/marker union/binding/final receipt; bounded reader template/concrete support/authority/current main parts/final receipt; all seven core exports including all seven actual profile parts.",
+    "completeOriginalStreams": [
+      "E11-focal-main",
+      "E11-focal-cleanup",
+      "E11-Analytics-main",
+      "E11-Analytics-cleanup",
+      "E11-reader-main"
+    ],
+    "completeExports": [
+      {
+        "name": "original-cpu-preview-first.cpuprofile",
+        "bytes": 1888001,
+        "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+        "representation": "ordered actual Git parts"
+      },
+      {
+        "name": "preview-e11-cpu-progress-markers.lf.log",
+        "bytes": 5324,
+        "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+        "representation": "one actual Git blob"
+      },
+      {
+        "name": "original-cpu-collection.json",
+        "bytes": 1661,
+        "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+        "representation": "one actual Git blob"
+      },
+      {
+        "name": "original-cpu-launcher.json",
+        "bytes": 663,
+        "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+        "representation": "one actual Git blob"
+      },
+      {
+        "name": "safe-summary.json",
+        "bytes": 43963,
+        "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+        "representation": "one actual Git blob"
+      },
+      {
+        "name": "inventory.json",
+        "bytes": 105553,
+        "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+        "representation": "one actual Git blob"
+      },
+      {
+        "name": "receipt.json",
+        "bytes": 52546,
+        "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+        "representation": "one actual Git blob"
+      }
+    ],
+    "sourceBlobs": 8,
+    "focalWorkingPins": 16,
+    "actualExports": 7,
+    "profileParts": 7,
+    "analyticsMainParts": 17,
+    "readerMainParts": 10,
+    "currentProofStates": {
+      "focal": "PASS_INSTRUMENTED_DIAGNOSTIC_FOCAL_ONLY",
+      "analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+      "reader": "TRANSPORT_AND_CAPTURE_COMPLETE_PENDING_ZERO"
+    },
+    "historicalClosure": "Direct derivation inputs enumerated by membership are included, with superseded E11 reader templates clearly labelled. Other historical references inside literal documents are not recursively collected and do not become archive entries.",
+    "completeArtifactArchive": false,
+    "completeRawRuntimeExport": false,
+    "noProductQualificationTransferred": true,
+    "C17": "Outside this E11 inventory. Root will add the closed C17 source/focal and current Analytics receipts in its coordinated increment.",
+    "originalLogStreams": 5,
+    "exportStreams": 7,
+    "derivedMarkerUnionStreams": 1
+  },
+  "groups": [
+    {
+      "id": "E11-Analytics",
+      "uniqueBlobs": 28,
+      "items": [
+        {
+          "role": "main-part-17",
+          "sha": "01c6fc88ae9290577f44669d486164ecc83d7f09",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[16]"
+          }
+        },
+        {
+          "role": "main-part-01",
+          "sha": "06fad42a46bb562330654267948732a16d109957",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[0]"
+          }
+        },
+        {
+          "role": "main-part-11",
+          "sha": "0aaa859c3a8b713d57a100f531af6c4ef778fe5a",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[10]"
+          }
+        },
+        {
+          "role": "main-part-07",
+          "sha": "1c64bf908768f0e015496fa58d7592e4594e1d88",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[6]"
+          }
+        },
+        {
+          "role": "cleanup",
+          "sha": "2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "cleanup"
+          }
+        },
+        {
+          "role": "main-part-09",
+          "sha": "322ca0a153f34287ea317cda9f2b59e1815dc269",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[8]"
+          }
+        },
+        {
+          "role": "main-part-14",
+          "sha": "348bfb1fdc699992a7253d860cce4b6360cc360c",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[13]"
+          }
+        },
+        {
+          "role": "main-part-15",
+          "sha": "39c5e608988efc6d32ad742b647f315a0b82a74d",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[14]"
+          }
+        },
+        {
+          "role": "authority",
+          "sha": "413ca99db8592570de690ee67d232b233b560aca",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "authority"
+          }
+        },
+        {
+          "role": "main-part-13",
+          "sha": "49ed5a6496f9d9c753747719fadc152af91548fa",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[12]"
+          }
+        },
+        {
+          "role": "acceptedFocal",
+          "sha": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "acceptedFocal"
+          }
+        },
+        {
+          "role": "main-part-04",
+          "sha": "58ab5308fb06fb453b86b12ce85c9b42bbfa0bac",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[3]"
+          }
+        },
+        {
+          "role": "original-selection:productionConfigPin",
+          "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.productionConfigPin"
+          }
+        },
+        {
+          "role": "literal-marker-union",
+          "sha": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "markers.literalUnion"
+          }
+        },
+        {
+          "role": "rawManifest",
+          "sha": "7f812dc6bb1d37138c441552614ef6d87f791b2a",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "rawManifest"
+          }
+        },
+        {
+          "role": "main-part-03",
+          "sha": "8a2502adae41fc496430bf8b3dd7fb35352e8973",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[2]"
+          }
+        },
+        {
+          "role": "original-selection:workflowPin",
+          "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.workflowPin"
+          }
+        },
+        {
+          "role": "main-part-12",
+          "sha": "959a2d45d9deb951f8339829415e9456d18199bd",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[11]"
+          }
+        },
+        {
+          "role": "main-part-06",
+          "sha": "b7c0cf94e170c73d55f8e5fd6a84cc8e097816bc",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[5]"
+          }
+        },
+        {
+          "role": "final-receipt",
+          "sha": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "main-part-08",
+          "sha": "c62fd70f7134e748306cafd319f335a14f1fb5d8",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[7]"
+          }
+        },
+        {
+          "role": "main-part-16",
+          "sha": "c9860ed08da9fcf847fe0ecdd976f3167ae18ec7",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[15]"
+          }
+        },
+        {
+          "role": "original-selection:baseConfigPin",
+          "sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.baseConfigPin"
+          }
+        },
+        {
+          "role": "main-part-10",
+          "sha": "dbb29da511366b5aac85a4844b5dde99d617564b",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[9]"
+          }
+        },
+        {
+          "role": "main-part-02",
+          "sha": "e04bef68f8ec6e99f0f316ea00a8ea876946f585",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[1]"
+          }
+        },
+        {
+          "role": "reader-binding",
+          "sha": "e664f6378e37c79ef64d9a680016911d9f8e7231",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "main-part-05",
+          "sha": "eecabc52d48c1cd39fba37a2ecca0ef354d2a047",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[4]"
+          }
+        },
+        {
+          "role": "original-selection:specPin",
+          "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.specPin"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E11-analysis",
+      "uniqueBlobs": 1,
+      "items": [
+        {
+          "role": "already-published-C16-profile-evidence",
+          "sha": "9f230a963d5540d73296d447bb84afc302489bd4",
+          "from": {
+            "blob": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+            "pointer": "coverage.includedE11AnalysisDocument"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E11-exports",
+      "uniqueBlobs": 14,
+      "items": [
+        {
+          "role": "profile-part-02",
+          "sha": "14f241caaf0393d27439a4a983a0697ae7ade42e",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[1]"
+          }
+        },
+        {
+          "role": "markers",
+          "sha": "2e908cb17714359dea5281357f956ff89f66d7da",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[1]"
+          }
+        },
+        {
+          "role": "profile-part-06",
+          "sha": "36a47a4d844139854c31f461822115339e5c0487",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[5]"
+          }
+        },
+        {
+          "role": "launcher",
+          "sha": "4180de318a5d5642ebb65b9190393179480c7275",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[3]"
+          }
+        },
+        {
+          "role": "profile-part-04",
+          "sha": "44610d70e50484d2f7177ff94e9d1af50a39cee0",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[3]"
+          }
+        },
+        {
+          "role": "collection",
+          "sha": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[2]"
+          }
+        },
+        {
+          "role": "profile-part-07",
+          "sha": "54d146487581b34ec68cffda4e089b5453804162",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[6]"
+          }
+        },
+        {
+          "role": "summary",
+          "sha": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[4]"
+          }
+        },
+        {
+          "role": "export-manifest",
+          "sha": "7af030aab7cb129a256019038909950bc7fa988f",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "profile-part-03",
+          "sha": "7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[2]"
+          }
+        },
+        {
+          "role": "inventory",
+          "sha": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[5]"
+          }
+        },
+        {
+          "role": "profile-part-01",
+          "sha": "8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[0]"
+          }
+        },
+        {
+          "role": "profile-part-05",
+          "sha": "ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[4]"
+          }
+        },
+        {
+          "role": "receipt",
+          "sha": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[6]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E11-focal",
+      "uniqueBlobs": 31,
+      "items": [
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "focal-manifest",
+          "sha": "19c0740f43a20e813affb296774e14a33c018e66",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "focalSupport",
+          "sha": "19c0740f43a20e813affb296774e14a33c018e66",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "focalSupport"
+          }
+        },
+        {
+          "role": "working-pin:apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "sha": "244d46ee41e9ce288a7260938174a57161137bab",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "support:retargetDiff",
+          "sha": "2c1c53ddc942ffe7782652e55d008203cbb02daf",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.retargetDiff"
+          }
+        },
+        {
+          "role": "working-pin:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "sha": "347edd5292d86537451507026236f27f2488a06a",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "working-pin:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "sha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "post:.ci-run.json",
+          "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles.post"
+          }
+        },
+        {
+          "role": "final-receipt",
+          "sha": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "sourceSupport",
+          "sha": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourceSupport"
+          }
+        },
+        {
+          "role": "support:bounds",
+          "sha": "6a8db9a3b45a82cc1b7a89471f835070e291c175",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.bounds"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "cleanup",
+          "sha": "82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "cleanup"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+          "sha": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "sha": "8bdc12d191a76137cd2244e01990f7a780091216",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "output:apps/cli/test/sucafina-proof-verification.test.ts",
+          "sha": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles"
+          }
+        },
+        {
+          "role": "authority",
+          "sha": "9f47f0f49b068f79068dd9754d9db2b2738df8c3",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "authority"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "sha": "a55818797ecf9fa6801393762bbe3261a1812576",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "sha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "base-driver",
+          "sha": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "base.driver"
+          }
+        },
+        {
+          "role": "working-pin:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "sha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "support:anchors",
+          "sha": "c17f04f979d0aff336c00170986f1b39db389689",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.anchors"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "sha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "sha": "ccc5ea87046144843e1751b1288e907974d24ca5",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "rawManifest",
+          "sha": "db51996fdf5e9d478b64fb1efa68976a6bc4b4ee",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "rawManifest"
+          }
+        },
+        {
+          "role": "main",
+          "sha": "dec8d7fffd0d300cad08112b5863c0813a5029f0",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "main"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "pre:.ci-run.json",
+          "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles.pre"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        },
+        {
+          "role": "support:fullSnapshotDiff",
+          "sha": "f252beb029d4f40b8932445ec7dfd7f9bfadea95",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.fullSnapshotDiff"
+          }
+        },
+        {
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "sha": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E11-reader",
+      "uniqueBlobs": 35,
+      "items": [
+        {
+          "role": "authority",
+          "sha": "0b7923ba98342a861e6e4b9ba608169caf783dcd",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.authority"
+          }
+        },
+        {
+          "role": "reader-manifest",
+          "sha": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "manifest",
+          "sha": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.manifest"
+          }
+        },
+        {
+          "role": "superseded-template:r1Workflow",
+          "sha": "2c9a0497590fc1ab9dd4c087b76f65ad0e6be9da",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "supersession.r1Workflow"
+          }
+        },
+        {
+          "role": "main-part-08",
+          "sha": "2d3ff19c71816688b9843b2dc942d238fa9845e7",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[7]"
+          }
+        },
+        {
+          "role": "base:parametricR2Python",
+          "sha": "31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricR2Python"
+          }
+        },
+        {
+          "role": "main-part-03",
+          "sha": "31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[2]"
+          }
+        },
+        {
+          "role": "main-part-04",
+          "sha": "32955aba8923908437f8a5e40d2900d47307d7e8",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[3]"
+          }
+        },
+        {
+          "role": "main-part-10",
+          "sha": "38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[9]"
+          }
+        },
+        {
+          "role": "superseded-template:r1Python",
+          "sha": "39faa5753dee705fd89a8262e6d0713a351f20d6",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "supersession.r1Python"
+          }
+        },
+        {
+          "role": "base:E10Yaml",
+          "sha": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.E10Yaml"
+          }
+        },
+        {
+          "role": "support:bindingDiff",
+          "sha": "4f8d1cc730133015e47495810cf52e4ae49c8468",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.bindingDiff"
+          }
+        },
+        {
+          "role": "base:E10Python",
+          "sha": "52b20e75154f7b4235d880c0e1a6d35e092fe966",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.E10Python"
+          }
+        },
+        {
+          "role": "support:boundsReusedWithoutChange",
+          "sha": "54a44996d95457c85e2273b5368f578223a6825b",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.boundsReusedWithoutChange"
+          }
+        },
+        {
+          "role": "files:workflow",
+          "sha": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "files.workflow"
+          }
+        },
+        {
+          "role": "main-part-01",
+          "sha": "6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[0]"
+          }
+        },
+        {
+          "role": "currentInputs:markerUnion",
+          "sha": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.markerUnion"
+          }
+        },
+        {
+          "role": "superseded-documentary-template",
+          "sha": "7738836dacbe9e0c63166560f087bc235392e0a1",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "documentationDraftSuperseded"
+          }
+        },
+        {
+          "role": "main-part-09",
+          "sha": "7bf8887e36f712624d6521adb2e56d2a27d27da5",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[8]"
+          }
+        },
+        {
+          "role": "files:python",
+          "sha": "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "files.python"
+          }
+        },
+        {
+          "role": "currentInputs:rawManifest",
+          "sha": "7f812dc6bb1d37138c441552614ef6d87f791b2a",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.rawManifest"
+          }
+        },
+        {
+          "role": "base:parametricR2Yaml",
+          "sha": "832214bc2430294b321918ebe2b25834fceabc1e",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricR2Yaml"
+          }
+        },
+        {
+          "role": "rawManifest",
+          "sha": "94bff195a4e55f169ddebeeacc09d320153e73d2",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.rawManifest"
+          }
+        },
+        {
+          "role": "base:parametricDiff",
+          "sha": "a20597fc20bf61f8bb989f6358b688387bf5228b",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricDiff"
+          }
+        },
+        {
+          "role": "main-part-07",
+          "sha": "aee006454f953ba5bd9ffad59597e425b313d312",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[6]"
+          }
+        },
+        {
+          "role": "base:parametricDerivation",
+          "sha": "b9988a8b966b627904454e530233daf8b2e567c4",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricDerivation"
+          }
+        },
+        {
+          "role": "main-part-02",
+          "sha": "ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[1]"
+          }
+        },
+        {
+          "role": "main-part-06",
+          "sha": "bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[5]"
+          }
+        },
+        {
+          "role": "currentInputs:closedOriginalIntake",
+          "sha": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.closedOriginalIntake"
+          }
+        },
+        {
+          "role": "base:parametricManifest",
+          "sha": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricManifest"
+          }
+        },
+        {
+          "role": "main-part-05",
+          "sha": "d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[4]"
+          }
+        },
+        {
+          "role": "final-receipt",
+          "sha": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "support:bindingDerivation",
+          "sha": "e5909bcea5c9f9051894106192a74a58df7e1cbe",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.bindingDerivation"
+          }
+        },
+        {
+          "role": "currentInputs:observedBinding",
+          "sha": "e664f6378e37c79ef64d9a680016911d9f8e7231",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.observedBinding"
+          }
+        },
+        {
+          "role": "direct-E10-base:manifest",
+          "sha": "e9a9692952d9156b9ce5f0d9d65e6335fcc196a0",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "base.manifest"
+          }
+        },
+        {
+          "role": "direct-E10-base:bounds",
+          "sha": "fe21695f18e751c8f4de76bd275742223507e7f8",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "base.bounds"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E11-source",
+      "uniqueBlobs": 23,
+      "items": [
+        {
+          "role": "support:derivation",
+          "sha": "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.derivation"
+          }
+        },
+        {
+          "role": "support:diff",
+          "sha": "073c035995a98db8f1b824c163532a904aecb17d",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.diff"
+          }
+        },
+        {
+          "role": "support:reuseDiff",
+          "sha": "0881f785a09710fb1d897feae2d642f560266c62",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.reuseDiff"
+          }
+        },
+        {
+          "role": "preimage:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "sha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.outer.preimage"
+          }
+        },
+        {
+          "role": "E10-reuse-base:http",
+          "sha": "30d9fac161b3fe3c862b96280bf339064d574cd9",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.http"
+          }
+        },
+        {
+          "role": "postimage:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "sha": "347edd5292d86537451507026236f27f2488a06a",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.http.postimage"
+          }
+        },
+        {
+          "role": "postimage:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "sha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.inner.postimage"
+          }
+        },
+        {
+          "role": "source-manifest",
+          "sha": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "role": "E10-reuse-base:outer",
+          "sha": "56a06415240134d4d36a0620cb38d574846e7675",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.outer"
+          }
+        },
+        {
+          "role": "E10-reuse-base:helper",
+          "sha": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.helper"
+          }
+        },
+        {
+          "role": "E10-reuse-base:inner",
+          "sha": "65b34f4b17401ee49196a518008dbe1c952f5d67",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.inner"
+          }
+        },
+        {
+          "role": "preimage:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "sha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.http.preimage"
+          }
+        },
+        {
+          "role": "support:bounds",
+          "sha": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.bounds"
+          }
+        },
+        {
+          "role": "postimage:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.source.postimage"
+          }
+        },
+        {
+          "role": "preimage:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.inner.preimage"
+          }
+        },
+        {
+          "role": "postimage:modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "sha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.helper.postimage"
+          }
+        },
+        {
+          "role": "preimage:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sha": "b7de9404461591ce0162d496ec917a47fb72a479",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.source.preimage"
+          }
+        },
+        {
+          "role": "postimage:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "sha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.outer.postimage"
+          }
+        },
+        {
+          "role": "postimage:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "sha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.authority.postimage"
+          }
+        },
+        {
+          "role": "preimage:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.store.preimage"
+          }
+        },
+        {
+          "role": "postimage:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.store.postimage"
+          }
+        },
+        {
+          "role": "preimage:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.authority.preimage"
+          }
+        },
+        {
+          "role": "postimage:.ci-run.json",
+          "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.request.postimage"
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "E11-focal-main",
+      "run": 46026823740,
+      "job": 140600259021,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "dec8d7fffd0d300cad08112b5863c0813a5029f0",
+          "bytes": 101801,
+          "sha256": "7cba0af02bddbbb7e07dee2c49ccefa4be1baa6a8cd0302d5a84c8c05dfca11e"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 101801,
+        "sha256": "7cba0af02bddbbb7e07dee2c49ccefa4be1baa6a8cd0302d5a84c8c05dfca11e",
+        "gitBlob": "dec8d7fffd0d300cad08112b5863c0813a5029f0",
+        "persisted": true
+      },
+      "lf": 871,
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies"
+    },
+    {
+      "id": "E11-focal-cleanup",
+      "run": 46026823740,
+      "job": 140601491487,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+          "bytes": 2281,
+          "sha256": "8ce2ad24c93acdcef3c07829ccad5d8176e4362e1907d606fbb457fefd87933c"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 2281,
+        "sha256": "8ce2ad24c93acdcef3c07829ccad5d8176e4362e1907d606fbb457fefd87933c",
+        "gitBlob": "82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+        "persisted": true
+      },
+      "lf": 39,
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies"
+    },
+    {
+      "id": "E11-Analytics-main",
+      "run": 46028127606,
+      "job": 140604695368,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "06fad42a46bb562330654267948732a16d109957",
+          "bytes": 300000,
+          "sha256": "3a22ee8559aa7ef0a5f58566303ea4824d0a4be119963735b0a867976c10c693",
+          "startCodeUnit": 0,
+          "endCodeUnit": 297350
+        },
+        {
+          "order": 2,
+          "sha": "e04bef68f8ec6e99f0f316ea00a8ea876946f585",
+          "bytes": 300000,
+          "sha256": "50048cf76b08f0183e9bc5d299e6be455a5551e1b937dfda8c0810ae72d82beb",
+          "startCodeUnit": 297350,
+          "endCodeUnit": 597350
+        },
+        {
+          "order": 3,
+          "sha": "8a2502adae41fc496430bf8b3dd7fb35352e8973",
+          "bytes": 300000,
+          "sha256": "9007371d0a839bf0a90c3c70fa9bed4f12d8dcce8583160c63827d1ea8b6e4b7",
+          "startCodeUnit": 597350,
+          "endCodeUnit": 895187
+        },
+        {
+          "order": 4,
+          "sha": "58ab5308fb06fb453b86b12ce85c9b42bbfa0bac",
+          "bytes": 300000,
+          "sha256": "6209cf22746c39eff274ddfcee90990e1796b32ff9c99e3cc9db748503af3a9f",
+          "startCodeUnit": 895187,
+          "endCodeUnit": 1195187
+        },
+        {
+          "order": 5,
+          "sha": "eecabc52d48c1cd39fba37a2ecca0ef354d2a047",
+          "bytes": 300000,
+          "sha256": "c2e9caf7624fcbc9ba71cf8e13c85c8df3643f70dca8b90ca0b9aa8e2deb846a",
+          "startCodeUnit": 1195187,
+          "endCodeUnit": 1495187
+        },
+        {
+          "order": 6,
+          "sha": "b7c0cf94e170c73d55f8e5fd6a84cc8e097816bc",
+          "bytes": 300000,
+          "sha256": "72b02bba2f7ea9f91a5205d8a30e52be6d3b328d273dae5b8662ce310d5e5f8a",
+          "startCodeUnit": 1495187,
+          "endCodeUnit": 1795187
+        },
+        {
+          "order": 7,
+          "sha": "1c64bf908768f0e015496fa58d7592e4594e1d88",
+          "bytes": 300000,
+          "sha256": "31b530ca4ff04956270c91fb56ed00ce684cfffc43ff4b91a728f6fd7aa36c39",
+          "startCodeUnit": 1795187,
+          "endCodeUnit": 2095187
+        },
+        {
+          "order": 8,
+          "sha": "c62fd70f7134e748306cafd319f335a14f1fb5d8",
+          "bytes": 300000,
+          "sha256": "833942d05b18bfa7ea54b7b377a7556fea1de1f52080ecddd9a29031671b1c14",
+          "startCodeUnit": 2095187,
+          "endCodeUnit": 2395185
+        },
+        {
+          "order": 9,
+          "sha": "322ca0a153f34287ea317cda9f2b59e1815dc269",
+          "bytes": 300000,
+          "sha256": "24b8dbfb5f6fb63bbd308b48f1d79c7c9198d89ebc555d26fd17f31dcbe7c4fd",
+          "startCodeUnit": 2395185,
+          "endCodeUnit": 2695182
+        },
+        {
+          "order": 10,
+          "sha": "dbb29da511366b5aac85a4844b5dde99d617564b",
+          "bytes": 300000,
+          "sha256": "95ae002a9d9ab2b7b0186b761e1b32a015118c9d14837d1cb8cb292b1c4dbb17",
+          "startCodeUnit": 2695182,
+          "endCodeUnit": 2995179
+        },
+        {
+          "order": 11,
+          "sha": "0aaa859c3a8b713d57a100f531af6c4ef778fe5a",
+          "bytes": 300000,
+          "sha256": "c203319063ccf47d55b5b8033d9d56a0d7aa8675a7b4c96dff05e2a82487528c",
+          "startCodeUnit": 2995179,
+          "endCodeUnit": 3295179
+        },
+        {
+          "order": 12,
+          "sha": "959a2d45d9deb951f8339829415e9456d18199bd",
+          "bytes": 300000,
+          "sha256": "ad75f2a42aa693449b350eee5b269bc0d4c7f916ace6c5bc4fb186347f9ac12a",
+          "startCodeUnit": 3295179,
+          "endCodeUnit": 3595179
+        },
+        {
+          "order": 13,
+          "sha": "49ed5a6496f9d9c753747719fadc152af91548fa",
+          "bytes": 300000,
+          "sha256": "0e4f0c698a4f1c58d316a3186bc91cf1ab94990c4663c66336f1f31b43507d82",
+          "startCodeUnit": 3595179,
+          "endCodeUnit": 3895179
+        },
+        {
+          "order": 14,
+          "sha": "348bfb1fdc699992a7253d860cce4b6360cc360c",
+          "bytes": 300000,
+          "sha256": "8bf88be8037bc263d49ec8152eefccea303c6856d1c8ec6ff8bf5d2d9ff2376b",
+          "startCodeUnit": 3895179,
+          "endCodeUnit": 4195176
+        },
+        {
+          "order": 15,
+          "sha": "39c5e608988efc6d32ad742b647f315a0b82a74d",
+          "bytes": 300000,
+          "sha256": "2cb1eb6407c5bac59a75fefebc2901eb2c031d4d79748afbf19e6ed05d751cfc",
+          "startCodeUnit": 4195176,
+          "endCodeUnit": 4495174
+        },
+        {
+          "order": 16,
+          "sha": "c9860ed08da9fcf847fe0ecdd976f3167ae18ec7",
+          "bytes": 300000,
+          "sha256": "94e9d6fe3bb2abfda162e1082f0dd6f44f3103523bbdf149019a04e0d7b3a830",
+          "startCodeUnit": 4495174,
+          "endCodeUnit": 4795174
+        },
+        {
+          "order": 17,
+          "sha": "01c6fc88ae9290577f44669d486164ecc83d7f09",
+          "bytes": 74240,
+          "sha256": "fbaa9cfa91d9506d4c7f575c08d54422f166120599e8c589f455e1ede1f24706",
+          "startCodeUnit": 4795174,
+          "endCodeUnit": 4869410
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 4874240,
+        "sha256": "41e0ea6134783ec1005550ec0e4581dda58c0c8f376689ac816cd6338ae86fc3",
+        "calculatedGitBlob": "d26fa67a647ceab9ab44133529ed0066b10e8362",
+        "persisted": false
+      },
+      "lf": 1976,
+      "byteOrderMarkByteOffsets": [
+        0,
+        2110279,
+        4231461
+      ],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies"
+    },
+    {
+      "id": "E11-Analytics-cleanup",
+      "run": 46028127606,
+      "job": 140609271563,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+          "bytes": 2281,
+          "sha256": "dbeec96205e77fb83f65e52b777d471865d1643f2af4dfcef6284aa1e05bcc99"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 2281,
+        "sha256": "dbeec96205e77fb83f65e52b777d471865d1643f2af4dfcef6284aa1e05bcc99",
+        "gitBlob": "2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+        "persisted": true
+      },
+      "lf": 39,
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies"
+    },
+    {
+      "id": "E11-reader-main",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+          "bytes": 300000,
+          "sha256": "f6ad415a23935a14f8f08fe4395243ba161d4e6a4a4d3b7663aa047a65bc4c73",
+          "startCodeUnit": 0,
+          "endCodeUnit": 299998
+        },
+        {
+          "order": 2,
+          "sha": "ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+          "bytes": 300000,
+          "sha256": "acbeef6285568fc955c4aa00b467c6b565a2f96680e2310f349f4f4fd916dd9c",
+          "startCodeUnit": 299998,
+          "endCodeUnit": 599998
+        },
+        {
+          "order": 3,
+          "sha": "31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+          "bytes": 300000,
+          "sha256": "6c64acf1089b7e4d4cf04ec394f654f149a56ff9014b8cf766db039f332369e4",
+          "startCodeUnit": 599998,
+          "endCodeUnit": 899998
+        },
+        {
+          "order": 4,
+          "sha": "32955aba8923908437f8a5e40d2900d47307d7e8",
+          "bytes": 300000,
+          "sha256": "d6160eb7e96fa70ce410a6f62b535c1b9fd77c38472ffc287fc4127c8825331b",
+          "startCodeUnit": 899998,
+          "endCodeUnit": 1199998
+        },
+        {
+          "order": 5,
+          "sha": "d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+          "bytes": 300000,
+          "sha256": "5d289dcbc6602f48349f7aa6573b688fc6791f07a5ac4ad41afb2865e16b7f31",
+          "startCodeUnit": 1199998,
+          "endCodeUnit": 1499998
+        },
+        {
+          "order": 6,
+          "sha": "bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+          "bytes": 300000,
+          "sha256": "aac2fc67f0046d745d11ef07883150c3432e2c451361d27bc8533b0f34d093db",
+          "startCodeUnit": 1499998,
+          "endCodeUnit": 1799998
+        },
+        {
+          "order": 7,
+          "sha": "aee006454f953ba5bd9ffad59597e425b313d312",
+          "bytes": 300000,
+          "sha256": "4b001457aafb4943e210c6b7b361293349213d0002d7cdc92d5ed608ff841ad6",
+          "startCodeUnit": 1799998,
+          "endCodeUnit": 2099998
+        },
+        {
+          "order": 8,
+          "sha": "2d3ff19c71816688b9843b2dc942d238fa9845e7",
+          "bytes": 300000,
+          "sha256": "1190856a31a1a5b66d7dbf10f514643cfe0b5f769b9f43d8180f449f16c97edd",
+          "startCodeUnit": 2099998,
+          "endCodeUnit": 2399996
+        },
+        {
+          "order": 9,
+          "sha": "7bf8887e36f712624d6521adb2e56d2a27d27da5",
+          "bytes": 300000,
+          "sha256": "5a325e4f41677cf776cab2e9a83090e53009597dfe65b74803cc50ebe2b9134f",
+          "startCodeUnit": 2399996,
+          "endCodeUnit": 2699996
+        },
+        {
+          "order": 10,
+          "sha": "38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+          "bytes": 238896,
+          "sha256": "8b88fbec952cdd4a2aa9a116c4277981e5634f98d1d6f12043d151dd48c7bec0",
+          "startCodeUnit": 2699996,
+          "endCodeUnit": 2938892
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 2938896,
+        "sha256": "f2e4145baf527fc89066ac1406a92fc3f151cb3e904bfeda0a7049625d57fb26",
+        "calculatedGitBlob": "9b09b5d3cd2a70e1b336a0bb45c30180720f9770",
+        "persisted": false
+      },
+      "lf": 1851,
+      "byteOrderMarkByteOffsets": [
+        0,
+        2116451
+      ],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies"
+    },
+    {
+      "id": "E11-export-profile",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+          "bytes": 300000,
+          "sha256": "01ba00457c461014b59c524ca32ae6c572bb4864efb936ec41bba82b50e9e702",
+          "startCodeUnit": 0,
+          "endCodeUnit": 300000
+        },
+        {
+          "order": 2,
+          "sha": "14f241caaf0393d27439a4a983a0697ae7ade42e",
+          "bytes": 300000,
+          "sha256": "ea00c93b471b37c23574b8ddf4771d32332beaf085897377ab4dd6a5346b7399",
+          "startCodeUnit": 300000,
+          "endCodeUnit": 600000
+        },
+        {
+          "order": 3,
+          "sha": "7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+          "bytes": 300000,
+          "sha256": "0e2c98b7b36306a30932a854f61fd3f60280620b773e30e56322cef5ce8319a8",
+          "startCodeUnit": 600000,
+          "endCodeUnit": 900000
+        },
+        {
+          "order": 4,
+          "sha": "44610d70e50484d2f7177ff94e9d1af50a39cee0",
+          "bytes": 300000,
+          "sha256": "8aeb0781645b87214e1c3c380da7d0eb3b0ea6f872942a6f2acc0f05fc5038b0",
+          "startCodeUnit": 900000,
+          "endCodeUnit": 1200000
+        },
+        {
+          "order": 5,
+          "sha": "ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+          "bytes": 300000,
+          "sha256": "74b321ec56809401ed620116ccc3e45fbd9691fd975cfa6c224320982ee7486e",
+          "startCodeUnit": 1200000,
+          "endCodeUnit": 1500000
+        },
+        {
+          "order": 6,
+          "sha": "36a47a4d844139854c31f461822115339e5c0487",
+          "bytes": 300000,
+          "sha256": "66c925163aad4c1edf07cb9add6cbe48a59bf457a6b5961ccdd43866eb03b7b4",
+          "startCodeUnit": 1500000,
+          "endCodeUnit": 1800000
+        },
+        {
+          "order": 7,
+          "sha": "54d146487581b34ec68cffda4e089b5453804162",
+          "bytes": 88001,
+          "sha256": "7957eb963c1a3335637ca1143b3c8555f8092059c76e3cc7e72789b772dbc1c6",
+          "startCodeUnit": 1800000,
+          "endCodeUnit": 1888001
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 1888001,
+        "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+        "calculatedGitBlob": "ac668b238261f78cb262228599e36bbb13a72a19",
+        "persisted": false
+      },
+      "lf": 1,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "original-cpu-preview-first.cpuprofile",
+      "original": true,
+      "inventoryFileId": 7
+    },
+    {
+      "id": "E11-export-markers",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "2e908cb17714359dea5281357f956ff89f66d7da",
+          "bytes": 5324,
+          "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 5324,
+        "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+        "gitBlob": "2e908cb17714359dea5281357f956ff89f66d7da",
+        "persisted": true
+      },
+      "lf": 6,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "preview-e11-cpu-progress-markers.lf.log",
+      "original": false,
+      "inventoryFileId": null
+    },
+    {
+      "id": "E11-export-collection",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+          "bytes": 1661,
+          "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 1661,
+        "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+        "gitBlob": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+        "persisted": true
+      },
+      "lf": 1,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "original-cpu-collection.json",
+      "original": true,
+      "inventoryFileId": 5
+    },
+    {
+      "id": "E11-export-launcher",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "4180de318a5d5642ebb65b9190393179480c7275",
+          "bytes": 663,
+          "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 663,
+        "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+        "gitBlob": "4180de318a5d5642ebb65b9190393179480c7275",
+        "persisted": true
+      },
+      "lf": 1,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "original-cpu-launcher.json",
+      "original": true,
+      "inventoryFileId": 6
+    },
+    {
+      "id": "E11-export-summary",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+          "bytes": 43963,
+          "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 43963,
+        "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+        "gitBlob": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+        "persisted": true
+      },
+      "lf": 781,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "safe-summary.json",
+      "original": false,
+      "inventoryFileId": null
+    },
+    {
+      "id": "E11-export-inventory",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+          "bytes": 105553,
+          "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 105553,
+        "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+        "gitBlob": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+        "persisted": true
+      },
+      "lf": 2175,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "inventory.json",
+      "original": false,
+      "inventoryFileId": null
+    },
+    {
+      "id": "E11-export-receipt",
+      "run": 46032200409,
+      "job": 140618529353,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+          "bytes": 52546,
+          "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 52546,
+        "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+        "gitBlob": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+        "persisted": true
+      },
+      "lf": 997,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "exportName": "receipt.json",
+      "original": false,
+      "inventoryFileId": null
+    },
+    {
+      "id": "E11-Analytics-marker-union",
+      "run": 46028127606,
+      "job": 140604695368,
+      "parts": [
+        {
+          "order": 1,
+          "sha": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+          "bytes": 39486,
+          "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6"
+        }
+      ],
+      "concatenation": "Concatenate exact UTF-8 bytes in numeric part order, with no separator or normalization.",
+      "whole": {
+        "bytes": 39486,
+        "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+        "gitBlob": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+        "persisted": true
+      },
+      "lf": 102,
+      "byteOrderMarkByteOffsets": [],
+      "verification": "all parts and literal concatenation rehashed from preserved Git copies",
+      "derived": true
+    }
+  ],
+  "objects": [
+    {
+      "path": "objects/01c6fc88ae9290577f44669d486164ecc83d7f09",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01c6fc88ae9290577f44669d486164ecc83d7f09",
+      "bytes": 74240,
+      "sha256": "fbaa9cfa91d9506d4c7f575c08d54422f166120599e8c589f455e1ede1f24706",
+      "lf": 86,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-17",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[16]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0225738bb0061d1063c87c1c537b6fe9ea5744a6",
+      "bytes": 105938,
+      "sha256": "cfef9b7f6761136fe51591cdee0cbcc1809e4697924b874f3c46eb2636d8fd40",
+      "lf": 549,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "support:derivation",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.derivation"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/06fad42a46bb562330654267948732a16d109957",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06fad42a46bb562330654267948732a16d109957",
+      "bytes": 300000,
+      "sha256": "3a22ee8559aa7ef0a5f58566303ea4824d0a4be119963735b0a867976c10c693",
+      "lf": 1176,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-01",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[0]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/073c035995a98db8f1b824c163532a904aecb17d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "073c035995a98db8f1b824c163532a904aecb17d",
+      "bytes": 50026,
+      "sha256": "bec2eed1baaa7ae6a72231090fb63dde018aed25aa1e8f055bd9f3df0ddf607f",
+      "lf": 732,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "support:diff",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.diff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0881f785a09710fb1d897feae2d642f560266c62",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0881f785a09710fb1d897feae2d642f560266c62",
+      "bytes": 24334,
+      "sha256": "63feb6b2eaa75e391280826cb07d4ad05ff47f032e458b67aef3372693941ef1",
+      "lf": 342,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "support:reuseDiff",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.reuseDiff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0aaa859c3a8b713d57a100f531af6c4ef778fe5a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0aaa859c3a8b713d57a100f531af6c4ef778fe5a",
+      "bytes": 300000,
+      "sha256": "c203319063ccf47d55b5b8033d9d56a0d7aa8675a7b4c96dff05e2a82487528c",
+      "lf": 30,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-11",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[10]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0b7923ba98342a861e6e4b9ba608169caf783dcd",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b7923ba98342a861e6e4b9ba608169caf783dcd",
+      "bytes": 7945,
+      "sha256": "fd802dd4b82a5c66fad4bc0f280acf9bf125661757e34a6596b407a6036cc820",
+      "lf": 217,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "authority",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.authority"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "bytes": 46151,
+      "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+      "lf": 533,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "bytes": 13422,
+      "sha256": "2ba9ff69b8ecead402f51452d7852144356ab5069cf3d4ab8a2256b4a21cbdae",
+      "lf": 351,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "reader-manifest",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-reader",
+          "role": "manifest",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.manifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/14f241caaf0393d27439a4a983a0697ae7ade42e",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14f241caaf0393d27439a4a983a0697ae7ade42e",
+      "bytes": 300000,
+      "sha256": "ea00c93b471b37c23574b8ddf4771d32332beaf085897377ab4dd6a5346b7399",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-02",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[1]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/19c0740f43a20e813affb296774e14a33c018e66",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19c0740f43a20e813affb296774e14a33c018e66",
+      "bytes": 20342,
+      "sha256": "c067e609be95d2aae8adcda23d625b144876b347f0eba672f46bd7a3e3d7755f",
+      "lf": 530,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "focal-manifest",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "focalSupport",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "focalSupport"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/1c64bf908768f0e015496fa58d7592e4594e1d88",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c64bf908768f0e015496fa58d7592e4594e1d88",
+      "bytes": 300000,
+      "sha256": "31b530ca4ff04956270c91fb56ed00ce684cfffc43ff4b91a728f6fd7aa36c39",
+      "lf": 38,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-07",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[6]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "bytes": 12321,
+      "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+      "lf": 206,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.outer.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/244d46ee41e9ce288a7260938174a57161137bab",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "244d46ee41e9ce288a7260938174a57161137bab",
+      "bytes": 12451,
+      "sha256": "11b611014da00ba0192527dc79ded7a97d65a2a01e37f5d3305e7845def15a28",
+      "lf": 204,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a2d6b17b5301782aaf6dae3db73b506f77e39cc",
+      "bytes": 2281,
+      "sha256": "dbeec96205e77fb83f65e52b777d471865d1643f2af4dfcef6284aa1e05bcc99",
+      "lf": 39,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "cleanup",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "cleanup"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2c1c53ddc942ffe7782652e55d008203cbb02daf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c1c53ddc942ffe7782652e55d008203cbb02daf",
+      "bytes": 9119,
+      "sha256": "72b1ef29e7c9f1649516b5e91ef8d2565f8792d686ddbc901a32029c626e5f6c",
+      "lf": 119,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "support:retargetDiff",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.retargetDiff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2c9a0497590fc1ab9dd4c087b76f65ad0e6be9da",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c9a0497590fc1ab9dd4c087b76f65ad0e6be9da",
+      "bytes": 118891,
+      "sha256": "f610fcb5d94fef89d688b98597e2937a388a73bd9acf05b43ea083f7a269beb8",
+      "lf": 1691,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "superseded-template:r1Workflow",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "supersession.r1Workflow"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2d3ff19c71816688b9843b2dc942d238fa9845e7",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d3ff19c71816688b9843b2dc942d238fa9845e7",
+      "bytes": 300000,
+      "sha256": "1190856a31a1a5b66d7dbf10f514643cfe0b5f769b9f43d8180f449f16c97edd",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-08",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[7]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2e908cb17714359dea5281357f956ff89f66d7da",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e908cb17714359dea5281357f956ff89f66d7da",
+      "bytes": 5324,
+      "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+      "lf": 6,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "markers",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[1]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/30d9fac161b3fe3c862b96280bf339064d574cd9",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30d9fac161b3fe3c862b96280bf339064d574cd9",
+      "bytes": 13828,
+      "sha256": "423f205369b3806c891bff4a5598257467c9160044bb28d12f0030a5bb56975d",
+      "lf": 141,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "E10-reuse-base:http",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.http"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31426bc46a94517f465da9c07e9dcbbbaf0654aa",
+      "bytes": 97270,
+      "sha256": "15b1726506ff787d1a3edbcde5a5e0f8621c620aaffb4dc2e5d27cd8ccffd8d9",
+      "lf": 1636,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:parametricR2Python",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricR2Python"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31ba0cbae9e4e879df9e4252f5c7c10abe8e10d6",
+      "bytes": 300000,
+      "sha256": "6c64acf1089b7e4d4cf04ec394f654f149a56ff9014b8cf766db039f332369e4",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-03",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[2]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/322ca0a153f34287ea317cda9f2b59e1815dc269",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "322ca0a153f34287ea317cda9f2b59e1815dc269",
+      "bytes": 300000,
+      "sha256": "24b8dbfb5f6fb63bbd308b48f1d79c7c9198d89ebc555d26fd17f31dcbe7c4fd",
+      "lf": 36,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-09",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[8]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/32955aba8923908437f8a5e40d2900d47307d7e8",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32955aba8923908437f8a5e40d2900d47307d7e8",
+      "bytes": 300000,
+      "sha256": "d6160eb7e96fa70ce410a6f62b535c1b9fd77c38472ffc287fc4127c8825331b",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-04",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[3]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/347edd5292d86537451507026236f27f2488a06a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "347edd5292d86537451507026236f27f2488a06a",
+      "bytes": 13818,
+      "sha256": "44ca1d564841f44bf6a5ae87584f105078006bd72f8826b0f6409836ff3e6191",
+      "lf": 141,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.http.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/348bfb1fdc699992a7253d860cce4b6360cc360c",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "348bfb1fdc699992a7253d860cce4b6360cc360c",
+      "bytes": 300000,
+      "sha256": "8bf88be8037bc263d49ec8152eefccea303c6856d1c8ec6ff8bf5d2d9ff2376b",
+      "lf": 36,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-14",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[13]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/36a47a4d844139854c31f461822115339e5c0487",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36a47a4d844139854c31f461822115339e5c0487",
+      "bytes": 300000,
+      "sha256": "66c925163aad4c1edf07cb9add6cbe48a59bf457a6b5961ccdd43866eb03b7b4",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-06",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[5]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38ba6e581a4ac37d8851208543fe3a69f1da97c7",
+      "bytes": 238896,
+      "sha256": "8b88fbec952cdd4a2aa9a116c4277981e5634f98d1d6f12043d151dd48c7bec0",
+      "lf": 49,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-10",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[9]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/39c5e608988efc6d32ad742b647f315a0b82a74d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39c5e608988efc6d32ad742b647f315a0b82a74d",
+      "bytes": 300000,
+      "sha256": "2cb1eb6407c5bac59a75fefebc2901eb2c031d4d79748afbf19e6ed05d751cfc",
+      "lf": 36,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-15",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[14]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/39faa5753dee705fd89a8262e6d0713a351f20d6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39faa5753dee705fd89a8262e6d0713a351f20d6",
+      "bytes": 97257,
+      "sha256": "61931dc569e1babcb09560e0b24ca7beefabece846a3e764e30ee2525ae09b40",
+      "lf": 1636,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "superseded-template:r1Python",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "supersession.r1Python"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "bytes": 114943,
+      "sha256": "9bbaa7e55b22d2cb71ab4ff186137fcdbf687b69bec685209045a676368625e6",
+      "lf": 1655,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:E10Yaml",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.E10Yaml"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/413ca99db8592570de690ee67d232b233b560aca",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "413ca99db8592570de690ee67d232b233b560aca",
+      "bytes": 4501,
+      "sha256": "43d0195f731b2b8fca3b26b51111c5e817c4c1ebbd22361cec3ea6905796a2d5",
+      "lf": 102,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "authority",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "authority"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4180de318a5d5642ebb65b9190393179480c7275",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4180de318a5d5642ebb65b9190393179480c7275",
+      "bytes": 663,
+      "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+      "lf": 1,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "launcher",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[3]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/44610d70e50484d2f7177ff94e9d1af50a39cee0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44610d70e50484d2f7177ff94e9d1af50a39cee0",
+      "bytes": 300000,
+      "sha256": "8aeb0781645b87214e1c3c380da7d0eb3b0ea6f872942a6f2acc0f05fc5038b0",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-04",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[3]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+      "bytes": 10333,
+      "sha256": "c08630983e3fd7617f06e268f4176490b730b0396c826289e2420b28c5230b70",
+      "lf": 184,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.inner.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/49ed5a6496f9d9c753747719fadc152af91548fa",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49ed5a6496f9d9c753747719fadc152af91548fa",
+      "bytes": 300000,
+      "sha256": "0e4f0c698a4f1c58d316a3186bc91cf1ab94990c4663c66336f1f31b43507d82",
+      "lf": 32,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-13",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[12]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "post:.ci-run.json",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles.post"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+      "bytes": 53308,
+      "sha256": "42ac1c5cf8eda2cd02699d6ad201cf2f9447ba164a926f5a23e0d8dd535d05aa",
+      "lf": 1527,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "final-receipt",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-Analytics",
+          "role": "acceptedFocal",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "acceptedFocal"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4df0056061887fa81c60138ca4bb677ff4fcb091",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+      "bytes": 24771,
+      "sha256": "15f9df4237fe766309b5c3670ec503f2142379b5ab7b1523ad8f37e3de1c0df1",
+      "lf": 553,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "source-manifest",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "sourceSupport",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourceSupport"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4f8d1cc730133015e47495810cf52e4ae49c8468",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f8d1cc730133015e47495810cf52e4ae49c8468",
+      "bytes": 14473,
+      "sha256": "caca10e61a1033464e6e9c89dc1b56dc6b64edd8f6472806e59f092696a99db1",
+      "lf": 226,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "support:bindingDiff",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.bindingDiff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/50edcd66141ad27884148b2683a68bdc6bb593d9",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50edcd66141ad27884148b2683a68bdc6bb593d9",
+      "bytes": 1661,
+      "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+      "lf": 1,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "collection",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[2]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/52b20e75154f7b4235d880c0e1a6d35e092fe966",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52b20e75154f7b4235d880c0e1a6d35e092fe966",
+      "bytes": 93747,
+      "sha256": "cd5054c21b6376031c313b65d49d7fdc40462ac6d174042648f97bbcf71a33b7",
+      "lf": 1600,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:E10Python",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.E10Python"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/54a44996d95457c85e2273b5368f578223a6825b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54a44996d95457c85e2273b5368f578223a6825b",
+      "bytes": 7234,
+      "sha256": "9460ab995a64e0bb8ee020abed5fa2453e3e392f7ca766dd9293eeb075892858",
+      "lf": 279,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "support:boundsReusedWithoutChange",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.boundsReusedWithoutChange"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/54d146487581b34ec68cffda4e089b5453804162",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54d146487581b34ec68cffda4e089b5453804162",
+      "bytes": 88001,
+      "sha256": "7957eb963c1a3335637ca1143b3c8555f8092059c76e3cc7e72789b772dbc1c6",
+      "lf": 1,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-07",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[6]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/56a06415240134d4d36a0620cb38d574846e7675",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56a06415240134d4d36a0620cb38d574846e7675",
+      "bytes": 16431,
+      "sha256": "096aac0d3ab020744143dd90311d8a6360e291b3eae1ed9545e1e19e9144c776",
+      "lf": 267,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "E10-reuse-base:outer",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.outer"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58a2ed1d0935b128ab2cf968aa6d5b99b4102998",
+      "bytes": 43963,
+      "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+      "lf": 781,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "summary",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[4]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/58ab5308fb06fb453b86b12ce85c9b42bbfa0bac",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58ab5308fb06fb453b86b12ce85c9b42bbfa0bac",
+      "bytes": 300000,
+      "sha256": "6209cf22746c39eff274ddfcee90990e1796b32ff9c99e3cc9db748503af3a9f",
+      "lf": 32,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-04",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[3]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/629eb12bf5e9d06a37b0729261fd324859f299ab",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+      "bytes": 19998,
+      "sha256": "549d1d0a3c51ea4807f91261431163f207731862c28663b72496df32b82f6056",
+      "lf": 342,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "E10-reuse-base:helper",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.helper"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/65b34f4b17401ee49196a518008dbe1c952f5d67",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65b34f4b17401ee49196a518008dbe1c952f5d67",
+      "bytes": 10333,
+      "sha256": "e09e67a807ee3bd9f8d82391ac35e68de619a6f315225a8a79508ab2b3bc8a32",
+      "lf": 184,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "E10-reuse-base:inner",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "derivation.mechanismBase.inner"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6a8db9a3b45a82cc1b7a89471f835070e291c175",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a8db9a3b45a82cc1b7a89471f835070e291c175",
+      "bytes": 10482,
+      "sha256": "346612daef1ab52698bc25ccd33ffcfde6946b186a7f6f2e1ff431d7baca3612",
+      "lf": 366,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "support:bounds",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.bounds"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "bytes": 118627,
+      "sha256": "79647ce8bba2d50e7885e92eed1cd50f291392b6f4af6365760e543079393152",
+      "lf": 1691,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "files:workflow",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "files.workflow"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "bytes": 13217,
+      "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+      "lf": 134,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:apps/cli/src/sucafina-product/portfolio-http.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.http.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "bytes": 4384,
+      "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac",
+      "lf": 75,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "original-selection:productionConfigPin",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.productionConfigPin"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e9629e2a230dd120abdc9336ea4d74d514d7a0f",
+      "bytes": 300000,
+      "sha256": "f6ad415a23935a14f8f08fe4395243ba161d4e6a4a4d3b7663aa047a65bc4c73",
+      "lf": 1703,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-01",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[0]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "bytes": 39486,
+      "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+      "lf": 102,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "literal-marker-union",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "markers.literalUnion"
+          }
+        },
+        {
+          "group": "E11-reader",
+          "role": "currentInputs:markerUnion",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.markerUnion"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7738836dacbe9e0c63166560f087bc235392e0a1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7738836dacbe9e0c63166560f087bc235392e0a1",
+      "bytes": 15165,
+      "sha256": "74046814bbbb550a40880049f2b3a054b4b767fae7b643b1e7d5186dfd1f53b0",
+      "lf": 394,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "superseded-documentary-template",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "documentationDraftSuperseded"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7af030aab7cb129a256019038909950bc7fa988f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7af030aab7cb129a256019038909950bc7fa988f",
+      "bytes": 11701,
+      "sha256": "c47fd873429578a52e55172444a09932618001896dfb62296df059044b73f572",
+      "lf": 432,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "export-manifest",
+          "from": {
+            "seed": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7bf8887e36f712624d6521adb2e56d2a27d27da5",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7bf8887e36f712624d6521adb2e56d2a27d27da5",
+      "bytes": 300000,
+      "sha256": "5a325e4f41677cf776cab2e9a83090e53009597dfe65b74803cc50ebe2b9134f",
+      "lf": 15,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-09",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[8]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c9dce36591898353c756ddd5e3bd6a3bb91da7f",
+      "bytes": 300000,
+      "sha256": "0e2c98b7b36306a30932a854f61fd3f60280620b773e30e56322cef5ce8319a8",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-03",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[2]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+      "bytes": 18474,
+      "sha256": "3659b3bf3bb4fcd28be64e181db71cbc9569e6b5a4d2b55681de9978a886b2ee",
+      "lf": 258,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "support:bounds",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "supports.bounds"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "bytes": 96993,
+      "sha256": "740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290",
+      "lf": 1636,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "files:python",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "files.python"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/7f812dc6bb1d37138c441552614ef6d87f791b2a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f812dc6bb1d37138c441552614ef6d87f791b2a",
+      "bytes": 19347,
+      "sha256": "68c96f5ddeeef960b23414b9fb566e3c61142f368ae73e9ec0485bc17d7b19bc",
+      "lf": 579,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "rawManifest",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "rawManifest"
+          }
+        },
+        {
+          "group": "E11-reader",
+          "role": "currentInputs:rawManifest",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.rawManifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8148a7fdd70621aa41a0978efdaf330202f2ba73",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+      "bytes": 60958,
+      "sha256": "133f88604f6972360051b97ae8daf04c3df0f9100e2cba5a906c06ad8b3a65af",
+      "lf": 895,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.source.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82f7b2249e47d4cb32bc82f407f0bdbf13fb4f5f",
+      "bytes": 2281,
+      "sha256": "8ce2ad24c93acdcef3c07829ccad5d8176e4362e1907d606fbb457fefd87933c",
+      "lf": 39,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "cleanup",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "cleanup"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/832214bc2430294b321918ebe2b25834fceabc1e",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "832214bc2430294b321918ebe2b25834fceabc1e",
+      "bytes": 118904,
+      "sha256": "8bc89bd9d70e8c1eb39ec402008b280567fbce828e6743faed36c035a2fe847c",
+      "lf": 1691,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:parametricR2Yaml",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricR2Yaml"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/841b16c3a8050e366f511618e100b50ac1ae4a13",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "841b16c3a8050e366f511618e100b50ac1ae4a13",
+      "bytes": 105553,
+      "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+      "lf": 2175,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "inventory",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[5]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8a2502adae41fc496430bf8b3dd7fb35352e8973",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a2502adae41fc496430bf8b3dd7fb35352e8973",
+      "bytes": 300000,
+      "sha256": "9007371d0a839bf0a90c3c70fa9bed4f12d8dcce8583160c63827d1ea8b6e4b7",
+      "lf": 194,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-03",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[2]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "bytes": 42018,
+      "sha256": "b716b6ab198354a5d74755dbd3c542475f5560a869794410b10a543129a1f82d",
+      "lf": 690,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8bdc12d191a76137cd2244e01990f7a780091216",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8bdc12d191a76137cd2244e01990f7a780091216",
+      "bytes": 8953,
+      "sha256": "509b58f0f8f175dca1f3e0b5d928eb85f166d495a8bc2cc5c9b60d208447fa8c",
+      "lf": 187,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c695af352399cb93ed753d8b0c9fd0d83a38acf",
+      "bytes": 300000,
+      "sha256": "01ba00457c461014b59c524ca32ae6c572bb4864efb936ec41bba82b50e9e702",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-01",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[0]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "original-selection:workflowPin",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.workflowPin"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/94bff195a4e55f169ddebeeacc09d320153e73d2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94bff195a4e55f169ddebeeacc09d320153e73d2",
+      "bytes": 9078,
+      "sha256": "b50651dd548d9c4392b7554c5a3e18be3f038c8c90e5beb7144b3cd9d7cfc10d",
+      "lf": 259,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "rawManifest",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.rawManifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/959a2d45d9deb951f8339829415e9456d18199bd",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "959a2d45d9deb951f8339829415e9456d18199bd",
+      "bytes": 300000,
+      "sha256": "ad75f2a42aa693449b350eee5b269bc0d4c7f916ace6c5bc4fb186347f9ac12a",
+      "lf": 38,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-12",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[11]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9cbc7f21623e5fb2e4c42fdf76fa1fa19788eb7b",
+      "bytes": 11630,
+      "sha256": "695b530195644d96cfd3f8f0f0e4b0073aa8860d98f57033c9cbae24d87470c1",
+      "lf": 178,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "output:apps/cli/test/sucafina-proof-verification.test.ts",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9d2351aaed9549f876a072ced264d9429924ab61",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "bytes": 5823,
+      "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+      "lf": 121,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:apps/cli/test/fixture/sucafina-native-installation.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.inner.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9f230a963d5540d73296d447bb84afc302489bd4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f230a963d5540d73296d447bb84afc302489bd4",
+      "bytes": 23320,
+      "sha256": "a550b369dbba1a9b6b97f16a259088f125d1fc09fbb6134bd2dbdaab4c16023f",
+      "lf": 1063,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-analysis",
+          "role": "already-published-C16-profile-evidence",
+          "from": {
+            "blob": "c2f1be3cf25f57bdb0c74a454922d5091b2d2383",
+            "pointer": "coverage.includedE11AnalysisDocument"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9f47f0f49b068f79068dd9754d9db2b2738df8c3",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f47f0f49b068f79068dd9754d9db2b2738df8c3",
+      "bytes": 14555,
+      "sha256": "4b614144ef4adc0247e994711baad7a736acef95e85f726adb2138153622eca1",
+      "lf": 399,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "authority",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "authority"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/a20597fc20bf61f8bb989f6358b688387bf5228b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a20597fc20bf61f8bb989f6358b688387bf5228b",
+      "bytes": 83771,
+      "sha256": "1423b07fac28ed7c233de7dd976d6f1c18ebd766af9cea230befdf2a77e4fcb8",
+      "lf": 1119,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:parametricDiff",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricDiff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/a55818797ecf9fa6801393762bbe3261a1812576",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "bytes": 56757,
+      "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+      "lf": 973,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae52bf42f05f1cb5e74c9d0fea4497f14737b461",
+      "bytes": 300000,
+      "sha256": "74b321ec56809401ed620116ccc3e45fbd9691fd975cfa6c224320982ee7486e",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "profile-part-05",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[0].parts[4]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/aee006454f953ba5bd9ffad59597e425b313d312",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aee006454f953ba5bd9ffad59597e425b313d312",
+      "bytes": 300000,
+      "sha256": "4b001457aafb4943e210c6b7b361293349213d0002d7cdc92d5ed608ff841ad6",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-07",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[6]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b5e2f218117a0f30e803a8b251922e92b6da2332",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+      "bytes": 22169,
+      "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+      "lf": 374,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.helper.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b7c0cf94e170c73d55f8e5fd6a84cc8e097816bc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7c0cf94e170c73d55f8e5fd6a84cc8e097816bc",
+      "bytes": 300000,
+      "sha256": "72b02bba2f7ea9f91a5205d8a30e52be6d3b328d273dae5b8662ce310d5e5f8a",
+      "lf": 30,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-06",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[5]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b7de9404461591ce0162d496ec917a47fb72a479",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7de9404461591ce0162d496ec917a47fb72a479",
+      "bytes": 60735,
+      "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+      "lf": 891,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.source.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+      "bytes": 10668,
+      "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf",
+      "lf": 169,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "base-driver",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "base.driver"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+      "bytes": 16431,
+      "sha256": "6f7233c1763c0223f47d3b119848003240816770a6ae95abb023686b72325fbe",
+      "lf": 267,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.outer.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b9988a8b966b627904454e530233daf8b2e567c4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9988a8b966b627904454e530233daf8b2e567c4",
+      "bytes": 371062,
+      "sha256": "06c76e2f3c9d5a3725a2c832ec1067489f9817bfd08bca002068b87aecb65ba7",
+      "lf": 269,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:parametricDerivation",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricDerivation"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba24387a5d8cb96b9321da5442c5565c69b5f6a4",
+      "bytes": 300000,
+      "sha256": "acbeef6285568fc955c4aa00b467c6b565a2f96680e2310f349f4f4fd916dd9c",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-02",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[1]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bdf854be6d340a5ec0c858c09ca7bb3f0f40dc25",
+      "bytes": 300000,
+      "sha256": "aac2fc67f0046d745d11ef07883150c3432e2c451361d27bc8533b0f34d093db",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-06",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[5]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c17f04f979d0aff336c00170986f1b39db389689",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c17f04f979d0aff336c00170986f1b39db389689",
+      "bytes": 22320,
+      "sha256": "42eb28a8faf593c9e3f28b80172c94bb2f157caf8c6ec4738f0154217b863b08",
+      "lf": 394,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "support:anchors",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.anchors"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c35042473a5a1f5416253a3c5bf6b8450c44673b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+      "bytes": 32579,
+      "sha256": "16ae187fc9138f1ecd79110244a54cd114d49e18fc68ee163c3690b97e5ad801",
+      "lf": 406,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.authority.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "bytes": 28244,
+      "sha256": "9744106ef5eb2e0f8066e53588773e726eddedc915196d52138b0772779a14a9",
+      "lf": 952,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "final-receipt",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-reader",
+          "role": "currentInputs:closedOriginalIntake",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.closedOriginalIntake"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c62fd70f7134e748306cafd319f335a14f1fb5d8",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c62fd70f7134e748306cafd319f335a14f1fb5d8",
+      "bytes": 300000,
+      "sha256": "833942d05b18bfa7ea54b7b377a7556fea1de1f52080ecddd9a29031671b1c14",
+      "lf": 30,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-08",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[7]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c9860ed08da9fcf847fe0ecdd976f3167ae18ec7",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9860ed08da9fcf847fe0ecdd976f3167ae18ec7",
+      "bytes": 300000,
+      "sha256": "94e9d6fe3bb2abfda162e1082f0dd6f44f3103523bbdf149019a04e0d7b3a830",
+      "lf": 46,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-16",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[15]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c9947af7fa6346f125143b69f056d2ee95b6ade7",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+      "bytes": 15975,
+      "sha256": "e76b2d28ae562496db2d6708c725ca1aa5716cadfc4e1d51ffb11a5cfe608a8d",
+      "lf": 408,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "base:parametricManifest",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "base.parametricManifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ccc5ea87046144843e1751b1288e907974d24ca5",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccc5ea87046144843e1751b1288e907974d24ca5",
+      "bytes": 20985,
+      "sha256": "42e4d739499050d14b872751617326c5cf1e9d872894dfe9d07a637261cf8d43",
+      "lf": 313,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d02bcbfc770719935dcaca97cc20045b656f784d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+      "bytes": 83955,
+      "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+      "lf": 1515,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.store.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4f7d003266db640ec0b4b5d76d8bfdb862be940",
+      "bytes": 300000,
+      "sha256": "5d289dcbc6602f48349f7aa6573b688fc6791f07a5ac4ad41afb2865e16b7f31",
+      "lf": 12,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "main-part-05",
+          "from": {
+            "blob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+            "pointer": "reader.originalMain.parts[4]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+      "bytes": 84086,
+      "sha256": "ee7ddbb5607c6bb88d312bcdbe5dac0a7b5593a82562f0a2dae1ad3b287a5119",
+      "lf": 1517,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.store.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d935c68f5b996c0e53195ec832b969c217fcf858",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "bytes": 1892,
+      "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5",
+      "lf": 53,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "original-selection:baseConfigPin",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.baseConfigPin"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/db51996fdf5e9d478b64fb1efa68976a6bc4b4ee",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db51996fdf5e9d478b64fb1efa68976a6bc4b4ee",
+      "bytes": 11880,
+      "sha256": "cc8cab08061b2bce772d5ced526e37624d2aa7082834b3f13b034479d437e7d3",
+      "lf": 361,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "rawManifest",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "rawManifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/dbb29da511366b5aac85a4844b5dde99d617564b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dbb29da511366b5aac85a4844b5dde99d617564b",
+      "bytes": 300000,
+      "sha256": "95ae002a9d9ab2b7b0186b761e1b32a015118c9d14837d1cb8cb292b1c4dbb17",
+      "lf": 50,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-10",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[9]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+      "bytes": 32461,
+      "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+      "lf": 404,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "preimage:modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.authority.preimage"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/dec8d7fffd0d300cad08112b5863c0813a5029f0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dec8d7fffd0d300cad08112b5863c0813a5029f0",
+      "bytes": 101801,
+      "sha256": "7cba0af02bddbbb7e07dee2c49ccefa4be1baa6a8cd0302d5a84c8c05dfca11e",
+      "lf": 871,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "main",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "main"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+      "bytes": 31566,
+      "sha256": "319ebd879b90a7a97366309e45a896ae1b2f37c9812d4d0db2ba48f764c13058",
+      "lf": 993,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "final-receipt",
+          "from": {
+            "seed": true
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/e04bef68f8ec6e99f0f316ea00a8ea876946f585",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e04bef68f8ec6e99f0f316ea00a8ea876946f585",
+      "bytes": 300000,
+      "sha256": "50048cf76b08f0183e9bc5d299e6be455a5551e1b937dfda8c0810ae72d82beb",
+      "lf": 46,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-02",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[1]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e21ccf351ceaa97dcdc09113a7b41d93eb74fa42",
+      "bytes": 52546,
+      "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+      "lf": 997,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-exports",
+          "role": "receipt",
+          "from": {
+            "blob": "7af030aab7cb129a256019038909950bc7fa988f",
+            "pointer": "exports[6]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/e5909bcea5c9f9051894106192a74a58df7e1cbe",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5909bcea5c9f9051894106192a74a58df7e1cbe",
+      "bytes": 256820,
+      "sha256": "84e595741f4a7a20520628f3560c0b583b5a38386580a43ddbf702079190340d",
+      "lf": 195,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "support:bindingDerivation",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "support.bindingDerivation"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/e664f6378e37c79ef64d9a680016911d9f8e7231",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e664f6378e37c79ef64d9a680016911d9f8e7231",
+      "bytes": 11212,
+      "sha256": "9489ff447a83168ac2821e06c5390f3a76d91b4c34ec6fb643cef03c762f9268",
+      "lf": 401,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "reader-binding",
+          "from": {
+            "seed": true
+          }
+        },
+        {
+          "group": "E11-reader",
+          "role": "currentInputs:observedBinding",
+          "from": {
+            "blob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+            "pointer": "currentInputs.observedBinding"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/e9a9692952d9156b9ce5f0d9d65e6335fcc196a0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9a9692952d9156b9ce5f0d9d65e6335fcc196a0",
+      "bytes": 18197,
+      "sha256": "f20b69809a14f292be8d6edd94c820d789141fb61760a0d72f5afa455ab20fb4",
+      "lf": 488,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "direct-E10-base:manifest",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "base.manifest"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "bytes": 4667,
+      "sha256": "41d15d919b969d24671a7cec27516f164c899682d5fe12d2fd2676f0ad633574",
+      "lf": 52,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-source",
+          "role": "postimage:.ci-run.json",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "files.request.postimage"
+          }
+        },
+        {
+          "group": "E11-focal",
+          "role": "pre:.ci-run.json",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "outputFiles.pre"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/eecabc52d48c1cd39fba37a2ecca0ef354d2a047",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eecabc52d48c1cd39fba37a2ecca0ef354d2a047",
+      "bytes": 300000,
+      "sha256": "c2e9caf7624fcbc9ba71cf8e13c85c8df3643f70dca8b90ca0b9aa8e2deb846a",
+      "lf": 40,
+      "endsWithLF": false,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "main-part-05",
+          "from": {
+            "blob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+            "pointer": "main.parts[4]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f183dd1049ef205c38395bda99c83efa8eddc80a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+      "bytes": 2037,
+      "sha256": "ab667441ef3ae1ce301051245d2becddab52681cce306ab1b9f68ff730e8920e",
+      "lf": 37,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f252beb029d4f40b8932445ec7dfd7f9bfadea95",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f252beb029d4f40b8932445ec7dfd7f9bfadea95",
+      "bytes": 12782,
+      "sha256": "690f7f2c5f494f8ff444cfa007005a7701ef18b5522a986550b0e8b2034c3730",
+      "lf": 193,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "support:fullSnapshotDiff",
+          "from": {
+            "blob": "19c0740f43a20e813affb296774e14a33c018e66",
+            "pointer": "supports.fullSnapshotDiff"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f8a62baf167a1a4374122552a770f1ec49f56313",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lf": 814,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-Analytics",
+          "role": "original-selection:specPin",
+          "from": {
+            "blob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+            "pointer": "originalAnalytics.specPin"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/fe21695f18e751c8f4de76bd275742223507e7f8",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe21695f18e751c8f4de76bd275742223507e7f8",
+      "bytes": 14536,
+      "sha256": "735b1c01a2e59fd6ef70045b4ee577ed50651251c6d5cecf98c44086b8ecd365",
+      "lf": 446,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": false,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-reader",
+          "role": "direct-E10-base:bounds",
+          "from": {
+            "blob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+            "pointer": "base.bounds"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+      "bytes": 66226,
+      "sha256": "21bf38974bee4ccf62f3ca33e928afcf67d05b8cf1aebb58452652290f8600d3",
+      "lf": 878,
+      "endsWithLF": true,
+      "alreadyInBaseIndex": true,
+      "verification": "actual Git blob fetched and authenticated in this inventory task",
+      "memberships": [
+        {
+          "group": "E11-focal",
+          "role": "working-pin:modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "from": {
+            "blob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+            "pointer": "sourcePinRecord.value.files"
+          }
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "uniqueActualBlobs": 118,
+    "newObjectsRelativeToBaseIndex": 112,
+    "alreadyInBaseIndex": 6,
+    "allActualGitAndSha256AndBytesVerified": true,
+    "allPartsAndConcatenationsVerified": true,
+    "transport": {
+      "records": 118,
+      "series": 7,
+      "checks": [
+        {
+          "name": "original-cpu-preview-first.cpuprofile",
+          "chunks": 103,
+          "bytes": 1888001,
+          "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "preview-e11-cpu-progress-markers.lf.log",
+          "chunks": 1,
+          "bytes": 5324,
+          "sha256": "9b04c10afbda90a8d90b4376e29dbf83aeb29381e649db7805f05078872807f5",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "original-cpu-collection.json",
+          "chunks": 1,
+          "bytes": 1661,
+          "sha256": "93f56bdd63fbc30d7f5ccd749be289c37a66de78cc2f1a642a5d70e41cd87eeb",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "original-cpu-launcher.json",
+          "chunks": 1,
+          "bytes": 663,
+          "sha256": "b1c0ec9dfe8c6c100eff888b4576ff36963575cf9b249226f6fbc15bef0c0f38",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "safe-summary.json",
+          "chunks": 3,
+          "bytes": 43963,
+          "sha256": "1468752be9a45c8b8e9b006f72936c2aa9b5cbbda1ae0f342b1bd7f3794dc11b",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "inventory.json",
+          "chunks": 6,
+          "bytes": 105553,
+          "sha256": "b73e90e0a60a542a72cf7667fff423848b067c1b7476634fba142c372a2879e1",
+          "literalCanonicalBase64": true
+        },
+        {
+          "name": "receipt.json",
+          "chunks": 3,
+          "bytes": 52546,
+          "sha256": "31c37826b4555149bbb7c5f523bd6f6c35030d5a30fc165fdcb643e4a92e487c",
+          "literalCanonicalBase64": true
+        }
+      ],
+      "terminalLiteral": true,
+      "method": "Own data parser and canonical base64 of authenticated Git exports; no reader or repository code executed."
+    },
+    "parities": {
+      "four": {
+        "analytics": {
+          "gitSha": "92860230bee25fba7f6736f88e956a1ecb900c20",
+          "bytes": 34162,
+          "sha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1",
+          "lf": 96,
+          "persisted": false,
+          "lines": 96
+        },
+        "cpu": {
+          "gitSha": "803d37eaef11afaec29ebdaee8aac1eb9a955d64",
+          "bytes": 3180,
+          "sha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+          "lf": 3,
+          "persisted": false,
+          "lines": 3
+        },
+        "progress": {
+          "gitSha": "5a304af4b1b25b86c936acd7acb199bbcafcc4dd",
+          "bytes": 2144,
+          "sha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7",
+          "lf": 3,
+          "persisted": false,
+          "lines": 3
+        },
+        "union": {
+          "gitSha": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+          "bytes": 39486,
+          "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+          "lf": 102,
+          "persisted": true,
+          "lines": 102
+        }
+      },
+      "literalUnion": true,
+      "literalCpuProgressExport": true
+    },
+    "originalArtifactCrcScope": "153 entries/CRCs are reported by the reviewed reader and preserved in its inventory. No ZIP was downloaded or CRC recomputation over the full ZIP claimed by this inventory author.",
+    "utf8LfBomPreserved": true,
+    "method": "Own pure JavaScript hashing/text/base64 analysis of Git copies only; no repository/reader executable invoked."
+  },
+  "excluded": {
+    "calculatedOrNotSeparatelyPersisted": [
+      {
+        "kind": "calculated-whole-only",
+        "role": "E11-Analytics-main",
+        "gitHash": "d26fa67a647ceab9ab44133529ed0066b10e8362",
+        "bytes": 4874240,
+        "sha256": "41e0ea6134783ec1005550ec0e4581dda58c0c8f376689ac816cd6338ae86fc3",
+        "reason": "Complete stream preserved as actual ordered parts; the whole hash is not asserted to be a published blob."
+      },
+      {
+        "kind": "calculated-whole-only",
+        "role": "E11-reader-main",
+        "gitHash": "9b09b5d3cd2a70e1b336a0bb45c30180720f9770",
+        "bytes": 2938896,
+        "sha256": "f2e4145baf527fc89066ac1406a92fc3f151cb3e904bfeda0a7049625d57fb26",
+        "reason": "Complete stream preserved as actual ordered parts; the whole hash is not asserted to be a published blob."
+      },
+      {
+        "kind": "calculated-whole-only",
+        "role": "E11-export-profile",
+        "gitHash": "ac668b238261f78cb262228599e36bbb13a72a19",
+        "bytes": 1888001,
+        "sha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+        "reason": "Complete stream preserved as actual ordered parts; the whole hash is not asserted to be a published blob."
+      },
+      {
+        "kind": "calculated-derived-only",
+        "role": "E11 analytics marker sequence",
+        "gitHash": "92860230bee25fba7f6736f88e956a1ecb900c20",
+        "bytes": 34162,
+        "sha256": "c92da4a9039520094f4abf2044c4249cff59f1c3d9a81173c8fc0f2aa2ea12c1",
+        "from": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+        "reason": "Derived by exact prefix selection from the published union; no separate blob was persisted or looked up."
+      },
+      {
+        "kind": "calculated-derived-only",
+        "role": "E11 cpu marker sequence",
+        "gitHash": "803d37eaef11afaec29ebdaee8aac1eb9a955d64",
+        "bytes": 3180,
+        "sha256": "b3339461c140f02d3d08b7aeb211813b14dd65671ec2d57bc0b4697de13d63cb",
+        "from": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+        "reason": "Derived by exact prefix selection from the published union; no separate blob was persisted or looked up."
+      },
+      {
+        "kind": "calculated-derived-only",
+        "role": "E11 progress marker sequence",
+        "gitHash": "5a304af4b1b25b86c936acd7acb199bbcafcc4dd",
+        "bytes": 2144,
+        "sha256": "231b84bb30224b362610595e2f3fcc051c065107001b5d184de5eef399fbf9e7",
+        "from": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+        "reason": "Derived by exact prefix selection from the published union; no separate blob was persisted or looked up."
+      }
+    ],
+    "originalArtifact": {
+      "bytes": 46001766,
+      "downloadCount": 1,
+      "expired": false,
+      "id": 15214066673,
+      "name": "playwright-ubuntu-24.04-1",
+      "sha256": "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef",
+      "verifiedBytes": 46001766,
+      "verifiedSha256": "98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef",
+      "gitBlob": null,
+      "archiveBytesExportedToGit": false,
+      "reason": "Original ZIP acquired once only inside the reviewed reader. Its verified metadata and inventory are preserved; this inventory does not acquire or publish the ZIP."
+    },
+    "auditArtifact": {
+      "id": 15215046581,
+      "name": "sf613-analytics-original-46028127606-receipt-1",
+      "bytes": 98228184,
+      "sha256": "2bf8c6625355e7c55bb2162f33e013672dbdc7c8e2a6013de4e18517bb120901",
+      "contentAcquired": false,
+      "gets": 0,
+      "reason": "Metadata only. Never downloaded by this inventory task."
+    },
+    "presentButNotExportedRaw": [
+      {
+        "inventoryFileId": 1,
+        "path": "test-ci-evidence/playwright-runtime.json",
+        "bytes": 4814721,
+        "sha256": "7e49169de9afac9e406ffcd775dbc020b15bd5423051c880df91e2551cddde6d",
+        "gitBlob": null,
+        "presence": "Present in original inventory; raw file not one of the seven exported payloads"
+      },
+      {
+        "inventoryFileId": 2,
+        "path": "test-ci-evidence/playwright-selection.json",
+        "bytes": 3066,
+        "sha256": "48d2d072a7a9291652f65f02d4e1161837962ba2afea7c6204b4bc6bfaf2139d",
+        "gitBlob": null,
+        "presence": "Present in original inventory; raw file not one of the seven exported payloads"
+      },
+      {
+        "inventoryFileId": 3,
+        "path": "test-ci-evidence/request.json",
+        "bytes": 388,
+        "sha256": "b7977304f9d3f380ee2675414c726c2871caa1b90035fe63c98557d4f78d708e",
+        "gitBlob": null,
+        "presence": "Present in original inventory; raw file not one of the seven exported payloads"
+      },
+      {
+        "inventoryFileId": 4,
+        "path": "test-ci-evidence/sf613-e11-cpu-1lfYPA/launcher.json",
+        "bytes": 663,
+        "sha256": "ac2f7ae0c7fa49cdd4595f8eff1a819dfd929a1f56d596c79d4936327953f6fa",
+        "gitBlob": null,
+        "presence": "Present in original inventory; raw file not one of the seven exported payloads"
+      }
+    ],
+    "otherArtifactEntries": "PNG, HTML, report and other unselected raw entries have hashes/CRC metadata in inventory.json; this inventory claims no raw Git copy or visual inspection.",
+    "traceNetwork": {
+      "matchingPaths": 0,
+      "scope": "No trace/network-named path in the received 153-entry inventory. This is an inventory observation, not a claim that no network activity occurred."
+    },
+    "preparedOnly": {
+      "nonce": "sf613-e11-cpu-1lfYPA",
+      "inventoryFileId": 4,
+      "profilePresent": false,
+      "collectionPresent": false,
+      "meaning": "Only launcher metadata is observed for this separate namespace; no start/stop/case/completion inferred."
+    },
+    "notBlobEntries": [
+      {
+        "role": "clean S15R",
+        "type": "commit",
+        "sha": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+        "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+      },
+      {
+        "role": "E11 source and executed Analytics head",
+        "type": "commit",
+        "sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+        "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+        "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+      },
+      {
+        "role": "E11 executed focal head",
+        "type": "commit",
+        "sha": "3131f1766768473ed1e5cb69e97416b55a04aae4",
+        "tree": "c8c09517aa23a0276a724c3c2b85fe4904895f93",
+        "soleParent": "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
+      },
+      {
+        "role": "E11 executed reader head",
+        "type": "commit",
+        "sha": "e63cffcea872aa538bc7ee1d6ed2768ecad80862",
+        "tree": "41f942de834bb4dedeb94fcbd4b1f6b93ef12f80",
+        "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
+      }
+    ],
+    "historicalReferencesOutsideClosure": [
+      {
+        "role": "E10 prior static review",
+        "sha": "cb581f7145d3fbca2e54350d730fe1ee1ec067f4"
+      },
+      {
+        "role": "E10 prior closed receipt",
+        "sha": "8ae301494906aa374c708c0d4f0b18692fbb77a4"
+      },
+      {
+        "role": "prior clean C15R focal receipt",
+        "sha": "f2d39b82fffab4cbd3d28a96164da41076c502b6"
+      }
+    ],
+    "calculatedHashesDoNotAssertUniversalObjectAbsence": true
+  },
+  "interpretation": {
+    "originalRun": 46028127606,
+    "readerRun": 46032200409,
+    "focalRun": 46026823740,
+    "captureComplete": true,
+    "captureState": "completed-on-time",
+    "pending": 0,
+    "pid": 3713,
+    "parentPid": 3668,
+    "nonce": "sf613-e11-cpu-RIlIZr",
+    "membership": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout"
+    },
+    "limits": [
+      "Whole-VM/PID profile, not Request-exclusive.",
+      "Source requests and native child-pair populations must not be paired or subtracted; none/none is not a full-fallback total.",
+      "Closed CPU counters match collection/stopped/finished; later HTTP progress is outside that equality.",
+      "No C16/C17 runtime, deadline improvement or Release qualification is inferred."
+    ],
+    "literalLabelNote": "The export manifest's main object points to the reader raw-manifest blob 94bff195, not to a whole original log. Original reader log bytes are the ten parts listed by the raw/final receipt and this inventory."
+  },
+  "publication": {
+    "author": "/root/close_pr613",
+    "authorizedEffects": "GET preserved Git copies, then one final documentary inventory blob and literal readback explicitly authorized by root; no index/tree/ref update.",
+    "createdBlobs": 1,
+    "createdTrees": 0,
+    "createdCommits": 0,
+    "changedRefs": 0,
+    "actionsLogGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0,
+    "indexEdited": false,
+    "readmeEdited": false,
+    "rootRetainsPublicationAuthority": true,
+    "selfBlobNotListedInObjects": "This inventory's unknown blob identity is supplied by its create/readback receipt, not recursively embedded."
+  },
+  "preparedAtUtc": "2026-11-27 18:50:11 UTC"
+}

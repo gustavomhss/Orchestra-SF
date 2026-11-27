@@ -1,0 +1,102 @@
+{
+  "schema": "orchestra-sf.e11-original-analytics-authority.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "REVIEWED_SINGLE_ORIGINAL_ANALYTICS_DIAGNOSTIC_AUTHORIZED",
+  "operator": "/root",
+  "purpose": "Observe current first-preview CPU and Source/native selection populations on reviewed E11 diagnostic snapshot. Diagnose the clean C15R preview failure without changing original Analytics selection, waits or oracles.",
+  "source": {
+    "sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "cleanParentTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "exactChanges": "2A6M",
+    "runDirectlyOnThisSource": true,
+    "additionalOverlay": false
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": false,
+    "content": "{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"packageSelector\":\"@orchestra/app\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/design-wave-five-analytics.spec.ts\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"strict\",\"ORCHESTRA_CHANNEL\":\"prod\"},\"config\":\"e2e/playwright.production.config.ts\"}"
+  },
+  "sourceSupport": {
+    "gitBlob": "4df0056061887fa81c60138ca4bb677ff4fcb091",
+    "bytes": 24771,
+    "sha256": "15f9df4237fe766309b5c3670ec503f2142379b5ab7b1523ad8f37e3de1c0df1"
+  },
+  "bounds": {
+    "gitBlob": "7e81ea4be8bd1651fa504e045d30552ab1fe06eb",
+    "bytes": 18474,
+    "sha256": "3659b3bf3bb4fcd28be64e181db71cbc9569e6b5a4d2b55681de9978a886b2ee"
+  },
+  "focal": {
+    "run": 46026823740,
+    "attempt": 1,
+    "receipt": {
+      "gitBlob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+      "bytes": 53308,
+      "sha256": "42ac1c5cf8eda2cd02699d6ad201cf2f9447ba164a926f5a23e0d8dd535d05aa"
+    },
+    "independentStatus": "ACK_POSITIVE_DIAGNOSTIC_FOCAL_ONLY"
+  },
+  "activation": {
+    "branch": "ci-run-sf613e11a",
+    "method": "Create ref once at S_E11",
+    "attempt": 1,
+    "automaticRetry": false,
+    "productBranchesAdvanced": false
+  },
+  "capture": {
+    "targetMs": 50000,
+    "closeBeforeMs": 55000,
+    "samplingIntervalUs": 5000,
+    "profileCapBytes": 4194304,
+    "collectionCapBytes": 16384,
+    "cpuMarkerCountMax": 3,
+    "cpuMarkerCapBytes": 4096,
+    "progressMarkerCountMax": 3,
+    "progressMarkerCapBytes": 1024,
+    "maxWirePerHelperBytes": 15360,
+    "counterSlots": 12,
+    "counterCap": 65535,
+    "saturationScope": "The 12 selection counters only; a cap value does not establish overflow.",
+    "noNewPumpOrAwait": true,
+    "qualification": false
+  },
+  "intake": {
+    "rootOnly": true,
+    "waitForMainAndCleanupTerminal": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "preserveCompleteOriginalBytesBeforeParse": true,
+    "completeGitBlobPartsWithLiteralReadback": true,
+    "metadataOnlyArtifacts": true,
+    "zipAcquisitionRequiresSeparateReviewedReader": true,
+    "noAuditZipAcquisition": true,
+    "independentReceiptReview": true
+  },
+  "observationLimits": [
+    "The Source array counts issued selection-token decisions, while nativePairs counts all completed child snapshot constructions before the callback, including non-C08 work.",
+    "No count conservation, subtraction or implicit Request attribution across Source/native/route/CPU sample populations.",
+    "Native none/none is neither the C08 fallback total nor the total of full graph copies.",
+    "CPU counters are bounded to the owned running PID window; late HTTP progress is a separate lifetime.",
+    "A closed profile and the collection metadata require their own complete received evidence. No E10/C14/C15R capture fact is transferred.",
+    "A passing instrumented Analytics would not qualify the clean product source or final #613 composition.",
+    "The request channel string prod is the repository's original test configuration, not authorization for a production cutover."
+  ],
+  "priorCleanNegative": {
+    "gitBlob": "8af8c2f8a5c8bcd6d9226461d26c255d44efcda1",
+    "bytes": 25370,
+    "sha256": "24246f66d0010b504a0e7603173c84fc10d6fb3dc4327707ea5cf36e05ade970"
+  },
+  "productionCutoverAuthorized": false,
+  "at": "2026-11-27 15:48:13 UTC",
+  "preflight": {
+    "at": "2026-11-27 15:48:04 UTC",
+    "branchAbsent": true,
+    "existingRuns": 0,
+    "sourceAndTreeReadback": true
+  }
+}

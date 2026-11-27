@@ -1,0 +1,488 @@
+{
+  "schema": 1,
+  "repository": "gustavomhss/Orchestra-SF",
+  "proposal": "E10 original artifact reader, derived from the closed E9 R2 reader",
+  "status": "TEXT_PROPOSAL_BOUND_TO_RECEIVED_E10_ORIGINAL_LOGS_NO_TREE_COMMIT_REF_OR_RUN",
+  "qualification": false,
+  "authority": {
+    "author": "/root/teams_product",
+    "exclusiveAuthorship": true,
+    "scope": "Prepare Python/YAML and reversible text supports as Git blobs only. Former writer paused; root owns execution/original intake.",
+    "handoff": "6ab14960b5bf3433b8a424fe67e5a00caa92cecb",
+    "rootOriginalIntake": {
+      "gitSha": "0ebff1a4f4bdc41a451639f3d0e1c39afe0698a7",
+      "bytes": 19512,
+      "sha256": "fc4f1e481345e90ac565bdf2211694bab4d0578a3ab31b6bda6dc2e6e482924b"
+    },
+    "finalBind": "Root explicitly approved replacing the final intake sentinel after original main+cleanup and independent Focal journey confirmation.",
+    "allowedWrites": "Only these unreferenced textual Git blobs. No repository code, Python, compiler, test, ZIP, tree, commit, ref or workflow executed or created by the author."
+  },
+  "bases": {
+    "python": {
+      "gitSha": "a7aa4b4484557e5f95ace155d2f04b2a203589cd",
+      "bytes": 83514,
+      "sha256": "61ca3d7e0953f9ccd929520a6d83df466cbc9d1013477e6d14bcd4cbf9c8d1c2"
+    },
+    "workflow": {
+      "gitSha": "3d8fd9f1dccc676d6f10e7054b43d3d599de8e6c",
+      "bytes": 103124,
+      "sha256": "7c06eb32108bf672b738f860fcec9e75cf8be846432b01337c13d0e87002a143"
+    },
+    "manifest": "e698872feb47333ba487f085223e43632225bb27",
+    "cleanSource": "7d26eb502441aafeacfaa89c135e81dc8d98571b",
+    "cleanTree": "b90f6e774436bddd61043b6ac70a9dc2a625baf4",
+    "sourceOverlayManifest": "8dbadd91156a3e81bfe3db45918885e03395972f"
+  },
+  "files": {
+    "python": {
+      "logicalPath": "sf613-artifact-reader.py",
+      "repositoryPath": null,
+      "gitSha": "52b20e75154f7b4235d880c0e1a6d35e092fe966",
+      "bytes": 93747,
+      "sha256": "cd5054c21b6376031c313b65d49d7fdc40462ac6d174042648f97bbcf71a33b7",
+      "lineFeeds": 1600,
+      "literalReadback": true
+    },
+    "workflow": {
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "gitSha": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "bytes": 114943,
+      "sha256": "9bbaa7e55b22d2cb71ab4ff186137fcdbf687b69bec685209045a676368625e6",
+      "lineFeeds": 1655,
+      "literalReadback": true
+    },
+    "anchors": {
+      "gitSha": "e10350f8686c7567a670697855615f89a441bccf",
+      "bytes": 334174,
+      "sha256": "d0c9b6e2ec566e4b8c67cd72c938c791df5af29506ffe2ade09356b45b36c937",
+      "pythonOperations": 11,
+      "yamlOperations": 5,
+      "literalReadback": true
+    },
+    "fullDiff": {
+      "gitSha": "7cb1a480092ace65ce1cc775eda1359648b15fdb",
+      "bytes": 96048,
+      "sha256": "802580b693b9288d9612d66ba1b6509bb432b61587085cfb71f1095c03f61189",
+      "python": {
+        "hunks": 26,
+        "added": 251,
+        "deleted": 119,
+        "forwardInverse": true
+      },
+      "workflow": {
+        "hunks": 29,
+        "added": 255,
+        "deleted": 123,
+        "forwardInverse": true
+      },
+      "literalReadback": true
+    },
+    "bounds": {
+      "gitSha": "fe21695f18e751c8f4de76bd275742223507e7f8",
+      "bytes": 14536,
+      "sha256": "735b1c01a2e59fd6ef70045b4ee577ed50651251c6d5cecf98c44086b8ecd365",
+      "literalReadback": true
+    }
+  },
+  "parametricHistory": {
+    "python": {
+      "gitSha": "5286d68f7fd994ac79584bae8e3a1820955f9251",
+      "bytes": 93769,
+      "sha256": "d2af6254a23ff5f9a7a51997124ced6b9cbfbe1c386cb55c052c6d710d54b06b"
+    },
+    "workflow": {
+      "gitSha": "588ca0e73255ef4fe9a600a186a39ec414c463b7",
+      "bytes": 114965,
+      "sha256": "b8a38328c052a7ec0c234392d7189e653f78373986ca485b7fae3a923681afed"
+    },
+    "replacedByFinalFiles": true,
+    "pythonChange": {
+      "before": "E10_BINDINGS_COMPLETE = \"UNBOUND_FINAL_INTAKE_ACK\"",
+      "after": "E10_BINDINGS_COMPLETE = True",
+      "uniqueForwardInverse": true,
+      "byteDelta": -22
+    },
+    "yamlChange": "Only Python embedding and its SHA256; branch/concurrency/upload name unchanged from the parameter proposal.",
+    "meaning": "True binds completed original intake, not the native files or an authorization to execute."
+  },
+  "topology": {
+    "producer": {
+      "commit": "8f85aa7653693a1fb73e37f497e2795fc4da66e0",
+      "tree": "590f5e9ca2fa18fa3981c55f56a542efd017daf2",
+      "soleParent": "7d26eb502441aafeacfaa89c135e81dc8d98571b",
+      "exactDelta": {
+        "A": 2,
+        "M": 5,
+        "paths": 7
+      },
+      "leaves": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts",
+          "status": "A",
+          "mode": "100644",
+          "gitSha": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+          "bytes": 19998,
+          "sha256": "549d1d0a3c51ea4807f91261431163f207731862c28663b72496df32b82f6056",
+          "lf": 342
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "status": "M",
+          "mode": "100644",
+          "gitSha": "30d9fac161b3fe3c862b96280bf339064d574cd9",
+          "bytes": 13828,
+          "sha256": "423f205369b3806c891bff4a5598257467c9160044bb28d12f0030a5bb56975d",
+          "lf": 141
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "status": "M",
+          "mode": "100644",
+          "gitSha": "56a06415240134d4d36a0620cb38d574846e7675",
+          "bytes": 16431,
+          "sha256": "096aac0d3ab020744143dd90311d8a6360e291b3eae1ed9545e1e19e9144c776",
+          "lf": 267
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "status": "M",
+          "mode": "100644",
+          "gitSha": "65b34f4b17401ee49196a518008dbe1c952f5d67",
+          "bytes": 10333,
+          "sha256": "e09e67a807ee3bd9f8d82391ac35e68de619a6f315225a8a79508ab2b3bc8a32",
+          "lf": 184
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "status": "M",
+          "mode": "100644",
+          "gitSha": "f4cee795ab526924e752a3a7b56a22f8b3d9b422",
+          "bytes": 58141,
+          "sha256": "4a2142554765bd92bfdae14b69b30d29c99b4d0ed3ce20615fb90860022b095f",
+          "lf": 858
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "status": "M",
+          "mode": "100644",
+          "gitSha": "ace18a94c3db1098ae48bc20970aab801f431cdd",
+          "bytes": 32468,
+          "sha256": "5c9ef425fe02de7c9b6ab36703d0c2df1f57bf08a0c8ba3e0b7afa6c27329c29",
+          "lf": 405
+        },
+        {
+          "path": ".ci-run.json",
+          "status": "A",
+          "mode": "100644",
+          "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "bytes": 295,
+          "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+          "lf": 0
+        }
+      ]
+    },
+    "reader": {
+      "commit": "UNBOUND_NOT_CREATED",
+      "tree": "UNBOUND_NOT_CREATED",
+      "soleParent": "7d26eb502441aafeacfaa89c135e81dc8d98571b",
+      "exactDelta": {
+        "A": 1,
+        "M": 0,
+        "D": 0,
+        "paths": [
+          ".github/workflows/sf613-artifact-read.yml"
+        ]
+      },
+      "workflowBlob": "405b3e9c77b6d5c0e7af0ee6180e9f8c38fbf6a5",
+      "branch": "sf613-artifact-e10",
+      "run": "UNBOUND_NOT_CREATED",
+      "attempt": 1,
+      "event": "push",
+      "noCheckout": true,
+      "repositoryCodeExecution": false
+    },
+    "beforeAnyFutureRun": "Root must inspect actual tree/commit/sole parent/exact1A and branch/run preflight, then separately authorize one activation."
+  },
+  "currentProducerFacts": {
+    "rawManifest": {
+      "gitSha": "c70e66c127f77dd566aeaa0ca126395a7ccac2da",
+      "bytes": 23935,
+      "sha256": "cfc65075fcc43c37457ed7fbefaa617d0b181e064720c191f895232d7649665d"
+    },
+    "intake": {
+      "gitSha": "0ebff1a4f4bdc41a451639f3d0e1c39afe0698a7",
+      "bytes": 19512,
+      "sha256": "fc4f1e481345e90ac565bdf2211694bab4d0578a3ab31b6bda6dc2e6e482924b"
+    },
+    "run": 45973791480,
+    "attempt": 1,
+    "branch": "ci-run-sf613e10",
+    "event": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "source": "8f85aa7653693a1fb73e37f497e2795fc4da66e0",
+    "sourceTree": "590f5e9ca2fa18fa3981c55f56a542efd017daf2",
+    "conclusion": "failure",
+    "main": {
+      "id": 140420390660,
+      "conclusion": "failure",
+      "runTestsConclusion": "failure"
+    },
+    "cleanup": {
+      "id": 140424805096,
+      "conclusion": "success"
+    },
+    "ciRefAfterCleanup": "404",
+    "artifact": {
+      "id": 15186093614,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45989855,
+      "sha256": "3417e925094e2ee08d1febe12f1b2f16927859b1cb8a75f72bca88a729a700a0",
+      "expired": false,
+      "metadataOnly": true,
+      "zipAcquired": false
+    },
+    "originalRequest": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "trailingLF": false,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+    },
+    "originalSelection": {
+      "spec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "config": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "tests": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "caseDeadlinesSeconds": [
+        780,
+        660
+      ],
+      "previewWaiterMs": 60000,
+      "sensitivityWaiterMs": 120000,
+      "workflowMinutes": 45
+    },
+    "observedOutcomes": {
+      "failed": 1,
+      "passed": 1,
+      "firstCase": "UI42 first preview waitForResponse60000ms at spec72:32",
+      "UI43": "unreached",
+      "UI44": "unreached",
+      "secondCase": "BI UI45/UI46 passed",
+      "source": "Root full original intake plus independent Focal confirmation; runtime JSON still pending."
+    },
+    "analytics": {
+      "gitSha": "4e0e77463b63e85895f6d306841a8a57831e517c",
+      "bytes": 34315,
+      "sha256": "6d90b394432d45b541b24d2693a841a688da59f80a87cf1e3e6e3821d9362c59",
+      "lines": 97,
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 45,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      }
+    },
+    "cpu": {
+      "gitSha": "7634ba7cf7f9848cb0d8a636631e3a6fe5e8c32b",
+      "bytes": 2637,
+      "sha256": "30d3394df656b7e344712e5cb5cdf01eadd244d488d36cb843b9420528e8beb0",
+      "lines": 3,
+      "pid": 3718,
+      "parentPid": 3674,
+      "nonce": "sf613-e10-cpu-TiUfW6",
+      "kinds": [
+        "started",
+        "stopped",
+        "finished"
+      ],
+      "sequences": [
+        1,
+        2,
+        3
+      ],
+      "reportedState": "completed-on-time",
+      "reportedProfile": {
+        "name": "preview-first.cpuprofile",
+        "bytes": 2002053,
+        "sha256": "c210527d23e35e51c1be72146ecf8f16f4b3998486d3e934cb8bc2d865c6e201",
+        "fsyncTenthMs": 2370544,
+        "closeTenthMs": 2370544
+      },
+      "reportedCollection": {
+        "name": "collection.json",
+        "bytes": 1475,
+        "sha256": "051a3a33f98dcb2ca11bd946cf9776f0a9478ee7dbc729067666b186cf94ca58",
+        "fsyncTenthMs": 2370548,
+        "closeTenthMs": 2370548
+      },
+      "nativeFilesAcquired": false
+    },
+    "progress": {
+      "gitSha": "6e22ae6cab73ff5b2b18f2a5ffb759ff7c9a7e42",
+      "bytes": 1629,
+      "sha256": "0dbcab8a4be406292e96565504d98552c6f1791a150e6d4e1b2f8a9afc2911cd",
+      "lines": 3,
+      "pid": 3718,
+      "kinds": [
+        "body-returned",
+        "admit-returned",
+        "case-callback-entered"
+      ],
+      "sequences": [
+        1,
+        2,
+        3
+      ]
+    },
+    "combinedWire": {
+      "gitSha": "0bfc9ee58397c704b056615212d218569d0b97b2",
+      "bytes": 4266,
+      "sha256": "d0e09cb6b19fab034c879206b1288a8bbbbc311a557f7c8e897654d8ee771a85",
+      "lines": 6,
+      "slot": "cpuMarkers",
+      "cap": 65536
+    },
+    "union": {
+      "gitSha": "df8df605c3086cb6bdb80faea1589582b02ccbc5",
+      "bytes": 38581,
+      "sha256": "47a3b9435307cd16a4d6ab6c5d00b38ee2c5e231e100a04135b9215d02ce3e3e",
+      "lines": 103,
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 45,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_PREVIEW_E10_CPU": 3,
+        "SF_PREVIEW_E10_PROGRESS": 3,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      }
+    },
+    "casePidBinding": "UNVERIFIED_UNTIL_ORIGINAL_RUNTIME_JSON; main reporter sections and ordinals are not substituted."
+  },
+  "protocolChanges": {
+    "families": [
+      "SF_ANALYTICS_SOURCE",
+      "SF_ANALYTICS_CAPTURE",
+      "SF_DESIGN_DIAGNOSTICS",
+      "SF_ANALYTICS_SCOPE",
+      "SF_PREVIEW_E10_CPU",
+      "SF_PREVIEW_E10_PROGRESS"
+    ],
+    "parities": [
+      "Analytics",
+      "CPU",
+      "Progress",
+      "complete union"
+    ],
+    "hardFailuresOnMismatch": true,
+    "literalTransport": "The existing64KiB slot carries CPU+PROGRESS literals in original per-case/result/stdio order, preserving the ordinal among all six families. Summary/receipt retain separate memberships and parities.",
+    "sequences": "Separate CPU and progress attempt sequences, each1–3 per PID. Duplicate/out-of-order sequence or reuse across streams is a contradiction. Missing attempted sequence numbers are not filled. No CPU/progress cross-family ordering is imposed.",
+    "finiteRoutes": {
+      "scope": "pid-running-window",
+      "order": [
+        "sealed-read",
+        "unfenced",
+        "full-guard"
+      ],
+      "cap": 65535,
+      "counts": "Three exact integers,0..65535; bool rejected."
+    },
+    "partialBinding": "Unavailable markers may lack the installation tuple; missing stays missing, present contradictions fail. Namespace selection needs a single complete tuple. The concrete current six records are all complete, so the existing4–7 series engine is sufficient.",
+    "lifecycle": "HTTP progress can continue after CPU finished until HTTP finally. Neither phasefinished nor a route counter proves sampler ownership, product admission, completed work or file close.",
+    "sourceVsSnapshot": "source/sourceTree in wire are the clean product; snapshot/run/attempt/nonce bind the installation. They are never compared as identical roles.",
+    "files": "Real selected profile/collection/launcher only, including0B/malformed/nonLF under caps. Original file ID/hash/bytes required. No missing-file payload or LF is fabricated. Present contradictions of identity/hash/close fail; incomplete received evidence does not promote captureComplete.",
+    "completion": "Actual CPU finished plus received valid complete originals, hashes, points and native parity are needed. Originalstdout complete claim alone is not captureComplete."
+  },
+  "preserved": {
+    "definitions": {
+      "same": [
+        "ReceiptFailure",
+        "need",
+        "digest",
+        "canonical",
+        "write_bytes",
+        "save_json",
+        "checked",
+        "pending",
+        "wire_line",
+        "write_wire",
+        "NoRedirect",
+        "bounded_read",
+        "api",
+        "pages",
+        "storage_url_allowed",
+        "download_original",
+        "path_parts",
+        "inspect_zip",
+        "read_file",
+        "locate_suffix",
+        "one_original_json",
+        "unpack_html_reports",
+        "tests_from_report",
+        "report_configuration",
+        "error_summary",
+        "safe_time",
+        "safe_failure",
+        "network_row",
+        "trace_operation",
+        "trace_rows",
+        "inventory_error_context_and_pngs",
+        "cpu_json_object",
+        "cpu_present_fields",
+        "ensure_inventory",
+        "prepare_core_export"
+      ],
+      "changed": [
+        "check_original_and_reader",
+        "marker_stream",
+        "parse_runtime_and_selection",
+        "parse_cpu_originals",
+        "finalize_core",
+        "report_failure",
+        "main"
+      ],
+      "removed": [
+        "parse_e9_markers"
+      ],
+      "added": [
+        "e10_routes",
+        "e10_unique_object",
+        "parse_e10_markers"
+      ],
+      "baseDefinitions": 43
+    },
+    "bootstrap": {
+      "bytes": 738,
+      "sha256": "8d3485fcc0f67552a24c09426e2d8e75ef2622ce1614c24487f351e979ba7078",
+      "gitBlob": "eebbd181dfe9b859c05a8280779799b12d5a8cf9"
+    },
+    "oneZipDownload": true,
+    "noCheckout": true,
+    "noRepositoryImportsOrExecution": true,
+    "zipPathCrcDigestExpandedInventory": "Literal base code; every entry remains inventoried, including unrelated/prepared launcher namespaces.",
+    "caps": "All CAP/CORE_CAP values literal to E9R2. No PNG/trace or new export type added.",
+    "emission": "prepare_core_export literal; finalizer only labels/name substitutions. Actual optional originals + combinedwire/summary/inventory/receipt,4–7 series. Freeze, exact jointpreflight includingLOG_BYTES, checked writes and terminal remain literal.",
+    "immutableIdentities": "Source/tree, request, spec/config, Bun1.3.14+0d9b296af33f2b851fcbf4df3e9ec89751734ba4 and upload action pin were not changed by a global E9 string replacement."
+  },
+  "boundsSummary": {
+    "payloadCapsTotal": 4808704,
+    "base64CapsTotal": 6411620,
+    "maximumChunks": 265,
+    "conservativeEmitterBeforePriorOutput": 6715748,
+    "emitterCap": 7340032,
+    "originalMainReceptionCap": 8388608,
+    "exactPreflightRequired": true
+  },
+  "reviewState": {
+    "authorTextChecks": "Completed: precompute/readback, unique anchors, full forward/inverse diff, embedding and literal infrastructure checks.",
+    "root": "Independent bytes/embedding/binding and semantic review received; fullsupports pending completion by root.",
+    "focal": "Independent semantic review in progress; no PASS inferred.",
+    "execution": "NOT_AUTHORIZED_BY_THIS_MANIFEST"
+  },
+  "pending": [
+    "Original ZIP, native profile/collection/launcher bytes and allentryCRCs have not been acquired.",
+    "Case/result/stdio attribution and all four runtime/main parities await the reader.",
+    "Reader D/Td/branch/run and audit artifact do not exist in this proposal.",
+    "Product Analytics remains negative; artifact receipt cannot qualify UI42 or transfer a future PASS."
+  ]
+}

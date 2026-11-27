@@ -1,0 +1,1923 @@
+{
+  "schema": "orchestra-sf.c17-focal-receipt.v1",
+  "at": "2026-11-27 18:47:07 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "CLOSED_PASS",
+  "qualification": false,
+  "qualificationScope": "Functional and type/guard focal only for exact S17/T17 via D17; no UI42–44, complete #613, integrated Migration/Release or go-live acceptance.",
+  "source": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a"
+  },
+  "snapshot": {
+    "sha": "276fe1688727c5859a20cf393adc698c5c544d7d",
+    "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "delta": "2A: original request and bound focal driver"
+  },
+  "run": {
+    "id": 46051100090,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46051100090",
+    "event": "push",
+    "head": "276fe1688727c5859a20cf393adc698c5c544d7d",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 140682318133,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success",
+        "started": "2026-11-27T18:39:32Z",
+        "completed": "2026-11-27T18:42:08Z"
+      },
+      {
+        "id": 140683398461,
+        "name": "cleanup",
+        "conclusion": "success",
+        "started": "2026-11-27T18:42:10Z",
+        "completed": "2026-11-27T18:42:15Z"
+      }
+    ]
+  },
+  "authority": {
+    "gitBlob": "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+    "bytes": 19576,
+    "sha256": "8d7b2e77fb3cfa540a1be864be1906b004a03d6e1208da6298c8fac306dfb6b9"
+  },
+  "focalManifest": {
+    "gitBlob": "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+    "bytes": 24170,
+    "sha256": "cb9b8a30c9354ce9f9fb8d5cf4ea354b33b741c8d23c49d00a40e548b62ae8be"
+  },
+  "bounds": {
+    "gitBlob": "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+    "bytes": 16947,
+    "sha256": "cb18c136132293550141ffe93f303d37eb7a16aec191a9933ffc1a22a9cdffc8"
+  },
+  "sourceManifest": {
+    "gitBlob": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+    "bytes": 18155,
+    "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78"
+  },
+  "sourceBinding": {
+    "gitBlob": "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+    "bytes": 5487,
+    "sha256": "97592ee88f59998c7dfd6caaa66b11570428f612338fbdca3d757be7d0cf502e"
+  },
+  "rawManifest": {
+    "gitBlob": "3a7ce980f7863c3fd3cf27766e65302de09046a0",
+    "bytes": 2227,
+    "sha256": "20d7f0437e5d0b96d93cffb637374301c835f13a70c804bb0953e7fc460e3d8a"
+  },
+  "main": {
+    "job": 140682318133,
+    "gitBlob": "3fc0baf11dccadaaa8a12d9ee246e7471327e524",
+    "bytes": 104973,
+    "sha256": "5e3964930eed8f5f89428427b0f6b71fd8db909c5ce4251aed01fda06dbcb76b",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 871,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "cleanup": {
+    "job": 140683398461,
+    "gitBlob": "9117f3e935ca0e814aaba9302d041e21133af3e7",
+    "bytes": 2281,
+    "sha256": "1dcad47a209a012fd6dea8476b2d6e665f4d682883ffa2ebcd467e8e91f13fe8",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "originalGets": {
+    "main": 1,
+    "cleanup": 1,
+    "zip": 0,
+    "auditZip": 0
+  },
+  "preservedBeforeInterpretation": true,
+  "originalAcquisitionsClosed": true,
+  "artifacts": [],
+  "branchAfterCleanup": "NOT_FOUND/404",
+  "commandRecords": [
+    {
+      "line": 749,
+      "gate": "fetch source parent",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=2",
+        "origin",
+        "276fe1688727c5859a20cf393adc698c5c544d7d"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 386,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 753,
+      "gate": "snapshot identity",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 3,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 756,
+      "gate": "source identity",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "show",
+        "-s",
+        "--format=%H%n%T",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 16,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 763,
+      "gate": "CurrentChoice readonly composition",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 644,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 785,
+      "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 610,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 807,
+      "gate": "CLI package typecheck",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "durationMs": 27673,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 812,
+      "gate": "Sucafina package typecheck",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 26255,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 817,
+      "gate": "inspect history completeness",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 4,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 820,
+      "gate": "fetch current dev and source ancestry",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--unshallow",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "276fe1688727c5859a20cf393adc698c5c544d7d"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 29680,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 825,
+      "gate": "current dev identity",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 3,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 828,
+      "gate": "actual guard merge base",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "git",
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 7,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "line": 832,
+      "gate": "canonical guardrails",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+      "run": "46051100090",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 3553,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "sourcePinRecord": {
+    "line": 760,
+    "gate": "reviewed source blobs",
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "sha": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "sha": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "sha": "39e6da84a3dd815721484affaf8315731ded073b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      }
+    ],
+    "expectedGroups": 6,
+    "expectedCommands": 12,
+    "functionalProcessesLaunched": 2,
+    "expectedTestDeclarations": 12,
+    "expectedControlReports": 8
+  },
+  "functional": {
+    "readonly": {
+      "pass": 7,
+      "fail": 0,
+      "expectations": 295,
+      "bunDurationMs": 635,
+      "processReceiptMs": 644
+    },
+    "projection": {
+      "pass": 5,
+      "fail": 0,
+      "expectations": 757,
+      "bunDurationMs": 599,
+      "processReceiptMs": 610
+    },
+    "total": {
+      "pass": 12,
+      "fail": 0,
+      "expectations": 1052
+    },
+    "passLines": [
+      {
+        "line": 771,
+        "text": "(pass) CurrentChoice readonly composition keeps original C08, Planner and fence readers live in legitimate child scopes [107.28ms]"
+      },
+      {
+        "line": 772,
+        "text": "(pass) CurrentChoice readonly prepared Planner rejects owner and method drift after preparation and each authorization [25.54ms]"
+      },
+      {
+        "line": 773,
+        "text": "(pass) CurrentChoice readonly calculation roots close escaped parent and child continuations and reject poisoned writes [21.93ms]"
+      },
+      {
+        "line": 774,
+        "text": "(pass) CurrentChoice readonly calculation roots refuse aborted requests and replaced persistence without replay [70.81ms]"
+      },
+      {
+        "line": 775,
+        "text": "(pass) C13 unfenced generic reads preserve later CurrentChoice fences and source reservations [19.94ms]"
+      },
+      {
+        "line": 776,
+        "text": "(pass) C13 unfenced admission rejects opaque or changed providers and preserves exact native lifetimes [33.91ms]"
+      },
+      {
+        "line": 777,
+        "text": "(pass) C13 generic facade writes retain native poison after caught source or audit corruption [25.09ms]"
+      },
+      {
+        "line": 795,
+        "text": "(pass) C14 C08 child reads preserve the complete product graph, ACL, fresh copies and both real authorizations [54.50ms]"
+      },
+      {
+        "line": 796,
+        "text": "(pass) C14 projection refuses live drift and preserves opaque, scoped, abort, error and poison semantics [71.13ms]"
+      },
+      {
+        "line": 797,
+        "text": "(pass) C15 whole graph selections preserve complete shape, metadata, authorization and detached values [31.28ms]"
+      },
+      {
+        "line": 798,
+        "text": "(pass) C15 selections refuse drift and preserve invalid, legacy, late and competing read decisions [40.96ms]"
+      },
+      {
+        "line": 799,
+        "text": "(pass) C16 closed case factories preserve selection, fallback, late observations and readonly fences [86.64ms]"
+      }
+    ],
+    "reportCount": 8,
+    "reportUnion": {
+      "gitBlob": "f01135c91d9d3210938c0cc699f4828d2b985b81",
+      "bytes": 10163,
+      "sha256": "86fe8e68bff6db751f8fa947de158df567aab624aad29da2830040328a8f079a"
+    },
+    "reports": [
+      {
+        "line": 765,
+        "prefix": "SF_C13_UNFENCED_CONTROL",
+        "value": {
+          "scenario": "later-fence-and-reservation",
+          "qualification": false,
+          "outerDirectCallbacks": 1,
+          "guards": 1,
+          "activeUnfencedIdentityCalls": 0,
+          "originalModeSentinelCalls": 1,
+          "durableVersionCount": 1,
+          "routeGets": 1,
+          "wrappedCallbacks": 1,
+          "authorizeCalls": 0
+        }
+      },
+      {
+        "line": 766,
+        "prefix": "SF_C13_UNFENCED_CONTROL",
+        "value": {
+          "scenario": "eligibility-and-native-lifetime",
+          "qualification": false,
+          "opaqueCallbacks": 1,
+          "driftChecks": 4,
+          "replacements": 0,
+          "childScopeMismatchRejected": true,
+          "closedRejected": true,
+          "abortIdentityPreserved": true
+        }
+      },
+      {
+        "line": 768,
+        "prefix": "SF_C13_UNFENCED_CONTROL",
+        "value": {
+          "scenario": "native-poison-and-active-fallback",
+          "qualification": false,
+          "outcomes": [
+            {
+              "route": "native",
+              "field": "sources",
+              "writeCallbacks": 1,
+              "reuseCallbacks": 1,
+              "accepted": false
+            },
+            {
+              "route": "native",
+              "field": "audit",
+              "writeCallbacks": 1,
+              "reuseCallbacks": 1,
+              "accepted": false
+            },
+            {
+              "route": "facade",
+              "field": "sources",
+              "writeCallbacks": 1,
+              "reuseCallbacks": 1,
+              "accepted": false
+            },
+            {
+              "route": "facade",
+              "field": "audit",
+              "writeCallbacks": 1,
+              "reuseCallbacks": 1,
+              "accepted": false
+            }
+          ],
+          "activeCallbacks": 1,
+          "activeFallback": "original source guard refusal",
+          "durableUnchanged": true
+        }
+      },
+      {
+        "line": 787,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "value": {
+          "scenario": "complete-product-and-fresh-authorization",
+          "qualification": false,
+          "outcomes": [
+            {
+              "mode": "readonly",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            },
+            {
+              "mode": "preimage",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            },
+            {
+              "mode": "top-level",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            }
+          ],
+          "subsequentPreferenceVersion": 2,
+          "createIdReceiver": "original mutable C08 input",
+          "projector": "installed original",
+          "limit": "top-level stays full; no parse count, domain-size ratio or performance qualification"
+        }
+      },
+      {
+        "line": 789,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "value": {
+          "scenario": "opaque-equivalence-and-live-refusal",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "readonly-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "readonly-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "preimage-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "preimage-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "readonly-source-checks-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "readonly-source-checks-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "source-accessor-full-fallback",
+              "callbacks": 1
+            },
+            {
+              "scenario": "driver-drift-before-body",
+              "callbacks": 0,
+              "authentication": 0
+            },
+            {
+              "scenario": "CurrentChoice-scoped-full-fallback",
+              "callbacks": 2,
+              "authentication": 18
+            },
+            {
+              "scenario": "real-authority-revoked-after-body",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "callback-error-without-replay-or-poison",
+              "callbacks": 1
+            },
+            {
+              "scenario": "request-abort-after-body",
+              "callbacks": 1,
+              "authentication": 3
+            },
+            {
+              "scenario": "caught-nested-write-still-poisons-owner",
+              "callbacks": 1
+            },
+            {
+              "scenario": "early-prototype-full",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "late-prototype-projected",
+              "callbacks": 0,
+              "authentication": 3
+            },
+            {
+              "scenario": "late-prototype-opaque",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "opaque-native-driver-full-fallback",
+              "callbacks": 2
+            }
+          ],
+          "limit": "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"
+        }
+      },
+      {
+        "line": 790,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "value": {
+          "scenario": "whole-graphs-and-shape",
+          "qualification": false,
+          "outcomes": [
+            {
+              "mode": "readonly",
+              "namespace": "cases",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "readonly",
+              "namespace": "preferences",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "preimage",
+              "namespace": "cases",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "preimage",
+              "namespace": "preferences",
+              "callbacks": 3,
+              "authentication": 18
+            }
+          ],
+          "aliases": "custom full path retained; each selected callback receives its own graph",
+          "limit": "native structural copy and functional composition; no latency or current Analytics result"
+        }
+      },
+      {
+        "line": 791,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "value": {
+          "scenario": "shape-precedence-and-drift",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "readonly-cases-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "readonly-preferences-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "preimage-cases-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "preimage-preferences-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "active-source-checks-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "narrow-second-authorization-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "returned body withheld"
+            },
+            {
+              "scenario": "case-precedence",
+              "callbacks": null,
+              "authentication": 6,
+              "outcome": "factory callback returned; not wrapped to count"
+            },
+            {
+              "scenario": "namespace-mismatch",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original full fallback and selection order"
+            },
+            {
+              "scenario": "late-registration",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original full fallback and selection order"
+            },
+            {
+              "scenario": "invalid-map",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "invalid-version",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "invalid-additive",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "legacy",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original legacy normalization"
+            },
+            {
+              "scenario": "throw-sentinel",
+              "callbacks": 1,
+              "authentication": 9,
+              "outcome": "original exception; next child remains usable"
+            },
+            {
+              "scenario": "throw-undefined",
+              "callbacks": 1,
+              "authentication": 9,
+              "outcome": "original exception; next child remains usable"
+            }
+          ],
+          "limit": "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"
+        }
+      },
+      {
+        "line": 792,
+        "prefix": "SF_C16_SELECTION_CONTROL",
+        "value": {
+          "scenario": "closed-case-factories",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "case-readonly-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "case-readonly-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-readonly-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-preimage-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "case-preimage-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-preimage-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-readonly-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "identity-readonly-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-readonly-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-preimage-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "identity-preimage-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-preimage-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-first-prototype",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-first-concurrent-declaration",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-second-prototype",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-second-concurrent-declaration",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-first-prototype",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-first-concurrent-declaration",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-second-prototype",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-second-concurrent-declaration",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-concurrent",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "case-opaque-context",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "case-namespace",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-concurrent",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-opaque-context",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-namespace",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-key-observed-after-first-authorization",
+              "authentication": 6,
+              "outcome": "no key read at registration, native selection or reauthorization"
+            },
+            {
+              "scenario": "identity-throw-sentinel",
+              "authentication": 9,
+              "outcome": "original throw preserved; next child remains usable"
+            },
+            {
+              "scenario": "identity-throw-undefined",
+              "authentication": 9,
+              "outcome": "original throw preserved; next child remains usable"
+            },
+            {
+              "scenario": "identity-request-abort",
+              "authentication": 3,
+              "outcome": "original abort refuses the root"
+            },
+            {
+              "scenario": "poisoned-native-root",
+              "authentication": 0,
+              "outcome": "no child result or root accepted after caught commit:true"
+            }
+          ],
+          "identityProjection": {
+            "cases": [
+              "mixed-map-and-detached-readonly",
+              "mixed-map-and-detached-preimage",
+              "composed-identity-first-authorization-drift",
+              "composed-identity-second-authorization-drift",
+              "restored-codec-birth-keeps-complete-case",
+              "restored-codec-exposure-keeps-complete-case",
+              "cold-plan-birth-survives-restore-and-memo",
+              "owner-weakmap-escape-latches-across-roots",
+              "owner-als-escape-latches-across-roots"
+            ],
+            "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+          },
+          "limits": "composed functional and refusal oracles; no latency or current Analytics qualification"
+        }
+      }
+    ],
+    "observedPriorSevenReportsLiteral": true,
+    "observed31C16OutcomesLiteral": true,
+    "newIdentityProjectionNames": [
+      "mixed-map-and-detached-readonly",
+      "mixed-map-and-detached-preimage",
+      "composed-identity-first-authorization-drift",
+      "composed-identity-second-authorization-drift",
+      "restored-codec-birth-keeps-complete-case",
+      "restored-codec-exposure-keeps-complete-case",
+      "cold-plan-birth-survives-restore-and-memo",
+      "owner-weakmap-escape-latches-across-roots",
+      "owner-als-escape-latches-across-roots"
+    ],
+    "statement": "Current run observed these controls; equality to prior data is comparison only and does not transfer qualification."
+  },
+  "outer": {
+    "pass": 6,
+    "fail": 0,
+    "expectations": 29,
+    "bunDurationSeconds": 89.09
+  },
+  "types": {
+    "cli": {
+      "exitCode": 0,
+      "processReceiptMs": 27673
+    },
+    "sucafina": {
+      "exitCode": 0,
+      "processReceiptMs": 26255
+    }
+  },
+  "guards": {
+    "ancestry": {
+      "gate": "guard ancestry",
+      "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+      "command": "bun run check:guards --base origin/dev --json"
+    },
+    "full": {
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "bootstrap": false,
+      "rules": 78,
+      "files": 856,
+      "findings": [
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 89,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    globalThis.structuredClone = (value, options) => {",
+          "match": [
+            4,
+            33
+          ]
+        },
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 95,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    finally { globalThis.structuredClone = original }",
+          "match": [
+            14,
+            43
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 110,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 13,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(780_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 14,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 72,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 89,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 98,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 156,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 203,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+          "match": [
+            129,
+            149
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 438,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+          "match": [
+            113,
+            132
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 444,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(660_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 445,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 471,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            125,
+            144
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 486,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            116,
+            135
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 527,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 616,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    }, { timeout: 60_000 })",
+          "match": [
+            7,
+            26
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 661,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 20,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  collabTest.setTimeout(900_000)",
+          "match": [
+            13,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 21,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 103,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+          "match": [
+            109,
+            128
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 142,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+          "match": [
+            68,
+            87
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 263,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(600_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 264,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 66,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 40_000 }).then(async (response) => {",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 79,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })",
+          "match": [
+            66,
+            85
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 101,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+          "match": [
+            105,
+            124
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 113,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+          "match": [
+            100,
+            119
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 124,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            36,
+            55
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 128,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            38,
+            57
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 135,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(420_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 136,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 153,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+          "match": [
+            78,
+            97
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(720_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 219,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 237,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            69,
+            88
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 326,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+          "match": [
+            139,
+            158
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 405,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            83,
+            102
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 437,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            90,
+            109
+          ]
+        }
+      ],
+      "errors": [],
+      "approved": [],
+      "touchesGuards": false
+    }
+  },
+  "runtime": {
+    "observedVersion": "1.3.14+0d9b296af",
+    "testBanner": "bun test v1.3.14 (0d9b296a)",
+    "fullRevision": null,
+    "fullRevisionObserved": false
+  },
+  "omni": {
+    "nonce": "6591527399229a006d648f0d2e82915a",
+    "declared": 6,
+    "spawned": 12,
+    "delegated": 0,
+    "line": 842,
+    "text": "omni positive control [6591527399229a006d648f0d2e82915a]: pass (declared: 6 test(s) in test/sucafina-proof-verification.test.ts); 12 omni spawn(s), 0 delegated."
+  },
+  "checks": [
+    {
+      "label": "twelveCommandsAnd24FalseTruncationFlags",
+      "pass": true
+    },
+    {
+      "label": "sixHostedBindings",
+      "pass": true
+    },
+    {
+      "label": "sourceParentStdout",
+      "pass": true
+    },
+    {
+      "label": "snapshotStdout",
+      "pass": true
+    },
+    {
+      "label": "shallowBranchMatchesOutput",
+      "pass": true
+    },
+    {
+      "label": "all12CurrentWorkingPins",
+      "pass": true
+    },
+    {
+      "label": "eightCompleteReports",
+      "pass": true
+    },
+    {
+      "label": "reportFamilies",
+      "pass": true
+    },
+    {
+      "label": "C15OutcomeCounts",
+      "pass": true
+    },
+    {
+      "label": "observedSevenInheritedReportsLiteral",
+      "pass": true
+    },
+    {
+      "label": "31RetainedC16OutcomesCurrentLiteral",
+      "pass": true
+    },
+    {
+      "label": "nineCurrentIdentityCases",
+      "pass": true
+    },
+    {
+      "label": "functional CurrentChoice readonly composition keeps original C08, Planner and fence readers live in legitimate child scopes",
+      "pass": true
+    },
+    {
+      "label": "functional CurrentChoice readonly prepared Planner rejects owner and method drift after preparation and each authorization",
+      "pass": true
+    },
+    {
+      "label": "functional CurrentChoice readonly calculation roots close escaped parent and child continuations and reject poisoned writes",
+      "pass": true
+    },
+    {
+      "label": "functional CurrentChoice readonly calculation roots refuse aborted requests and replaced persistence without replay",
+      "pass": true
+    },
+    {
+      "label": "functional C13 unfenced generic reads preserve later CurrentChoice fences and source reservations",
+      "pass": true
+    },
+    {
+      "label": "functional C13 unfenced admission rejects opaque or changed providers and preserves exact native lifetimes",
+      "pass": true
+    },
+    {
+      "label": "functional C13 generic facade writes retain native poison after caught source or audit corruption",
+      "pass": true
+    },
+    {
+      "label": "functional C14 C08 child reads preserve the complete product graph, ACL, fresh copies and both real authorizations",
+      "pass": true
+    },
+    {
+      "label": "functional C14 projection refuses live drift and preserves opaque, scoped, abort, error and poison semantics",
+      "pass": true
+    },
+    {
+      "label": "functional C15 whole graph selections preserve complete shape, metadata, authorization and detached values",
+      "pass": true
+    },
+    {
+      "label": "functional C15 selections refuse drift and preserve invalid, legacy, late and competing read decisions",
+      "pass": true
+    },
+    {
+      "label": "functional C16 closed case factories preserve selection, fallback, late observations and readonly fences",
+      "pass": true
+    },
+    {
+      "label": "outer G1",
+      "pass": true
+    },
+    {
+      "label": "outer G2",
+      "pass": true
+    },
+    {
+      "label": "outer G3",
+      "pass": true
+    },
+    {
+      "label": "outer G4",
+      "pass": true
+    },
+    {
+      "label": "outer G5",
+      "pass": true
+    },
+    {
+      "label": "outer G6",
+      "pass": true
+    },
+    {
+      "label": "18PassLines",
+      "pass": true
+    },
+    {
+      "label": "threePassTotals",
+      "pass": true
+    },
+    {
+      "label": "zeroFailures",
+      "pass": true
+    },
+    {
+      "label": "observedAssertionTotals",
+      "pass": true
+    },
+    {
+      "label": "types",
+      "pass": true
+    },
+    {
+      "label": "oneFullGuardReport",
+      "pass": true
+    },
+    {
+      "label": "guardActualAncestry",
+      "pass": true
+    },
+    {
+      "label": "guardNoErrorsOrApprovals",
+      "pass": true
+    },
+    {
+      "label": "guard40AdvisoriesPreserved",
+      "pass": true
+    },
+    {
+      "label": "omni6Declared12Spawn0Delegated",
+      "pass": true
+    },
+    {
+      "label": "currentNonce",
+      "pass": true
+    },
+    {
+      "label": "observedBun",
+      "pass": true
+    },
+    {
+      "label": "bothOriginalsPreservedBeforeParse",
+      "pass": true
+    },
+    {
+      "label": "terminalSuccess",
+      "pass": true
+    },
+    {
+      "label": "zeroArtifacts",
+      "pass": true
+    },
+    {
+      "label": "branchRemoved",
+      "pass": true
+    }
+  ],
+  "commandChecks": [
+    {
+      "label": "fetch source parent",
+      "line": 749,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "snapshot identity",
+      "line": 753,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "source identity",
+      "line": 756,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "CurrentChoice readonly composition",
+      "line": 763,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "line": 785,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "CLI package typecheck",
+      "line": 807,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "Sucafina package typecheck",
+      "line": 812,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "inspect history completeness",
+      "line": 817,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "fetch current dev and source ancestry",
+      "line": 820,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "current dev identity",
+      "line": 825,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "actual guard merge base",
+      "line": 828,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    },
+    {
+      "label": "canonical guardrails",
+      "line": 832,
+      "argv": true,
+      "cwd": true,
+      "labelMatch": true,
+      "exit0": true,
+      "truncationFalse": true,
+      "identity": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/focal_migration",
+    "status": "ACK",
+    "findings": [],
+    "rawBlobsRehashedBeforeParse": true,
+    "fullOriginalsNotReacquired": true,
+    "sourceSnapshotTreeAnd12Pins": true,
+    "commands12": true,
+    "falseTruncationFlags24": true,
+    "functional": {
+      "tests": 12,
+      "assertions": 1052,
+      "readonly": {
+        "tests": 7,
+        "assertions": 295
+      },
+      "projection": {
+        "tests": 5,
+        "assertions": 757
+      }
+    },
+    "reports8": true,
+    "outcomes31": true,
+    "identityCases9ExactNames": true,
+    "unionMatches": "f01135c91d9d3210938c0cc699f4828d2b985b81",
+    "typesBothExit0": true,
+    "guards": {
+      "rules": 78,
+      "files": 856,
+      "warnings": 40,
+      "errors": 0,
+      "approved": 0,
+      "bootstrap": false,
+      "touchesGuards": false
+    },
+    "outer": {
+      "pass": 6,
+      "assertions": 29,
+      "durationSeconds": 89.09
+    },
+    "omni": {
+      "nonce": "6591527399229a006d648f0d2e82915a",
+      "declared": 6,
+      "spawned": 12,
+      "delegated": 0,
+      "line": 842,
+      "text": "omni positive control [6591527399229a006d648f0d2e82915a]: pass (declared: 6 test(s) in test/sucafina-proof-verification.test.ts); 12 omni spawn(s), 0 delegated."
+    },
+    "observedBun": "1.3.14+0d9b296af",
+    "fullRevisionObserved": false,
+    "scope": "focal only; no installed Analytics, latency or Release inference"
+  },
+  "previousNegativesPreserved": [
+    {
+      "run": 46038404128,
+      "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+      "receipt": "f1d38ff665811dd8daad45ad1749e5623ca325fd",
+      "status": "CLOSED_NEGATIVE",
+      "scope": "C16 original Analytics: first preview timeout, BI pass;12/15 historical areas retained."
+    }
+  ],
+  "nextAction": "Original unchanged Analytics on S17 through exact1A snapshot, after its separate concrete review and authority.",
+  "limits": [
+    "No original source, spec, waiter, retry, worker or observer changed by execution overlays.",
+    "Actual output durations are bounded focal observations, not predicted installed latency.",
+    "No CPU profile acquired; E11 remains historical.",
+    "Final C613/UI6/D26 and final Migration/Release candidate qualifications remain pending.",
+    "G08/G10 external access and reservations remain unresolved.",
+    "Production cutover requires explicit user approval."
+  ],
+  "productionCutoverAuthorized": false
+}

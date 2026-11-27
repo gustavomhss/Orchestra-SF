@@ -1,0 +1,972 @@
+{
+  "schema": "orchestra-sf.go-live-three-docs-current-intake.v1",
+  "revision": "R7",
+  "state": "DRAFT_ONLY_PENDING_INDEPENDENT_DOCUMENT_REVIEW_NO_COMMIT_REF_OR_RUN",
+  "observationCutUtc": "2026-11-27T19:08:31Z",
+  "preparedAtUtc": "2026-11-27T19:20:53Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "writer": "/root/teams_product",
+  "authority": "Root authorized only the three existing documentary postimage blobs plus manifest/derivation. No product, executable, tree, commit, ref, run, original-log or ZIP action by this writer.",
+  "route": {
+    "pullRequest": 613,
+    "publicBranch": "sf-design-next",
+    "publicHead": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "privateBranch": "sf613-astra-finish",
+    "privateHead": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+    "actualDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "actualDevTree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "refsLastCheckedAt": "2026-11-27T18:36:30Z",
+    "sourceSha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "currentSourceIsBranchHead": false,
+    "finalCompositionCreated": false
+  },
+  "priorDraft": {
+    "gitBlob": "7d573ea99fc7436dcb1583800615693243832576",
+    "bytes": 35566,
+    "sha256": "df60d0babb6cf0b8697e3c8bd7675b020ffd32d682bf70ceda49dbd3000fbf10"
+  },
+  "priorIndependentReview": {
+    "gitBlob": "1ff71678703f579bc5f90732e813598ededf77af",
+    "bytes": 5020,
+    "sha256": "08803bfd95d1537d29e5c45125fc1d518005b7e132a7bab562782a89fe90b44d"
+  },
+  "files": [
+    {
+      "path": "docs/qa/sucafina/go-live/status.json",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+        "bytes": 621005,
+        "sha256": "94dbcd707ea5d7d8d035c91c7b3a24e3ee004f6f09f255bbb901e810ea58dad5"
+      },
+      "post": {
+        "gitBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+        "bytes": 642382,
+        "sha256": "ef7c8d4b2cd598b6debf2515a7d37ba071eb094ce34438b6ebf508784d66b28f"
+      },
+      "literalReadback": true
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/README.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "b0f3f8abaf52dc71a1612adba2e8096f6e6e7650",
+        "bytes": 83544,
+        "sha256": "e109fed78a92b5662d5e967669bdadcb293045f31560c3b06318f2981b0f0ed9"
+      },
+      "post": {
+        "gitBlob": "9b5e1016f4cdd7b4968b30ad4614516931c4bdd7",
+        "bytes": 89575,
+        "sha256": "d7bb27f69537e4a5d2ffd803c46c75616376dd64465faddd5b6c55181679616a"
+      },
+      "literalReadback": true
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "a93fe8ee7205652db5ec5caa0325a4d23059d06d",
+        "bytes": 177911,
+        "sha256": "e842e62bee94d24aaca6f2c005225b8cebb75a05db837138e79c31c9f36c71ec"
+      },
+      "post": {
+        "gitBlob": "f7407f76cfba4334d35ae89fcf051a90c4431e2a",
+        "bytes": 183745,
+        "sha256": "3e35d84a396ca33e7bf09b5404da1e86a531fcc0b81343b62e8b9bc23e6635e7"
+      },
+      "literalReadback": true
+    }
+  ],
+  "evidence": {
+    "before": 97,
+    "after": 98,
+    "prefixLiteral": true,
+    "added": 1,
+    "newId": "design-c17-original-analytics-46052118180-closed",
+    "newRecordCanonicalSha256": "9814558b246348e594d46dc96e7bdf143652698eea723e187341bd64143b833d",
+    "priorPendingEvidenceId": "design-c17-original-analytics-46052118180",
+    "priorPendingCutUtc": "2026-11-27T18:48:04Z",
+    "historicalPendingLiteral": true
+  },
+  "protectedFields": [
+    {
+      "path": "gates",
+      "literal": true,
+      "sha256": "ef9c3f912e647cc6d344c42fc2280101fc5a96e25cce48787056b88667bbf590"
+    },
+    {
+      "path": "migrationObservations",
+      "literal": true,
+      "sha256": "d7fa2101b72f3b78171b686cbcd0c4c8f21c600507dedb51f0fe5d0a4021ebc1"
+    },
+    {
+      "path": "authorization",
+      "literal": true,
+      "sha256": "adbeefb4bfbac8378105684adcbff822bf6816919965604850f3207fb8c3663b"
+    },
+    {
+      "path": "finalCandidate",
+      "literal": true,
+      "sha256": "5bdd613413a9790de29c0d5a78070784b317b3b47142e52250b2e03bb08e5ffd"
+    },
+    {
+      "path": "environments",
+      "literal": true,
+      "sha256": "32b08d6940b3f154a0d7b6a1c1d5f49c509d36d900fd079b1a12d545c0640e66"
+    },
+    {
+      "path": "overall",
+      "literal": true,
+      "sha256": "d203c1c9054aa8142d3bb7a5b2180a105470e4e1d03e164023063c04b585c101"
+    },
+    {
+      "path": "executionThisFront",
+      "literal": true,
+      "sha256": "0468154d99da8ed2929a51b86f9081bfa89cc729695022c3cf8a84a389d20a94"
+    }
+  ],
+  "previousCurrentObservationArchived": {
+    "revision": "R6",
+    "cutUtc": "2026-11-27T18:48:04Z",
+    "manifest": {
+      "gitBlob": "7d573ea99fc7436dcb1583800615693243832576",
+      "bytes": 35566,
+      "sha256": "df60d0babb6cf0b8697e3c8bd7675b020ffd32d682bf70ceda49dbd3000fbf10"
+    },
+    "reviewReceipt": {
+      "gitBlob": "1ff71678703f579bc5f90732e813598ededf77af",
+      "bytes": 5020,
+      "sha256": "08803bfd95d1537d29e5c45125fc1d518005b7e132a7bab562782a89fe90b44d"
+    },
+    "designObservationLiteral": true,
+    "documentReviewLiteral": true,
+    "pendingInstalledArchived": true,
+    "currentPendingInstalledRemoved": true
+  },
+  "designHistory": {
+    "before": 11,
+    "after": 12,
+    "existingPrefixLiteral": true,
+    "addedR6CanonicalSha256": "576ea34ee0c3946dc0fb24b4e801a7d4e9b6aaa3c1704f3603c3b65bf545e816"
+  },
+  "reviewHistory": {
+    "before": 11,
+    "after": 12,
+    "existingPrefixLiteral": true,
+    "addedR6CanonicalSha256": "ced60603ff696536f140be7f654cb95c6c137d55d8082dca0248b2d8f75b3ca2"
+  },
+  "sourceIdentity": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "unchangedFromR6": true,
+    "sourceIsProductBranchHead": false,
+    "publicPrivateAndDevRefsNotChangedByThisRevision": true,
+    "currentState": "C17_SOURCE_FROZEN_FOCAL_PASS_ORIGINAL_ANALYTICS_NEGATIVE",
+    "successorCandidate": null,
+    "successorPatch": null,
+    "successorRun": null
+  },
+  "derivation": {
+    "kind": "ONE_CLOSED_INSTALLED_RECORD_CURRENT_STATE_UPDATE_AND_LITERAL_R6_HISTORY_APPEND",
+    "statusTopLevelChanges": [
+      "observedAtUtc",
+      "evidence",
+      "review",
+      "publication",
+      "designObservation",
+      "designObservationHistory"
+    ],
+    "statusCanonicalJsonWithLF": true,
+    "status": {
+      "format": "Each before/after value is read at the exact JSON path from the authenticated named blob; verify presence and canonical JSON value SHA256. Replace that field without disturbing sibling order. Reverse operations with before/after exchanged for inversion. Append records additionally require the full old prefix literal. Serialize JSON.stringify(value,null,2)+'\\n'.",
+      "operations": [
+        {
+          "path": [
+            "observedAtUtc"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "observedAtUtc"
+            ],
+            "canonicalValueSha256": "b2dd7a838c7ebdd99ffb3295e231cb977cfeca3602f66e7fbaf49efd186691b8"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "observedAtUtc"
+            ],
+            "canonicalValueSha256": "e82eea0579870f138ec799a03aa06219605db7d8d05016c433dfda00664931aa"
+          }
+        },
+        {
+          "path": [
+            "evidence"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "evidence"
+            ],
+            "canonicalValueSha256": "b1b820a8ec17d68357dcee0b97600fd0496773f6dd0a1ebd4abb00b901f4076e"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "evidence"
+            ],
+            "canonicalValueSha256": "14e96c5b10d7d3b681bc6c684c1f4f6aa28861899a7150b035a0b60e865592ac"
+          },
+          "append": {
+            "prefixElements": 97,
+            "appendedElements": 1,
+            "prefixLiteral": true
+          }
+        },
+        {
+          "path": [
+            "review",
+            "documentReview",
+            "scope"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "review",
+              "documentReview",
+              "scope"
+            ],
+            "canonicalValueSha256": "aae02af7bb1bfbd34775033f26cdd5147b9da34b8ea32d54fddfd0287f1a7f91"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "review",
+              "documentReview",
+              "scope"
+            ],
+            "canonicalValueSha256": "c90c9e930d5fdc043b87e8e0723eaacafacb18a2298f8d55fa247704f68dc13d"
+          }
+        },
+        {
+          "path": [
+            "review",
+            "documentReviewHistory"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "review",
+              "documentReviewHistory"
+            ],
+            "canonicalValueSha256": "a1d4d94aec33b1a7e5eef19e32ae4df9b5812296175f2255b374978b7b825a96"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "review",
+              "documentReviewHistory"
+            ],
+            "canonicalValueSha256": "4ac331b9a7566e9b003656f3274ad26dcb265e54bd1ac2d96b2f09dfb87c79f3"
+          },
+          "append": {
+            "prefixElements": 11,
+            "appendedElements": 1,
+            "prefixLiteral": true
+          }
+        },
+        {
+          "path": [
+            "publication",
+            "scope"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "publication",
+              "scope"
+            ],
+            "canonicalValueSha256": "aae02af7bb1bfbd34775033f26cdd5147b9da34b8ea32d54fddfd0287f1a7f91"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "publication",
+              "scope"
+            ],
+            "canonicalValueSha256": "c90c9e930d5fdc043b87e8e0723eaacafacb18a2298f8d55fa247704f68dc13d"
+          }
+        },
+        {
+          "path": [
+            "publication",
+            "observationCutUtc"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "publication",
+              "observationCutUtc"
+            ],
+            "canonicalValueSha256": "b2dd7a838c7ebdd99ffb3295e231cb977cfeca3602f66e7fbaf49efd186691b8"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "publication",
+              "observationCutUtc"
+            ],
+            "canonicalValueSha256": "e82eea0579870f138ec799a03aa06219605db7d8d05016c433dfda00664931aa"
+          }
+        },
+        {
+          "path": [
+            "publication",
+            "stateSource"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "publication",
+              "stateSource"
+            ],
+            "canonicalValueSha256": "6c2c22df23af7f4af27833299b25d7756bbf9e4c69fc4389bc9212dedf7c1b79"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "publication",
+              "stateSource"
+            ],
+            "canonicalValueSha256": "58f59b84ae7b25d74f9fac5df4076ef5f00de8f1a81a9f25fbdc0cb121cd07b7"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "state"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "state"
+            ],
+            "canonicalValueSha256": "d1b66768825931c09ddd95e21fdfc455b29741cd8cb995d62ad9e680f6baa075"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservation",
+              "state"
+            ],
+            "canonicalValueSha256": "b7e0d09b8f2c7155de5ff200fb0338a993d1a141b56f1894cf6bca448e6c7ca4"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "currentProductSource"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "currentProductSource"
+            ],
+            "canonicalValueSha256": "6e4fe04e4427ca7183f6728c9e8839cc9ec21b7b608876ced88ec65cd92f6e7b"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservation",
+              "currentProductSource"
+            ],
+            "canonicalValueSha256": "2d2c2258a7b5b3475c8d0a642ddadfd82bc139090a44f0d94a2da7820e636e2b"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "latestInstalled"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "latestInstalled"
+            ],
+            "canonicalValueSha256": "e42b5ca3055ac7d5c7d04741734f0a540cd51128e35ef8292427b472af370ef2"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservation",
+              "latestInstalled"
+            ],
+            "canonicalValueSha256": "271fb4a2fbf86a7f013a8b0ddbb759194f7c1e59b884ec23bfc6ce793843cb2c"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "currentReviewBlocker"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "currentReviewBlocker"
+            ],
+            "canonicalValueSha256": "dc55383799d4e8ced104153a6c3bfdbf32e4a46910e7377119057ab49b22ac70"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservation",
+              "currentReviewBlocker"
+            ],
+            "canonicalValueSha256": "09fcde7e35d28e21a24bc66d68783e78656cd22fb75f5aa1a841a65c6f6853c5"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "independentIntakeRef"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "independentIntakeRef"
+            ],
+            "canonicalValueSha256": "30756120fce4be341e243f0cd6c276c52211f280736679b2d1837653fb39d9e3"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservation",
+              "independentIntakeRef"
+            ],
+            "canonicalValueSha256": "0270385130af7e35a7074fa2f5a335c4b3ae070ec0e028b8d22e42f69ae34ddc"
+          }
+        },
+        {
+          "path": [
+            "designObservation",
+            "pendingInstalled"
+          ],
+          "beforePresent": true,
+          "afterPresent": false,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservation",
+              "pendingInstalled"
+            ],
+            "canonicalValueSha256": "9a7f5c5be86d9e2e9ca6bee3725a2a305dd7dc257b1b19e16809957a2e339927"
+          },
+          "after": null
+        },
+        {
+          "path": [
+            "designObservationHistory"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": {
+            "fromBlob": "d336b53bb7b1142405bbc71435196f4a93108033",
+            "path": [
+              "designObservationHistory"
+            ],
+            "canonicalValueSha256": "258fa15295717d73d572799b53d113429c1370bee2341fe6e56da505227a0c59"
+          },
+          "after": {
+            "fromBlob": "420e9580f64fb4fe8fad9a9279f78d4f43b5457a",
+            "path": [
+              "designObservationHistory"
+            ],
+            "canonicalValueSha256": "7ffba0b2d1605c9847c2b57933be3800ef5d0d2d4ccfa9fa6b598e7beeb98128"
+          },
+          "append": {
+            "prefixElements": 11,
+            "appendedElements": 1,
+            "prefixLiteral": true
+          }
+        }
+      ],
+      "fieldOperations": 14,
+      "wholeForwardLiteral": true,
+      "wholeInverseLiteral": true
+    },
+    "readme": {
+      "kind": "NEW_R7_PREFIX_PLUS_ENTIRE_R6_PLUS_DETAILS_CLOSER",
+      "prefixBytes": 6019,
+      "prefixSha256": "ece4bfd2b64bc9347260f7c271e4f91d0fc88e2320536fbe8f59230bdda0816d",
+      "suffix": "\n</details>\n",
+      "fullPriorTextOccurrences": 1
+    },
+    "execution": {
+      "kind": "EXACT_R6_PLUS_R7_APPEND",
+      "appendBytes": 5834,
+      "appendSha256": "82b3faeac9ebb917c80e87a7d71b70b694430c17255a1b5a8320dc1cbadad337"
+    }
+  },
+  "goLive": {
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "state": "NOT_READY",
+    "migrationObservations": 10,
+    "productionApproval": null,
+    "protectedAuthorizationUnchanged": true,
+    "finalCandidateUnchanged": true
+  },
+  "currentAnalytics": {
+    "run": 46052118180,
+    "attempt": 1,
+    "status": "CLOSED_NEGATIVE",
+    "conclusion": "failure",
+    "passed": 1,
+    "failed": 1,
+    "total": 2,
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "sourceTree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "snapshot": "7603f10c7d10a76f901425f659ee40448ee6cdfd",
+    "snapshotTree": "aa774f70dc197926561857711a9faf5c080f008c",
+    "snapshotSoleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "delta": "1A original295B request only",
+    "receipt": {
+      "gitBlob": "bb3a76252a7be38694c900ab32e70855ff471aef",
+      "bytes": 26111,
+      "sha256": "96af17f9e4a0d142f3ffe6128ef413c692424374c8f5f3eec762c9d24fcbf965"
+    },
+    "rawManifest": {
+      "gitBlob": "0031a8430373df98e4fff6f5ad458301a9e29654",
+      "bytes": 8148,
+      "sha256": "65b94be5e1368a644299749c6c74df716ff6cc0969205489bf51c912adfb3afe"
+    },
+    "firstCase": {
+      "failure": "page.waitForResponse timeout60000",
+      "site": "design-wave-five-analytics.spec.ts:72:32",
+      "requestSequence": 3,
+      "requestTimestamp": "2026-11-27T18:54:14.9878088Z",
+      "method": "POST",
+      "ownerBinding": "exact",
+      "matchingNativeResponseObserved": false,
+      "UI42Captures": 6,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "cause": null,
+      "currentCpuProfile": false,
+      "finalServerOutcomeAfterBrowserClosure": null
+    },
+    "secondCase": {
+      "status": "passed",
+      "UI45Captures": 7,
+      "UI46Captures": 33,
+      "BI06EnglishHttp": 200,
+      "BI06PortugueseHttp": 200,
+      "negativeSourceHttp": 403,
+      "negativeReason": "bi-source-outside-selected-value",
+      "catalogViews": 11,
+      "fabricatedResult": false,
+      "earlierCancellationCauseCorrected": null
+    },
+    "main": {
+      "job": 140685741835,
+      "bytes": 4869189,
+      "sha256": "3b58e6e78c33bf6579fda19bb4e060886a7b9e71604e4290ccb727b244b9961d",
+      "actualParts": 17,
+      "wholeGitBlobCalculated": "ed3a1b751c8ab2f91238534e396c0cccbbe2875e",
+      "wholeBlobPersisted": false
+    },
+    "cleanup": {
+      "job": 140689486169,
+      "gitBlob": "5f5382e2b394ca2a9bb6880229ac0f7436363488",
+      "bytes": 2281,
+      "sha256": "73b3e73aa2862574776b3135405bea2e75d89465d6b1d5793a7d7041ecb55376",
+      "wholeBlobPersisted": true,
+      "literalReadback": true,
+      "lf": 39,
+      "bomCodeUnitOffsets": [
+        0
+      ]
+    },
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1,
+      "artifactZip": 0,
+      "auditZip": 0
+    },
+    "preservedBeforeInterpretation": true,
+    "originalAcquisitionsClosed": true,
+    "markerUnion": {
+      "gitBlob": "c9ddd4f41df72cfb2ff8448805a72e03beb5cf5e",
+      "bytes": 34168,
+      "sha256": "2bc4682e592e5742deea6e4ad1ba84218191263633a136188c5f2563ae2bbf8f"
+    },
+    "markerRecords": 96,
+    "reporterSections": [
+      {
+        "case": 1,
+        "records": 33,
+        "bytes": 5856,
+        "sha256": "c3fe82a57eec2ccdfdd28e4c9df8d93ffa7ea117013f427789a68d303e7758e5"
+      },
+      {
+        "case": 2,
+        "records": 63,
+        "bytes": 28312,
+        "sha256": "c70a03151fe79f13a6aa523df0433bc63242ef5eec93ab1b9c7da8c84ca8650d"
+      }
+    ],
+    "artifactRuntimeCaseResultStdoutBinding": false,
+    "artifact": {
+      "id": 15225815949,
+      "bytes": 45840255,
+      "digest": "sha256:7c4be14b501bd7b516502269e57f858c8f6de1b273d764d5686e9496d0868e9e",
+      "state": "METADATA_ONLY",
+      "zipGets": 0,
+      "runtimeJsonReceived": false,
+      "crcVerified": false,
+      "visualReviewPerformed": false,
+      "traceOrNetworkAvailability": "not inspected"
+    },
+    "runtime": {
+      "observed": "1.3.14+0d9b296af",
+      "fullRevisionObserved": false
+    },
+    "independentIntake": {
+      "reviewer": "/root/focal_migration",
+      "status": "ACK",
+      "findings": [],
+      "rootChecks": 28,
+      "originalsNotReacquiredByPeer": true
+    },
+    "qualification": false
+  },
+  "preservedCurrentReferences": {
+    "focal": {
+      "literal": true,
+      "runId": 46051100090,
+      "state": "CLOSED_PASS",
+      "receipt": {
+        "gitBlob": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+        "bytes": 63985,
+        "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b"
+      },
+      "canonicalObjectSha256": "da278ce166cd50a7135addd515607b779a8397eaa835f3111379e87daa3e03bf"
+    },
+    "d26": {
+      "literal": true,
+      "manifest": {
+        "gitBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+        "bytes": 50155,
+        "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f"
+      },
+      "review": {
+        "gitBlob": "ce6090bad72629a9eab229a997f60aa16677cd09",
+        "bytes": 4747,
+        "sha256": "62c08d25a9b7053a4e96d51d03d8258082ec6bbb08308d08a4d1cee26508675c"
+      },
+      "finalBindings": "UNBOUND",
+      "executed": false,
+      "wholeFunctionalCount": null,
+      "canonicalObjectSha256": "3cec72794fd1d1153c6908e37c9869aea163c02aca069dea153cf3f7634b4589"
+    },
+    "evidenceArchive": {
+      "literal": true,
+      "ref": "refs/heads/sf613-evidence",
+      "commit": "df0bd54bd624779b9d28836a8a4464dcf0a58ba3",
+      "tree": "d151671b1ada10ba90a1d20eaa33de2fffef6608",
+      "newIncrementByThisWriter": false,
+      "thisR7IncludedInPublishedFirstIncrement": false
+    },
+    "operationalObservation": {
+      "evidenceId": "operational-access-observation-2026-11-27-183630",
+      "cutUtc": "2026-11-27T18:36:30Z",
+      "refreshedByThisRevision": false,
+      "reservationsPromoted": false,
+      "identitiesGrantsPromoted": false,
+      "deviceUsed": false
+    },
+    "E11Diagnostic": {
+      "literal": true,
+      "currentC17Measurement": false
+    }
+  },
+  "nextDiagnosis": {
+    "sourceFrozen": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "status": "OPEN",
+    "C18Formulated": false,
+    "newCandidate": null,
+    "newPatch": null,
+    "newRun": null,
+    "newObserver": false
+  },
+  "review": {
+    "status": "PENDING_INDEPENDENT_ROOT_DOCUMENT_REVIEW",
+    "formalProductionApproval": false,
+    "priorR6ReviewAcceptedDraftOnly": true,
+    "currentC17IntakeClosedByRootAndFocal": true,
+    "newIntakeByThisWriter": false
+  },
+  "authorChecks": [
+    {
+      "name": "R6-base-status",
+      "pass": true
+    },
+    {
+      "name": "R6-base-readme",
+      "pass": true
+    },
+    {
+      "name": "R6-base-execution",
+      "pass": true
+    },
+    {
+      "name": "R6-review-exact",
+      "pass": true
+    },
+    {
+      "name": "protected-gates",
+      "pass": true,
+      "detail": "ef9c3f912e647cc6d344c42fc2280101fc5a96e25cce48787056b88667bbf590"
+    },
+    {
+      "name": "protected-migrationObservations",
+      "pass": true,
+      "detail": "d7fa2101b72f3b78171b686cbcd0c4c8f21c600507dedb51f0fe5d0a4021ebc1"
+    },
+    {
+      "name": "protected-authorization",
+      "pass": true,
+      "detail": "adbeefb4bfbac8378105684adcbff822bf6816919965604850f3207fb8c3663b"
+    },
+    {
+      "name": "protected-finalCandidate",
+      "pass": true,
+      "detail": "5bdd613413a9790de29c0d5a78070784b317b3b47142e52250b2e03bb08e5ffd"
+    },
+    {
+      "name": "protected-environments",
+      "pass": true,
+      "detail": "32b08d6940b3f154a0d7b6a1c1d5f49c509d36d900fd079b1a12d545c0640e66"
+    },
+    {
+      "name": "protected-overall",
+      "pass": true,
+      "detail": "d203c1c9054aa8142d3bb7a5b2180a105470e4e1d03e164023063c04b585c101"
+    },
+    {
+      "name": "protected-executionThisFront",
+      "pass": true,
+      "detail": "0468154d99da8ed2929a51b86f9081bfa89cc729695022c3cf8a84a389d20a94"
+    },
+    {
+      "name": "first-97-evidence-literal",
+      "pass": true
+    },
+    {
+      "name": "one-appended-record",
+      "pass": true
+    },
+    {
+      "name": "R6-design-archive-literal",
+      "pass": true
+    },
+    {
+      "name": "R6-review-archive-literal",
+      "pass": true
+    },
+    {
+      "name": "R6-pending-preserved-historically",
+      "pass": true
+    },
+    {
+      "name": "no-current-pending",
+      "pass": true
+    },
+    {
+      "name": "focal-C17-literal",
+      "pass": true
+    },
+    {
+      "name": "source-identity-literal",
+      "pass": true
+    },
+    {
+      "name": "current-D26-literal",
+      "pass": true
+    },
+    {
+      "name": "archive-and-external-pointers-literal",
+      "pass": true
+    },
+    {
+      "name": "E11-historical-literal",
+      "pass": true
+    },
+    {
+      "name": "current-installed-C17",
+      "pass": true
+    },
+    {
+      "name": "one-fail-one-pass",
+      "pass": true
+    },
+    {
+      "name": "receipt-current",
+      "pass": true
+    },
+    {
+      "name": "source-snapshot-sole-parent",
+      "pass": true
+    },
+    {
+      "name": "raw-linked",
+      "pass": true
+    },
+    {
+      "name": "whole-hash-not-persisted",
+      "pass": true
+    },
+    {
+      "name": "preview-current-facts",
+      "pass": true
+    },
+    {
+      "name": "partial-UI-scope",
+      "pass": true
+    },
+    {
+      "name": "BI-case-current",
+      "pass": true
+    },
+    {
+      "name": "union-current",
+      "pass": true
+    },
+    {
+      "name": "artifact-metadata-only",
+      "pass": true
+    },
+    {
+      "name": "no-causal-or-new-CPU-claim",
+      "pass": true
+    },
+    {
+      "name": "C18-unformulated",
+      "pass": true
+    },
+    {
+      "name": "scope-12-of-15-0-new",
+      "pass": true
+    },
+    {
+      "name": "go-live-0-of-5",
+      "pass": true
+    },
+    {
+      "name": "ten-Migration-five-gates",
+      "pass": true
+    },
+    {
+      "name": "R6-README-entire-once",
+      "pass": true
+    },
+    {
+      "name": "execution-append-only",
+      "pass": true
+    },
+    {
+      "name": "explicit-cut",
+      "pass": true
+    },
+    {
+      "name": "canonical-json",
+      "pass": true
+    },
+    {
+      "name": "only-six-status-top-levels",
+      "pass": true,
+      "detail": [
+        "observedAtUtc",
+        "evidence",
+        "review",
+        "publication",
+        "designObservation",
+        "designObservationHistory"
+      ]
+    },
+    {
+      "name": "coordination-and-original-review-content-literal",
+      "pass": true
+    }
+  ],
+  "derivationChecks": {
+    "statusFieldOperations": 14,
+    "wholeForwardLiteral": true,
+    "wholeInverseLiteral": true,
+    "readmeWholeR6ExactlyOnce": true,
+    "executionExactPrefix": true
+  },
+  "mutations": {
+    "byThisWriter": {
+      "documentPostimageBlobs": 3,
+      "manifestBlobs": 1,
+      "productEdits": 0,
+      "executableEdits": 0,
+      "trees": 0,
+      "commits": 0,
+      "refs": 0,
+      "runs": 0,
+      "prChanges": 0,
+      "comments": 0,
+      "originalLogGets": 0,
+      "zipGets": 0,
+      "deviceCommands": 0
+    },
+    "readback": "Each postimage was read back literally and authenticated before this manifest."
+  },
+  "limits": [
+    "R6's in_progress observation remains correct for18:48:04Z and is preserved literally in history. R7 closes the actual run at its19:08:31Z documentary cut.",
+    "The current original first-preview timeout remains unresolved. Missing response markers do not establish the final fate of the server operation after browser closure or a causal CPU/latency conclusion.",
+    "The original BI case passed only for this S17/run; it does not prove the cause of an earlier cancellation was corrected or qualify UI42–44.",
+    "C17 focal PASS remains literal and source-bound. No final D26/UI6, Migration, Release or production qualification is transferred.",
+    "The artifact remains metadata-only. Zero ZIP GET means no current PNG/CRC/runtime JSON/trace/network intake; absence of receipt is not absence of files.",
+    "S17 stays frozen with diagnosis open; no C18 is formulated by this update. No new access, reservation, ref, artifact or archive-increment acquisition is performed.",
+    "These are only three revised documentary drafts plus their manifest. All97 prior evidence records,seven protected objects,ten Migration observations,five gates and prior histories remain intact."
+  ]
+}

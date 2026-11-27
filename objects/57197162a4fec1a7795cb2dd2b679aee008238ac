@@ -1,0 +1,1121 @@
+{
+  "schema": "sf613-d26-c17-documentary-derivation/v1",
+  "status": "DRAFT_UNBOUND_DOCUMENTARY_ONLY",
+  "author": "/root/focal_migration",
+  "authority": "Root requested C16-to-C17 documentary draft and incorporation of the closed focal as a historical prerequisite; no D26 execution, final binding or source qualification follows.",
+  "base": {
+    "manifest": {
+      "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+      "bytes": 38243,
+      "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+      "lf": 981
+    },
+    "bounds": {
+      "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+      "bytes": 25101,
+      "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+      "lf": 744
+    },
+    "derivation": {
+      "git": "ae3a5e6705de8c80ffdb8f0715c666710809c922",
+      "bytes": 40977,
+      "sha256": "c22de64650824484c9158f4b6cbe329dde3fca0a364c39164f2d29f1aea30fc7",
+      "lf": 1101
+    }
+  },
+  "files": [
+    {
+      "name": "manifest",
+      "pre": {
+        "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+        "bytes": 38243,
+        "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+        "lf": 981
+      },
+      "post": {
+        "git": "2b660b737a80526b14f9406a5934ba23681968d8",
+        "bytes": 50155,
+        "sha256": "0c5f504128ab2ed64c17856d9fddf197cc66637d6f8a968b0243382df70c154f",
+        "lf": 1284
+      },
+      "fieldChangeCount": 21,
+      "changes": [
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "gitSha"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+          "after": "da41241cfe00ef5e482d652e041451a30c63dfbb"
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 25101,
+          "after": 35765
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+          "after": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be"
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "lf"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 744,
+          "after": 1019
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "gitBlob"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+          "after": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 70284,
+          "after": 87176
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+          "after": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69"
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "c17NestedIdentityProjection"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "report": "SF_C16_SELECTION_CONTROL",
+            "path": "identityProjection.cases",
+            "expectedCount": 9,
+            "expectedNames": [
+              "mixed-map-and-detached-readonly",
+              "mixed-map-and-detached-preimage",
+              "composed-identity-first-authorization-drift",
+              "composed-identity-second-authorization-drift",
+              "restored-codec-birth-keeps-complete-case",
+              "restored-codec-exposure-keeps-complete-case",
+              "cold-plan-birth-survives-restore-and-memo",
+              "owner-weakmap-escape-latches-across-roots",
+              "owner-als-escape-latches-across-roots"
+            ]
+          }
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "gitSha"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+          "after": "da41241cfe00ef5e482d652e041451a30c63dfbb"
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 25101,
+          "after": 35765
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+          "after": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be"
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "lf"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 744,
+          "after": 1019
+        },
+        {
+          "path": [
+            "futureIntake",
+            "note"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The inherited envelope checks26 outer cases and the native Omni verdict. All37 actual argv/cwd/exit receipts,74false truncation flags,six isolated proof children and complete current C12/C14/C15/C16 reports require explicit original-log intake. G26 contributes two C14,two C15 and one C16 reports; C15 has four and fifteen outcome rows and C16 has31. The separate C16 focal expectation of12 functional tests/eight reports is not the whole D26 count, which remains null. No parser or silent automatic gate is added.",
+          "after": "The inherited envelope checks26 outer cases and the native Omni verdict. Intake must receive all37 actual argv/cwd/exit receipts,74false truncation flags,six isolated proof children and complete current C12/C14/C15/C16 reports. G26 contributes two C14,two C15 and one C16 reports; C15 has four and fifteen outcomes,C16 keeps31 and carries9 nested identityProjection.cases for C17. There is no SF_C17 report family,extra declaration or parser. The separate focal12/eight requirement is not the whole D26 functional count,which remains null."
+        },
+        {
+          "path": [
+            "futureIntake",
+            "currentC17NestedIdentityProjectionRequired"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": true
+        },
+        {
+          "path": [
+            "futureIntake",
+            "currentC17IdentityProjectionCasesExpected"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 9
+        },
+        {
+          "path": [
+            "futureIntake",
+            "currentC17IdentityProjectionCaseNames"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": [
+            "mixed-map-and-detached-readonly",
+            "mixed-map-and-detached-preimage",
+            "composed-identity-first-authorization-drift",
+            "composed-identity-second-authorization-drift",
+            "restored-codec-birth-keeps-complete-case",
+            "restored-codec-exposure-keeps-complete-case",
+            "cold-plan-birth-survives-restore-and-memo",
+            "owner-weakmap-escape-latches-across-roots",
+            "owner-als-escape-latches-across-roots"
+          ]
+        },
+        {
+          "path": [
+            "concretization",
+            "1"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "Receive the actual final C613 tree and reconcile the C16 Provider/test references plus the preserved C15R contract/SourceLifecycle/LocalStore and unchanged C14 CurrentChoice/ACL-authorizer/ProductAuthority references before binding. These eight reference leaves are documentary; do not restore historical full files or assume a final source pin. The remaining source/UI recipe is unchanged.",
+          "after": "Receive the actual final C613 tree and reconcile the C17 contract/LocalStore/Provider/test references plus the unchanged clean SourceLifecycle/CurrentChoice/ACL-authorizer/ProductAuthority references before binding. These eight documentary reference leaves do not prescribe restoration of historical files or bind final source pins; the remaining source/UI recipe stays unchanged."
+        },
+        {
+          "path": [
+            "limits",
+            "2"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The preserved currentC14Reference, currentC15Reference and earlier revision records are historical cuts. currentC16Reference is the active documentary reference only and does not bind final C613. The fixed inherited English-copy commit remains historical; current origin/dev is observed by the unchanged guard group.",
+          "after": "The preserved currentC14Reference,currentC15Reference,currentC16Reference and prior revisions are historical cuts. currentC17Reference is active documentary input only and does not bind final C613. The inherited English-copy commit remains historical; the unchanged guard group observes current origin/dev."
+        },
+        {
+          "path": [
+            "limits",
+            "3"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The unchanged G26 whole-file command covers five current declarations and five reports once. Its historical C14 title and literal reviewed block remain unchanged; the mixed cooperative/Bun deadlines are110/120s for C14,18/20s for C15 and8/10s for C16. Nominal Bun290s/cooperative264s leaves10s to the unchanged300s process cap; the parent remains360s. Whole D26 functional count stays null; no focal result or product/UI qualification is transferred.",
+          "after": "G26's unchanged whole-file command still covers five declarations and five reports once. The C16 report retains31 outcomes and adds9 nested C17 identityProjection.cases; no declaration,report family,parser or deadline is added. Cooperative/Bun deadlines remain110/120s for C14,18/20s for C15,and8/10s for C16. Nominal290s/264s leaves10s to the unchanged300s process cap,with360s parent. Whole D26 functional count remains null and no focal result or product/UI qualification is transferred."
+        },
+        {
+          "path": [
+            "currentC17Reference"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "scope": "Current C17 documentary reference only. Final C613 and the four D26 binding parameters remain UNBOUND. C14/C15/C16 objects are preserved historical cuts.",
+            "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+            "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+            "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+            "sourceManifest": {
+              "gitSha": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+              "bytes": 18155,
+              "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78"
+            },
+            "sourceBounds": {
+              "gitSha": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+              "bytes": 9394,
+              "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8"
+            },
+            "sourceObjectSupplement": {
+              "gitSha": "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+              "bytes": 5487,
+              "sha256": "97592ee88f59998c7dfd6caaa66b11570428f612338fbdca3d757be7d0cf502e"
+            },
+            "changedProductPins": [
+              {
+                "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+                "preimage": "8bdc12d191a76137cd2244e01990f7a780091216",
+                "gitBlob": "39e6da84a3dd815721484affaf8315731ded073b",
+                "bytes": 8973,
+                "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+                "finalC613Blob": "UNBOUND"
+              },
+              {
+                "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+                "preimage": "d02bcbfc770719935dcaca97cc20045b656f784d",
+                "gitBlob": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+                "bytes": 96231,
+                "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+                "finalC613Blob": "UNBOUND"
+              },
+              {
+                "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+                "preimage": "550236df66f1e02e5111a1eee23579e76178bc6b",
+                "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+                "bytes": 67334,
+                "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+                "finalC613Blob": "UNBOUND"
+              }
+            ],
+            "test": {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+              "preimage": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+              "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+              "bytes": 87176,
+              "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+              "lf": 1462,
+              "declarations": 5,
+              "preservedDeclarations": 5,
+              "addedC17Declarations": 0,
+              "reports": 5,
+              "addedC17ReportFamilies": 0,
+              "reportFamilies": {
+                "SF_C14_SNAPSHOT_CONTROL": 2,
+                "SF_C15_SELECTION_CONTROL": 2,
+                "SF_C16_SELECTION_CONTROL": 1
+              },
+              "c15OutcomeRows": [
+                4,
+                15
+              ],
+              "c16OutcomeRows": [
+                31
+              ],
+              "c17IdentityProjection": {
+                "report": "SF_C16_SELECTION_CONTROL",
+                "path": "identityProjection.cases",
+                "expectedCount": 9,
+                "expectedNames": [
+                  "mixed-map-and-detached-readonly",
+                  "mixed-map-and-detached-preimage",
+                  "composed-identity-first-authorization-drift",
+                  "composed-identity-second-authorization-drift",
+                  "restored-codec-birth-keeps-complete-case",
+                  "restored-codec-exposure-keeps-complete-case",
+                  "cold-plan-birth-survives-restore-and-memo",
+                  "owner-weakmap-escape-latches-across-roots",
+                  "owner-als-escape-latches-across-roots"
+                ]
+              },
+              "wholeFileNoNameFilter": true,
+              "finalC613Blob": "UNBOUND"
+            },
+            "perTestBudgetsByGeneration": {
+              "inheritedC14": {
+                "declarations": 2,
+                "cooperativePerTestMs": 110000,
+                "bunPerTestMs": 120000
+              },
+              "addedC15": {
+                "declarations": 2,
+                "cooperativePerTestMs": 18000,
+                "bunPerTestMs": 20000
+              },
+              "addedC16": {
+                "declarations": 1,
+                "cooperativePerTestMs": 8000,
+                "bunPerTestMs": 10000
+              }
+            },
+            "nominalBunSumMs": 290000,
+            "nominalCooperativeSumMs": 264000,
+            "nominalMarginToProcessMs": 10000,
+            "processMs": 300000,
+            "outerMs": 360000,
+            "unchangedReferencePaths": "SourceLifecycle, CurrentChoice, ACL authorizer and ProductAuthority remain the preserved clean references; no observer is added. Reconcile all referenced paths against actual final C613.",
+            "focalReference": {
+              "manifest": {
+                "gitSha": "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+                "bytes": 24170,
+                "sha256": "cb9b8a30c9354ce9f9fb8d5cf4ea354b33b741c8d23c49d00a40e548b62ae8be"
+              },
+              "bounds": {
+                "gitSha": "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+                "bytes": 16947,
+                "sha256": "cb18c136132293550141ffe93f303d37eb7a16aec191a9933ffc1a22a9cdffc8"
+              },
+              "driver": {
+                "gitSha": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+                "bytes": 10891,
+                "sha256": "eb2ea447e2e95f53a96660c6db64cc68a0df06e3efbe423c7f52dfd321f32b77"
+              },
+              "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+              "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+              "authority": {
+                "gitSha": "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+                "bytes": 19576,
+                "sha256": "8d7b2e77fb3cfa540a1be864be1906b004a03d6e1208da6298c8fac306dfb6b9"
+              },
+              "reportedRun": "46051100090",
+              "reportedAttempt": 1,
+              "functionalDeclarationsExpected": 12,
+              "controlReportsExpected": 8,
+              "notWholeD26Count": true,
+              "result": {
+                "status": "CLOSED_PASS_LIMITED_FOCAL",
+                "scope": "Historical prerequisite from this exact C17 focal; not a D26, original Analytics, Release or product qualification.",
+                "rootReceipt": {
+                  "gitSha": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+                  "bytes": 63985,
+                  "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b",
+                  "locatorProvenance": "root reported; independent same-log intake by focal_migration"
+                },
+                "rawManifest": {
+                  "gitSha": "3a7ce980f7863c3fd3cf27766e65302de09046a0",
+                  "bytes": 2227,
+                  "sha256": "20d7f0437e5d0b96d93cffb637374301c835f13a70c804bb0953e7fc460e3d8a"
+                },
+                "functionalPass": 12,
+                "functionalFail": 0,
+                "functionalAssertions": 1052,
+                "outerPass": 6,
+                "outerFail": 0,
+                "outerAssertions": 29,
+                "reports": 8,
+                "c16Outcomes": 31,
+                "c17IdentityProjectionCases": 9,
+                "commandsExitZero": 12,
+                "truncationFlagsFalse": 24,
+                "cliTypesExit": 0,
+                "sucafinaTypesExit": 0,
+                "guards": {
+                  "rules": 78,
+                  "files": 856,
+                  "warnings": 40,
+                  "errors": 0,
+                  "approved": 0
+                },
+                "omni": {
+                  "declared": 6,
+                  "spawned": 12,
+                  "delegated": 0
+                },
+                "resultTransferredToD26": false
+              },
+              "assertionCount": 1052,
+              "completedAt": "2026-11-27T18:42:15Z"
+            },
+            "qualificationTransferred": false,
+            "limits": [
+              "Reference pins do not bind final C613 or establish a D26 result.",
+              "The same five whole-file declarations retain their original deadlines; nine C17 cases are nested in the existing C16 report.",
+              "Readonly body reduction and full preimage fallback are distinct oracles; no current CPU/latency or original Analytics acceptance is inferred.",
+              "The nominal10-second process margin does not guarantee setup, scheduling, teardown or reap."
+            ]
+          }
+        },
+        {
+          "path": [
+            "c17DocumentaryRevision"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "author": "/root/focal_migration",
+            "authority": "Root requested the documentary C16-to-C17 draft and then authorized incorporation of the closed C17 focal as a historical prerequisite only. No executable or final binding changes.",
+            "status": "DRAFT_UNBOUND_FOCAL_RECEIVED_NO_QUALIFICATION_TRANSFER",
+            "baseManifest": {
+              "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+              "bytes": 38243,
+              "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+              "lf": 981
+            },
+            "baseBounds": {
+              "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+              "bytes": 25101,
+              "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+              "lf": 744
+            },
+            "baseDerivation": {
+              "git": "ae3a5e6705de8c80ffdb8f0715c666710809c922",
+              "bytes": 40977,
+              "sha256": "c22de64650824484c9158f4b6cbe329dde3fca0a364c39164f2d29f1aea30fc7",
+              "lf": 1101
+            },
+            "scope": "Update only active source/test references, nine nested C17 report oracles and related locators. Record the received C17 focal as historical prerequisite without qualifying D26 or Analytics. Preserve all earlier reference/revision objects literally.",
+            "selectionUnchanged": {
+              "wholeFileDeclarations": 5,
+              "wholeFileReports": 5,
+              "c16Outcomes": 31,
+              "addedC17Declarations": 0,
+              "addedC17Reports": 0
+            },
+            "nestedC17Expected": {
+              "report": "SF_C16_SELECTION_CONTROL",
+              "field": "identityProjection.cases",
+              "count": 9,
+              "names": [
+                "mixed-map-and-detached-readonly",
+                "mixed-map-and-detached-preimage",
+                "composed-identity-first-authorization-drift",
+                "composed-identity-second-authorization-drift",
+                "restored-codec-birth-keeps-complete-case",
+                "restored-codec-exposure-keeps-complete-case",
+                "cold-plan-birth-survives-restore-and-memo",
+                "owner-weakmap-escape-latches-across-roots",
+                "owner-als-escape-latches-across-roots"
+              ]
+            },
+            "preserved": {
+              "executables": 4,
+              "outerGroups": 26,
+              "syntacticSites": 32,
+              "commands": 37,
+              "truncationFlags": 74,
+              "proofChildren": 6,
+              "G1Through25Literal": true,
+              "G26Literal": true,
+              "G6Literal": true,
+              "globalMinutes": [
+                35,
+                40,
+                45
+              ],
+              "finalBindingParameters": 4,
+              "finalBindingsState": "UNBOUND",
+              "wholeD26FunctionalCount": null,
+              "bunNominalMs": 290000,
+              "cooperativeNominalMs": 264000,
+              "processMs": 300000,
+              "parentMs": 360000
+            },
+            "history": "Internal 'current' labels in preserved reference/revision objects describe their own historical cuts; the appended C17 reference is active only as documentary input.",
+            "qualificationTransferred": false,
+            "actions": {
+              "plannedDocumentBlobs": 3,
+              "executableChanges": 0,
+              "trees": 0,
+              "commits": 0,
+              "refs": 0,
+              "runs": 0,
+              "originalLogGets": 0,
+              "zipGets": 0
+            }
+          }
+        }
+      ],
+      "forwardWholeTextExact": true,
+      "inverseWholeTextExact": true
+    },
+    {
+      "name": "bounds",
+      "pre": {
+        "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+        "bytes": 25101,
+        "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+        "lf": 744
+      },
+      "post": {
+        "git": "da41241cfe00ef5e482d652e041451a30c63dfbb",
+        "bytes": 35765,
+        "sha256": "bdc4ab7a8d916143476f73f6cbc611fdfa0456231afec01eab3112af507285be",
+        "lf": 1019
+      },
+      "fieldChangeCount": 5,
+      "changes": [
+        {
+          "path": [
+            "wrapper",
+            "groupInventory",
+            "25",
+            "c17NestedIdentityProjectionOracles"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 9
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "7"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The envelope still verifies the outer26-case summary and native Omni verdict. Reconciliation of37 actual commands/74false truncation flags,six proof children,two C14 reports,two C15 reports (four and fifteen outcomes) and one C16 report (31 outcomes) remains an explicit intake obligation. No parser is introduced. The separate C16 focal's12 functional tests/eight reports are not the whole D26 functional count, which remains null.",
+          "after": "The envelope still verifies the outer26-case summary and native Omni verdict. Intake must reconcile37 actual commands/74false truncation flags,six proof children,two C14 reports,two C15 reports (four and fifteen outcomes),and one C16 report with31 outcomes plus9 nested identityProjection.cases for C17. No new report family or parser is added. Twelve functional tests/eight reports describe only the separate focal; whole D26 functional count remains null."
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "9"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The preserved c14Reference,c15Reference and earlier documentary/type-repair revisions are historical. c16Reference is the active documentary reference; its Provider/test plus the preserved C15R/C14 reference leaves must be reconciled against actual final C613 before the four bindings are resolved. No final source or qualification follows from a reference pin.",
+          "after": "The preserved c14Reference,c15Reference,c16Reference and earlier revisions are historical. c17Reference supplies the active documentary contract/LocalStore/Provider/test pins and source/focal locators. Reconcile those and the unchanged clean reference leaves against actual final C613 before resolving the four bindings; no source qualification follows from a reference pin."
+        },
+        {
+          "path": [
+            "c17Reference"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "scope": "Current C17 documentary reference only. Final C613 and the four D26 binding parameters remain UNBOUND. C14/C15/C16 objects are preserved historical cuts.",
+            "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+            "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+            "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+            "sourceManifest": {
+              "gitSha": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+              "bytes": 18155,
+              "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78"
+            },
+            "sourceBounds": {
+              "gitSha": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+              "bytes": 9394,
+              "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8"
+            },
+            "sourceObjectSupplement": {
+              "gitSha": "10279d163b1930a325fdaa1d4c5c365a18ecf773",
+              "bytes": 5487,
+              "sha256": "97592ee88f59998c7dfd6caaa66b11570428f612338fbdca3d757be7d0cf502e"
+            },
+            "changedProductPins": [
+              {
+                "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+                "preimage": "8bdc12d191a76137cd2244e01990f7a780091216",
+                "gitBlob": "39e6da84a3dd815721484affaf8315731ded073b",
+                "bytes": 8973,
+                "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+                "finalC613Blob": "UNBOUND"
+              },
+              {
+                "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+                "preimage": "d02bcbfc770719935dcaca97cc20045b656f784d",
+                "gitBlob": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+                "bytes": 96231,
+                "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+                "finalC613Blob": "UNBOUND"
+              },
+              {
+                "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+                "preimage": "550236df66f1e02e5111a1eee23579e76178bc6b",
+                "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+                "bytes": 67334,
+                "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+                "finalC613Blob": "UNBOUND"
+              }
+            ],
+            "test": {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+              "preimage": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+              "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+              "bytes": 87176,
+              "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+              "lf": 1462,
+              "declarations": 5,
+              "preservedDeclarations": 5,
+              "addedC17Declarations": 0,
+              "reports": 5,
+              "addedC17ReportFamilies": 0,
+              "reportFamilies": {
+                "SF_C14_SNAPSHOT_CONTROL": 2,
+                "SF_C15_SELECTION_CONTROL": 2,
+                "SF_C16_SELECTION_CONTROL": 1
+              },
+              "c15OutcomeRows": [
+                4,
+                15
+              ],
+              "c16OutcomeRows": [
+                31
+              ],
+              "c17IdentityProjection": {
+                "report": "SF_C16_SELECTION_CONTROL",
+                "path": "identityProjection.cases",
+                "expectedCount": 9,
+                "expectedNames": [
+                  "mixed-map-and-detached-readonly",
+                  "mixed-map-and-detached-preimage",
+                  "composed-identity-first-authorization-drift",
+                  "composed-identity-second-authorization-drift",
+                  "restored-codec-birth-keeps-complete-case",
+                  "restored-codec-exposure-keeps-complete-case",
+                  "cold-plan-birth-survives-restore-and-memo",
+                  "owner-weakmap-escape-latches-across-roots",
+                  "owner-als-escape-latches-across-roots"
+                ]
+              },
+              "wholeFileNoNameFilter": true,
+              "finalC613Blob": "UNBOUND"
+            },
+            "perTestBudgetsByGeneration": {
+              "inheritedC14": {
+                "declarations": 2,
+                "cooperativePerTestMs": 110000,
+                "bunPerTestMs": 120000
+              },
+              "addedC15": {
+                "declarations": 2,
+                "cooperativePerTestMs": 18000,
+                "bunPerTestMs": 20000
+              },
+              "addedC16": {
+                "declarations": 1,
+                "cooperativePerTestMs": 8000,
+                "bunPerTestMs": 10000
+              }
+            },
+            "nominalBunSumMs": 290000,
+            "nominalCooperativeSumMs": 264000,
+            "nominalMarginToProcessMs": 10000,
+            "processMs": 300000,
+            "outerMs": 360000,
+            "unchangedReferencePaths": "SourceLifecycle, CurrentChoice, ACL authorizer and ProductAuthority remain the preserved clean references; no observer is added. Reconcile all referenced paths against actual final C613.",
+            "focalReference": {
+              "manifest": {
+                "gitSha": "424d1cd57d51948680f9e9d14fe1d11b61df5665",
+                "bytes": 24170,
+                "sha256": "cb9b8a30c9354ce9f9fb8d5cf4ea354b33b741c8d23c49d00a40e548b62ae8be"
+              },
+              "bounds": {
+                "gitSha": "a998d1c90e4f572c3161d3e833ade45b04510d1f",
+                "bytes": 16947,
+                "sha256": "cb18c136132293550141ffe93f303d37eb7a16aec191a9933ffc1a22a9cdffc8"
+              },
+              "driver": {
+                "gitSha": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+                "bytes": 10891,
+                "sha256": "eb2ea447e2e95f53a96660c6db64cc68a0df06e3efbe423c7f52dfd321f32b77"
+              },
+              "snapshot": "276fe1688727c5859a20cf393adc698c5c544d7d",
+              "tree": "d6488da013a6bf745a92b24e38faf8ad2a5de8a5",
+              "authority": {
+                "gitSha": "f0164ae3f4eb16c281069aa2de68dc22f3e82a84",
+                "bytes": 19576,
+                "sha256": "8d7b2e77fb3cfa540a1be864be1906b004a03d6e1208da6298c8fac306dfb6b9"
+              },
+              "reportedRun": "46051100090",
+              "reportedAttempt": 1,
+              "functionalDeclarationsExpected": 12,
+              "controlReportsExpected": 8,
+              "notWholeD26Count": true,
+              "result": {
+                "status": "CLOSED_PASS_LIMITED_FOCAL",
+                "scope": "Historical prerequisite from this exact C17 focal; not a D26, original Analytics, Release or product qualification.",
+                "rootReceipt": {
+                  "gitSha": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+                  "bytes": 63985,
+                  "sha256": "c963a2d9540671c2ce64b04526134f8c919c16d8d84b4ea050614b1d1bfc3f6b",
+                  "locatorProvenance": "root reported; independent same-log intake by focal_migration"
+                },
+                "rawManifest": {
+                  "gitSha": "3a7ce980f7863c3fd3cf27766e65302de09046a0",
+                  "bytes": 2227,
+                  "sha256": "20d7f0437e5d0b96d93cffb637374301c835f13a70c804bb0953e7fc460e3d8a"
+                },
+                "functionalPass": 12,
+                "functionalFail": 0,
+                "functionalAssertions": 1052,
+                "outerPass": 6,
+                "outerFail": 0,
+                "outerAssertions": 29,
+                "reports": 8,
+                "c16Outcomes": 31,
+                "c17IdentityProjectionCases": 9,
+                "commandsExitZero": 12,
+                "truncationFlagsFalse": 24,
+                "cliTypesExit": 0,
+                "sucafinaTypesExit": 0,
+                "guards": {
+                  "rules": 78,
+                  "files": 856,
+                  "warnings": 40,
+                  "errors": 0,
+                  "approved": 0
+                },
+                "omni": {
+                  "declared": 6,
+                  "spawned": 12,
+                  "delegated": 0
+                },
+                "resultTransferredToD26": false
+              },
+              "assertionCount": 1052,
+              "completedAt": "2026-11-27T18:42:15Z"
+            },
+            "qualificationTransferred": false,
+            "limits": [
+              "Reference pins do not bind final C613 or establish a D26 result.",
+              "The same five whole-file declarations retain their original deadlines; nine C17 cases are nested in the existing C16 report.",
+              "Readonly body reduction and full preimage fallback are distinct oracles; no current CPU/latency or original Analytics acceptance is inferred.",
+              "The nominal10-second process margin does not guarantee setup, scheduling, teardown or reap."
+            ]
+          }
+        },
+        {
+          "path": [
+            "c17DocumentaryRevision"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "author": "/root/focal_migration",
+            "authority": "Root requested the documentary C16-to-C17 draft and then authorized incorporation of the closed C17 focal as a historical prerequisite only. No executable or final binding changes.",
+            "status": "DRAFT_UNBOUND_FOCAL_RECEIVED_NO_QUALIFICATION_TRANSFER",
+            "baseManifest": {
+              "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+              "bytes": 38243,
+              "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+              "lf": 981
+            },
+            "baseBounds": {
+              "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+              "bytes": 25101,
+              "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+              "lf": 744
+            },
+            "baseDerivation": {
+              "git": "ae3a5e6705de8c80ffdb8f0715c666710809c922",
+              "bytes": 40977,
+              "sha256": "c22de64650824484c9158f4b6cbe329dde3fca0a364c39164f2d29f1aea30fc7",
+              "lf": 1101
+            },
+            "scope": "Update only active source/test references, nine nested C17 report oracles and related locators. Record the received C17 focal as historical prerequisite without qualifying D26 or Analytics. Preserve all earlier reference/revision objects literally.",
+            "selectionUnchanged": {
+              "wholeFileDeclarations": 5,
+              "wholeFileReports": 5,
+              "c16Outcomes": 31,
+              "addedC17Declarations": 0,
+              "addedC17Reports": 0
+            },
+            "nestedC17Expected": {
+              "report": "SF_C16_SELECTION_CONTROL",
+              "field": "identityProjection.cases",
+              "count": 9,
+              "names": [
+                "mixed-map-and-detached-readonly",
+                "mixed-map-and-detached-preimage",
+                "composed-identity-first-authorization-drift",
+                "composed-identity-second-authorization-drift",
+                "restored-codec-birth-keeps-complete-case",
+                "restored-codec-exposure-keeps-complete-case",
+                "cold-plan-birth-survives-restore-and-memo",
+                "owner-weakmap-escape-latches-across-roots",
+                "owner-als-escape-latches-across-roots"
+              ]
+            },
+            "preserved": {
+              "executables": 4,
+              "outerGroups": 26,
+              "syntacticSites": 32,
+              "commands": 37,
+              "truncationFlags": 74,
+              "proofChildren": 6,
+              "G1Through25Literal": true,
+              "G26Literal": true,
+              "G6Literal": true,
+              "globalMinutes": [
+                35,
+                40,
+                45
+              ],
+              "finalBindingParameters": 4,
+              "finalBindingsState": "UNBOUND",
+              "wholeD26FunctionalCount": null,
+              "bunNominalMs": 290000,
+              "cooperativeNominalMs": 264000,
+              "processMs": 300000,
+              "parentMs": 360000
+            },
+            "history": "Internal 'current' labels in preserved reference/revision objects describe their own historical cuts; the appended C17 reference is active only as documentary input.",
+            "qualificationTransferred": false,
+            "actions": {
+              "plannedDocumentBlobs": 3,
+              "executableChanges": 0,
+              "trees": 0,
+              "commits": 0,
+              "refs": 0,
+              "runs": 0,
+              "originalLogGets": 0,
+              "zipGets": 0
+            }
+          }
+        }
+      ],
+      "forwardWholeTextExact": true,
+      "inverseWholeTextExact": true
+    }
+  ],
+  "applicationContract": {
+    "format": "JSON paths contain exact object keys or array indices. Verify beforePresent and full before value, then set after or delete. Reverse the steps and exchange before/after to invert. Serialize JSON.stringify(value,null,2)+'\\n'.",
+    "baseSerializationLiteral": true,
+    "forwardSerializationLiteral": true,
+    "inverseSerializationLiteral": true,
+    "presenceFlagsDistinguishMissingFromNull": true
+  },
+  "checks": {
+    "fourExecutableReferencesLiteral": true,
+    "fourBindingsUnbound": true,
+    "manifestBudgetsLiteral": true,
+    "G6Literal": true,
+    "G25Literal": true,
+    "priorAdditionalGroupsLiteral": true,
+    "G26CommandAndBudgetsLiteral": true,
+    "runBlocksLiteral": true,
+    "envelopeLiteral": true,
+    "finalizerLiteral": true,
+    "loaderLiteral": true,
+    "globalLiteral": true,
+    "capsLiteral": true,
+    "originalGroupProofLiteral": true,
+    "runCommandProofLiteral": true,
+    "ui6Literal": true,
+    "count26323774": true,
+    "wholeFunctionalNull": true,
+    "proofChildren6": true,
+    "noNewReportFamily": true
+  },
+  "preservedHistoricalObjects": [
+    {
+      "path": "manifest.currentC14Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "89c9fcb94c660db27467197fb38a9cc8bc91a30a6da19cbbb13cc9f47ae96f4e"
+    },
+    {
+      "path": "manifest.currentC15Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "0f86af8f14b60b4f566c6bfa9e929df6bec89c760642f4e921a6e29f2dc6ad4c"
+    },
+    {
+      "path": "manifest.currentC16Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "cbbf97b5168f1ebfe7f6b9e49cf7bb49b0fe0c40704db52621c4e9511757ede8"
+    },
+    {
+      "path": "manifest.documentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "6aff645f77e38aa68d8fd1e2ebbd20125c89ab32b25b273bbd1a3307ade92871"
+    },
+    {
+      "path": "manifest.typeRepairRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "ca4263ec1e02267db329774506c042dbf8c1aa2f36d1dee0e58078e9a0c59da9"
+    },
+    {
+      "path": "manifest.c16DocumentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "5b390786246e7b2500603186d20f1b0d3ea6cda6afa7796aac90b01e4b818473"
+    },
+    {
+      "path": "bounds.c14Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "e9c1d902b13527a401049b0b50525c2428cfbf73003af0e0b4ecae779b3ec7d9"
+    },
+    {
+      "path": "bounds.c15Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "18bd9f82687adb729961a5a026fee1cf9447be24fe355dfd4956cbd7c15fabc8"
+    },
+    {
+      "path": "bounds.c16Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "cbbf97b5168f1ebfe7f6b9e49cf7bb49b0fe0c40704db52621c4e9511757ede8"
+    },
+    {
+      "path": "bounds.documentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "6aff645f77e38aa68d8fd1e2ebbd20125c89ab32b25b273bbd1a3307ade92871"
+    },
+    {
+      "path": "bounds.typeRepairRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "ca4263ec1e02267db329774506c042dbf8c1aa2f36d1dee0e58078e9a0c59da9"
+    },
+    {
+      "path": "bounds.c16DocumentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "5b390786246e7b2500603186d20f1b0d3ea6cda6afa7796aac90b01e4b818473"
+    }
+  ],
+  "executableReferencesLiteral": {
+    "wrapper": {
+      "gitSha": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "lf": 337,
+      "createdAndLiteralReadback": true
+    },
+    "envelope": {
+      "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "createdAndLiteralReadback": true
+    },
+    "finalizer": {
+      "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "createdAndLiteralReadback": true
+    },
+    "workflow": {
+      "gitSha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "createdAndLiteralReadback": true
+    }
+  },
+  "unchanged": {
+    "executables": 4,
+    "groups": 26,
+    "syntacticSites": 32,
+    "commands": 37,
+    "truncationFlags": 74,
+    "proofChildren": 6,
+    "G1Through25Literal": true,
+    "G26Literal": true,
+    "G6ProcessMs": 300000,
+    "G6OuterMs": 360000,
+    "globalMinutes": [
+      35,
+      40,
+      45
+    ],
+    "finalBindingParameters": 4,
+    "finalBindingState": "UNBOUND",
+    "wholeD26FunctionalCount": null,
+    "ui6SeparateAndLiteral": true
+  },
+  "activeG26": {
+    "controlReference": {
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69"
+    },
+    "declarations": 5,
+    "reports": 5,
+    "c15OutcomeCounts": [
+      4,
+      15
+    ],
+    "c16OutcomeCount": 31,
+    "c17NestedIdentityCases": {
+      "report": "SF_C16_SELECTION_CONTROL",
+      "path": "identityProjection.cases",
+      "expectedCount": 9,
+      "expectedNames": [
+        "mixed-map-and-detached-readonly",
+        "mixed-map-and-detached-preimage",
+        "composed-identity-first-authorization-drift",
+        "composed-identity-second-authorization-drift",
+        "restored-codec-birth-keeps-complete-case",
+        "restored-codec-exposure-keeps-complete-case",
+        "cold-plan-birth-survives-restore-and-memo",
+        "owner-weakmap-escape-latches-across-roots",
+        "owner-als-escape-latches-across-roots"
+      ]
+    },
+    "extraDeclaration": false,
+    "extraReportFamily": false,
+    "bunNominalMs": 290000,
+    "cooperativeNominalMs": 264000,
+    "processMs": 300000,
+    "parentMs": 360000,
+    "nominalMarginMs": 10000
+  },
+  "historicalC17Focal": {
+    "source": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "run": "46051100090",
+    "attempt": 1,
+    "rootReceipt": "2c7134e4dbb54f589cd5d5a1680a27bff3cda6fd",
+    "actualFunctionalPass": 12,
+    "actualFunctionalAssertions": 1052,
+    "actualReports": 8,
+    "actualOuterPass": 6,
+    "actualOuterAssertions": 29,
+    "qualificationTransferred": false
+  },
+  "limits": [
+    "Only the21 manifest and5 bounds JSON field changes listed here are authorized; eight manifest changes update bounds identity metadata.",
+    "All12 historical reference/revision objects remain literal. Their own current labels are historical cuts, not the active final candidate.",
+    "The four executables, their embeddings, hashes, budgets, G1–25/G26 selection and UI6 remain unchanged.",
+    "Current C17 source and focal evidence are documentary references; final C613 and all four final bindings remain UNBOUND.",
+    "C17's nine cases are nested under the existing SF_C16_SELECTION_CONTROL.identityProjection.cases; no parser, report family or execution command is added.",
+    "The received focal does not qualify D26, Analytics, Release or latency. Whole D26 functional count remains null.",
+    "The nominal10-second process margin remains arithmetic, not an overhead/reap guarantee."
+  ],
+  "actions": {
+    "documentBlobs": 3,
+    "executables": 0,
+    "productEdits": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

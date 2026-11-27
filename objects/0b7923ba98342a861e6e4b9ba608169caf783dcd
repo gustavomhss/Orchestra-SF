@@ -1,0 +1,217 @@
+{
+  "schema": "orchestra-sf.e11-reader-root-authority.v1",
+  "status": "REVIEWED_SINGLE_ORIGINAL_ARTIFACT_READER_EXECUTION_AUTHORIZED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "purpose": "Acquire and verify the single original E11 Analytics artifact, preserve its complete inventory and transport bounded current CPU evidence for causal diagnosis.",
+  "reader": {
+    "sha": "e63cffcea872aa538bc7ee1d6ed2768ecad80862",
+    "tree": "41f942de834bb4dedeb94fcbd4b1f6b93ef12f80",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "parentTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "branch": "sf613-artifact-e11cpu",
+    "workflow": ".github/workflows/sf613-artifact-read.yml",
+    "workflowBlob": {
+      "gitBlob": "6cadc485d1cdae8342a21caa453bac83eba51ce2",
+      "bytes": 118627,
+      "sha256": "79647ce8bba2d50e7885e92eed1cd50f291392b6f4af6365760e543079393152"
+    },
+    "pythonBlob": {
+      "gitBlob": "7f330114fb99d61977d8d83cdf78b46ac6c2134d",
+      "bytes": 96993,
+      "sha256": "740d024579d001d3bcfa7c9f78c179b1a145de6225ed5a7eb590f29175bb4290"
+    },
+    "exactDelta": "1A workflow only",
+    "treeAudit": {
+      "pairs": 3,
+      "literalSiblings": 69,
+      "allGitTreeHashesVerified": true
+    },
+    "checkout": false,
+    "repositoryCodeExecuted": false
+  },
+  "original": {
+    "run": 46028127606,
+    "attempt": 1,
+    "head": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+    "tree": "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4",
+    "mainJob": 140604695368,
+    "cleanupJob": 140609271563,
+    "artifact": {
+      "id": 15214066673,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 46001766,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15214066673",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15214066673/zip",
+      "expired": false,
+      "created_at": "2026-11-27T15:57:37Z",
+      "expires_at": "2026-12-04T15:57:34Z",
+      "updated_at": "2026-11-27T15:57:37Z",
+      "digest": "sha256:98d5edb929b9202b9ac67b24b8a923eaf203b9c9e50173303804c4419cb66bef",
+      "workflow_run": {
+        "id": 46028127606,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613e11a",
+        "head_sha": "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
+      }
+    },
+    "logIntake": {
+      "gitBlob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "bytes": 28244,
+      "sha256": "9744106ef5eb2e0f8066e53588773e726eddedc915196d52138b0772779a14a9"
+    },
+    "binding": {
+      "gitBlob": "e664f6378e37c79ef64d9a680016911d9f8e7231",
+      "bytes": 11212,
+      "sha256": "9489ff447a83168ac2821e06c5390f3a76d91b4c34ec6fb643cef03c762f9268"
+    },
+    "markerUnion": {
+      "lines": 102,
+      "bytes": 39486,
+      "sha256": "3c57662a08523be08727493999989406b92d3c8c26a9071814220ae2efd254e6",
+      "gitBlobCalculated": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "gitBlobPersisted": true,
+      "gitBlob": "704d89e2a74eda39cefec150c5a4b3870bbb20f0",
+      "literalReadback": true
+    }
+  },
+  "template": {
+    "manifest": {
+      "gitBlob": "c9947af7fa6346f125143b69f056d2ee95b6ade7",
+      "bytes": 15975,
+      "sha256": "e76b2d28ae562496db2d6708c725ca1aa5716cadfc4e1d51ffb11a5cfe608a8d"
+    },
+    "derivation": {
+      "gitBlob": "b9988a8b966b627904454e530233daf8b2e567c4",
+      "bytes": 371062,
+      "sha256": "06c76e2f3c9d5a3725a2c832ec1067489f9817bfd08bca002068b87aecb65ba7"
+    },
+    "diff": {
+      "gitBlob": "a20597fc20bf61f8bb989f6358b688387bf5228b",
+      "bytes": 83771,
+      "sha256": "1423b07fac28ed7c233de7dd976d6f1c18ebd766af9cea230befdf2a77e4fcb8"
+    },
+    "bounds": {
+      "gitBlob": "54a44996d95457c85e2273b5368f578223a6825b",
+      "bytes": 7234,
+      "sha256": "9460ab995a64e0bb8ee020abed5fa2453e3e392f7ca766dd9293eeb075892858"
+    },
+    "rootStaticChecks": {
+      "python": {
+        "hunks": 32,
+        "added": 135,
+        "removed": 99,
+        "forwardAndInverse": true
+      },
+      "yaml": {
+        "hunks": 35,
+        "added": 139,
+        "removed": 103,
+        "forwardAndInverse": true
+      },
+      "infrastructureDefinitionsLiteral": 35,
+      "embeddingLiteral": true,
+      "noCheckout": true,
+      "readPermissionsOnly": true
+    },
+    "anchorsRootAppliedAndInverted": {
+      "python": 11,
+      "yaml": 5
+    },
+    "independentReviewer": "/root/teams_product",
+    "independentStatus": "ACK_TEMPLATE_AND_CONCRETE_EXECUTABLE_BINDING"
+  },
+  "concreteSupport": {
+    "manifest": {
+      "gitBlob": "13c59828c65a1dcaef34f5e810c175c078e396c3",
+      "bytes": 13422,
+      "sha256": "2ba9ff69b8ecead402f51452d7852144356ab5069cf3d4ab8a2256b4a21cbdae"
+    },
+    "binding": {
+      "gitBlob": "e5909bcea5c9f9051894106192a74a58df7e1cbe",
+      "bytes": 256820,
+      "sha256": "84e595741f4a7a20520628f3560c0b583b5a38386580a43ddbf702079190340d"
+    },
+    "diff": {
+      "gitBlob": "4f8d1cc730133015e47495810cf52e4ae49c8468",
+      "bytes": 14473,
+      "sha256": "caca10e61a1033464e6e9c89dc1b56dc6b64edd8f6472806e59f092696a99db1"
+    },
+    "rootForwardInverseChecks": {
+      "python": {
+        "anchors": 4,
+        "hunks": 5,
+        "added": 30,
+        "removed": 30,
+        "forwardAndInverseLiteral": true
+      },
+      "yaml": {
+        "anchors": 4,
+        "hunks": 7,
+        "added": 33,
+        "removed": 33,
+        "forwardAndInverseLiteral": true
+      }
+    },
+    "all30BindingLinesMatchCurrentIntake": true,
+    "independentReview": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_CONCRETE_CODE_BINDING_AND_ACTUAL_OBJECT",
+      "treePairs": 3,
+      "literalSiblings": 69,
+      "exactOneWorkflowAddition": true,
+      "allSourceAndSnapshotIdentitiesCorrect": true,
+      "finalManifestLocator": "Root authenticated; peer accepted executable, binding supports and actual object. Final documentary locator linkage may complete separately."
+    }
+  },
+  "transport": {
+    "originalArtifactGets": 1,
+    "noAuditArtifactGets": true,
+    "rootOriginalReaderMainGets": 1,
+    "rootReceiveCompleteBeforeParsing": true,
+    "rootMainCapBytes": 8388608,
+    "profileCapBytes": 4194304,
+    "collectionCapBytes": 16384,
+    "launcherCapBytes": 8192,
+    "cpuAndProgressSlotBytes": 65536,
+    "emissionCapBytes": 7340032,
+    "maxEnvelopeBeforePriorLog": 6715748,
+    "exactPreflightIncludesPriorLog": true,
+    "actualExportsMin": 4,
+    "actualExportsMax": 7,
+    "rawZeroByteMalformedAndAbsentDistinct": true,
+    "allCrcAndInventoryCapsPreserved": true
+  },
+  "scope": {
+    "captureCompleteAtThisCut": false,
+    "profileFilesVerifiedAtThisCut": false,
+    "parityCaseResultStdioAtThisCut": false,
+    "cleanProductQualified": false,
+    "finalC613Qualified": false,
+    "releaseQualified": false,
+    "productionCutoverAuthorized": false
+  },
+  "postRun": {
+    "waitForTerminal": true,
+    "rootReceiveMainOnce": true,
+    "preserveAllRawBeforeSemanticInterpretation": true,
+    "authenticateFullEmittedEnvelopeAndTerminalBeforeAcceptingExports": true,
+    "independentIntakeRequired": true,
+    "branchRetainedForAudit": true,
+    "noAutomaticRetry": true,
+    "noUnobservedFileFabricated": true
+  },
+  "limits": [
+    "This reader will verify declared current CPU files and original report membership; job success alone is not receipt acceptance.",
+    "Source/native/route populations remain distinct. A profile covers the process VM and cannot by itself assign exclusive Request causality.",
+    "One original ZIP acquisition is authorized only when this document is finalized and all bindings are independently accepted. No archive from the reader's audit upload may be downloaded.",
+    "No product, PR or dev branch advancement; no production cutover."
+  ],
+  "at": "2026-11-27 16:16:24 UTC",
+  "preflight": {
+    "at": "2026-11-27 16:15:53 UTC",
+    "branchAbsent": true,
+    "existingRuns": 0
+  }
+}

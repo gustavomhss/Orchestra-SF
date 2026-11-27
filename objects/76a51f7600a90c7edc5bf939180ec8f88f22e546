@@ -1,0 +1,106 @@
+{
+  "schema": "sf613-c17-focal-binding/v1",
+  "status": "BOUND_BLOBS_ONLY_NO_EXECUTION",
+  "qualification": false,
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "template": {
+    "git": "4c33f46e4f67bbcd053a1e074e9863e9dbf8124f",
+    "bytes": 10856,
+    "sha256": "d5d75239c127592b950963a23c2ad3b6ebc697cec790889978688783dbb74a8b",
+    "lf": 169,
+    "finalLF": true
+  },
+  "bound": {
+    "git": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+    "bytes": 10891,
+    "sha256": "eb2ea447e2e95f53a96660c6db64cc68a0df06e3efbe423c7f52dfd321f32b77",
+    "lf": 169,
+    "finalLF": true
+  },
+  "operations": [
+    {
+      "id": "bind-source",
+      "before": "UNBOUND_C17_SOURCE_SHA",
+      "after": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "id": "bind-tree",
+      "before": "UNBOUND_C17_SOURCE_TREE",
+      "after": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    }
+  ],
+  "source": {
+    "sha": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+    "tree": "863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "baseTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "delta": "4M",
+    "treePairs": 11,
+    "unchangedSiblings": 265,
+    "auditedBy": "/root",
+    "agentCreatedOrAuditedTrees": false
+  },
+  "sourceManifest": {
+    "git": "da2dfce4db1159120893733e0b8b680c2f113bdb",
+    "bytes": 18155,
+    "sha256": "0ffb8b16115c0457f3e640f76c1f52b43b8c54fa2c8b0017746fffb752a6ef78",
+    "lf": 469,
+    "finalLF": true
+  },
+  "sourceBounds": {
+    "git": "181097b3741b02f5099ce67ee6e90651b1ff5346",
+    "bytes": 9394,
+    "sha256": "bcb160b8284aca9a8d7620c65c511f13f65e2d25c8c8c1fc343ce6bd151540d8",
+    "lf": 251,
+    "finalLF": true
+  },
+  "verification": {
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "baseRetargetThenBindingLiteral": true,
+    "changedExecutableTokens": 2,
+    "remainingUnboundTokens": 0,
+    "retargetAnchorsPreserved": "9a0700a45d2148762970a2b140533cd834dd1470",
+    "requestLiteral": {
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "finalLF": false
+    },
+    "allOtherBytesLiteral": true,
+    "repositoryExecution": false
+  },
+  "bindingDiff": {
+    "git": "e8ff707c3c5b4a6f8d3d0f0139225d66416f5a44",
+    "bytes": 730,
+    "sha256": "cfccba3153d7f1f305b4d1bd5f97ddb85a2cc93654161bffb84f1b5ed2d1f0ad",
+    "lf": 14,
+    "finalLF": true,
+    "hunks": 1,
+    "added": 2,
+    "removed": 2
+  },
+  "snapshotAddition": {
+    "git": "a6e589633307f1f09d5d602cee05d4f1686e2d0e",
+    "bytes": 11672,
+    "sha256": "2791cf8111a9874f3763a8150581f3b39c33d4eb691fa32ecbb9609ba7684078",
+    "lf": 181,
+    "finalLF": true,
+    "hunks": 2,
+    "added": 170,
+    "removed": 0,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "requestNoFinalLF": true,
+    "notAnActualTree": "Root owns source/D object inspection and creation; author made blobs only."
+  },
+  "limits": [
+    "No source tree, snapshot tree, commit, ref, run, original logs or ZIP was created or acquired by this author.",
+    "Current runtime and Analytics results remain pending; the source hash binding does not imply qualification."
+  ]
+}

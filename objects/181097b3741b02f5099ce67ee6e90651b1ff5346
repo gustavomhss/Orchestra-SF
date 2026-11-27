@@ -1,0 +1,251 @@
+{
+  "schema": "sf613-c17-identity-projection-bounds-v1",
+  "status": "STATIC_PROPOSAL_NO_EXECUTION",
+  "base": {
+    "commit": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c"
+  },
+  "plannedDelta": {
+    "modified": 4,
+    "added": 0,
+    "deleted": 0,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "mode": "100644",
+        "status": "modified",
+        "preimage": {
+          "gitSha": "8bdc12d191a76137cd2244e01990f7a780091216",
+          "bytes": 8953,
+          "sha256": "509b58f0f8f175dca1f3e0b5d928eb85f166d495a8bc2cc5c9b60d208447fa8c",
+          "lf": 187
+        },
+        "postimage": {
+          "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+          "bytes": 8973,
+          "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+          "lf": 187
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "status": "modified",
+        "preimage": {
+          "gitSha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+          "bytes": 83955,
+          "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+          "lf": 1515
+        },
+        "postimage": {
+          "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+          "bytes": 96231,
+          "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+          "lf": 1685
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "mode": "100644",
+        "status": "modified",
+        "preimage": {
+          "gitSha": "550236df66f1e02e5111a1eee23579e76178bc6b",
+          "bytes": 66998,
+          "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+          "lf": 887
+        },
+        "postimage": {
+          "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+          "bytes": 67334,
+          "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+          "lf": 891
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "mode": "100644",
+        "status": "modified",
+        "preimage": {
+          "gitSha": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+          "bytes": 70284,
+          "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+          "lf": 1196
+        },
+        "postimage": {
+          "gitSha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+          "bytes": 87176,
+          "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+          "lf": 1462
+        }
+      }
+    ]
+  },
+  "scope": {
+    "factory": "selectSfCaseIdentity only",
+    "nativeSelection": "case-identities",
+    "capturedKey": "id/incarnation/version are still read only in the original private callback after the first authorize",
+    "finalCopy": "structuredClone(identityCases) is unchanged before that callback",
+    "root": "Extra case-body reduction only for private snapshots of native readonly roots with trusted plan/birth/owner provenance",
+    "preimage": "Complete cases under the identity selection; no birth certification",
+    "uncertainOrigin": "Complete cases; restoration cannot create provenance retroactively",
+    "custom": "C16 opaque/full fallbacks remain",
+    "bootstrap": "Original module-import primitives, matching the existing codec/projection bootstrap assumption; not an attestation of replacements made before module initialization."
+  },
+  "retained": {
+    "identityFields": [
+      "id",
+      "incarnation",
+      "version",
+      "participants"
+    ],
+    "knownBodyFieldsEligibleToOmit": [
+      "state",
+      "objective",
+      "horizon",
+      "currency",
+      "criteria",
+      "sourceRefs",
+      "alternatives",
+      "costCoverageBases",
+      "assumptions",
+      "questions",
+      "choices",
+      "preparedChanges",
+      "receipts",
+      "ledger"
+    ],
+    "unknownCaseFields": "all",
+    "ambiguousEntries": "entire",
+    "keys": "all original own case keys, including __proto__, defined as own data",
+    "participants": "only dense own string arrays admit body omission; other shapes retain complete entry",
+    "otherData": "same complete metadata, ACL, sfSources, audit, optional/unknown fields as C16; no new default or normalization"
+  },
+  "work": {
+    "selection": "Linear shallow pass over case entries, their own field descriptors and participants elements; no traversal of omitted body subgraphs.",
+    "copies": "Same native clone and final Provider clone calls; their input may omit known unused case bodies.",
+    "ownerPrivacy": {
+      "staticSites": 40,
+      "getStore": 19,
+      "run": 5,
+      "rootIdentityGet": 3,
+      "rootIdentitySet": 1,
+      "rootOwn": 11,
+      "rootProperty": 1,
+      "pins": 9,
+      "latch": "per store, permanent false after a possibly exposed owner; false path is a boolean short circuit",
+      "semantics": "Prefix before receiver; original lookup/receiver/arguments/result/error remain."
+    },
+    "birthChecks": {
+      "prototypes": [
+        "Object.prototype",
+        "Array.prototype",
+        "Set.prototype"
+      ],
+      "bound": "Number of their original own properties captured at module bootstrap plus fixed scalar pin groups; independent of application graph sizes.",
+      "plans": "Seven original plan property descriptors and, when present, three original copy-string descriptors; no additional payload string copy.",
+      "lifetime": "Two private WeakMaps with captured constructor/get/set/delete/apply. Readonly root registration is removed in original finally. No strong cross-owner graph/result/authority cache."
+    },
+    "unchanged": {
+      "awaitsLocalStore": 21,
+      "thenCallsLocalStore": 7,
+      "awaitsProvider": 36,
+      "twoAuthorizations": true,
+      "sourceLifecycle": true,
+      "currentChoice": true,
+      "productAuthority": true,
+      "codecBuilderMaterializerBodies": 10,
+      "clock": true,
+      "deadlines": true
+    }
+  },
+  "controls": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "pin": {
+      "gitSha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+      "lf": 1462
+    },
+    "wholeFile": {
+      "declarations": 5,
+      "reports": 5,
+      "expectCallSites": 315,
+      "awaitTokens": 160,
+      "nominalBunSeconds": [
+        120,
+        120,
+        20,
+        20,
+        10
+      ],
+      "nominalTotalSeconds": 290,
+      "processSeconds": 300,
+      "parentSeconds": 360,
+      "nominalProcessMarginSeconds": 10,
+      "marginIsGuarantee": false
+    },
+    "existingReadonly": {
+      "declarations": 7,
+      "reports": 3,
+      "unchangedPin": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+    },
+    "functionalSelection": {
+      "declarations": 12,
+      "reports": 8,
+      "totalExecutedAssertions": null
+    },
+    "existingC16": {
+      "outcomes": 31,
+      "readAttemptsUpperBound": 49,
+      "unchanged": true
+    },
+    "addedC17": {
+      "identityOracles": 9,
+      "physicalProbeTransactionsUpperBound": 16,
+      "composedC08ReadsUpperBound": 2,
+      "totalC16PlusC17ReadAttemptsUpperBound": 51,
+      "additionalFixtures": 1,
+      "cooperativeMilliseconds": 8000,
+      "bunMilliseconds": 10000,
+      "addedTopLevelDeclarations": 0,
+      "addedReportLines": 0,
+      "oracles": [
+        "mixed-map-and-detached-readonly",
+        "mixed-map-and-detached-preimage",
+        "composed-identity-first-authorization-drift",
+        "composed-identity-second-authorization-drift",
+        "restored-codec-birth-keeps-complete-case",
+        "restored-codec-exposure-keeps-complete-case",
+        "cold-plan-birth-survives-restore-and-memo",
+        "owner-weakmap-escape-latches-across-roots",
+        "owner-als-escape-latches-across-roots"
+      ],
+      "explicitAttemptScope": "Direct state.read calls in the scenario loops only; fixture/admission internals and all process C08 traffic are not counted.",
+      "addedReportJsonFragmentBytes": 500
+    },
+    "limits": [
+      "Native physical probe and composed C08 factory refusal are separate positive proofs.",
+      "Preimage proves complete-case equivalence, not a second physical reduction.",
+      "Existing C16 error/throw-undefined/captured-id timing/abort/poison and concurrent declarations remain literal.",
+      "No new large fingerprint payload performance fixture; shared materializer and plan proof are reviewed statically.",
+      "Temporary intrinsic replacements are refusal/provenance controls, restored in finally, not CPU or latency measurements."
+    ]
+  },
+  "focalByReference": {
+    "owner": "focal_migration",
+    "groups": 6,
+    "commands": 12,
+    "expectedTruncationFlags": 24,
+    "expectedTruncationValue": false,
+    "cleanSource": "UNBOUND_UNTIL_ROOT_OBJECT",
+    "runtimeResults": null
+  },
+  "originalAnalytics": {
+    "firstPreviewWaitMilliseconds": 60000,
+    "extraRetries": 0,
+    "workers": 1,
+    "extraRepeats": 0,
+    "changes": 0,
+    "qualification": "Pending future original run; no performance or success result transferred."
+  }
+}

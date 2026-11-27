@@ -1,0 +1,1119 @@
+diff --git a/sf613-artifact-reader.py b/sf613-artifact-reader.py
+--- a/sf613-artifact-reader.py
++++ b/sf613-artifact-reader.py
+@@ -18,20 +18,20 @@
+ import zlib
+ 
+ REPO = "gustavomhss/Orchestra-SF"
+-BRANCH = "sf613-artifact-e10"
++BRANCH = "UNBOUND_READER_BRANCH"
+ WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+-SOURCE = "7d26eb502441aafeacfaa89c135e81dc8d98571b"
+-SOURCE_TREE = "b90f6e774436bddd61043b6ac70a9dc2a625baf4"
+-SNAPSHOT = "8f85aa7653693a1fb73e37f497e2795fc4da66e0"
+-SNAPSHOT_TREE = "590f5e9ca2fa18fa3981c55f56a542efd017daf2"
+-ORIGINAL_RUN = 45973791480
++SOURCE = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
++SOURCE_TREE = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++SNAPSHOT = "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
++SNAPSHOT_TREE = "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4"
++ORIGINAL_RUN = 46028127606
+ ORIGINAL_ATTEMPT = 1
+-MAIN_JOB = 140420390660
+-CLEANUP_JOB = 140424805096
+-ARTIFACT_ID = 15186093614
+-ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
+-ARTIFACT_BYTES = 45989855
+-ARTIFACT_SHA = "3417e925094e2ee08d1febe12f1b2f16927859b1cb8a75f72bca88a729a700a0"
++MAIN_JOB = 140604695368
++CLEANUP_JOB = "UNBOUND_CLEANUP_JOB"
++ARTIFACT_ID = "UNBOUND_ARTIFACT_ID"
++ARTIFACT_NAME = "UNBOUND_ARTIFACT_NAME"
++ARTIFACT_BYTES = "UNBOUND_ARTIFACT_BYTES"
++ARTIFACT_SHA = "UNBOUND_ARTIFACT_SHA256"
+ REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+ REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+ SOURCE_SELECTION_PINS = [
+@@ -48,28 +48,28 @@
+         "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+     }
+ ]
+-# Current metadata and literal main-derived parities are bound. Final intake closure is still explicit.
+-E10_BINDINGS_COMPLETE = True
+-ORIGINAL_CONCLUSION = "failure"
+-MAIN_CONCLUSION = "failure"
+-CLEANUP_CONCLUSION = "success"
+-TEST_STEP_CONCLUSION = "failure"
+-EXPECTED_CASE_STATUSES = [["failed", "timedOut"], ["passed"]]
+-EXPECTED_FIRST_WAITER_FAILURE = True
+-EXPECTED_VERDICT = {"failed": 1, "passed": 1, "UI42": "failed at first original 60 s response waiter", "UI43": "unreached in first case", "UI44": "unreached in first case", "BI": "original second case passed"}
+-SEMANTIC_SHA = "47a3b9435307cd16a4d6ab6c5d00b38ee2c5e231e100a04135b9215d02ce3e3e"
+-SEMANTIC_BYTES = 38581
+-SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":45,"SF_ANALYTICS_CAPTURE":46,"SF_PREVIEW_E10_CPU":3,"SF_PREVIEW_E10_PROGRESS":3,"SF_DESIGN_DIAGNOSTICS":5,"SF_ANALYTICS_SCOPE":1}
+-ANALYTICS_SHA = "6d90b394432d45b541b24d2693a841a688da59f80a87cf1e3e6e3821d9362c59"
+-ANALYTICS_BYTES = 34315
+-ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":45,"SF_ANALYTICS_CAPTURE":46,"SF_DESIGN_DIAGNOSTICS":5,"SF_ANALYTICS_SCOPE":1}
+-CPU_COUNTS = {"SF_PREVIEW_E10_CPU": 3}
+-PROGRESS_COUNTS = {"SF_PREVIEW_E10_PROGRESS": 3}
++# NON-EXECUTABLE TEMPLATE: source and announced live run/main only; terminal intake facts remain UNBOUND.
++E11_BINDINGS_COMPLETE = "UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE"
++ORIGINAL_CONCLUSION = "UNBOUND_ORIGINAL_CONCLUSION"
++MAIN_CONCLUSION = "UNBOUND_MAIN_CONCLUSION"
++CLEANUP_CONCLUSION = "UNBOUND_CLEANUP_CONCLUSION"
++TEST_STEP_CONCLUSION = "UNBOUND_TEST_STEP_CONCLUSION"
++EXPECTED_CASE_STATUSES = [["UNBOUND_CASE_1_STATUS"], ["UNBOUND_CASE_2_STATUS"]]
++EXPECTED_FIRST_WAITER_FAILURE = "UNBOUND_FIRST_WAITER_FAILURE"
++EXPECTED_VERDICT = {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42", "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44", "BI": "UNBOUND_BI"}
++SEMANTIC_SHA = "UNBOUND_UNION_SHA256"
++SEMANTIC_BYTES = "UNBOUND_UNION_BYTES"
++SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_PREVIEW_E11_CPU":"UNBOUND_CPU_COUNT","SF_PREVIEW_E11_PROGRESS":"UNBOUND_PROGRESS_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
++ANALYTICS_SHA = "UNBOUND_ANALYTICS_SHA256"
++ANALYTICS_BYTES = "UNBOUND_ANALYTICS_BYTES"
++ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
++CPU_COUNTS = {"SF_PREVIEW_E11_CPU": "UNBOUND_CPU_COUNT"}
++PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": "UNBOUND_PROGRESS_COUNT"}
+ CPU = {
+-    "nonce": "sf613-e10-cpu-TiUfW6", "pid": 3718, "parentPid": 3674,
+-    "markerBytes": 2637, "markerSha256": "30d3394df656b7e344712e5cb5cdf01eadd244d488d36cb843b9420528e8beb0",
++    "nonce": "UNBOUND_CPU_NONCE", "pid": "UNBOUND_CPU_PID", "parentPid": "UNBOUND_CPU_PARENT_PID",
++    "markerBytes": "UNBOUND_CPU_MARKER_BYTES", "markerSha256": "UNBOUND_CPU_MARKER_SHA256",
+ }
+-PROGRESS = {"markerBytes": 1629, "markerSha256": "0dbcab8a4be406292e96565504d98552c6f1791a150e6d4e1b2f8a9afc2911cd"}
++PROGRESS = {"markerBytes": "UNBOUND_PROGRESS_MARKER_BYTES", "markerSha256": "UNBOUND_PROGRESS_MARKER_SHA256"}
+ CPU_NAMES = ("preview-first.cpuprofile", "collection.json", "launcher.json")
+ CORE_CAP = {"profile": 4 * 1024 * 1024, "cpuMarkers": 64 * 1024,
+             "collection": 16 * 1024, "launcher": 8 * 1024,
+@@ -228,7 +228,7 @@
+     raise ReceiptFailure("API_COLLECTION_PAGE_CAP")
+ 
+ def check_original_and_reader():
+-    need(E10_BINDINGS_COMPLETE is True, "E10_INTAKE_BINDINGS_UNBOUND")
++    need(E11_BINDINGS_COMPLETE is True, "E11_INTAKE_BINDINGS_UNBOUND")
+     need(bool(TOKEN), "GITHUB_TOKEN_REQUIRED")
+     driver = os.environ.get("GITHUB_SHA", "")
+     run_id = os.environ.get("GITHUB_RUN_ID", "")
+@@ -280,16 +280,17 @@
+     original_delta = api("/compare/" + SOURCE + "..." + SNAPSHOT, "original-snapshot-delta")
+     original_changes = original_delta.get("files", [])
+     need(original_delta.get("ahead_by") == 1 and original_delta.get("behind_by") == 0
+-         and original_delta.get("total_commits") == 1 and len(original_changes) == 7
++         and original_delta.get("total_commits") == 1 and len(original_changes) == 8
+          and {(item.get("filename"), item.get("status"), item.get("sha")) for item in original_changes} == {
+-              ("modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts", "added", "629eb12bf5e9d06a37b0729261fd324859f299ab"),
+-              ("apps/cli/src/sucafina-product/portfolio-http.ts", "modified", "30d9fac161b3fe3c862b96280bf339064d574cd9"),
+-              ("packages/app-shell/e2e/sucafina/design-support/installation.ts", "modified", "56a06415240134d4d36a0620cb38d574846e7675"),
+-              ("apps/cli/test/fixture/sucafina-native-installation.ts", "modified", "65b34f4b17401ee49196a518008dbe1c952f5d67"),
+-              ("modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts", "modified", "f4cee795ab526924e752a3a7b56a22f8b3d9b422"),
+-              ("modules/sucafina/Sucafinav1/product/integration/product-authority.ts", "modified", "ace18a94c3db1098ae48bc20970aab801f431cdd"),
++              ("modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts", "added", "b5e2f218117a0f30e803a8b251922e92b6da2332"),
++              ("apps/cli/src/sucafina-product/portfolio-http.ts", "modified", "347edd5292d86537451507026236f27f2488a06a"),
++              ("packages/app-shell/e2e/sucafina/design-support/installation.ts", "modified", "b989a4fa1b4ecfcc8800e9df07e823e93d77009a"),
++              ("apps/cli/test/fixture/sucafina-native-installation.ts", "modified", "46dab966dbb2631fcc65f5cf730e792f9e7e94da"),
++              ("modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts", "modified", "8148a7fdd70621aa41a0978efdaf330202f2ba73"),
++              ("modules/sucafina/Sucafinav1/product/integration/product-authority.ts", "modified", "c35042473a5a1f5416253a3c5bf6b8450c44673b"),
++              ("modules/sucafina/Sucafinav1/runtime/local-store.ts", "modified", "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"),
+               (".ci-run.json", "added", "eda49a023c07599de00f5af9642ee92b9d9adf3b"),
+-          }, "ORIGINAL_EXACT_E10_SEVEN_OVERLAYS")
++          }, "ORIGINAL_EXACT_E11_EIGHT_OVERLAYS")
+     original_run = api("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1", "original-run")
+     need(original_run.get("id") == ORIGINAL_RUN and original_run.get("run_attempt") == 1
+          and original_run.get("head_sha") == SNAPSHOT and original_run.get("event") == "push"
+@@ -626,7 +627,7 @@
+     all_lines = []
+     streams = []
+     pattern = re.compile(r"^(?:\x1b\[[0-?]*[ -/]*[@-~])*"
+-                         r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE|SF_PREVIEW_E10_CPU|SF_PREVIEW_E10_PROGRESS) (.*)$")
++                         r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE|SF_PREVIEW_E11_CPU|SF_PREVIEW_E11_PROGRESS) (.*)$")
+     for result_ordinal, result in enumerate(results, 1):
+         for field in ("stdout", "stderr"):
+             chunks = []
+@@ -720,9 +721,9 @@
+     RECEIPT["parsers"]["runtime"] = {
+         "file": runtime_item["id"], "bytes": len(runtime_raw), "sha256": digest(runtime_raw),
+         "tests": 2, "config": runtime_config, "cases": cases,
+-        "verdict": {"failed": 1, "passed": 1, "UI42": "failed at first original 60 s response waiter",
+-                    "UI43": "unreached in first case", "UI44": "unreached in first case",
+-                    "BI": "original second case passed"},
++        "verdict": {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42",
++                    "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44",
++                    "BI": "UNBOUND_BI"},
+         "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                             "matchesOriginalMainSequence": parity,
+                             "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+@@ -907,34 +908,51 @@
+                      "originalPng": True, "jpegPreviewSubstituted": False})
+     RECEIPT["parsers"]["targetPngs"] = pngs
+ 
+-def e10_routes(value):
++def e11_routes(value):
+     need(isinstance(value, dict) and set(value) == {"scope", "order", "cap", "counts"}
+          and value.get("scope") == "pid-running-window"
+          and value.get("order") == ["sealed-read", "unfenced", "full-guard"]
+          and type(value.get("cap")) is int and value["cap"] == 65535
+          and isinstance(value.get("counts"), list) and len(value["counts"]) == 3
+          and all(type(count) is int and 0 <= count <= 65535 for count in value["counts"]),
+-         "E10_ROUTES_FINITE_PROTOCOL")
++         "E11_ROUTES_FINITE_PROTOCOL")
+     return value
+ 
+ 
+-def e10_unique_object(pairs):
++def e11_selection(value):
++    need(isinstance(value, dict)
++         and set(value) == {"scope", "order", "cap", "sourceRequests", "nativePairs", "saturated"}
++         and value.get("scope") == "pid-running-window"
++         and value.get("order") == ["none", "cases", "preferences"]
++         and type(value.get("cap")) is int and value["cap"] == 65535
++         and isinstance(value.get("sourceRequests"), list) and len(value["sourceRequests"]) == 3
++         and isinstance(value.get("nativePairs"), list) and len(value["nativePairs"]) == 9
++         and all(type(count) is int and 0 <= count <= 65535
++                 for count in value["sourceRequests"] + value["nativePairs"])
++         and type(value.get("saturated")) is bool, "E11_SELECTION_FINITE_PROTOCOL")
++    need(value["saturated"] == any(count == 65535
++                                   for count in value["sourceRequests"] + value["nativePairs"]),
++         "E11_SELECTION_SATURATED_CAP_REACHED")
++    return value
++
++
++def e11_unique_object(pairs):
+     value = {}
+     for key, item in pairs:
+-        need(key not in value, "E10_DUPLICATE_JSON_KEY")
++        need(key not in value, "E11_DUPLICATE_JSON_KEY")
+         value[key] = item
+     return value
+ 
+ 
+-def parse_e10_markers():
++def parse_e11_markers():
+     # Each family has its own attempted sequence. Interleaving is only the original stream order.
+     runtime = RECEIPT["parsers"]["runtime"]
+     need(runtime["semanticMarkers"]["matchesOriginalMainSequence"] is True,
+-         "E10_RUNTIME_MAIN_PARITY_REQUIRED")
++         "E11_RUNTIME_MAIN_PARITY_REQUIRED")
+     analytics_lines, cpu_lines, progress_lines, wire_lines = [], [], [], []
+     cpu_memberships, progress_memberships, events, progress_events = [], [], [], []
+     complete_bindings, family_sequences = {}, {}
+-    cpu_prefix, progress_prefix = "SF_PREVIEW_E10_CPU ", "SF_PREVIEW_E10_PROGRESS "
++    cpu_prefix, progress_prefix = "SF_PREVIEW_E11_CPU ", "SF_PREVIEW_E11_PROGRESS "
+     progress_kinds = ("body-returned", "admit-returned", "case-callback-entered")
+     binding_names = ("snapshot", "runId", "attempt", "nonce")
+     expected_identity = {"snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1"}
+@@ -942,7 +960,7 @@
+         for stream in case["stdioStreams"]:
+             raw = (ROOT / stream["markerPath"]).read_bytes()
+             need(len(raw) == stream["markerBytes"] and digest(raw) == stream["markerSha256"],
+-                 "E10_CASE_MARKER_SOURCE")
++                 "E11_CASE_MARKER_SOURCE")
+             lines = raw.decode("utf-8", errors="strict").splitlines()
+             analytics_lines.extend(line for line in lines if line.split(" ", 1)[0] in ANALYTICS_COUNTS)
+             stream_records = {"cpu": [], "progress": []}
+@@ -953,45 +971,46 @@
+                 prefix, cap = (cpu_prefix, 4096) if family == "cpu" else (progress_prefix, 1024)
+                 encoded = (line + "\n").encode("ascii")
+                 need(len(encoded) <= cap and re.fullmatch(rb"[\x20-\x7e]*\n", encoded) is not None,
+-                     "E10_" + family.upper() + "_MARKER_LINE_BOUND")
+-                event = json.loads(line[len(prefix):], object_pairs_hook=e10_unique_object)
++                     "E11_" + family.upper() + "_MARKER_LINE_BOUND")
++                event = json.loads(line[len(prefix):], object_pairs_hook=e11_unique_object)
+                 need(isinstance(event, dict)
+-                     and event.get("schema") == "sf-preview-causal-e10-" + family + "-v1"
++                     and event.get("schema") == "sf-preview-causal-e11-" + family + "-v1"
+                      and event.get("source") == SOURCE and event.get("sourceTree") == SOURCE_TREE
+                      and event.get("qualification") is False
+                      and type(event.get("request")) is int and event["request"] == 1
+                      and type(event.get("pid")) is int and 0 <= event["pid"] <= 999999999,
+-                     "E10_MARKER_SOURCE_BINDING")
++                     "E11_MARKER_SOURCE_BINDING")
+                 need(type(event.get("sequence")) is int and 1 <= event["sequence"] <= 3,
+-                     "E10_MARKER_SEQUENCE_BOUND")
+-                e10_routes(event.get("routes"))
++                     "E11_MARKER_SEQUENCE_BOUND")
++                e11_routes(event.get("routes"))
++                e11_selection(event.get("selection"))
+                 for name, expected in expected_identity.items():
+                     if name in event:
+                         need(type(event[name]) is str and event[name] == expected,
+-                             "E10_MARKER_PRESENT_IDENTITY_CONTRADICTION_" + name)
++                             "E11_MARKER_PRESENT_IDENTITY_CONTRADICTION_" + name)
+                 if "nonce" in event:
+                     need(isinstance(event["nonce"], str)
+-                         and re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", event["nonce"]) is not None
+-                         and (CPU["nonce"] is None or event["nonce"] == CPU["nonce"]), "E10_MARKER_PRESENT_NONCE_CONTRADICTION")
++                         and re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", event["nonce"]) is not None
++                         and (CPU["nonce"] is None or event["nonce"] == CPU["nonce"]), "E11_MARKER_PRESENT_NONCE_CONTRADICTION")
+                 bound = all(name in event for name in binding_names)
+                 if family == "cpu":
+                     need(event.get("kind") in ("started", "stopped", "finished", "unavailable"),
+-                         "E10_CPU_MARKER_KIND")
++                         "E11_CPU_MARKER_KIND")
+                     if event["kind"] != "unavailable":
+-                        need(bound, "E10_CPU_CAPTURE_RECORD_BINDING_REQUIRED")
++                        need(bound, "E11_CPU_CAPTURE_RECORD_BINDING_REQUIRED")
+                     cpu_lines.append(line)
+                     events.append(event)
+                 else:
+                     allowed = {"schema", "source", "sourceTree", "qualification", "pid", "request",
+-                               "sequence", "kind", "elapsedTenthMs", "cpuPhase", "routes", *binding_names}
++                               "sequence", "kind", "elapsedTenthMs", "cpuPhase", "routes", "selection", *binding_names}
+                     need(set(event).issubset(allowed) and event.get("kind") in progress_kinds
+                          and "elapsedTenthMs" in event
+                          and (event["elapsedTenthMs"] is None or
+                               type(event["elapsedTenthMs"]) is int and 0 <= event["elapsedTenthMs"] <= 999999999)
+                          and event.get("cpuPhase") in ("running", "stopping", "finished", "failed", "unavailable"),
+-                         "E10_PROGRESS_FINITE_PROTOCOL")
++                         "E11_PROGRESS_FINITE_PROTOCOL")
+                     if event["cpuPhase"] != "unavailable":
+-                        need(bound, "E10_PROGRESS_CAPTURE_BINDING_REQUIRED")
++                        need(bound, "E11_PROGRESS_CAPTURE_BINDING_REQUIRED")
+                     progress_lines.append(line)
+                     progress_events.append(event)
+                 key = (family, event["pid"])
+@@ -999,7 +1018,7 @@
+                     stream["case"], stream["result"], stream["stream"])})
+                 need(seen["stream"] == (stream["case"], stream["result"], stream["stream"])
+                      and event["sequence"] > seen["last"] and event["kind"] not in seen["kinds"],
+-                     "E10_FAMILY_SEQUENCE_OR_MEMBERSHIP_CONTRADICTION")
++                     "E11_FAMILY_SEQUENCE_OR_MEMBERSHIP_CONTRADICTION")
+                 seen["last"] = event["sequence"]
+                 seen["kinds"].add(event["kind"])
+                 if bound:
+@@ -1022,7 +1041,7 @@
+     cpu_raw = (("\n".join(cpu_lines) + "\n") if cpu_lines else "").encode("utf-8")
+     progress_raw = (("\n".join(progress_lines) + "\n") if progress_lines else "").encode("utf-8")
+     wire_raw = (("\n".join(wire_lines) + "\n") if wire_lines else "").encode("utf-8")
+-    need(0 < len(wire_raw) <= CORE_CAP["cpuMarkers"], "E10_COMBINED_WIRE_SLOT_CAP")
++    need(0 < len(wire_raw) <= CORE_CAP["cpuMarkers"], "E11_COMBINED_WIRE_SLOT_CAP")
+     analytics_counts = {name: sum(line.startswith(name + " ") for line in analytics_lines)
+                         for name in ANALYTICS_COUNTS}
+     cpu_counts = {name: sum(line.startswith(name + " ") for line in cpu_lines) for name in CPU_COUNTS}
+@@ -1030,17 +1049,17 @@
+     need(len(analytics_raw) == ANALYTICS_BYTES and digest(analytics_raw) == ANALYTICS_SHA
+          and analytics_counts == ANALYTICS_COUNTS, "ANALYTICS_MAIN_PARITY_REQUIRED")
+     need(len(cpu_raw) == CPU["markerBytes"] and digest(cpu_raw) == CPU["markerSha256"]
+-         and cpu_counts == CPU_COUNTS, "E10_CPU_MAIN_PARITY_REQUIRED")
++         and cpu_counts == CPU_COUNTS, "E11_CPU_MAIN_PARITY_REQUIRED")
+     need(len(progress_raw) == PROGRESS["markerBytes"] and digest(progress_raw) == PROGRESS["markerSha256"]
+-         and progress_counts == PROGRESS_COUNTS, "E10_PROGRESS_MAIN_PARITY_REQUIRED")
+-    need(len(complete_bindings) <= 1, "E10_COMPLETE_CAPTURE_BINDING_AMBIGUOUS")
++         and progress_counts == PROGRESS_COUNTS, "E11_PROGRESS_MAIN_PARITY_REQUIRED")
++    need(len(complete_bindings) <= 1, "E11_COMPLETE_CAPTURE_BINDING_AMBIGUOUS")
+     selected_binding = next(iter(complete_bindings.values())) if complete_bindings else None
+     need((selected_binding is None and CPU["nonce"] is None and CPU["pid"] is None)
+          or (selected_binding is not None and selected_binding["nonce"] == CPU["nonce"]
+-             and selected_binding["pid"] == CPU["pid"]), "E10_SELECTED_CAPTURE_BINDING")
++             and selected_binding["pid"] == CPU["pid"]), "E11_SELECTED_CAPTURE_BINDING")
+     if selected_binding is None:
+-        pending("E10_COMPLETE_CAPTURE_BINDING_ABSENT")
+-    path = "derived/preview-e10-cpu-progress-markers.lf.log"
++        pending("E11_COMPLETE_CAPTURE_BINDING_ABSENT")
++    path = "derived/preview-e11-cpu-progress-markers.lf.log"
+     write_bytes(ROOT / path, wire_raw)
+     parities = {
+         "analytics": {"bytes": len(analytics_raw), "sha256": digest(analytics_raw),
+@@ -1055,10 +1074,10 @@
+         "union": runtime["semanticMarkers"],
+         "allFour": True,
+     }
+-    runtime["e10CpuRecords"] = cpu_memberships
+-    runtime["e10ProgressRecords"] = progress_memberships
++    runtime["e11CpuRecords"] = cpu_memberships
++    runtime["e11ProgressRecords"] = progress_memberships
+     runtime["parities"] = parities
+-    RECEIPT["parsers"]["e10Markers"] = {
++    RECEIPT["parsers"]["e11Markers"] = {
+         "path": path, "bytes": len(wire_raw), "sha256": digest(wire_raw), "lines": len(wire_lines),
+         "cpuCounts": cpu_counts, "progressCounts": progress_counts, "parities": parities,
+         "cpuMemberships": cpu_memberships, "progressMemberships": progress_memberships,
+@@ -1072,10 +1091,14 @@
+                    "A complete tuple selects an artifact namespace, not sampler ownership or capture completion.",
+                    "Routes count already selected branches in this PID only while sampling runs; they are not Request totals.",
+                    "A route count at65535 is saturated. No conservation, exclusive time or authority result is inferred.",
++                   "Selection has Source3 token decisions and native9 copied-child pairs, row=requested and column=materialized.",
++                   "Native pairs include all copied child surfaces and non-C08 callers, before callback; none/none is not a C08 fallback rate.",
++                   "Source and native populations are distinct; no pairing, conservation, positivity or cross-family monotonicity is required.",
++                   "Selection.saturated reports cap reached among its twelve slots only, not the three routes or events above the cap.",
+                    "Body/admit returned and case callback entered are boundaries, not result validity, admission or producer success.",
+                    "Playwright workerIndex is not a PID; native identity is read only from literal authenticated records."],
+     }
+-    checked("e10_four_hard_parities_independent_sequences_and_case_stream_membership")
++    checked("e11_four_hard_parities_independent_sequences_and_case_stream_membership")
+     return {"raw": wire_raw, "cpuRaw": cpu_raw, "events": events, "progressEvents": progress_events,
+             "cpuMemberships": cpu_memberships, "progressMemberships": progress_memberships,
+             "selectedBinding": selected_binding}
+@@ -1106,16 +1129,16 @@
+ 
+ 
+ def parse_cpu_originals(marker_data):
+-    # Current E10 records authenticate one complete tuple; no first/latest directory is selected.
++    # UNBOUND CURRENT FACT: retain this started/tuple gate only after the actual E11 intake supports it; never choose first/latest directory.
+     binding = marker_data["selectedBinding"]
+     need(binding is not None and binding["nonce"] == CPU["nonce"] and binding["pid"] == CPU["pid"],
+-         "E10_CURRENT_COMPLETE_CAPTURE_BINDING")
++         "E11_CURRENT_COMPLETE_CAPTURE_BINDING")
+     events = marker_data["events"]
+     started = next((event for event in events if event["kind"] == "started"), None)
+     stopped = next((event for event in events if event["kind"] == "stopped"), None)
+     finished = next((event for event in events if event["kind"] == "finished"), None)
+     need(started is not None and started["kind"] == "started"
+-         and re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", CPU["nonce"]) is not None,
++         and re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", CPU["nonce"]) is not None,
+          "CPU_SELECTED_STARTED_NONCE")
+     expected_runtime = ["1.3.14", "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"]
+     need(started.get("runtime") == expected_runtime and started.get("parentPid") == CPU["parentPid"]
+@@ -1134,7 +1157,7 @@
+         pieces = item["path"].split("/")
+         positions = [index for index in range(len(pieces) - 2)
+                      if pieces[index] == "test-ci-evidence"
+-                     and pieces[index + 1].startswith("sf613-e10-cpu-")]
++                     and pieces[index + 1].startswith("sf613-e11-cpu-")]
+         if not positions:
+             continue
+         need(len(positions) == 1, "CPU_NAMESPACE_AMBIGUOUS")
+@@ -1151,14 +1174,14 @@
+         group[kind].append({"file": item["id"], "name": "/".join(relative),
+                             "bytes": item["bytes"], "sha256": item["sha256"]})
+         if kind != "unclassified":
+-            need(re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", nonce) is not None
++            need(re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", nonce) is not None
+                  and len(relative) == 1 and name in CPU_NAMES, "CPU_NAMESPACE_MEMBER_SHAPE")
+     selected_groups = [group for group in groups.values() if group["nonce"] == CPU["nonce"]]
+     need(len(selected_groups) <= 1, "CPU_SELECTED_DIRECTORY_AMBIGUOUS")
+     selected_directory = selected_groups[0]["directory"] if selected_groups else None
+     populations = [group for group in groups.values() if group["profile"] or group["collection"]]
+     population_inventory = {
+-        "scope": "all outer archive E10 nonce directories", "directories": list(groups.values()),
++        "scope": "all outer archive E11 nonce directories", "directories": list(groups.values()),
+         "populationCount": len(populations), "selectedNonce": CPU["nonce"],
+         "selectedDirectory": selected_directory, "extraLauncherFiles": [],
+         "launcherLimit": "Launcher preparation is not Request/start/profile/close proof; absent files are not fabricated.",
+@@ -1175,7 +1198,7 @@
+             raw = read_file(FILES[item["file"]], CORE_CAP["launcher"])
+             value, parse_status = cpu_json_object(raw)
+             binding = cpu_present_fields(value, {
+-                "schema": "sf-preview-e10-cpu-launch-v1", "source": SOURCE, "sourceTree": SOURCE_TREE,
++                "schema": "sf-preview-e11-cpu-launch-v1", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                 "snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1", "nonce": group["nonce"],
+                 "relativeDirectory": "test-ci-evidence/" + group["nonce"],
+                 "state": "prepared", "qualification": False, "processRole": "native-cli",
+@@ -1227,12 +1250,12 @@
+                     "runId": str(ORIGINAL_RUN), "attempt": "1", "nonce": CPU["nonce"],
+                     "qualification": False}
+         if name == "launcher.json":
+-            expected.update({"schema": "sf-preview-e10-cpu-launch-v1", "processRole": "native-cli",
++            expected.update({"schema": "sf-preview-e11-cpu-launch-v1", "processRole": "native-cli",
+                              "state": "prepared", "entry": "apps/cli/src/index.ts", "command": "serve",
+                              "relativeDirectory": "test-ci-evidence/" + CPU["nonce"],
+                              "profileName": "preview-first.cpuprofile"})
+         else:
+-            expected.update({"schema": "sf-preview-causal-e10-cpu-v1", "pid": CPU["pid"],
++            expected.update({"schema": "sf-preview-causal-e11-cpu-v1", "pid": CPU["pid"],
+                              "parentPid": CPU["parentPid"], "request": 1, "runtime": expected_runtime,
+                              "intervalUs": 5000, "targetMs": 50000, "acceptMs": 55000,
+                              "profileCapBytes": CORE_CAP["profile"], "collectionCapBytes": CORE_CAP["collection"]})
+@@ -1241,7 +1264,10 @@
+         if name in raw_files and not valid:
+             pending("CPU_SELECTED_FILE_BINDING_UNVERIFIED", {"file": presence[name]["file"]})
+     if collection is not None and "routes" in collection:
+-        e10_routes(collection["routes"])
++        e11_routes(collection["routes"])
++    collection_selection_valid = collection is not None and "selection" in collection
++    if collection_selection_valid:
++        e11_selection(collection["selection"])
+     # Missing originals or JSON fields remain pending. Every present contradiction is rejected.
+     collection_close_fields = False
+     if finished is not None:
+@@ -1252,7 +1278,7 @@
+                     expected_file.update({"bytes": len(raw_files[name]), "sha256": digest(raw_files[name])})
+                 cpu_present_fields(finished[field], expected_file, "CPU_FINISHED_PRESENT_FILE_CONTRADICTION")
+         if collection is not None:
+-            expected_collection = {name: finished[name] for name in ("state", "cause", "cleanupFailed", "routes")
++            expected_collection = {name: finished[name] for name in ("state", "cause", "cleanupFailed", "routes", "selection")
+                                    if name in finished}
+             collection_close_fields = cpu_present_fields(collection, expected_collection,
+                                                          "CPU_COLLECTION_PRESENT_CLOSE_CONTRADICTION")
+@@ -1295,7 +1321,7 @@
+     elif (set(raw_files) != set(CPU_NAMES)
+           or not all(row["parseStatus"] == "JSON_OBJECT" and row["trailingLF"] for row in selected)
+           or not all(bindings.values()) or not profile_valid or not collection_close_fields
+-          or collection is None or "native" not in collection):
++          or collection is None or "native" not in collection or not collection_selection_valid):
+         pending("CPU_COMPLETED_MARKER_FILES_NOT_COMPLETE")
+     else:
+         need(finished.get("state") in ("completed-on-time", "completed-late", "short-completed")
+@@ -1304,6 +1330,7 @@
+              and all(bindings.values()) and profile_valid, "CPU_FINISHED_REQUIRED_FILES")
+         need(collection.get("profile") == finished.get("profile")
+              and collection.get("routes") == stopped.get("routes") == finished.get("routes")
++             and collection.get("selection") == stopped.get("selection") == finished.get("selection")
+              and collection.get("points") == finished.get("points")
+              and type(collection.get("cleanupFailed")) is bool
+              and collection.get("cleanupFailed") == stopped.get("cleanupFailed") == finished.get("cleanupFailed")
+@@ -1360,6 +1387,8 @@
+         "finishedRecordPresent": finished is not None, "postCloseFilesVerified": post_close_files,
+         "selectedFileBindings": bindings, "collectionProfileBytesMatched": collection_profile_binding,
+         "collectionRoutes": collection.get("routes") if collection is not None else None,
++        "collectionSelection": collection.get("selection") if collection is not None else None,
++        "collectionSelectionValid": collection_selection_valid,
+         "profileSchemaValid": profile_valid, "native": native,
+         "collectionWithinAccept": finished.get("collectionWithinAccept") if capture_complete else None,
+         "limits": ["Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+@@ -1372,6 +1401,9 @@
+                    "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+                    "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+                    "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
++                   "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
++                   "Source token decisions and all-surface native copied-child pairs have distinct populations; no conservation or fallback rate is inferred.",
++                   "Native pairs exclude top-level materializations and copies that threw before completion; the CPU profile may still include them.",
+                    "All clocks retain their domains; no reconciliation with Playwright startTime/duration."],
+     }
+     checked("cpu_all_populations_inventory_optional_raw_files_and_explicit_completion")
+@@ -1434,11 +1466,11 @@
+     need(RECEIPT["archiveSummary"]["allEntriesVerified"] is True and not RECEIPT["failures"],
+          "CORE_REQUIRED_VALIDATION_FAILURE")
+     summary = canonical({
+-        "schema": 1, "kind": "e10-original-core-summary", "qualification": False,
++        "schema": 1, "kind": "e11-original-core-summary", "qualification": False,
+         "source": SOURCE, "sourceTree": SOURCE_TREE, "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+         "run": ORIGINAL_RUN, "attempt": ORIGINAL_ATTEMPT, "artifact": RECEIPT["artifact"],
+         "selection": RECEIPT["parsers"]["selection"], "runtime": RECEIPT["parsers"]["runtime"],
+-        "cpuMarkers": RECEIPT["parsers"]["e10Markers"], "cpu": cpu,
++        "cpuMarkers": RECEIPT["parsers"]["e11Markers"], "cpu": cpu,
+         "cpuPopulationInventory": RECEIPT["parsers"]["cpuPopulationInventory"],
+         "pending": RECEIPT["pending"],
+         "htmlArchives": RECEIPT["parsers"].get("htmlArchives", []),
+@@ -1449,7 +1481,7 @@
+     first_payloads = []
+     for key, name, export_name in (
+             ("profile", "preview-first.cpuprofile", "original-cpu-preview-first.cpuprofile"),
+-            ("cpuMarkers", None, "preview-e10-cpu-progress-markers.lf.log"),
++            ("cpuMarkers", None, "preview-e11-cpu-progress-markers.lf.log"),
+             ("collection", "collection.json", "original-cpu-collection.json"),
+             ("launcher", "launcher.json", "original-cpu-launcher.json")):
+         if name is None:
+@@ -1488,7 +1520,7 @@
+     core_bytes = sum(len(line) for line in core_lines)
+     before_bytes = LOG_BYTES
+     final = {
+-        "schema": 1, "kind": "e10-core-terminal", "qualification": False,
++        "schema": 1, "kind": "e11-core-terminal", "qualification": False,
+         "status": RECEIPT["status"], "coreBytesComplete": True, "receiptBase64Complete": True,
+         "captureComplete": cpu["captureComplete"], "cpuState": cpu["state"],
+         "coreFiles": len(prepared), "coreChunks": len(core_lines),
+@@ -1539,7 +1571,7 @@
+     except Exception:
+         pass
+     terminal = {
+-        "schema": 1, "kind": "e10-core-terminal", "qualification": False, "status": "RECEIPT_FAILED",
++        "schema": 1, "kind": "e11-core-terminal", "qualification": False, "status": "RECEIPT_FAILED",
+         "coreBytesComplete": False, "receiptBase64Complete": False, "readerExitCode": 1,
+         "coreChunksWritten": CORE_LINES_WRITTEN, "logBytesBeforeTerminal": LOG_BYTES,
+         "failures": [failure], "failureReceipt": receipt_meta,
+@@ -1558,7 +1590,7 @@
+     unpack_html_reports()
+     checked("all_discovered_zip_entries_crc_sha256_and_safe_paths")
+     parse_runtime_and_selection()
+-    marker_data = parse_e10_markers()
++    marker_data = parse_e11_markers()
+     cpu_raw = parse_cpu_originals(marker_data)
+     need(not RECEIPT["failures"], "REQUIRED_PARSER_FAILURE")
+     RECEIPT["status"] = ("ORIGINAL_BYTES_VERIFIED" if RECEIPT["parsers"]["cpu"]["captureComplete"]
+@@ -1566,8 +1598,8 @@
+     RECEIPT["qualification"] = False
+     RECEIPT["limits"] = [
+         "This job receives one existing original ZIP; no checkout or repository product/test/observer is executed.",
+-        "The execution used S with seven overlays2A5M over corrected C13; no clean-source performance or final qualification is inferred.",
+-        "The two original cases retain their selection and deadlines. Outcomes are verified only against the current E10 intake.",
++        "The execution used E11 S with eight overlays2A6M over clean S15R; no clean-source performance or final qualification is inferred.",
++        "The two original cases retain their selection and deadlines. Outcomes are verified only against the completed current E11 intake.",
+         "Every actually present selected profile/collection/launcher is exported whole, plus literal CPU+progress when present, summary, inventory and receipt.",
+         "Absent files have no fabricated payload. A real zero-byte file has its inventory ID, empty SHA256 and one empty base64 chunk.",
+         "Raw runtime/selection, error-context and HTML remain preserved in the audit artifact but are not exported whole in this log.",
+@@ -1578,6 +1610,10 @@
+         "CPU and progress have separate attempt sequences and lifetimes; late HTTP progress never rewrites closed CPU files.",
+         "Progress proves only body/admit return or entry of the withCase callback, not validity, accepted authorization or product success.",
+         "Routes are PID-running-window counters of already selected branches, capped65535, not Request totals or completed work.",
++        "Selection Source3 counts issued-token decisions; native3x3 counts all completed native child copies before callback, not only C08.",
++        "Selection is finite with twelve slots capped65535; saturated means cap reached in those slots, not in the historical route counters.",
++        "No equality, conservation, positivity, Request ownership or counters-to-samples pairing is inferred across these populations.",
++        "Only a complete CPU closure compares collection/stopped/finished selection snapshots; late HTTP progress remains separate.",
+         "Received file hashes are not post-close producer hashes. Missing CPU finished never promotes captureComplete, even if progress says finished.",
+         "Partial, empty, malformed and non-LF files remain exact original bytes with explicit parse/presence state; no JSON or LF is fabricated.",
+         "CPU whole-VM samples may include unrelated backend work and observer overhead; no exclusive time or causal bottleneck is inferred.",
+diff --git a/.github/workflows/sf613-artifact-read.yml b/.github/workflows/sf613-artifact-read.yml
+--- a/.github/workflows/sf613-artifact-read.yml
++++ b/.github/workflows/sf613-artifact-read.yml
+@@ -2,14 +2,14 @@
+ 
+ on:
+   push:
+-    branches: [sf613-artifact-e10]
++    branches: [UNBOUND_READER_BRANCH]
+ 
+ permissions:
+   contents: read
+   actions: read
+ 
+ concurrency:
+-  group: sf613-artifact-e10-${{ github.sha }}
++  group: UNBOUND_READER_BRANCH-${{ github.sha }}
+   cancel-in-progress: false
+ 
+ jobs:
+@@ -20,7 +20,7 @@
+       - name: Verify original immutable artifact without checkout
+         env:
+           GH_TOKEN: ${{ github.token }}
+-          SF613_ARTIFACT_READER_SHA256: cd5054c21b6376031c313b65d49d7fdc40462ac6d174042648f97bbcf71a33b7
++          SF613_ARTIFACT_READER_SHA256: 15b1726506ff787d1a3edbcde5a5e0f8621c620aaffb4dc2e5d27cd8ccffd8d9
+           SF613_ARTIFACT_READER_SOURCE: |
+             #!/usr/bin/env python3
+             """Receipt of one immutable Analytics artifact. Never imports or executes repository code."""
+@@ -42,20 +42,20 @@
+             import zlib
+             
+             REPO = "gustavomhss/Orchestra-SF"
+-            BRANCH = "sf613-artifact-e10"
++            BRANCH = "UNBOUND_READER_BRANCH"
+             WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+-            SOURCE = "7d26eb502441aafeacfaa89c135e81dc8d98571b"
+-            SOURCE_TREE = "b90f6e774436bddd61043b6ac70a9dc2a625baf4"
+-            SNAPSHOT = "8f85aa7653693a1fb73e37f497e2795fc4da66e0"
+-            SNAPSHOT_TREE = "590f5e9ca2fa18fa3981c55f56a542efd017daf2"
+-            ORIGINAL_RUN = 45973791480
++            SOURCE = "069a56a60a9c12ea7c32ed54b07ee11442c35db5"
++            SOURCE_TREE = "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
++            SNAPSHOT = "ace9cecb0c03cf3f1c5287a81570b508d8116aab"
++            SNAPSHOT_TREE = "f8e25f50d5b9a5f59ba8e3d5a5b24b6ba717cef4"
++            ORIGINAL_RUN = 46028127606
+             ORIGINAL_ATTEMPT = 1
+-            MAIN_JOB = 140420390660
+-            CLEANUP_JOB = 140424805096
+-            ARTIFACT_ID = 15186093614
+-            ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
+-            ARTIFACT_BYTES = 45989855
+-            ARTIFACT_SHA = "3417e925094e2ee08d1febe12f1b2f16927859b1cb8a75f72bca88a729a700a0"
++            MAIN_JOB = 140604695368
++            CLEANUP_JOB = "UNBOUND_CLEANUP_JOB"
++            ARTIFACT_ID = "UNBOUND_ARTIFACT_ID"
++            ARTIFACT_NAME = "UNBOUND_ARTIFACT_NAME"
++            ARTIFACT_BYTES = "UNBOUND_ARTIFACT_BYTES"
++            ARTIFACT_SHA = "UNBOUND_ARTIFACT_SHA256"
+             REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+             REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+             SOURCE_SELECTION_PINS = [
+@@ -72,28 +72,28 @@
+                     "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+                 }
+             ]
+-            # Current metadata and literal main-derived parities are bound. Final intake closure is still explicit.
+-            E10_BINDINGS_COMPLETE = True
+-            ORIGINAL_CONCLUSION = "failure"
+-            MAIN_CONCLUSION = "failure"
+-            CLEANUP_CONCLUSION = "success"
+-            TEST_STEP_CONCLUSION = "failure"
+-            EXPECTED_CASE_STATUSES = [["failed", "timedOut"], ["passed"]]
+-            EXPECTED_FIRST_WAITER_FAILURE = True
+-            EXPECTED_VERDICT = {"failed": 1, "passed": 1, "UI42": "failed at first original 60 s response waiter", "UI43": "unreached in first case", "UI44": "unreached in first case", "BI": "original second case passed"}
+-            SEMANTIC_SHA = "47a3b9435307cd16a4d6ab6c5d00b38ee2c5e231e100a04135b9215d02ce3e3e"
+-            SEMANTIC_BYTES = 38581
+-            SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":45,"SF_ANALYTICS_CAPTURE":46,"SF_PREVIEW_E10_CPU":3,"SF_PREVIEW_E10_PROGRESS":3,"SF_DESIGN_DIAGNOSTICS":5,"SF_ANALYTICS_SCOPE":1}
+-            ANALYTICS_SHA = "6d90b394432d45b541b24d2693a841a688da59f80a87cf1e3e6e3821d9362c59"
+-            ANALYTICS_BYTES = 34315
+-            ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":45,"SF_ANALYTICS_CAPTURE":46,"SF_DESIGN_DIAGNOSTICS":5,"SF_ANALYTICS_SCOPE":1}
+-            CPU_COUNTS = {"SF_PREVIEW_E10_CPU": 3}
+-            PROGRESS_COUNTS = {"SF_PREVIEW_E10_PROGRESS": 3}
++            # NON-EXECUTABLE TEMPLATE: source and announced live run/main only; terminal intake facts remain UNBOUND.
++            E11_BINDINGS_COMPLETE = "UNBOUND_FINAL_ACTUAL_ANALYTICS_INTAKE"
++            ORIGINAL_CONCLUSION = "UNBOUND_ORIGINAL_CONCLUSION"
++            MAIN_CONCLUSION = "UNBOUND_MAIN_CONCLUSION"
++            CLEANUP_CONCLUSION = "UNBOUND_CLEANUP_CONCLUSION"
++            TEST_STEP_CONCLUSION = "UNBOUND_TEST_STEP_CONCLUSION"
++            EXPECTED_CASE_STATUSES = [["UNBOUND_CASE_1_STATUS"], ["UNBOUND_CASE_2_STATUS"]]
++            EXPECTED_FIRST_WAITER_FAILURE = "UNBOUND_FIRST_WAITER_FAILURE"
++            EXPECTED_VERDICT = {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42", "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44", "BI": "UNBOUND_BI"}
++            SEMANTIC_SHA = "UNBOUND_UNION_SHA256"
++            SEMANTIC_BYTES = "UNBOUND_UNION_BYTES"
++            SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_PREVIEW_E11_CPU":"UNBOUND_CPU_COUNT","SF_PREVIEW_E11_PROGRESS":"UNBOUND_PROGRESS_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
++            ANALYTICS_SHA = "UNBOUND_ANALYTICS_SHA256"
++            ANALYTICS_BYTES = "UNBOUND_ANALYTICS_BYTES"
++            ANALYTICS_COUNTS = {"SF_ANALYTICS_SOURCE":"UNBOUND_SOURCE_COUNT","SF_ANALYTICS_CAPTURE":"UNBOUND_CAPTURE_COUNT","SF_DESIGN_DIAGNOSTICS":"UNBOUND_DIAGNOSTICS_COUNT","SF_ANALYTICS_SCOPE":"UNBOUND_SCOPE_COUNT"}
++            CPU_COUNTS = {"SF_PREVIEW_E11_CPU": "UNBOUND_CPU_COUNT"}
++            PROGRESS_COUNTS = {"SF_PREVIEW_E11_PROGRESS": "UNBOUND_PROGRESS_COUNT"}
+             CPU = {
+-                "nonce": "sf613-e10-cpu-TiUfW6", "pid": 3718, "parentPid": 3674,
+-                "markerBytes": 2637, "markerSha256": "30d3394df656b7e344712e5cb5cdf01eadd244d488d36cb843b9420528e8beb0",
++                "nonce": "UNBOUND_CPU_NONCE", "pid": "UNBOUND_CPU_PID", "parentPid": "UNBOUND_CPU_PARENT_PID",
++                "markerBytes": "UNBOUND_CPU_MARKER_BYTES", "markerSha256": "UNBOUND_CPU_MARKER_SHA256",
+             }
+-            PROGRESS = {"markerBytes": 1629, "markerSha256": "0dbcab8a4be406292e96565504d98552c6f1791a150e6d4e1b2f8a9afc2911cd"}
++            PROGRESS = {"markerBytes": "UNBOUND_PROGRESS_MARKER_BYTES", "markerSha256": "UNBOUND_PROGRESS_MARKER_SHA256"}
+             CPU_NAMES = ("preview-first.cpuprofile", "collection.json", "launcher.json")
+             CORE_CAP = {"profile": 4 * 1024 * 1024, "cpuMarkers": 64 * 1024,
+                         "collection": 16 * 1024, "launcher": 8 * 1024,
+@@ -252,7 +252,7 @@
+                 raise ReceiptFailure("API_COLLECTION_PAGE_CAP")
+             
+             def check_original_and_reader():
+-                need(E10_BINDINGS_COMPLETE is True, "E10_INTAKE_BINDINGS_UNBOUND")
++                need(E11_BINDINGS_COMPLETE is True, "E11_INTAKE_BINDINGS_UNBOUND")
+                 need(bool(TOKEN), "GITHUB_TOKEN_REQUIRED")
+                 driver = os.environ.get("GITHUB_SHA", "")
+                 run_id = os.environ.get("GITHUB_RUN_ID", "")
+@@ -304,16 +304,17 @@
+                 original_delta = api("/compare/" + SOURCE + "..." + SNAPSHOT, "original-snapshot-delta")
+                 original_changes = original_delta.get("files", [])
+                 need(original_delta.get("ahead_by") == 1 and original_delta.get("behind_by") == 0
+-                     and original_delta.get("total_commits") == 1 and len(original_changes) == 7
++                     and original_delta.get("total_commits") == 1 and len(original_changes) == 8
+                      and {(item.get("filename"), item.get("status"), item.get("sha")) for item in original_changes} == {
+-                          ("modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts", "added", "629eb12bf5e9d06a37b0729261fd324859f299ab"),
+-                          ("apps/cli/src/sucafina-product/portfolio-http.ts", "modified", "30d9fac161b3fe3c862b96280bf339064d574cd9"),
+-                          ("packages/app-shell/e2e/sucafina/design-support/installation.ts", "modified", "56a06415240134d4d36a0620cb38d574846e7675"),
+-                          ("apps/cli/test/fixture/sucafina-native-installation.ts", "modified", "65b34f4b17401ee49196a518008dbe1c952f5d67"),
+-                          ("modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts", "modified", "f4cee795ab526924e752a3a7b56a22f8b3d9b422"),
+-                          ("modules/sucafina/Sucafinav1/product/integration/product-authority.ts", "modified", "ace18a94c3db1098ae48bc20970aab801f431cdd"),
++                          ("modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts", "added", "b5e2f218117a0f30e803a8b251922e92b6da2332"),
++                          ("apps/cli/src/sucafina-product/portfolio-http.ts", "modified", "347edd5292d86537451507026236f27f2488a06a"),
++                          ("packages/app-shell/e2e/sucafina/design-support/installation.ts", "modified", "b989a4fa1b4ecfcc8800e9df07e823e93d77009a"),
++                          ("apps/cli/test/fixture/sucafina-native-installation.ts", "modified", "46dab966dbb2631fcc65f5cf730e792f9e7e94da"),
++                          ("modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts", "modified", "8148a7fdd70621aa41a0978efdaf330202f2ba73"),
++                          ("modules/sucafina/Sucafinav1/product/integration/product-authority.ts", "modified", "c35042473a5a1f5416253a3c5bf6b8450c44673b"),
++                          ("modules/sucafina/Sucafinav1/runtime/local-store.ts", "modified", "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e"),
+                           (".ci-run.json", "added", "eda49a023c07599de00f5af9642ee92b9d9adf3b"),
+-                      }, "ORIGINAL_EXACT_E10_SEVEN_OVERLAYS")
++                      }, "ORIGINAL_EXACT_E11_EIGHT_OVERLAYS")
+                 original_run = api("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1", "original-run")
+                 need(original_run.get("id") == ORIGINAL_RUN and original_run.get("run_attempt") == 1
+                      and original_run.get("head_sha") == SNAPSHOT and original_run.get("event") == "push"
+@@ -650,7 +651,7 @@
+                 all_lines = []
+                 streams = []
+                 pattern = re.compile(r"^(?:\x1b\[[0-?]*[ -/]*[@-~])*"
+-                                     r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE|SF_PREVIEW_E10_CPU|SF_PREVIEW_E10_PROGRESS) (.*)$")
++                                     r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE|SF_PREVIEW_E11_CPU|SF_PREVIEW_E11_PROGRESS) (.*)$")
+                 for result_ordinal, result in enumerate(results, 1):
+                     for field in ("stdout", "stderr"):
+                         chunks = []
+@@ -744,9 +745,9 @@
+                 RECEIPT["parsers"]["runtime"] = {
+                     "file": runtime_item["id"], "bytes": len(runtime_raw), "sha256": digest(runtime_raw),
+                     "tests": 2, "config": runtime_config, "cases": cases,
+-                    "verdict": {"failed": 1, "passed": 1, "UI42": "failed at first original 60 s response waiter",
+-                                "UI43": "unreached in first case", "UI44": "unreached in first case",
+-                                "BI": "original second case passed"},
++                    "verdict": {"failed": "UNBOUND_FAILED", "passed": "UNBOUND_PASSED", "UI42": "UNBOUND_UI42",
++                                "UI43": "UNBOUND_UI43", "UI44": "UNBOUND_UI44",
++                                "BI": "UNBOUND_BI"},
+                     "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                                         "matchesOriginalMainSequence": parity,
+                                         "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+@@ -931,34 +932,51 @@
+                                  "originalPng": True, "jpegPreviewSubstituted": False})
+                 RECEIPT["parsers"]["targetPngs"] = pngs
+             
+-            def e10_routes(value):
++            def e11_routes(value):
+                 need(isinstance(value, dict) and set(value) == {"scope", "order", "cap", "counts"}
+                      and value.get("scope") == "pid-running-window"
+                      and value.get("order") == ["sealed-read", "unfenced", "full-guard"]
+                      and type(value.get("cap")) is int and value["cap"] == 65535
+                      and isinstance(value.get("counts"), list) and len(value["counts"]) == 3
+                      and all(type(count) is int and 0 <= count <= 65535 for count in value["counts"]),
+-                     "E10_ROUTES_FINITE_PROTOCOL")
++                     "E11_ROUTES_FINITE_PROTOCOL")
+                 return value
+             
+             
+-            def e10_unique_object(pairs):
++            def e11_selection(value):
++                need(isinstance(value, dict)
++                     and set(value) == {"scope", "order", "cap", "sourceRequests", "nativePairs", "saturated"}
++                     and value.get("scope") == "pid-running-window"
++                     and value.get("order") == ["none", "cases", "preferences"]
++                     and type(value.get("cap")) is int and value["cap"] == 65535
++                     and isinstance(value.get("sourceRequests"), list) and len(value["sourceRequests"]) == 3
++                     and isinstance(value.get("nativePairs"), list) and len(value["nativePairs"]) == 9
++                     and all(type(count) is int and 0 <= count <= 65535
++                             for count in value["sourceRequests"] + value["nativePairs"])
++                     and type(value.get("saturated")) is bool, "E11_SELECTION_FINITE_PROTOCOL")
++                need(value["saturated"] == any(count == 65535
++                                               for count in value["sourceRequests"] + value["nativePairs"]),
++                     "E11_SELECTION_SATURATED_CAP_REACHED")
++                return value
++            
++            
++            def e11_unique_object(pairs):
+                 value = {}
+                 for key, item in pairs:
+-                    need(key not in value, "E10_DUPLICATE_JSON_KEY")
++                    need(key not in value, "E11_DUPLICATE_JSON_KEY")
+                     value[key] = item
+                 return value
+             
+             
+-            def parse_e10_markers():
++            def parse_e11_markers():
+                 # Each family has its own attempted sequence. Interleaving is only the original stream order.
+                 runtime = RECEIPT["parsers"]["runtime"]
+                 need(runtime["semanticMarkers"]["matchesOriginalMainSequence"] is True,
+-                     "E10_RUNTIME_MAIN_PARITY_REQUIRED")
++                     "E11_RUNTIME_MAIN_PARITY_REQUIRED")
+                 analytics_lines, cpu_lines, progress_lines, wire_lines = [], [], [], []
+                 cpu_memberships, progress_memberships, events, progress_events = [], [], [], []
+                 complete_bindings, family_sequences = {}, {}
+-                cpu_prefix, progress_prefix = "SF_PREVIEW_E10_CPU ", "SF_PREVIEW_E10_PROGRESS "
++                cpu_prefix, progress_prefix = "SF_PREVIEW_E11_CPU ", "SF_PREVIEW_E11_PROGRESS "
+                 progress_kinds = ("body-returned", "admit-returned", "case-callback-entered")
+                 binding_names = ("snapshot", "runId", "attempt", "nonce")
+                 expected_identity = {"snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1"}
+@@ -966,7 +984,7 @@
+                     for stream in case["stdioStreams"]:
+                         raw = (ROOT / stream["markerPath"]).read_bytes()
+                         need(len(raw) == stream["markerBytes"] and digest(raw) == stream["markerSha256"],
+-                             "E10_CASE_MARKER_SOURCE")
++                             "E11_CASE_MARKER_SOURCE")
+                         lines = raw.decode("utf-8", errors="strict").splitlines()
+                         analytics_lines.extend(line for line in lines if line.split(" ", 1)[0] in ANALYTICS_COUNTS)
+                         stream_records = {"cpu": [], "progress": []}
+@@ -977,45 +995,46 @@
+                             prefix, cap = (cpu_prefix, 4096) if family == "cpu" else (progress_prefix, 1024)
+                             encoded = (line + "\n").encode("ascii")
+                             need(len(encoded) <= cap and re.fullmatch(rb"[\x20-\x7e]*\n", encoded) is not None,
+-                                 "E10_" + family.upper() + "_MARKER_LINE_BOUND")
+-                            event = json.loads(line[len(prefix):], object_pairs_hook=e10_unique_object)
++                                 "E11_" + family.upper() + "_MARKER_LINE_BOUND")
++                            event = json.loads(line[len(prefix):], object_pairs_hook=e11_unique_object)
+                             need(isinstance(event, dict)
+-                                 and event.get("schema") == "sf-preview-causal-e10-" + family + "-v1"
++                                 and event.get("schema") == "sf-preview-causal-e11-" + family + "-v1"
+                                  and event.get("source") == SOURCE and event.get("sourceTree") == SOURCE_TREE
+                                  and event.get("qualification") is False
+                                  and type(event.get("request")) is int and event["request"] == 1
+                                  and type(event.get("pid")) is int and 0 <= event["pid"] <= 999999999,
+-                                 "E10_MARKER_SOURCE_BINDING")
++                                 "E11_MARKER_SOURCE_BINDING")
+                             need(type(event.get("sequence")) is int and 1 <= event["sequence"] <= 3,
+-                                 "E10_MARKER_SEQUENCE_BOUND")
+-                            e10_routes(event.get("routes"))
++                                 "E11_MARKER_SEQUENCE_BOUND")
++                            e11_routes(event.get("routes"))
++                            e11_selection(event.get("selection"))
+                             for name, expected in expected_identity.items():
+                                 if name in event:
+                                     need(type(event[name]) is str and event[name] == expected,
+-                                         "E10_MARKER_PRESENT_IDENTITY_CONTRADICTION_" + name)
++                                         "E11_MARKER_PRESENT_IDENTITY_CONTRADICTION_" + name)
+                             if "nonce" in event:
+                                 need(isinstance(event["nonce"], str)
+-                                     and re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", event["nonce"]) is not None
+-                                     and (CPU["nonce"] is None or event["nonce"] == CPU["nonce"]), "E10_MARKER_PRESENT_NONCE_CONTRADICTION")
++                                     and re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", event["nonce"]) is not None
++                                     and (CPU["nonce"] is None or event["nonce"] == CPU["nonce"]), "E11_MARKER_PRESENT_NONCE_CONTRADICTION")
+                             bound = all(name in event for name in binding_names)
+                             if family == "cpu":
+                                 need(event.get("kind") in ("started", "stopped", "finished", "unavailable"),
+-                                     "E10_CPU_MARKER_KIND")
++                                     "E11_CPU_MARKER_KIND")
+                                 if event["kind"] != "unavailable":
+-                                    need(bound, "E10_CPU_CAPTURE_RECORD_BINDING_REQUIRED")
++                                    need(bound, "E11_CPU_CAPTURE_RECORD_BINDING_REQUIRED")
+                                 cpu_lines.append(line)
+                                 events.append(event)
+                             else:
+                                 allowed = {"schema", "source", "sourceTree", "qualification", "pid", "request",
+-                                           "sequence", "kind", "elapsedTenthMs", "cpuPhase", "routes", *binding_names}
++                                           "sequence", "kind", "elapsedTenthMs", "cpuPhase", "routes", "selection", *binding_names}
+                                 need(set(event).issubset(allowed) and event.get("kind") in progress_kinds
+                                      and "elapsedTenthMs" in event
+                                      and (event["elapsedTenthMs"] is None or
+                                           type(event["elapsedTenthMs"]) is int and 0 <= event["elapsedTenthMs"] <= 999999999)
+                                      and event.get("cpuPhase") in ("running", "stopping", "finished", "failed", "unavailable"),
+-                                     "E10_PROGRESS_FINITE_PROTOCOL")
++                                     "E11_PROGRESS_FINITE_PROTOCOL")
+                                 if event["cpuPhase"] != "unavailable":
+-                                    need(bound, "E10_PROGRESS_CAPTURE_BINDING_REQUIRED")
++                                    need(bound, "E11_PROGRESS_CAPTURE_BINDING_REQUIRED")
+                                 progress_lines.append(line)
+                                 progress_events.append(event)
+                             key = (family, event["pid"])
+@@ -1023,7 +1042,7 @@
+                                 stream["case"], stream["result"], stream["stream"])})
+                             need(seen["stream"] == (stream["case"], stream["result"], stream["stream"])
+                                  and event["sequence"] > seen["last"] and event["kind"] not in seen["kinds"],
+-                                 "E10_FAMILY_SEQUENCE_OR_MEMBERSHIP_CONTRADICTION")
++                                 "E11_FAMILY_SEQUENCE_OR_MEMBERSHIP_CONTRADICTION")
+                             seen["last"] = event["sequence"]
+                             seen["kinds"].add(event["kind"])
+                             if bound:
+@@ -1046,7 +1065,7 @@
+                 cpu_raw = (("\n".join(cpu_lines) + "\n") if cpu_lines else "").encode("utf-8")
+                 progress_raw = (("\n".join(progress_lines) + "\n") if progress_lines else "").encode("utf-8")
+                 wire_raw = (("\n".join(wire_lines) + "\n") if wire_lines else "").encode("utf-8")
+-                need(0 < len(wire_raw) <= CORE_CAP["cpuMarkers"], "E10_COMBINED_WIRE_SLOT_CAP")
++                need(0 < len(wire_raw) <= CORE_CAP["cpuMarkers"], "E11_COMBINED_WIRE_SLOT_CAP")
+                 analytics_counts = {name: sum(line.startswith(name + " ") for line in analytics_lines)
+                                     for name in ANALYTICS_COUNTS}
+                 cpu_counts = {name: sum(line.startswith(name + " ") for line in cpu_lines) for name in CPU_COUNTS}
+@@ -1054,17 +1073,17 @@
+                 need(len(analytics_raw) == ANALYTICS_BYTES and digest(analytics_raw) == ANALYTICS_SHA
+                      and analytics_counts == ANALYTICS_COUNTS, "ANALYTICS_MAIN_PARITY_REQUIRED")
+                 need(len(cpu_raw) == CPU["markerBytes"] and digest(cpu_raw) == CPU["markerSha256"]
+-                     and cpu_counts == CPU_COUNTS, "E10_CPU_MAIN_PARITY_REQUIRED")
++                     and cpu_counts == CPU_COUNTS, "E11_CPU_MAIN_PARITY_REQUIRED")
+                 need(len(progress_raw) == PROGRESS["markerBytes"] and digest(progress_raw) == PROGRESS["markerSha256"]
+-                     and progress_counts == PROGRESS_COUNTS, "E10_PROGRESS_MAIN_PARITY_REQUIRED")
+-                need(len(complete_bindings) <= 1, "E10_COMPLETE_CAPTURE_BINDING_AMBIGUOUS")
++                     and progress_counts == PROGRESS_COUNTS, "E11_PROGRESS_MAIN_PARITY_REQUIRED")
++                need(len(complete_bindings) <= 1, "E11_COMPLETE_CAPTURE_BINDING_AMBIGUOUS")
+                 selected_binding = next(iter(complete_bindings.values())) if complete_bindings else None
+                 need((selected_binding is None and CPU["nonce"] is None and CPU["pid"] is None)
+                      or (selected_binding is not None and selected_binding["nonce"] == CPU["nonce"]
+-                         and selected_binding["pid"] == CPU["pid"]), "E10_SELECTED_CAPTURE_BINDING")
++                         and selected_binding["pid"] == CPU["pid"]), "E11_SELECTED_CAPTURE_BINDING")
+                 if selected_binding is None:
+-                    pending("E10_COMPLETE_CAPTURE_BINDING_ABSENT")
+-                path = "derived/preview-e10-cpu-progress-markers.lf.log"
++                    pending("E11_COMPLETE_CAPTURE_BINDING_ABSENT")
++                path = "derived/preview-e11-cpu-progress-markers.lf.log"
+                 write_bytes(ROOT / path, wire_raw)
+                 parities = {
+                     "analytics": {"bytes": len(analytics_raw), "sha256": digest(analytics_raw),
+@@ -1079,10 +1098,10 @@
+                     "union": runtime["semanticMarkers"],
+                     "allFour": True,
+                 }
+-                runtime["e10CpuRecords"] = cpu_memberships
+-                runtime["e10ProgressRecords"] = progress_memberships
++                runtime["e11CpuRecords"] = cpu_memberships
++                runtime["e11ProgressRecords"] = progress_memberships
+                 runtime["parities"] = parities
+-                RECEIPT["parsers"]["e10Markers"] = {
++                RECEIPT["parsers"]["e11Markers"] = {
+                     "path": path, "bytes": len(wire_raw), "sha256": digest(wire_raw), "lines": len(wire_lines),
+                     "cpuCounts": cpu_counts, "progressCounts": progress_counts, "parities": parities,
+                     "cpuMemberships": cpu_memberships, "progressMemberships": progress_memberships,
+@@ -1096,10 +1115,14 @@
+                                "A complete tuple selects an artifact namespace, not sampler ownership or capture completion.",
+                                "Routes count already selected branches in this PID only while sampling runs; they are not Request totals.",
+                                "A route count at65535 is saturated. No conservation, exclusive time or authority result is inferred.",
++                               "Selection has Source3 token decisions and native9 copied-child pairs, row=requested and column=materialized.",
++                               "Native pairs include all copied child surfaces and non-C08 callers, before callback; none/none is not a C08 fallback rate.",
++                               "Source and native populations are distinct; no pairing, conservation, positivity or cross-family monotonicity is required.",
++                               "Selection.saturated reports cap reached among its twelve slots only, not the three routes or events above the cap.",
+                                "Body/admit returned and case callback entered are boundaries, not result validity, admission or producer success.",
+                                "Playwright workerIndex is not a PID; native identity is read only from literal authenticated records."],
+                 }
+-                checked("e10_four_hard_parities_independent_sequences_and_case_stream_membership")
++                checked("e11_four_hard_parities_independent_sequences_and_case_stream_membership")
+                 return {"raw": wire_raw, "cpuRaw": cpu_raw, "events": events, "progressEvents": progress_events,
+                         "cpuMemberships": cpu_memberships, "progressMemberships": progress_memberships,
+                         "selectedBinding": selected_binding}
+@@ -1130,16 +1153,16 @@
+             
+             
+             def parse_cpu_originals(marker_data):
+-                # Current E10 records authenticate one complete tuple; no first/latest directory is selected.
++                # UNBOUND CURRENT FACT: retain this started/tuple gate only after the actual E11 intake supports it; never choose first/latest directory.
+                 binding = marker_data["selectedBinding"]
+                 need(binding is not None and binding["nonce"] == CPU["nonce"] and binding["pid"] == CPU["pid"],
+-                     "E10_CURRENT_COMPLETE_CAPTURE_BINDING")
++                     "E11_CURRENT_COMPLETE_CAPTURE_BINDING")
+                 events = marker_data["events"]
+                 started = next((event for event in events if event["kind"] == "started"), None)
+                 stopped = next((event for event in events if event["kind"] == "stopped"), None)
+                 finished = next((event for event in events if event["kind"] == "finished"), None)
+                 need(started is not None and started["kind"] == "started"
+-                     and re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", CPU["nonce"]) is not None,
++                     and re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", CPU["nonce"]) is not None,
+                      "CPU_SELECTED_STARTED_NONCE")
+                 expected_runtime = ["1.3.14", "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"]
+                 need(started.get("runtime") == expected_runtime and started.get("parentPid") == CPU["parentPid"]
+@@ -1158,7 +1181,7 @@
+                     pieces = item["path"].split("/")
+                     positions = [index for index in range(len(pieces) - 2)
+                                  if pieces[index] == "test-ci-evidence"
+-                                 and pieces[index + 1].startswith("sf613-e10-cpu-")]
++                                 and pieces[index + 1].startswith("sf613-e11-cpu-")]
+                     if not positions:
+                         continue
+                     need(len(positions) == 1, "CPU_NAMESPACE_AMBIGUOUS")
+@@ -1175,14 +1198,14 @@
+                     group[kind].append({"file": item["id"], "name": "/".join(relative),
+                                         "bytes": item["bytes"], "sha256": item["sha256"]})
+                     if kind != "unclassified":
+-                        need(re.fullmatch(r"sf613-e10-cpu-[A-Za-z0-9]{6}", nonce) is not None
++                        need(re.fullmatch(r"sf613-e11-cpu-[A-Za-z0-9]{6}", nonce) is not None
+                              and len(relative) == 1 and name in CPU_NAMES, "CPU_NAMESPACE_MEMBER_SHAPE")
+                 selected_groups = [group for group in groups.values() if group["nonce"] == CPU["nonce"]]
+                 need(len(selected_groups) <= 1, "CPU_SELECTED_DIRECTORY_AMBIGUOUS")
+                 selected_directory = selected_groups[0]["directory"] if selected_groups else None
+                 populations = [group for group in groups.values() if group["profile"] or group["collection"]]
+                 population_inventory = {
+-                    "scope": "all outer archive E10 nonce directories", "directories": list(groups.values()),
++                    "scope": "all outer archive E11 nonce directories", "directories": list(groups.values()),
+                     "populationCount": len(populations), "selectedNonce": CPU["nonce"],
+                     "selectedDirectory": selected_directory, "extraLauncherFiles": [],
+                     "launcherLimit": "Launcher preparation is not Request/start/profile/close proof; absent files are not fabricated.",
+@@ -1199,7 +1222,7 @@
+                         raw = read_file(FILES[item["file"]], CORE_CAP["launcher"])
+                         value, parse_status = cpu_json_object(raw)
+                         binding = cpu_present_fields(value, {
+-                            "schema": "sf-preview-e10-cpu-launch-v1", "source": SOURCE, "sourceTree": SOURCE_TREE,
++                            "schema": "sf-preview-e11-cpu-launch-v1", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                             "snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1", "nonce": group["nonce"],
+                             "relativeDirectory": "test-ci-evidence/" + group["nonce"],
+                             "state": "prepared", "qualification": False, "processRole": "native-cli",
+@@ -1251,12 +1274,12 @@
+                                 "runId": str(ORIGINAL_RUN), "attempt": "1", "nonce": CPU["nonce"],
+                                 "qualification": False}
+                     if name == "launcher.json":
+-                        expected.update({"schema": "sf-preview-e10-cpu-launch-v1", "processRole": "native-cli",
++                        expected.update({"schema": "sf-preview-e11-cpu-launch-v1", "processRole": "native-cli",
+                                          "state": "prepared", "entry": "apps/cli/src/index.ts", "command": "serve",
+                                          "relativeDirectory": "test-ci-evidence/" + CPU["nonce"],
+                                          "profileName": "preview-first.cpuprofile"})
+                     else:
+-                        expected.update({"schema": "sf-preview-causal-e10-cpu-v1", "pid": CPU["pid"],
++                        expected.update({"schema": "sf-preview-causal-e11-cpu-v1", "pid": CPU["pid"],
+                                          "parentPid": CPU["parentPid"], "request": 1, "runtime": expected_runtime,
+                                          "intervalUs": 5000, "targetMs": 50000, "acceptMs": 55000,
+                                          "profileCapBytes": CORE_CAP["profile"], "collectionCapBytes": CORE_CAP["collection"]})
+@@ -1265,7 +1288,10 @@
+                     if name in raw_files and not valid:
+                         pending("CPU_SELECTED_FILE_BINDING_UNVERIFIED", {"file": presence[name]["file"]})
+                 if collection is not None and "routes" in collection:
+-                    e10_routes(collection["routes"])
++                    e11_routes(collection["routes"])
++                collection_selection_valid = collection is not None and "selection" in collection
++                if collection_selection_valid:
++                    e11_selection(collection["selection"])
+                 # Missing originals or JSON fields remain pending. Every present contradiction is rejected.
+                 collection_close_fields = False
+                 if finished is not None:
+@@ -1276,7 +1302,7 @@
+                                 expected_file.update({"bytes": len(raw_files[name]), "sha256": digest(raw_files[name])})
+                             cpu_present_fields(finished[field], expected_file, "CPU_FINISHED_PRESENT_FILE_CONTRADICTION")
+                     if collection is not None:
+-                        expected_collection = {name: finished[name] for name in ("state", "cause", "cleanupFailed", "routes")
++                        expected_collection = {name: finished[name] for name in ("state", "cause", "cleanupFailed", "routes", "selection")
+                                                if name in finished}
+                         collection_close_fields = cpu_present_fields(collection, expected_collection,
+                                                                      "CPU_COLLECTION_PRESENT_CLOSE_CONTRADICTION")
+@@ -1319,7 +1345,7 @@
+                 elif (set(raw_files) != set(CPU_NAMES)
+                       or not all(row["parseStatus"] == "JSON_OBJECT" and row["trailingLF"] for row in selected)
+                       or not all(bindings.values()) or not profile_valid or not collection_close_fields
+-                      or collection is None or "native" not in collection):
++                      or collection is None or "native" not in collection or not collection_selection_valid):
+                     pending("CPU_COMPLETED_MARKER_FILES_NOT_COMPLETE")
+                 else:
+                     need(finished.get("state") in ("completed-on-time", "completed-late", "short-completed")
+@@ -1328,6 +1354,7 @@
+                          and all(bindings.values()) and profile_valid, "CPU_FINISHED_REQUIRED_FILES")
+                     need(collection.get("profile") == finished.get("profile")
+                          and collection.get("routes") == stopped.get("routes") == finished.get("routes")
++                         and collection.get("selection") == stopped.get("selection") == finished.get("selection")
+                          and collection.get("points") == finished.get("points")
+                          and type(collection.get("cleanupFailed")) is bool
+                          and collection.get("cleanupFailed") == stopped.get("cleanupFailed") == finished.get("cleanupFailed")
+@@ -1384,6 +1411,8 @@
+                     "finishedRecordPresent": finished is not None, "postCloseFilesVerified": post_close_files,
+                     "selectedFileBindings": bindings, "collectionProfileBytesMatched": collection_profile_binding,
+                     "collectionRoutes": collection.get("routes") if collection is not None else None,
++                    "collectionSelection": collection.get("selection") if collection is not None else None,
++                    "collectionSelectionValid": collection_selection_valid,
+                     "profileSchemaValid": profile_valid, "native": native,
+                     "collectionWithinAccept": finished.get("collectionWithinAccept") if capture_complete else None,
+                     "limits": ["Raw existing profile/collection/launcher bytes are exported whole, including empty or malformed files.",
+@@ -1396,6 +1425,9 @@
+                                "Started precedes HTTP authorization; runtime stream binding is not product admission.",
+                                "Progress finished is not CPU finished; progress cannot attest profile or collection close.",
+                                "Route snapshots are PID-running-window aggregates, not Request counts or completed work.",
++                               "Selection closed parity is collection/stopped/finished only; later HTTP progress is not a close receipt.",
++                               "Source token decisions and all-surface native copied-child pairs have distinct populations; no conservation or fallback rate is inferred.",
++                               "Native pairs exclude top-level materializations and copies that threw before completion; the CPU profile may still include them.",
+                                "All clocks retain their domains; no reconciliation with Playwright startTime/duration."],
+                 }
+                 checked("cpu_all_populations_inventory_optional_raw_files_and_explicit_completion")
+@@ -1458,11 +1490,11 @@
+                 need(RECEIPT["archiveSummary"]["allEntriesVerified"] is True and not RECEIPT["failures"],
+                      "CORE_REQUIRED_VALIDATION_FAILURE")
+                 summary = canonical({
+-                    "schema": 1, "kind": "e10-original-core-summary", "qualification": False,
++                    "schema": 1, "kind": "e11-original-core-summary", "qualification": False,
+                     "source": SOURCE, "sourceTree": SOURCE_TREE, "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                     "run": ORIGINAL_RUN, "attempt": ORIGINAL_ATTEMPT, "artifact": RECEIPT["artifact"],
+                     "selection": RECEIPT["parsers"]["selection"], "runtime": RECEIPT["parsers"]["runtime"],
+-                    "cpuMarkers": RECEIPT["parsers"]["e10Markers"], "cpu": cpu,
++                    "cpuMarkers": RECEIPT["parsers"]["e11Markers"], "cpu": cpu,
+                     "cpuPopulationInventory": RECEIPT["parsers"]["cpuPopulationInventory"],
+                     "pending": RECEIPT["pending"],
+                     "htmlArchives": RECEIPT["parsers"].get("htmlArchives", []),
+@@ -1473,7 +1505,7 @@
+                 first_payloads = []
+                 for key, name, export_name in (
+                         ("profile", "preview-first.cpuprofile", "original-cpu-preview-first.cpuprofile"),
+-                        ("cpuMarkers", None, "preview-e10-cpu-progress-markers.lf.log"),
++                        ("cpuMarkers", None, "preview-e11-cpu-progress-markers.lf.log"),
+                         ("collection", "collection.json", "original-cpu-collection.json"),
+                         ("launcher", "launcher.json", "original-cpu-launcher.json")):
+                     if name is None:
+@@ -1512,7 +1544,7 @@
+                 core_bytes = sum(len(line) for line in core_lines)
+                 before_bytes = LOG_BYTES
+                 final = {
+-                    "schema": 1, "kind": "e10-core-terminal", "qualification": False,
++                    "schema": 1, "kind": "e11-core-terminal", "qualification": False,
+                     "status": RECEIPT["status"], "coreBytesComplete": True, "receiptBase64Complete": True,
+                     "captureComplete": cpu["captureComplete"], "cpuState": cpu["state"],
+                     "coreFiles": len(prepared), "coreChunks": len(core_lines),
+@@ -1563,7 +1595,7 @@
+                 except Exception:
+                     pass
+                 terminal = {
+-                    "schema": 1, "kind": "e10-core-terminal", "qualification": False, "status": "RECEIPT_FAILED",
++                    "schema": 1, "kind": "e11-core-terminal", "qualification": False, "status": "RECEIPT_FAILED",
+                     "coreBytesComplete": False, "receiptBase64Complete": False, "readerExitCode": 1,
+                     "coreChunksWritten": CORE_LINES_WRITTEN, "logBytesBeforeTerminal": LOG_BYTES,
+                     "failures": [failure], "failureReceipt": receipt_meta,
+@@ -1582,7 +1614,7 @@
+                 unpack_html_reports()
+                 checked("all_discovered_zip_entries_crc_sha256_and_safe_paths")
+                 parse_runtime_and_selection()
+-                marker_data = parse_e10_markers()
++                marker_data = parse_e11_markers()
+                 cpu_raw = parse_cpu_originals(marker_data)
+                 need(not RECEIPT["failures"], "REQUIRED_PARSER_FAILURE")
+                 RECEIPT["status"] = ("ORIGINAL_BYTES_VERIFIED" if RECEIPT["parsers"]["cpu"]["captureComplete"]
+@@ -1590,8 +1622,8 @@
+                 RECEIPT["qualification"] = False
+                 RECEIPT["limits"] = [
+                     "This job receives one existing original ZIP; no checkout or repository product/test/observer is executed.",
+-                    "The execution used S with seven overlays2A5M over corrected C13; no clean-source performance or final qualification is inferred.",
+-                    "The two original cases retain their selection and deadlines. Outcomes are verified only against the current E10 intake.",
++                    "The execution used E11 S with eight overlays2A6M over clean S15R; no clean-source performance or final qualification is inferred.",
++                    "The two original cases retain their selection and deadlines. Outcomes are verified only against the completed current E11 intake.",
+                     "Every actually present selected profile/collection/launcher is exported whole, plus literal CPU+progress when present, summary, inventory and receipt.",
+                     "Absent files have no fabricated payload. A real zero-byte file has its inventory ID, empty SHA256 and one empty base64 chunk.",
+                     "Raw runtime/selection, error-context and HTML remain preserved in the audit artifact but are not exported whole in this log.",
+@@ -1602,6 +1634,10 @@
+                     "CPU and progress have separate attempt sequences and lifetimes; late HTTP progress never rewrites closed CPU files.",
+                     "Progress proves only body/admit return or entry of the withCase callback, not validity, accepted authorization or product success.",
+                     "Routes are PID-running-window counters of already selected branches, capped65535, not Request totals or completed work.",
++                    "Selection Source3 counts issued-token decisions; native3x3 counts all completed native child copies before callback, not only C08.",
++                    "Selection is finite with twelve slots capped65535; saturated means cap reached in those slots, not in the historical route counters.",
++                    "No equality, conservation, positivity, Request ownership or counters-to-samples pairing is inferred across these populations.",
++                    "Only a complete CPU closure compares collection/stopped/finished selection snapshots; late HTTP progress remains separate.",
+                     "Received file hashes are not post-close producer hashes. Missing CPU finished never promotes captureComplete, even if progress says finished.",
+                     "Partial, empty, malformed and non-LF files remain exact original bytes with explicit parse/presence state; no JSON or LF is fabricated.",
+                     "CPU whole-VM samples may include unrelated backend work and observer overhead; no exclusive time or causal bottleneck is inferred.",
+@@ -1648,7 +1684,7 @@
+         if: always()
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, same pin as original producer
+         with:
+-          name: sf613-analytics-original-45973791480-receipt-${{ github.run_attempt }}
++          name: sf613-analytics-original-46028127606-receipt-${{ github.run_attempt }}
+           path: ${{ runner.temp }}/sf613-artifact-read
+           if-no-files-found: error
+           include-hidden-files: true

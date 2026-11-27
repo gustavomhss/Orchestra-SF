@@ -1,0 +1,549 @@
+{
+  "schema": "sf613-e11-source-derivation-v1",
+  "status": "text-only-proposal",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "commit": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8"
+  },
+  "sourceDelta": {
+    "added": 2,
+    "modified": 6,
+    "deleted": 0,
+    "paths": 8
+  },
+  "modified": [
+    {
+      "key": "http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134
+      },
+      "postimage": {
+        "gitSha": "347edd5292d86537451507026236f27f2488a06a",
+        "bytes": 13818,
+        "sha256": "44ca1d564841f44bf6a5ae87584f105078006bd72f8826b0f6409836ff3e6191",
+        "lf": 141
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 2,
+      "addedLines": 41,
+      "removedLines": 34,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import { decodeSfOperationInput } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts\"\nimport { digestSfValue } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts\"\nimport type { PortResult } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts\"\n",
+          "after": "import { startSfE11CpuObservation, finishSfE11CpuObservation, markSfE11HttpProgress } from \"../../../../modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts\"\nimport { decodeSfOperationInput } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts\"\nimport { digestSfValue } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts\"\nimport type { PortResult } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "    if (request.method !== \"POST\") return reply({ status: \"needs-input\", reason: \"method-not-allowed\" }, 405)\n    if (url.searchParams.getAll(\"sf\").length !== 1 || [...url.searchParams.keys()].some((key) => key !== \"sf\") || !request.headers.get(\"content-type\")?.toLowerCase().startsWith(\"application/json\")) return reply({ status: \"needs-input\", reason: \"invalid-decision-request\" })\n    const mode = selected as Mode\n    const payload = await boundedJson(request)\n    if (!valid(mode, payload)) return reply({ status: \"needs-input\", reason: \"invalid-decision-input\" })\n    const admitted = await input.authority.human.admit(request, actions[mode], payload)\n    if (admitted.status !== \"ok\") return reply(admitted)\n    try {\n      const call = admitted.value\n      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })\n      const allowHistoricalRetry = [\"decision-promote\", \"decision-choose\", \"decision-add-question\", \"decision-answer-question\", \"decision-prepare-changes\", \"decision-promote-portfolio\", \"decision-prepare-portfolio\"].includes(mode)\n      const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {\n        if (mode === \"decision-choose\") return input.mutations.recordChoice(payload as Parameters<Mutations[\"recordChoice\"]>[0], call)\n        if (mode === \"decision-add-question\") return input.mutations.addQuestion(payload as Parameters<Mutations[\"addQuestion\"]>[0], call)\n        if (mode === \"decision-answer-question\") return input.mutations.answerQuestion(payload as Parameters<Mutations[\"answerQuestion\"]>[0], call)\n        if (mode === \"decision-promote\") return input.mutations.addAlternative(payload as Parameters<Mutations[\"addAlternative\"]>[0], call)\n        if (mode === \"decision-prepare-changes\") return input.mutations.prepareChanges(payload as Parameters<Mutations[\"prepareChanges\"]>[0], call)\n        if (mode === \"decision-review\") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)\n        const product = input.product\n        if (!product) return { status: \"unavailable\", reason: \"portfolio-planner-stored-scenarios-unavailable\" }\n        if (mode === \"decision-portfolio-reconcile\") return product.http.reconcile(payload as Parameters<Portfolio[\"http\"][\"reconcile\"]>[0], call)\n        if (mode === \"decision-promote-portfolio\") return product.http.promote(payload as Parameters<Portfolio[\"http\"][\"promote\"]>[0], call)\n        if (mode === \"decision-prepare-portfolio\") return product.http.prepare(payload as Parameters<Portfolio[\"http\"][\"prepare\"]>[0], call)\n        if (mode === \"decision-portfolio-results\") return product.http.list(payload.caseRef, call)\n        if (mode === \"decision-portfolio-read\") return product.http.read(String(payload.resultRef), payload.caseRef, call)\n        if (mode === \"decision-sensitivity-read\") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)\n        if (mode === \"decision-sensitivity-units\") return product.http.sensitivityUnits(payload as Parameters<Portfolio[\"http\"][\"sensitivityUnits\"]>[0], call)\n        if (mode === \"decision-sensitivity-evaluate\") return product.http.sensitivity(payload.request as Parameters<Portfolio[\"http\"][\"sensitivity\"]>[0], payload.caseRef, call)\n        if (mode === \"decision-portfolio-preview\") return product.http.preview(payload.request as Parameters<Portfolio[\"http\"][\"preview\"]>[0], payload.caseRef, call)\n        return product.http.evaluate(payload.request as Parameters<Portfolio[\"http\"][\"evaluate\"]>[0], payload.caseRef, call)\n      })\n      if (!await input.authority.host.revalidate(call)) return reply({ status: \"denied\", reason: \"decision-authority-changed\" })\n      if (mode === \"decision-portfolio-reconcile\" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||\n        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))\n        return reply({ status: \"denied\", reason: \"portfolio-reconciliation-authority-changed\" })\n      return reply(result)\n    } catch { return reply({ status: \"unavailable\", reason: mode === \"decision-review\" ? \"procurement-prepared-review-producer-unavailable\" : \"decision-request-unavailable\" }) }\n    finally { input.authority.human.finish(admitted.value) }\n  }\n}\n\n",
+          "after": "    if (request.method !== \"POST\") return reply({ status: \"needs-input\", reason: \"method-not-allowed\" }, 405)\n    if (url.searchParams.getAll(\"sf\").length !== 1 || [...url.searchParams.keys()].some((key) => key !== \"sf\") || !request.headers.get(\"content-type\")?.toLowerCase().startsWith(\"application/json\")) return reply({ status: \"needs-input\", reason: \"invalid-decision-request\" })\n    const mode = selected as Mode\n    const cpu = mode === \"decision-portfolio-preview\" ? startSfE11CpuObservation(request) : undefined\n    try {\n      const payload = await boundedJson(request)\n      markSfE11HttpProgress(cpu, request, \"body-returned\")\n      if (!valid(mode, payload)) return reply({ status: \"needs-input\", reason: \"invalid-decision-input\" })\n      const admitted = await input.authority.human.admit(request, actions[mode], payload)\n      markSfE11HttpProgress(cpu, request, \"admit-returned\")\n      if (admitted.status !== \"ok\") return reply(admitted)\n      try {\n        const call = admitted.value\n        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })\n        const allowHistoricalRetry = [\"decision-promote\", \"decision-choose\", \"decision-add-question\", \"decision-answer-question\", \"decision-prepare-changes\", \"decision-promote-portfolio\", \"decision-prepare-portfolio\"].includes(mode)\n        const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {\n          markSfE11HttpProgress(cpu, request, \"case-callback-entered\")\n          if (mode === \"decision-choose\") return input.mutations.recordChoice(payload as Parameters<Mutations[\"recordChoice\"]>[0], call)\n          if (mode === \"decision-add-question\") return input.mutations.addQuestion(payload as Parameters<Mutations[\"addQuestion\"]>[0], call)\n          if (mode === \"decision-answer-question\") return input.mutations.answerQuestion(payload as Parameters<Mutations[\"answerQuestion\"]>[0], call)\n          if (mode === \"decision-promote\") return input.mutations.addAlternative(payload as Parameters<Mutations[\"addAlternative\"]>[0], call)\n          if (mode === \"decision-prepare-changes\") return input.mutations.prepareChanges(payload as Parameters<Mutations[\"prepareChanges\"]>[0], call)\n          if (mode === \"decision-review\") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)\n          const product = input.product\n          if (!product) return { status: \"unavailable\", reason: \"portfolio-planner-stored-scenarios-unavailable\" }\n          if (mode === \"decision-portfolio-reconcile\") return product.http.reconcile(payload as Parameters<Portfolio[\"http\"][\"reconcile\"]>[0], call)\n          if (mode === \"decision-promote-portfolio\") return product.http.promote(payload as Parameters<Portfolio[\"http\"][\"promote\"]>[0], call)\n          if (mode === \"decision-prepare-portfolio\") return product.http.prepare(payload as Parameters<Portfolio[\"http\"][\"prepare\"]>[0], call)\n          if (mode === \"decision-portfolio-results\") return product.http.list(payload.caseRef, call)\n          if (mode === \"decision-portfolio-read\") return product.http.read(String(payload.resultRef), payload.caseRef, call)\n          if (mode === \"decision-sensitivity-read\") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)\n          if (mode === \"decision-sensitivity-units\") return product.http.sensitivityUnits(payload as Parameters<Portfolio[\"http\"][\"sensitivityUnits\"]>[0], call)\n          if (mode === \"decision-sensitivity-evaluate\") return product.http.sensitivity(payload.request as Parameters<Portfolio[\"http\"][\"sensitivity\"]>[0], payload.caseRef, call)\n          if (mode === \"decision-portfolio-preview\") return product.http.preview(payload.request as Parameters<Portfolio[\"http\"][\"preview\"]>[0], payload.caseRef, call)\n          return product.http.evaluate(payload.request as Parameters<Portfolio[\"http\"][\"evaluate\"]>[0], payload.caseRef, call)\n        })\n        if (!await input.authority.host.revalidate(call)) return reply({ status: \"denied\", reason: \"decision-authority-changed\" })\n        if (mode === \"decision-portfolio-reconcile\" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||\n          binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))\n          return reply({ status: \"denied\", reason: \"portfolio-reconciliation-authority-changed\" })\n        return reply(result)\n      } catch { return reply({ status: \"unavailable\", reason: mode === \"decision-review\" ? \"procurement-prepared-review-producer-unavailable\" : \"decision-request-unavailable\" }) }\n      finally { input.authority.human.finish(admitted.value) }\n    } finally { finishSfE11CpuObservation(cpu, request) }\n  }\n}\n\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "key": "inner",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121
+      },
+      "postimage": {
+        "gitSha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+        "bytes": 10333,
+        "sha256": "c08630983e3fd7617f06e268f4176490b730b0396c826289e2420b28c5230b70",
+        "lf": 184
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 4,
+      "addedLines": 66,
+      "removedLines": 3,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import { mkdtemp, realpath, rm } from \"node:fs/promises\"\nimport { tmpdir, userInfo } from \"node:os\"\nimport path from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n",
+          "after": "import { mkdtemp, realpath, rm } from \"node:fs/promises\"\nimport { createHash } from \"node:crypto\"\nimport { Buffer } from \"node:buffer\"\nimport { lstatSync, readFileSync, realpathSync } from \"node:fs\"\nimport { tmpdir, userInfo } from \"node:os\"\nimport path from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "      return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }\n    })\n    const app = yield* AppProcess.Service\n    const child = yield* app.spawn(ChildProcess.make(process.execPath, [\n      entry, \"serve\", \"--hostname\", hostname, \"--port\", String(port), \"--installation\", factory,\n    ], {\n",
+          "after": "      return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }\n    })\n    const app = yield* AppProcess.Service\n    const cpuEnvironment = nativePreviewE11CpuEnvironment(root)\n    const child = yield* app.spawn(ChildProcess.make(process.execPath, [\n      entry, \"serve\", \"--hostname\", hostname, \"--port\", String(port), \"--installation\", factory,\n    ], {\n"
+        },
+        {
+          "id": "hunk-3",
+          "before": "        XDG_STATE_HOME: path.join(root, \"host-state\"),\n        ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),\n        ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),\n      },\n    }))\n    const ready = yield* Deferred.make<void>()\n    const diagnostic = { last: \"\" }\n    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>\n      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,\n    )))\n    yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>\n      Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),\n    )))\n",
+          "after": "        XDG_STATE_HOME: path.join(root, \"host-state\"),\n        ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),\n        ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),\n        ...cpuEnvironment,\n      },\n    }))\n    const ready = yield* Deferred.make<void>()\n    const diagnostic = { last: \"\" }\n    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n      if (((line.startsWith(\"SF_PREVIEW_E11_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E11_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }\n      }\n      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void\n    })))\n    yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>\n      Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),\n    )))\n"
+        },
+        {
+          "id": "hunk-4",
+          "before": "    }\n  })\n}\n",
+          "after": "    }\n  })\n}\n\n\n/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */\nfunction nativePreviewE11CpuEnvironment(privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\", sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n  let stage = \"binding\"\n  try {\n    const directory = process.env[directoryKey], encoded = process.env[bindingKey]\n    if (!directory && !encoded) return disabled\n    if (!directory || !encoded || encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n        Bun.version !== \"1.3.14\" || Bun.revision !== \"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\") throw new Error(\"cpu-binding\")\n    const value: unknown = JSON.parse(encoded)\n    if (!value || typeof value !== \"object\" || Array.isArray(value)) throw new Error(\"cpu-binding\")\n    const binding = value as Record<string, unknown>\n    if (binding.schema !== \"sf-preview-e11-cpu-launch-v1\" || binding.source !== source || binding.sourceTree !== sourceTree ||\n        typeof binding.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||\n        typeof binding.runId !== \"string\" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== \"1\" ||\n        typeof binding.nonce !== \"string\" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||\n        typeof binding.launcherBytes !== \"number\" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||\n        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))\n      throw new Error(\"cpu-binding\")\n    stage = \"directory\"\n    const repository = realpathSync(path.resolve(path.dirname(entry), \"../../..\"))\n    const base = path.join(repository, \"test-ci-evidence\"), info = lstatSync(directory)\n    const relative = path.relative(realpathSync(privateRoot), directory)\n    if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== binding.nonce ||\n        realpathSync(base) !== base || realpathSync(directory) !== directory || !info.isDirectory() || info.isSymbolicLink() ||\n        relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + path.sep) && !path.isAbsolute(relative))\n      throw new Error(\"cpu-directory\")\n    stage = \"launcher\"\n    const launcherPath = path.join(directory, \"launcher.json\"), launcherInfo = lstatSync(launcherPath)\n    if (!launcherInfo.isFile() || launcherInfo.isSymbolicLink() || launcherInfo.size !== binding.launcherBytes)\n      throw new Error(\"cpu-launcher\")\n    const text = readFileSync(launcherPath, \"utf8\")\n    if (Buffer.byteLength(text, \"utf8\") !== binding.launcherBytes ||\n        createHash(\"sha256\").update(text, \"utf8\").digest(\"hex\") !== binding.launcherSha256) throw new Error(\"cpu-launcher-hash\")\n    const parsed: unknown = JSON.parse(text)\n    if (!parsed || typeof parsed !== \"object\" || Array.isArray(parsed)) throw new Error(\"cpu-launcher-shape\")\n    const launcher = parsed as Record<string, unknown>\n    for (const key of [\"schema\", \"source\", \"sourceTree\", \"snapshot\", \"runId\", \"attempt\", \"nonce\"] as const)\n      if (launcher[key] !== binding[key]) throw new Error(\"cpu-launcher-binding\")\n    if (launcher.processRole !== \"native-cli\" || launcher.profileName !== \"preview-first.cpuprofile\")\n      throw new Error(\"cpu-launcher-role\")\n    return { [directoryKey]: directory, [bindingKey]: encoded }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E11_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e11-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"native-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* The original child must still be spawned with its original settings. */ }\n    return disabled\n  }\n}\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "key": "outer",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206
+      },
+      "postimage": {
+        "gitSha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+        "bytes": 16431,
+        "sha256": "6f7233c1763c0223f47d3b119848003240816770a6ae95abb023686b72325fbe",
+        "lf": 267
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 4,
+      "addedLines": 62,
+      "removedLines": 1,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import type { BrowserContext } from \"@playwright/test\"\nimport type { ChildProcessHandle } from \"effect/unstable/process/ChildProcessSpawner\"\nimport { chmod, mkdir, mkdtemp, readFile, realpath, rm } from \"node:fs/promises\"\nimport { tmpdir } from \"node:os\"\nimport path from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n",
+          "after": "import type { BrowserContext } from \"@playwright/test\"\nimport type { ChildProcessHandle } from \"effect/unstable/process/ChildProcessSpawner\"\nimport { chmod, mkdir, mkdtemp, readFile, realpath, rm } from \"node:fs/promises\"\nimport { createHash } from \"node:crypto\"\nimport { Buffer } from \"node:buffer\"\nimport { chmodSync, closeSync, fstatSync, fsyncSync, lstatSync, mkdtempSync, openSync, realpathSync, writeFileSync } from \"node:fs\"\nimport { tmpdir } from \"node:os\"\nimport path from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "    const installed = yield* Effect.gen(function* () {\n      const ready = yield* Deferred.make<void, Error>()\n      const diagnostic = { tail: \"\" }\n      const child = yield* launcher.spawn(ChildProcess.make(\"bun\", [path.join(support, \"native-host.ts\"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {\n        cwd: repository,\n        env: isolatedEnvironment(root),\n        extendEnv: false,\n        stdin: \"ignore\",\n        stdout: \"pipe\",\n",
+          "after": "    const installed = yield* Effect.gen(function* () {\n      const ready = yield* Deferred.make<void, Error>()\n      const diagnostic = { tail: \"\" }\n      const cpuEnvironment = preparePreviewE11CpuEnvironment(repository, root)\n      const child = yield* launcher.spawn(ChildProcess.make(\"bun\", [path.join(support, \"native-host.ts\"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {\n        cwd: repository,\n        env: { ...isolatedEnvironment(root), ...cpuEnvironment },\n        extendEnv: false,\n        stdin: \"ignore\",\n        stdout: \"pipe\",\n"
+        },
+        {
+          "id": "hunk-3",
+          "before": "      }))\n      owned.child = child\n      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)\n        return line === \"SF_DESIGN_READY\" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void\n      }), Effect.catch(() => Deferred.fail(ready, new Error(\"Native design host output failed\")))))\n",
+          "after": "      }))\n      owned.child = child\n      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n        if (((line.startsWith(\"SF_PREVIEW_E11_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E11_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }\n        }\n        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)\n        return line === \"SF_DESIGN_READY\" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void\n      }), Effect.catch(() => Deferred.fail(ready, new Error(\"Native design host output failed\")))))\n"
+        },
+        {
+          "id": "hunk-4",
+          "before": "function redact(value: string) {\n  return value.replace(/[a-f0-9]{64}/g, \"[redacted]\").replace(/code=[^&\\s\"']+/g, \"code=[redacted]\")\n}\n",
+          "after": "function redact(value: string) {\n  return value.replace(/[a-f0-9]{64}/g, \"[redacted]\").replace(/code=[^&\\s\"']+/g, \"code=[redacted]\")\n}\n\n\n/** Diagnostic files survive the two original private roots; failure never blocks launch. */\nfunction preparePreviewE11CpuEnvironment(repository: string, privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\", sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n  let fd: number | undefined, stage = \"gate\"\n  try {\n    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT\n    if (process.env.GITHUB_ACTIONS !== \"true\" || process.env.GITHUB_REPOSITORY !== \"gustavomhss/Orchestra-SF\" ||\n        process.platform !== \"linux\" || process.arch !== \"x64\" || !snapshot || !/^[a-f0-9]{40}$/.test(snapshot) ||\n        !runId || !/^[0-9]{1,20}$/.test(runId) || attempt !== \"1\") throw new Error(\"cpu-gate\")\n    stage = \"base\"\n    const base = path.join(realpathSync(repository), \"test-ci-evidence\"), baseInfo = lstatSync(base)\n    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error(\"cpu-base\")\n    stage = \"directory\"\n    const directory = mkdtempSync(path.join(base, \"sf613-e11-cpu-\"))\n    chmodSync(directory, 0o700)\n    const relative = path.relative(realpathSync(privateRoot), directory)\n    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||\n        relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + path.sep) && !path.isAbsolute(relative))\n      throw new Error(\"cpu-root\")\n    const nonce = path.basename(directory)\n    if (!/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error(\"cpu-nonce\")\n    const binding = { schema: \"sf-preview-e11-cpu-launch-v1\", source, sourceTree, snapshot, runId, attempt, nonce }\n    const launcher = { ...binding, qualification: false, state: \"prepared\", processRole: \"native-cli\",\n      entry: \"apps/cli/src/index.ts\", command: \"serve\", profileName: \"preview-first.cpuprofile\",\n      relativeDirectory: \"test-ci-evidence/\" + nonce, createdUtcMs: Date.now(),\n      childGraceMs: 2000, adapterGraceMs: 10000,\n      limits: \"Preparation is not proof of selection, native start, profile flush or durable collection.\" }\n    stage = \"launcher\"\n    const text = JSON.stringify(launcher) + \"\\n\", launcherBytes = Buffer.byteLength(text, \"utf8\")\n    if (launcherBytes > 8192) throw new Error(\"cpu-launcher-size\")\n    const launcherSha256 = createHash(\"sha256\").update(text, \"utf8\").digest(\"hex\")\n    fd = openSync(path.join(directory, \"launcher.json\"), \"wx\", 0o600)\n    writeFileSync(fd, text, \"utf8\")\n    fsyncSync(fd)\n    const written = fstatSync(fd)\n    if (!written.isFile() || written.size !== launcherBytes) throw new Error(\"cpu-launcher-write\")\n    closeSync(fd)\n    fd = undefined\n    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E11_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e11-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"playwright-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* Original setup/spawn remains authoritative. */ }\n    return disabled\n  } finally {\n    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve original setup outcome. */ } }\n  }\n}\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "key": "authority",
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "bytes": 32461,
+        "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+        "lf": 404
+      },
+      "postimage": {
+        "gitSha": "c35042473a5a1f5416253a3c5bf6b8450c44673b",
+        "bytes": 32579,
+        "sha256": "16ae187fc9138f1ecd79110244a54cd114d49e18fc68ee163c3690b97e5ad801",
+        "lf": 406
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 2,
+      "addedLines": 2,
+      "removedLines": 0,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import type { SessionSchema } from \"@orchestra/core/session/schema\"\nimport { types } from \"node:util\"\nimport { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from \"./source-lifecycle.ts\"\n",
+          "after": "import { pumpSfE11CpuObservation } from \"../../runtime/preview-cpu-e11-diagnostic.ts\"\nimport type { SessionSchema } from \"@orchestra/core/session/schema\"\nimport { types } from \"node:util\"\nimport { currentSfReadonlyAuthorityData, currentSfSiblingSnapshots } from \"./source-lifecycle.ts\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "    const observe = async (surface: Surface, snapshot: Pick<Snapshot, \"data\">) => {\n      if (currentRead && !currentRead()) return undefined\n      const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })\n      if (!actor || (currentRead && !currentRead())) return undefined\n      const access = object(object(snapshot.data.access)[actor.id])\n      if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== \"string\"))) ||\n",
+          "after": "    const observe = async (surface: Surface, snapshot: Pick<Snapshot, \"data\">) => {\n      if (currentRead && !currentRead()) return undefined\n      const actor = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })\n      pumpSfE11CpuObservation()\n      if (!actor || (currentRead && !currentRead())) return undefined\n      const access = object(object(snapshot.data.access)[actor.id])\n      if ((access.assigned !== undefined && (!Array.isArray(access.assigned) || access.assigned.some((value) => typeof value !== \"string\"))) ||\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "key": "source",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891
+      },
+      "postimage": {
+        "gitSha": "8148a7fdd70621aa41a0978efdaf330202f2ba73",
+        "bytes": 60958,
+        "sha256": "133f88604f6972360051b97ae8daf04c3df0f9100e2cba5a906c06ad8b3a65af",
+        "lf": 895
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 4,
+      "addedLines": 4,
+      "removedLines": 0,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import { types } from \"node:util\"\nimport { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from \"../../runtime/local-store.ts\"\nimport type { ReadonlyAuthorityData } from \"../../runtime/local-store.ts\"\n",
+          "after": "import { markSfE11CpuRoute, markSfE11SourceSelection } from \"../../runtime/preview-cpu-e11-diagnostic.ts\"\nimport { types } from \"node:util\"\nimport { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from \"../../runtime/local-store.ts\"\nimport type { ReadonlyAuthorityData } from \"../../runtime/local-store.ts\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "        if (!root?.current()) return execute\n        const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, \"transaction\"))\n        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }\n        return execute\n      }\n      return driver.transaction(surface, productRead(async (snapshot, blobs) => {\n",
+          "after": "        if (!root?.current()) return execute\n        const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, \"transaction\"))\n        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }\n        markSfE11SourceSelection(selection)\n        return execute\n      }\n      return driver.transaction(surface, productRead(async (snapshot, blobs) => {\n"
+        },
+        {
+          "id": "hunk-3",
+          "before": "        requireProduct()\n        const seal = options?.sealedRead && input.purpose !== \"business-restore\" && authorityCurrent() && readAuthority?.([])\n        if (seal && seal.current()) {\n          // Only the Dashboard snapshot covered by the held durable preimage\n          // can reuse its pure source-metadata validation.\n          const identity = surface === \"dashboard\" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined\n",
+          "after": "        requireProduct()\n        const seal = options?.sealedRead && input.purpose !== \"business-restore\" && authorityCurrent() && readAuthority?.([])\n        if (seal && seal.current()) {\n          markSfE11CpuRoute(0)\n          // Only the Dashboard snapshot covered by the held durable preimage\n          // can reuse its pure source-metadata validation.\n          const identity = surface === \"dashboard\" && sealedDigestsCurrent() ? seal.bytesIdentity ?? seal.identity : undefined\n"
+        },
+        {
+          "id": "hunk-4",
+          "before": "        const sealed = input.purpose !== \"business-restore\" && method && Object.hasOwn(method, \"value\") &&\n          active && Object.hasOwn(active, \"value\") && active.value === method.value ?\n          currentDriverReadonlyAuthorityData(driver, [], \"unfenced\") : undefined\n        const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined\n        const guarded = guard(surface, snapshot, sealedPreimage)\n        try {\n",
+          "after": "        const sealed = input.purpose !== \"business-restore\" && method && Object.hasOwn(method, \"value\") &&\n          active && Object.hasOwn(active, \"value\") && active.value === method.value ?\n          currentDriverReadonlyAuthorityData(driver, [], \"unfenced\") : undefined\n        markSfE11CpuRoute(sealed ? 1 : 2)\n        const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined\n        const guarded = guard(surface, snapshot, sealedPreimage)\n        try {\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "key": "store",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+        "bytes": 83955,
+        "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+        "lf": 1515
+      },
+      "postimage": {
+        "gitSha": "d6a8cb9029032f25a31c8f1b1f7ee70e39d4626e",
+        "bytes": 84086,
+        "sha256": "ee7ddbb5607c6bb88d312bcdbe5dac0a7b5593a82562f0a2dae1ad3b287a5119",
+        "lf": 1517
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "hunks": 2,
+      "addedLines": 2,
+      "removedLines": 0,
+      "anchors": [
+        {
+          "id": "hunk-1",
+          "before": "import { Database } from \"bun:sqlite\"\nimport { createSnapshotSqlReader } from \"./snapshot-sql-read.ts\"\nimport { AsyncLocalStorage } from \"node:async_hooks\"\n",
+          "after": "import { markSfE11NativeCopy } from \"./preview-cpu-e11-diagnostic.ts\"\nimport { Database } from \"bun:sqlite\"\nimport { createSnapshotSqlReader } from \"./snapshot-sql-read.ts\"\nimport { AsyncLocalStorage } from \"node:async_hooks\"\n"
+        },
+        {
+          "id": "hunk-2",
+          "before": "          : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)\n          : projected ? projected.snapshot\n          : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)\n        if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({\n          selection: projected?.selection,\n          current: () => {\n",
+          "after": "          : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)\n          : projected ? projected.snapshot\n          : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)\n        markSfE11NativeCopy(selection, projected?.selection)\n        if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({\n          selection: projected?.selection,\n          current: () => {\n"
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  ],
+  "added": [
+    {
+      "key": "helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+        "bytes": 22169,
+        "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+        "lf": 374
+      },
+      "created": true,
+      "readbackLiteral": true,
+      "content": "import inspector from \"node:inspector\"\nimport { createHash } from \"node:crypto\"\nimport { Buffer } from \"node:buffer\"\nimport { closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, writeFileSync } from \"node:fs\"\nimport cpuPath from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n\nconst source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n\n// Temporary CPU-only observation. The lexical handle never enters product context.\ntype Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }\nlet selectionTried = false, selectedFrame: Frame | undefined\nconst numberCap = 999_999_999, pulseMs = 10_000\nconst routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]\ntype SelectionClass = 0 | 1 | 2\nconst sourceRequests: [number, number, number] = [0, 0, 0]\nconst nativePairs: [number, number, number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0, 0, 0]\nconst progressPrefix = \"SF_PREVIEW_E11_PROGRESS \", progressCapBytes = 1024\nconst progressSchema = \"sf-preview-causal-e11-progress-v1\"\ntype HttpProgress = \"body-returned\" | \"admit-returned\" | \"case-callback-entered\"\n\nfunction whole(value: number) { return value - value % 1 }\nfunction bounded(value: number) { return value <= numberCap ? whole(value < 0 ? 0 : value) : numberCap }\nfunction pid() {\n  const value = process.pid\n  return typeof value === \"number\" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0\n}\nfunction parentPid() {\n  const value = process.ppid\n  return typeof value === \"number\" && value >= 0 && value <= numberCap && value % 1 === 0 ? value : 0\n}\n\nfunction routeSnapshot() {\n  return { scope: \"pid-running-window\", order: [\"sealed-read\", \"unfenced\", \"full-guard\"], cap: routeCap, counts: routeCounts.slice() }\n}\nfunction selectionClass(value: \"cases\" | \"preferences\" | undefined): SelectionClass | undefined {\n  return value === undefined ? 0 : value === \"cases\" ? 1 : value === \"preferences\" ? 2 : undefined\n}\nfunction selectionSnapshot() {\n  let saturated = false\n  for (let index = 0; index < sourceRequests.length; index++) if (sourceRequests[index] === routeCap) saturated = true\n  for (let index = 0; index < nativePairs.length; index++) if (nativePairs[index] === routeCap) saturated = true\n  return { scope: \"pid-running-window\", order: [\"none\", \"cases\", \"preferences\"], cap: routeCap,\n    sourceRequests: sourceRequests.slice(), nativePairs: nativePairs.slice(), saturated }\n}\nexport function markSfE11SourceSelection(selection: \"cases\" | \"preferences\" | undefined) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    const slot = selectionClass(selection)\n    if (slot !== undefined && sourceRequests[slot] < routeCap) sourceRequests[slot]++\n  } catch { /* Count an issued Source token only; never alter its admission or pump here. */ }\n}\nexport function markSfE11NativeCopy(requested: \"cases\" | \"preferences\" | undefined,\n  materialized: \"cases\" | \"preferences\" | undefined) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    const row = selectionClass(requested), column = selectionClass(materialized)\n    if (row === undefined || column === undefined) return\n    const slot = row * 3 + column, value = nativePairs[slot]\n    if (value !== undefined && value < routeCap) nativePairs[slot] = value + 1\n  } catch { /* All completed native child copies in this PID; no Request or C08 attribution. */ }\n}\nexport function pumpSfE11CpuObservation() {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    pulseCpuFrame(frame)\n  } catch { /* A cooperative boundary cannot change the original outcome. */ }\n}\nexport function markSfE11CpuRoute(route: 0 | 1 | 2) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned ||\n        (route !== 0 && route !== 1 && route !== 2)) return\n    if (routeCounts[route] < routeCap) routeCounts[route]++\n    pumpSfE11CpuObservation()\n  } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }\n}\nexport function markSfE11HttpProgress(handle: unknown, request: Request, point: HttpProgress) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n    const slot = point === \"body-returned\" ? 1 : point === \"admit-returned\" ? 2 : point === \"case-callback-entered\" ? 4 : 0\n    if (!slot || (frame.progressMask & slot) !== 0) return\n    frame.progressMask |= slot\n    const sequence = ++frame.progressSequence\n    try {\n      const now = cpuNow(), capture = cpuCapture?.frame === frame ? cpuCapture : undefined\n      const binding = capture?.binding\n      const line = progressPrefix + JSON.stringify({ schema: progressSchema, source, sourceTree, qualification: false,\n        pid: pid(), request: 1, sequence, kind: point,\n        elapsedTenthMs: now === undefined || now < frame.start ? null : cpuTenth(now - frame.start),\n        cpuPhase: capture?.phase ?? \"unavailable\", routes: routeSnapshot(), selection: selectionSnapshot(),\n        ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + \"\\n\"\n      if (line.length <= progressCapBytes && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n    } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }\n    pumpSfE11CpuObservation()\n  } catch { /* Do not inspect the Request or replace a product result. */ }\n}\n\nfunction disposeCpuFrame(frame: Frame) {\n  frame.closed = true\n  const timer = frame.timer\n  frame.timer = undefined\n  if (timer !== undefined) {\n    try { clearInterval(timer) } catch { /* Never replace the original request outcome. */ }\n  }\n}\nfunction pulseCpuFrame(frame: Frame) {\n  try {\n    if (frame !== selectedFrame || frame.closed) return\n    const now = cpuNow()\n    if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)\n  } catch { /* A delayed or failed pulse is not proof of timely collection. */ }\n}\nexport function startSfE11CpuObservation(request: Request): Frame | undefined {\n  if (selectionTried) return undefined\n  selectionTried = true\n  let frame: Frame | undefined\n  try {\n    const start = cpuNow()\n    if (start === undefined) { cpuEmit(\"unavailable\", undefined, { reason: \"selection-clock\" }); return undefined }\n    frame = { request, start, closed: false, httpClosed: false, progressMask: 0, progressSequence: 0 }\n    selectedFrame = frame\n    const selected = frame\n    // Install and unref before starting a sampler, so timer failure owns no sampler.\n    frame.timer = setInterval(() => pulseCpuFrame(selected), pulseMs)\n    frame.timer.unref?.()\n    startCpuObservation(frame)\n    if (cpuCapture?.frame !== frame || cpuCapture.phase !== \"running\") disposeCpuFrame(frame)\n    return frame\n  } catch {\n    if (frame) disposeCpuFrame(frame)\n    cpuEmit(\"unavailable\", undefined, { reason: \"selection-timer\" })\n    return undefined\n  }\n}\nexport function finishSfE11CpuObservation(handle: unknown, request: Request) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n    frame.httpClosed = true\n    if (frame.closed) return\n    disposeCpuFrame(frame)\n    const now = cpuNow()\n    finishCpuObservation(frame, now, now !== undefined && now - frame.start >= cpuTargetMs ? \"target\" : \"final\")\n  } catch { /* Observation cannot replace a returned value or original rejection. */ }\n}\n\ntype CpuMethod = \"Profiler.enable\" | \"Profiler.setSamplingInterval\" | \"Profiler.start\" | \"Profiler.stop\"\ntype CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }\ntype CpuBinding = {\n  schema: \"sf-preview-e11-cpu-launch-v1\"; source: string; sourceTree: string; snapshot: string;\n  runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string\n}\ntype CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }\ntype CpuCapture = {\n  frame: Frame; directory: string; binding: CpuBinding; session: CpuSession;\n  phase: \"running\" | \"stopping\" | \"finished\" | \"failed\"; owned: boolean;\n  points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;\n  cleanupFailed: boolean\n}\nconst cpuPrefix = \"SF_PREVIEW_E11_CPU \", cpuSchema = \"sf-preview-causal-e11-cpu-v1\"\nconst cpuRevision = \"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"\nconst cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000\nconst cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024\nconst cpuDirectoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", cpuBindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\nlet cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0\n\nfunction cpuNow(): number | undefined {\n  try {\n    const value = performance.now()\n    if (typeof value === \"number\" && value >= 0 && value <= numberCap / 10) return value\n  } catch { /* CPU observation never changes the original outcome. */ }\n}\nfunction cpuTenth(value: number | undefined): number | null {\n  return value === undefined ? null : whole(value * 10)\n}\nfunction cpuUtc(): number | null {\n  try {\n    const value = Date.now()\n    if (typeof value === \"number\" && value >= 0 && value <= 8_640_000_000_000_000 && value % 1 === 0) return value\n  } catch { /* Separate from the original observer's health. */ }\n  return null\n}\nfunction cpuHash(value: string) { return createHash(\"sha256\").update(value, \"utf8\").digest(\"hex\") }\nfunction cpuWithin(parent: string, child: string) {\n  const relative = cpuPath.relative(parent, child)\n  return relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + cpuPath.sep) && !cpuPath.isAbsolute(relative)\n}\nfunction cpuObject(value: unknown): value is Record<string, unknown> {\n  return value !== null && typeof value === \"object\" && !Array.isArray(value)\n}\nfunction cpuEmit(kind: string, binding: CpuBinding | undefined, payload: Record<string, unknown>) {\n  if (cpuLines >= 3) return\n  const sequence = ++cpuLines\n  try {\n    const line = cpuPrefix + JSON.stringify({ schema: cpuSchema, source, sourceTree, qualification: false,\n      pid: pid(), sequence, kind, request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),\n      ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}),\n      ...payload }) + \"\\n\"\n    if (line.length <= 4096 && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n  } catch { /* An attempted line is never replayed. */ }\n}\nfunction cpuAdmit(): { directory: string; binding: CpuBinding } | undefined {\n  const directory = process.env[cpuDirectoryKey], encoded = process.env[cpuBindingKey]\n  if (!directory || !encoded) return undefined\n  if (encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n      typeof Bun === \"undefined\" || Bun.version !== \"1.3.14\" || Bun.revision !== cpuRevision) throw new Error(\"cpu-runtime\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../\", import.meta.url)))\n  if (process.argv[1] !== cpuPath.join(repository, \"apps/cli/src/index.ts\") || process.argv[2] !== \"serve\")\n    throw new Error(\"cpu-process\")\n  const base = cpuPath.join(repository, \"test-ci-evidence\"), value: unknown = JSON.parse(encoded)\n  if (!cpuObject(value) || value.schema !== \"sf-preview-e11-cpu-launch-v1\" || value.source !== source ||\n      value.sourceTree !== sourceTree || typeof value.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||\n      typeof value.runId !== \"string\" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== \"1\" ||\n      typeof value.nonce !== \"string\" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||\n      typeof value.launcherBytes !== \"number\" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||\n      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))\n    throw new Error(\"cpu-binding\")\n  if (!cpuPath.isAbsolute(directory) || cpuPath.dirname(directory) !== base || cpuPath.basename(directory) !== value.nonce ||\n      realpathSync(base) !== base || realpathSync(directory) !== directory ||\n      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || cpuWithin(realpathSync(process.cwd()), directory))\n    throw new Error(\"cpu-directory\")\n  const launcherPath = cpuPath.join(directory, \"launcher.json\"), info = lstatSync(launcherPath)\n  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error(\"cpu-launcher\")\n  const text = readFileSync(launcherPath, \"utf8\"), launcher: unknown = JSON.parse(text)\n  if (Buffer.byteLength(text, \"utf8\") !== value.launcherBytes || cpuHash(text) !== value.launcherSha256 || !cpuObject(launcher))\n    throw new Error(\"cpu-launcher\")\n  for (const key of [\"schema\", \"source\", \"sourceTree\", \"snapshot\", \"runId\", \"attempt\", \"nonce\"] as const)\n    if (launcher[key] !== value[key]) throw new Error(\"cpu-launcher-binding\")\n  if (launcher.processRole !== \"native-cli\" || launcher.profileName !== \"preview-first.cpuprofile\")\n    throw new Error(\"cpu-launcher-role\")\n  return { directory, binding: value as CpuBinding }\n}\nfunction cpuWrite(directory: string, name: string, text: string): CpuFile {\n  const bytes = Buffer.byteLength(text, \"utf8\")\n  const cap = name === \"preview-first.cpuprofile\" ? cpuProfileCapBytes : cpuCollectionCapBytes\n  if (bytes > cap) throw new Error(\"cpu-file-cap\")\n  const sha256 = cpuHash(text)\n  let fd: number | undefined\n  try {\n    fd = openSync(cpuPath.join(directory, name), \"wx\", 0o600)\n    writeFileSync(fd, text, \"utf8\")\n    fsyncSync(fd)\n    const fsyncTenthMs = cpuTenth(cpuNow()), info = fstatSync(fd)\n    if (!info.isFile() || info.size !== bytes) throw new Error(\"cpu-file-size\")\n    closeSync(fd)\n    fd = undefined\n    return { name, bytes, sha256, fsyncTenthMs, closeTenthMs: cpuTenth(cpuNow()) }\n  } finally {\n    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve the primary observation failure. */ } }\n  }\n}\nfunction startCpuObservation(frame: Frame) {\n  if (cpuTried) return\n  cpuTried = true\n  let admitted: ReturnType<typeof cpuAdmit> = undefined, stage = \"admission\"\n  try {\n    admitted = cpuAdmit()\n    if (!admitted) { cpuEmit(\"unavailable\", undefined, { reason: \"no-launcher\" }); return }\n    const now = cpuNow()\n    if (now === undefined || now < frame.start || now - frame.start >= cpuTargetMs) {\n      cpuEmit(\"unavailable\", admitted.binding, { reason: \"late-or-invalid-clock\", elapsedTenthMs: now === undefined ? null : cpuTenth(now - frame.start) })\n      return\n    }\n    stage = \"connect\"\n    // This is the exact default-import/synchronous form exercised by the pinned Bun.\n    const session = new inspector.Session() as unknown as CpuSession\n    session.connect()\n    stage = \"enable\"\n    session.post(\"Profiler.enable\")\n    stage = \"sampling-preflight\"\n    // A rejection here can mean another VM sampler is running. Never disconnect it.\n    session.post(\"Profiler.setSamplingInterval\", { interval: cpuIntervalUs })\n    const beforeStart = cpuNow()\n    const points: Record<string, number | null> = { frameStart: cpuTenth(frame.start), startEnter: cpuTenth(beforeStart) }\n    if (beforeStart === undefined || beforeStart < frame.start || beforeStart - frame.start >= cpuTargetMs) {\n      cpuEmit(\"unavailable\", admitted.binding, { reason: \"late-before-start\", points })\n      return\n    }\n    stage = \"start\"\n    session.post(\"Profiler.start\")\n    points.startReturn = cpuTenth(cpuNow())\n    const capture: CpuCapture = { frame, directory: admitted.directory, binding: admitted.binding, session,\n      phase: \"running\", owned: true, points, utcStartReturnMs: cpuUtc(), cleanupFailed: false }\n    cpuCapture = capture\n    cpuEmit(\"started\", capture.binding, { runtime: [\"1.3.14\", cpuRevision], parentPid: parentPid(),\n      intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,\n      utcMs: capture.utcStartReturnMs, points })\n  } catch {\n    // Admission/start failure has no established sampler ownership: no disable/disconnect.\n    cpuEmit(\"unavailable\", admitted?.binding, { reason: stage, ownership: stage === \"start\" ? \"uncertain\" : \"not-owned\" })\n  }\n}\nfunction checkpointCpuObservation(frame: Frame, now: number): boolean {\n  try {\n    const capture = cpuCapture\n    if (capture?.frame === frame && capture.phase === \"running\" && now - frame.start >= cpuTargetMs) {\n      finishCpuObservation(frame, now, \"target\")\n      return true\n    }\n  } catch { /* Never prevent the original cutoff check. */ }\n  return false\n}\nfunction finishCpuObservation(frame: Frame, now: number | undefined, cause: \"target\" | \"window\" | \"final\") {\n  const capture = cpuCapture\n  if (!capture || capture.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n  capture.phase = \"stopping\"\n  capture.stopCause = cause\n  let stage = \"stop\", profileFile: CpuFile | undefined\n  try {\n    capture.points.stopCheckpoint = cpuTenth(now)\n    capture.points.stopEnter = cpuTenth(cpuNow())\n    capture.utcStopEnterMs = cpuUtc()\n    const result: unknown = capture.session.post(\"Profiler.stop\")\n    capture.points.stopReturn = cpuTenth(cpuNow())\n    capture.owned = false\n    // Stop returned successfully in this same synchronous turn. Keep its result.\n    try { capture.session.disconnect() } catch { capture.cleanupFailed = true }\n    stage = \"result\"\n    if (!cpuObject(result) || !cpuObject(result.profile)) throw new Error(\"cpu-result\")\n    const profile = result.profile\n    if (!Array.isArray(profile.nodes) || !Array.isArray(profile.samples) || !Array.isArray(profile.timeDeltas) ||\n        typeof profile.startTime !== \"number\" || typeof profile.endTime !== \"number\" ||\n        !Number.isFinite(profile.startTime) || !Number.isFinite(profile.endTime) || profile.endTime < profile.startTime ||\n        profile.samples.length !== profile.timeDeltas.length) throw new Error(\"cpu-profile\")\n    cpuEmit(\"stopped\", capture.binding, { cause, points: capture.points,\n      nodesBounded: bounded(profile.nodes.length), samplesBounded: bounded(profile.samples.length), cleanupFailed: capture.cleanupFailed })\n    stage = \"serialize\"\n    capture.points.serializeEnter = cpuTenth(cpuNow())\n    // Full first serialization of returned result.profile, not the inaccessible native JSON string.\n    const profileText = JSON.stringify(profile) + \"\\n\"\n    capture.points.serializeReturn = cpuTenth(cpuNow())\n    stage = \"profile-cap\"\n    if (Buffer.byteLength(profileText, \"utf8\") > cpuProfileCapBytes) throw new Error(\"cpu-profile-cap\")\n    stage = \"profile-write\"\n    capture.points.profileWriteEnter = cpuTenth(cpuNow())\n    profileFile = cpuWrite(capture.directory, \"preview-first.cpuprofile\", profileText)\n    capture.points.profileFsync = profileFile.fsyncTenthMs\n    capture.points.profileClose = profileFile.closeTenthMs\n    const stop = capture.points.stopEnter, closed = profileFile.closeTenthMs, origin = whole(frame.start * 10)\n    const temporalProfile = typeof stop === \"number\" && closed !== null && stop >= origin && closed >= stop &&\n      closed - origin < cpuAcceptMs * 10\n    const short = cause === \"final\" && now !== undefined && now - frame.start < cpuTargetMs\n    const state = short ? \"short-completed\" : temporalProfile ? \"completed-on-time\" : \"completed-late\"\n    const collection = { schema: cpuSchema, source, sourceTree, qualification: false,\n      snapshot: capture.binding.snapshot, runId: capture.binding.runId, attempt: capture.binding.attempt,\n      nonce: capture.binding.nonce, pid: pid(), parentPid: parentPid(), request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),\n      runtime: [\"1.3.14\", cpuRevision], intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,\n      state, cause, utcStartReturnMs: capture.utcStartReturnMs, utcStopEnterMs: capture.utcStopEnterMs ?? null, points: capture.points,\n      profile: profileFile, native: { startTime: profile.startTime, endTime: profile.endTime,\n        nodes: profile.nodes.length, samples: profile.samples.length },\n      cleanupFailed: capture.cleanupFailed, profileCapBytes: cpuProfileCapBytes, collectionCapBytes: cpuCollectionCapBytes,\n      limits: \"Whole VM samples; endTime is last sample; no async/exclusive CPU attribution; overhead not subtracted. This file does not attest its own durable completion.\" }\n    stage = \"collection-write\"\n    const collectionFile = cpuWrite(capture.directory, \"collection.json\", JSON.stringify(collection) + \"\\n\")\n    capture.phase = \"finished\"\n    // Only this later marker attests collection.json's own fsync/close and hash.\n    cpuEmit(\"finished\", capture.binding, { state, cause, profile: profileFile, collection: collectionFile,\n      collectionWithinAccept: temporalProfile && collectionFile.closeTenthMs !== null && closed !== null &&\n        collectionFile.closeTenthMs >= closed && collectionFile.closeTenthMs - origin < cpuAcceptMs * 10,\n      points: capture.points, cleanupFailed: capture.cleanupFailed })\n  } catch {\n    capture.phase = \"failed\"\n    // No second stop and no uncertain global cleanup. Partial files remain evidence.\n    cpuEmit(\"finished\", capture.binding, { state: \"incomplete\", reason: stage, cause,\n      points: capture.points, ...(profileFile ? { profile: profileFile } : {}),\n      stopReturned: !capture.owned, cleanupFailed: capture.cleanupFailed })\n  }\n}\n",
+      "absenceEvidence": "GET contents on exact base commit returned404; no source tree or ref created",
+      "inverse": "remove only this added path"
+    },
+    {
+      "key": "request",
+      "path": ".ci-run.json",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0
+      },
+      "created": false,
+      "readbackLiteral": true,
+      "content": "{\"package\":\"app\",\"directory\":\"packages/app-shell\",\"packageSelector\":\"@orchestra/app\",\"runner\":\"playwright\",\"args\":[\"e2e/sucafina/design-wave-five-analytics.spec.ts\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"strict\",\"ORCHESTRA_CHANNEL\":\"prod\"},\"config\":\"e2e/playwright.production.config.ts\"}",
+      "absenceEvidence": "GET contents on exact base commit returned404; no source tree or ref created",
+      "inverse": "remove only this added path"
+    }
+  ],
+  "e10Reuse": {
+    "commit": "8f85aa7653693a1fb73e37f497e2795fc4da66e0",
+    "tree": "590f5e9ca2fa18fa3981c55f56a542efd017daf2",
+    "files": [
+      {
+        "key": "helper",
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+        "basePath": "modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts",
+        "base": {
+          "gitSha": "629eb12bf5e9d06a37b0729261fd324859f299ab",
+          "bytes": 19998,
+          "sha256": "549d1d0a3c51ea4807f91261431163f207731862c28663b72496df32b82f6056",
+          "lf": 342
+        },
+        "postimage": {
+          "gitSha": "b5e2f218117a0f30e803a8b251922e92b6da2332",
+          "bytes": 22169,
+          "sha256": "4528560d6ea8c7ed406f9ae2ea248da8cd43d324ae575cef7e86de3926c9f662",
+          "lf": 374
+        },
+        "hunks": 10,
+        "added": 52,
+        "removed": 20,
+        "anchors": [
+          {
+            "id": "hunk-1",
+            "before": "import cpuPath from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n\nconst source = \"7d26eb502441aafeacfaa89c135e81dc8d98571b\"\nconst sourceTree = \"b90f6e774436bddd61043b6ac70a9dc2a625baf4\"\n\n// Temporary CPU-only observation. The lexical handle never enters product context.\ntype Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }\nlet selectionTried = false, selectedFrame: Frame | undefined\nconst numberCap = 999_999_999, pulseMs = 10_000\nconst routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]\nconst progressPrefix = \"SF_PREVIEW_E10_PROGRESS \", progressCapBytes = 1024\nconst progressSchema = \"sf-preview-causal-e10-progress-v1\"\ntype HttpProgress = \"body-returned\" | \"admit-returned\" | \"case-callback-entered\"\n\nfunction whole(value: number) { return value - value % 1 }\n",
+            "after": "import cpuPath from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n\nconst source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n\n// Temporary CPU-only observation. The lexical handle never enters product context.\ntype Frame = { request: Request; start: number; closed: boolean; httpClosed: boolean; progressMask: number; progressSequence: number; timer?: ReturnType<typeof setInterval> }\nlet selectionTried = false, selectedFrame: Frame | undefined\nconst numberCap = 999_999_999, pulseMs = 10_000\nconst routeCap = 65_535, routeCounts: [number, number, number] = [0, 0, 0]\ntype SelectionClass = 0 | 1 | 2\nconst sourceRequests: [number, number, number] = [0, 0, 0]\nconst nativePairs: [number, number, number, number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0, 0, 0, 0]\nconst progressPrefix = \"SF_PREVIEW_E11_PROGRESS \", progressCapBytes = 1024\nconst progressSchema = \"sf-preview-causal-e11-progress-v1\"\ntype HttpProgress = \"body-returned\" | \"admit-returned\" | \"case-callback-entered\"\n\nfunction whole(value: number) { return value - value % 1 }\n"
+          },
+          {
+            "id": "hunk-2",
+            "before": "function routeSnapshot() {\n  return { scope: \"pid-running-window\", order: [\"sealed-read\", \"unfenced\", \"full-guard\"], cap: routeCap, counts: routeCounts.slice() }\n}\nexport function pumpSfE10CpuObservation() {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    pulseCpuFrame(frame)\n  } catch { /* A cooperative boundary cannot change the original outcome. */ }\n}\nexport function markSfE10CpuRoute(route: 0 | 1 | 2) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned ||\n        (route !== 0 && route !== 1 && route !== 2)) return\n    if (routeCounts[route] < routeCap) routeCounts[route]++\n    pumpSfE10CpuObservation()\n  } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }\n}\nexport function markSfE10HttpProgress(handle: unknown, request: Request, point: HttpProgress) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n",
+            "after": "function routeSnapshot() {\n  return { scope: \"pid-running-window\", order: [\"sealed-read\", \"unfenced\", \"full-guard\"], cap: routeCap, counts: routeCounts.slice() }\n}\nfunction selectionClass(value: \"cases\" | \"preferences\" | undefined): SelectionClass | undefined {\n  return value === undefined ? 0 : value === \"cases\" ? 1 : value === \"preferences\" ? 2 : undefined\n}\nfunction selectionSnapshot() {\n  let saturated = false\n  for (let index = 0; index < sourceRequests.length; index++) if (sourceRequests[index] === routeCap) saturated = true\n  for (let index = 0; index < nativePairs.length; index++) if (nativePairs[index] === routeCap) saturated = true\n  return { scope: \"pid-running-window\", order: [\"none\", \"cases\", \"preferences\"], cap: routeCap,\n    sourceRequests: sourceRequests.slice(), nativePairs: nativePairs.slice(), saturated }\n}\nexport function markSfE11SourceSelection(selection: \"cases\" | \"preferences\" | undefined) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    const slot = selectionClass(selection)\n    if (slot !== undefined && sourceRequests[slot] < routeCap) sourceRequests[slot]++\n  } catch { /* Count an issued Source token only; never alter its admission or pump here. */ }\n}\nexport function markSfE11NativeCopy(requested: \"cases\" | \"preferences\" | undefined,\n  materialized: \"cases\" | \"preferences\" | undefined) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    const row = selectionClass(requested), column = selectionClass(materialized)\n    if (row === undefined || column === undefined) return\n    const slot = row * 3 + column, value = nativePairs[slot]\n    if (value !== undefined && value < routeCap) nativePairs[slot] = value + 1\n  } catch { /* All completed native child copies in this PID; no Request or C08 attribution. */ }\n}\nexport function pumpSfE11CpuObservation() {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned) return\n    pulseCpuFrame(frame)\n  } catch { /* A cooperative boundary cannot change the original outcome. */ }\n}\nexport function markSfE11CpuRoute(route: 0 | 1 | 2) {\n  try {\n    const frame = selectedFrame, capture = cpuCapture\n    if (!frame || frame.closed || capture?.frame !== frame || capture.phase !== \"running\" || !capture.owned ||\n        (route !== 0 && route !== 1 && route !== 2)) return\n    if (routeCounts[route] < routeCap) routeCounts[route]++\n    pumpSfE11CpuObservation()\n  } catch { /* These are selected routes in this PID, not completed work or Request attribution. */ }\n}\nexport function markSfE11HttpProgress(handle: unknown, request: Request, point: HttpProgress) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n"
+          },
+          {
+            "id": "hunk-3",
+            "before": "      const line = progressPrefix + JSON.stringify({ schema: progressSchema, source, sourceTree, qualification: false,\n        pid: pid(), request: 1, sequence, kind: point,\n        elapsedTenthMs: now === undefined || now < frame.start ? null : cpuTenth(now - frame.start),\n        cpuPhase: capture?.phase ?? \"unavailable\", routes: routeSnapshot(),\n        ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + \"\\n\"\n      if (line.length <= progressCapBytes && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n    } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }\n    pumpSfE10CpuObservation()\n  } catch { /* Do not inspect the Request or replace a product result. */ }\n}\n\n",
+            "after": "      const line = progressPrefix + JSON.stringify({ schema: progressSchema, source, sourceTree, qualification: false,\n        pid: pid(), request: 1, sequence, kind: point,\n        elapsedTenthMs: now === undefined || now < frame.start ? null : cpuTenth(now - frame.start),\n        cpuPhase: capture?.phase ?? \"unavailable\", routes: routeSnapshot(), selection: selectionSnapshot(),\n        ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}) }) + \"\\n\"\n      if (line.length <= progressCapBytes && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n    } catch { /* Consume this attempt once; failure or backpressure does not block the pump. */ }\n    pumpSfE11CpuObservation()\n  } catch { /* Do not inspect the Request or replace a product result. */ }\n}\n\n"
+          },
+          {
+            "id": "hunk-4",
+            "before": "    if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)\n  } catch { /* A delayed or failed pulse is not proof of timely collection. */ }\n}\nexport function startSfE10CpuObservation(request: Request): Frame | undefined {\n  if (selectionTried) return undefined\n  selectionTried = true\n  let frame: Frame | undefined\n",
+            "after": "    if (now !== undefined && now >= frame.start && checkpointCpuObservation(frame, now)) disposeCpuFrame(frame)\n  } catch { /* A delayed or failed pulse is not proof of timely collection. */ }\n}\nexport function startSfE11CpuObservation(request: Request): Frame | undefined {\n  if (selectionTried) return undefined\n  selectionTried = true\n  let frame: Frame | undefined\n"
+          },
+          {
+            "id": "hunk-5",
+            "before": "    return undefined\n  }\n}\nexport function finishSfE10CpuObservation(handle: unknown, request: Request) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n",
+            "after": "    return undefined\n  }\n}\nexport function finishSfE11CpuObservation(handle: unknown, request: Request) {\n  try {\n    const frame = selectedFrame\n    if (!frame || handle !== frame || frame.request !== request || frame.httpClosed) return\n"
+          },
+          {
+            "id": "hunk-6",
+            "before": "type CpuMethod = \"Profiler.enable\" | \"Profiler.setSamplingInterval\" | \"Profiler.start\" | \"Profiler.stop\"\ntype CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }\ntype CpuBinding = {\n  schema: \"sf-preview-e10-cpu-launch-v1\"; source: string; sourceTree: string; snapshot: string;\n  runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string\n}\ntype CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }\n",
+            "after": "type CpuMethod = \"Profiler.enable\" | \"Profiler.setSamplingInterval\" | \"Profiler.start\" | \"Profiler.stop\"\ntype CpuSession = { connect(): void; disconnect(): void; post(method: CpuMethod, params?: { interval: number }): unknown }\ntype CpuBinding = {\n  schema: \"sf-preview-e11-cpu-launch-v1\"; source: string; sourceTree: string; snapshot: string;\n  runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string\n}\ntype CpuFile = { name: string; bytes: number; sha256: string; fsyncTenthMs: number | null; closeTenthMs: number | null }\n"
+          },
+          {
+            "id": "hunk-7",
+            "before": "  points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;\n  cleanupFailed: boolean\n}\nconst cpuPrefix = \"SF_PREVIEW_E10_CPU \", cpuSchema = \"sf-preview-causal-e10-cpu-v1\"\nconst cpuRevision = \"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"\nconst cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000\nconst cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024\nconst cpuDirectoryKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_DIR\", cpuBindingKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_BINDING\"\nlet cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0\n\nfunction cpuNow(): number | undefined {\n",
+            "after": "  points: Record<string, number | null>; utcStartReturnMs: number | null; utcStopEnterMs?: number | null; stopCause?: string;\n  cleanupFailed: boolean\n}\nconst cpuPrefix = \"SF_PREVIEW_E11_CPU \", cpuSchema = \"sf-preview-causal-e11-cpu-v1\"\nconst cpuRevision = \"0d9b296af33f2b851fcbf4df3e9ec89751734ba4\"\nconst cpuTargetMs = 50_000, cpuAcceptMs = 55_000, cpuIntervalUs = 5_000\nconst cpuProfileCapBytes = 4 * 1024 * 1024, cpuCollectionCapBytes = 16 * 1024\nconst cpuDirectoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", cpuBindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\nlet cpuCapture: CpuCapture | undefined, cpuTried = false, cpuLines = 0\n\nfunction cpuNow(): number | undefined {\n"
+          },
+          {
+            "id": "hunk-8",
+            "before": "  const sequence = ++cpuLines\n  try {\n    const line = cpuPrefix + JSON.stringify({ schema: cpuSchema, source, sourceTree, qualification: false,\n      pid: pid(), sequence, kind, request: 1, routes: routeSnapshot(),\n      ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}),\n      ...payload }) + \"\\n\"\n    if (line.length <= 4096 && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n",
+            "after": "  const sequence = ++cpuLines\n  try {\n    const line = cpuPrefix + JSON.stringify({ schema: cpuSchema, source, sourceTree, qualification: false,\n      pid: pid(), sequence, kind, request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),\n      ...(binding ? { snapshot: binding.snapshot, runId: binding.runId, attempt: binding.attempt, nonce: binding.nonce } : {}),\n      ...payload }) + \"\\n\"\n    if (line.length <= 4096 && /^[\\x20-\\x7e]*\\n$/.test(line)) process.stdout.write(line)\n"
+          },
+          {
+            "id": "hunk-9",
+            "before": "  if (!directory || !encoded) return undefined\n  if (encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n      typeof Bun === \"undefined\" || Bun.version !== \"1.3.14\" || Bun.revision !== cpuRevision) throw new Error(\"cpu-runtime\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../../\", import.meta.url)))\n  if (process.argv[1] !== cpuPath.join(repository, \"apps/cli/src/index.ts\") || process.argv[2] !== \"serve\")\n    throw new Error(\"cpu-process\")\n  const base = cpuPath.join(repository, \"test-ci-evidence\"), value: unknown = JSON.parse(encoded)\n  if (!cpuObject(value) || value.schema !== \"sf-preview-e10-cpu-launch-v1\" || value.source !== source ||\n      value.sourceTree !== sourceTree || typeof value.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||\n      typeof value.runId !== \"string\" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== \"1\" ||\n      typeof value.nonce !== \"string\" || !/^sf613-e10-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||\n      typeof value.launcherBytes !== \"number\" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||\n      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))\n    throw new Error(\"cpu-binding\")\n",
+            "after": "  if (!directory || !encoded) return undefined\n  if (encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n      typeof Bun === \"undefined\" || Bun.version !== \"1.3.14\" || Bun.revision !== cpuRevision) throw new Error(\"cpu-runtime\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../\", import.meta.url)))\n  if (process.argv[1] !== cpuPath.join(repository, \"apps/cli/src/index.ts\") || process.argv[2] !== \"serve\")\n    throw new Error(\"cpu-process\")\n  const base = cpuPath.join(repository, \"test-ci-evidence\"), value: unknown = JSON.parse(encoded)\n  if (!cpuObject(value) || value.schema !== \"sf-preview-e11-cpu-launch-v1\" || value.source !== source ||\n      value.sourceTree !== sourceTree || typeof value.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||\n      typeof value.runId !== \"string\" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== \"1\" ||\n      typeof value.nonce !== \"string\" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||\n      typeof value.launcherBytes !== \"number\" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||\n      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))\n    throw new Error(\"cpu-binding\")\n"
+          },
+          {
+            "id": "hunk-10",
+            "before": "    const state = short ? \"short-completed\" : temporalProfile ? \"completed-on-time\" : \"completed-late\"\n    const collection = { schema: cpuSchema, source, sourceTree, qualification: false,\n      snapshot: capture.binding.snapshot, runId: capture.binding.runId, attempt: capture.binding.attempt,\n      nonce: capture.binding.nonce, pid: pid(), parentPid: parentPid(), request: 1, routes: routeSnapshot(),\n      runtime: [\"1.3.14\", cpuRevision], intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,\n      state, cause, utcStartReturnMs: capture.utcStartReturnMs, utcStopEnterMs: capture.utcStopEnterMs ?? null, points: capture.points,\n      profile: profileFile, native: { startTime: profile.startTime, endTime: profile.endTime,\n",
+            "after": "    const state = short ? \"short-completed\" : temporalProfile ? \"completed-on-time\" : \"completed-late\"\n    const collection = { schema: cpuSchema, source, sourceTree, qualification: false,\n      snapshot: capture.binding.snapshot, runId: capture.binding.runId, attempt: capture.binding.attempt,\n      nonce: capture.binding.nonce, pid: pid(), parentPid: parentPid(), request: 1, routes: routeSnapshot(), selection: selectionSnapshot(),\n      runtime: [\"1.3.14\", cpuRevision], intervalUs: cpuIntervalUs, targetMs: cpuTargetMs, acceptMs: cpuAcceptMs,\n      state, cause, utcStartReturnMs: capture.utcStartReturnMs, utcStopEnterMs: capture.utcStopEnterMs ?? null, points: capture.points,\n      profile: profileFile, native: { startTime: profile.startTime, endTime: profile.endTime,\n"
+          }
+        ],
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      {
+        "key": "http",
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "basePath": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "base": {
+          "gitSha": "30d9fac161b3fe3c862b96280bf339064d574cd9",
+          "bytes": 13828,
+          "sha256": "423f205369b3806c891bff4a5598257467c9160044bb28d12f0030a5bb56975d",
+          "lf": 141
+        },
+        "postimage": {
+          "gitSha": "347edd5292d86537451507026236f27f2488a06a",
+          "bytes": 13818,
+          "sha256": "44ca1d564841f44bf6a5ae87584f105078006bd72f8826b0f6409836ff3e6191",
+          "lf": 141
+        },
+        "hunks": 3,
+        "added": 6,
+        "removed": 6,
+        "anchors": [
+          {
+            "id": "hunk-1",
+            "before": "import { startSfE10CpuObservation, finishSfE10CpuObservation, markSfE10HttpProgress } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts\"\nimport { decodeSfOperationInput } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts\"\nimport { digestSfValue } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts\"\nimport type { PortResult } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts\"\n",
+            "after": "import { startSfE11CpuObservation, finishSfE11CpuObservation, markSfE11HttpProgress } from \"../../../../modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts\"\nimport { decodeSfOperationInput } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts\"\nimport { digestSfValue } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts\"\nimport type { PortResult } from \"../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts\"\n"
+          },
+          {
+            "id": "hunk-2",
+            "before": "    if (request.method !== \"POST\") return reply({ status: \"needs-input\", reason: \"method-not-allowed\" }, 405)\n    if (url.searchParams.getAll(\"sf\").length !== 1 || [...url.searchParams.keys()].some((key) => key !== \"sf\") || !request.headers.get(\"content-type\")?.toLowerCase().startsWith(\"application/json\")) return reply({ status: \"needs-input\", reason: \"invalid-decision-request\" })\n    const mode = selected as Mode\n    const cpu = mode === \"decision-portfolio-preview\" ? startSfE10CpuObservation(request) : undefined\n    try {\n      const payload = await boundedJson(request)\n      markSfE10HttpProgress(cpu, request, \"body-returned\")\n      if (!valid(mode, payload)) return reply({ status: \"needs-input\", reason: \"invalid-decision-input\" })\n      const admitted = await input.authority.human.admit(request, actions[mode], payload)\n      markSfE10HttpProgress(cpu, request, \"admit-returned\")\n      if (admitted.status !== \"ok\") return reply(admitted)\n      try {\n        const call = admitted.value\n        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })\n        const allowHistoricalRetry = [\"decision-promote\", \"decision-choose\", \"decision-add-question\", \"decision-answer-question\", \"decision-prepare-changes\", \"decision-promote-portfolio\", \"decision-prepare-portfolio\"].includes(mode)\n        const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {\n          markSfE10HttpProgress(cpu, request, \"case-callback-entered\")\n          if (mode === \"decision-choose\") return input.mutations.recordChoice(payload as Parameters<Mutations[\"recordChoice\"]>[0], call)\n          if (mode === \"decision-add-question\") return input.mutations.addQuestion(payload as Parameters<Mutations[\"addQuestion\"]>[0], call)\n          if (mode === \"decision-answer-question\") return input.mutations.answerQuestion(payload as Parameters<Mutations[\"answerQuestion\"]>[0], call)\n",
+            "after": "    if (request.method !== \"POST\") return reply({ status: \"needs-input\", reason: \"method-not-allowed\" }, 405)\n    if (url.searchParams.getAll(\"sf\").length !== 1 || [...url.searchParams.keys()].some((key) => key !== \"sf\") || !request.headers.get(\"content-type\")?.toLowerCase().startsWith(\"application/json\")) return reply({ status: \"needs-input\", reason: \"invalid-decision-request\" })\n    const mode = selected as Mode\n    const cpu = mode === \"decision-portfolio-preview\" ? startSfE11CpuObservation(request) : undefined\n    try {\n      const payload = await boundedJson(request)\n      markSfE11HttpProgress(cpu, request, \"body-returned\")\n      if (!valid(mode, payload)) return reply({ status: \"needs-input\", reason: \"invalid-decision-input\" })\n      const admitted = await input.authority.human.admit(request, actions[mode], payload)\n      markSfE11HttpProgress(cpu, request, \"admit-returned\")\n      if (admitted.status !== \"ok\") return reply(admitted)\n      try {\n        const call = admitted.value\n        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })\n        const allowHistoricalRetry = [\"decision-promote\", \"decision-choose\", \"decision-add-question\", \"decision-answer-question\", \"decision-prepare-changes\", \"decision-promote-portfolio\", \"decision-prepare-portfolio\"].includes(mode)\n        const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {\n          markSfE11HttpProgress(cpu, request, \"case-callback-entered\")\n          if (mode === \"decision-choose\") return input.mutations.recordChoice(payload as Parameters<Mutations[\"recordChoice\"]>[0], call)\n          if (mode === \"decision-add-question\") return input.mutations.addQuestion(payload as Parameters<Mutations[\"addQuestion\"]>[0], call)\n          if (mode === \"decision-answer-question\") return input.mutations.answerQuestion(payload as Parameters<Mutations[\"answerQuestion\"]>[0], call)\n"
+          },
+          {
+            "id": "hunk-3",
+            "before": "        return reply(result)\n      } catch { return reply({ status: \"unavailable\", reason: mode === \"decision-review\" ? \"procurement-prepared-review-producer-unavailable\" : \"decision-request-unavailable\" }) }\n      finally { input.authority.human.finish(admitted.value) }\n    } finally { finishSfE10CpuObservation(cpu, request) }\n  }\n}\n\n",
+            "after": "        return reply(result)\n      } catch { return reply({ status: \"unavailable\", reason: mode === \"decision-review\" ? \"procurement-prepared-review-producer-unavailable\" : \"decision-request-unavailable\" }) }\n      finally { input.authority.human.finish(admitted.value) }\n    } finally { finishSfE11CpuObservation(cpu, request) }\n  }\n}\n\n"
+          }
+        ],
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      {
+        "key": "inner",
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "basePath": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "base": {
+          "gitSha": "65b34f4b17401ee49196a518008dbe1c952f5d67",
+          "bytes": 10333,
+          "sha256": "e09e67a807ee3bd9f8d82391ac35e68de619a6f315225a8a79508ab2b3bc8a32",
+          "lf": 184
+        },
+        "postimage": {
+          "gitSha": "46dab966dbb2631fcc65f5cf730e792f9e7e94da",
+          "bytes": 10333,
+          "sha256": "c08630983e3fd7617f06e268f4176490b730b0396c826289e2420b28c5230b70",
+          "lf": 184
+        },
+        "hunks": 5,
+        "added": 9,
+        "removed": 9,
+        "anchors": [
+          {
+            "id": "hunk-1",
+            "before": "      return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }\n    })\n    const app = yield* AppProcess.Service\n    const cpuEnvironment = nativePreviewE10CpuEnvironment(root)\n    const child = yield* app.spawn(ChildProcess.make(process.execPath, [\n      entry, \"serve\", \"--hostname\", hostname, \"--port\", String(port), \"--installation\", factory,\n    ], {\n",
+            "after": "      return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }\n    })\n    const app = yield* AppProcess.Service\n    const cpuEnvironment = nativePreviewE11CpuEnvironment(root)\n    const child = yield* app.spawn(ChildProcess.make(process.execPath, [\n      entry, \"serve\", \"--hostname\", hostname, \"--port\", String(port), \"--installation\", factory,\n    ], {\n"
+          },
+          {
+            "id": "hunk-2",
+            "before": "    const ready = yield* Deferred.make<void>()\n    const diagnostic = { last: \"\" }\n    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n      if (((line.startsWith(\"SF_PREVIEW_E10_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E10_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }\n      }\n      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void\n",
+            "after": "    const ready = yield* Deferred.make<void>()\n    const diagnostic = { last: \"\" }\n    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n      if (((line.startsWith(\"SF_PREVIEW_E11_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E11_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }\n      }\n      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void\n"
+          },
+          {
+            "id": "hunk-3",
+            "before": "\n\n/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */\nfunction nativePreviewE10CpuEnvironment(privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"7d26eb502441aafeacfaa89c135e81dc8d98571b\", sourceTree = \"b90f6e774436bddd61043b6ac70a9dc2a625baf4\"\n  let stage = \"binding\"\n  try {\n    const directory = process.env[directoryKey], encoded = process.env[bindingKey]\n",
+            "after": "\n\n/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */\nfunction nativePreviewE11CpuEnvironment(privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\", sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n  let stage = \"binding\"\n  try {\n    const directory = process.env[directoryKey], encoded = process.env[bindingKey]\n"
+          },
+          {
+            "id": "hunk-4",
+            "before": "    const value: unknown = JSON.parse(encoded)\n    if (!value || typeof value !== \"object\" || Array.isArray(value)) throw new Error(\"cpu-binding\")\n    const binding = value as Record<string, unknown>\n    if (binding.schema !== \"sf-preview-e10-cpu-launch-v1\" || binding.source !== source || binding.sourceTree !== sourceTree ||\n        typeof binding.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||\n        typeof binding.runId !== \"string\" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== \"1\" ||\n        typeof binding.nonce !== \"string\" || !/^sf613-e10-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||\n        typeof binding.launcherBytes !== \"number\" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||\n        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))\n      throw new Error(\"cpu-binding\")\n",
+            "after": "    const value: unknown = JSON.parse(encoded)\n    if (!value || typeof value !== \"object\" || Array.isArray(value)) throw new Error(\"cpu-binding\")\n    const binding = value as Record<string, unknown>\n    if (binding.schema !== \"sf-preview-e11-cpu-launch-v1\" || binding.source !== source || binding.sourceTree !== sourceTree ||\n        typeof binding.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||\n        typeof binding.runId !== \"string\" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== \"1\" ||\n        typeof binding.nonce !== \"string\" || !/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(binding.nonce) ||\n        typeof binding.launcherBytes !== \"number\" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||\n        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))\n      throw new Error(\"cpu-binding\")\n"
+          },
+          {
+            "id": "hunk-5",
+            "before": "    return { [directoryKey]: directory, [bindingKey]: encoded }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E10_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e10-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"native-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* The original child must still be spawned with its original settings. */ }\n    return disabled\n",
+            "after": "    return { [directoryKey]: directory, [bindingKey]: encoded }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E11_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e11-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"native-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* The original child must still be spawned with its original settings. */ }\n    return disabled\n"
+          }
+        ],
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      {
+        "key": "outer",
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "basePath": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "base": {
+          "gitSha": "56a06415240134d4d36a0620cb38d574846e7675",
+          "bytes": 16431,
+          "sha256": "096aac0d3ab020744143dd90311d8a6360e291b3eae1ed9545e1e19e9144c776",
+          "lf": 267
+        },
+        "postimage": {
+          "gitSha": "b989a4fa1b4ecfcc8800e9df07e823e93d77009a",
+          "bytes": 16431,
+          "sha256": "6f7233c1763c0223f47d3b119848003240816770a6ae95abb023686b72325fbe",
+          "lf": 267
+        },
+        "hunks": 5,
+        "added": 10,
+        "removed": 10,
+        "anchors": [
+          {
+            "id": "hunk-1",
+            "before": "    const installed = yield* Effect.gen(function* () {\n      const ready = yield* Deferred.make<void, Error>()\n      const diagnostic = { tail: \"\" }\n      const cpuEnvironment = preparePreviewE10CpuEnvironment(repository, root)\n      const child = yield* launcher.spawn(ChildProcess.make(\"bun\", [path.join(support, \"native-host.ts\"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {\n        cwd: repository,\n        env: { ...isolatedEnvironment(root), ...cpuEnvironment },\n",
+            "after": "    const installed = yield* Effect.gen(function* () {\n      const ready = yield* Deferred.make<void, Error>()\n      const diagnostic = { tail: \"\" }\n      const cpuEnvironment = preparePreviewE11CpuEnvironment(repository, root)\n      const child = yield* launcher.spawn(ChildProcess.make(\"bun\", [path.join(support, \"native-host.ts\"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {\n        cwd: repository,\n        env: { ...isolatedEnvironment(root), ...cpuEnvironment },\n"
+          },
+          {
+            "id": "hunk-2",
+            "before": "      }))\n      owned.child = child\n      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n        if (((line.startsWith(\"SF_PREVIEW_E10_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E10_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }\n        }\n        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)\n",
+            "after": "      }))\n      owned.child = child\n      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n        if (((line.startsWith(\"SF_PREVIEW_E11_CPU \") && line.length + 1 <= 4096) ||\n          (line.startsWith(\"SF_PREVIEW_E11_PROGRESS \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }\n        }\n        if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)\n"
+          },
+          {
+            "id": "hunk-3",
+            "before": "\n\n/** Diagnostic files survive the two original private roots; failure never blocks launch. */\nfunction preparePreviewE10CpuEnvironment(repository: string, privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E10_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"7d26eb502441aafeacfaa89c135e81dc8d98571b\", sourceTree = \"b90f6e774436bddd61043b6ac70a9dc2a625baf4\"\n  let fd: number | undefined, stage = \"gate\"\n  try {\n    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT\n",
+            "after": "\n\n/** Diagnostic files survive the two original private roots; failure never blocks launch. */\nfunction preparePreviewE11CpuEnvironment(repository: string, privateRoot: string): Record<string, string> {\n  const directoryKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E11_CPU_EVIDENCE_BINDING\"\n  const disabled = { [directoryKey]: \"\", [bindingKey]: \"\" }\n  const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\", sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n  let fd: number | undefined, stage = \"gate\"\n  try {\n    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT\n"
+          },
+          {
+            "id": "hunk-4",
+            "before": "    const base = path.join(realpathSync(repository), \"test-ci-evidence\"), baseInfo = lstatSync(base)\n    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error(\"cpu-base\")\n    stage = \"directory\"\n    const directory = mkdtempSync(path.join(base, \"sf613-e10-cpu-\"))\n    chmodSync(directory, 0o700)\n    const relative = path.relative(realpathSync(privateRoot), directory)\n    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||\n        relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + path.sep) && !path.isAbsolute(relative))\n      throw new Error(\"cpu-root\")\n    const nonce = path.basename(directory)\n    if (!/^sf613-e10-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error(\"cpu-nonce\")\n    const binding = { schema: \"sf-preview-e10-cpu-launch-v1\", source, sourceTree, snapshot, runId, attempt, nonce }\n    const launcher = { ...binding, qualification: false, state: \"prepared\", processRole: \"native-cli\",\n      entry: \"apps/cli/src/index.ts\", command: \"serve\", profileName: \"preview-first.cpuprofile\",\n      relativeDirectory: \"test-ci-evidence/\" + nonce, createdUtcMs: Date.now(),\n",
+            "after": "    const base = path.join(realpathSync(repository), \"test-ci-evidence\"), baseInfo = lstatSync(base)\n    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error(\"cpu-base\")\n    stage = \"directory\"\n    const directory = mkdtempSync(path.join(base, \"sf613-e11-cpu-\"))\n    chmodSync(directory, 0o700)\n    const relative = path.relative(realpathSync(privateRoot), directory)\n    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||\n        relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + path.sep) && !path.isAbsolute(relative))\n      throw new Error(\"cpu-root\")\n    const nonce = path.basename(directory)\n    if (!/^sf613-e11-cpu-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error(\"cpu-nonce\")\n    const binding = { schema: \"sf-preview-e11-cpu-launch-v1\", source, sourceTree, snapshot, runId, attempt, nonce }\n    const launcher = { ...binding, qualification: false, state: \"prepared\", processRole: \"native-cli\",\n      entry: \"apps/cli/src/index.ts\", command: \"serve\", profileName: \"preview-first.cpuprofile\",\n      relativeDirectory: \"test-ci-evidence/\" + nonce, createdUtcMs: Date.now(),\n"
+          },
+          {
+            "id": "hunk-5",
+            "before": "    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E10_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e10-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"playwright-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* Original setup/spawn remains authoritative. */ }\n    return disabled\n",
+            "after": "    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }\n  } catch {\n    try {\n      console.info(\"SF_PREVIEW_E11_CPU \" + JSON.stringify({ schema: \"sf-preview-causal-e11-cpu-v1\", source, sourceTree,\n        qualification: false, role: \"playwright-launcher\", kind: \"disabled\", reason: stage }))\n    } catch { /* Original setup/spawn remains authoritative. */ }\n    return disabled\n"
+          }
+        ],
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      }
+    ],
+    "caveat": "Only the observation mechanism is reused. ProductAuthority, SourceLifecycle and LocalStore are patched from current S15R; no old product bodies are transplanted."
+  },
+  "runtimeRevision": {
+    "expected": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "length": 40,
+    "helperLiteral": true,
+    "nativeLauncherLiteral": true,
+    "renames": "E10 identifier tokens and e10 followed by hyphen only; source/tree replace only the exact old40-character constants"
+  },
+  "helperRelocation": {
+    "from": "modules/sucafina/Sucafinav1/product/contracts/preview-cpu-e10-diagnostic.ts",
+    "to": "modules/sucafina/Sucafinav1/runtime/preview-cpu-e11-diagnostic.ts",
+    "repositoryUrl": {
+      "from": "../../../../../",
+      "to": "../../../../"
+    },
+    "runtimeToProductImport": false
+  },
+  "verification": {
+    "kind": "pure text/hash/line-diff only",
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "sourceObjectCreated": false,
+    "refCreated": false,
+    "originalActionsOrZipAcquired": false
+  }
+}

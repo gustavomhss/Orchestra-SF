@@ -1,0 +1,187 @@
+{
+  "schema": "sf613-c17-source-draft-anchors-v1",
+  "status": "DRAFT_REVIEW_NO_SOURCE_OBJECT_OR_EXECUTION",
+  "base": {
+    "commit": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "preimage": {
+        "gitSha": "8bdc12d191a76137cd2244e01990f7a780091216",
+        "bytes": 8953,
+        "sha256": "509b58f0f8f175dca1f3e0b5d928eb85f166d495a8bc2cc5c9b60d208447fa8c",
+        "lf": 187
+      },
+      "postimage": {
+        "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187
+      },
+      "operations": [
+        {
+          "id": "finite-identity-selection",
+          "before": "  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: \"cases\" | \"preferences\" }>",
+          "after": "  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: \"cases\" | \"preferences\" | \"case-identities\" }>"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": {
+        "gitSha": "d02bcbfc770719935dcaca97cc20045b656f784d",
+        "bytes": 83955,
+        "sha256": "4ec7f271d600e2dfbb0ad3436131022f0ee9b3710dd256acec319ab7e1bb476e",
+        "lf": 1515
+      },
+      "postimage": {
+        "gitSha": "7d98b46e4056cae7ff122d57f6231cb49a926d6e",
+        "bytes": 93094,
+        "sha256": "58f93d0e9548b39e876a5728ab64cd8db9836e6f7ea9ac28c615864231396511",
+        "lf": 1656
+      },
+      "operations": [
+        {
+          "id": "local-read-selection",
+          "before": "type LocalProductRead = Readonly<{ current: () => boolean; selection: \"cases\" | \"preferences\" | undefined }>",
+          "after": "type LocalProductRead = Readonly<{ current: () => boolean; selection: \"cases\" | \"preferences\" | \"case-identities\" | undefined }>"
+        },
+        {
+          "id": "observation-birth-contract",
+          "before": "    bytesIdentity?: object\n  } => {\n    const prior = materializations.get(surface)",
+          "after": "    bytesIdentity?: object\n    normalizedSource?: () => boolean\n  } => {\n    const prior = materializations.get(surface)"
+        },
+        {
+          "id": "memo-plan-provenance",
+          "before": "      return { materialize, bytesIdentity: prior.identity,\n        ...(!prior.fingerprint || prior.copy ? { copy: materialize } : {}),",
+          "after": "      return { materialize, bytesIdentity: prior.identity, normalizedSource: () => identitySnapshotBirth.planCurrent(prior),\n        ...(!prior.fingerprint || prior.copy ? { copy: materialize } : {}),"
+        },
+        {
+          "id": "empty-and-cold-birth",
+          "before": "      return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity }\n    }\n    const snapshot = decodeSnapshot(payload)\n    const plan = planSnapshotMaterialization(snapshot, payload, fingerprint)",
+          "after": "      return { materialize: empty, copy: empty, bytesIdentity: emptySnapshotIdentity, normalizedSource: identitySnapshotBirth.current }\n    }\n    const beforeDecode = identitySnapshotBirth.current()\n    const snapshot = decodeSnapshot(payload)\n    const decoded = beforeDecode && identitySnapshotBirth.current()\n    const plan = planSnapshotMaterialization(snapshot, payload, fingerprint)\n    const normalized = decoded && identitySnapshotBirth.current()\n    identitySnapshotBirth.rememberPlan(plan, normalized)"
+        },
+        {
+          "id": "cold-birth-retained",
+          "before": "    return { materialize: () => snapshot, bytesIdentity: plan?.identity,\n      ...(plan && (!plan.fingerprint || plan.copy) ? { freshPlan: { units: plan.units,",
+          "after": "    return { materialize: () => snapshot, bytesIdentity: plan?.identity, normalizedSource: () => normalized,\n      ...(plan && (!plan.fingerprint || plan.copy) ? { freshPlan: { units: plan.units,"
+        },
+        {
+          "id": "readonly-product-copy",
+          "before": "  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: \"cases\" | \"preferences\") => {\n    const snapshot = requireDashboardSource(scope, identity)\n    if (!snapshot) throw new Error(\"Local Dashboard product view unavailable\")\n    return productSnapshotView.copy(snapshot, selection)\n  }",
+          "after": "  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: \"cases\" | \"preferences\" | \"case-identities\") => {\n    const snapshot = requireDashboardSource(scope, identity)\n    if (!snapshot) throw new Error(\"Local Dashboard product view unavailable\")\n    return productSnapshotView.copy(snapshot, selection,\n      scope.root.readOnly === true && identitySnapshotBirth.isReadonlySnapshot(scope.root, snapshot))\n  }"
+        },
+        {
+          "id": "readonly-private-slots",
+          "before": "    readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>\n      operation(true, async (db) => {\n        const copies: SnapshotCopies = {}",
+          "after": "    readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>\n      operation(true, async (db) => {\n        const normalized: Partial<Record<Surface, Snapshot>> = {}\n        const copies: SnapshotCopies = {}"
+        },
+        {
+          "id": "readonly-first-birth-and-latch",
+          "before": "            copies[surface] = () => validateSnapshot(plan.copy())\n          }\n          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }\n          return () => {\n            if (observed.value) return observed.value\n            observed.value = observed.materialize!()\n            observed.materialize = undefined\n            return observed.value\n          }",
+          "after": "            copies[surface] = () => validateSnapshot(plan.copy())\n          }\n          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }\n          return () => {\n            if (observed.value) {\n              // Once a private graph may have crossed a changed intrinsic, it\n              // cannot regain normalization merely because the hook is restored.\n              if (!identitySnapshotBirth.current()) delete normalized[surface]\n              return observed.value\n            }\n            const birth = source.normalizedSource?.() === true && identitySnapshotBirth.current()\n            observed.value = observed.materialize!()\n            if (birth && source.normalizedSource?.() === true && identitySnapshotBirth.current()) normalized[surface] = observed.value\n            observed.materialize = undefined\n            return observed.value\n          }"
+        },
+        {
+          "id": "bind-readonly-root",
+          "before": "        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }\n        try {",
+          "after": "        const scope: ReadScope = { root: { identity: {}, db, snapshots, copies, aclCopies, bytesIdentity: snapshotBytesIdentity(byteKeys), poisoned: false, readers: 0, readOnly: true }, open: true, signal: transactionOptions?.signal }\n        identitySnapshotBirth.bindReadonly(scope.root, normalized)\n        try {"
+        },
+        {
+          "id": "release-readonly-root",
+          "before": "          // This root never exposes its private observations. Closed descendants\n          // need neither their graphs/getters nor the initial memo's copy plans.\n          scope.root.snapshots = {}",
+          "after": "          // This root never exposes its private observations. Closed descendants\n          // need neither their graphs/getters nor the initial memo's copy plans.\n          identitySnapshotBirth.releaseReadonly(scope.root)\n          scope.root.snapshots = {}"
+        },
+        {
+          "id": "physical-tag",
+          "before": "        const selection: \"cases\" | \"preferences\" | undefined = selected && productSnapshotView.own(selected, \"value\") &&\n          (selected.value === \"cases\" || selected.value === \"preferences\") ? selected.value : undefined",
+          "after": "        const selection: \"cases\" | \"preferences\" | \"case-identities\" | undefined = selected && productSnapshotView.own(selected, \"value\") &&\n          (selected.value === \"cases\" || selected.value === \"preferences\" || selected.value === \"case-identities\") ? selected.value : undefined"
+        },
+        {
+          "id": "projected-birth-current",
+          "before": "              projected?.selection && !productSnapshotView.selectionCurrent()) return false",
+          "after": "              projected?.selection && !productSnapshotView.selectionCurrent() ||\n              projected?.normalizedIdentities && !identitySnapshotBirth.current()) return false"
+        },
+        {
+          "id": "projected-birth-egress",
+          "before": "            if (!sameStore() || !productSnapshotView.current() || projected?.selection && !productSnapshotView.selectionCurrent())\n              throw new Error(\"Local Dashboard product root changed\")",
+          "after": "            if (!sameStore() || !productSnapshotView.current() || projected?.selection && !productSnapshotView.selectionCurrent() ||\n              projected?.normalizedIdentities && !identitySnapshotBirth.current())\n              throw new Error(\"Local Dashboard product root changed\")"
+        },
+        {
+          "id": "private-birth-registry",
+          "before": "// The new fixed projection never passes its private source graph to a replaced\n",
+          "after": "// Normalization belongs to the actual decoder/plan birth, never to a later\n// lookup with restored globals. Only readonly roots bind private graph slots;\n// mutable targets, held preimages and their copies are never certified here.\nconst identitySnapshotBirth = (() => {\n  const property = Object.getOwnPropertyDescriptor, own = Object.hasOwn, parentOf = Object.getPrototypeOf\n  const ownKeys = Reflect.ownKeys, apply = Reflect.apply, PrivateMap = WeakMap\n  const get = WeakMap.prototype.get, set = WeakMap.prototype.set, remove = WeakMap.prototype.delete\n  const read = <T>(registry: WeakMap<object, T>, key: object): T | undefined => apply(get, registry, [key])\n  const plans = new PrivateMap<object, () => boolean>()\n  const roots = new PrivateMap<object, Partial<Record<Surface, Snapshot>>>()\n  const prototypes = [Object.prototype, Array.prototype, Set.prototype].map((owner) => ({\n    owner, parent: parentOf(owner), keys: ownKeys(owner),\n  }))\n  const pins: { owner: object; key: PropertyKey; expected: PropertyDescriptor | undefined }[] = []\n  for (const group of prototypes) for (const key of group.keys) pins.push({ owner: group.owner, key, expected: property(group.owner, key) })\n  // In addition to the decoder/ACL pins, these intrinsics build copy plans or\n  // can receive the private graph on existing full-copy/observation paths.\n  const groups = [\n    { owner: Object, keys: [\"is\", \"freeze\", \"entries\", \"getOwnPropertyDescriptors\", \"getOwnPropertySymbols\"] },\n    { owner: Array, keys: [\"from\"] },\n    { owner: globalThis, keys: [\"structuredClone\"] },\n  ]\n  for (const group of groups) for (const key of group.keys) pins.push({ owner: group.owner, key, expected: property(group.owner, key) })\n  const same = (active: PropertyDescriptor | undefined, expected: PropertyDescriptor | undefined) =>\n    active === undefined || expected === undefined ? active === expected :\n      active.enumerable === expected.enumerable && active.configurable === expected.configurable &&\n      own(active, \"value\") === own(expected, \"value\") && (own(expected, \"value\")\n        ? active.value === expected.value && active.writable === expected.writable\n        : active.get === expected.get && active.set === expected.set)\n  const current = () => {\n    try {\n      if (!readonlyAuthorityAclCodec?.() || !snapshotDecoderCurrent()) return false\n      for (let index = 0; index < prototypes.length; index++) {\n        const group = prototypes[index]!\n        if (parentOf(group.owner) !== group.parent || ownKeys(group.owner).length !== group.keys.length) return false\n      }\n      for (let index = 0; index < pins.length; index++) {\n        const pin = pins[index]!\n        if (!same(property(pin.owner, pin.key), pin.expected)) return false\n      }\n      return true\n    } catch { return false }\n  }\n  const rememberPlan = (plan: SnapshotMaterialization | undefined, normalized: boolean) => {\n    if (!plan || !normalized || !current()) return\n    const copy = property(plan, \"copy\")?.value\n    const records: { owner: object; key: string; expected: PropertyDescriptor | undefined }[] = []\n    for (const key of [\"identity\", \"payload\", \"fingerprint\", \"payloadUnits\", \"copy\", \"acl\", \"units\"])\n      records.push({ owner: plan, key, expected: property(plan, key) })\n    if (copy !== undefined) for (const key of [\"json\", \"missing\", \"largeStrings\"])\n      records.push({ owner: copy, key, expected: property(copy, key) })\n    // A memo may have crossed a replaced Map method. Its own immutable strings\n    // must still be precisely those captured at the trusted plan construction.\n    const valid = () => {\n      for (let index = 0; index < records.length; index++) {\n        const record = records[index]!\n        if (!same(property(record.owner, record.key), record.expected)) return false\n      }\n      return true\n    }\n    apply(set, plans, [plan, valid])\n  }\n  return {\n    current, rememberPlan,\n    planCurrent: (plan: SnapshotMaterialization) => {\n      const valid = read(plans, plan)\n      return !!valid && current() && valid()\n    },\n    bindReadonly: (root: object, snapshots: Partial<Record<Surface, Snapshot>>) => { apply(set, roots, [root, snapshots]) },\n    releaseReadonly: (root: object) => { apply(remove, roots, [root]) },\n    isReadonlySnapshot: (root: object, snapshot: Snapshot) => {\n      const snapshots = read(roots, root)\n      return !!snapshots && property(snapshots, \"dashboard\")?.value === snapshot\n    },\n  }\n})()\n\n// The new fixed projection never passes its private source graph to a replaced\n"
+        },
+        {
+          "id": "identity-map",
+          "before": "  const selectedState = (value: unknown, selection: \"cases\" | \"preferences\") => {",
+          "after": "  // The fixed identity factory reads only these four fields. Unknown fields\n  // and malformed entries remain complete; only known DecisionCase bodies may\n  // be omitted from a graph whose readonly birth proves a normalized tree.\n  const caseBodies = [\"state\", \"objective\", \"horizon\", \"currency\", \"criteria\", \"sourceRefs\", \"alternatives\", \"costCoverageBases\",\n    \"assumptions\", \"questions\", \"choices\", \"preparedChanges\", \"receipts\", \"ledger\"] as const\n  const identityCases = (cases: Record<string, unknown>) => {\n    const fields = descriptors(cases), names = keys(fields), selected: Record<string, unknown> = {}\n    for (let index = 0; index < names.length; index++) {\n      const name = names[index]!, field = fields[name]!\n      const entry: unknown = field.value\n      let value = entry\n      if (plain(entry)) {\n        const parts = descriptors(entry)\n        const id = own(parts, \"id\") ? parts.id : undefined, incarnation = own(parts, \"incarnation\") ? parts.incarnation : undefined\n        const version = own(parts, \"version\") ? parts.version : undefined, participants = own(parts, \"participants\") ? parts.participants : undefined\n        const members: unknown = participants?.value\n        let simple = !!id?.enumerable && own(id, \"value\") && typeof id.value === \"string\" &&\n          !!incarnation?.enumerable && own(incarnation, \"value\") && typeof incarnation.value === \"string\" &&\n          !!version?.enumerable && own(version, \"value\") && integer(version.value) && Number(version.value) >= 0 &&\n          !!participants?.enumerable && own(participants, \"value\") && Array.isArray(members) && parentOf(members) === Array.prototype\n        if (simple && Array.isArray(members)) {\n          const elements = descriptors(members)\n          simple = keys(elements).length === members.length + 1\n          for (let item = 0; simple && item < members.length; item++) {\n            const element = own(elements, item) ? elements[item] : undefined\n            simple = !!element?.enumerable && own(element, \"value\") && typeof element.value === \"string\"\n          }\n        }\n        if (simple) {\n          const reduced: Record<string, unknown> = {}, partNames = keys(parts)\n          for (let item = 0; item < partNames.length; item++) {\n            const key = partNames[item]!\n            let body = false\n            for (let known = 0; known < caseBodies.length; known++) if (caseBodies[known] === key) body = true\n            if (!body) define(reduced, key, { value: parts[key]!.value, enumerable: true, writable: true, configurable: true })\n          }\n          value = reduced\n        }\n      }\n      define(selected, name, { value, enumerable: true, writable: true, configurable: true })\n    }\n    return selected\n  }\n  const selectedState = (value: unknown, selection: \"cases\" | \"preferences\" | \"case-identities\", normalizedIdentities: boolean) => {"
+        },
+        {
+          "id": "map-selection",
+          "before": "      define(selected, name, { value: map && name !== selection && value !== undefined ? {} : value,\n        enumerable: true, writable: true, configurable: true })",
+          "after": "      const retained = selection === \"case-identities\" ? \"cases\" : selection\n      define(selected, name, { value: name === \"cases\" && normalizedIdentities && plain(value) ? identityCases(value) :\n        map && name !== retained && value !== undefined ? {} : value,\n        enumerable: true, writable: true, configurable: true })"
+        },
+        {
+          "id": "copy-provenance-parameter",
+          "before": "  const copy = (snapshot: Snapshot, selection?: \"cases\" | \"preferences\") => {\n    const data: Record<string, unknown> = {}",
+          "after": "  const copy = (snapshot: Snapshot, selection?: \"cases\" | \"preferences\" | \"case-identities\", normalized = false) => {\n    const normalizedIdentities = selection === \"case-identities\" && normalized && identitySnapshotBirth.current()\n    const data: Record<string, unknown> = {}"
+        },
+        {
+          "id": "copy-selection",
+          "before": "    const selected = selection && product && own(product, \"value\") ? selectedState(product.value, selection) : undefined",
+          "after": "    const selected = selection && product && own(product, \"value\") ? selectedState(product.value, selection, normalizedIdentities) : undefined"
+        },
+        {
+          "id": "actual-birth-output",
+          "before": "    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined }",
+          "after": "    return { snapshot: validateSnapshot(clone(view)), selection: selected ? selection : undefined, normalizedIdentities: !!selected && normalizedIdentities }"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": {
+        "gitSha": "550236df66f1e02e5111a1eee23579e76178bc6b",
+        "bytes": 66998,
+        "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+        "lf": 887
+      },
+      "postimage": {
+        "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891
+      },
+      "operations": [
+        {
+          "id": "selection-proof-type",
+          "before": "const productSnapshotSelections = new WeakMap<object, (transaction: object) => \"cases\" | \"preferences\" | undefined>()",
+          "after": "const productSnapshotSelections = new WeakMap<object, (transaction: object) => \"cases\" | \"preferences\" | \"case-identities\" | undefined>()"
+        },
+        {
+          "id": "closed-identity-tag",
+          "before": "    if (selected ? !graph && !identity : identity ? !graph : graph === read) return \"cases\" as const",
+          "after": "    if (selected ? !graph && !identity : !identity && graph === read) return \"cases\" as const\n    if (identity && !selected && !graph) return \"case-identities\" as const"
+        },
+        {
+          "id": "identity-predispatch",
+          "before": "              (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)\n            : readiness || preferencesSelection !== read))",
+          "after": "              (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)\n            : projection.selection === \"case-identities\"\n            ? readiness || selection || resultSelection || casesSelection || scenarioSelection || !identitySelection\n            : readiness || preferencesSelection !== read))"
+        },
+        {
+          "id": "identity-map-required",
+          "before": "          if (projection.selection === \"cases\" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases : !selectedPreferences)",
+          "after": "          if (projection.selection === \"cases\" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases\n            : projection.selection === \"case-identities\" ? !identityCases : !selectedPreferences)"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Only new identity projection may omit known case body fields.",
+    "Unproven plan or graph birth, held preimage and mutable roots retain complete cases.",
+    "Provider clone of identityCases and late captured observations remain literal.",
+    "No test/runtime execution or deadline change."
+  ]
+}
