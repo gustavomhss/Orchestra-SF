@@ -1,0 +1,1389 @@
+name: SF613 original Analytics artifact receipt
+
+on:
+  push:
+    branches: [sf613-artifact-c14bi]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sf613-artifact-c14bi-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  original-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Verify original immutable artifact without checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SF613_ARTIFACT_READER_SHA256: 6f68d604597378afa9cac3fe0e7177f3bf215106141f121db5a2e0da6c91832d
+          SF613_ARTIFACT_READER_SOURCE: |
+            #!/usr/bin/env python3
+            """Receipt of one immutable Analytics artifact. Never imports or executes repository code."""
+            import base64
+            import binascii
+            import hashlib
+            import heapq
+            import io
+            import json
+            import os
+            import pathlib
+            import re
+            import stat
+            import sys
+            import time
+            import urllib.error
+            import urllib.parse
+            import urllib.request
+            import zipfile
+            import zlib
+            
+            REPO = "gustavomhss/Orchestra-SF"
+            BRANCH = "sf613-artifact-c14bi"
+            WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+            SOURCE = "372cbc152bc1361168de9efcd4262770105670c5"
+            SOURCE_TREE = "af7f7537aaceec2eb9fd8c92fdfe06c65d89b522"
+            SNAPSHOT = "847ac2a08cf50665901e18f02c6c9a42d5098fd6"
+            SNAPSHOT_TREE = "5e40d0df6df1f25919fd28e02d59b5602dc23bc4"
+            ORIGINAL_RUN = 45997926983
+            ORIGINAL_ATTEMPT = 1
+            MAIN_JOB = 140501915254
+            CLEANUP_JOB = 140506455595
+            ARTIFACT_ID = 15197740928
+            ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
+            ARTIFACT_BYTES = 46754336
+            ARTIFACT_SHA = "8c72f3b487aeae6876711bf8958aeb20ad037689bc65bc7634747a19274d702d"
+            REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+            REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+            SOURCE_SELECTION_PINS = [
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+                    "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+                    "bytes": 56661,
+                    "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+                },
+                {
+                    "path": "packages/app-shell/e2e/playwright.production.config.ts",
+                    "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+                    "bytes": 4384,
+                    "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+                    "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+                    "bytes": 21102,
+                    "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+                }
+            ]
+            SEMANTIC_SHA = "bf3903f1055806df95d6d134a2b3d603c82c1788cc91931b5b09b1e8e2bcb767"
+            SEMANTIC_BYTES = 29714
+            SEMANTIC_COUNTS = {"SF_ANALYTICS_SOURCE": 41, "SF_ANALYTICS_CAPTURE": 42,
+                               "SF_DESIGN_DIAGNOSTICS": 7, "SF_ANALYTICS_SCOPE": 0}
+            TITLES = [
+                "wave five analytics: native scenarios, recorded results and sensitivity",
+                "wave five analytics: question catalog and original contextual BI",
+            ]
+            PNG_SUFFIXES = []  # Inventory all PNGs; no image is assigned to a page/context by filename.
+            OPERATIONS = {
+                "decision-portfolio-preview", "decision-portfolio-evaluate",
+                "decision-portfolio-results", "decision-portfolio-read",
+                "decision-sensitivity-units", "decision-sensitivity-read",
+                "decision-sensitivity-evaluate", "bi-data", "bi-options",
+            }
+            CAP = {
+                "apiBytes": 16 * 1024 * 1024, "entries": 20000, "archives": 64,
+                "entryBytes": 128 * 1024 * 1024, "expandedBytes": 1024 * 1024 * 1024,
+                "depth": 3, "jsonBytes": 32 * 1024 * 1024,
+                "htmlBytes": 64 * 1024 * 1024, "jsonlLineBytes": 4 * 1024 * 1024,
+                "traceRows": 200000, "summaryRows": 4000,
+                "logBytes": 1536 * 1024, "mainLogReviewCapBytes": 2 * 1024 * 1024, "chunkBytes": 24 * 1024,
+            }
+            TRACE_EXPORT_BYTES = 256 * 1024
+            TRACE_LOG_RESERVE = 384 * 1024
+            ROOT = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf613-artifact-read"
+            ROOT.mkdir(mode=0o700, exist_ok=False)
+            (ROOT / "api").mkdir(mode=0o700)
+            (ROOT / "derived").mkdir(mode=0o700)
+            (ROOT / "originals").mkdir(mode=0o700)
+            os.umask(0o077)
+            RECEIPT = {
+                "schema": 1, "kind": "original-artifact-receipt", "qualification": False,
+                "status": "STARTED", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                "originalRun": ORIGINAL_RUN, "originalAttempt": ORIGINAL_ATTEMPT,
+                "artifactId": ARTIFACT_ID, "caps": CAP, "checks": [],
+                "pending": [], "failures": [], "parsers": {}, "logExports": [],
+            }
+            FILES = []
+            ARCHIVES = []
+            TOTAL_EXPANDED = 0
+            TOTAL_ENTRIES = 0
+            LOG_BYTES = 0
+            API_COUNT = 0
+            TRACE_ROWS = []
+            TRACE_OBSERVED = 0
+            TRACE_ATTACHMENTS = []
+            
+            class ReceiptFailure(Exception):
+                def __init__(self, code):
+                    self.code = code
+                    super().__init__(code)
+            
+            def need(value, code):
+                if not value:
+                    raise ReceiptFailure(code)
+            
+            def digest(data):
+                return hashlib.sha256(data).hexdigest()
+            
+            def canonical(value):
+                return (json.dumps(value, ensure_ascii=True, sort_keys=True, indent=2) + "\n").encode("ascii")
+            
+            def write_bytes(path, data):
+                path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                with open(path, "xb") as handle:
+                    handle.write(data)
+            
+            def save_json(relative, value):
+                data = canonical(value)
+                write_bytes(ROOT / relative, data)
+                return {"path": relative, "bytes": len(data), "sha256": digest(data)}
+            
+            def checked(code):
+                RECEIPT["checks"].append(code)
+            
+            def pending(code, detail=None):
+                item = {"code": code}
+                if detail is not None:
+                    item["detail"] = detail
+                RECEIPT["pending"].append(item)
+            
+            def emit(prefix, value):
+                global LOG_BYTES
+                raw = (prefix + " " + json.dumps(value, ensure_ascii=True, separators=(",", ":")) + "\n").encode("ascii")
+                need(len(raw) <= 32768, "LOG_LINE_EXCEEDS_32_KIB")
+                if LOG_BYTES + len(raw) > CAP["logBytes"]:
+                    return False
+                sys.stdout.buffer.write(raw)
+                sys.stdout.buffer.flush()
+                LOG_BYTES += len(raw)
+                return True
+            
+            class NoRedirect(urllib.request.HTTPRedirectHandler):
+                def redirect_request(self, req, fp, code, msg, headers, newurl):
+                    return None
+            
+            NO_REDIRECT = urllib.request.build_opener(NoRedirect())
+            TOKEN = os.environ.get("GH_TOKEN", "")
+            
+            def bounded_read(handle, limit):
+                chunks = []
+                count = 0
+                while True:
+                    block = handle.read(min(1024 * 1024, limit + 1 - count))
+                    if not block:
+                        break
+                    count += len(block)
+                    need(count <= limit, "HTTP_BODY_CAP")
+                    chunks.append(block)
+                return b"".join(chunks)
+            
+            def api(route, label):
+                global API_COUNT
+                need(route.startswith("/") and "\n" not in route, "API_ROUTE_INVALID")
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + route,
+                    headers={"Authorization": "Bearer " + TOKEN,
+                             "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28",
+                             "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    with NO_REDIRECT.open(request, timeout=45) as response:
+                        need(response.status == 200, "API_STATUS")
+                        raw = bounded_read(response, CAP["apiBytes"])
+                except urllib.error.HTTPError as error:
+                    raise ReceiptFailure("API_HTTP_" + str(error.code)) from None
+                except (urllib.error.URLError, TimeoutError):
+                    raise ReceiptFailure("API_TRANSPORT") from None
+                API_COUNT += 1
+                write_bytes(ROOT / "api" / (label + ".json"), raw)
+                try:
+                    return json.loads(raw)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("API_JSON_INVALID") from None
+            
+            def pages(route, key, prefix):
+                all_rows = []
+                total = None
+                for number in range(1, 21):
+                    separator = "&" if "?" in route else "?"
+                    data = api(route + separator + "per_page=100&page=" + str(number), prefix + "-" + str(number))
+                    need(isinstance(data, dict) and isinstance(data.get(key), list), "API_COLLECTION_SHAPE")
+                    if total is None:
+                        total = data.get("total_count")
+                        need(isinstance(total, int) and 0 <= total <= 2000, "API_COLLECTION_TOTAL")
+                    need(data.get("total_count") == total, "API_COLLECTION_CHANGED")
+                    all_rows.extend(data[key])
+                    if len(all_rows) >= total:
+                        need(len(all_rows) == total, "API_COLLECTION_COUNT")
+                        return all_rows
+                    need(len(data[key]) == 100, "API_COLLECTION_INCOMPLETE")
+                raise ReceiptFailure("API_COLLECTION_PAGE_CAP")
+            
+            def check_original_and_reader():
+                need(bool(TOKEN), "GITHUB_TOKEN_REQUIRED")
+                driver = os.environ.get("GITHUB_SHA", "")
+                run_id = os.environ.get("GITHUB_RUN_ID", "")
+                attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "")
+                need(os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "Linux",
+                     "HOSTED_LINUX_REQUIRED")
+                need(os.environ.get("GITHUB_REPOSITORY") == REPO and os.environ.get("GITHUB_EVENT_NAME") == "push",
+                     "READER_EVENT_REQUIRED")
+                need(os.environ.get("GITHUB_REF") == "refs/heads/" + BRANCH, "READER_REF_REQUIRED")
+                need(re.fullmatch(r"[a-f0-9]{40}", driver) is not None and driver != SOURCE,
+                     "READER_DRIVER_SHA_REQUIRED")
+                need(run_id.isdecimal() and attempt == "1", "READER_FIRST_ATTEMPT_REQUIRED")
+                event_raw = pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes()
+                need(len(event_raw) <= CAP["apiBytes"], "EVENT_CAP")
+                event = json.loads(event_raw)
+                need(event.get("after") == driver and event.get("ref") == "refs/heads/" + BRANCH
+                     and event.get("repository", {}).get("full_name") == REPO, "READER_EVENT_BINDING")
+                write_bytes(ROOT / "api" / "reader-event.json", event_raw)
+                current_run = api("/actions/runs/" + run_id + "/attempts/1", "reader-run")
+                need(current_run.get("head_sha") == driver and current_run.get("event") == "push"
+                     and current_run.get("run_attempt") == 1 and current_run.get("head_branch") == BRANCH
+                     and current_run.get("repository", {}).get("full_name") == REPO,
+                     "READER_API_BINDING")
+                need(str(current_run.get("path", "")).split("@")[0] == WORKFLOW, "READER_WORKFLOW_PATH")
+                current_commit = api("/git/commits/" + driver, "reader-commit")
+                need([p.get("sha") for p in current_commit.get("parents", [])] == [SOURCE],
+                     "READER_SOLE_PARENT")
+                source_commit = api("/git/commits/" + SOURCE, "source-commit")
+                need(source_commit.get("tree", {}).get("sha") == SOURCE_TREE, "SOURCE_TREE")
+                delta = api("/compare/" + SOURCE + "..." + driver, "reader-delta")
+                need(delta.get("ahead_by") == 1 and delta.get("behind_by") == 0
+                     and delta.get("total_commits") == 1, "READER_COMMIT_DELTA")
+                changes = delta.get("files")
+                need(isinstance(changes, list) and len(changes) == 1
+                     and changes[0].get("filename") == WORKFLOW and changes[0].get("status") == "added",
+                     "READER_EXACT_ONE_WORKFLOW_ADDITION")
+                ref = api("/git/ref/heads/" + BRANCH, "reader-ref")
+                need(ref.get("object", {}).get("sha") == driver, "READER_REF_DRIFT")
+                RECEIPT["reader"] = {
+                    "driver": driver, "driverTree": current_commit["tree"]["sha"],
+                    "run": int(run_id), "attempt": 1, "event": "push", "branch": BRANCH,
+                    "workflow": WORKFLOW, "workflowBlob": changes[0]["sha"],
+                    "soleParent": SOURCE, "noCheckout": True, "repositoryCodeExecuted": False,
+                }
+                snapshot = api("/git/commits/" + SNAPSHOT, "original-snapshot-commit")
+                need(snapshot.get("tree", {}).get("sha") == SNAPSHOT_TREE
+                     and [p.get("sha") for p in snapshot.get("parents", [])] == [SOURCE],
+                     "ORIGINAL_SNAPSHOT_BINDING")
+                original_delta = api("/compare/" + SOURCE + "..." + SNAPSHOT, "original-snapshot-delta")
+                original_changes = original_delta.get("files", [])
+                need(original_delta.get("ahead_by") == 1 and original_delta.get("behind_by") == 0
+                     and original_delta.get("total_commits") == 1 and len(original_changes) == 1
+                     and {(item.get("filename"), item.get("status"), item.get("sha")) for item in original_changes} == {
+                         (".ci-run.json", "added", "eda49a023c07599de00f5af9642ee92b9d9adf3b"),
+                     }, "ORIGINAL_EXACT_ONE_REQUEST_ADDITION")
+                original_run = api("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1", "original-run")
+                need(original_run.get("id") == ORIGINAL_RUN and original_run.get("run_attempt") == 1
+                     and original_run.get("head_sha") == SNAPSHOT and original_run.get("event") == "push"
+                     and original_run.get("status") == "completed" and original_run.get("conclusion") == "failure"
+                     and original_run.get("repository", {}).get("full_name") == REPO,
+                     "ORIGINAL_RUN_BINDING")
+                jobs = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1/jobs", "jobs", "original-jobs")
+                need(len(jobs) == 2 and {j.get("id") for j in jobs} == {MAIN_JOB, CLEANUP_JOB},
+                     "ORIGINAL_JOB_SET")
+                for job in jobs:
+                    expected = "failure" if job["id"] == MAIN_JOB else "success"
+                    need(job.get("status") == "completed" and job.get("conclusion") == expected,
+                         "ORIGINAL_JOB_TERMINAL")
+                main = next(j for j in jobs if j["id"] == MAIN_JOB)
+                need(any(step.get("name") == "Run tests" and step.get("conclusion") == "failure"
+                         for step in main.get("steps", [])), "ORIGINAL_TEST_STEP")
+                artifact = api("/actions/artifacts/" + str(ARTIFACT_ID), "original-artifact")
+                listed = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/artifacts", "artifacts", "original-artifacts")
+                matches = [a for a in listed if a.get("id") == ARTIFACT_ID]
+                need(len(matches) == 1, "ARTIFACT_RUN_MEMBERSHIP")
+                for data in [artifact, matches[0]]:
+                    need(data.get("id") == ARTIFACT_ID and data.get("name") == ARTIFACT_NAME
+                         and data.get("size_in_bytes") == ARTIFACT_BYTES
+                         and data.get("digest") == "sha256:" + ARTIFACT_SHA
+                         and data.get("expired") is False, "ARTIFACT_METADATA_BINDING")
+                    binding = data.get("workflow_run", {})
+                    need(binding.get("id") == ORIGINAL_RUN and binding.get("head_sha") == SNAPSHOT,
+                         "ARTIFACT_WORKFLOW_BINDING")
+                request_blob = api("/git/blobs/" + REQUEST_BLOB, "original-request-blob")
+                need(request_blob.get("sha") == REQUEST_BLOB and request_blob.get("encoding") == "base64",
+                     "ORIGINAL_REQUEST_BLOB")
+                raw = base64.b64decode("".join(request_blob["content"].split()), validate=True)
+                need(len(raw) == 295 and digest(raw) == REQUEST_SHA, "ORIGINAL_REQUEST_BYTES")
+                request = json.loads(raw)
+                need(request.get("runner") == "playwright"
+                     and request.get("args") == ["e2e/sucafina/design-wave-five-analytics.spec.ts"]
+                     and request.get("config") == "e2e/playwright.production.config.ts",
+                     "ORIGINAL_REQUEST_SELECTION")
+                write_bytes(ROOT / "originals" / "source-request.json", raw)
+                RECEIPT["originalJobs"] = [
+                    {"id": j["id"], "status": j["status"], "conclusion": j["conclusion"],
+                     "startedAt": j.get("started_at"), "completedAt": j.get("completed_at")} for j in jobs
+                ]
+                RECEIPT["artifact"] = {"id": ARTIFACT_ID, "name": ARTIFACT_NAME, "bytes": ARTIFACT_BYTES,
+                                       "sha256": ARTIFACT_SHA, "expired": False}
+                source_pins = []
+                for index, pin in enumerate(SOURCE_SELECTION_PINS):
+                    path = pin["path"]
+                    item = api("/contents/" + path + "?ref=" + SOURCE, "source-selection-" + str(index))
+                    need(item.get("type") == "file" and item.get("path") == path
+                         and item.get("sha") == pin["gitBlob"] and item.get("encoding") == "base64",
+                         "SOURCE_SELECTION_FILE_BINDING")
+                    raw = base64.b64decode("".join(item["content"].split()), validate=True)
+                    need(len(raw) == pin["bytes"] and digest(raw) == pin["sha256"]
+                         and hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest() == pin["gitBlob"],
+                         "SOURCE_SELECTION_BYTES")
+                    source_pins.append(dict(pin))
+                RECEIPT["sourceSelectionPins"] = source_pins
+                checked("source_spec_and_config_pins")
+                checked("reader_and_original_api_git_bindings")
+            
+            def storage_url_allowed(url):
+                value = urllib.parse.urlsplit(url)
+                host = (value.hostname or "").lower()
+                suffixes = (".blob.core.windows.net", ".githubusercontent.com", ".amazonaws.com")
+                return (value.scheme == "https" and not value.username and not value.password
+                        and value.port in (None, 443) and any(host.endswith(suffix) for suffix in suffixes))
+            
+            def download_original():
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + "/actions/artifacts/" + str(ARTIFACT_ID) + "/zip",
+                    headers={"Authorization": "Bearer " + TOKEN, "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    response = NO_REDIRECT.open(request, timeout=45)
+                except urllib.error.HTTPError as error:
+                    need(error.code == 302, "ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                    location = error.headers.get("Location", "")
+                    error.close()
+                else:
+                    response.close()
+                    raise ReceiptFailure("ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                need(storage_url_allowed(location), "ARTIFACT_STORAGE_ORIGIN")
+                # A separate request/opener receives no GitHub Authorization, cookie or referer.
+                for redirect_count in range(4):
+                    unsigned = urllib.request.Request(location, headers={"User-Agent": "sf613-original-artifact-reader"})
+                    try:
+                        response = NO_REDIRECT.open(unsigned, timeout=120)
+                    except urllib.error.HTTPError as error:
+                        need(error.code in (301, 302, 303, 307, 308) and redirect_count < 3,
+                             "ARTIFACT_STORAGE_HTTP")
+                        location = urllib.parse.urljoin(location, error.headers.get("Location", ""))
+                        error.close()
+                        need(storage_url_allowed(location), "ARTIFACT_STORAGE_REDIRECT_ORIGIN")
+                        continue
+                    except (urllib.error.URLError, TimeoutError):
+                        raise ReceiptFailure("ARTIFACT_STORAGE_TRANSPORT") from None
+                    with response:
+                        need(response.status == 200, "ARTIFACT_STORAGE_STATUS")
+                        hasher = hashlib.sha256()
+                        size = 0
+                        with open(ROOT / "original.zip", "xb") as output:
+                            while True:
+                                block = response.read(1024 * 1024)
+                                if not block:
+                                    break
+                                size += len(block)
+                                need(size <= ARTIFACT_BYTES, "ARTIFACT_TOO_LARGE")
+                                output.write(block)
+                                hasher.update(block)
+                        need(size == ARTIFACT_BYTES and hasher.hexdigest() == ARTIFACT_SHA,
+                             "ARTIFACT_BYTES_OR_SHA256")
+                        RECEIPT["artifact"]["verifiedBytes"] = size
+                        RECEIPT["artifact"]["verifiedSha256"] = hasher.hexdigest()
+                        RECEIPT["artifact"]["downloadCount"] = 1
+                        checked("original_zip_bytes_and_sha256")
+                        return
+                raise ReceiptFailure("ARTIFACT_REDIRECT_CAP")
+            
+            # Phase 2: read archive bytes only; never use extractall, shell, imports or executable entries.
+            def path_parts(name, directory):
+                need(isinstance(name, str) and name and "\x00" not in name and "\\" not in name
+                     and not name.startswith("/") and not re.match(r"^[A-Za-z]:", name),
+                     "ZIP_PATH_INVALID")
+                pieces = name.rstrip("/").split("/") if directory else name.split("/")
+                need(bool(pieces) and all(part not in ("", ".", "..") for part in pieces),
+                     "ZIP_PATH_TRAVERSAL")
+                need(all(len(part.encode("utf-8")) <= 255 for part in pieces), "ZIP_COMPONENT_CAP")
+                need(len(name.encode("utf-8")) <= 4096, "ZIP_PATH_CAP")
+                return pieces
+            
+            def inspect_zip(source_file, label, depth, parent_file=None):
+                global TOTAL_EXPANDED, TOTAL_ENTRIES
+                need(depth <= CAP["depth"] and len(ARCHIVES) < CAP["archives"], "NESTED_ZIP_CAP")
+                archive_index = len(ARCHIVES)
+                output_root = ROOT / "originals" / ("archive-" + str(archive_index).zfill(3))
+                output_root.mkdir(mode=0o700)
+                source_hasher = hashlib.sha256()
+                source_size = 0
+                with open(source_file, "rb") as original_zip:
+                    while True:
+                        block = original_zip.read(1024 * 1024)
+                        if not block:
+                            break
+                        source_hasher.update(block)
+                        source_size += len(block)
+                archive = {"index": archive_index, "label": label, "depth": depth,
+                           "sourcePath": str(pathlib.Path(source_file).relative_to(ROOT)),
+                           "sourceBytes": source_size, "sourceSha256": source_hasher.hexdigest(),
+                           "parentFile": parent_file, "entries": 0, "crcVerified": 0,
+                           "expandedBytes": 0, "status": "STARTED"}
+                ARCHIVES.append(archive)
+                nested = []
+                with zipfile.ZipFile(source_file, "r") as source:
+                    entries = source.infolist()
+                    need(len(entries) + TOTAL_ENTRIES <= CAP["entries"], "ZIP_ENTRY_COUNT_CAP")
+                    seen = set()
+                    for entry in entries:
+                        name = entry.filename
+                        need(entry.orig_filename == name, "ZIP_RAW_PATH_ALTERED")
+                        directory = entry.is_dir()
+                        pieces = path_parts(name, directory)
+                        normalized = "/".join(pieces)
+                        need(normalized not in seen, "ZIP_DUPLICATE_PATH")
+                        seen.add(normalized)
+                        kind = stat.S_IFMT(entry.external_attr >> 16)
+                        need(kind in (0, stat.S_IFDIR if directory else stat.S_IFREG),
+                             "ZIP_SPECIAL_FILE_OR_SYMLINK")
+                        need((entry.flag_bits & 1) == 0, "ZIP_ENCRYPTED_ENTRY")
+                        need(entry.compress_type in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED),
+                             "ZIP_COMPRESSION_UNSUPPORTED")
+                        need(0 <= entry.file_size <= CAP["entryBytes"], "ZIP_ENTRY_SIZE_CAP")
+                        need(TOTAL_EXPANDED + entry.file_size <= CAP["expandedBytes"], "ZIP_EXPANDED_CAP")
+                        destination = output_root.joinpath(*pieces)
+                        need(output_root == destination.parent or output_root in destination.parents,
+                             "ZIP_DESTINATION_ESCAPE")
+                        TOTAL_ENTRIES += 1
+                        file_id = len(FILES)
+                        item = {
+                            "id": file_id, "archive": archive_index, "path": name, "directory": directory,
+                            "compressedBytes": entry.compress_size, "declaredBytes": entry.file_size,
+                            "expectedCrc32": format(entry.CRC, "08x"),
+                            "storedPath": str(destination.relative_to(ROOT)),
+                        }
+                        FILES.append(item)
+                        if directory:
+                            need(entry.file_size == 0 and entry.CRC == 0, "ZIP_DIRECTORY_PAYLOAD")
+                            with source.open(entry, "r") as original:
+                                need(original.read(1) == b"", "ZIP_DIRECTORY_PAYLOAD")
+                            destination.mkdir(mode=0o700, parents=True, exist_ok=True)
+                            item.update({"bytes": 0, "sha256": digest(b""), "crc32": "00000000", "crcVerified": True})
+                        else:
+                            destination.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                            hasher = hashlib.sha256()
+                            crc = 0
+                            size = 0
+                            # zipfile checks the local header and EOF CRC as well; calculate independently.
+                            with source.open(entry, "r") as original, open(destination, "xb") as target:
+                                while True:
+                                    block = original.read(1024 * 1024)
+                                    if not block:
+                                        break
+                                    size += len(block)
+                                    TOTAL_EXPANDED += len(block)
+                                    need(size <= entry.file_size and size <= CAP["entryBytes"]
+                                         and TOTAL_EXPANDED <= CAP["expandedBytes"], "ZIP_ACTUAL_EXPANSION_CAP")
+                                    target.write(block)
+                                    hasher.update(block)
+                                    crc = zlib.crc32(block, crc)
+                            need(size == entry.file_size and (crc & 0xffffffff) == entry.CRC, "ZIP_CRC_OR_SIZE")
+                            item.update({"bytes": size, "sha256": hasher.hexdigest(),
+                                         "crc32": format(crc & 0xffffffff, "08x"), "crcVerified": True})
+                            with open(destination, "rb") as header:
+                                magic = header.read(4)
+                            if name.lower().endswith(".zip") or magic in (b"PK\x03\x04", b"PK\x05\x06"):
+                                nested.append((destination, "zip-entry", file_id))
+                        archive["entries"] += 1
+                        archive["crcVerified"] += 1
+                        archive["expandedBytes"] += entry.file_size
+                archive["status"] = "CRC_VERIFIED"
+                for destination, nested_label, file_id in nested:
+                    inspect_zip(destination, nested_label, depth + 1, file_id)
+                return archive_index
+            
+            def read_file(item, limit):
+                need(not item["directory"] and item["bytes"] <= limit, "PARSER_INPUT_CAP")
+                data = (ROOT / item["storedPath"]).read_bytes()
+                need(len(data) == item["bytes"] and digest(data) == item["sha256"], "EXTRACTED_FILE_CHANGED")
+                return data
+            
+            def locate_suffix(suffix, outer_only=False):
+                rows = [row for row in FILES if not row["directory"]
+                        and (not outer_only or row["archive"] == 0)
+                        and (row["path"] == suffix or row["path"].endswith("/" + suffix))]
+                return rows
+            
+            def one_original_json(suffix):
+                rows = locate_suffix(suffix, outer_only=True)
+                need(len(rows) == 1, "ORIGINAL_JSON_CARDINALITY_" + suffix.replace(".", "_"))
+                raw = read_file(rows[0], CAP["jsonBytes"])
+                try:
+                    data = json.loads(raw)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("ORIGINAL_JSON_PARSE") from None
+                return rows[0], raw, data
+            
+            def unpack_html_reports():
+                reports = locate_suffix("playwright-report/index.html", outer_only=True)
+                if not reports:
+                    pending("HTML_REPORT_ABSENT")
+                    return
+                parsed = []
+                for item in reports:
+                    raw = read_file(item, CAP["htmlBytes"])
+                    text = raw.decode("utf-8")
+                    # Read only the embedded archive string. No HTML/JavaScript is evaluated.
+                    found = re.findall(r'data:application/zip;base64,([A-Za-z0-9+/=\r\n]+)', text)
+                    if not found:
+                        assignments = re.findall(r'playwrightReportBase64\s*=\s*["\x27]([A-Za-z0-9+/=\r\n]+)["\x27]', text)
+                        found = assignments
+                    need(len(found) <= 1, "HTML_REPORT_ARCHIVE_AMBIGUOUS")
+                    if not found:
+                        pending("HTML_REPORT_EMBEDDED_ARCHIVE_UNRECOGNIZED", {"file": item["id"]})
+                        continue
+                    encoded = re.sub(r"[\r\n]", "", found[0])
+                    need(len(encoded) <= CAP["htmlBytes"], "HTML_REPORT_BASE64_CAP")
+                    decoded = base64.b64decode(encoded, validate=True)
+                    need(len(decoded) <= CAP["htmlBytes"] and decoded.startswith(b"PK"), "HTML_REPORT_ZIP")
+                    filename = ROOT / "originals" / ("html-embedded-" + str(item["id"]) + ".zip")
+                    write_bytes(filename, decoded)
+                    nested_id = inspect_zip(filename, "html-report-embedded", 1, item["id"])
+                    parsed.append({"htmlFile": item["id"], "zipBytes": len(decoded),
+                                   "zipSha256": digest(decoded), "archive": nested_id})
+                RECEIPT["parsers"]["htmlArchives"] = parsed
+            
+            def tests_from_report(report):
+                tests = []
+                visited = 0
+                def visit(suite, trail, depth):
+                    nonlocal visited
+                    visited += 1
+                    need(visited <= 10000 and depth <= 32 and isinstance(suite, dict), "REPORT_SUITE_CAP")
+                    for spec in suite.get("specs", []):
+                        need(isinstance(spec, dict), "REPORT_SPEC_SHAPE")
+                        for test in spec.get("tests", []):
+                            need(isinstance(test, dict), "REPORT_TEST_SHAPE")
+                            tests.append((spec, test, trail))
+                    for child in suite.get("suites", []):
+                        visit(child, trail + [suite.get("title", "")], depth + 1)
+                need(isinstance(report, dict) and isinstance(report.get("suites"), list), "REPORT_ROOT_SHAPE")
+                for suite in report["suites"]:
+                    visit(suite, [], 0)
+                return tests
+            
+            def report_configuration(report, tests, label):
+                config = report.get("config", {})
+                need(isinstance(config, dict) and config.get("workers") == 1, label + "_WORKERS")
+                projects = config.get("projects")
+                need(isinstance(projects, list) and bool(projects), label + "_PROJECTS")
+                selected = {test.get("projectId") or test.get("projectName") for _, test, _ in tests}
+                checked_projects = []
+                for project in projects:
+                    if project.get("id") in selected or project.get("name") in selected or len(projects) == 1:
+                        need(project.get("retries") == 0 and project.get("repeatEach") == 1,
+                             label + "_RETRY_REPEAT")
+                        need(project.get("id") in (None, "chromium") and project.get("name") == "chromium",
+                             label + "_CHROMIUM_PROJECT")
+                        checked_projects.append({"id": project.get("id"), "name": project.get("name"),
+                                                 "retries": 0, "repeatEach": 1})
+                need(bool(checked_projects), label + "_SELECTED_PROJECT")
+                return {"workers": 1, "projects": checked_projects}
+            
+            def error_summary(errors):
+                out = []
+                for error in errors:
+                    if not isinstance(error, dict):
+                        continue
+                    message = str(error.get("message", ""))
+                    stack = str(error.get("stack", ""))
+                    combined = message + "\n" + stack
+                    position = re.search(r"design-wave-five-analytics\.spec\.ts:(\d+):(\d+)", combined)
+                    out.append({
+                        "timeout60000": bool(re.search(r"Timeout\s+60000ms|60000\s*ms", combined)),
+                        "waitForResponse": "waitForResponse" in combined,
+                        "originalBiRequestFailed": "Original BI request failed" in combined,
+                        "source": {"file": "design-wave-five-analytics.spec.ts",
+                                   "line": int(position.group(1)), "column": int(position.group(2))} if position else None,
+                        "messageBytes": len(message.encode("utf-8")), "messageSha256": digest(message.encode("utf-8")),
+                        "stackBytes": len(stack.encode("utf-8")), "stackSha256": digest(stack.encode("utf-8")),
+                    })
+                return out
+            
+            def marker_stream(results, case_ordinal):
+                all_lines = []
+                streams = []
+                pattern = re.compile(r"^(?:\x1b\[[0-?]*[ -/]*[@-~])*"
+                                     r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE) (.*)$")
+                for result_ordinal, result in enumerate(results, 1):
+                    for field in ("stdout", "stderr"):
+                        chunks = []
+                        size = 0
+                        for chunk in result.get(field, []):
+                            need(isinstance(chunk, dict), "RUNTIME_STDIO_CHUNK_SHAPE")
+                            if isinstance(chunk.get("text"), str) and "buffer" not in chunk:
+                                raw = chunk["text"].encode("utf-8")
+                            elif isinstance(chunk.get("buffer"), str) and "text" not in chunk:
+                                encoded = chunk["buffer"]
+                                need(len(encoded) <= (CAP["jsonBytes"] * 4 // 3 + 4), "RUNTIME_STDIO_BASE64_CAP")
+                                raw = base64.b64decode(encoded, validate=True)
+                            else:
+                                raise ReceiptFailure("RUNTIME_STDIO_CHUNK_ENCODING")
+                            size += len(raw)
+                            need(size <= CAP["jsonBytes"], "RUNTIME_STDIO_STREAM_CAP")
+                            chunks.append(raw)
+                        # Decode only after concatenating one stream: a chunk may split a UTF-8 character.
+                        stream_raw = b"".join(chunks)
+                        text = stream_raw.decode("utf-8", errors="strict")
+                        lines = []
+                        for line in text.splitlines():
+                            match = pattern.match(line)
+                            if match:
+                                lines.append(match.group(1) + " " + match.group(2))
+                        marker_raw = (("\n".join(lines) + "\n") if lines else "").encode("utf-8")
+                        marker_path = ("derived/runtime-case-" + str(case_ordinal) + "-result-"
+                                       + str(result_ordinal) + "-" + field + "-semantic-markers.lf.log")
+                        write_bytes(ROOT / marker_path, marker_raw)
+                        streams.append({"case": case_ordinal, "result": result_ordinal, "stream": field,
+                                        "bytes": len(stream_raw), "sha256": digest(stream_raw),
+                                        "markerBytes": len(marker_raw), "markerSha256": digest(marker_raw),
+                                        "markerPath": marker_path, "markerLines": len(lines)})
+                        all_lines.extend(lines)
+                return {"lines": all_lines, "streams": streams}
+            
+            def attachment_inventory_links(attachments, case_ordinal):
+                need(isinstance(attachments, list) and len(attachments) <= CAP["entries"], "RUNTIME_ATTACHMENT_CAP")
+                def tail(value):
+                    if not isinstance(value, str) or len(value) > 4096 or "\x00" in value or "\\" in value:
+                        return None
+                    pieces = value.split("/")
+                    if any(piece in (".", "..") for piece in pieces):
+                        return None
+                    positions = [index for index, piece in enumerate(pieces) if piece == "test-results"]
+                    if len(positions) != 1 or len(pieces) - positions[0] < 3:
+                        return None
+                    return "/".join(pieces[positions[0]:])
+                by_tail = {}
+                for item in FILES:
+                    suffix = tail(item["path"])
+                    if not item["directory"] and ARCHIVES[item["archive"]]["depth"] == 0 and suffix is not None:
+                        by_tail.setdefault(suffix, []).append(item)
+                linked = []
+                for ordinal, attachment in enumerate(attachments, 1):
+                    if not isinstance(attachment, dict):
+                        continue
+                    path = attachment.get("path")
+                    suffix = tail(path)
+                    matches = by_tail.get(suffix, []) if suffix is not None else []
+                    name = attachment.get("name")
+                    kind = "trace" if name == "trace" else "screenshot" if attachment.get("contentType") == "image/png" else "other"
+                    row = {"case": case_ordinal, "result": 1, "attachment": ordinal, "kind": kind,
+                           "pathPresent": isinstance(path, str), "pathRule": "exact test-results tail including case directory and filename",
+                           "files": [item["id"] for item in matches],
+                           "status": "unique" if len(matches) == 1 else "ambiguous" if matches else "unmatched"}
+                    linked.append(row)
+                    if kind == "trace":
+                        TRACE_ATTACHMENTS.append(row)
+                return linked
+            
+            def parse_runtime_and_selection():
+                selection_item, selection_raw, selection = one_original_json("playwright-selection.json")
+                runtime_item, runtime_raw, runtime = one_original_json("playwright-runtime.json")
+                selected = tests_from_report(selection)
+                executed = tests_from_report(runtime)
+                need(len(selected) == 2 and len(executed) == 2, "ORIGINAL_TWO_TESTS")
+                need([spec.get("title") for spec, _, _ in selected] == TITLES
+                     and [spec.get("title") for spec, _, _ in executed] == TITLES,
+                     "ORIGINAL_TEST_TITLES_AND_ORDER")
+                selection_config = report_configuration(selection, selected, "SELECTION")
+                runtime_config = report_configuration(runtime, executed, "RUNTIME")
+                cases = []
+                markers = []
+                for index, (spec, test, _) in enumerate(executed):
+                    results = test.get("results")
+                    need(isinstance(results, list) and len(results) == 1, "ORIGINAL_SINGLE_RESULT")
+                    result = results[0]
+                    need(result.get("retry", 0) == 0 and test.get("expectedStatus", "passed") == "passed",
+                         "ORIGINAL_RESULT_ATTEMPT")
+                    worker_index = result.get("workerIndex")
+                    parallel_index = result.get("parallelIndex")
+                    need(type(worker_index) is int and worker_index >= 0
+                         and type(parallel_index) is int and parallel_index == 0,
+                         "ORIGINAL_SINGLE_PARALLEL_WORKER")
+                    status = result.get("status")
+                    need(status in ("failed", "timedOut") if index == 0 else status == "failed",
+                         "ORIGINAL_RESULT_VERDICT")
+                    errors = result.get("errors", [])
+                    if not errors and isinstance(result.get("error"), dict):
+                        errors = [result["error"]]
+                    captured = marker_stream(results, index + 1)
+                    markers.extend(captured["lines"])
+                    cases.append({
+                        "title": TITLES[index], "status": status, "retry": 0,
+                        "workerIndex": worker_index, "parallelIndex": result.get("parallelIndex"),
+                        "stdioStreams": captured["streams"],
+                        "durationMs": result.get("duration"), "startTime": result.get("startTime"),
+                        "errors": error_summary(errors),
+                        "attachmentCount": len(result.get("attachments", [])),
+                        "attachmentLinks": attachment_inventory_links(result.get("attachments", []), index + 1),
+                    })
+                first = cases[0]["errors"]
+                need(any(error["timeout60000"] and error["waitForResponse"]
+                         and error["source"] == {"file": "design-wave-five-analytics.spec.ts", "line": 72, "column": 32}
+                         for error in first), "ORIGINAL_UI42_FAILURE_LOCATION")
+                need(any(error["originalBiRequestFailed"] and error["waitForResponse"]
+                         and error["source"] == {"file": "design-wave-five-analytics.spec.ts", "line": 759, "column": 41}
+                         for error in cases[1]["errors"]), "ORIGINAL_LOCALIZED_BI06_FAILURE_LOCATION")
+                marker_raw = (("\n".join(markers) + "\n") if markers else "").encode("utf-8")
+                write_bytes(ROOT / "derived" / "runtime-semantic-markers.lf.log", marker_raw)
+                counts = {name: sum(line.startswith(name + " ") for line in markers) for name in SEMANTIC_COUNTS}
+                parity = len(marker_raw) == SEMANTIC_BYTES and digest(marker_raw) == SEMANTIC_SHA and counts == SEMANTIC_COUNTS
+                if not parity:
+                    pending("RUNTIME_MAIN_SEMANTIC_SEQUENCE_NOT_IDENTICAL",
+                            {"observedBytes": len(marker_raw), "observedSha256": digest(marker_raw), "counts": counts})
+                RECEIPT["parsers"]["selection"] = {
+                    "file": selection_item["id"], "bytes": len(selection_raw), "sha256": digest(selection_raw),
+                    "tests": 2, "titles": TITLES, "config": selection_config,
+                }
+                RECEIPT["parsers"]["runtime"] = {
+                    "file": runtime_item["id"], "bytes": len(runtime_raw), "sha256": digest(runtime_raw),
+                    "tests": 2, "config": runtime_config, "cases": cases,
+                    "verdict": {"failed": 2, "passed": 0, "UI42": "failed at first original 60 s response waiter",
+                                "UI43": "unreached in first case", "UI44": "unreached in first case",
+                                "BI": "failed in localized BI06 acquisition at spec759:41; prior BI06 and BI01 observations remain separate"},
+                    "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                                        "matchesOriginalMainSequence": parity,
+                                        "order": "case/result order, stdout then stderr; no temporal interleaving between streams is inferred",
+                                        "expectedBytes": SEMANTIC_BYTES, "expectedSha256": SEMANTIC_SHA},
+                }
+                # Original JSON files are retained verbatim. No arbitrary report text is dumped to logs.
+                RECEIPT["logExports"].extend([
+                    {"file": selection_item["id"], "format": "original-json",
+                     "status": "PENDING_ORIGINAL_JSON_LOG_EXPORT", "reason": "unclassified original strings retained in artifact"},
+                    {"file": runtime_item["id"], "format": "original-json",
+                     "status": "PENDING_ORIGINAL_JSON_LOG_EXPORT", "reason": "raw report retained in artifact; derived strict summary is logged"},
+                ])
+                checked("original_selection_runtime_and_negative_verdict")
+            
+            # Phase 3: strictly bounded, derived summaries. Raw sources stay byte-for-byte in originals/.
+            def safe_time(value):
+                if isinstance(value, (int, float)) and not isinstance(value, bool) and value == value and abs(value) < 1e18:
+                    return value
+                return None
+            
+            def safe_failure(value):
+                if isinstance(value, dict):
+                    value = value.get("message", "")
+                if not isinstance(value, str) or not value:
+                    return None
+                match = re.search(r"net::ERR_[A-Z0-9_]+|NS_[A-Z0-9_]+|TimeoutError", value)
+                return {"present": True, "code": match.group(0) if match else None,
+                        "bytes": len(value.encode("utf-8")), "sha256": digest(value.encode("utf-8"))}
+            
+            def trace_value(value):
+                if isinstance(value, str):
+                    raw = value.encode("utf-8")
+                    return {"bytes": len(raw), "sha256": digest(raw)}
+                return None
+            
+            def trace_target(value):
+                if not isinstance(value, str):
+                    return None
+                out = {"url": trace_value(value), "operation": None, "viewId": None, "selectionRef": None,
+                       "path": None, "queryStatus": "unrecognized"}
+                if len(value) > 4096:
+                    out["queryStatus"] = "over-cap"
+                    return out
+                try:
+                    url = urllib.parse.urlsplit(value)
+                    query = urllib.parse.parse_qs(url.query, max_num_fields=100, keep_blank_values=True)
+                    sf = query.get("sf", [])
+                    view = query.get("viewId", [])
+                    selection = query.get("selectionRef", [])
+                    out["operation"] = sf[0] if len(sf) == 1 and sf[0] in OPERATIONS else None
+                    out["viewId"] = view[0] if len(view) == 1 and view[0] in ("BI01", "BI06", "BI11") else None
+                    out["viewIdValues"] = [trace_value(item) for item in view]
+                    out["selectionRef"] = trace_value(selection[0]) if len(selection) == 1 else None
+                    out["selectionRefCount"] = len(selection)
+                    out["queryStatus"] = "parsed"
+                    if out["operation"] is not None:
+                        path = url.path
+                        need(len(path) <= 2048 and not any(ord(c) < 32 for c in path), "TRACE_TARGET_PATH_INVALID")
+                        out["path"] = path
+                except (ValueError, TypeError):
+                    out["queryStatus"] = "unrecognized"
+                return out
+            
+            def network_row(record):
+                snapshot = record.get("snapshot")
+                if not isinstance(snapshot, dict):
+                    return None
+                request = snapshot.get("request")
+                response = snapshot.get("response")
+                if not isinstance(request, dict):
+                    return None
+                response = response if isinstance(response, dict) else {}
+                target = trace_target(request.get("url"))
+                if target is None or target["operation"] not in OPERATIONS:
+                    return None
+                method = request.get("method")
+                need(method in ("GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"), "TRACE_HTTP_METHOD")
+                status = response.get("status")
+                if type(status) is not int or not 0 <= status <= 599:
+                    status = None
+                timestamp = snapshot.get("startedDateTime")
+                if not isinstance(timestamp, str) or not re.fullmatch(r"[0-9T:.\-+Z]{10,40}", timestamp):
+                    timestamp = None
+                failure = snapshot.get("_failureText") or response.get("_failureText") or record.get("error")
+                return {"kind": "network", "operation": target["operation"], "method": method, "target": target,
+                        "status": status, "timestamp": timestamp, "durationMs": safe_time(snapshot.get("time")),
+                        "monotonicTime": safe_time(snapshot.get("_monotonicTime")), "failure": safe_failure(failure)}
+            
+            def trace_operation(record, allowed_api):
+                for field in ("apiName", "title"):
+                    value = record.get(field)
+                    if isinstance(value, str) and value in allowed_api:
+                        return value, field
+                owner, method = record.get("class"), record.get("method")
+                if not isinstance(owner, str) or not isinstance(method, str):
+                    return None, None
+                known = {
+                    ("Page", "waitForEventInfo"): "Page.waitForEventInfo",
+                    ("Page", "close"): "page.close", ("BrowserContext", "close"): "browserContext.close",
+                    ("Browser", "close"): "browser.close", ("CDPSession", "detach"): "cdpSession.detach",
+                    ("Frame", "goto"): "frame.goto", ("Page", "reload"): "page.reload",
+                    ("Page", "goBack"): "page.goBack", ("Page", "goForward"): "page.goForward",
+                    ("Frame", "waitForURL"): "frame.waitForURL",
+                    ("Frame", "click"): "frame.click", ("Frame", "selectOption"): "frame.selectOption",
+                    ("Frame", "fill"): "frame.fill", ("Route", "abort"): "route.abort",
+                    ("Browser", "newContext"): "browser.newContext", ("BrowserContext", "newPage"): "browserContext.newPage",
+                    ("BrowserContext", "newCDPSession"): "browserContext.newCDPSession",
+                }
+                if owner == "CDPSession" and method == "send" and isinstance(record.get("params"), dict):
+                    command = record["params"].get("method")
+                    if command in ("Network.enable", "Network.getResponseBody"):
+                        return "cdpSession.send:" + command, "class/method/command"
+                operation = known.get((owner, method))
+                return (operation, "class/method") if operation is not None else (None, None)
+            
+            def trace_details(record, identities):
+                params = record.get("params") if isinstance(record.get("params"), dict) else {}
+                result = record.get("result") if isinstance(record.get("result"), dict) else {}
+                nested = params.get("params") if isinstance(params.get("params"), dict) else {}
+                snapshot = record.get("snapshot") if isinstance(record.get("snapshot"), dict) else {}
+                request = snapshot.get("request") if isinstance(snapshot.get("request"), dict) else {}
+                values = {}
+                for kind in ("call", "request", "page", "context", "frame", "session"):
+                    fields = [(kind + "Id", record.get(kind + "Id"))]
+                    if kind != "call":
+                        fields.extend([("params." + kind + "Id", params.get(kind + "Id")),
+                                       ("params.params." + kind + "Id", nested.get(kind + "Id"))])
+                        for label, parent in (("params", params), ("params.params", nested), ("result", result)):
+                            child = parent.get(kind)
+                            if isinstance(child, dict):
+                                fields.append((label + "." + kind + ".guid", child.get("guid")))
+                    if kind == "page":
+                        fields.extend([("snapshot.pageref", snapshot.get("pageref")),
+                                       ("snapshot._pageId", snapshot.get("_pageId"))])
+                    if kind == "frame":
+                        fields.append(("snapshot._frameref", snapshot.get("_frameref")))
+                    if kind == "request":
+                        fields.extend([("snapshot._requestId", snapshot.get("_requestId")),
+                                       ("snapshot.request._requestId", request.get("_requestId"))])
+                    if kind == "context":
+                        fields.append(("snapshot._contextId", snapshot.get("_contextId")))
+                    for field, value in fields:
+                        if not (isinstance(value, str) and 0 < len(value) <= 1024):
+                            continue
+                        hashed = trace_value(value)
+                        key = (kind, hashed["bytes"], hashed["sha256"])
+                        if key not in identities and len(identities) < CAP["summaryRows"] * 8:
+                            identities[key] = len(identities) + 1
+                        values[field] = {"kind": kind, "local": identities.get(key), **hashed}
+                selector = params.get("selector")
+                selection = None
+                if isinstance(selector, str):
+                    safe_selectors = {
+                        '[data-sf-field="view"]', '[data-sf-field="selection"]',
+                        '[data-sf-field="start"]', '[data-sf-field="end"]',
+                        '[data-sf-bi-view="BI01"]', '[data-sf-bi-view="BI06"]', '[data-sf-bi-view="BI11"]',
+                        'internal:role=button[name="Ver dados"s]', 'internal:role=button[name="Ver dados"i]',
+                        'internal:role=button[name="Load options"s]', 'internal:role=button[name="Carregar opções"s]',
+                    }
+                    selection = {"safe": selector if selector in safe_selectors else None, **trace_value(selector)}
+                targets = {}
+                for label, parent in (("params", params), ("params.params", nested)):
+                    for child_name in (None, "frame", "request", "response"):
+                        child = parent if child_name is None else parent.get(child_name)
+                        if isinstance(child, dict):
+                            target = trace_target(child.get("url"))
+                            if target is not None:
+                                targets[label + ("." + child_name if child_name else "") + ".url"] = target
+                locales = {}
+                for label, parent in (("params", params), ("params.options", params.get("options"))):
+                    if isinstance(parent, dict) and isinstance(parent.get("locale"), str):
+                        locale = parent["locale"]
+                        locales[label + ".locale"] = {"safe": locale if locale in ("en-US", "pt-BR") else None, **trace_value(locale)}
+                locations = []
+                stack = record.get("stack")
+                if isinstance(stack, list):
+                    for frame in stack[:64]:
+                        if not isinstance(frame, dict):
+                            continue
+                        filename = frame.get("file")
+                        line, column = frame.get("line"), frame.get("column")
+                        if isinstance(filename, str) and filename.replace("\\", "/").endswith("/design-wave-five-analytics.spec.ts") \
+                                and type(line) is int and 1 <= line <= 10000 and type(column) is int and 1 <= column <= 10000:
+                            locations.append({"file": "design-wave-five-analytics.spec.ts", "line": line, "column": column})
+                return {"identities": values, "missingIdentityKinds": [
+                            kind for kind in ("request", "page", "context", "frame", "session")
+                            if not any(value["kind"] == kind for value in values.values())],
+                        "selector": selection, "targets": targets, "locales": locales, "sourceLocations": locations}
+            
+            def trace_file_bindings(item, attachment_index):
+                ancestors = []
+                current = item["archive"]
+                for _ in range(CAP["depth"] + 2):
+                    parent = ARCHIVES[current].get("parentFile")
+                    if parent is None:
+                        break
+                    ancestors.append(parent)
+                    current = FILES[parent]["archive"]
+                bindings = [binding for ancestor in ancestors for binding in attachment_index.get(ancestor, {}).values()]
+                cases = sorted({(binding["case"], binding["result"]) for binding in bindings})
+                return {"ancestorFiles": ancestors, "runtimeAttachments": bindings,
+                        "caseResults": [{"case": case, "result": result} for case, result in cases],
+                        "status": "single-case-result" if len(cases) == 1 else "shared" if cases else "unbound",
+                        "rule": "original archive ancestry to a unique runtime trace attachment; no name/time/page inference"}
+            
+            def trace_priority(row):
+                operation = row.get("operation")
+                failure = row.get("failure")
+                if row.get("canceled") is True or (isinstance(failure, dict) and failure.get("present")) \
+                        or operation in ("Network.loadingFailed", "context.requestFailed", "route.abort"):
+                    return 0
+                if row["kind"] == "network" and (row["target"]["viewId"] == "BI06" or operation == "bi-options"):
+                    return 1
+                if row["kind"] == "context-options" or operation in (
+                        "browser.newContext", "browserContext.newPage", "browserContext.newCDPSession",
+                        "page.close", "browserContext.close", "browser.close", "page.crash",
+                        "frame.navigated", "page.frameNavigated", "page.frameDetached", "context.page",
+                        "page.goto", "frame.goto", "page.reload", "page.goBack", "page.goForward",
+                        "Network.requestWillBeSent", "Network.responseReceived", "Network.loadingFinished",
+                        "cdpSession.send:Network.getResponseBody", "cdpSession.detach", "cDPSession.detach"):
+                    return 1
+                if any(value["safe"] == "pt-BR" for value in row["locales"].values()):
+                    return 1
+                return 2 if row["kind"] == "network" or operation in (
+                    "page.waitForResponse", "Page.waitForEventInfo", "frame.selectOption", "locator.selectOption",
+                    "frame.click", "locator.click", "page.click") else 3
+            
+            def trace_witness(row):
+                return (str(row["file"]) + "/" + str(row["line"]) + "/" + row["originalLineSha256"] + "\n").encode("ascii")
+            
+            def trace_rows():
+                global TRACE_OBSERVED
+                candidates = [item for item in FILES if not item["directory"]
+                              and (item["path"].endswith(".trace") or item["path"].endswith(".network"))]
+                reports, candidates_heap = [], []
+                selected_counts, row_cap_counts = [0] * 4, [0] * 4
+                selected_witness, row_cap_witness = hashlib.sha256(), hashlib.sha256()
+                attachment_index = {}
+                for link in TRACE_ATTACHMENTS:
+                    if link["status"] == "unique":
+                        file_id = link["files"][0]
+                        cases = attachment_index.setdefault(file_id, {})
+                        key = (link["case"], link["result"])
+                        if key not in cases:
+                            cases[key] = {"case": link["case"], "result": link["result"], "file": file_id,
+                                          "firstAttachment": link["attachment"], "lastAttachment": link["attachment"], "attachmentCount": 0}
+                        cases[key]["lastAttachment"] = link["attachment"]
+                        cases[key]["attachmentCount"] += 1
+                allowed_api = {
+                    "page.waitForResponse", "page.close", "browserContext.close", "browser.close",
+                    "cDPSession.detach", "cdpSession.detach", "page.goto", "frame.goto", "page.reload",
+                    "page.goBack", "page.goForward", "page.waitForURL", "frame.waitForURL", "route.abort",
+                    "locator.click", "locator.selectOption", "locator.fill", "page.click", "page.selectOption",
+                    "browser.newContext", "browserContext.newPage", "browserContext.newCDPSession",
+                }
+                native_events = {
+                    ("Page", "close"): "page.close", ("Page", "crash"): "page.crash",
+                    ("BrowserContext", "close"): "browserContext.close", ("BrowserContext", "page"): "context.page",
+                    ("BrowserContext", "request"): "context.request", ("BrowserContext", "response"): "context.response",
+                    ("BrowserContext", "requestFailed"): "context.requestFailed",
+                    ("BrowserContext", "requestFinished"): "context.requestFinished",
+                    ("Frame", "navigated"): "frame.navigated", ("Page", "frameNavigated"): "page.frameNavigated",
+                    ("Page", "frameDetached"): "page.frameDetached",
+                }
+                for item in candidates:
+                    if TRACE_OBSERVED >= CAP["traceRows"]:
+                        pending("TRACE_PARSE_ROW_CAP", {"file": item["id"], "limit": CAP["traceRows"]})
+                        break
+                    parsed = malformed = selected = physical_lines = 0
+                    call_labels, ordinals, identities = {}, {}, {}
+                    path = ROOT / item["storedPath"]
+                    with open(path, "rb") as source:
+                        while True:
+                            raw = source.readline(CAP["jsonlLineBytes"] + 1)
+                            if not raw:
+                                break
+                            need(len(raw) <= CAP["jsonlLineBytes"], "TRACE_LINE_CAP")
+                            physical_lines += 1
+                            TRACE_OBSERVED += 1
+                            if TRACE_OBSERVED > CAP["traceRows"]:
+                                pending("TRACE_PARSE_ROW_CAP", {"file": item["id"], "limit": CAP["traceRows"]})
+                                break
+                            try:
+                                record = json.loads(raw)
+                            except (ValueError, UnicodeError):
+                                malformed += 1
+                                continue
+                            if not isinstance(record, dict):
+                                malformed += 1
+                                continue
+                            parsed += 1
+                            row = network_row(record)
+                            kind = record.get("type")
+                            call_id = record.get("callId")
+                            operation, label_source = trace_operation(record, allowed_api)
+                            if kind == "before" and operation is not None and isinstance(call_id, str):
+                                call_labels[call_id] = (operation, label_source)
+                                ordinals.setdefault(call_id, len(ordinals) + 1)
+                                row = {"kind": "call-before", "operation": operation, "operationSource": label_source,
+                                       "ordinal": ordinals[call_id], "timestamp": safe_time(record.get("startTime"))}
+                            elif kind == "after" and isinstance(call_id, str) and call_id in call_labels:
+                                operation, label_source = call_labels[call_id]
+                                row = {"kind": "call-after", "operation": operation, "operationSource": label_source,
+                                       "ordinal": ordinals[call_id], "timestamp": safe_time(record.get("endTime")),
+                                       "failure": safe_failure(record.get("error"))}
+                            elif kind == "event":
+                                params = record.get("params") if isinstance(record.get("params"), dict) else {}
+                                owner, method = record.get("class"), record.get("method")
+                                event = native_events.get((owner, method)) if isinstance(owner, str) and isinstance(method, str) else None
+                                if record.get("class") == "CDPSession" and record.get("method") == "event" \
+                                        and params.get("method") in ("Network.loadingFailed", "Network.loadingFinished", "Network.requestWillBeSent", "Network.responseReceived"):
+                                    event = params["method"]
+                                if event is not None:
+                                    event_params = params.get("params") if isinstance(params.get("params"), dict) else params
+                                    row = {"kind": "native-event", "operation": event, "timestamp": safe_time(record.get("time")),
+                                           "failure": safe_failure(event_params.get("errorText") or event_params.get("failureText")),
+                                           "canceled": event_params.get("canceled") if type(event_params.get("canceled")) is bool else None}
+                            elif kind == "context-options":
+                                options = record.get("options") if isinstance(record.get("options"), dict) else {}
+                                locale = options.get("locale")
+                                row = {"kind": "context-options", "operation": "context-options",
+                                       "locale": locale if locale in ("en-US", "pt-BR") else None,
+                                       "localeValue": trace_value(locale), "version": record.get("version") if type(record.get("version")) is int else None,
+                                       "wallTime": safe_time(record.get("wallTime")), "monotonicTime": safe_time(record.get("monotonicTime"))}
+                            if row is not None:
+                                selected += 1
+                                details = trace_details(record, identities)
+                                row = {"file": item["id"], "archive": item["archive"], "line": physical_lines,
+                                       "record": parsed, "originalLineBytes": len(raw), "originalLineSha256": digest(raw),
+                                       **row, **details}
+                                priority = trace_priority(row)
+                                selected_counts[priority] += 1
+                                selected_witness.update(trace_witness(row))
+                                entry = (-priority, TRACE_OBSERVED, row)
+                                dropped = None
+                                if len(candidates_heap) < CAP["summaryRows"]:
+                                    heapq.heappush(candidates_heap, entry)
+                                elif entry[:2] > candidates_heap[0][:2]:
+                                    dropped = heapq.heapreplace(candidates_heap, entry)[2]
+                                else:
+                                    dropped = row
+                                if dropped is not None:
+                                    row_cap_counts[trace_priority(dropped)] += 1
+                                    row_cap_witness.update(trace_witness(dropped))
+                    reports.append({"file": item["id"], "archive": item["archive"], "bytes": item["bytes"], "sha256": item["sha256"],
+                                    "parsedRecords": parsed, "malformedRecords": malformed, "selectedRecords": selected,
+                                    "physicalLinesRead": physical_lines, "binding": trace_file_bindings(item, attachment_index)})
+                selected_total = sum(item["selectedRecords"] for item in reports)
+                if selected_total > len(candidates_heap):
+                    pending("TRACE_SAFE_SUMMARY_CAP", {"selected": selected_total, "retainedCandidates": len(candidates_heap)})
+                if any(item["malformedRecords"] for item in reports):
+                    pending("TRACE_JSONL_MALFORMED_RECORDS", {"count": sum(item["malformedRecords"] for item in reports)})
+                if not candidates:
+                    pending("ORIGINAL_TRACE_NETWORK_ABSENT")
+                if any(report["binding"]["status"] == "shared" for report in reports):
+                    pending("ORIGINAL_TRACE_SHARED_CASE_RESULT_ANCESTRY")
+                if not any(report["binding"]["status"] == "single-case-result"
+                           and report["binding"]["caseResults"] == [{"case": 2, "result": 1}] for report in reports):
+                    pending("ORIGINAL_BI_TRACE_EXCLUSIVE_RUNTIME_ATTACHMENT_UNBOUND")
+                result = {"schema": 2, "qualification": False, "files": [], "rows": [],
+                          "retainedRows": 0, "selectedRows": selected_total,
+                          "coverage": {"candidateFiles": len(candidates), "visitedFiles": len(reports),
+                                       "unvisitedFiles": len(candidates) - len(reports), "fileReportsRetained": 0,
+                                       "fileReportsOmitted": len(reports), "identityOrdinalOmissions": 0,
+                                       "bi06NetworkRows": 0, "biOptionsNetworkRows": 0, "localizedContextDeclarations": 0},
+                          "retention": {"rawByteCap": TRACE_EXPORT_BYTES, "rowCap": CAP["summaryRows"],
+                                        "selectedByPriority": selected_counts, "rowCapOmittedByPriority": row_cap_counts,
+                                        "byteCapOmittedByPriority": [0] * 4, "retainedByPriority": [0] * 4,
+                                        "selectedWitnessSha256": selected_witness.hexdigest(),
+                                        "rowCapOmittedWitnessSha256": row_cap_witness.hexdigest(),
+                                        "byteCapOmittedWitnessSha256": digest(b""), "retainedWitnessSha256": digest(b""),
+                                        "allFileReportsBytes": len(canonical(reports)), "allFileReportsSha256": digest(canonical(reports)),
+                                        "selectionRule": "lower priority number first; newest native scan position within a priority; final output file/line order",
+                                        "priority0": "explicit failures/canceled/abort",
+                                        "priority1": "BI06/bi-options, context/page/session creation, locale, navigation and lifecycle",
+                                        "priority2": "other target network and response/selection/click calls",
+                                        "priority3": "remaining finite allowlisted records",
+                                        "witnessEncoding": "ASCII file/line/originalLineSha256 plus LF",
+                                        "witnessOrders": "selected: native scan; row-cap omissions: eviction/discard; byte-cap omissions: priority/newest; retained: file/line"},
+                          "limits": [
+                              "No headers, cookies, request/response bodies, full URLs or arbitrary query/selector values are emitted.",
+                              "Only BI01/BI06/BI11 viewId and the finite selector allowlist are clear text; other values are length/SHA256 only.",
+                              "Identity ordinals are file-local. Matching value hashes witness literal scalar equality, not ownership or cross-file request identity.",
+                              "Archive ancestry binds only to explicit runtime attachments. Shared case/result ancestry stays ambiguous; no locale or page is manufactured.",
+                              "Retained JSONL line order is preserved within each file, including explicit gaps. No chronological merge or clock conversion is inferred.",
+                              "A context locale declaration is not assigned to a page/request without a native identity relationship present in the records.",
+                              "Caps and all omission counts/digests remain explicit. Complete inventory retains every candidate file; this bounded trace export may be partial.",
+                              "No abort initiator or absent runtime event is inferred from these rows or their omission.",
+                          ]}
+                # Budget the entire object, including file bindings and limits, before any trace-series emission.
+                budget = TRACE_EXPORT_BYTES - len(canonical(result)) - 4096
+                need(budget >= 0, "TRACE_FIXED_METADATA_BYTE_CAP")
+                def item_cost(value):
+                    raw = canonical(value)
+                    return len(raw) + 4 * raw.count(b"\n") + 4
+                report_by_file = {report["file"]: report for report in reports}
+                retained_files, retained_rows = {}, []
+                byte_counts, retained_counts = [0] * 4, [0] * 4
+                byte_witness = hashlib.sha256()
+                for _, _, row in sorted(candidates_heap, key=lambda entry: (-entry[0], -entry[1])):
+                    report = report_by_file[row["file"]]
+                    cost = item_cost(row) + (0 if row["file"] in retained_files else item_cost(report))
+                    if cost <= budget:
+                        budget -= cost
+                        retained_files[row["file"]] = report
+                        retained_rows.append(row)
+                        retained_counts[trace_priority(row)] += 1
+                    else:
+                        byte_counts[trace_priority(row)] += 1
+                        byte_witness.update(trace_witness(row))
+                for report in reports:
+                    if report["file"] not in retained_files:
+                        cost = item_cost(report)
+                        if cost <= budget:
+                            budget -= cost
+                            retained_files[report["file"]] = report
+                retained_rows.sort(key=lambda row: (row["file"], row["line"]))
+                TRACE_ROWS[:] = retained_rows
+                retained_witness = hashlib.sha256()
+                for row in retained_rows:
+                    retained_witness.update(trace_witness(row))
+                identity_omissions = sum(value["local"] is None for row in retained_rows for value in row["identities"].values())
+                if identity_omissions:
+                    pending("TRACE_IDENTITY_ORDINAL_CAP", {"values": identity_omissions, "perFileCap": CAP["summaryRows"] * 8})
+                result["files"] = [retained_files[key] for key in sorted(retained_files)]
+                result["rows"] = retained_rows
+                result["retainedRows"] = len(retained_rows)
+                result["coverage"].update({
+                    "fileReportsRetained": len(retained_files), "fileReportsOmitted": len(reports) - len(retained_files),
+                    "identityOrdinalOmissions": identity_omissions,
+                    "bi06NetworkRows": sum(row["kind"] == "network" and row["target"]["viewId"] == "BI06" for row in retained_rows),
+                    "biOptionsNetworkRows": sum(row["kind"] == "network" and row["operation"] == "bi-options" for row in retained_rows),
+                    "localizedContextDeclarations": sum((row["kind"] == "context-options" and row["locale"] == "pt-BR")
+                                                         or any(value["safe"] == "pt-BR" for value in row["locales"].values())
+                                                         for row in retained_rows)})
+                result["retention"].update({"byteCapOmittedByPriority": byte_counts, "retainedByPriority": retained_counts,
+                                            "byteCapOmittedWitnessSha256": byte_witness.hexdigest(),
+                                            "retainedWitnessSha256": retained_witness.hexdigest()})
+                need(selected_total == sum(row_cap_counts) + sum(byte_counts) + len(retained_rows), "TRACE_RETENTION_CONSERVATION")
+                if sum(byte_counts) or len(retained_files) != len(reports):
+                    pending("TRACE_SAFE_BYTE_CAP", {"cap": TRACE_EXPORT_BYTES, "omittedRows": sum(byte_counts),
+                                                   "omittedFileReports": len(reports) - len(retained_files)})
+                need(len(canonical(result)) <= TRACE_EXPORT_BYTES, "TRACE_SERIALIZED_BYTE_CAP")
+                RECEIPT["parsers"]["trace"] = save_json("derived/trace-safe.json", result)
+                RECEIPT["parsers"]["trace"].update({"files": len(candidates), "selectedRows": selected_total,
+                                                  "retainedRows": len(retained_rows), "rawByteCap": TRACE_EXPORT_BYTES,
+                                                  "runtimeBinding": "explicit attachment and archive ancestry; shared ancestry remains ambiguous"})
+            
+            def inventory_error_context_and_pngs():
+                contexts = [item for item in FILES if not item["directory"] and item["path"].endswith("error-context.md")]
+                RECEIPT["parsers"]["errorContexts"] = [
+                    {"file": item["id"], "bytes": item["bytes"], "sha256": item["sha256"],
+                     "rawPreserved": True, "logText": "PENDING_ORIGINAL_TEXT_EXPORT"} for item in contexts
+                ]
+                if not contexts:
+                    pending("ORIGINAL_ERROR_CONTEXT_ABSENT")
+                pngs = []
+                for suffix in PNG_SUFFIXES:
+                    matches = locate_suffix(suffix, outer_only=True)
+                    if len(matches) != 1:
+                        pending("ORIGINAL_TARGET_PNG_CARDINALITY", {"suffix": suffix, "matches": len(matches)})
+                        continue
+                    item = matches[0]
+                    raw = read_file(item, CAP["entryBytes"])
+                    need(raw.startswith(b"\x89PNG\r\n\x1a\n") and len(raw) >= 33
+                         and raw[12:16] == b"IHDR", "TARGET_PNG_SIGNATURE")
+                    width = int.from_bytes(raw[16:20], "big")
+                    height = int.from_bytes(raw[20:24], "big")
+                    need(0 < width <= 20000 and 0 < height <= 20000, "TARGET_PNG_DIMENSIONS")
+                    pngs.append({"file": item["id"], "suffix": suffix, "bytes": item["bytes"],
+                                 "sha256": item["sha256"], "width": width, "height": height,
+                                 "originalPng": True, "jpegPreviewSubstituted": False})
+                RECEIPT["parsers"]["targetPngs"] = pngs
+            
+            def log_bytes_payload(name, raw, mime, original, reserve=65536, record=True):
+                encoded = base64.b64encode(raw).decode("ascii")
+                pieces = [encoded[i:i + CAP["chunkBytes"]] for i in range(0, len(encoded), CAP["chunkBytes"])]
+                metadata = {"name": name, "bytes": len(raw), "sha256": digest(raw), "mime": mime,
+                            "original": original, "encoding": "base64", "chunks": len(pieces)}
+                lines = [{"schema": 1, **metadata, "index": i + 1, "data": piece} for i, piece in enumerate(pieces)]
+                planned = sum(len(("SF613_ARTIFACT_BYTES " + json.dumps(row, ensure_ascii=True, separators=(",", ":")) + "\n").encode("ascii"))
+                              for row in lines)
+                if any(len(("SF613_ARTIFACT_BYTES " + json.dumps(row, ensure_ascii=True, separators=(",", ":")) + "\n").encode("ascii")) > 32768
+                       for row in lines) or LOG_BYTES + planned + reserve > CAP["logBytes"]:
+                    if record:
+                        RECEIPT["logExports"].append({**metadata, "status": "PENDING_LOG_BUDGET",
+                                                      "reason": "all bytes retained in artifact; no partial base64 emitted"})
+                    return False
+                for row in lines:
+                    need(emit("SF613_ARTIFACT_BYTES", row), "LOG_BUDGET_CHANGED")
+                if record:
+                    RECEIPT["logExports"].append({**metadata, "status": "COMPLETE"})
+                return True
+            
+            def ensure_inventory():
+                if "inventory" not in RECEIPT:
+                    inventory = {"schema": 1, "archives": ARCHIVES, "files": FILES}
+                    RECEIPT["inventory"] = save_json("derived/inventory.json", inventory)
+                return RECEIPT["inventory"]
+            
+            def emit_bounded_evidence():
+                inventory = ensure_inventory()
+                safe = {
+                    "schema": 1, "qualification": False, "source": SOURCE, "sourceTree": SOURCE_TREE,
+                    "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE, "run": ORIGINAL_RUN,
+                    "artifact": RECEIPT["artifact"],
+                    "selection": RECEIPT["parsers"].get("selection"),
+                    "runtime": RECEIPT["parsers"].get("runtime"),
+                    "htmlArchives": RECEIPT["parsers"].get("htmlArchives", []),
+                    "errorContexts": RECEIPT["parsers"].get("errorContexts", []),
+                    "targetPngs": RECEIPT["parsers"].get("targetPngs", []),
+                }
+                summary = canonical(safe)
+                write_bytes(ROOT / "derived" / "safe-summary.json", summary)
+                log_bytes_payload("safe-summary.json", summary, "application/json", False, reserve=65536 + TRACE_LOG_RESERVE)
+                inventory_raw = (ROOT / inventory["path"]).read_bytes()
+                need(len(inventory_raw) == inventory["bytes"] and digest(inventory_raw) == inventory["sha256"],
+                     "INVENTORY_BYTES_CHANGED")
+                log_bytes_payload("inventory.json", inventory_raw, "application/json", False, reserve=65536 + TRACE_LOG_RESERVE)
+                trace_path = ROOT / "derived" / "trace-safe.json"
+                if trace_path.is_file():
+                    need(log_bytes_payload("trace-safe.json", trace_path.read_bytes(), "application/json", False), "BOUNDED_TRACE_LOG_EXPORT")
+                for png in RECEIPT["parsers"].get("targetPngs", []):
+                    raw = read_file(FILES[png["file"]], CAP["entryBytes"])
+                    log_bytes_payload("original-png-" + str(png["file"]) + ".png", raw, "image/png", True)
+            
+            def main():
+                check_original_and_reader()
+                download_original()
+                inspect_zip(ROOT / "original.zip", "original-artifact", 0)
+                unpack_html_reports()
+                checked("all_discovered_zip_entries_crc_sha256_and_safe_paths")
+                for name, parser in (
+                    ("runtimeAndSelection", parse_runtime_and_selection),
+                    ("trace", trace_rows),
+                    ("errorContextAndPng", inventory_error_context_and_pngs),
+                ):
+                    try:
+                        parser()
+                    except ReceiptFailure as error:
+                        RECEIPT["failures"].append({"parser": name, "code": error.code})
+                    except Exception as error:
+                        RECEIPT["failures"].append({"parser": name, "code": "PARSER_ERROR",
+                                                    "type": type(error).__name__})
+                emit_bounded_evidence()
+                need(not RECEIPT["failures"], "REQUIRED_PARSER_FAILURE")
+                RECEIPT["status"] = "ORIGINAL_BYTES_VERIFIED"
+                RECEIPT["qualification"] = False
+                RECEIPT["limits"] = [
+                    "This job receives existing evidence only; it has no checkout and executes no repository product, tests or observers.",
+                    "The original execution used snapshot A with one original request overlay over source C14 S. No literal-S execution, performance qualification or final candidate qualification is inferred.",
+                    "UI42 failed at the first 60 s waiter; UI43/UI44 were not reached; case2 failed in localized BI06 acquisition. No cancellation cause is inferred.",
+                    "Pending exports or unsupported structures remain explicit; an artifact hash does not manufacture missing evidence.",
+                    "No credentials, headers, cookies, full signed URL, request/response body or raw error message is emitted by this reader.",
+                ]
+            
+            exit_code = 0
+            try:
+                main()
+            except ReceiptFailure as error:
+                exit_code = 1
+                RECEIPT["status"] = "RECEIPT_FAILED"
+                RECEIPT["failures"].append({"code": error.code})
+            except Exception as error:
+                exit_code = 1
+                RECEIPT["status"] = "RECEIPT_FAILED"
+                # Exception text/traceback can contain a signed URL; emit only the class.
+                RECEIPT["failures"].append({"code": "UNEXPECTED_READER_ERROR", "type": type(error).__name__})
+            finally:
+                RECEIPT["apiReads"] = API_COUNT
+                RECEIPT["archiveSummary"] = {
+                    "archives": len(ARCHIVES), "entries": TOTAL_ENTRIES,
+                    "crcVerified": sum(1 for row in FILES if row.get("crcVerified")),
+                    "expandedBytes": TOTAL_EXPANDED,
+                    "allEntriesVerified": bool(FILES) and all(row.get("crcVerified") is True for row in FILES),
+                }
+                ensure_inventory()
+                RECEIPT["readerExitCode"] = exit_code
+                RECEIPT["logBytesBeforeFinalReceipt"] = LOG_BYTES
+                receipt_raw = canonical(RECEIPT)
+                write_bytes(ROOT / "receipt.json", receipt_raw)
+                receipt_emitted = log_bytes_payload("receipt.json", receipt_raw, "application/json",
+                                                   False, reserve=4096, record=False)
+                final = {"schema": 1, "qualification": False, "status": RECEIPT["status"],
+                         "receiptBase64Complete": receipt_emitted,
+                         "receiptBytes": len(receipt_raw), "receiptSha256": digest(receipt_raw),
+                         "entries": TOTAL_ENTRIES, "crcVerified": RECEIPT["archiveSummary"]["crcVerified"],
+                         "expandedBytes": TOTAL_EXPANDED, "pending": len(RECEIPT["pending"]),
+                         "failures": RECEIPT["failures"], "readerExitCode": exit_code}
+                need(emit("SF613_ARTIFACT_RECEIPT", final), "FINAL_RECEIPT_LOG_CAP")
+            sys.exit(exit_code)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import os
+          import pathlib
+          
+          raw = os.environ.pop("SF613_ARTIFACT_READER_SOURCE").encode("utf-8")
+          expected = os.environ.pop("SF613_ARTIFACT_READER_SHA256")
+          if hashlib.sha256(raw).hexdigest() != expected:
+              raise RuntimeError("READER_SOURCE_SHA256_MISMATCH")
+          target = pathlib.Path(os.environ["RUNNER_TEMP"]).resolve() / "sf613-artifact-reader.py"
+          workspace = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+          if target == workspace or workspace in target.parents:
+              raise RuntimeError("READER_SOURCE_MUST_BE_OUTSIDE_WORKSPACE")
+          with target.open("xb") as handle:
+              handle.write(raw)
+          exec(compile(raw, str(target), "exec"),
+               {"__name__": "__main__", "__file__": str(target)})
+          PY
+
+      - name: Preserve original bytes and receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, same pin as original producer
+        with:
+          name: sf613-analytics-original-45997926983-receipt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf613-artifact-read
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7
