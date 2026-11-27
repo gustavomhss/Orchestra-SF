@@ -1,0 +1,1154 @@
+name: sf613-final-qualification
+
+# D25 parametric draft, not a frozen candidate. D adds only this workflow and the wrapper; checkout remains literal C613.
+# This workflow has no repository-write permission and retains D for audit after intake.
+on:
+  push:
+    branches:
+      - sf613-final-ci
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  qualification:
+    name: technical qualification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Initialize external evidence
+        id: evidence
+        run: |
+          node --input-type=module <<'SF613_NODE'
+          import fs from "node:fs"
+          import path from "node:path"
+          const run = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+          if (!/^[1-9]\d*$/.test(run ?? "") || !/^[1-9]\d*$/.test(attempt ?? "")) throw new Error("Invalid run/attempt")
+          const base = fs.realpathSync(process.env.RUNNER_TEMP)
+          const target = path.join(base, "sf613-final-" + run + "-" + attempt)
+          if (process.env.SF613_EVIDENCE !== undefined || /[\r\n]/.test(target)) throw new Error("Unexpected inherited evidence path")
+          const workspace = path.resolve(process.env.GITHUB_WORKSPACE)
+          if (target === workspace || target.startsWith(workspace + path.sep)) throw new Error("Evidence is inside checkout")
+          fs.mkdirSync(target, { mode: 0o700 })
+          const info = fs.lstatSync(target)
+          if (!info.isDirectory() || info.isSymbolicLink() || (info.mode & 0o777) !== 0o700) throw new Error("Unsafe evidence directory")
+          fs.writeFileSync(path.join(target, "bootstrap.json"), JSON.stringify({
+            schema: "sf613-final-evidence-bootstrap-v1", status: "NOT_EXECUTED",
+            driver: process.env.GITHUB_SHA, run, attempt, createdAt: new Date().toISOString(),
+            goLiveAcceptance: false
+          }, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          fs.appendFileSync(process.env.GITHUB_ENV, "SF613_EVIDENCE=" + target + "\n")
+          SF613_NODE
+
+      - name: Setup Node 24.15
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Checkout literal source C613
+        id: checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: __SF613_SOURCE_SHA__
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Bun from C613
+        uses: ./.github/actions/setup-bun
+        with:
+          reuse-node: "true"
+          save: "false"
+
+      - name: ripgrep
+        uses: ./.github/actions/ripgrep
+
+      - name: Linux sandbox dependencies
+        run: |
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
+          # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Configure git identity
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: omni binaries
+        uses: ./.github/actions/omni-binaries
+
+      - name: Run source-bound technical qualification
+        id: technical
+        timeout-minutes: 40
+        env:
+          SF613_API_TOKEN: ${{ github.token }}
+          # Derived transport digest: regenerate after substituting the four reviewed pins.
+          SF613_ENVELOPE_SHA256: "725bfb488579f6d7568200a60994cccbfb8738e0c23369cdb1600609717418cc"
+          SF613_ENVELOPE_SOURCE: |
+            import fs from "node:fs"
+            import * as fsp from "node:fs/promises"
+            import path from "node:path"
+            import { createHash, randomBytes } from "node:crypto"
+            import { spawn } from "node:child_process"
+            import { Transform, Writable } from "node:stream"
+            import { pipeline } from "node:stream/promises"
+            import { pathToFileURL } from "node:url"
+            
+            const SOURCE = "__SF613_SOURCE_SHA__"
+            const TREE = "__SF613_SOURCE_TREE__"
+            const WRAPPER_BLOB = "__SF613_WRAPPER_BLOB__"
+            const WRAPPER_SHA256 = "__SF613_WRAPPER_SHA256__"
+            const REPOSITORY = "gustavomhss/Orchestra-SF"
+            const BRANCH = "sf613-final-ci"
+            const WORKFLOW = ".github/workflows/sf613-final-qualification.yml"
+            const SLOT = "apps/cli/test/sf613-final-verification.test.ts"
+            const PRELOAD = "script/test-omni-control.ts"
+            const PRELOAD_BLOB = "643ad90a4606c2afd6c6c9aee389ca6389ab54e9"
+            const CLI_BUNFIG_BLOB = "b63db7a054a18092d613327093aaec2acba606b2"
+            const UI_BYTES = 390
+            const UI_SHA256 = "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2"
+            const TEST_TIMEOUT_MS = 35 * 60 * 1000
+            const COMMAND_TERM_GRACE_MS = 5000
+            const COMMAND_KILL_GRACE_MS = 5000
+            const STDIO_DRAIN_MS = 10000
+            const OPEN_EXCLUSIVE = fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_RDWR
+            const NOFOLLOW_READ = fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW
+            const started = performance.now()
+            const errors = []
+            const recordedErrors = new WeakSet()
+            const receipt = {
+              schema: "sf613-final-technical-literal-c-d25-r1",
+              status: "FAIL", technicalQualification: false, goLiveAcceptance: false,
+              source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+              run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+              requestUiChanged: null, sourceTreeChanged: null,
+              branchCleanup: { policy: "preserve D for audit; later removal requires an available authorized capability", performed: false },
+              commands: [], errors, startedAt: new Date().toISOString()
+            }
+            let evidence, checkout, testDirectory, testDirectoryFd, slotFd, slotIdentity, wrapperBytes
+            let baseline, rootDirectories, interrupted = false, activeStop
+            let commandSequence = 0
+            const sha256 = bytes => createHash("sha256").update(bytes).digest("hex")
+            const gitBlob = bytes => createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+            const need = (condition, message) => { if (!condition) throw new Error(message) }
+            const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+            async function within(promise, milliseconds) {
+              let timer
+              try { return await Promise.race([promise, new Promise(resolve => { timer = setTimeout(() => resolve(null), milliseconds) })]) }
+              finally { clearTimeout(timer) }
+            }
+            const statIdentity = stat => ({
+              dev: String(stat.dev), ino: String(stat.ino), nlink: String(stat.nlink),
+              mode: Number(stat.mode & 0o7777n), uid: String(stat.uid), size: String(stat.size)
+            })
+            const sameInode = (left, right) => left.dev === right.dev && left.ino === right.ino
+            function problem(stage, error) {
+              if (error && typeof error === "object") {
+                if (recordedErrors.has(error)) return
+                recordedErrors.add(error)
+              }
+              const value = { stage, message: error instanceof Error ? error.message : String(error) }
+              if (error && typeof error.code === "string") value.code = error.code
+              errors.push(value)
+              return value
+            }
+            function captureSignal(signal) {
+              if (!interrupted) problem("signal", new Error("Envelope received " + signal))
+              interrupted = true
+              activeStop?.("envelope-" + signal)
+            }
+            process.on("SIGTERM", () => captureSignal("SIGTERM"))
+            process.on("SIGINT", () => captureSignal("SIGINT"))
+            
+            function exclusiveFile(relative, bytes) {
+              need(evidence && !path.isAbsolute(relative) && !relative.split("/").includes(".."), "Invalid evidence path")
+              const target = path.join(evidence, relative)
+              const descriptor = fs.openSync(target, OPEN_EXCLUSIVE, 0o600)
+              try {
+                const st = fs.fstatSync(descriptor, { bigint: true })
+                need(st.isFile() && st.nlink === 1n && (st.mode & 0o777n) === 0o600n, "Evidence file identity mismatch")
+                fs.writeFileSync(descriptor, bytes)
+                fs.fsyncSync(descriptor)
+              } finally { fs.closeSync(descriptor) }
+              return { path: relative, bytes: bytes.length, sha256: sha256(bytes) }
+            }
+            function jsonFile(relative, value) {
+              return exclusiveFile(relative, Buffer.from(JSON.stringify(value, null, 2) + "\n"))
+            }
+            function absent(target) {
+              try { fs.lstatSync(target); return false }
+              catch (error) { if (error.code === "ENOENT") return true; throw error }
+            }
+            function directoryChain(target) {
+              const absolute = path.resolve(target)
+              const result = []
+              let current = path.parse(absolute).root
+              const components = absolute.slice(current.length).split(path.sep).filter(Boolean)
+              for (const part of ["", ...components]) {
+                if (part) current = path.join(current, part)
+                const st = fs.lstatSync(current, { bigint: true })
+                need(st.isDirectory() && !st.isSymbolicLink(), "Non-directory or symlink ancestor: " + current)
+                need(fs.realpathSync(current) === current, "Nonliteral directory ancestor: " + current)
+                result.push({ path: current, ...statIdentity(st) })
+              }
+              return result
+            }
+            function compareDirectories(original) {
+              const current = directoryChain(original.at(-1).path)
+              need(current.length === original.length && current.every((entry, index) =>
+                entry.path === original[index].path && sameInode(entry, original[index])),
+                "Checkout/slot directory identity drift")
+              return current
+            }
+            function readRegular(target, expectedSize) {
+              const descriptor = fs.openSync(target, NOFOLLOW_READ)
+              try {
+                const before = fs.fstatSync(descriptor, { bigint: true })
+                need(before.isFile() && before.nlink === 1n, "Non-regular or multiply linked file: " + target)
+                if (expectedSize !== undefined) need(before.size === BigInt(expectedSize), "Unexpected file size: " + target)
+                const bytes = fs.readFileSync(descriptor)
+                const after = fs.fstatSync(descriptor, { bigint: true })
+                need(sameInode(before, after) && before.size === after.size && BigInt(bytes.length) === after.size,
+                  "File changed while reading: " + target)
+                return { bytes, stat: statIdentity(after) }
+              } finally { fs.closeSync(descriptor) }
+            }
+            function groupAlive(pid) {
+              if (!Number.isInteger(pid) || pid <= 0) return false
+              try { process.kill(-pid, 0); return true }
+              catch (error) { if (error.code === "ESRCH") return false; throw error }
+            }
+            async function waitGroupGone(pid, milliseconds) {
+              const until = performance.now() + milliseconds
+              while (groupAlive(pid) && performance.now() < until) await sleep(50)
+              return !groupAlive(pid)
+            }
+            function processBirth(pid) {
+              try {
+                const stat = fs.readFileSync("/proc/" + pid + "/stat", "utf8")
+                const tail = stat.slice(stat.lastIndexOf(")") + 2).trim().split(/\s+/)
+                return { pid, group: Number(tail[2]), session: Number(tail[3]), starttime: tail[19],
+                  bootId: fs.readFileSync("/proc/sys/kernel/random/boot_id", "utf8").trim() }
+              } catch (error) { if (error.code === "ENOENT" || error.code === "ESRCH") return null; throw error }
+            }
+            async function fileDigest(filename) {
+              const hash = createHash("sha256")
+              let bytes = 0
+              for await (const chunk of fs.createReadStream(filename)) { bytes += chunk.length; hash.update(chunk) }
+              return { bytes, sha256: hash.digest("hex") }
+            }
+            async function captured(label, executable, args, options = {}) {
+              need(!interrupted, "Envelope interrupted before " + label)
+              const serial = String(++commandSequence).padStart(3, "0")
+              const prefix = serial + "-" + label.replace(/[^a-z0-9-]/gi, "-").toLowerCase()
+              const outName = prefix + ".stdout.bin", errName = prefix + ".stderr.bin"
+              const outFile = path.join(evidence, outName), errFile = path.join(evidence, errName)
+              const handles = []
+              const record = { label, executable, args, cwd: options.cwd ?? checkout, startedAt: new Date().toISOString(),
+                timeoutMs: options.timeoutMs ?? 30000, stopReasons: [], signals: [], captureErrors: [] }
+              receipt.commands.push(record)
+              let child, timeoutTimer, killTimer, exited = false, closed = false, stopRequested = false
+              const begin = performance.now()
+              const send = signal => {
+                if (!child?.pid) return
+                try {
+                  if (!groupAlive(child.pid)) return
+                  const current = processBirth(child.pid), expected = record.birth
+                  if (!current || !expected || current.pid !== expected.pid || current.group !== expected.group ||
+                    current.session !== expected.session || current.starttime !== expected.starttime || current.bootId !== expected.bootId) {
+                    record.captureErrors.push("Refused " + signal + " without the original process-birth identity")
+                    return
+                  }
+                  process.kill(-child.pid, signal); record.signals.push(signal)
+                } catch (error) { if (error.code !== "ESRCH") record.captureErrors.push("signal " + signal + ": " + error.message) }
+              }
+              const stop = reason => {
+                record.stopReasons.push(reason)
+                if (stopRequested) return
+                stopRequested = true
+                send("SIGTERM")
+                killTimer = setTimeout(() => send("SIGKILL"), COMMAND_TERM_GRACE_MS)
+              }
+              const pump = async (stream, handle, streamName) => {
+                const hash = createHash("sha256")
+                let bytes = 0
+                const tap = new Transform({ transform(chunk, encoding, callback) {
+                  bytes += chunk.length; hash.update(chunk); callback(null, chunk)
+                } })
+                let pending = Promise.resolve()
+                const sink = new Writable({
+                  write(chunk, encoding, callback) {
+                    pending = (async () => {
+                      let offset = 0
+                      while (offset < chunk.length) {
+                        const result = await handle.write(chunk, offset, chunk.length - offset, null)
+                        need(result.bytesWritten > 0, "Zero-byte evidence write")
+                        offset += result.bytesWritten
+                      }
+                    })()
+                    pending.then(() => callback(), callback)
+                  },
+                  final(callback) {
+                    pending = handle.sync()
+                    pending.then(() => callback(), callback)
+                  },
+                  destroy(error, callback) {
+                    // This stream never owns/closes the descriptor; finish outstanding I/O first.
+                    pending.then(() => callback(error), writeError => callback(error ?? writeError))
+                  }
+                })
+                try {
+                  await pipeline(stream, tap, sink)
+                  return { bytes, sha256: hash.digest("hex"), complete: true }
+                } catch (error) {
+                  record.captureErrors.push(streamName + ": " + error.message)
+                  problem(label + ":" + streamName, error)
+                  stop("capture-error")
+                  return { bytes, sha256: hash.digest("hex"), complete: false }
+                }
+              }
+              try {
+                handles.push(await fsp.open(outFile, OPEN_EXCLUSIVE, 0o600))
+                handles.push(await fsp.open(errFile, OPEN_EXCLUSIVE, 0o600))
+                const childEnv = { ...process.env, ...options.env }
+                delete childEnv.SF613_API_TOKEN
+                delete childEnv.SF613_EVIDENCE
+                delete childEnv.GH_TOKEN
+                delete childEnv.GITHUB_TOKEN
+                child = spawn(executable, args, { cwd: record.cwd, env: childEnv, detached: true,
+                  shell: false, stdio: ["ignore", "pipe", "pipe"] })
+                record.pid = child.pid ?? null
+                activeStop = stop
+                const closePromise = new Promise(resolve => child.once("close", () => { closed = true; resolve() }))
+                const exitPromise = new Promise(resolve => {
+                  child.once("error", error => { record.spawnError = error.message; problem(label + ":spawn", error); exited = true; resolve() })
+                  child.once("exit", (code, signal) => { record.exitCode = code; record.exitSignal = signal; exited = true; resolve() })
+                })
+                record.birth = child.pid ? processBirth(child.pid) : null
+                if (record.birth) {
+                  need(record.birth.group === child.pid && record.birth.session === child.pid, "Child does not own its new process group")
+                  jsonFile(prefix + ".process-start.json", { source: SOURCE, driver: process.env.GITHUB_SHA,
+                    run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, birth: record.birth, label })
+                }
+                if (options.requireBirth) need(record.birth, "Original Bun process birth could not be recorded")
+                const pumps = [pump(child.stdout, handles[0], "stdout"), pump(child.stderr, handles[1], "stderr")]
+                timeoutTimer = setTimeout(() => stop("timeout"), record.timeoutMs)
+                await within(exitPromise, record.timeoutMs + COMMAND_TERM_GRACE_MS + COMMAND_KILL_GRACE_MS)
+                if (!exited) { stop("exit-not-observed"); send("SIGKILL"); record.captureErrors.push("Process exit was not observed") }
+                if (exited && !record.spawnError && (!(options.acceptedExitCodes ?? [0]).includes(record.exitCode) || record.exitSignal !== null))
+                  problem(label + ":original-exit", new Error("Original process exitCode=" + record.exitCode + " signal=" + record.exitSignal))
+                let drains = await within(Promise.all(pumps), STDIO_DRAIN_MS)
+                if (!drains) {
+                  stop("stdio-drain-timeout"); send("SIGKILL")
+                  drains = await within(Promise.all(pumps), COMMAND_KILL_GRACE_MS)
+                }
+                if (!drains) {
+                  child.stdout.destroy(new Error("Evidence drain deadline"))
+                  child.stderr.destroy(new Error("Evidence drain deadline"))
+                  drains = await Promise.all(pumps)
+                }
+                await within(closePromise, COMMAND_KILL_GRACE_MS)
+                need(closed, "Original process close was not observed")
+                if (groupAlive(child.pid) && !await waitGroupGone(child.pid, 1000)) {
+                  stop("remaining-process-group")
+                  if (!await waitGroupGone(child.pid, COMMAND_TERM_GRACE_MS)) send("SIGKILL")
+                  need(await waitGroupGone(child.pid, COMMAND_KILL_GRACE_MS), "Process group did not finalize: " + label)
+                }
+                for (const handle of handles) await handle.sync()
+                record.stdout = { path: outName, ...await fileDigest(outFile), observed: drains[0] }
+                record.stderr = { path: errName, ...await fileDigest(errFile), observed: drains[1] }
+                for (const stream of [record.stdout, record.stderr]) need(stream.observed.complete &&
+                  stream.bytes === stream.observed.bytes && stream.sha256 === stream.observed.sha256, "Incomplete evidence capture: " + label)
+                need(exited && !record.spawnError && record.captureErrors.length === 0 && record.stopReasons.length === 0,
+                  "Process or capture did not complete normally: " + label)
+                return record
+              } catch (error) {
+                problem(label, error)
+                throw error
+              } finally {
+                clearTimeout(timeoutTimer); clearTimeout(killTimer)
+                activeStop = undefined
+                try {
+                  if (child?.pid && groupAlive(child.pid)) {
+                    send("SIGKILL")
+                    if (!await waitGroupGone(child.pid, COMMAND_KILL_GRACE_MS)) problem(label + ":cleanup", new Error("Process group remains"))
+                  }
+                } catch (error) { problem(label + ":process-cleanup", error) }
+                for (const handle of handles) {
+                  try { await handle.sync() } catch (error) { problem(label + ":flush", error) }
+                  try { await handle.close() } catch (error) { problem(label + ":close", error) }
+                }
+                record.durationMs = Math.round(performance.now() - begin)
+                record.finishedAt = new Date().toISOString()
+                if (evidence) {
+                  try { jsonFile(prefix + ".process-finished.json", record) }
+                  catch (error) { problem(label + ":process-receipt", error) }
+                }
+              }
+            }
+            async function git(label, args, accepted = [0]) {
+              const record = await captured(label, "git", args, { env: { GIT_OPTIONAL_LOCKS: "0" }, acceptedExitCodes: accepted })
+              need(accepted.includes(record.exitCode) && record.exitSignal === null, "Git exit status: " + label)
+              return { bytes: fs.readFileSync(path.join(evidence, record.stdout.path)), record }
+            }
+            const asText = bytes => new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+            
+            async function api(endpoint) {
+              const token = process.env.SF613_API_TOKEN
+              need(typeof token === "string" && token.length > 0, "Read-only Actions API token is unavailable")
+              const response = await fetch("https://api.github.com/repos/" + REPOSITORY + endpoint, {
+                headers: { Accept: "application/vnd.github+json", Authorization: "Bearer " + token,
+                  "X-GitHub-Api-Version": "2022-11-28" },
+                signal: AbortSignal.timeout(10000), redirect: "error"
+              })
+              need(response.status === 200, "GitHub read failed: " + endpoint + " HTTP " + response.status)
+              return await response.json()
+            }
+            async function observedActions(stage) {
+              const id = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT, driver = process.env.GITHUB_SHA
+              const run = await api("/actions/runs/" + id + "/attempts/" + attempt)
+              need(String(run.id) === id && String(run.run_attempt) === attempt && run.head_sha === driver &&
+                run.head_branch === BRANCH && run.event === "push" && run.path === WORKFLOW &&
+                run.repository?.full_name === REPOSITORY && run.head_repository?.full_name === REPOSITORY &&
+                run.actor?.login === process.env.GITHUB_ACTOR && String(run.actor?.id) === process.env.GITHUB_ACTOR_ID &&
+                run.triggering_actor?.login === process.env.GITHUB_TRIGGERING_ACTOR, "Actual Actions run does not bind D/path/event/repository/actor")
+              need(run.status === "in_progress" && run.conclusion === null, "Actions run is not the active attempt")
+              const workflow = await api("/actions/workflows/" + run.workflow_id)
+              need(workflow.path === WORKFLOW && workflow.state === "active", "Actual Actions workflow path/state mismatch")
+              const listing = await api("/actions/runs/" + id + "/attempts/" + attempt + "/jobs?per_page=100")
+              need(listing.total_count === 1 && listing.jobs.length === 1, "Unexpected job inventory")
+              const job = listing.jobs[0]
+              need(String(job.run_id) === id && job.head_sha === driver && job.name === "technical qualification" &&
+                job.status === "in_progress" && job.conclusion === null && job.runner_id > 0 &&
+                job.runner_name === process.env.RUNNER_NAME &&
+                Array.isArray(job.labels) && job.labels.length === 1 && job.labels[0] === "ubuntu-24.04",
+                "Actual job or runner assignment mismatch")
+              const current = await api("/git/ref/heads/" + BRANCH)
+              need(current.ref === "refs/heads/" + BRANCH && current.object?.type === "commit" && current.object.sha === driver,
+                "Current qualification ref no longer identifies D")
+              const value = { stage, observedAt: new Date().toISOString(),
+                run: { id: run.id, attempt: run.run_attempt, event: run.event, headSha: run.head_sha,
+                  headBranch: run.head_branch, path: run.path, workflowId: run.workflow_id, status: run.status,
+                  actor: { login: run.actor.login, id: run.actor.id }, triggeringActor: run.triggering_actor.login },
+                job: { id: job.id, name: job.name, status: job.status, runnerId: job.runner_id,
+                  runnerName: job.runner_name, runnerGroupId: job.runner_group_id, runnerGroupName: job.runner_group_name, labels: job.labels },
+                currentRef: { ref: current.ref, sha: current.object.sha } }
+              jsonFile("actions-" + stage + ".json", value)
+              return value
+            }
+            async function observeCheckout(stage, expectedSlot) {
+              compareDirectories(rootDirectories)
+              const head = asText((await git(stage + "-head", ["rev-parse", "HEAD"])).bytes).trim()
+              const tree = asText((await git(stage + "-tree", ["rev-parse", "HEAD^{tree}"])).bytes).trim()
+              need(head === SOURCE && tree === TREE, "Literal checkout C/T drift")
+              const symbolic = await git(stage + "-detached", ["symbolic-ref", "-q", "HEAD"], [0, 1])
+              need(symbolic.record.exitCode === 1 && symbolic.bytes.length === 0, "Checkout must remain detached at C")
+              const index = (await git(stage + "-whole-index", ["ls-files", "--stage", "-z"])).bytes
+              const tracked = (await git(stage + "-tracked", ["diff", "--no-ext-diff", "--no-textconv", "--exit-code"])).bytes
+              const staged = (await git(stage + "-staged", ["diff", "--cached", "--no-ext-diff", "--no-textconv", "--exit-code"])).bytes
+              need(tracked.length === 0 && staged.length === 0, "Tracked or staged bytes changed")
+              const status = (await git(stage + "-status", ["status", "--porcelain=v1", "--untracked-files=all", "-z"])).bytes
+              const expected = expectedSlot ? Buffer.from("?? " + SLOT + "\0") : Buffer.alloc(0)
+              need(status.equals(expected), "Unexpected tracked/untracked worktree status")
+              const ui = readRegular(path.join(checkout, ".ci-run.json"), UI_BYTES)
+              need(sha256(ui.bytes) === UI_SHA256, "Original UI request bytes changed")
+              if (baseline) {
+                need(index.equals(baseline.index), "Whole index entries changed")
+                need(ui.bytes.equals(baseline.ui), "Original UI request no longer equals before")
+              }
+              const result = { stage, observedAt: new Date().toISOString(), head, tree,
+                detached: true, indexBytes: index.length, indexSha256: sha256(index),
+                statusBytes: status.length, statusSha256: sha256(status),
+                expectedUntracked: expectedSlot ? [SLOT] : [],
+                ui: { bytes: ui.bytes.length, sha256: sha256(ui.bytes), gitBlob: gitBlob(ui.bytes) } }
+              jsonFile("checkout-" + stage + ".json", result)
+              return { index, ui: ui.bytes, result }
+            }
+            function slotAnchor() {
+              need(Number.isInteger(testDirectoryFd), "No retained slot directory")
+              return "/proc/self/fd/" + testDirectoryFd + "/" + path.basename(SLOT)
+            }
+            function inspectOwnedSlot() {
+              need(Number.isInteger(slotFd) && slotIdentity, "No owned slot")
+              compareDirectories(rootDirectories)
+              const parent = statIdentity(fs.fstatSync(testDirectoryFd, { bigint: true }))
+              need(sameInode(parent, rootDirectories.at(-1)), "Retained slot parent drift")
+              const name = slotAnchor()
+              const byName = fs.lstatSync(name, { bigint: true })
+              const byFd = fs.fstatSync(slotFd, { bigint: true })
+              need(byName.isFile() && !byName.isSymbolicLink() && byFd.isFile() &&
+                sameInode(statIdentity(byName), slotIdentity) && sameInode(statIdentity(byFd), slotIdentity) &&
+                byName.nlink === 1n && byFd.nlink === 1n && (byFd.mode & 0o777n) === 0o600n,
+                "Owned slot inode/type/link/mode drift")
+              need(byFd.size === BigInt(wrapperBytes.length), "Owned slot size drift")
+              const bytes = Buffer.alloc(wrapperBytes.length)
+              let offset = 0
+              while (offset < bytes.length) {
+                const count = fs.readSync(slotFd, bytes, offset, bytes.length - offset, offset)
+                need(count > 0, "Short owned slot read")
+                offset += count
+              }
+              need(sha256(bytes) === WRAPPER_SHA256 && gitBlob(bytes) === WRAPPER_BLOB && bytes.equals(wrapperBytes),
+                "Owned slot content drift")
+              const finalName = fs.lstatSync(name, { bigint: true })
+              need(sameInode(statIdentity(finalName), slotIdentity) && finalName.nlink === 1n, "Owned slot path changed during inspection")
+              return { ...statIdentity(finalName), sha256: sha256(bytes), gitBlob: gitBlob(bytes) }
+            }
+            function createOwnedSlot() {
+              const target = path.join(checkout, SLOT)
+              need(absent(target), "Slot already exists in the worktree")
+              compareDirectories(rootDirectories)
+              testDirectoryFd = fs.openSync(testDirectory, fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW)
+              const parent = statIdentity(fs.fstatSync(testDirectoryFd, { bigint: true }))
+              need(sameInode(parent, rootDirectories.at(-1)), "Slot parent changed before creation")
+              const descriptor = fs.openSync(slotAnchor(), OPEN_EXCLUSIVE, 0o600)
+              slotFd = descriptor
+              const st = fs.fstatSync(descriptor, { bigint: true })
+              slotIdentity = statIdentity(st)
+              need(st.isFile() && st.nlink === 1n && (st.mode & 0o777n) === 0o600n &&
+                st.uid === BigInt(process.getuid()), "Exclusive slot identity/mode mismatch")
+              fs.writeFileSync(descriptor, wrapperBytes)
+              fs.fsyncSync(descriptor)
+              receipt.slot = { path: SLOT, tracked: false, creation: "O_CREAT|O_EXCL|O_NOFOLLOW,0600; retained parent descriptor",
+                before: inspectOwnedSlot(), cleanup: "pending" }
+              jsonFile("slot-created.json", { source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+                run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, ...receipt.slot })
+            }
+            function cleanupOwnedSlot() {
+              if (!Number.isInteger(slotFd)) return
+              try {
+                const own = inspectOwnedSlot()
+                // No await or user callback separates the final inode check and unlink.
+                const current = fs.lstatSync(slotAnchor(), { bigint: true })
+                need(sameInode(statIdentity(current), slotIdentity) && current.isFile() && current.nlink === 1n,
+                  "Refuse to unlink a slot not owned by this envelope")
+                fs.unlinkSync(slotAnchor())
+                need(absent(path.join(checkout, SLOT)), "Slot path still exists after unlink")
+                receipt.slot ??= { path: SLOT, tracked: false }
+                receipt.slot.after = own
+                receipt.slot.cleanup = "removed-own-inode"
+              } catch (error) {
+                receipt.slot ??= { path: SLOT, tracked: false }
+                receipt.slot.cleanup = "refused-or-failed; no foreign slot removal"
+                problem("slot-cleanup", error)
+              } finally {
+                try { fs.closeSync(slotFd) } catch (error) { problem("slot-fd-close", error) }
+                slotFd = undefined
+              }
+            }
+            async function resolveBun() {
+              for (const folder of (process.env.PATH ?? "").split(path.delimiter)) {
+                if (!path.isAbsolute(folder)) continue
+                const candidate = path.join(folder, "bun")
+                try {
+                  await fsp.access(candidate, fs.constants.X_OK)
+                  const actual = fs.realpathSync(candidate)
+                  need(fs.statSync(actual).isFile(), "Bun executable is not a file")
+                  return actual
+                } catch (error) { if (error.code !== "ENOENT" && error.code !== "EACCES") throw error }
+              }
+              throw new Error("Prepared Bun executable is unavailable")
+            }
+            function parseResult(processRecord, nonce) {
+              need(processRecord.exitCode === 0 && processRecord.exitSignal === null, "Original Bun process failed")
+              const stdout = asText(fs.readFileSync(path.join(evidence, processRecord.stdout.path)))
+              const stderr = asText(fs.readFileSync(path.join(evidence, processRecord.stderr.path)))
+              const strip = value => value.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "")
+              const outLines = strip(stdout).split(/\r?\n/), errLines = strip(stderr).split(/\r?\n/)
+              const summaries = pattern => errLines.map(line => line.match(pattern)).filter(Boolean)
+              const passes = summaries(/^\s*(\d+) pass\s*$/), failures = summaries(/^\s*(\d+) fail\s*$/)
+              const skips = summaries(/^\s*(\d+) skip\s*$/)
+              need(passes.length === 1 && Number(passes[0][1]) === 25 &&
+                failures.length === 1 && Number(failures[0][1]) === 0 &&
+                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), "Outer Bun summary is not 25 PASS/0 FAIL/0 SKIP")
+              need(errLines.filter(line => /^\(pass\) /.test(line)).length === 25 &&
+                !errLines.some(line => /^\((fail|skip|todo)\) /.test(line)), "Outer case result inventory mismatch")
+              const ran = summaries(/^Ran 25 tests across 1 file\./)
+              need(ran.length === 1, "Outer Bun declaration/file count mismatch")
+              const tag = "omni positive control [" + nonce + "]:"
+              const footers = outLines.filter(line => line.includes(tag))
+              need(footers.length === 1, "Expected exactly one nonce-bound outer Omni verdict")
+              const prefix = tag + " pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "
+              need(footers[0].startsWith(prefix), "Outer Omni declaration/file identity mismatch")
+              const counts = footers[0].slice(prefix.length).match(/^([1-9]\d*) omni spawn\(s\), 0 delegated\.$/)
+              need(counts && Number.isSafeInteger(Number(counts[1])), "Outer Omni did not prove own spawns without delegation")
+              const headers = errLines.filter(line => /^bun test v/.test(line))
+              need(headers.length === 1, "Actual Bun header missing or ambiguous")
+              return { pass: 25, fail: 0, skip: 0, declarations: 25, actualHeader: headers[0],
+                omni: { nonce, declared: 25, spawns: Number(counts[1]), delegated: 0, footer: footers[0],
+                  nestedChildrenAddedToOuterCount: false },
+                summaryOrigin: "original outer stderr", omniOrigin: "original outer stdout" }
+            }
+            
+            try {
+              need(process.platform === "linux" && /^24\.15\.\d+$/.test(process.versions.node), "Node 24.15.x on Linux is required")
+              need(process.env.CI === "true" && process.env.GITHUB_ACTIONS === "true" &&
+                process.env.RUNNER_OS === "Linux" && process.env.RUNNER_ARCH === "X64" &&
+                process.env.RUNNER_ENVIRONMENT === "github-hosted", "Actual hosted Linux Actions context is required")
+              need(process.env.GITHUB_REPOSITORY === REPOSITORY && process.env.GITHUB_EVENT_NAME === "push" &&
+                process.env.GITHUB_REF === "refs/heads/" + BRANCH && process.env.GITHUB_REF_NAME === BRANCH &&
+                process.env.GITHUB_REF_TYPE === "branch" && process.env.GITHUB_JOB === "qualification" &&
+                process.env.GITHUB_SERVER_URL === "https://github.com" && process.env.GITHUB_API_URL === "https://api.github.com",
+                "Repository/event/ref/job context mismatch")
+              need(/^[a-f0-9]{40}$/.test(SOURCE) && /^[a-f0-9]{40}$/.test(TREE) &&
+                /^[a-f0-9]{40}$/.test(WRAPPER_BLOB) && /^[a-f0-9]{64}$/.test(WRAPPER_SHA256), "Unresolved or invalid reviewed source/wrapper pins")
+              const driver = process.env.GITHUB_SHA
+              need(/^[a-f0-9]{40}$/.test(driver ?? "") && driver !== SOURCE &&
+                process.env.GITHUB_WORKFLOW_SHA === driver &&
+                process.env.GITHUB_WORKFLOW_REF === REPOSITORY + "/" + WORKFLOW + "@refs/heads/" + BRANCH,
+                "The actual Actions workflow/driver SHA must remain D")
+              need(/^[1-9]\d*$/.test(process.env.GITHUB_RUN_ID ?? "") &&
+                /^[1-9]\d*$/.test(process.env.GITHUB_RUN_ATTEMPT ?? ""), "Run and attempt are required")
+              need(process.env.ORCHESTRA_OMNI_CONTROL_RUN === undefined &&
+                process.env.ORCHESTRA_OMNI_CONTROL_NONCE === undefined, "Inherited outer Omni control state is forbidden")
+              const runnerTemp = fs.realpathSync(process.env.RUNNER_TEMP)
+              const expectedEvidence = path.join(runnerTemp, "sf613-final-" + process.env.GITHUB_RUN_ID + "-" + process.env.GITHUB_RUN_ATTEMPT)
+              const evidenceCandidate = fs.realpathSync(process.env.SF613_EVIDENCE)
+              need(evidenceCandidate === expectedEvidence, "Unexpected evidence directory")
+              const evidenceStat = fs.lstatSync(evidenceCandidate, { bigint: true })
+              need(evidenceStat.isDirectory() && !evidenceStat.isSymbolicLink() &&
+                evidenceStat.uid === BigInt(process.getuid()) && (evidenceStat.mode & 0o777n) === 0o700n, "Evidence directory ownership or mode mismatch")
+              const bootstrap = JSON.parse(asText(readRegular(path.join(evidenceCandidate, "bootstrap.json")).bytes))
+              need(bootstrap.schema === "sf613-final-evidence-bootstrap-v1" && bootstrap.driver === driver &&
+                bootstrap.run === process.env.GITHUB_RUN_ID && bootstrap.attempt === process.env.GITHUB_RUN_ATTEMPT,
+                "Evidence bootstrap belongs to another run")
+              checkout = fs.realpathSync(process.env.GITHUB_WORKSPACE)
+              need(checkout === path.resolve(process.env.GITHUB_WORKSPACE), "Checkout root is not literal")
+              need(evidenceCandidate !== checkout && !evidenceCandidate.startsWith(checkout + path.sep) && !checkout.startsWith(evidenceCandidate + path.sep),
+                "Evidence must be outside the checkout")
+              evidence = evidenceCandidate
+              need(fs.realpathSync(process.cwd()) === checkout, "Envelope working directory is not the checkout")
+              testDirectory = path.join(checkout, path.dirname(SLOT))
+              rootDirectories = directoryChain(testDirectory)
+              const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"))
+              need(event.ref === "refs/heads/" + BRANCH && event.after === driver && event.deleted === false &&
+                event.repository?.full_name === REPOSITORY, "Original push payload does not bind D")
+              receipt.environment = { node: process.versions.node, platform: process.platform, arch: process.arch,
+                repository: process.env.GITHUB_REPOSITORY, event: process.env.GITHUB_EVENT_NAME,
+                ref: process.env.GITHUB_REF, workflowRef: process.env.GITHUB_WORKFLOW_REF,
+                workflowSha: process.env.GITHUB_WORKFLOW_SHA, actualGithubSha: driver,
+                runnerOs: process.env.RUNNER_OS, runnerArch: process.env.RUNNER_ARCH, runnerName: process.env.RUNNER_NAME }
+              receipt.directories = rootDirectories
+              jsonFile("envelope-started.json", { ...receipt, commands: [], errors: [] })
+              receipt.actionsBefore = await observedActions("before")
+            
+              const origin = asText((await git("origin-url", ["remote", "get-url", "origin"])).bytes).trim().replace(/\.git$/, "")
+              need(origin === "https://github.com/" + REPOSITORY, "Unexpected origin remote")
+              await captured("fetch-reviewed-driver", "git", ["fetch", "--no-tags", "--depth=2", "origin", driver],
+                { timeoutMs: 60000, env: { GIT_OPTIONAL_LOCKS: "0" } }).then(record => need(record.exitCode === 0 && record.exitSignal === null, "Could not fetch D"))
+              const driverIdentity = asText((await git("driver-identity", ["show", "-s", "--format=%H%n%P%n%T", driver])).bytes).trim().split("\n")
+              need(driverIdentity.length === 3 && driverIdentity[0] === driver && driverIdentity[1] === SOURCE &&
+                /^[a-f0-9]{40}$/.test(driverIdentity[2]), "D must be the sole child of C")
+              receipt.driverTree = driverIdentity[2]
+              const changes = asText((await git("driver-exact-two-additions",
+                ["diff-tree", "--no-commit-id", "--name-status", "-r", "-z", SOURCE, driver])).bytes).split("\0")
+              need(changes.pop() === "" && changes.length === 4 &&
+                changes[0] === "A" && changes[2] === "A" &&
+                JSON.stringify([changes[1], changes[3]].sort()) === JSON.stringify([WORKFLOW, SLOT].sort()),
+                "D must add exactly the workflow and wrapper, with no source changes")
+              const sourceSlot = (await git("slot-absent-in-source", ["ls-tree", "-z", SOURCE, "--", SLOT])).bytes
+              const sourceWorkflow = (await git("workflow-absent-in-source", ["ls-tree", "-z", SOURCE, "--", WORKFLOW])).bytes
+              const indexSlot = (await git("slot-absent-in-index", ["ls-files", "--stage", "-z", "--", SLOT])).bytes
+              need(sourceSlot.length === 0 && sourceWorkflow.length === 0 && indexSlot.length === 0 &&
+                absent(path.join(checkout, SLOT)), "The driver paths must be new; the slot must be absent from C/index/worktree")
+              const observedWrapperBlob = asText((await git("wrapper-blob-in-driver", ["rev-parse", driver + ":" + SLOT])).bytes).trim()
+              need(observedWrapperBlob === WRAPPER_BLOB, "The driver wrapper blob is not the reviewed pin")
+              wrapperBytes = (await git("extract-reviewed-wrapper", ["cat-file", "blob", WRAPPER_BLOB])).bytes
+              need(gitBlob(wrapperBytes) === WRAPPER_BLOB && sha256(wrapperBytes) === WRAPPER_SHA256,
+                "Extracted wrapper bytes do not equal both reviewed pins")
+              receipt.wrapper = { path: SLOT, bytes: wrapperBytes.length, gitBlob: WRAPPER_BLOB, sha256: WRAPPER_SHA256,
+                origin: "immutable Git blob in D", materialization: "exclusive untracked harness slot at literal C" }
+              exclusiveFile("wrapper-from-driver.ts", wrapperBytes)
+              const workflowBytes = (await git("workflow-from-driver", ["show", driver + ":" + WORKFLOW])).bytes
+              receipt.workflow = { path: WORKFLOW, gitBlob: gitBlob(workflowBytes), sha256: sha256(workflowBytes), bytes: workflowBytes.length }
+              exclusiveFile("workflow-from-driver.yml", workflowBytes)
+              const preload = readRegular(path.join(checkout, PRELOAD))
+              const cliBunfig = readRegular(path.join(checkout, "apps/cli/bunfig.toml"))
+              need(gitBlob(preload.bytes) === PRELOAD_BLOB && gitBlob(cliBunfig.bytes) === CLI_BUNFIG_BLOB,
+                "Original CLI bunfig/Omni preload bytes changed")
+              receipt.preload = { path: PRELOAD, gitBlob: PRELOAD_BLOB, sha256: sha256(preload.bytes), bytes: preload.bytes.length }
+              receipt.cliBunfig = { gitBlob: CLI_BUNFIG_BLOB, bytes: cliBunfig.bytes.length, sha256: sha256(cliBunfig.bytes) }
+              baseline = await observeCheckout("before", false)
+              createOwnedSlot()
+            
+              const { validateRequest, omniControlScope, controlVerdict } = await import(pathToFileURL(path.join(checkout, "script/test-ci-request.ts")).href)
+              const { locateTestPackage } = await import(pathToFileURL(path.join(checkout, "script/test-ci-location.ts")).href)
+              const requested = { package: "cli", directory: "apps/cli", packageSelector: "@orchestra/cli",
+                runner: "bun", args: ["./test/sf613-final-verification.test.ts", "--timeout", "600000"],
+                env: { ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "strict", ORCHESTRA_CHANNEL: "prod" } }
+              const request = validateRequest(requested,
+                file => {
+                  const absolute = path.resolve(checkout, file)
+                  if (absolute === path.join(checkout, SLOT)) {
+                    try { inspectOwnedSlot(); return fs.realpathSync(absolute) === absolute } catch { return false }
+                  }
+                  if (absolute === path.join(checkout, "apps/cli/package.json")) {
+                    try { readRegular(absolute); return fs.realpathSync(absolute) === absolute } catch { return false }
+                  }
+                  return false
+                },
+                selector => locateTestPackage(checkout, selector))
+              need(JSON.stringify(request) === JSON.stringify(requested) && omniControlScope(request) === "declared",
+                "Canonical request validator changed the closed technical request")
+              jsonFile("technical-request.json", { request, origin: "driver contract in memory", sourceUiRequestUntouched: true,
+                checkout: SOURCE, driver, omniControl: "declared" })
+              const nonce = randomBytes(16).toString("hex")
+              receipt.controlNonce = nonce
+              const bun = await resolveBun()
+              const packageManager = JSON.parse(asText(readRegular(path.join(checkout, "package.json")).bytes)).packageManager
+              need(/^bun@\d+\.\d+\.\d+$/.test(packageManager), "Source packageManager is not an exact Bun version")
+              receipt.toolchain = { executable: bun, sourcePackageManager: packageManager }
+              receipt.slot.beforeExecution = inspectOwnedSlot()
+              await observeCheckout("slot-before-execution", true)
+              need(performance.now() - started < 3 * 60 * 1000, "Preflight exhausted the reserved execution/finalization window")
+              const nonceLine = Buffer.from("omni control nonce: " + nonce + "\n")
+              receipt.nonceObservation = exclusiveFile("omni-control-nonce.stdout.bin", nonceLine)
+              await new Promise((resolve, reject) => process.stdout.write(nonceLine, error => error ? reject(error) : resolve()))
+              receipt.nonceObservation.emittedBeforeBun = true
+              const execution = await captured("technical-outer-bun", bun, ["test", ...request.args], {
+                cwd: path.join(checkout, "apps/cli"), timeoutMs: TEST_TIMEOUT_MS, requireBirth: true,
+                env: { GITHUB_ACTIONS: "false", CI: "true", ORCHESTRA_CHANNEL: "prod",
+                  ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "strict", ORCHESTRA_OMNI_CONTROL: "declared",
+                  ORCHESTRA_OMNI_CONTROL_NONCE: nonce, ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: "false" }
+              })
+              receipt.execution = execution
+              receipt.result = parseResult(execution, nonce)
+              // This derived input is an unordered stream-set adapter, not a reconstructed job timeline.
+              // Its only generated bytes are necessary LF boundaries; no step names or timestamps are invented.
+              const segments = [], chunks = []
+              let inputBytes = 0, lastByte
+              for (const original of [
+                { origin: "literal nonce line emitted before Bun", file: receipt.nonceObservation },
+                { origin: "complete original outer stdout", file: execution.stdout },
+                { origin: "complete original outer stderr", file: execution.stderr },
+              ]) {
+                const bytes = fs.readFileSync(path.join(evidence, original.file.path))
+                need(bytes.length === original.file.bytes && sha256(bytes) === original.file.sha256, "Omni input original changed")
+                if (bytes.length && inputBytes && lastByte !== 10) {
+                  chunks.push(Buffer.from("\n"))
+                  segments.push({ kind: "necessary-line-boundary", offset: inputBytes, bytes: 1 })
+                  inputBytes++
+                  lastByte = 10
+                }
+                segments.push({ kind: "original", origin: original.origin, path: original.file.path,
+                  offset: inputBytes, bytes: bytes.length, sha256: sha256(bytes) })
+                chunks.push(bytes)
+                inputBytes += bytes.length
+                if (bytes.length) lastByte = bytes.at(-1)
+              }
+              const canonicalInput = Buffer.concat(chunks)
+              const canonicalInputFile = exclusiveFile("omni-control-verdict-input.txt", canonicalInput)
+              jsonFile("omni-control-verdict-input.json", { schema: "sf613-original-control-verdict-input-v1",
+                chronologyClaimed: false, syntheticSteps: false, segments, input: canonicalInputFile })
+              const originalVerdict = controlVerdict({ name: receipt.actionsBefore.job.name }, asText(canonicalInput))
+              need(originalVerdict.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "),
+                "Original C controlVerdict did not accept the observed outer control")
+              receipt.originalOmniVerdict = { sourcePath: "script/test-ci-request.ts", function: "controlVerdict",
+                source: SOURCE, verdict: originalVerdict, input: canonicalInputFile, chronologyClaimed: false, segments }
+              need(receipt.result.actualHeader.startsWith("bun test v" + packageManager.slice(4) + " ("),
+                "Actual Bun test version does not match C's packageManager")
+              receipt.toolchain.actualHeader = receipt.result.actualHeader
+            } catch (error) {
+              problem("qualification", error)
+            } finally {
+              if (!evidence) {
+                // Preserve a FAIL receipt for a pre-slot failure, but only in this run's safe bootstrap directory.
+                try {
+                  const run = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+                  need(/^[1-9]\d*$/.test(run ?? "") && /^[1-9]\d*$/.test(attempt ?? ""), "Invalid fallback evidence run/attempt")
+                  const candidate = fs.realpathSync(process.env.SF613_EVIDENCE)
+                  const expected = path.join(fs.realpathSync(process.env.RUNNER_TEMP), "sf613-final-" + run + "-" + attempt)
+                  const workspace = fs.realpathSync(process.env.GITHUB_WORKSPACE)
+                  need(candidate === expected && candidate !== workspace && !candidate.startsWith(workspace + path.sep) &&
+                    !workspace.startsWith(candidate + path.sep), "Unsafe fallback evidence location")
+                  const st = fs.lstatSync(candidate, { bigint: true })
+                  need(st.isDirectory() && !st.isSymbolicLink() && st.uid === BigInt(process.getuid()) &&
+                    (st.mode & 0o777n) === 0o700n, "Unsafe fallback evidence directory")
+                  const bootstrap = JSON.parse(asText(readRegular(path.join(candidate, "bootstrap.json")).bytes))
+                  need(bootstrap.schema === "sf613-final-evidence-bootstrap-v1" && bootstrap.driver === process.env.GITHUB_SHA &&
+                    bootstrap.run === run && bootstrap.attempt === attempt, "Fallback bootstrap identity mismatch")
+                  evidence = candidate
+                } catch (error) { problem("fallback-evidence", error) }
+              }
+              if (evidence && baseline) {
+                try { receipt.checkoutAfterExecution = (await observeCheckout("after-execution", Number.isInteger(slotFd))).result }
+                catch (error) { problem("checkout-after-execution", error) }
+                if (Number.isInteger(slotFd)) {
+                  try { receipt.slot.afterExecution = inspectOwnedSlot() }
+                  catch (error) { problem("slot-after-execution", error) }
+                }
+              }
+              cleanupOwnedSlot()
+              if (Number.isInteger(testDirectoryFd)) {
+                try { fs.closeSync(testDirectoryFd) } catch (error) { problem("slot-directory-close", error) }
+                testDirectoryFd = undefined
+              }
+              if (evidence && baseline) {
+                try { receipt.checkoutAfterCleanup = (await observeCheckout("after-cleanup", false)).result }
+                catch (error) { problem("checkout-after-cleanup", error) }
+                try { receipt.actionsAfter = await observedActions("after") }
+                catch (error) { problem("actions-after", error) }
+              }
+              receipt.requestUiChanged = receipt.checkoutAfterCleanup ? false : null
+              receipt.sourceTreeChanged = receipt.checkoutAfterCleanup ? false : null
+              receipt.finishedAt = new Date().toISOString()
+              receipt.durationMs = Math.round(performance.now() - started)
+              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 25 &&
+                receipt.originalOmniVerdict?.source === SOURCE &&
+                receipt.slot?.cleanup === "removed-own-inode" && receipt.checkoutAfterCleanup && receipt.actionsAfter
+              receipt.status = passed ? "PASS" : "FAIL"
+              receipt.technicalQualification = !!passed
+              receipt.goLiveAcceptance = false
+              if (evidence) {
+                try { jsonFile("receipt.json", receipt) }
+                catch (error) { problem("receipt-write", error); receipt.status = "FAIL"; receipt.technicalQualification = false }
+              }
+              process.stdout.write(JSON.stringify({ schema: receipt.schema, status: receipt.status, source: SOURCE,
+                sourceTree: TREE, driver: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+                attempt: process.env.GITHUB_RUN_ATTEMPT, goLiveAcceptance: false, errors: errors.map(value => ({ stage: value.stage, message: value.message })) }) + "\n")
+              process.exitCode = receipt.status === "PASS" ? 0 : 1
+            }
+        run: |
+          node --input-type=module <<'SF613_NODE'
+          import fs from "node:fs"
+          import path from "node:path"
+          import { createHash } from "node:crypto"
+          
+          const source = process.env.SF613_ENVELOPE_SOURCE
+          const expectedHash = process.env.SF613_ENVELOPE_SHA256
+          delete process.env.SF613_ENVELOPE_SOURCE
+          delete process.env.SF613_ENVELOPE_SHA256
+          const need = (value, message) => { if (!value) throw new Error(message) }
+          need(typeof source === "string" && source.length > 0 && /^[a-f0-9]{64}$/.test(expectedHash ?? ""),
+            "Missing reviewed envelope transport")
+          const bytes = Buffer.from(source, "utf8")
+          const digest = createHash("sha256").update(bytes).digest("hex")
+          need(digest === expectedHash, "Envelope transport bytes do not match the derived reviewed hash")
+          const run = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+          need(/^[1-9]\d*$/.test(run ?? "") && /^[1-9]\d*$/.test(attempt ?? ""), "Invalid envelope transport run/attempt")
+          const evidence = fs.realpathSync(process.env.SF613_EVIDENCE)
+          need(evidence === path.join(fs.realpathSync(process.env.RUNNER_TEMP), "sf613-final-" + run + "-" + attempt),
+            "Unexpected envelope transport evidence directory")
+          const workspace = fs.realpathSync(process.env.GITHUB_WORKSPACE), st = fs.lstatSync(evidence)
+          need(evidence !== workspace && !evidence.startsWith(workspace + path.sep) && !workspace.startsWith(evidence + path.sep) &&
+            st.isDirectory() && !st.isSymbolicLink() && st.uid === process.getuid() && (st.mode & 0o777) === 0o700,
+            "Unsafe envelope transport evidence directory")
+          const bootstrapPath = path.join(evidence, "bootstrap.json")
+          const bootstrapStat = fs.lstatSync(bootstrapPath)
+          need(bootstrapStat.isFile() && !bootstrapStat.isSymbolicLink() && bootstrapStat.nlink === 1,
+            "Unsafe envelope transport bootstrap")
+          const bootstrap = JSON.parse(fs.readFileSync(bootstrapPath, "utf8"))
+          need(bootstrap.schema === "sf613-final-evidence-bootstrap-v1" && bootstrap.driver === process.env.GITHUB_SHA &&
+            bootstrap.run === run && bootstrap.attempt === attempt, "Envelope transport bootstrap belongs to another run")
+          const filename = path.join(evidence, "envelope-from-workflow.mjs")
+          const fd = fs.openSync(filename,
+            fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_RDWR, 0o600)
+          try {
+            const own = fs.fstatSync(fd)
+            need(own.isFile() && own.nlink === 1 && (own.mode & 0o777) === 0o600, "Unsafe envelope transport copy")
+            fs.writeFileSync(fd, bytes)
+            fs.fsyncSync(fd)
+            const copied = Buffer.alloc(bytes.length)
+            let offset = 0
+            while (offset < copied.length) {
+              const count = fs.readSync(fd, copied, offset, copied.length - offset, offset)
+              need(count > 0, "Incomplete envelope transport copy")
+              offset += count
+            }
+            need(copied.equals(bytes) && fs.fstatSync(fd).size === bytes.length, "Envelope transport copy differs")
+          } finally { fs.closeSync(fd) }
+          fs.writeFileSync(path.join(evidence, "envelope-transport.json"), JSON.stringify({
+            schema: "sf613-envelope-env-transport-v1", source: "literal step environment in actual workflow D",
+            driver: process.env.GITHUB_SHA, run, attempt, bytes: bytes.length, sha256: digest,
+            copy: "envelope-from-workflow.mjs", originalBytesMatched: true,
+            sourceEnvironmentRemovedBeforeImportAndChildren: true,
+            executionState: "one import follows this receipt; completion requires the main and finalizer receipts",
+            importForm: "data:text/javascript;base64 with node: builtins and absolute file URLs only",
+          }, null, 2) + "\n", { flag: "wx", mode: 0o600 })
+          // Node 24.15 supports text/javascript data: modules; the envelope has no relative import or import.meta use.
+          await import("data:text/javascript;base64," + bytes.toString("base64"))
+          SF613_NODE
+
+      - name: Finalize owned slot and evidence
+        id: finalize
+        if: always()
+        timeout-minutes: 3
+        env:
+          SF613_TECH_OUTCOME: ${{ steps.technical.outcome }}
+        run: |
+          node --input-type=module <<'SF613_NODE'
+          import fs from "node:fs"
+          import path from "node:path"
+          import { createHash } from "node:crypto"
+          import { spawnSync } from "node:child_process"
+          
+          const SOURCE = "__SF613_SOURCE_SHA__"
+          const TREE = "__SF613_SOURCE_TREE__"
+          const WRAPPER_BLOB = "__SF613_WRAPPER_BLOB__"
+          const WRAPPER_SHA256 = "__SF613_WRAPPER_SHA256__"
+          const SLOT = "apps/cli/test/sf613-final-verification.test.ts"
+          const UI_SHA256 = "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2"
+          const failures = []
+          const result = { schema: "sf613-final-technical-finalizer-v1", status: "FAIL", goLiveAcceptance: false,
+            source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+            run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+            technicalStepOutcome: process.env.SF613_TECH_OUTCOME, processCleanup: [], slotCleanup: "not-attempted",
+            refCleanup: "not-performed; D retained for audit; removal requires an available authorized capability", errors: failures }
+          let evidence, root, main
+          const hash = bytes => createHash("sha256").update(bytes).digest("hex")
+          const blob = bytes => createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+          const need = (condition, message) => { if (!condition) throw new Error(message) }
+          const fail = (stage, error) => failures.push({ stage, message: error instanceof Error ? error.message : String(error) })
+          const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+          function sameBirth(a, b) { return a && b && a.pid === b.pid && a.group === b.group && a.session === b.session &&
+            a.starttime === b.starttime && a.bootId === b.bootId }
+          function birth(pid) {
+            try {
+              const text = fs.readFileSync("/proc/" + pid + "/stat", "utf8")
+              const tail = text.slice(text.lastIndexOf(")") + 2).trim().split(/\s+/)
+              return { pid, group: Number(tail[2]), session: Number(tail[3]), starttime: tail[19],
+                bootId: fs.readFileSync("/proc/sys/kernel/random/boot_id", "utf8").trim() }
+            } catch (error) { if (error.code === "ENOENT" || error.code === "ESRCH") return null; throw error }
+          }
+          function alive(pid) {
+            try { process.kill(-pid, 0); return true } catch (error) { if (error.code === "ESRCH") return false; throw error }
+          }
+          async function waitGone(pid, budget) {
+            const until = performance.now() + budget
+            while (alive(pid) && performance.now() < until) await sleep(50)
+            return !alive(pid)
+          }
+          function write(relative, bytes) {
+            const fd = fs.openSync(path.join(evidence, relative),
+              fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_WRONLY, 0o600)
+            try { fs.writeFileSync(fd, bytes); fs.fsyncSync(fd) } finally { fs.closeSync(fd) }
+          }
+          function json(relative, value) { write(relative, Buffer.from(JSON.stringify(value, null, 2) + "\n")) }
+          function readJson(relative) {
+            const file = path.join(evidence, relative)
+            const st = fs.lstatSync(file)
+            need(st.isFile() && !st.isSymbolicLink() && st.nlink === 1, "Unsafe evidence input " + relative)
+            return JSON.parse(fs.readFileSync(file, "utf8"))
+          }
+          function directories(chain) {
+            need(Array.isArray(chain) && chain.length > 0 && chain.at(-1).path === path.join(root, path.dirname(SLOT)),
+              "Missing original slot directory identities")
+            for (const expected of chain) {
+              const st = fs.lstatSync(expected.path, { bigint: true })
+              need(st.isDirectory() && !st.isSymbolicLink() && fs.realpathSync(expected.path) === expected.path &&
+                String(st.dev) === expected.dev && String(st.ino) === expected.ino, "Directory identity drift")
+            }
+          }
+          let gitSerial = 0
+          function git(label, args) {
+            const invocation = spawnSync("git", args, { cwd: root, shell: false, timeout: 30000,
+              maxBuffer: 16 * 1024 * 1024, env: { ...process.env, GIT_OPTIONAL_LOCKS: "0" } })
+            const prefix = "finalizer-git-" + String(++gitSerial).padStart(2, "0") + "-" + label
+            const stdout = invocation.stdout ?? Buffer.alloc(0), stderr = invocation.stderr ?? Buffer.alloc(0)
+            write(prefix + ".stdout.bin", stdout); write(prefix + ".stderr.bin", stderr)
+            need(!invocation.error && invocation.status === 0 && invocation.signal === null, "Final Git observation failed: " + label)
+            return stdout
+          }
+          try {
+            const run = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+            need(/^[1-9]\d*$/.test(run ?? "") && /^[1-9]\d*$/.test(attempt ?? ""), "Invalid run/attempt")
+            evidence = fs.realpathSync(process.env.SF613_EVIDENCE)
+            need(evidence === path.join(fs.realpathSync(process.env.RUNNER_TEMP), "sf613-final-" + run + "-" + attempt),
+              "Unexpected evidence location")
+            const es = fs.lstatSync(evidence)
+            need(es.isDirectory() && !es.isSymbolicLink() && es.uid === process.getuid() && (es.mode & 0o777) === 0o700,
+              "Unsafe evidence directory")
+            const bootstrap = readJson("bootstrap.json")
+            need(bootstrap.driver === process.env.GITHUB_SHA && bootstrap.run === run && bootstrap.attempt === attempt,
+              "Bootstrap identity mismatch")
+            root = fs.realpathSync(process.env.GITHUB_WORKSPACE)
+            need(root === path.resolve(process.env.GITHUB_WORKSPACE) && evidence !== root &&
+              !evidence.startsWith(root + path.sep), "Evidence/checkout boundary mismatch")
+            try { main = readJson("receipt.json") } catch (error) { fail("main-receipt", error) }
+          
+            for (const name of fs.readdirSync(evidence).filter(name => /^\d{3}-[a-z0-9-]+\.process-start\.json$/.test(name)).sort()) {
+              try {
+                const record = readJson(name), expected = record.birth
+                need(record.source === SOURCE && record.driver === process.env.GITHUB_SHA && record.run === run &&
+                  record.attempt === attempt && Number.isSafeInteger(expected?.pid) && expected.pid > 0 &&
+                  expected.group === expected.pid && expected.session === expected.pid, "Process receipt identity mismatch")
+                const current = birth(expected.pid)
+                if (!current) {
+                  need(!alive(expected.pid), "Unidentified remaining process group; refuse to signal by recycled number")
+                  result.processCleanup.push({ label: record.label, pid: expected.pid, result: "already-gone" })
+                } else if (!sameBirth(current, expected)) {
+                  fail("process-birth-drift", new Error("Recorded process number has another birth; it was not signaled: " + record.label))
+                  result.processCleanup.push({ label: record.label, pid: expected.pid, result: "birth-different; not-signaled" })
+                } else {
+                  fail("remaining-owned-process", new Error("Owned process remained after the technical step: " + record.label))
+                  process.kill(-expected.pid, "SIGTERM")
+                  if (!await waitGone(expected.pid, 5000)) {
+                    const again = birth(expected.pid)
+                    need(sameBirth(again, expected), "Lost process-birth identity; refuse SIGKILL")
+                    process.kill(-expected.pid, "SIGKILL")
+                    need(await waitGone(expected.pid, 5000), "Owned process group did not finalize")
+                  }
+                  result.processCleanup.push({ label: record.label, pid: expected.pid, result: "terminated-owned-birth" })
+                }
+              } catch (error) { fail("process-finalization", error) }
+            }
+          
+            const slot = path.join(root, SLOT)
+            let slotExists = false
+            try { fs.lstatSync(slot); slotExists = true } catch (error) { if (error.code !== "ENOENT") throw error }
+            if (slotExists) {
+              need(main?.slot?.cleanup !== "removed-own-inode", "A new slot appeared after successful removal; refuse to touch it")
+              need(!failures.some(value => value.stage === "process-finalization"), "Process ownership unresolved; refuse slot cleanup")
+              const created = readJson("slot-created.json"), initial = readJson("envelope-started.json")
+              need(created.source === SOURCE && created.sourceTree === TREE && created.driver === process.env.GITHUB_SHA &&
+                created.run === run && created.attempt === attempt, "Slot creation identity mismatch")
+              directories(initial.directories)
+              const directoryFd = fs.openSync(path.dirname(slot),
+                fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW)
+              try {
+                const parent = fs.fstatSync(directoryFd, { bigint: true }), expectedParent = initial.directories.at(-1)
+                need(String(parent.dev) === expectedParent.dev && String(parent.ino) === expectedParent.ino,
+                  "Slot parent changed before finalizer acquisition")
+                const anchoredSlot = "/proc/self/fd/" + directoryFd + "/" + path.basename(slot)
+                const fd = fs.openSync(anchoredSlot, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW)
+                try {
+                  const own = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(anchoredSlot, { bigint: true })
+                  need(own.isFile() && named.isFile() && !named.isSymbolicLink() && own.nlink === 1n && named.nlink === 1n &&
+                    String(own.dev) === created.before.dev && String(own.ino) === created.before.ino &&
+                    own.dev === named.dev && own.ino === named.ino && (own.mode & 0o777n) === 0o600n, "Refuse foreign slot inode/type/mode")
+                  const bytes = fs.readFileSync(fd)
+                  need(hash(bytes) === WRAPPER_SHA256 && blob(bytes) === WRAPPER_BLOB, "Refuse drifted slot bytes")
+                  directories(initial.directories)
+                  const finalName = fs.lstatSync(anchoredSlot, { bigint: true })
+                  need(finalName.dev === own.dev && finalName.ino === own.ino && finalName.isFile() && finalName.nlink === 1n,
+                    "Slot identity changed before cleanup")
+                  fs.unlinkSync(anchoredSlot)
+                  result.slotCleanup = "removed-own-inode-after-failed-step"
+                } finally { fs.closeSync(fd) }
+              } finally { fs.closeSync(directoryFd) }
+            } else result.slotCleanup = "already-absent"
+            try { fs.lstatSync(slot); throw new Error("Slot remains") } catch (error) { if (error.code !== "ENOENT") throw error }
+          
+            need(git("head", ["rev-parse", "HEAD"]).toString("utf8").trim() === SOURCE &&
+              git("tree", ["rev-parse", "HEAD^{tree}"]).toString("utf8").trim() === TREE, "Final literal C/T mismatch")
+            const index = git("whole-index", ["ls-files", "--stage", "-z"])
+            const beforeIndexNames = fs.readdirSync(evidence).filter(name => /^\d{3}-before-whole-index\.stdout\.bin$/.test(name))
+            need(beforeIndexNames.length === 1 && index.equals(fs.readFileSync(path.join(evidence, beforeIndexNames[0]))),
+              "Final whole index does not equal before")
+            need(git("tracked", ["diff", "--no-ext-diff", "--no-textconv", "--exit-code"]).length === 0 &&
+              git("staged", ["diff", "--cached", "--no-ext-diff", "--no-textconv", "--exit-code"]).length === 0 &&
+              git("status", ["status", "--porcelain=v1", "--untracked-files=all", "-z"]).length === 0, "Final worktree/index is not clean")
+            const uiPath = path.join(root, ".ci-run.json"), uiStat = fs.lstatSync(uiPath)
+            need(uiStat.isFile() && !uiStat.isSymbolicLink() && uiStat.nlink === 1 && uiStat.size === 390, "Final UI request file identity mismatch")
+            const ui = fs.readFileSync(uiPath)
+            need(hash(ui) === UI_SHA256, "Final UI request bytes changed")
+            result.finalCheckout = { head: SOURCE, tree: TREE, clean: true, indexBytes: index.length,
+              indexSha256: hash(index), uiBytes: ui.length, uiSha256: hash(ui), slotAbsent: true }
+          
+            need(main?.status === "PASS" && main.technicalQualification === true && main.goLiveAcceptance === false &&
+              main.source === SOURCE && main.sourceTree === TREE && main.driver === process.env.GITHUB_SHA &&
+              main.run === run && main.attempt === attempt && main.result?.pass === 25 &&
+              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 25 &&
+              main.result?.omni?.spawns > 0 && main.result?.omni?.delegated === 0 &&
+              main.originalOmniVerdict?.source === SOURCE && main.originalOmniVerdict?.function === "controlVerdict" &&
+              main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); ") &&
+              main.slot?.cleanup === "removed-own-inode" && process.env.SF613_TECH_OUTCOME === "success",
+              "No successful, complete, source-bound original technical receipt")
+          } catch (error) { fail("finalizer", error) }
+          // Prepare and hash the inventory before writing the terminal result.
+          // This manifest is evidence inventory, never an independent PASS verdict.
+          if (evidence) {
+            try {
+              const files = []
+              for (const name of fs.readdirSync(evidence).sort()) {
+                need(name !== "finalization.json" && name !== "evidence-manifest.json", "Finalizer output already exists")
+                const filename = path.join(evidence, name), st = fs.lstatSync(filename)
+                need(st.isFile() && !st.isSymbolicLink() && st.nlink === 1, "Unexpected evidence directory entry")
+                const digest = createHash("sha256")
+                let bytes = 0
+                for await (const chunk of fs.createReadStream(filename)) { bytes += chunk.length; digest.update(chunk) }
+                files.push({ path: name, bytes, sha256: digest.digest("hex") })
+              }
+              const manifestBytes = Buffer.from(JSON.stringify({
+                schema: "sf613-final-evidence-manifest-v1", source: SOURCE, sourceTree: TREE,
+                driver: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+                state: "INVENTORY_PREPARED", independentQualification: false, goLiveAcceptance: false,
+                terminalReceipt: "finalization.json",
+                excludedSelfAndTerminalReceipt: ["evidence-manifest.json", "finalization.json"], files,
+              }, null, 2) + "\n")
+              write("evidence-manifest.json", manifestBytes)
+              result.evidenceManifest = { path: "evidence-manifest.json", bytes: manifestBytes.length, sha256: hash(manifestBytes) }
+            } catch (error) { fail("evidence-finalization", error) }
+          }
+          result.status = failures.length === 0 ? "PASS" : "FAIL"
+          result.finishedAt = new Date().toISOString()
+          if (evidence) {
+            const terminal = path.join(evidence, "finalization.json")
+            let fd, owned, closed = false
+            try {
+              fd = fs.openSync(terminal, fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_RDWR, 0o600)
+              owned = fs.fstatSync(fd, { bigint: true })
+              need(owned.isFile() && owned.nlink === 1n, "Unsafe owned terminal receipt")
+              fs.writeFileSync(fd, JSON.stringify(result, null, 2) + "\n")
+              fs.fsyncSync(fd)
+              fs.closeSync(fd); closed = true
+            } catch (error) {
+              fail("terminal-receipt-write", error)
+              result.status = "FAIL"
+              // One bounded best effort on this finalizer's own descriptor/inode only.
+              // A broken disk/runner cannot promise persistence; job success is always required.
+              if (fd !== undefined && owned) {
+                try {
+                  const current = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(terminal, { bigint: true })
+                  need(current.dev === owned.dev && current.ino === owned.ino && named.dev === owned.dev &&
+                    named.ino === owned.ino && current.nlink === 1n && named.nlink === 1n && named.isFile(),
+                    "Refuse to rewrite a foreign terminal receipt")
+                  fs.ftruncateSync(fd, 0)
+                  const failureBytes = Buffer.from(JSON.stringify(result, null, 2) + "\n")
+                  need(fs.writeSync(fd, failureBytes, 0, failureBytes.length, 0) === failureBytes.length,
+                    "Incomplete FAIL terminal receipt")
+                  fs.fsyncSync(fd)
+                  fs.closeSync(fd); closed = true
+                } catch (secondary) {
+                  fail("terminal-receipt-fail-contingency", secondary)
+                  try {
+                    const named = fs.lstatSync(terminal, { bigint: true })
+                    need(named.dev === owned.dev && named.ino === owned.ino && named.nlink === 1n && named.isFile(),
+                      "Refuse to remove a foreign terminal receipt")
+                    fs.unlinkSync(terminal)
+                  } catch (cleanupError) { fail("terminal-receipt-owned-cleanup", cleanupError) }
+                }
+              }
+            } finally {
+              if (fd !== undefined && !closed) {
+                try { fs.closeSync(fd) } catch (error) { fail("terminal-receipt-close", error); result.status = "FAIL" }
+              }
+            }
+          }
+          process.stdout.write(JSON.stringify(result) + "\n")
+          process.exitCode = result.status === "PASS" ? 0 : 1
+          SF613_NODE
+
+      - name: Upload original technical evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sf613-final-technical-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf613-final-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7

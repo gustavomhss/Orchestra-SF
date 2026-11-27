@@ -1,0 +1,1101 @@
+{
+  "schema": "sf613-d26-c16-documentary-derivation/v1",
+  "status": "DOCUMENTARY_ONLY_UNBOUND_NOT_EXECUTED",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized three documentary blobs only, from the last accepted D26 C15R documents.",
+  "baseCorrection": {
+    "acceptedManifest": {
+      "git": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+      "bytes": 31541,
+      "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+      "lf": 808
+    },
+    "acceptedBounds": {
+      "git": "cab7769368a73d850f59e98cadfb947b58cee02c",
+      "bytes": 18921,
+      "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+      "lf": 581
+    },
+    "acceptedDerivation": {
+      "git": "79b09955504ea67ac944e68bb0143e29078ec200",
+      "bytes": 22479,
+      "sha256": "2385121adfbc45226a7d9e0ff60e53fe5c75eaf86a4ed245835f3e3df1e95298",
+      "lf": 137
+    },
+    "earlierNotUsedAsPreimages": [
+      "5244ae34d7ad5827e89b013e709e123a726eea12",
+      "2f01f5cfd420a4ef40ea4121043f201bd4190349"
+    ]
+  },
+  "sourceReference": {
+    "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "manifest": {
+      "git": "57acd565b321ac9ddbf6c84b5d2fe32d41726bf4",
+      "bytes": 11710,
+      "sha256": "2dec3a125a24f315d8cf2ff250e11980936b3d075076f7e0ca27239503b7d7e8"
+    },
+    "bounds": {
+      "git": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+      "bytes": 3863,
+      "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870"
+    },
+    "provider": {
+      "git": "550236df66f1e02e5111a1eee23579e76178bc6b",
+      "bytes": 66998,
+      "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+      "lf": 887
+    },
+    "test": {
+      "git": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196
+    },
+    "finalC613": "UNBOUND",
+    "qualificationTransferred": false
+  },
+  "files": [
+    {
+      "name": "manifest",
+      "pre": {
+        "git": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+        "bytes": 31541,
+        "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+        "lf": 808
+      },
+      "post": {
+        "git": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+        "bytes": 38243,
+        "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33",
+        "lf": 981
+      },
+      "fieldChangeCount": 34,
+      "changes": [
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "gitSha"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "cab7769368a73d850f59e98cadfb947b58cee02c",
+          "after": "245d65e3f1975f61680a328a5f48686931b9cbfd"
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 18921,
+          "after": 25101
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+          "after": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c"
+        },
+        {
+          "path": [
+            "supports",
+            "bounds",
+            "lf"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 581,
+          "after": 744
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "declarations"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "reports"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "gitBlob"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "a55818797ecf9fa6801393762bbe3261a1812576",
+          "after": "548fa992a4e5c5b25380d3e0e798993bac3e622c"
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 56757,
+          "after": 70284
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "currentReference",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+          "after": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a"
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "reportFamilies",
+            "SF_C16_SELECTION_CONTROL"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 1
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "perTestBudgetsByGeneration",
+            "addedC16"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "declarations": 1,
+            "cooperativePerTestMs": 8000,
+            "bunPerTestMs": 10000
+          }
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "nominalBunSumMs"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 280000,
+          "after": 290000
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "nominalMarginToProcessMs"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 20000,
+          "after": 10000
+        },
+        {
+          "path": [
+            "selection",
+            "addedGroup",
+            "nominalCooperativeSumMs"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 264000
+        },
+        {
+          "path": [
+            "selection",
+            "newlyAddedFunctionalDeclarations"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "selection",
+            "newlyAddedControlReports"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "budgets",
+            "newControlDeclarations"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "budgets",
+            "newControlPerTestBudgetsByGeneration",
+            "addedC16"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "declarations": 1,
+            "cooperativePerTestMs": 8000,
+            "bunPerTestMs": 10000
+          }
+        },
+        {
+          "path": [
+            "budgets",
+            "newControlNominalBunSumMs"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 280000,
+          "after": 290000
+        },
+        {
+          "path": [
+            "budgets",
+            "newControlNominalMarginToProcessMs"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 20000,
+          "after": 10000
+        },
+        {
+          "path": [
+            "budgets",
+            "newControlNominalCooperativeSumMs"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 264000
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "gitSha"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "cab7769368a73d850f59e98cadfb947b58cee02c",
+          "after": "245d65e3f1975f61680a328a5f48686931b9cbfd"
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "bytes"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 18921,
+          "after": 25101
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "sha256"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+          "after": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c"
+        },
+        {
+          "path": [
+            "bounds",
+            "reference",
+            "lf"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 581,
+          "after": 744
+        },
+        {
+          "path": [
+            "futureIntake",
+            "note"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The inherited envelope checks26 outer cases and native Omni verdict. All37 actual argv/cwd/exit receipts,74false flags,six isolated proof children,complete current C12/C14/C15 reports and outcomes require explicit original-log intake. G26 contributes two C14 and two C15 reports; the C15 reports contain four and fifteen outcome rows. The separate C15 focal expectation of11 functional tests/seven reports is not the whole D26 count, which remains null. No parser or silent automatic gate is added.",
+          "after": "The inherited envelope checks26 outer cases and the native Omni verdict. All37 actual argv/cwd/exit receipts,74false truncation flags,six isolated proof children and complete current C12/C14/C15/C16 reports require explicit original-log intake. G26 contributes two C14,two C15 and one C16 reports; C15 has four and fifteen outcome rows and C16 has31. The separate C16 focal expectation of12 functional tests/eight reports is not the whole D26 count, which remains null. No parser or silent automatic gate is added."
+        },
+        {
+          "path": [
+            "futureIntake",
+            "currentC16ReportsRequired"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 1
+        },
+        {
+          "path": [
+            "futureIntake",
+            "completeC16OutcomeRequired"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": true
+        },
+        {
+          "path": [
+            "futureIntake",
+            "currentC16OutcomeRowsExpected"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": [
+            31
+          ]
+        },
+        {
+          "path": [
+            "concretization",
+            "1"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "Receive the actual final tree and reconcile the five changed C15 leaves (four product files and the existing G26 test) plus the three unchanged C14 product pins against their documentary references before binding; the remaining final source/UI recipe is unchanged.",
+          "after": "Receive the actual final C613 tree and reconcile the C16 Provider/test references plus the preserved C15R contract/SourceLifecycle/LocalStore and unchanged C14 CurrentChoice/ACL-authorizer/ProductAuthority references before binding. These eight reference leaves are documentary; do not restore historical full files or assume a final source pin. The remaining source/UI recipe is unchanged."
+        },
+        {
+          "path": [
+            "limits",
+            "2"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The preserved currentC14Reference is historical; currentC15Reference and its source S15/pins are references only. The fixed inherited English-copy commit remains historical; current origin/dev is observed by the unchanged guard group.",
+          "after": "The preserved currentC14Reference, currentC15Reference and earlier revision records are historical cuts. currentC16Reference is the active documentary reference only and does not bind final C613. The fixed inherited English-copy commit remains historical; current origin/dev is observed by the unchanged guard group."
+        },
+        {
+          "path": [
+            "limits",
+            "3"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The unchanged G26 whole-file command covers four current declarations and four reports once. Its title and literal reviewed block remain unchanged; the mixed deadlines are110/120s for C14 and18/20s for C15. The whole D26 functional count remains null, with no focal result or product/UI qualification transferred.",
+          "after": "The unchanged G26 whole-file command covers five current declarations and five reports once. Its historical C14 title and literal reviewed block remain unchanged; the mixed cooperative/Bun deadlines are110/120s for C14,18/20s for C15 and8/10s for C16. Nominal Bun290s/cooperative264s leaves10s to the unchanged300s process cap; the parent remains360s. Whole D26 functional count stays null; no focal result or product/UI qualification is transferred."
+        },
+        {
+          "path": [
+            "currentC16Reference"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "scope": "Current documentary C16 reference only; final C613 and D26 remain UNBOUND. Preserved currentC14Reference and currentC15Reference are historical cuts.",
+            "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+            "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+            "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+            "sourceManifest": {
+              "gitSha": "57acd565b321ac9ddbf6c84b5d2fe32d41726bf4",
+              "bytes": 11710,
+              "sha256": "2dec3a125a24f315d8cf2ff250e11980936b3d075076f7e0ca27239503b7d7e8"
+            },
+            "sourceBounds": {
+              "gitSha": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+              "bytes": 3863,
+              "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870"
+            },
+            "changedProductPin": {
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+              "preimage": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+              "gitBlob": "550236df66f1e02e5111a1eee23579e76178bc6b",
+              "bytes": 66998,
+              "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+              "finalC613Blob": "UNBOUND"
+            },
+            "test": {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+              "preimage": "a55818797ecf9fa6801393762bbe3261a1812576",
+              "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+              "bytes": 70284,
+              "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+              "lf": 1196,
+              "declarations": 5,
+              "preservedDeclarations": 4,
+              "addedC16Declarations": 1,
+              "reports": 5,
+              "reportFamilies": {
+                "SF_C14_SNAPSHOT_CONTROL": 2,
+                "SF_C15_SELECTION_CONTROL": 2,
+                "SF_C16_SELECTION_CONTROL": 1
+              },
+              "c15OutcomeRows": [
+                4,
+                15
+              ],
+              "c16OutcomeRows": [
+                31
+              ],
+              "wholeFileNoNameFilter": true,
+              "finalC613Blob": "UNBOUND"
+            },
+            "perTestBudgetsByGeneration": {
+              "inheritedC14": {
+                "declarations": 2,
+                "cooperativePerTestMs": 110000,
+                "bunPerTestMs": 120000
+              },
+              "addedC15": {
+                "declarations": 2,
+                "cooperativePerTestMs": 18000,
+                "bunPerTestMs": 20000
+              },
+              "addedC16": {
+                "declarations": 1,
+                "cooperativePerTestMs": 8000,
+                "bunPerTestMs": 10000
+              }
+            },
+            "nominalBunSumMs": 290000,
+            "nominalCooperativeSumMs": 264000,
+            "nominalMarginToProcessMs": 10000,
+            "processMs": 300000,
+            "outerMs": 360000,
+            "unchangedReferencePaths": "Other C15R and C14 product references remain in the preserved historical objects. Only Provider and the selected test changed from clean069a; no E11 file is included.",
+            "focalExpectationOnly": {
+              "functionalDeclarations": 12,
+              "controlReports": 8,
+              "notWholeD26Count": true
+            },
+            "qualificationTransferred": false,
+            "limits": [
+              "Reference pins do not bind final C613 or establish a result for D26.",
+              "Readonly admission oracles and preimage equivalence remain distinct; no latency guarantee or original Analytics acceptance is inferred.",
+              "The 10-second nominal process margin does not guarantee startup, setup, scheduling, disposal or reap."
+            ]
+          }
+        },
+        {
+          "path": [
+            "c16DocumentaryRevision"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "author": "/root/focal_migration",
+            "authority": "Root authorized exactly three documentary blobs from the last accepted D26 C15R manifest/bounds. No executable, final binding, object, ref, run, original log or ZIP changes.",
+            "baseManifest": {
+              "git": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+              "bytes": 31541,
+              "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+              "lf": 808
+            },
+            "baseBounds": {
+              "git": "cab7769368a73d850f59e98cadfb947b58cee02c",
+              "bytes": 18921,
+              "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+              "lf": 581
+            },
+            "baseDerivation": {
+              "git": "79b09955504ea67ac944e68bb0143e29078ec200",
+              "bytes": 22479,
+              "sha256": "2385121adfbc45226a7d9e0ff60e53fe5c75eaf86a4ed245835f3e3df1e95298",
+              "lf": 137
+            },
+            "scope": "Update only active G26 whole-file selection, reference pins, mixed budgets and future report intake for C16; preserve all earlier reference and revision objects literally.",
+            "previousG26": {
+              "declarations": 4,
+              "reports": 4,
+              "bunNominalMs": 280000,
+              "cooperativeNominalMs": 256000,
+              "nominalProcessMarginMs": 20000
+            },
+            "currentG26": {
+              "declarations": 5,
+              "reports": 5,
+              "bunNominalMs": 290000,
+              "cooperativeNominalMs": 264000,
+              "nominalProcessMarginMs": 10000,
+              "processMs": 300000,
+              "parentMs": 360000,
+              "c16Reports": 1,
+              "c16Outcomes": 31
+            },
+            "preserved": {
+              "executables": 4,
+              "outerGroups": 26,
+              "syntacticSites": 32,
+              "commands": 37,
+              "truncationFlags": 74,
+              "proofChildren": 6,
+              "G6Literal": true,
+              "globalMinutes": [
+                35,
+                40,
+                45
+              ],
+              "finalBindingParameters": 4,
+              "finalBindingsState": "UNBOUND",
+              "wholeD26FunctionalCount": null
+            },
+            "history": "The prior currentC14/currentC15 reference objects and documentaryRevision/typeRepairRevision records remain byte-literal at their JSON object boundaries; their internal 'current' labels describe those preserved cuts.",
+            "qualificationTransferred": false,
+            "derivation": "A separate immutable field-delta receipt accompanies these two documents; it records exact pre/post bytes and reversible JSON field changes.",
+            "actions": {
+              "plannedDocumentBlobs": 3,
+              "executableChanges": 0,
+              "trees": 0,
+              "commits": 0,
+              "refs": 0,
+              "runs": 0,
+              "originalLogGets": 0,
+              "zipGets": 0
+            }
+          }
+        }
+      ],
+      "forwardWholeTextExact": true,
+      "inverseWholeTextExact": true,
+      "createdAndLiteralReadback": true
+    },
+    {
+      "name": "bounds",
+      "pre": {
+        "git": "cab7769368a73d850f59e98cadfb947b58cee02c",
+        "bytes": 18921,
+        "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+        "lf": 581
+      },
+      "post": {
+        "git": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+        "bytes": 25101,
+        "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c",
+        "lf": 744
+      },
+      "fieldChangeCount": 14,
+      "changes": [
+        {
+          "path": [
+            "wrapper",
+            "addedFunctionalDeclarations"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "wrapper",
+            "addedControlReports"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "wrapper",
+            "groupInventory",
+            "25",
+            "declarations"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "wrapper",
+            "groupInventory",
+            "25",
+            "reports"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": 4,
+          "after": 5
+        },
+        {
+          "path": [
+            "wrapper",
+            "addedPerTestBudgetsByGeneration",
+            "addedC16"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "declarations": 1,
+            "cooperativePerTestMs": 8000,
+            "bunPerTestMs": 10000
+          }
+        },
+        {
+          "path": [
+            "wrapper",
+            "addedNominalBunSumMs"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 290000
+        },
+        {
+          "path": [
+            "wrapper",
+            "addedNominalCooperativeSumMs"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 264000
+        },
+        {
+          "path": [
+            "wrapper",
+            "addedNominalMarginToProcessMs"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": 10000
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "0"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "G1–25 and their budgets, including G6 at300/360s, remain literal. The unchanged G26 whole-file command now covers the current four declarations (two inherited C14 plus two C15), without a name filter or directory selection.",
+          "after": "G1–25 and their budgets, including G6 at300/360s, remain literal. G26's unchanged whole-file command now covers five declarations (two C14,two C15,one C16), without a name filter or directory selection."
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "2"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "G26 has two inherited C14 declarations at110s cooperative/120s Bun and two C15 declarations at18s/20s. The nominal280s total leaves20s inside the unchanged300s process allocation and360s parent, without guaranteeing startup, setup, disposal or reaping. Null uniform per-test fields mean mixed budgets, specified by generation.",
+          "after": "G26 retains two C14 declarations at110s cooperative/120s Bun and two C15 at18s/20s, and selects one C16 at8s/10s. Nominal Bun290s/cooperative264s leaves10s inside the unchanged300s process and360s parent, without guaranteeing startup, setup, disposal, scheduling or reap. Null uniform per-test fields still mean mixed budgets."
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "7"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The envelope still verifies the outer26-case summary and native Omni verdict. Reconciliation of37 actual commands/74false flags, six proof children, two C14 reports and two C15 reports (four and fifteen outcome rows) remains an intake obligation; no new parser is introduced. Eleven functional tests/seven reports describe only the separate C15 focal; the whole D26 functional count remains null.",
+          "after": "The envelope still verifies the outer26-case summary and native Omni verdict. Reconciliation of37 actual commands/74false truncation flags,six proof children,two C14 reports,two C15 reports (four and fifteen outcomes) and one C16 report (31 outcomes) remains an explicit intake obligation. No parser is introduced. The separate C16 focal's12 functional tests/eight reports are not the whole D26 functional count, which remains null."
+        },
+        {
+          "path": [
+            "boundaryNotes",
+            "9"
+          ],
+          "beforePresent": true,
+          "afterPresent": true,
+          "before": "The preserved c14Reference is historical. Current C15 references and the three unchanged C14 product pins must be reconciled with actual final C613 before the four bindings are resolved. No final source content or qualification is assumed from a reference pin.",
+          "after": "The preserved c14Reference,c15Reference and earlier documentary/type-repair revisions are historical. c16Reference is the active documentary reference; its Provider/test plus the preserved C15R/C14 reference leaves must be reconciled against actual final C613 before the four bindings are resolved. No final source or qualification follows from a reference pin."
+        },
+        {
+          "path": [
+            "c16Reference"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "scope": "Current documentary C16 reference only; final C613 and D26 remain UNBOUND. Preserved currentC14Reference and currentC15Reference are historical cuts.",
+            "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+            "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+            "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+            "sourceManifest": {
+              "gitSha": "57acd565b321ac9ddbf6c84b5d2fe32d41726bf4",
+              "bytes": 11710,
+              "sha256": "2dec3a125a24f315d8cf2ff250e11980936b3d075076f7e0ca27239503b7d7e8"
+            },
+            "sourceBounds": {
+              "gitSha": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+              "bytes": 3863,
+              "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870"
+            },
+            "changedProductPin": {
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+              "preimage": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+              "gitBlob": "550236df66f1e02e5111a1eee23579e76178bc6b",
+              "bytes": 66998,
+              "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+              "finalC613Blob": "UNBOUND"
+            },
+            "test": {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+              "preimage": "a55818797ecf9fa6801393762bbe3261a1812576",
+              "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+              "bytes": 70284,
+              "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+              "lf": 1196,
+              "declarations": 5,
+              "preservedDeclarations": 4,
+              "addedC16Declarations": 1,
+              "reports": 5,
+              "reportFamilies": {
+                "SF_C14_SNAPSHOT_CONTROL": 2,
+                "SF_C15_SELECTION_CONTROL": 2,
+                "SF_C16_SELECTION_CONTROL": 1
+              },
+              "c15OutcomeRows": [
+                4,
+                15
+              ],
+              "c16OutcomeRows": [
+                31
+              ],
+              "wholeFileNoNameFilter": true,
+              "finalC613Blob": "UNBOUND"
+            },
+            "perTestBudgetsByGeneration": {
+              "inheritedC14": {
+                "declarations": 2,
+                "cooperativePerTestMs": 110000,
+                "bunPerTestMs": 120000
+              },
+              "addedC15": {
+                "declarations": 2,
+                "cooperativePerTestMs": 18000,
+                "bunPerTestMs": 20000
+              },
+              "addedC16": {
+                "declarations": 1,
+                "cooperativePerTestMs": 8000,
+                "bunPerTestMs": 10000
+              }
+            },
+            "nominalBunSumMs": 290000,
+            "nominalCooperativeSumMs": 264000,
+            "nominalMarginToProcessMs": 10000,
+            "processMs": 300000,
+            "outerMs": 360000,
+            "unchangedReferencePaths": "Other C15R and C14 product references remain in the preserved historical objects. Only Provider and the selected test changed from clean069a; no E11 file is included.",
+            "focalExpectationOnly": {
+              "functionalDeclarations": 12,
+              "controlReports": 8,
+              "notWholeD26Count": true
+            },
+            "qualificationTransferred": false,
+            "limits": [
+              "Reference pins do not bind final C613 or establish a result for D26.",
+              "Readonly admission oracles and preimage equivalence remain distinct; no latency guarantee or original Analytics acceptance is inferred.",
+              "The 10-second nominal process margin does not guarantee startup, setup, scheduling, disposal or reap."
+            ]
+          }
+        },
+        {
+          "path": [
+            "c16DocumentaryRevision"
+          ],
+          "beforePresent": false,
+          "afterPresent": true,
+          "before": null,
+          "after": {
+            "author": "/root/focal_migration",
+            "authority": "Root authorized exactly three documentary blobs from the last accepted D26 C15R manifest/bounds. No executable, final binding, object, ref, run, original log or ZIP changes.",
+            "baseManifest": {
+              "git": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+              "bytes": 31541,
+              "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+              "lf": 808
+            },
+            "baseBounds": {
+              "git": "cab7769368a73d850f59e98cadfb947b58cee02c",
+              "bytes": 18921,
+              "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+              "lf": 581
+            },
+            "baseDerivation": {
+              "git": "79b09955504ea67ac944e68bb0143e29078ec200",
+              "bytes": 22479,
+              "sha256": "2385121adfbc45226a7d9e0ff60e53fe5c75eaf86a4ed245835f3e3df1e95298",
+              "lf": 137
+            },
+            "scope": "Update only active G26 whole-file selection, reference pins, mixed budgets and future report intake for C16; preserve all earlier reference and revision objects literally.",
+            "previousG26": {
+              "declarations": 4,
+              "reports": 4,
+              "bunNominalMs": 280000,
+              "cooperativeNominalMs": 256000,
+              "nominalProcessMarginMs": 20000
+            },
+            "currentG26": {
+              "declarations": 5,
+              "reports": 5,
+              "bunNominalMs": 290000,
+              "cooperativeNominalMs": 264000,
+              "nominalProcessMarginMs": 10000,
+              "processMs": 300000,
+              "parentMs": 360000,
+              "c16Reports": 1,
+              "c16Outcomes": 31
+            },
+            "preserved": {
+              "executables": 4,
+              "outerGroups": 26,
+              "syntacticSites": 32,
+              "commands": 37,
+              "truncationFlags": 74,
+              "proofChildren": 6,
+              "G6Literal": true,
+              "globalMinutes": [
+                35,
+                40,
+                45
+              ],
+              "finalBindingParameters": 4,
+              "finalBindingsState": "UNBOUND",
+              "wholeD26FunctionalCount": null
+            },
+            "history": "The prior currentC14/currentC15 reference objects and documentaryRevision/typeRepairRevision records remain byte-literal at their JSON object boundaries; their internal 'current' labels describe those preserved cuts.",
+            "qualificationTransferred": false,
+            "derivation": "A separate immutable field-delta receipt accompanies these two documents; it records exact pre/post bytes and reversible JSON field changes.",
+            "actions": {
+              "plannedDocumentBlobs": 3,
+              "executableChanges": 0,
+              "trees": 0,
+              "commits": 0,
+              "refs": 0,
+              "runs": 0,
+              "originalLogGets": 0,
+              "zipGets": 0
+            }
+          }
+        }
+      ],
+      "forwardWholeTextExact": true,
+      "inverseWholeTextExact": true,
+      "createdAndLiteralReadback": true
+    }
+  ],
+  "applicationContract": {
+    "format": "JSON paths are arrays of exact object keys or array indices. Each step verifies beforePresent and the full before value; apply after or delete. Reverse steps in reverse order, exchanging before/after. Serialize with JSON.stringify(value,null,2)+'\\n'.",
+    "baseSerializationLiteral": true,
+    "forwardSerializationLiteral": true,
+    "inverseSerializationLiteral": true,
+    "absentFieldsUsePresenceFlags": true,
+    "undefinedFabricated": false
+  },
+  "checks": {
+    "manifestHistorical": true,
+    "boundsHistorical": true,
+    "allFourExecutables": true,
+    "fourBindingsUnbound": true,
+    "G6Literal": true,
+    "oldGroupsLiteral": true,
+    "globalAndEmbeddingLiteral": true,
+    "count26323774": true,
+    "wholeFunctionalNull": true,
+    "proofChildren6": true,
+    "G26CommandLiteral": true
+  },
+  "preservedHistoricalObjects": [
+    {
+      "path": "manifest.currentC14Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "9cb8b3cb6676483dc1670643ec7c9760b1a77e4e1db9263a21476ae32cf853d2"
+    },
+    {
+      "path": "manifest.currentC15Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "6da9f364bf36bbfbc9e7446ef775b0d347d668a08bc80c5bed83b6d0de28f1f5"
+    },
+    {
+      "path": "manifest.documentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "a5d91419e40a65302a665830834b55cd59bbb82fa0c5bbbe18a76550d074effe"
+    },
+    {
+      "path": "manifest.typeRepairRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "ff5fd276185c59653d93b3aa114ba888e844656030ab46b4652889c5a4b1f0c2"
+    },
+    {
+      "path": "bounds.c14Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "9da47697d33444a906b8dd3bddb01eeaa3de734cef2a54fb827497d7042782ca"
+    },
+    {
+      "path": "bounds.c15Reference",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "6a93d438c2a28e0c2d9f936ce1a7dea5707a6e602aa67f6e9716d0b63acf9b9f"
+    },
+    {
+      "path": "bounds.documentaryRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "a5d91419e40a65302a665830834b55cd59bbb82fa0c5bbbe18a76550d074effe"
+    },
+    {
+      "path": "bounds.typeRepairRevision",
+      "identical": true,
+      "canonicalObjectUtf8Sha256": "ff5fd276185c59653d93b3aa114ba888e844656030ab46b4652889c5a4b1f0c2"
+    }
+  ],
+  "executableReferencesLiteral": {
+    "wrapper": {
+      "gitSha": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "lf": 337,
+      "createdAndLiteralReadback": true
+    },
+    "envelope": {
+      "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "createdAndLiteralReadback": true
+    },
+    "finalizer": {
+      "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "createdAndLiteralReadback": true
+    },
+    "workflow": {
+      "gitSha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "createdAndLiteralReadback": true
+    }
+  },
+  "unchanged": {
+    "executableChanges": 0,
+    "groups": 26,
+    "syntacticSites": 32,
+    "plannedCommands": 37,
+    "truncationFlagsRequiredFalse": 74,
+    "proofChildren": 6,
+    "G6ProcessMs": 300000,
+    "G6OuterMs": 360000,
+    "globalMinutes": [
+      35,
+      40,
+      45
+    ],
+    "finalizerMinutes": 3,
+    "finalParameters": 4,
+    "finalParameterState": "UNBOUND",
+    "wholeD26FunctionalCount": null,
+    "ui6Request390BytesUnchanged": true
+  },
+  "activeG26": {
+    "sameTitleArgvCwdWholeFile": true,
+    "controlFile": {
+      "git": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196
+    },
+    "declarations": 5,
+    "reports": 5,
+    "reportFamilies": {
+      "SF_C14_SNAPSHOT_CONTROL": 2,
+      "SF_C15_SELECTION_CONTROL": 2,
+      "SF_C16_SELECTION_CONTROL": 1
+    },
+    "C15Outcomes": [
+      4,
+      15
+    ],
+    "C16Outcomes": [
+      31
+    ],
+    "bunPerTestMs": [
+      120000,
+      120000,
+      20000,
+      20000,
+      10000
+    ],
+    "cooperativePerTestMs": [
+      110000,
+      110000,
+      18000,
+      18000,
+      8000
+    ],
+    "nominalBunMs": 290000,
+    "nominalCooperativeMs": 264000,
+    "nominalProcessMarginMs": 10000,
+    "processMs": 300000,
+    "parentMs": 360000
+  },
+  "limits": [
+    "No executable/body/embedding/digest, final binding, tree, commit, ref, run or original acquisition was changed.",
+    "Historical reference/revision objects retain their previous labels and values. The appended C16 revision explicitly identifies those objects as preserved historical cuts.",
+    "New pins describe the reviewed C16 source only; final C613 still requires reconciliation and its four binding values remain UNBOUND.",
+    "Whole-file five declarations/five reports is a future selection requirement. No C16 focal result is imported; the whole D26 functional count remains null.",
+    "Nominal290s under300s is arithmetic, not a guarantee that setup/teardown/scheduling/reap fits.",
+    "34 manifest field changes include eight bounds-reference identity fields;14 bounds field changes include active counts/budgets/notes plus the C16 reference and revision. The algorithm and runner are unchanged."
+  ],
+  "actions": {
+    "documentBlobsInThisPackage": 3,
+    "executables": 0,
+    "productEdits": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0
+  }
+}

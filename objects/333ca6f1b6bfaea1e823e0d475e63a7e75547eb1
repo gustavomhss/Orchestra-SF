@@ -1,0 +1,447 @@
+{
+  "schema": "sf613-d25-parametric-proposal/v1",
+  "at": "2026-11-27 00:33:05 UTC",
+  "status": "TEXT_ONLY_UNBOUND_NOT_EXECUTED",
+  "authority": {
+    "root": "Prepare parametric D25 = D24 + current qualified C12 control while the original Analytics is running; text/diff/manifesto only. Monitoring and original intake have priority.",
+    "writer": "/root/close_pr613",
+    "reviewer": "/root/teams_product",
+    "newTreesCommitsRefsRunsAuthorized": false
+  },
+  "basis": {
+    "d24Manifest": {
+      "gitSha": "ab2184636b78da71e40d459c0b24053fe47d50cc",
+      "bytes": 13928,
+      "sha256": "0eed6249a91acfcbfb81fe413404147914b7d8e17f6d3c4eec0188decb848c85"
+    },
+    "d24Artifacts": {
+      "wrapper": {
+        "gitSha": "8366eb424bd5752a1a66d29192ad916b75187a2c",
+        "bytes": 17193,
+        "sha256": "95e38d473c8cdac0c8ca5480b8b805062cf47c45fcd85d86f3e47a655dc3ef4b"
+      },
+      "envelope": {
+        "gitSha": "1509e98581956f9079c9fa2ed753f4fe9c21e16c",
+        "bytes": 43811,
+        "sha256": "cba3d00329a14c9b5f084d7c80366131b6a36bbb831cd0a84eb0ec6cc7432db7"
+      },
+      "finalizer": {
+        "gitSha": "9e27ae4bd76a263934979961256d47daeddbae75",
+        "bytes": 15782,
+        "sha256": "aedcdb2e99b342d67ffb652f9fba2d5e87972bd73a615efd023ca49d623006a7"
+      },
+      "workflow": {
+        "gitSha": "a6a1b08e9c86ae8eccc4b5933578338e8bf3d6b3",
+        "bytes": 80067,
+        "sha256": "4b69e7e4a08a7329a3cb3b6658f3d04c246aa24e412792c7083e3e9f9fe0ee66"
+      }
+    },
+    "d24Bounds": "70358f42cc5dbde50c7f0783a4c002b498d333b6",
+    "originalFinalCompositionPlan": "a32b28e3cc6ce8edf282c48cca0f911f31f34255"
+  },
+  "artifacts": {
+    "wrapper": {
+      "gitSha": "537183d6a1aea5b8ca7fd2f9cd16b34b3219555d",
+      "bytes": 17573,
+      "sha256": "05d7e91da175e24307707165822a1b3a3f60128c8c8f700202a543c978cc2a08",
+      "lf": 330,
+      "createdAndLiteralReadback": true
+    },
+    "envelope": {
+      "gitSha": "19367d419960c838377b65adf50fb616161d672c",
+      "bytes": 43811,
+      "sha256": "725bfb488579f6d7568200a60994cccbfb8738e0c23369cdb1600609717418cc",
+      "lf": 723,
+      "createdAndLiteralReadback": true
+    },
+    "finalizer": {
+      "gitSha": "ccceacd8241da07eff178c02939980ef803eed87",
+      "bytes": 15782,
+      "sha256": "c815df0860b2bd5870ca847161010cdd2e0d6d274201ba3c2ab96069cf16d543",
+      "lf": 250,
+      "createdAndLiteralReadback": true
+    },
+    "workflow": {
+      "gitSha": "40de6b3d9533828e038d290377b9c182c623bb4a",
+      "bytes": 80067,
+      "sha256": "7aa3e1fb4c568184f76ed53c3157cd6f54c27fc97ce28a97724b8d52e1700e53",
+      "lf": 1154,
+      "createdAndLiteralReadback": true
+    }
+  },
+  "supports": {
+    "anchors": {
+      "gitSha": "13130aa9363e12b794d38f2b8ed08a065e652b07",
+      "bytes": 155965,
+      "sha256": "64534e08f1bf2382a5ec2df009b6c7f8b805aa2c8a3305c99a21591b4e13b1a0",
+      "createdAndLiteralReadback": true
+    },
+    "diff": {
+      "gitSha": "6b03d0b7c63c89115a919ac2ab03ee31584962a1",
+      "bytes": 15162,
+      "sha256": "95c90b4d368e6f4de46a76dafd5110f9167a27dc81a8791842f45e375b579fe6",
+      "createdAndLiteralReadback": true
+    },
+    "bounds": {
+      "gitSha": "fc1ddfb0cdcb7901cbee5981130863a0c044ca22",
+      "bytes": 9795,
+      "sha256": "0caee4089ac39a99596f9c5a88f22cf2331b135d8cf90467b6b3408e0135bc09",
+      "createdAndLiteralReadback": true
+    }
+  },
+  "target": {
+    "source": "__SF613_SOURCE_SHA__",
+    "sourceTree": "__SF613_SOURCE_TREE__",
+    "sourceState": "UNBOUND",
+    "driver": "UNBOUND_PENDING_FINAL_C613_AND_CONCRETE_REVIEW",
+    "soleParent": "__SF613_SOURCE_SHA__",
+    "branch": "sf613-final-ci",
+    "futureDelta": [
+      {
+        "path": ".github/workflows/sf613-final-qualification.yml",
+        "status": "A",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sf613-final-verification.test.ts",
+        "status": "A",
+        "mode": "100644"
+      }
+    ],
+    "companionsAreBlobsNotAdditionalDriverPaths": true,
+    "unchangedUIRequestInsideSource": true
+  },
+  "placeholders": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyPlaceholdersRemain": true
+  },
+  "selection": {
+    "preservedD24Groups": 24,
+    "preservedD24PlannedCommands": 35,
+    "addedGroup": {
+      "group": 25,
+      "title": "comparison proof observes the real Finance owner and its complete publication controls",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/comparison-proof-observation.test.ts",
+      "argv": [
+        "test",
+        "./test/product/wp10/integration/comparison-proof-observation.test.ts"
+      ],
+      "executable": "process.execPath",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "declarations": 1,
+      "cooperativeMs": 110000,
+      "bunCaseMs": 120000,
+      "processMs": 150000,
+      "outerMs": 180000,
+      "currentReference": {
+        "gitBlob": "e861e77e7ca08a5b9fc3e5fe8003474c4afae9dc",
+        "bytes": 40638,
+        "sha256": "7bc53704d821ad5023e606554febbcb30d013bd00d06cac03b098f56527830ca"
+      },
+      "finalC613Blob": "UNBOUND",
+      "wholeFileNoNameFilter": true,
+      "literalGroupFromCurrentFocal": {
+        "driver": "22be535d336759d15f308ebb89962d667a75609f",
+        "blockLines": 6
+      },
+      "referenceIsFutureQualification": false
+    },
+    "priorAdditionalGroups": [
+      {
+        "group": 22,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "declarations": 7,
+        "currentReference": {
+          "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+          "bytes": 42278,
+          "sha256": "8acd1b2070a9dd56b5fc31d8e170d02d9082cb3851d613b45dfe1c9db0968059"
+        },
+        "finalC613Blob": "UNBOUND",
+        "referenceIsQualification": false,
+        "processMs": 120000,
+        "outerMs": 180000,
+        "individualCaseMs": [
+          12000,
+          15000
+        ]
+      },
+      {
+        "group": 23,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "declarations": 2,
+        "currentReference": {
+          "gitBlob": "d9db1d5a9236d35ea8512fbd73e88c4f14c728ad",
+          "bytes": 23131,
+          "sha256": "18f158c1b17a9e7e7c8134b2c46c5b9297de032fc4317e98f1d8c1ef94ba41db"
+        },
+        "finalC613Blob": "UNBOUND",
+        "referenceIsQualification": false,
+        "processMs": 120000,
+        "outerMs": 180000,
+        "individualCaseMs": [
+          12000,
+          15000
+        ]
+      },
+      {
+        "group": 24,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+        "declarations": 2,
+        "currentReference": {
+          "gitBlob": "50b31fc7e65dba03852ebfe14be551c9cf6692fc",
+          "bytes": 21869,
+          "sha256": "aa6392f21b5eb15cfe130a0e2ce18262bde4fd9298118a8a0a7b4ded37f3f662"
+        },
+        "finalC613Blob": "UNBOUND",
+        "referenceIsQualification": false,
+        "processMs": 120000,
+        "outerMs": 180000,
+        "individualCaseMs": [
+          12000,
+          15000
+        ]
+      }
+    ],
+    "totalOuterGroups": 25,
+    "plannedWrapperCommands": 36,
+    "syntacticCommandSites": 31,
+    "englishReadLoopExecutions": 6,
+    "commandArithmetic": "25 groups each contain one syntactic command except G1 adds two and G9 adds four: 31 sites; G12 executes its one site six times: 36 planned commands.",
+    "newlyAddedFunctionalDeclarations": 1,
+    "fullSuiteUniqueFunctionalCount": null,
+    "proofParentControls": 10,
+    "proofIsolatedChildren": 6,
+    "proofCountsAreSeparate": true,
+    "coverageAlreadyInG4": true,
+    "portfolioAlreadyInG17": true,
+    "noDuplicateOldGroups": true
+  },
+  "currentReferenceEvidence": {
+    "scope": "Historical acceptance of the current control on C3 only; not a result of D25, C613 or the running Analytics.",
+    "source": "a0b3725bb62f3a1dd26e45cb5874894779db4cb9",
+    "sourceTree": "cec59fed43d61602bd42170fe96d072e2039f3a6",
+    "run": 45914597981,
+    "attempt": 1,
+    "writerReceipt": "cc5b8090b749e9f51de6a07d9ff58f65453a84f4",
+    "rootReceipt": "0226995f0574ff106a36f4d6217643e4cf58eb92",
+    "independentReceiptCurrent": "0f5a0a38eee76d2dc0cf11e24bf7fa5cc586618d",
+    "control": {
+      "pass": 1,
+      "fail": 0,
+      "assertions": 158,
+      "phasesReturned": 18,
+      "reports": 4
+    },
+    "reportDerivative": {
+      "gitBlob": "b730319c690c505857777bd79942a074f0e90690",
+      "bytes": 2098,
+      "sha256": "2d5339a35c4505845ac587ce1ade4b3c340ea224137370c9dbd2a9dfbf4e52e1"
+    },
+    "limits": [
+      "Native sealed proof and instrumented entry counters are distinct modes.",
+      "Aggregate instrumented counts are method entries outside ALS before delegation, not SQL, I/O, CPU or latency.",
+      "Unsupported retains complete original work and separately reports admission counts.",
+      "No result is transferred to the final composed candidate or to Analytics."
+    ]
+  },
+  "delta": {
+    "wrapper": {
+      "anchors": 3,
+      "changes": [
+        "D25 documentary label",
+        "D25 verification schema",
+        "Append one literal G25 block after G24"
+      ]
+    },
+    "envelope": {
+      "anchors": 10,
+      "changes": [
+        "D25 receipt schema",
+        "Nine exact outer-count lines 24 to 25"
+      ],
+      "lineNumbersInD24": [
+        33,
+        474,
+        476,
+        477,
+        479,
+        484,
+        490,
+        491,
+        657,
+        709
+      ],
+      "noGlobalReplace": true
+    },
+    "finalizer": {
+      "anchors": 3,
+      "lineNumbersInD24": [
+        171,
+        172,
+        175
+      ],
+      "change": "Three outer-count gates 24 to 25"
+    },
+    "workflow": {
+      "anchors": 4,
+      "changes": [
+        "D25 documentary label",
+        "Derived envelope digest",
+        "Complete literal envelope embedding",
+        "Complete literal finalizer embedding"
+      ],
+      "sameLengthAsD24": true
+    },
+    "totalAnchors": 20,
+    "diffHunks": 15,
+    "diffAdded": 37,
+    "diffDeleted": 30,
+    "forwardAndInverseWholeText": true
+  },
+  "literalProof": {
+    "g1to24": {
+      "bytes": 14187,
+      "sha256": "d697431396aece846f66a83cbad4535f489594b822c97ed5964a07dbc45c1189",
+      "beforeAfterLiteral": true
+    },
+    "runCommand": true,
+    "allPriorGroupCommandsAndBudgets": true,
+    "firstFourWorkflowRunBlocks": true,
+    "loader": {
+      "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "literal": true
+    },
+    "envelopeEmbeddedBytesExact": true,
+    "finalizerEmbeddedBytesExact": true,
+    "derivedEnvelopeDigestExact": true,
+    "inheritedHexIdentityGatesRemainRejectingUnbound": true,
+    "repositoryWritePermissionsAbsent": true
+  },
+  "budgets": {
+    "newProcessMs": 150000,
+    "newOuterMs": 180000,
+    "newControlCooperativeMs": 110000,
+    "newControlBunMs": 120000,
+    "previous24GroupsLiteral": true,
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "noGlobalBudgetIncrease": true,
+    "maximaDoNotGuaranteeSchedulingOrReaping": true
+  },
+  "bounds": {
+    "reference": {
+      "gitSha": "fc1ddfb0cdcb7901cbee5981130863a0c044ca22",
+      "bytes": 9795,
+      "sha256": "0caee4089ac39a99596f9c5a88f22cf2331b135d8cf90467b6b3408e0135bc09"
+    },
+    "runCharacterLimit": 21000,
+    "maximumDraftRunChars": 15833,
+    "maximumFourPinWidthModelRunChars": 15930,
+    "widthModelIsNonhexPureDataOnly": true,
+    "allWithinLimit": true
+  },
+  "uiRequest": {
+    "path": ".ci-run.json",
+    "bytes": 390,
+    "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+    "state": "REQUIRED_FINAL_C613_BYTES_NOT_CREATED_BY_THIS_PACKAGE",
+    "mustBeInsideFinalC613": true,
+    "unchangedByD": true,
+    "finalUI": "Three original specs/six cases remain a separate qualification on the literal final candidate. D25 does not run or qualify FinalUI."
+  },
+  "futureIntake": {
+    "outerPassRequired": 25,
+    "failRequired": 0,
+    "skipRequired": 0,
+    "expectedPlannedCommands": 36,
+    "proofChildrenExpectedSeparately": 6,
+    "actualNativeOmniAndNonceRequired": true,
+    "originalC12ReportsRequired": 4,
+    "completeC12OutcomeRequired": true,
+    "countsArePlanningUntilExecuted": true,
+    "envelopeAlgorithmChangedBeyondListedCountsAndSchema": false,
+    "note": "The inherited envelope checks 25 outer cases and the native Omni verdict; reconciliation of all 36 commands, six isolated proof children and four C12 reports remains an explicit original-log intake obligation. No new report parser or count gate is implied."
+  },
+  "concretization": [
+    "Freeze the real final C613 separately under root authority; no such identity is created here.",
+    "Receive final tree and actual control pins from C613, including comparison-proof-observation.test.ts; compare against separately reviewed current reference before binding.",
+    "Bind only source SHA/tree in wrapper, then compute its actual Git blob/SHA256.",
+    "Bind the four reviewed values in envelope/finalizer and checkout positions, regenerate embeddings and envelope digest, and review exact bound diff.",
+    "Only after separate authority create the sole-child D with two added paths; no companion script is an additional source path.",
+    "Run technical qualification and the separate original FinalUI only under their later explicit authorities; receive fresh originals and do not transfer this focal PASS."
+  ],
+  "limits": [
+    "All transformations were pure text/hash/diff/width operations; no authored program, test, compiler or workflow was executed.",
+    "C613/Cgo, final source pin, driver commit/tree/ref/run, Release acceptance, FinalUI acceptance and go-live remain undefined.",
+    "G25 proves its own full control only when later run; it does not repeat G4 coverage, G17 Portfolio, or closed focal campaigns.",
+    "The source-bound current Analytics 45916475931 is a separate active campaign; its outcome is not asserted in this proposal."
+  ],
+  "actions": {
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalDownloads": 0,
+    "zipDownloads": 0,
+    "productEdits": 0,
+    "createdTextBlobsBeforeThisManifest": 7
+  }
+}

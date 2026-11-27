@@ -1,0 +1,107 @@
+{
+  "schema": "orchestra-sf.c16-closed-case-factory-bounds.v1",
+  "status": "STATIC_BOUNDS_NOT_EXECUTION_RESULT",
+  "baseSource": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+  "baseTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+  "delta": {
+    "modifiedPaths": 2,
+    "addedPaths": 0,
+    "productPaths": 1,
+    "testPaths": 1,
+    "sourceHunks": 3,
+    "sourceAdded": 17,
+    "sourceRemoved": 8,
+    "testHunks": 2,
+    "testAdded": 224,
+    "testRemoved": 1
+  },
+  "newControl": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+    "title": "C16 closed case factories preserve selection, fallback, late observations and readonly fences",
+    "declarations": 1,
+    "staticExpectCallSites": 47,
+    "staticAwaitSites": 27,
+    "reports": 1,
+    "reportFamily": "SF_C16_SELECTION_CONTROL",
+    "expectedOutcomes": 31,
+    "outcomeGroups": {
+      "positiveValueAndMalformed": 12,
+      "firstOrSecondAuthorizationDrift": 8,
+      "fullFallback": 6,
+      "lateCapturedKey": 1,
+      "sentinelThrows": 2,
+      "requestAbort": 1,
+      "poisonedReadonlyRoot": 1
+    },
+    "c08ReadAttemptsIfAllScenariosReached": 49,
+    "cooperativeMs": 8000,
+    "bunMs": 10000,
+    "realCpuProfiling": false,
+    "performanceAssertions": false,
+    "assertionsAreNotRuntimeTotals": true
+  },
+  "wholeProjectionFile": {
+    "declarations": 5,
+    "expectedReports": 5,
+    "unchangedC14BunMs": [
+      120000,
+      120000
+    ],
+    "unchangedC15BunMs": [
+      20000,
+      20000
+    ],
+    "newC16BunMs": 10000,
+    "nominalBunTotalMs": 290000,
+    "cooperativeNominalTotalMs": 264000,
+    "processMs": 300000,
+    "parentMs": 360000,
+    "nominalProcessMarginMs": 10000,
+    "wholeFileSelection": true,
+    "noFilter": true,
+    "noRetry": true,
+    "overheadGuaranteed": false
+  },
+  "otherFunctionalFile": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+    "gitBlob": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+    "unchanged": true,
+    "declarations": 7,
+    "bunMsPerTest": 45000,
+    "nominalBunTotalMs": 315000,
+    "processMs": 360000,
+    "parentMs": 420000,
+    "expectedReports": 3
+  },
+  "focalExpected": {
+    "groups": 6,
+    "commands": 12,
+    "functionalTests": 12,
+    "functionalReports": 8,
+    "driverOwner": "/root/focal_migration",
+    "status": "Expected selection only; driver source/tree binding and actual execution remain separate",
+    "existingRunnerTypesGuardCommandsAndDeadlinesUnchanged": true,
+    "expectedTruncationFlags": 24
+  },
+  "product": {
+    "factoryCallsPerEligibleRead": 1,
+    "authorizationsBeforeAndAfterCallback": 2,
+    "originalAwaitSites": 35,
+    "candidateAwaitSites": 36,
+    "newAwaitDescription": "One new mutually exclusive fallback site replaces the previous opaque await for that branch; no extra await per execution.",
+    "thenAdded": 0,
+    "cacheAdded": false,
+    "observerAdded": false,
+    "nativeSnapshotShape": "Existing fixed whole cases projection, unchanged native validator and metadata",
+    "idBeforeFirstAuthorization": false,
+    "replay": false
+  },
+  "limits": [
+    "The 31 outcomes and12 tests/8 reports are expected, not executed evidence.",
+    "Readonly physical admission is discriminated by additive prototype-gate refusal for both factories. The new preimage cases prove equivalence, not an independent narrow-admission oracle.",
+    "Existing C13/C14/C15 cases remain selected and byte-literal except the one import addition in the projection file.",
+    "The original Analytics waiter60s, specification, worker1/retry0/repeat1, seed and runtime pins are unchanged.",
+    "No worst-case latency improvement or success within60s is inferred from the profile samples or these nominal test budgets."
+  ]
+}

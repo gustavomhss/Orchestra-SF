@@ -1,0 +1,88 @@
+{
+  "schema": "orchestra-sf.c16.root-static-review.v1",
+  "sourceBase": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+  "sourceTreeBase": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+  "status": "STATIC_ACK_PRODUCT_AND_CONTROLS",
+  "executed": false,
+  "qualification": false,
+  "provider": {
+    "status": "ROOT_PROVIDER_STATIC_ACK",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "post": {
+      "gitBlob": "550236df66f1e02e5111a1eee23579e76178bc6b",
+      "bytes": 66998,
+      "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60"
+    },
+    "uniqueAnchors": [
+      1,
+      1,
+      1
+    ],
+    "forward": true,
+    "inverse": true,
+    "diff": {
+      "hunks": 3,
+      "adds": 17,
+      "removes": 8
+    },
+    "controlsPending": false,
+    "execution": false
+  },
+  "controls": {
+    "preMeta": {
+      "gitBlob": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "bytes": 56757,
+      "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3"
+    },
+    "postMeta": {
+      "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a"
+    },
+    "anchors": 2,
+    "forward": true,
+    "inverse": true,
+    "existingDeclarationsLiteralPrefix": true,
+    "diff": {
+      "hunks": 2,
+      "adds": 224,
+      "removes": 1
+    },
+    "control": {
+      "testDeclarations": 1,
+      "expectSites": 47,
+      "awaitSites": 27,
+      "reportSites": 1,
+      "nominalWholeFileMs": 290000,
+      "processMs": 300000,
+      "parentMs": 360000
+    },
+    "scope": "functional controls, not installed Analytics",
+    "executed": false
+  },
+  "reviewFindings": [
+    "Private registry identities only during physical selection; no captured ID or state lookup before first authorization.",
+    "Competing or late declarations refuse narrowing or invalidate the materialized selection.",
+    "Existing valid single-case and identity dispatch remain literal.",
+    "Missing/malformed single-case fallback uses only the closed factory project on a fresh cases graph when actual cases projection exists.",
+    "Both authorizations, fresh checks, abort, errors and poisoned root behavior retained.",
+    "Control prefix and original 120/120/20/20 second declarations preserved; one 8-second cooperative/10-second Bun declaration added.",
+    "31 outcome assertions include original full opaque fallback, independently cloned outputs and post-authorization identity observation.",
+    "Physical-narrow refusal oracle covers readonly for both factories; preimage checks establish equivalence, not a separate physical-narrow proof.",
+    "Whole-file nominal 290 seconds within existing 300-second process/360-second parent; not a runtime completion guarantee.",
+    "No E11 diagnostics, waiter changes, caching or authorization bypass."
+  ],
+  "independentReview": {
+    "agent": "teams_product",
+    "provider": "ACK 3 hunks +17/-8; anchors/diff full forward/inverse",
+    "controls": "ACK 2 hunks +224/-1; 47 expect sites/27 await sites/31 outcomes; no blocker",
+    "executed": false
+  },
+  "integrationState": {
+    "commitCreated": false,
+    "treeCreated": false,
+    "refChanged": false,
+    "devChanged": false,
+    "productionApproved": false
+  }
+}

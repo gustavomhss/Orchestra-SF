@@ -1,0 +1,247 @@
+{
+  "schema": "orchestra-sf.c16-closed-case-factories-source.v1",
+  "status": "ROOT_OBJECT_REPORTED_CI_PENDING",
+  "qualification": false,
+  "repository": "gustavomhss/Orchestra-SF",
+  "authority": {
+    "writer": "/root/close_pr613",
+    "operator": "/root",
+    "rootStaticReview": "c5942e9e086692cfd389f7daa37b5f2d70c3f1f1",
+    "teamsSourceAndControlAckReceived": true,
+    "sourceTreeRefRunCreationByWriter": 0,
+    "actionsOriginalGetsByWriter": 0,
+    "zipGetsByWriter": 0,
+    "repositoryOrTestExecution": false
+  },
+  "base": {
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "clean": true,
+    "expectedSoleParent": true,
+    "sourceCommit": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "noE11Overlay": true
+  },
+  "instructions": {
+    "rootAgents": {
+      "gitBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223
+    },
+    "localAgents": "Existing ancestors were already audited by root for these unchanged paths; no additional AGENTS applies.",
+    "tests": "Actions only, never executed here",
+    "typechecks": "Existing package bun-run lanes",
+    "guards": "Existing canonical origin/dev lane",
+    "generatedCodeChanged": false
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitBlob": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+        "bytes": 66226,
+        "sha256": "21bf38974bee4ccf62f3ca33e928afcf67d05b8cf1aebb58452652290f8600d3",
+        "lf": 878
+      },
+      "postimage": {
+        "gitBlob": "550236df66f1e02e5111a1eee23579e76178bc6b",
+        "bytes": 66998,
+        "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+        "lf": 887
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitBlob": "a55818797ecf9fa6801393762bbe3261a1812576",
+        "bytes": 56757,
+        "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+        "lf": 973
+      },
+      "postimage": {
+        "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+        "bytes": 70284,
+        "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+        "lf": 1196
+      }
+    }
+  ],
+  "supports": {
+    "sourceAnchors": {
+      "gitBlob": "c1bd6552c5b53c02768624f69a9044c5b6d9a470",
+      "bytes": 4998,
+      "sha256": "ce2374d37be6409e16e9b6978e85541f7e3ba0e5e46150d6544cb0c5a3ccab6a",
+      "lf": 36
+    },
+    "sourceDiff": {
+      "gitBlob": "d66c19927dca1e8a46ef8001436936de88f82368",
+      "bytes": 4257,
+      "sha256": "147716bbd3c0c7918fb01a5f1b2969fdc74bbb2e4000587d44c349a4ed2fe226",
+      "lf": 54
+    },
+    "controlAnchors": {
+      "gitBlob": "cd7a502de38ae093d140a1c015e87c6777238ba6",
+      "bytes": 16575,
+      "sha256": "9c122ebff8710cb91e8db92770cdace19a5803f6cfb6f85ffd74c9eb036c3997",
+      "lf": 54
+    },
+    "controlDiff": {
+      "gitBlob": "677c905b9fc7941cecd92d85cd17c5d098207674",
+      "bytes": 16733,
+      "sha256": "0a7eab6c2c2c1c73ddf18f1c7c135ab6f99b806f0f0d203cc4f68bed0f652905",
+      "lf": 260
+    },
+    "bounds": {
+      "gitBlob": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+      "bytes": 3863,
+      "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870",
+      "lf": 107
+    },
+    "currentProfileEvidence": {
+      "gitBlob": "9f230a963d5540d73296d447bb84afc302489bd4",
+      "bytes": 23320,
+      "sha256": "a550b369dbba1a9b6b97f16a259088f125d1fc09fbb6134bd2dbdaab4c16023f",
+      "lf": 1063
+    }
+  },
+  "observedProblem": {
+    "profileBytes": 1888001,
+    "profileSha256": "6e8f44263e882fb9c63b341b594b1a5d8159e656047f968a2784cd31b5b2fc84",
+    "profileWholeGitCalculatedOnly": "ac668b238261f78cb262228599e36bbb13a72a19",
+    "exportsManifest": "7af030aab7cb129a256019038909950bc7fa988f",
+    "nodes": 8246,
+    "samples": 9682,
+    "validationIssues": 0,
+    "structuredCloneSelf": 2842,
+    "nativeCopyCloneSelf": 1261,
+    "coverageNativeCloneSelf": 385,
+    "identityNativeCloneSelf": 299,
+    "intersection": 0,
+    "union": 684,
+    "unionShareAllSamplesPercent": 7.064656062796943,
+    "unionShareNativeCopyCloneSamplesPercent": 54.2426645519429,
+    "mechanism": "C15 physical selection explicitly excludes the private single-case and case-identity factories. Native admitted C08 copies therefore contain the full product state before their Provider dispatch narrows to cases; current profile samples that clone on both concrete consumer stacks.",
+    "limits": "Whole-VM current E11 diagnostic profile; sample sets disjoint as documented, inclusive frames overlap. Counts are not saved time or a deadline prediction; no Source/native pairing or none/none fallback-rate inference."
+  },
+  "repair": {
+    "productFiles": 1,
+    "selectors": [
+      "selectSfCase",
+      "selectSfCaseIdentity"
+    ],
+    "newNativeSelectionKinds": 0,
+    "transport": "Reuse existing cases whole-graph projection and actual selection mark; LocalStore/Source/CurrentChoice stay literal.",
+    "query": "Private registry identity only. Readiness, result/scenario routes and concurrent cases declarations retain full C14. No selected ID/captured key/authority is read before authorization.",
+    "predispatch": "Recheck actual selection and precedence after first authorize, prove the appropriate cases map before any closed projection callback.",
+    "validSingle": "Existing selected.value clone and factory dispatch remain literal.",
+    "identity": "Existing cases clone and identity factory dispatch remain literal; captured fields are observed only inside the original callback.",
+    "missingOrMalformedSingle": "Only when actual native selection is cases and the factory map is proven, invoke the private factory project on a new whole cases clone. A reduced state never reaches the opaque callback.",
+    "drift": "New conflicting registration invalidates an existing physical selection. Current Provider/Source checks before/after awaits and final authorization still refuse changed eligibility without replay.",
+    "unchanged": [
+      "Two original business authorizations, namespace/mode, final metadata and status decisions",
+      "Original valid single-case and identity dispatch, callback guards and short-circuits",
+      "Source metadata checks, readonly scope/lifetime, CurrentChoice wrappers and native commit:true poison",
+      "Abort, throw propagation including throw undefined, durable write/fallback behavior",
+      "Original C13/C14/C15 declarations and existing Analytics selection/deadlines",
+      "All seven E11 observer files absent from this clean product delta"
+    ],
+    "awaits": {
+      "before": 35,
+      "after": 36,
+      "newSite": "mutually exclusive closed fallback instead of the previous opaque await; no added suspension on the same execution"
+    },
+    "thenAdded": 0,
+    "nonNullJustification": "cases! in the closed fallback is guaranteed by the preceding actual-projection map guard; no cast/any/suppression or fabricated data."
+  },
+  "controls": {
+    "test": {
+      "gitBlob": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196
+    },
+    "newDeclarations": 1,
+    "staticExpectCallSites": 47,
+    "staticAwaitSites": 27,
+    "expectedOutcomes": 31,
+    "expectedReports": 1,
+    "report": "SF_C16_SELECTION_CONTROL",
+    "title": "C16 closed case factories preserve selection, fallback, late observations and readonly fences",
+    "existingFourPreserved": true,
+    "existingSevenReadonlyPreserved": true,
+    "physicalAdmissionOracle": "Both closed factories under a native readonly composition must refuse the additive prototype drift before/after authorization; the gate is specific to actual narrow copies.",
+    "preimageLimit": "Positive equivalence and detachedness only in this new control; no claim of a second independent narrow-admission oracle.",
+    "coverage": [
+      "Valid values and metadata versus opaque-authorizer full snapshots; new independent copies per call",
+      "Missing and array-malformed cases for both factories under readonly/preimage",
+      "Concurrent declarations before admission, opaque contexts and namespace mismatch retain full path",
+      "Prototype drift and late conflicting declarations in first and second authorization",
+      "Mutable captured identity key read exactly once after the first authorization, not during registration or reauthorization",
+      "Sentinel Error and throw undefined propagate; following child remains usable",
+      "Original Request abort refuses the root",
+      "Caught native commit:true poisons the same root, preventing accepted child/root and durable changes"
+    ]
+  },
+  "derivation": {
+    "sourceAnchors": 3,
+    "controlAnchors": 2,
+    "sourceDiff": {
+      "hunks": 3,
+      "added": 17,
+      "removed": 8
+    },
+    "controlDiff": {
+      "hunks": 2,
+      "added": 224,
+      "removed": 1
+    },
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "controlExistingPrefixLiteralExceptImport": true
+  },
+  "focal": {
+    "groups": 6,
+    "commands": 12,
+    "functionalTests": 12,
+    "functionalReports": 8,
+    "driverOwner": "/root/focal_migration",
+    "status": "Expected selection only; driver source/tree binding and actual execution remain separate",
+    "existingRunnerTypesGuardCommandsAndDeadlinesUnchanged": true,
+    "expectedTruncationFlags": 24
+  },
+  "limits": [
+    "The 31 outcomes and12 tests/8 reports are expected, not executed evidence.",
+    "Readonly physical admission is discriminated by additive prototype-gate refusal for both factories. The new preimage cases prove equivalence, not an independent narrow-admission oracle.",
+    "Existing C13/C14/C15 cases remain selected and byte-literal except the one import addition in the projection file.",
+    "The original Analytics waiter60s, specification, worker1/retry0/repeat1, seed and runtime pins are unchanged.",
+    "No worst-case latency improvement or success within60s is inferred from the profile samples or these nominal test budgets."
+  ],
+  "next": "Focal binds the existing clean driver to the root-created S16/T16. Root alone audits/operates any focal and later Analytics after separate authority; this packet claims no CI or Analytics outcome.",
+  "rootReportedObject": {
+    "commit": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "delta": "exact2M Provider550236 + control548fa, mode100644",
+    "treePairs": 10,
+    "unchangedSiblings": 214,
+    "createdAndAuditedBy": "/root",
+    "independentlyAuditedByThisWriter": false,
+    "refsOrRunsByWriter": 0
+  },
+  "documentarySupersession": {
+    "gitBlob": "fceccbc01efe4525e11161d719096b907b9044fd",
+    "bytes": 11492,
+    "sha256": "8a849e3c073ee9c6dc56a01d90f43aa99e538902b9a608fbb18f589661239e37",
+    "reason": "Only clarify the root-created object status and rename24 stdoutTruncated/stderrTruncated flags to expectedTruncationFlags; source/test/budgets unchanged.",
+    "boundsSuperseded": {
+      "gitBlob": "896909ff9a518ae6eaa483d910b4e4db24936d05",
+      "bytes": 3858,
+      "sha256": "fe108684d3982465e068e1dabaa8ee96ed770547caef790a3754688463ba3449"
+    }
+  }
+}

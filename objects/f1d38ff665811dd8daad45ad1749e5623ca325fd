@@ -1,0 +1,646 @@
+{
+  "schema": "orchestra-sf.c16-original-analytics-intake-final.v1",
+  "at": "2026-11-27 17:21:09 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "CLOSED_NEGATIVE_ORIGINAL_ANALYTICS",
+  "qualification": false,
+  "source": {
+    "sha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "role": "Clean C16 source; source-bound results only"
+  },
+  "snapshot": {
+    "sha": "dfa5cca0f7e20b92c23ea45897301c2327dc60ea",
+    "tree": "b558bb198d9b8e41702c75fb2719dea49672db2a",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "delta": "1A original request only"
+  },
+  "run": {
+    "id": 46038404128,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46038404128",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 140639576694,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-27T17:01:10Z",
+        "completedAt": "2026-11-27T17:10:40Z"
+      },
+      {
+        "id": 140644065718,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-27T17:10:43Z",
+        "completedAt": "2026-11-27T17:10:50Z"
+      }
+    ]
+  },
+  "authority": {
+    "gitBlob": "472b0f27d10436b67ba18d8d98330abb647141ff",
+    "bytes": 5851,
+    "sha256": "908133c2936b87dbe6a25300ef538cecea00e85bee894e7bd8dd07fb69508491"
+  },
+  "focal": {
+    "gitBlob": "354a1382f902b6336ab4298f4e4ee12ac9aee7c3",
+    "bytes": 61055,
+    "sha256": "4733eaa4874168992cb681a55a027780d04aff77c7f667fee05fb857869f8378"
+  },
+  "rawManifest": {
+    "gitBlob": "866c4d1d905f262ece8ebe76b3e4422adea8b779",
+    "bytes": 9362,
+    "sha256": "e186e573b4f08180ba0899f91b85440c6114962f425c5b275d642c5dd8f840c2"
+  },
+  "main": {
+    "job": 140639576694,
+    "bytes": 4859527,
+    "sha256": "06f6263deccbee5c52296156f2f44c0ba4aa311c76e553fec05345a1eb720443",
+    "wholeGitBlobCalculated": "b9e19c83f7530b8ef2c49e43389386ddc311aee2",
+    "wholeBlobPersisted": false,
+    "literalReadback": true,
+    "lf": 1965,
+    "bomCodeUnitOffsets": [
+      0,
+      2099826,
+      4212704
+    ],
+    "bomByteOffsets": [
+      0,
+      2104639,
+      4217528
+    ],
+    "allPartsPersisted": true,
+    "parts": [
+      {
+        "index": 1,
+        "startCodeUnit": 0,
+        "endCodeUnit": 297350,
+        "bytes": 300000,
+        "gitBlob": "710ac96054e72046ad61e3c43912954f48bf9108",
+        "sha256": "7fc5d87b571b13910a4721e73d74e0f8379f414a4e2dadb8cb4e0ed25880f260",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 2,
+        "startCodeUnit": 297350,
+        "endCodeUnit": 597350,
+        "bytes": 300000,
+        "gitBlob": "389a0c72befd29d608c65d4acaea97c8069ab373",
+        "sha256": "f66e7f13ffd073eabaea97ff42fd21086e0fc33deed9400e64c6cfa3fea652e2",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 3,
+        "startCodeUnit": 597350,
+        "endCodeUnit": 895187,
+        "bytes": 300000,
+        "gitBlob": "71da7ff4a6b7c5b229986a72d3a81ab63ce132bd",
+        "sha256": "0deceeb46aa6755842556874a443990389af334c25edf05fe765bb4de0f33726",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 4,
+        "startCodeUnit": 895187,
+        "endCodeUnit": 1195187,
+        "bytes": 300000,
+        "gitBlob": "d505ed51815229e11719c23c901466130ad1e094",
+        "sha256": "e38ba0688306d31f9dea2039fd7948fb773523df436f448d97ff32e7b70282ec",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 5,
+        "startCodeUnit": 1195187,
+        "endCodeUnit": 1495187,
+        "bytes": 300000,
+        "gitBlob": "043d7fe462aec232de9b4337a83d582c14193179",
+        "sha256": "342ab75a3e3133d4bd870d0213d702939f5b151f280e4887e3e4c05581c9a93a",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 6,
+        "startCodeUnit": 1495187,
+        "endCodeUnit": 1795187,
+        "bytes": 300000,
+        "gitBlob": "08e4ddd7ad06a6fb5bbee2f01a952b82b3f5a228",
+        "sha256": "c7c8991384026801f94c9a7bc43b4b846f7a721b32c8d0ddc498cba068da17d6",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 7,
+        "startCodeUnit": 1795187,
+        "endCodeUnit": 2095187,
+        "bytes": 300000,
+        "gitBlob": "77cd860e048bbedd862c83f9727a381a4c31f158",
+        "sha256": "4a9c2007e23417aeade47a2ea1c998e7365845310276583b7a6be24873bd122c",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 8,
+        "startCodeUnit": 2095187,
+        "endCodeUnit": 2395185,
+        "bytes": 300000,
+        "gitBlob": "c2396ed2dfb13e4b9d40660e8a2831134280eeb1",
+        "sha256": "d5267b1ae9d55a9c0744940fea67a128ec463ca337ea91d75215499bbbf7ce28",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 9,
+        "startCodeUnit": 2395185,
+        "endCodeUnit": 2695182,
+        "bytes": 300000,
+        "gitBlob": "35076b2734865ce4229e30849176dcef916dfac3",
+        "sha256": "4e28b00a03916b42acb2ad8c31a7e76e12400af3843668f1a7c3fc418b27ae50",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 10,
+        "startCodeUnit": 2695182,
+        "endCodeUnit": 2995179,
+        "bytes": 300000,
+        "gitBlob": "accacf6d46438d0a40d5241eb76cb1b2876ea346",
+        "sha256": "f5071b7d11efa1ea63ddb368fd1028981d9f06f9c572f1a5f10c4e169eb798e4",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 11,
+        "startCodeUnit": 2995179,
+        "endCodeUnit": 3295179,
+        "bytes": 300000,
+        "gitBlob": "78a6bfe1f9eb4d9ecd2a793db6ff20979ea2c26a",
+        "sha256": "081f25c6de093fa9a4c1d996e3eea2aeb19946cee6625f2d3cb192ef90406090",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 12,
+        "startCodeUnit": 3295179,
+        "endCodeUnit": 3595179,
+        "bytes": 300000,
+        "gitBlob": "f6a84fa741cb5260126f0f6a13ad9c0a24024409",
+        "sha256": "5f01901d17526184821b910bbe5d7ba3d93a4a4bc0a79b948e1eef127be90666",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 13,
+        "startCodeUnit": 3595179,
+        "endCodeUnit": 3895179,
+        "bytes": 300000,
+        "gitBlob": "20fa4baeb4776daa38b401a6aded08163aa0d9a4",
+        "sha256": "f2245404690f8c6c9acdaf0d75c9daeb8db7a5265caed8c074ef8c95626eced6",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 14,
+        "startCodeUnit": 3895179,
+        "endCodeUnit": 4195176,
+        "bytes": 300000,
+        "gitBlob": "7c1d22843b155e1934ac3ac9d6c967b7965a8c4d",
+        "sha256": "7dcced0ed9ee6d8cd54b1058ac22955d370f4954e1ff7ce2ae5b261b8fb82db2",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 15,
+        "startCodeUnit": 4195176,
+        "endCodeUnit": 4495174,
+        "bytes": 300000,
+        "gitBlob": "1f17a9f96cdd1167112f4c0c7fc7f4a51050d175",
+        "sha256": "ab6cdbab0c63b55042c5622da5d609362f026b3570dc166680ca50a75b9f7a0e",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 16,
+        "startCodeUnit": 4495174,
+        "endCodeUnit": 4795174,
+        "bytes": 300000,
+        "gitBlob": "f2fd71634903de42920b252caedffd5f107b613e",
+        "sha256": "6d2cfd42184196e17a982c345e904fa801d576e90158da2b72b3767a1fe004a5",
+        "persisted": true,
+        "literalReadback": true
+      },
+      {
+        "index": 17,
+        "startCodeUnit": 4795174,
+        "endCodeUnit": 4854697,
+        "bytes": 59527,
+        "gitBlob": "138bf4be94f427cfbeacfb42cf3112a7b462667c",
+        "sha256": "421b2830b28d25a5cff1dc8a948de5b78d3488d056a709d392660ccec3ccfa2c",
+        "persisted": true,
+        "literalReadback": true
+      }
+    ]
+  },
+  "cleanup": {
+    "job": 140644065718,
+    "gitBlob": "db9977c55265a111e8c0d78559e45320780f98fd",
+    "bytes": 2281,
+    "sha256": "56b0cb24e80d95930104a24009eb647d7739de102d83b5699919cd9d9885b5e7",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "originalGets": {
+    "main": 1,
+    "cleanup": 1
+  },
+  "originalAcquisitionsClosed": true,
+  "preservedBeforeSemanticParsing": true,
+  "branchAfterCleanup": "404 NOT_FOUND",
+  "selection": {
+    "testsObserved": 2,
+    "workersObserved": 1,
+    "retriesConfigured": 0,
+    "repeatEachConfigured": 1,
+    "firstPreviewMs": 60000,
+    "sensitivityMs": 120000,
+    "originalSpecAndHelpers": true,
+    "observerOverlay": false,
+    "sourceUnchangedPackagesAndGithub": [
+      {
+        "path": "packages",
+        "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "unchangedFromClean069a": true
+      },
+      {
+        "path": ".github",
+        "sha": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "unchangedFromClean069a": true
+      }
+    ]
+  },
+  "verdict": {
+    "passed": 1,
+    "failed": 1,
+    "total": 2,
+    "newAreasQualified": 0,
+    "historicalAreasQualified": 12,
+    "historicalTotalAreas": 15,
+    "finalCompositionQualified": false
+  },
+  "firstCase": {
+    "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "specLocation": "design-wave-five-analytics.spec.ts:12:1",
+    "status": "failed",
+    "failure": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event response",
+    "errorLocation": "design-wave-five-analytics.spec.ts:72:32",
+    "operation": "decision-portfolio-preview",
+    "method": "POST",
+    "sequence": 3,
+    "ownerBinding": "exact",
+    "nativeRequestLine": 1236,
+    "nativeResponseObserved": false,
+    "partialCaptures": {
+      "UI42": 6,
+      "list": 4,
+      "configure": 2
+    },
+    "ui43Reached": false,
+    "ui44Reached": false,
+    "lastCapture": "UI42-configure-focused-candidate-test-data",
+    "view": "ready/ready/ready; Running; Preview is not yet available",
+    "consoleErrors": [],
+    "pageErrors": [],
+    "previousResultReads": [
+      {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 330,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 538,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "cause": "NOT_ESTABLISHED_BY_CURRENT_LOGS",
+    "currentCpuProfile": false
+  },
+  "secondCase": {
+    "title": "wave five analytics: question catalog and original contextual BI",
+    "specLocation": "design-wave-five-analytics.spec.ts:443:1",
+    "status": "passed",
+    "captures": {
+      "UI45": 7,
+      "UI46": 33,
+      "total": 40
+    },
+    "bi06OriginalCompletions": [
+      {
+        "line": 1646,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      },
+      {
+        "line": 1850,
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      }
+    ],
+    "bi06LocalizedAcquisition": {
+      "operation": "bi-data-original-acquisition",
+      "view": "BI06",
+      "locale": "pt-BR",
+      "http": 200,
+      "acquisition": "native-response-cdp"
+    },
+    "originalSourceNegative": {
+      "http": 403,
+      "reason": "bi-source-outside-selected-value"
+    },
+    "finalScope": {
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "catalogViews": 11,
+      "originalFinancialRead": true,
+      "originalOperationalRead": true,
+      "originalSourceResolution": true,
+      "originalOperationalSourceResolution": true,
+      "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+      "originalSensitivityChoices": 0,
+      "invalidatedOnPeriodChange": true,
+      "fabricatedResult": false
+    },
+    "historicalC14AbortCausallyResolved": false
+  },
+  "markerUnion": {
+    "gitBlob": "e56b6884d9d15c83fa73622b532a98877dd86aa3",
+    "bytes": 34175,
+    "sha256": "b78bcda5d9f3394cb113ced175c97d5035205514c2b547831dc497f405e24e59",
+    "lines": 96,
+    "counts": {
+      "SF_ANALYTICS_SOURCE": 44,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "actualGitBlobPersisted": true,
+    "literalReadback": true
+  },
+  "mainOrderedSections": {
+    "all": {
+      "lines": 96,
+      "bytes": 34175,
+      "sha256": "b78bcda5d9f3394cb113ced175c97d5035205514c2b547831dc497f405e24e59",
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 44,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      }
+    },
+    "first": {
+      "lines": 33,
+      "bytes": 5856,
+      "sha256": "5a70db7e2191a63bec134edf20f6e2dbdc8df3652ca240559b4044bc08b34b15",
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 24,
+        "SF_ANALYTICS_CAPTURE": 6,
+        "SF_DESIGN_DIAGNOSTICS": 3
+      }
+    },
+    "second": {
+      "lines": 63,
+      "bytes": 28319,
+      "sha256": "ecc6cafbf6d6545b466bee2f058021492175535589c869304796e1d1bfc91acf",
+      "counts": {
+        "SF_ANALYTICS_CAPTURE": 40,
+        "SF_ANALYTICS_SOURCE": 20,
+        "SF_DESIGN_DIAGNOSTICS": 2,
+        "SF_ANALYTICS_SCOPE": 1
+      }
+    }
+  },
+  "mainSectionsAreNotRuntimeCaseResultStdioBinding": true,
+  "diagnosticExcerpt": {
+    "gitBlob": "0b711b2b14b27a254c46b1605dd6e91c3a74f0e1",
+    "bytes": 14471,
+    "sha256": "bcf597be87e2ce0f01ce902dacf2ff7d2327e1d91eb328aff0fd8b850749e459"
+  },
+  "artifact": {
+    "id": 15219543392,
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 45809306,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15219543392",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15219543392/zip",
+    "expired": false,
+    "created_at": "2026-11-27T17:10:36Z",
+    "expires_at": "2026-12-04T17:10:33Z",
+    "updated_at": "2026-11-27T17:10:36Z",
+    "digest": "sha256:a33e78d68c5031489e2a7eb0c7a84d029fd929f8bc6f66d1b96b2091929a6b22",
+    "workflow_run": {
+      "id": 46038404128,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613c16a",
+      "head_sha": "dfa5cca0f7e20b92c23ea45897301c2327dc60ea"
+    },
+    "received": "METADATA_ONLY",
+    "originalZipGets": 0,
+    "crcVerified": false,
+    "runtimeJsonReceived": false,
+    "traceReceived": false
+  },
+  "runtime": {
+    "observed": "1.3.14+0d9b296af",
+    "fullRevisionNotObserved": null,
+    "releaseQualification": false
+  },
+  "omni": {
+    "environmentNonce": "3a148600784d4027753d717703f55f75",
+    "focalCountsNotTransferred": true
+  },
+  "rootChecks": [
+    {
+      "name": "current run snapshot",
+      "pass": true
+    },
+    {
+      "name": "original full preservation",
+      "pass": true
+    },
+    {
+      "name": "checkout original SHA printed",
+      "pass": true
+    },
+    {
+      "name": "two tests one worker",
+      "pass": true
+    },
+    {
+      "name": "actual one failed one passed",
+      "pass": true
+    },
+    {
+      "name": "first preview error original60s",
+      "pass": true
+    },
+    {
+      "name": "first preview native request3 exact owner",
+      "pass": true
+    },
+    {
+      "name": "no preview native response in received markers",
+      "pass": true
+    },
+    {
+      "name": "preceding results1/2 actual200ok",
+      "pass": true
+    },
+    {
+      "name": "UI42 only six list/configure",
+      "pass": true
+    },
+    {
+      "name": "no UI43/UI44 captures",
+      "pass": true
+    },
+    {
+      "name": "BI forty captures7/33",
+      "pass": true
+    },
+    {
+      "name": "two native BI06 original completions",
+      "pass": true
+    },
+    {
+      "name": "BI06 ptBR original acquisition200",
+      "pass": true
+    },
+    {
+      "name": "source negative403 original",
+      "pass": true
+    },
+    {
+      "name": "diagnostic page/console arrays empty",
+      "pass": true
+    },
+    {
+      "name": "final BI scope only",
+      "pass": true
+    },
+    {
+      "name": "no observer markers",
+      "pass": true
+    }
+  ],
+  "independentReview": {
+    "reviewer": "/root/teams_product",
+    "status": "CLOSED_NEGATIVE_CURRENT_ANALYTICS",
+    "checks": 30,
+    "findings": [],
+    "all17MainPartsAndCleanupAuthenticatedBeforeParse": true,
+    "markerUnion": {
+      "lines": 96,
+      "bytes": 34175,
+      "sha256": "b78bcda5d9f3394cb113ced175c97d5035205514c2b547831dc497f405e24e59",
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 44,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      }
+    },
+    "mainSections": {
+      "all": {
+        "lines": 96,
+        "bytes": 34175,
+        "sha256": "b78bcda5d9f3394cb113ced175c97d5035205514c2b547831dc497f405e24e59",
+        "counts": {
+          "SF_ANALYTICS_SOURCE": 44,
+          "SF_ANALYTICS_CAPTURE": 46,
+          "SF_DESIGN_DIAGNOSTICS": 5,
+          "SF_ANALYTICS_SCOPE": 1
+        }
+      },
+      "first": {
+        "lines": 33,
+        "bytes": 5856,
+        "sha256": "5a70db7e2191a63bec134edf20f6e2dbdc8df3652ca240559b4044bc08b34b15",
+        "counts": {
+          "SF_ANALYTICS_SOURCE": 24,
+          "SF_ANALYTICS_CAPTURE": 6,
+          "SF_DESIGN_DIAGNOSTICS": 3
+        }
+      },
+      "second": {
+        "lines": 63,
+        "bytes": 28319,
+        "sha256": "ecc6cafbf6d6545b466bee2f058021492175535589c869304796e1d1bfc91acf",
+        "counts": {
+          "SF_ANALYTICS_CAPTURE": 40,
+          "SF_ANALYTICS_SOURCE": 20,
+          "SF_DESIGN_DIAGNOSTICS": 2,
+          "SF_ANALYTICS_SCOPE": 1
+        }
+      }
+    },
+    "sourceAndSnapshotIdentity": true,
+    "twoOriginalJourneys": true,
+    "firstPreviewStillTimeout": true,
+    "secondCaseBiPassed": true,
+    "currentProfileAcquired": false,
+    "originalAcquisitionsByReviewer": 0,
+    "artifactAcquisitionsByReviewer": 0
+  },
+  "priorNegativePreserved": {
+    "cleanC15R": "8af8c2f8a5c8bcd6d9226461d26c255d44efcda1",
+    "diagnosticE11": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+    "completeHistoricalE11Reader": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1"
+  },
+  "next": "Static diagnosis of remaining preview cost in clean S16. E11 remains historical; no new observer or rerun authorized by this receipt.",
+  "limits": [
+    "Only six pre-preview UI42 captures were reached; UI43/UI44 have no accepted evidence in this run.",
+    "The 12-control focal PASS does not imply the original installed journey passed.",
+    "Current logs do not quantify C16 latency savings or establish the cause of the timeout.",
+    "The historical E11 profile is not a CPU profile of C16.",
+    "Marker sections are partitions of main output, not verified artifact runtime case/result/stdio membership.",
+    "Artifact is metadata only; no original ZIP, audit ZIP, PNG, trace or runtime JSON has been acquired.",
+    "No final C613 candidate, PR merge, final tar, operational gate or production approval follows."
+  ],
+  "productionCutoverAuthorized": false
+}

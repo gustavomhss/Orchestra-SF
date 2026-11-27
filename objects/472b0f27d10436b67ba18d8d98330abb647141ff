@@ -1,0 +1,174 @@
+{
+  "schema": "orchestra-sf.c16-original-analytics-root-authority.v1",
+  "at": "2026-11-27 17:01:04 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "REVIEWED_SINGLE_ORIGINAL_ANALYTICS_AUTHORIZED",
+  "operator": "/root",
+  "source": {
+    "sha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "role": "Clean immutable C16 product source, not current public/private branch head or dev"
+  },
+  "snapshot": {
+    "sha": "dfa5cca0f7e20b92c23ea45897301c2327dc60ea",
+    "tree": "b558bb198d9b8e41702c75fb2719dea49672db2a",
+    "soleParent": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "exactDelta": "1A .ci-run.json only",
+    "branch": "ci-run-sf613c16a",
+    "workflow": ".github/workflows/test-ci.yml",
+    "event": "push",
+    "attempt": 1,
+    "run": null
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "finalLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "firstPreviewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "pins": [
+      {
+        "bytes": 56661,
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+      },
+      {
+        "bytes": 4384,
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+      },
+      {
+        "bytes": 21102,
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+      }
+    ],
+    "unchangedSubtrees": [
+      {
+        "path": "packages",
+        "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "unchangedFromClean069a": true
+      },
+      {
+        "path": ".github",
+        "sha": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "unchangedFromClean069a": true
+      }
+    ],
+    "observer": false,
+    "profiler": false,
+    "originalTimeoutsUnchanged": true
+  },
+  "focalPrerequisite": {
+    "status": "CLOSED_PASS",
+    "run": 46037237370,
+    "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "receipt": {
+      "gitBlob": "354a1382f902b6336ab4298f4e4ee12ac9aee7c3",
+      "bytes": 61055,
+      "sha256": "4733eaa4874168992cb681a55a027780d04aff77c7f667fee05fb857869f8378"
+    },
+    "reviewers": [
+      "/root",
+      "/root/teams_product"
+    ],
+    "functionalPassed": 12,
+    "functionalReports": 8,
+    "commandExitsZero": 12,
+    "truncationFalse": 24
+  },
+  "review": {
+    "root": {
+      "exact1A": true,
+      "commitTreeParentReadback": true,
+      "treePairs": 1,
+      "literalSiblings": 45,
+      "originalRequestAuthenticated": true,
+      "originalSelectionPinsAndSubtreesConfirmed": true
+    },
+    "independent": {
+      "agent": "/root/teams_product",
+      "status": "ACK",
+      "actualAnalyticsObject": true,
+      "soleParentS16": true,
+      "treePairs": 1,
+      "literalSiblings": 45,
+      "exact1A": true,
+      "request295BytesNoLF": true,
+      "originalSpecConfigHelperAndWorkflow": true,
+      "selectionAndWaitersUnchanged": true,
+      "focalIntakeComplete": true,
+      "findings": []
+    }
+  },
+  "intake": {
+    "onlyAfterBothJobsTerminal": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "preserveCompleteOriginalBeforeInterpretation": true,
+    "artifactsFirstAction": "metadata only",
+    "originalZip": "Only if needed through separately reviewed bounded reader for the actual artifact",
+    "auditZipDownloads": 0,
+    "automaticRetries": false,
+    "agentsAcquireOriginals": false
+  },
+  "priorNegativeAnalytics": {
+    "clean": {
+      "run": 46016341104,
+      "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+      "receipt": "8af8c2f8a5c8bcd6d9226461d26c255d44efcda1",
+      "result": "1 FAILED / 1 PASSED"
+    },
+    "diagnostic": {
+      "run": 46028127606,
+      "source": "ace9cecb0c03cf3f1c5287a81570b508d8116aab",
+      "receipt": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "cpuReader": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+      "result": "1 FAILED / 1 PASSED"
+    }
+  },
+  "preflight": {
+    "branch": "404 NOT_FOUND",
+    "runs": 0
+  },
+  "qualification": false,
+  "productionCutoverAuthorized": false,
+  "limits": [
+    "This executes the original installed Analytics on a changed product source; it is not an automatic rerun of prior failures.",
+    "No source/helper/worker/retry/deadline changes, focal wrapper or diagnostic observer are included.",
+    "Focal functional results do not predict the outcome of either installed journey.",
+    "Final C613 composition, UI6 and D26 still require their own actual-head evidence and independent review.",
+    "No real Microsoft G08, isolated recovery G10, production environment or production cutover is exercised."
+  ]
+}

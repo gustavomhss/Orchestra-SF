@@ -1,0 +1,94 @@
+{
+  "schema": "orchestra-sf.c16-focal-originals.v1",
+  "at": "2026-11-27 16:56:31 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+  "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+  "snapshot": "30890fcdcfd4e255185f443d128fe85ba21299ff",
+  "snapshotTree": "b17d971454c84cdd72c720d49ddc32e727f68624",
+  "run": 46037237370,
+  "attempt": 1,
+  "runConclusion": "success",
+  "authority": {
+    "gitBlob": "75b39f50641a408e5a7d47d0a3351167c3ed5814",
+    "bytes": 15601,
+    "sha256": "286aac88036a8cc67525ceb4d6ab3d2af722292067ab23efb27f786f73ac4e51"
+  },
+  "finalPackage": {
+    "gitBlob": "3477cff4f2aed4ac23a3f38ca4fb48fa2c8fc281",
+    "bytes": 1619,
+    "sha256": "237debf2ec67a90ea2faa0ef1421987841c8d79d48c892511733cadc80eef0ff"
+  },
+  "support": {
+    "manifest": {
+      "gitBlob": "e0098f86c27f72e48a6296b493a5c8dad4c18a1a",
+      "bytes": 18955,
+      "sha256": "5651a5826964cb6c6388bffacf8e3b870942ebb28f2cc0b75c65b627b239457f"
+    },
+    "bounds": {
+      "gitBlob": "29978faac841235e3ecec78b35dea207dceefbad",
+      "bytes": 11760,
+      "sha256": "e8778ce2c07c39d05609e0a320c8118656a01dfdeb6d6a78ea5c51160b9868d5"
+    }
+  },
+  "main": {
+    "job": 140635618844,
+    "gitBlob": "cf95fae47c5a977b871ea3cf9582c6040bb20809",
+    "bytes": 104436,
+    "sha256": "3581fd7f1c18f24071159351111692c9eb55010d52fd215db4b8565fa802c183",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 872,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "cleanup": {
+    "job": 140636770926,
+    "gitBlob": "3f18b826f17bca87143dab1ad2f679beedb433a2",
+    "bytes": 2280,
+    "sha256": "8d8a6ae59f92530020ac831029b00bf7dfd49c6ab9f93ce483773747bd86c69d",
+    "wholeBlobPersisted": true,
+    "literalReadback": true,
+    "lf": 39,
+    "bomCodeUnitOffsets": [
+      0
+    ]
+  },
+  "jobs": [
+    {
+      "id": 140635618844,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-27T16:52:29Z",
+      "completedAt": "2026-11-27T16:54:59Z"
+    },
+    {
+      "id": 140636770926,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-27T16:55:01Z",
+      "completedAt": "2026-11-27T16:55:07Z"
+    }
+  ],
+  "artifacts": {
+    "artifacts": []
+  },
+  "branchAfter": {
+    "error": "GitHub API error 404: {\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/git/refs#get-a-reference\",\"status\":\"404\"}",
+    "error_code": "NOT_FOUND",
+    "error_data": {
+      "message": "Not Found",
+      "documentation_url": "https://docs.github.com/rest/git/refs#get-a-reference",
+      "status": "404"
+    }
+  },
+  "originalGets": {
+    "main": 1,
+    "cleanup": 1
+  },
+  "preservedBeforeSemanticParsing": true,
+  "productVerdict": "PENDING_CURRENT_COMPLETE_LOG_INTAKE"
+}

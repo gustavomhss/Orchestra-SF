@@ -1,0 +1,203 @@
+diff --git a/apps/cli/test/sf613-final-verification.test.ts b/apps/cli/test/sf613-final-verification.test.ts
+--- a/apps/cli/test/sf613-final-verification.test.ts
++++ b/apps/cli/test/sf613-final-verification.test.ts
+@@ -1,4 +1,4 @@
+-// D25 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
++// D26 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
+ import { expect } from "bun:test"
+ import path from "node:path"
+ import { readFile } from "node:fs/promises"
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires Linux GitHub Actions with the actual driver SHA in GITHUB_SHA")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-final-composition-literal-c-d25-r1", source, sourceTree,
++    verification: "sf613-final-composition-literal-c-d26-r1", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -328,3 +328,10 @@
+   yield* runCommand("comparison proof observation", process.execPath,
+     ["test", "./test/product/wp10/integration/comparison-proof-observation.test.ts"], module, 150_000)
+ }), 180_000)
++
++checks.live("C14 C08 snapshot projection preserves fresh authorization and full-path equivalence", () => Effect.gen(function* () {
++  requireHostedCandidate()
++  expectSpawn(import.meta.path)
++  yield* runCommand("C14 snapshot projection", process.execPath,
++    ["test", "./test/product/wp10/integration/c08-snapshot-projection.test.ts"], module, 300_000)
++}), 360_000)
+diff --git a/sf613-final-envelope.mjs b/sf613-final-envelope.mjs
+--- a/sf613-final-envelope.mjs
++++ b/sf613-final-envelope.mjs
+@@ -30,7 +30,7 @@
+ const errors = []
+ const recordedErrors = new WeakSet()
+ const receipt = {
+-  schema: "sf613-final-technical-literal-c-d25-r1",
++  schema: "sf613-final-technical-literal-c-d26-r1",
+   status: "FAIL", technicalQualification: false, goLiveAcceptance: false,
+   source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+   run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+@@ -471,24 +471,24 @@
+   const summaries = pattern => errLines.map(line => line.match(pattern)).filter(Boolean)
+   const passes = summaries(/^\s*(\d+) pass\s*$/), failures = summaries(/^\s*(\d+) fail\s*$/)
+   const skips = summaries(/^\s*(\d+) skip\s*$/)
+-  need(passes.length === 1 && Number(passes[0][1]) === 25 &&
++  need(passes.length === 1 && Number(passes[0][1]) === 26 &&
+     failures.length === 1 && Number(failures[0][1]) === 0 &&
+-    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), "Outer Bun summary is not 25 PASS/0 FAIL/0 SKIP")
+-  need(errLines.filter(line => /^\(pass\) /.test(line)).length === 25 &&
++    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), "Outer Bun summary is not 26 PASS/0 FAIL/0 SKIP")
++  need(errLines.filter(line => /^\(pass\) /.test(line)).length === 26 &&
+     !errLines.some(line => /^\((fail|skip|todo)\) /.test(line)), "Outer case result inventory mismatch")
+-  const ran = summaries(/^Ran 25 tests across 1 file\./)
++  const ran = summaries(/^Ran 26 tests across 1 file\./)
+   need(ran.length === 1, "Outer Bun declaration/file count mismatch")
+   const tag = "omni positive control [" + nonce + "]:"
+   const footers = outLines.filter(line => line.includes(tag))
+   need(footers.length === 1, "Expected exactly one nonce-bound outer Omni verdict")
+-  const prefix = tag + " pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "
++  const prefix = tag + " pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); "
+   need(footers[0].startsWith(prefix), "Outer Omni declaration/file identity mismatch")
+   const counts = footers[0].slice(prefix.length).match(/^([1-9]\d*) omni spawn\(s\), 0 delegated\.$/)
+   need(counts && Number.isSafeInteger(Number(counts[1])), "Outer Omni did not prove own spawns without delegation")
+   const headers = errLines.filter(line => /^bun test v/.test(line))
+   need(headers.length === 1, "Actual Bun header missing or ambiguous")
+-  return { pass: 25, fail: 0, skip: 0, declarations: 25, actualHeader: headers[0],
+-    omni: { nonce, declared: 25, spawns: Number(counts[1]), delegated: 0, footer: footers[0],
++  return { pass: 26, fail: 0, skip: 0, declarations: 26, actualHeader: headers[0],
++    omni: { nonce, declared: 26, spawns: Number(counts[1]), delegated: 0, footer: footers[0],
+       nestedChildrenAddedToOuterCount: false },
+     summaryOrigin: "original outer stderr", omniOrigin: "original outer stdout" }
+ }
+@@ -654,7 +654,7 @@
+   jsonFile("omni-control-verdict-input.json", { schema: "sf613-original-control-verdict-input-v1",
+     chronologyClaimed: false, syntheticSteps: false, segments, input: canonicalInputFile })
+   const originalVerdict = controlVerdict({ name: receipt.actionsBefore.job.name }, asText(canonicalInput))
+-  need(originalVerdict.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "),
++  need(originalVerdict.startsWith("omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); "),
+     "Original C controlVerdict did not accept the observed outer control")
+   receipt.originalOmniVerdict = { sourcePath: "script/test-ci-request.ts", function: "controlVerdict",
+     source: SOURCE, verdict: originalVerdict, input: canonicalInputFile, chronologyClaimed: false, segments }
+@@ -706,7 +706,7 @@
+   receipt.sourceTreeChanged = receipt.checkoutAfterCleanup ? false : null
+   receipt.finishedAt = new Date().toISOString()
+   receipt.durationMs = Math.round(performance.now() - started)
+-  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 25 &&
++  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 26 &&
+     receipt.originalOmniVerdict?.source === SOURCE &&
+     receipt.slot?.cleanup === "removed-own-inode" && receipt.checkoutAfterCleanup && receipt.actionsAfter
+   receipt.status = passed ? "PASS" : "FAIL"
+diff --git a/sf613-final-finalizer.mjs b/sf613-final-finalizer.mjs
+--- a/sf613-final-finalizer.mjs
++++ b/sf613-final-finalizer.mjs
+@@ -168,11 +168,11 @@
+ 
+   need(main?.status === "PASS" && main.technicalQualification === true && main.goLiveAcceptance === false &&
+     main.source === SOURCE && main.sourceTree === TREE && main.driver === process.env.GITHUB_SHA &&
+-    main.run === run && main.attempt === attempt && main.result?.pass === 25 &&
+-    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 25 &&
++    main.run === run && main.attempt === attempt && main.result?.pass === 26 &&
++    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 26 &&
+     main.result?.omni?.spawns > 0 && main.result?.omni?.delegated === 0 &&
+     main.originalOmniVerdict?.source === SOURCE && main.originalOmniVerdict?.function === "controlVerdict" &&
+-    main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); ") &&
++    main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); ") &&
+     main.slot?.cleanup === "removed-own-inode" && process.env.SF613_TECH_OUTCOME === "success",
+     "No successful, complete, source-bound original technical receipt")
+ } catch (error) { fail("finalizer", error) }
+diff --git a/.github/workflows/sf613-final-qualification.yml b/.github/workflows/sf613-final-qualification.yml
+--- a/.github/workflows/sf613-final-qualification.yml
++++ b/.github/workflows/sf613-final-qualification.yml
+@@ -1,6 +1,6 @@
+ name: sf613-final-qualification
+ 
+-# D25 parametric draft, not a frozen candidate. D adds only this workflow and the wrapper; checkout remains literal C613.
++# D26 parametric draft, not a frozen candidate. D adds only this workflow and the wrapper; checkout remains literal C613.
+ # This workflow has no repository-write permission and retains D for audit after intake.
+ on:
+   push:
+@@ -98,7 +98,7 @@
+         env:
+           SF613_API_TOKEN: ${{ github.token }}
+           # Derived transport digest: regenerate after substituting the four reviewed pins.
+-          SF613_ENVELOPE_SHA256: "725bfb488579f6d7568200a60994cccbfb8738e0c23369cdb1600609717418cc"
++          SF613_ENVELOPE_SHA256: "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1"
+           SF613_ENVELOPE_SOURCE: |
+             import fs from "node:fs"
+             import * as fsp from "node:fs/promises"
+@@ -132,7 +132,7 @@
+             const errors = []
+             const recordedErrors = new WeakSet()
+             const receipt = {
+-              schema: "sf613-final-technical-literal-c-d25-r1",
++              schema: "sf613-final-technical-literal-c-d26-r1",
+               status: "FAIL", technicalQualification: false, goLiveAcceptance: false,
+               source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+               run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+@@ -573,24 +573,24 @@
+               const summaries = pattern => errLines.map(line => line.match(pattern)).filter(Boolean)
+               const passes = summaries(/^\s*(\d+) pass\s*$/), failures = summaries(/^\s*(\d+) fail\s*$/)
+               const skips = summaries(/^\s*(\d+) skip\s*$/)
+-              need(passes.length === 1 && Number(passes[0][1]) === 25 &&
++              need(passes.length === 1 && Number(passes[0][1]) === 26 &&
+                 failures.length === 1 && Number(failures[0][1]) === 0 &&
+-                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), "Outer Bun summary is not 25 PASS/0 FAIL/0 SKIP")
+-              need(errLines.filter(line => /^\(pass\) /.test(line)).length === 25 &&
++                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), "Outer Bun summary is not 26 PASS/0 FAIL/0 SKIP")
++              need(errLines.filter(line => /^\(pass\) /.test(line)).length === 26 &&
+                 !errLines.some(line => /^\((fail|skip|todo)\) /.test(line)), "Outer case result inventory mismatch")
+-              const ran = summaries(/^Ran 25 tests across 1 file\./)
++              const ran = summaries(/^Ran 26 tests across 1 file\./)
+               need(ran.length === 1, "Outer Bun declaration/file count mismatch")
+               const tag = "omni positive control [" + nonce + "]:"
+               const footers = outLines.filter(line => line.includes(tag))
+               need(footers.length === 1, "Expected exactly one nonce-bound outer Omni verdict")
+-              const prefix = tag + " pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "
++              const prefix = tag + " pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); "
+               need(footers[0].startsWith(prefix), "Outer Omni declaration/file identity mismatch")
+               const counts = footers[0].slice(prefix.length).match(/^([1-9]\d*) omni spawn\(s\), 0 delegated\.$/)
+               need(counts && Number.isSafeInteger(Number(counts[1])), "Outer Omni did not prove own spawns without delegation")
+               const headers = errLines.filter(line => /^bun test v/.test(line))
+               need(headers.length === 1, "Actual Bun header missing or ambiguous")
+-              return { pass: 25, fail: 0, skip: 0, declarations: 25, actualHeader: headers[0],
+-                omni: { nonce, declared: 25, spawns: Number(counts[1]), delegated: 0, footer: footers[0],
++              return { pass: 26, fail: 0, skip: 0, declarations: 26, actualHeader: headers[0],
++                omni: { nonce, declared: 26, spawns: Number(counts[1]), delegated: 0, footer: footers[0],
+                   nestedChildrenAddedToOuterCount: false },
+                 summaryOrigin: "original outer stderr", omniOrigin: "original outer stdout" }
+             }
+@@ -756,7 +756,7 @@
+               jsonFile("omni-control-verdict-input.json", { schema: "sf613-original-control-verdict-input-v1",
+                 chronologyClaimed: false, syntheticSteps: false, segments, input: canonicalInputFile })
+               const originalVerdict = controlVerdict({ name: receipt.actionsBefore.job.name }, asText(canonicalInput))
+-              need(originalVerdict.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); "),
++              need(originalVerdict.startsWith("omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); "),
+                 "Original C controlVerdict did not accept the observed outer control")
+               receipt.originalOmniVerdict = { sourcePath: "script/test-ci-request.ts", function: "controlVerdict",
+                 source: SOURCE, verdict: originalVerdict, input: canonicalInputFile, chronologyClaimed: false, segments }
+@@ -808,7 +808,7 @@
+               receipt.sourceTreeChanged = receipt.checkoutAfterCleanup ? false : null
+               receipt.finishedAt = new Date().toISOString()
+               receipt.durationMs = Math.round(performance.now() - started)
+-              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 25 &&
++              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 26 &&
+                 receipt.originalOmniVerdict?.source === SOURCE &&
+                 receipt.slot?.cleanup === "removed-own-inode" && receipt.checkoutAfterCleanup && receipt.actionsAfter
+               receipt.status = passed ? "PASS" : "FAIL"
+@@ -1062,11 +1062,11 @@
+           
+             need(main?.status === "PASS" && main.technicalQualification === true && main.goLiveAcceptance === false &&
+               main.source === SOURCE && main.sourceTree === TREE && main.driver === process.env.GITHUB_SHA &&
+-              main.run === run && main.attempt === attempt && main.result?.pass === 25 &&
+-              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 25 &&
++              main.run === run && main.attempt === attempt && main.result?.pass === 26 &&
++              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 26 &&
+               main.result?.omni?.spawns > 0 && main.result?.omni?.delegated === 0 &&
+               main.originalOmniVerdict?.source === SOURCE && main.originalOmniVerdict?.function === "controlVerdict" &&
+-              main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 25 test(s) in test/sf613-final-verification.test.ts); ") &&
++              main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); ") &&
+               main.slot?.cleanup === "removed-own-inode" && process.env.SF613_TECH_OUTCOME === "success",
+               "No successful, complete, source-bound original technical receipt")
+           } catch (error) { fail("finalizer", error) }

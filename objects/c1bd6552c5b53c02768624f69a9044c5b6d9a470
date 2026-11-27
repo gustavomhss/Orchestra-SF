@@ -1,0 +1,36 @@
+{
+  "schema": "orchestra-sf.c16-closed-case-projection-anchors.v1",
+  "baseSource": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+  "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+  "preimage": {
+    "gitSha": "ff9d23fe68d779e518d4a09ca00ba1768d3f824a",
+    "bytes": 66226,
+    "sha256": "21bf38974bee4ccf62f3ca33e928afcf67d05b8cf1aebb58452652290f8600d3",
+    "lf": 878
+  },
+  "postimage": {
+    "gitSha": "550236df66f1e02e5111a1eee23579e76178bc6b",
+    "bytes": 66998,
+    "sha256": "7d8d266cda6cb57723fc569b4e0e177a0f59a3b26747cb105d7c3a6929574a60",
+    "lf": 887
+  },
+  "anchors": [
+    {
+      "id": "closed-factory-selection",
+      "before": "// Only the existing whole-graph declarations may narrow the native copy. Do\n// not run selectors, inspect IDs or promote a lower-precedence declaration.\nfunction productReadSelection(namespace: SfStateNamespace, read: object) {\n  if (selectionValue(readinessReads, read)) return undefined\n  if (namespace === \"cases\" && selectionValue(caseGraphReads, read) === read &&\n    !selectionValue(caseReads, read) && !selectionValue(resultReads, read) &&\n    !selectionValue(scenarioReads, read) && !selectionValue(caseIdentityReads, read)) return \"cases\" as const\n  if (namespace === \"preferences\" && selectionValue(preferencesReads, read) === read) return \"preferences\" as const\n  return undefined\n}\n",
+      "after": "// Only closed cases factories and explicit whole-graph declarations may narrow\n// the native copy. Never inspect IDs or run selectors before authorization.\nfunction productReadSelection(namespace: SfStateNamespace, read: object) {\n  if (selectionValue(readinessReads, read)) return undefined\n  if (namespace === \"cases\" && !selectionValue(resultReads, read) && !selectionValue(scenarioReads, read)) {\n    const selected = selectionValue(caseReads, read), graph = selectionValue(caseGraphReads, read)\n    const identity = selectionValue(caseIdentityReads, read)\n    // Concurrent declarations retain the full path; later registration invalidates\n    // an already materialized selection instead of changing its callback route.\n    if (selected ? !graph && !identity : identity ? !graph : graph === read) return \"cases\" as const\n  }\n  if (namespace === \"preferences\" && selectionValue(preferencesReads, read) === read) return \"preferences\" as const\n  return undefined\n}\n"
+    },
+    {
+      "id": "closed-factory-predispatch",
+      "before": "        if (projection?.selection) {\n          if (!selectionCurrent() || (projection.selection === \"cases\"\n            ? readiness || selection || resultSelection || casesSelection !== read\n            : readiness || preferencesSelection !== read))\n            return { commit: false, value: { status: \"denied\", reason: \"product-authority-changed\" } }\n          if (projection.selection === \"cases\") selectedCases = projectCasesRead(state)\n          if (projection.selection === \"preferences\") selectedPreferences = projectPreferencesRead(state)\n          if (projection.selection === \"cases\" ? !selectedCases : !selectedPreferences)\n            return { commit: false, value: { status: \"denied\", reason: \"product-authority-changed\" } }\n        }\n",
+      "after": "        if (projection?.selection) {\n          if (!selectionCurrent() || (projection.selection === \"cases\"\n            ? readiness || resultSelection || scenarioSelection ||\n              (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)\n            : readiness || preferencesSelection !== read))\n            return { commit: false, value: { status: \"denied\", reason: \"product-authority-changed\" } }\n          if (projection.selection === \"cases\" && casesSelection === read) selectedCases = projectCasesRead(state)\n          if (projection.selection === \"preferences\") selectedPreferences = projectPreferencesRead(state)\n          if (projection.selection === \"cases\" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases : !selectedPreferences)\n            return { commit: false, value: { status: \"denied\", reason: \"product-authority-changed\" } }\n        }\n"
+    },
+    {
+      "id": "closed-single-case-fallback",
+      "before": "          : sealed && authorityOnly ? await authorityOnly(authority) as T\n          : await read(receipts ?? structuredClone(state), authority)\n",
+      "after": "          : sealed && authorityOnly ? await authorityOnly(authority) as T\n          // Missing or malformed single-case entries keep the factory's original\n          // cases lookup; a reduced view can never fall through to an opaque read.\n          : projection?.selection === \"cases\" && selection\n          ? await selection.project(structuredClone(cases!), authority) as T\n          : await read(receipts ?? structuredClone(state), authority)\n"
+    }
+  ],
+  "forwardLiteral": true,
+  "inverseLiteral": true
+}

@@ -1,0 +1,301 @@
+{
+  "schema": "orchestra-sf.c16-focal-derivation.v1",
+  "status": "STATIC_TEXT_ONLY_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "git": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+    "bytes": 10668,
+    "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf",
+    "lf": 169
+  },
+  "template": {
+    "git": "d45c3d2ab8348056d7d4be75c45a782480f91e8f",
+    "bytes": 10768,
+    "sha256": "2026cb2d0b7566f31331f2b172b545a8ba3441e7f1a86bc2b500edc6960e78f9",
+    "lf": 169,
+    "finalLF": true
+  },
+  "bound": {
+    "git": "33966f83510cd306df0b553a3827979ae49b1064",
+    "bytes": 10783,
+    "sha256": "4c9a1664771f283260ef0c0b57f308b2003d0bedc721e5397f47b6c9ac426df6",
+    "lf": 169,
+    "finalLF": true
+  },
+  "source": {
+    "sha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "tree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "soleParent": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "reportedRootDelta": "2M: Provider and projection control",
+    "agentCreated": false
+  },
+  "templateAnchors": [
+    {
+      "id": "unbound-source-and-tree",
+      "before": "const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n",
+      "after": "const source = \"__SF613_C16_SOURCE_SHA_UNBOUND__\"\nconst sourceTree = \"__SF613_C16_SOURCE_TREE_UNBOUND__\"\n"
+    },
+    {
+      "id": "binding-error-label",
+      "before": "throw new Error(\"C15 source and tree must be bound to reviewed Git objects before execution\")",
+      "after": "throw new Error(\"C16 source and tree must be bound to reviewed Git objects before execution\")"
+    },
+    {
+      "id": "verification-label",
+      "before": "verification: \"sf613-c15-snapshot-projection-focal\", source, sourceTree,",
+      "after": "verification: \"sf613-c16-closed-case-selection-focal\", source, sourceTree,"
+    },
+    {
+      "id": "candidate-delta-and-functional-counts",
+      "before": "    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 4, candidateDeltaPaths: 5,\n    deltaBase: \"372cbc152bc1361168de9efcd4262770105670c5\",\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 11, preservedTestDeclarations: 9, addedTestDeclarations: 2,\n    expectedControlReports: 7, nameFilter: null,\n",
+      "after": "    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 12, preservedTestDeclarations: 11, addedTestDeclarations: 1,\n    expectedControlReports: 8, nameFilter: null,\n"
+    },
+    {
+      "id": "mechanism-and-assertion-labels",
+      "before": "    mechanism: \"fixed detached C08 child snapshot and private whole cases/preferences selections through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition\",\n    assertions: \"complete shape and metadata, fresh selected graphs and authorization, opaque full routes, selector precedence and late registration, invalid and legacy fallback, live drift, scoped checks, inherited ACL timing, lifetime, error, abort and native poison\",\n",
+      "after": "    mechanism: \"fixed detached C08 child snapshots and private whole cases/preferences selections, including closed selectSfCase/selectSfCaseIdentity factories, through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition\",\n    assertions: \"preserved C13/C14/C15 controls plus closed case factory selection, full fallbacks, late identity getters, fresh copies and authorization, concurrent declaration refusal, original errors, abort and native poison\",\n"
+    },
+    {
+      "id": "projection-selection-budget",
+      "before": "    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, addedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, selectedTests: 4, nominalSum: 280000, process: 300000, parent: 360000 },",
+      "after": "    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, addedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },"
+    },
+    {
+      "id": "provider-working-pin",
+      "before": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"ff9d23fe68d779e518d4a09ca00ba1768d3f824a\"]",
+      "after": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"550236df66f1e02e5111a1eee23579e76178bc6b\"]"
+    },
+    {
+      "id": "projection-test-working-pin",
+      "before": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"a55818797ecf9fa6801393762bbe3261a1812576\"]",
+      "after": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"548fa992a4e5c5b25380d3e0e798993bac3e622c\"]"
+    },
+    {
+      "id": "working-pin-report-counts",
+      "before": "    functionalProcessesLaunched: 2, expectedTestDeclarations: 11, expectedControlReports: 7 }) + \"\\n\")",
+      "after": "    functionalProcessesLaunched: 2, expectedTestDeclarations: 12, expectedControlReports: 8 }) + \"\\n\")"
+    },
+    {
+      "id": "projection-group-labels",
+      "before": "checks.live(\"C14/C15 C08 projection and whole graph selection preserve authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14/C15 snapshot projection and whole graph selection\", process.execPath,",
+      "after": "checks.live(\"C14/C15/C16 C08 projection and closed case selection preserve authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14/C15/C16 snapshot projection and closed case selection\", process.execPath,"
+    }
+  ],
+  "bindings": [
+    {
+      "token": "__SF613_C16_SOURCE_SHA_UNBOUND__",
+      "value": "0860b3404ca54235997c4cdaee63bbe0659d5a7a"
+    },
+    {
+      "token": "__SF613_C16_SOURCE_TREE_UNBOUND__",
+      "value": "194690fc63c26ac7feb690e44d0fea70742da88c"
+    }
+  ],
+  "finalAnchors": [
+    {
+      "id": "unbound-source-and-tree",
+      "before": "const source = \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\"\nconst sourceTree = \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\"\n",
+      "after": "const source = \"0860b3404ca54235997c4cdaee63bbe0659d5a7a\"\nconst sourceTree = \"194690fc63c26ac7feb690e44d0fea70742da88c\"\n"
+    },
+    {
+      "id": "binding-error-label",
+      "before": "throw new Error(\"C15 source and tree must be bound to reviewed Git objects before execution\")",
+      "after": "throw new Error(\"C16 source and tree must be bound to reviewed Git objects before execution\")"
+    },
+    {
+      "id": "verification-label",
+      "before": "verification: \"sf613-c15-snapshot-projection-focal\", source, sourceTree,",
+      "after": "verification: \"sf613-c16-closed-case-selection-focal\", source, sourceTree,"
+    },
+    {
+      "id": "candidate-delta-and-functional-counts",
+      "before": "    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 4, candidateDeltaPaths: 5,\n    deltaBase: \"372cbc152bc1361168de9efcd4262770105670c5\",\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 11, preservedTestDeclarations: 9, addedTestDeclarations: 2,\n    expectedControlReports: 7, nameFilter: null,\n",
+      "after": "    source, sourceTree, qualification: false, sourcePaths: 12, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    expectedGroups: 6, expectedCommands: 12, functionalProcessesLaunched: 2,\n    expectedTestDeclarations: 12, preservedTestDeclarations: 11, addedTestDeclarations: 1,\n    expectedControlReports: 8, nameFilter: null,\n"
+    },
+    {
+      "id": "mechanism-and-assertion-labels",
+      "before": "    mechanism: \"fixed detached C08 child snapshot and private whole cases/preferences selections through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition\",\n    assertions: \"complete shape and metadata, fresh selected graphs and authorization, opaque full routes, selector precedence and late registration, invalid and legacy fallback, live drift, scoped checks, inherited ACL timing, lifetime, error, abort and native poison\",\n",
+      "after": "    mechanism: \"fixed detached C08 child snapshots and private whole cases/preferences selections, including closed selectSfCase/selectSfCaseIdentity factories, through the original LocalStore, CurrentChoice, SourcePersistence and ProductAuthority composition\",\n    assertions: \"preserved C13/C14/C15 controls plus closed case factory selection, full fallbacks, late identity getters, fresh copies and authorization, concurrent declaration refusal, original errors, abort and native poison\",\n"
+    },
+    {
+      "id": "projection-selection-budget",
+      "before": "    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, addedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, selectedTests: 4, nominalSum: 280000, process: 300000, parent: 360000 },",
+      "after": "    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, addedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },"
+    },
+    {
+      "id": "provider-working-pin",
+      "before": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"ff9d23fe68d779e518d4a09ca00ba1768d3f824a\"]",
+      "after": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"550236df66f1e02e5111a1eee23579e76178bc6b\"]"
+    },
+    {
+      "id": "projection-test-working-pin",
+      "before": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"a55818797ecf9fa6801393762bbe3261a1812576\"]",
+      "after": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"548fa992a4e5c5b25380d3e0e798993bac3e622c\"]"
+    },
+    {
+      "id": "working-pin-report-counts",
+      "before": "    functionalProcessesLaunched: 2, expectedTestDeclarations: 11, expectedControlReports: 7 }) + \"\\n\")",
+      "after": "    functionalProcessesLaunched: 2, expectedTestDeclarations: 12, expectedControlReports: 8 }) + \"\\n\")"
+    },
+    {
+      "id": "projection-group-labels",
+      "before": "checks.live(\"C14/C15 C08 projection and whole graph selection preserve authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14/C15 snapshot projection and whole graph selection\", process.execPath,",
+      "after": "checks.live(\"C14/C15/C16 C08 projection and closed case selection preserve authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14/C15/C16 snapshot projection and closed case selection\", process.execPath,"
+    }
+  ],
+  "checks": {
+    "templateForwardInverse": true,
+    "bindingForwardInverse": true,
+    "boundForwardInverse": true,
+    "uniqueBeforeAndAfter": true,
+    "runCommandLiteral": true,
+    "readonlyGroupLiteral": true,
+    "cliSfTypesAndGuardsTailLiteral": true,
+    "sourceAndTreeOnlyBinding": true,
+    "requestLiteral": true,
+    "requestFinalLF": false,
+    "syntacticRunCommandSites": 12,
+    "groups": 6,
+    "workingPins": 12,
+    "noObserverPins": true,
+    "noRepositoryCodeExecuted": true
+  },
+  "diffStatistics": {
+    "template": {
+      "hunks": 6,
+      "added": 16,
+      "removed": 16
+    },
+    "binding": {
+      "hunks": 1,
+      "added": 2,
+      "removed": 2
+    },
+    "boundRetarget": {
+      "hunks": 6,
+      "added": 16,
+      "removed": 16
+    },
+    "snapshotAddition": {
+      "hunks": 2,
+      "added": 170,
+      "removed": 0
+    }
+  },
+  "controlSelectionEvidence": {
+    "pre": {
+      "git": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "bytes": 56757,
+      "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+      "lf": 973
+    },
+    "post": {
+      "git": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196
+    },
+    "anchors": {
+      "git": "cd7a502de38ae093d140a1c015e87c6777238ba6",
+      "bytes": 16575,
+      "sha256": "9c122ebff8710cb91e8db92770cdace19a5803f6cfb6f85ffd74c9eb036c3997",
+      "lf": 54
+    },
+    "diff": {
+      "git": "677c905b9fc7941cecd92d85cd17c5d098207674",
+      "bytes": 16733,
+      "sha256": "0a7eab6c2c2c1c73ddf18f1c7c135ab6f99b806f0f0d203cc4f68bed0f652905",
+      "lf": 260
+    },
+    "forwardInverse": true,
+    "originalFourDeclarationsPreservedExceptImport": true,
+    "readonly": {
+      "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "bytes": 42018,
+      "sha256": "b716b6ab198354a5d74755dbd3c542475f5560a869794410b10a543129a1f82d",
+      "lf": 690
+    },
+    "selection": {
+      "anchors": [
+        {
+          "id": "closed-case-factory-import",
+          "forwardCount": 1
+        },
+        {
+          "id": "append-one-bounded-c16-control",
+          "forwardCount": 1
+        }
+      ],
+      "forward": true,
+      "inverse": true,
+      "declarations": [
+        "C14 C08 child reads preserve the complete product graph, ACL, fresh copies and both real authorizations",
+        "C14 projection refuses live drift and preserves opaque, scoped, abort, error and poison semantics",
+        "C15 whole graph selections preserve complete shape, metadata, authorization and detached values",
+        "C15 selections refuse drift and preserve invalid, legacy, late and competing read decisions",
+        "C16 closed case factories preserve selection, fallback, late observations and readonly fences"
+      ],
+      "deadlines": [
+        120000,
+        120000,
+        20000,
+        20000,
+        10000
+      ],
+      "nominalMs": 290000,
+      "readonlyDeclarations": [
+        "CurrentChoice readonly composition keeps original C08, Planner and fence readers live in legitimate child scopes",
+        "CurrentChoice readonly prepared Planner rejects owner and method drift after preparation and each authorization",
+        "CurrentChoice readonly calculation roots close escaped parent and child continuations and reject poisoned writes",
+        "CurrentChoice readonly calculation roots refuse aborted requests and replaced persistence without replay",
+        "C13 unfenced generic reads preserve later CurrentChoice fences and source reservations",
+        "C13 unfenced admission rejects opaque or changed providers and preserves exact native lifetimes",
+        "C13 generic facade writes retain native poison after caught source or audit corruption"
+      ],
+      "reportCounts": {
+        "SF_C14_SNAPSHOT_CONTROL": 2,
+        "SF_C15_SELECTION_CONTROL": 2,
+        "SF_C16_SELECTION_CONTROL": 1
+      },
+      "newExpectSites": 47,
+      "newAwaitSites": 27,
+      "totalFunctional": 12,
+      "expectedReports": 8,
+      "newOutcomes": 31
+    }
+  },
+  "snapshotAddition": {
+    "parent": "S16 above; root alone materializes D",
+    "driver": {
+      "change": "A",
+      "mode": "100644",
+      "git": "33966f83510cd306df0b553a3827979ae49b1064",
+      "bytes": 10783,
+      "sha256": "4c9a1664771f283260ef0c0b57f308b2003d0bedc721e5397f47b6c9ac426df6",
+      "lf": 169,
+      "finalLF": true
+    },
+    "request": {
+      "path": ".ci-run.json",
+      "change": "A",
+      "mode": "100644",
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "finalLF": false
+    },
+    "preimages": "Required actual-source preimages: both paths absent; root alone audits the actual S16 tree and creates D.",
+    "tree": null,
+    "commit": null,
+    "ref": null,
+    "run": null
+  },
+  "limits": [
+    "Static text and byte derivation only; no compilation, tests, product execution or Actions acquisition.",
+    "No E11 diagnostic source/driver lineage is incorporated. Source/LocalStore/CurrentChoice pins remain from clean069a.",
+    "Source object identity is supplied by root after its audit; this agent creates blobs only.",
+    "12 declarations and 8 reports are required future observations, not transferred PASS or assertion totals.",
+    "Nominal test budgets are not an assurance of startup, teardown, scheduling or reap completion."
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "schema": "sf613-d25-root-parametric-review-v1",
+  "at": "2026-11-27 00:43:41 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root",
+  "verdict": "STATIC_PROPOSAL_ACCEPTED_UNBOUND_NO_EXECUTION_AUTHORITY",
+  "manifest": {
+    "blob": "333ca6f1b6bfaea1e823e0d475e63a7e75547eb1",
+    "bytes": 15697,
+    "sha256": "fc4a0917b2eca5ca640ab8ee23755c2ad8a4c6965e35b6295170443739aaa1c8"
+  },
+  "artifacts": {
+    "wrapper": {
+      "blob": "537183d6a1aea5b8ca7fd2f9cd16b34b3219555d",
+      "bytes": 17573,
+      "sha256": "05d7e91da175e24307707165822a1b3a3f60128c8c8f700202a543c978cc2a08"
+    },
+    "envelope": {
+      "blob": "19367d419960c838377b65adf50fb616161d672c",
+      "bytes": 43811,
+      "sha256": "725bfb488579f6d7568200a60994cccbfb8738e0c23369cdb1600609717418cc"
+    },
+    "finalizer": {
+      "blob": "ccceacd8241da07eff178c02939980ef803eed87",
+      "bytes": 15782,
+      "sha256": "c815df0860b2bd5870ca847161010cdd2e0d6d274201ba3c2ab96069cf16d543"
+    },
+    "workflow": {
+      "blob": "40de6b3d9533828e038d290377b9c182c623bb4a",
+      "bytes": 80067,
+      "sha256": "7aa3e1fb4c568184f76ed53c3157cd6f54c27fc97ce28a97724b8d52e1700e53"
+    }
+  },
+  "baseArtifacts": {
+    "wrapper": {
+      "blob": "8366eb424bd5752a1a66d29192ad916b75187a2c",
+      "bytes": 17193,
+      "sha256": "95e38d473c8cdac0c8ca5480b8b805062cf47c45fcd85d86f3e47a655dc3ef4b"
+    },
+    "envelope": {
+      "blob": "1509e98581956f9079c9fa2ed753f4fe9c21e16c",
+      "bytes": 43811,
+      "sha256": "cba3d00329a14c9b5f084d7c80366131b6a36bbb831cd0a84eb0ec6cc7432db7"
+    },
+    "finalizer": {
+      "blob": "9e27ae4bd76a263934979961256d47daeddbae75",
+      "bytes": 15782,
+      "sha256": "aedcdb2e99b342d67ffb652f9fba2d5e87972bd73a615efd023ca49d623006a7"
+    },
+    "workflow": {
+      "blob": "a6a1b08e9c86ae8eccc4b5933578338e8bf3d6b3",
+      "bytes": 80067,
+      "sha256": "4b69e7e4a08a7329a3cb3b6658f3d04c246aa24e412792c7083e3e9f9fe0ee66"
+    }
+  },
+  "rootChecks": {
+    "wrapperExactTwoLabelsAndLiteralFocalBlock": true,
+    "fullOldGroupsAndRunCommandPreserved": true,
+    "newBlockBytes": 380,
+    "groups": 25,
+    "runCommandInvocationSites": 31,
+    "envelopeLines": [
+      33,
+      474,
+      476,
+      477,
+      479,
+      484,
+      490,
+      491,
+      657,
+      709
+    ],
+    "finalizerLines": [
+      171,
+      172,
+      175
+    ],
+    "workflowChangedLines": [
+      3,
+      101,
+      135,
+      576,
+      578,
+      579,
+      581,
+      586,
+      592,
+      593,
+      759,
+      811,
+      1065,
+      1066,
+      1069
+    ],
+    "embeddingsLiteral": true,
+    "envelopeDigestExact": true,
+    "controlTimeouts": {
+      "processMs": 150000,
+      "outerMs": 180000,
+      "cooperativeMs": 110000,
+      "bunTestMs": 120000
+    }
+  },
+  "selection": {
+    "outerGroups": 25,
+    "syntacticCommandSites": 31,
+    "englishLoopExecutions": 6,
+    "plannedCommands": 36,
+    "proofChildren": 6,
+    "proofChildrenAreSeparate": true,
+    "oldG4AndG17NotDuplicated": true
+  },
+  "independentReview": {
+    "agent": "/root/teams_product",
+    "delivery": "Collaboration final message; no separate Git review blob claimed",
+    "result": "ACK no blocker,199 positive textual checks",
+    "supportChecks": "All20 unique anchors/full15hunk +37/-30 diff reproduce all4 full texts both ways; old groups/runCommand/loader/bootstrap/policies preserved",
+    "maximumRunCharacters": 15833,
+    "fourPinWidthModelMaximum": 15930,
+    "runLimit": 21000,
+    "loader": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda"
+  },
+  "bounds": {
+    "blob": "fc1ddfb0cdcb7901cbee5981130863a0c044ca22",
+    "bytes": 9795,
+    "sha256": "0caee4089ac39a99596f9c5a88f22cf2331b135d8cf90467b6b3408e0135bc09"
+  },
+  "limits": [
+    "C613/T613 and concrete wrapper pins remain UNBOUND; no new source candidate, driver commit, ref or run exists.",
+    "The original control e861 is current reference only. Future actual source must be read and independently reviewed before binding/execution.",
+    "Future intake must reconcile36 command records, six proof children and all4 C12 reports; these are not new automatic checks silently added to the preserved envelope.",
+    "Final UI6 request390 bytes and35/40/45 minute limits remain unchanged.",
+    "Current original Analytics45916475931 is negative, with artifact pending; parametric D25 does not qualify that journey or enable promotion."
+  ]
+}

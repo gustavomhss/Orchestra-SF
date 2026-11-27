@@ -1,0 +1,137 @@
+{
+  "schema": "sf613-d26-c15-type-repair-documentary-derivation/v1",
+  "author": "/root/teams_product",
+  "scope": "Retarget documentary source/tree/sole-parent and control pin/size/hash only after root accepted the three erased type arguments. The previous D26 documentary amendment and all executable files remain the baseline.",
+  "source": {
+    "commit": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "tree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "soleParent": "86a724371c42f6be640fcf1108900e6fe49edea6",
+    "delta": "1M",
+    "pairs": 8,
+    "unchangedSiblings": 178,
+    "test": {
+      "gitSha": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "bytes": 56757,
+      "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3"
+    }
+  },
+  "repairSupport": "e781c4c2f0cb114fdd03167b9e7e0db4d70749e1",
+  "cumulativeProductReference": "Still4 product files+1test against S14; no product postimage changed in the repair.",
+  "checks": {
+    "artifactPinsLiteral": true,
+    "executableSupportPinsLiteral": true,
+    "targetAndFourBindingsLiteral": true,
+    "groupExecutableSelectionLiteral": true,
+    "allBudgetsIntakeUiLiteral": true,
+    "oldHistoryLiteral": true,
+    "currentFourProductAndThreeUnchangedPinsLiteral": true,
+    "boundsEngineAndCountersLiteral": true,
+    "sourceMatchesAuditedCommit": true,
+    "repairedTestMatchesAuthenticatedBytes": true,
+    "noQualificationTransferred": true
+  },
+  "files": [
+    {
+      "name": "manifest",
+      "pre": {
+        "gitSha": "5244ae34d7ad5827e89b013e709e123a726eea12",
+        "bytes": 29616,
+        "sha256": "f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b",
+        "lf": 776
+      },
+      "post": {
+        "gitSha": "bbf5c6bd266708871e86da41fe87f567d7c634f3",
+        "bytes": 31541,
+        "sha256": "e47512b078a7ce23a1ebba49a0865918846c6269f137183a5f7243a916dc76bf",
+        "lf": 808
+      },
+      "contextAnchors": [
+        {
+          "id": "manifest-1",
+          "before": "      \"createdAndLiteralReadback\": true\n    },\n    \"bounds\": {\n      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n      \"bytes\": 16996,\n      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n      \"lf\": 549,\n      \"createdAndLiteralReadback\": true\n    }\n  },\n",
+          "after": "      \"createdAndLiteralReadback\": true\n    },\n    \"bounds\": {\n      \"gitSha\": \"cab7769368a73d850f59e98cadfb947b58cee02c\",\n      \"bytes\": 18921,\n      \"sha256\": \"c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f\",\n      \"lf\": 581,\n      \"createdAndLiteralReadback\": true\n    }\n  },\n"
+        },
+        {
+          "id": "manifest-2",
+          "before": "      \"processMs\": 300000,\n      \"outerMs\": 360000,\n      \"currentReference\": {\n        \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n        \"bytes\": 56730,\n        \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\"\n      },\n      \"finalC613Blob\": \"UNBOUND\",\n      \"wholeFileNoNameFilter\": true,\n",
+          "after": "      \"processMs\": 300000,\n      \"outerMs\": 360000,\n      \"currentReference\": {\n        \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n        \"bytes\": 56757,\n        \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\"\n      },\n      \"finalC613Blob\": \"UNBOUND\",\n      \"wholeFileNoNameFilter\": true,\n"
+        },
+        {
+          "id": "manifest-3",
+          "before": "  },\n  \"bounds\": {\n    \"reference\": {\n      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n      \"bytes\": 16996,\n      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n      \"lf\": 549\n    },\n    \"runCharacterLimit\": 21000,\n    \"maximumDraftRunChars\": 15833,\n",
+          "after": "  },\n  \"bounds\": {\n    \"reference\": {\n      \"gitSha\": \"cab7769368a73d850f59e98cadfb947b58cee02c\",\n      \"bytes\": 18921,\n      \"sha256\": \"c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f\",\n      \"lf\": 581\n    },\n    \"runCharacterLimit\": 21000,\n    \"maximumDraftRunChars\": 15833,\n"
+        },
+        {
+          "id": "manifest-4",
+          "before": "  },\n  \"currentC15Reference\": {\n    \"scope\": \"Current documentary source/control reference only. It does not bind final C613 or qualify D26; currentC14Reference remains the historical baseline.\",\n    \"source\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"tree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n    \"soleParent\": \"372cbc152bc1361168de9efcd4262770105670c5\",\n    \"sourceManifest\": {\n      \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n      \"bytes\": 11823,\n",
+          "after": "  },\n  \"currentC15Reference\": {\n    \"scope\": \"Current documentary source/control reference only. It does not bind final C613 or qualify D26; currentC14Reference remains the historical baseline.\",\n    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    \"tree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"sourceManifest\": {\n      \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n      \"bytes\": 11823,\n"
+        },
+        {
+          "id": "manifest-5",
+          "before": "    },\n    \"test\": {\n      \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n      \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n      \"bytes\": 56730,\n      \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\",\n      \"lf\": 973,\n      \"declarations\": 4,\n      \"inheritedC14Declarations\": 2,\n",
+          "after": "    },\n    \"test\": {\n      \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n      \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n      \"bytes\": 56757,\n      \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\",\n      \"lf\": 973,\n      \"declarations\": 4,\n      \"inheritedC14Declarations\": 2,\n"
+        },
+        {
+          "id": "manifest-6",
+          "before": "    \"wholeD26FunctionalCount\": null,\n    \"qualificationTransferred\": false,\n    \"originalC14ReferenceIsHistorical\": true\n  }\n}\n",
+          "after": "    \"wholeD26FunctionalCount\": null,\n    \"qualificationTransferred\": false,\n    \"originalC14ReferenceIsHistorical\": true\n  },\n  \"typeRepairRevision\": {\n    \"authority\": \"Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.\",\n    \"previousManifest\": {\n      \"gitSha\": \"5244ae34d7ad5827e89b013e709e123a726eea12\",\n      \"bytes\": 29616,\n      \"sha256\": \"f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b\",\n      \"lf\": 776\n    },\n    \"previousBounds\": {\n      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n      \"bytes\": 16996,\n      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n      \"lf\": 549\n    },\n    \"repairSupport\": {\n      \"gitSha\": \"e781c4c2f0cb114fdd03167b9e7e0db4d70749e1\",\n      \"bytes\": 8711,\n      \"sha256\": \"76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7\"\n    },\n    \"previousSource\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"previousTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n    \"previousTest\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"test\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n    \"sourceDeltaAgainstParent\": \"1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.\",\n    \"cumulativeDeltaAgainstS14\": \"4 product files and1 existing test; the four product postimages are unchanged by this repair.\",\n    \"limits\": \"No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.\",\n    \"qualificationTransferred\": false,\n    \"finalC613State\": \"UNBOUND\"\n  }\n}\n"
+        }
+      ],
+      "unifiedDiff": "diff --git a/d26-manifest.json b/d26-manifest.json\n--- a/d26-manifest.json\n+++ b/d26-manifest.json\n@@ -107,10 +107,10 @@\n       \"createdAndLiteralReadback\": true\n     },\n     \"bounds\": {\n-      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n-      \"bytes\": 16996,\n-      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n-      \"lf\": 549,\n+      \"gitSha\": \"cab7769368a73d850f59e98cadfb947b58cee02c\",\n+      \"bytes\": 18921,\n+      \"sha256\": \"c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f\",\n+      \"lf\": 581,\n       \"createdAndLiteralReadback\": true\n     }\n   },\n@@ -210,9 +210,9 @@\n       \"processMs\": 300000,\n       \"outerMs\": 360000,\n       \"currentReference\": {\n-        \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n-        \"bytes\": 56730,\n-        \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\"\n+        \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n+        \"bytes\": 56757,\n+        \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\"\n       },\n       \"finalC613Blob\": \"UNBOUND\",\n       \"wholeFileNoNameFilter\": true,\n@@ -582,10 +582,10 @@\n   },\n   \"bounds\": {\n     \"reference\": {\n-      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n-      \"bytes\": 16996,\n-      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n-      \"lf\": 549\n+      \"gitSha\": \"cab7769368a73d850f59e98cadfb947b58cee02c\",\n+      \"bytes\": 18921,\n+      \"sha256\": \"c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f\",\n+      \"lf\": 581\n     },\n     \"runCharacterLimit\": 21000,\n     \"maximumDraftRunChars\": 15833,\n@@ -652,9 +652,9 @@\n   },\n   \"currentC15Reference\": {\n     \"scope\": \"Current documentary source/control reference only. It does not bind final C613 or qualify D26; currentC14Reference remains the historical baseline.\",\n-    \"source\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n-    \"tree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n-    \"soleParent\": \"372cbc152bc1361168de9efcd4262770105670c5\",\n+    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n+    \"tree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n+    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n     \"sourceManifest\": {\n       \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n       \"bytes\": 11823,\n@@ -662,9 +662,9 @@\n     },\n     \"test\": {\n       \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n-      \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n-      \"bytes\": 56730,\n-      \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\",\n+      \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n+      \"bytes\": 56757,\n+      \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\",\n       \"lf\": 973,\n       \"declarations\": 4,\n       \"inheritedC14Declarations\": 2,\n@@ -772,5 +772,37 @@\n     \"wholeD26FunctionalCount\": null,\n     \"qualificationTransferred\": false,\n     \"originalC14ReferenceIsHistorical\": true\n+  },\n+  \"typeRepairRevision\": {\n+    \"authority\": \"Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.\",\n+    \"previousManifest\": {\n+      \"gitSha\": \"5244ae34d7ad5827e89b013e709e123a726eea12\",\n+      \"bytes\": 29616,\n+      \"sha256\": \"f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b\",\n+      \"lf\": 776\n+    },\n+    \"previousBounds\": {\n+      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n+      \"bytes\": 16996,\n+      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n+      \"lf\": 549\n+    },\n+    \"repairSupport\": {\n+      \"gitSha\": \"e781c4c2f0cb114fdd03167b9e7e0db4d70749e1\",\n+      \"bytes\": 8711,\n+      \"sha256\": \"76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7\"\n+    },\n+    \"previousSource\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n+    \"previousTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n+    \"previousTest\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n+    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n+    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n+    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n+    \"test\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n+    \"sourceDeltaAgainstParent\": \"1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.\",\n+    \"cumulativeDeltaAgainstS14\": \"4 product files and1 existing test; the four product postimages are unchanged by this repair.\",\n+    \"limits\": \"No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.\",\n+    \"qualificationTransferred\": false,\n+    \"finalC613State\": \"UNBOUND\"\n   }\n }\n",
+      "hunks": 6,
+      "addedLines": 49,
+      "removedLines": 17,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "name": "bounds",
+      "pre": {
+        "gitSha": "2f01f5cfd420a4ef40ea4121043f201bd4190349",
+        "bytes": 16996,
+        "sha256": "e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91",
+        "lf": 549
+      },
+      "post": {
+        "gitSha": "cab7769368a73d850f59e98cadfb947b58cee02c",
+        "bytes": 18921,
+        "sha256": "c1a16d9dc552270e08dcca41d10a1821223adea51d6de7592c479f05044bcd5f",
+        "lf": 581
+      },
+      "contextAnchors": [
+        {
+          "id": "bounds-1",
+          "before": "  ],\n  \"c15Reference\": {\n    \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n    \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n    \"bytes\": 56730,\n    \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\",\n    \"source\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"sourceTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n    \"sourceManifest\": {\n      \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n      \"bytes\": 11823,\n",
+          "after": "  ],\n  \"c15Reference\": {\n    \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n    \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n    \"bytes\": 56757,\n    \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\",\n    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n    \"sourceManifest\": {\n      \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n      \"bytes\": 11823,\n"
+        },
+        {
+          "id": "bounds-2",
+          "before": "    \"wholeD26FunctionalCount\": null,\n    \"qualificationTransferred\": false,\n    \"originalC14ReferenceIsHistorical\": true\n  }\n}\n",
+          "after": "    \"wholeD26FunctionalCount\": null,\n    \"qualificationTransferred\": false,\n    \"originalC14ReferenceIsHistorical\": true\n  },\n  \"typeRepairRevision\": {\n    \"authority\": \"Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.\",\n    \"previousManifest\": {\n      \"gitSha\": \"5244ae34d7ad5827e89b013e709e123a726eea12\",\n      \"bytes\": 29616,\n      \"sha256\": \"f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b\",\n      \"lf\": 776\n    },\n    \"previousBounds\": {\n      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n      \"bytes\": 16996,\n      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n      \"lf\": 549\n    },\n    \"repairSupport\": {\n      \"gitSha\": \"e781c4c2f0cb114fdd03167b9e7e0db4d70749e1\",\n      \"bytes\": 8711,\n      \"sha256\": \"76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7\"\n    },\n    \"previousSource\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"previousTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n    \"previousTest\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n    \"test\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n    \"sourceDeltaAgainstParent\": \"1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.\",\n    \"cumulativeDeltaAgainstS14\": \"4 product files and1 existing test; the four product postimages are unchanged by this repair.\",\n    \"limits\": \"No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.\",\n    \"qualificationTransferred\": false,\n    \"finalC613State\": \"UNBOUND\"\n  }\n}\n"
+        }
+      ],
+      "unifiedDiff": "diff --git a/d26-bounds.json b/d26-bounds.json\n--- a/d26-bounds.json\n+++ b/d26-bounds.json\n@@ -468,11 +468,11 @@\n   ],\n   \"c15Reference\": {\n     \"path\": \"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\n-    \"gitBlob\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n-    \"bytes\": 56730,\n-    \"sha256\": \"08f54327e1afc401278b2e726f5ef29496cec1239193d8e61a66a958bba582a5\",\n-    \"source\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n-    \"sourceTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n+    \"gitBlob\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n+    \"bytes\": 56757,\n+    \"sha256\": \"2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3\",\n+    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n+    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n     \"sourceManifest\": {\n       \"gitSha\": \"75791541a1c268fbb24c4f6aa8f9d37e8160e20f\",\n       \"bytes\": 11823,\n@@ -545,5 +545,37 @@\n     \"wholeD26FunctionalCount\": null,\n     \"qualificationTransferred\": false,\n     \"originalC14ReferenceIsHistorical\": true\n+  },\n+  \"typeRepairRevision\": {\n+    \"authority\": \"Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.\",\n+    \"previousManifest\": {\n+      \"gitSha\": \"5244ae34d7ad5827e89b013e709e123a726eea12\",\n+      \"bytes\": 29616,\n+      \"sha256\": \"f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b\",\n+      \"lf\": 776\n+    },\n+    \"previousBounds\": {\n+      \"gitSha\": \"2f01f5cfd420a4ef40ea4121043f201bd4190349\",\n+      \"bytes\": 16996,\n+      \"sha256\": \"e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91\",\n+      \"lf\": 549\n+    },\n+    \"repairSupport\": {\n+      \"gitSha\": \"e781c4c2f0cb114fdd03167b9e7e0db4d70749e1\",\n+      \"bytes\": 8711,\n+      \"sha256\": \"76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7\"\n+    },\n+    \"previousSource\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n+    \"previousTree\": \"2c6e05fb1ffc700b25815aa4c64964fe7740308c\",\n+    \"previousTest\": \"86b2dd03f894e10a5c6a787771544a2c10a972b2\",\n+    \"source\": \"069a56a60a9c12ea7c32ed54b07ee11442c35db5\",\n+    \"sourceTree\": \"9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8\",\n+    \"soleParent\": \"86a724371c42f6be640fcf1108900e6fe49edea6\",\n+    \"test\": \"a55818797ecf9fa6801393762bbe3261a1812576\",\n+    \"sourceDeltaAgainstParent\": \"1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.\",\n+    \"cumulativeDeltaAgainstS14\": \"4 product files and1 existing test; the four product postimages are unchanged by this repair.\",\n+    \"limits\": \"No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.\",\n+    \"qualificationTransferred\": false,\n+    \"finalC613State\": \"UNBOUND\"\n   }\n }\n",
+      "hunks": 2,
+      "addedLines": 37,
+      "removedLines": 5,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  ],
+  "totals": {
+    "contextAnchors": 8,
+    "hunks": 8,
+    "addedLines": 86,
+    "removedLines": 22,
+    "fullForwardAndInverseLiteral": true
+  },
+  "actions": {
+    "documentaryTextBlobs": 3,
+    "executableChanges": 0,
+    "goLiveDocumentChanges": 0,
+    "treeCommitRefRunCreations": 0,
+    "repositoryExecution": 0,
+    "originalOrZipAcquisitions": 0
+  },
+  "limits": "The repair is statically accepted, not a new focal/typecheck PASS. D26 remains26groups/32sites/37commands/74flags, G26four declarations/four reports and280s nominal/300s process/360s parent; total D26functional count null; all four final bindings UNBOUND. No qualification is transferred."
+}

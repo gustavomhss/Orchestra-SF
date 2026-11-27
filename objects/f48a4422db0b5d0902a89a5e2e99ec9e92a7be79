@@ -1,0 +1,391 @@
+{
+  "schema": "orchestra-sf.go-live-three-docs-current-intake.v1",
+  "revision": "R5",
+  "state": "REVIEWABLE_DRAFT_BLOBS_ONLY_NOT_PUBLISHED",
+  "observationCutUtc": "2026-11-27T17:29:26Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "writer": "/root/teams_product",
+  "route": {
+    "pullRequest": 613,
+    "publicBranch": "sf-design-next",
+    "publicHead": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "privateBranch": "sf613-astra-finish",
+    "privateHead": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+    "actualDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "actualDevTree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "refsLastCheckedAt": "2026-11-27T16:53:06Z",
+    "sourceSha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "currentSourceIsBranchHead": false,
+    "finalCompositionCreated": false
+  },
+  "priorDraft": {
+    "gitBlob": "0eed84bd79f690ecb64507863d5065ea078ab962",
+    "bytes": 7064,
+    "sha256": "631c06feed0d7de20f517fee354a30b9173c1acd870daf577ce6af46bb931704"
+  },
+  "priorIndependentReview": {
+    "gitBlob": "66adbf41a8dba8a7d6111a3750552214bf1b875f",
+    "bytes": 1317,
+    "sha256": "56928082597b1bcd6b38b718228e5b79c5adcc28d9364a4fee68f5c1af0e6e15"
+  },
+  "files": [
+    {
+      "path": "docs/qa/sucafina/go-live/status.json",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "fff743a2d2cc9e91fda856d55c1e0fb22ac4feaa",
+        "bytes": 568385,
+        "sha256": "f0c9cd2bd5780e73d8b77e01852cb6f93b3f2d3350f36b4416f1f2923a45ca6c"
+      },
+      "post": {
+        "gitBlob": "fa432f25ce503a164d056ac1532452f43f25eeaa",
+        "bytes": 588016,
+        "sha256": "490937c152d1d432e40f2a08f0089ae86fe963b36fa61392d5e0ea0ad885b7a5"
+      },
+      "literalReadback": true
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/README.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "1ab3b65c4510c7ec1a760ca4515155e1772e1b0b",
+        "bytes": 69614,
+        "sha256": "3e737dd463e68d786cdf596f48e6befe77b6facf3db790f624a43962430afed5"
+      },
+      "post": {
+        "gitBlob": "dc8f8c599673fd9aab1af2fc9387caa4b1a6e828",
+        "bytes": 74850,
+        "sha256": "97fa800023ef8859e7606dcc633dfe5219fe8ab20d457e326617ffa60ff6dcc9"
+      },
+      "literalReadback": true
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "a04dbb2ea7a96bf5e8e9b90059d74af5e49a0625",
+        "bytes": 162081,
+        "sha256": "445ba6eb55897ebf2bd8e157948aee08cbd098c0b7f45f4d41c04d4892d34537"
+      },
+      "post": {
+        "gitBlob": "f18851de913b734e937886622e66d2ad026dd74f",
+        "bytes": 167793,
+        "sha256": "4e988f3e5159c055ec0c02171add7374efadabf983fa49ecc0cbb87051657112"
+      },
+      "literalReadback": true
+    }
+  ],
+  "evidence": {
+    "before": 90,
+    "after": 91,
+    "first90Literal": true,
+    "addedIds": [
+      "design-c16-original-analytics-46038404128-closed"
+    ],
+    "priorPendingEvidence": {
+      "id": "design-c16-original-analytics-46038404128",
+      "cut": "2026-11-27T17:07:16Z",
+      "literal": true
+    }
+  },
+  "protectedFields": [
+    {
+      "path": "gates",
+      "literal": true,
+      "sha256": "ef9c3f912e647cc6d344c42fc2280101fc5a96e25cce48787056b88667bbf590"
+    },
+    {
+      "path": "migrationObservations",
+      "literal": true,
+      "sha256": "d7fa2101b72f3b78171b686cbcd0c4c8f21c600507dedb51f0fe5d0a4021ebc1"
+    },
+    {
+      "path": "authorization",
+      "literal": true,
+      "sha256": "adbeefb4bfbac8378105684adcbff822bf6816919965604850f3207fb8c3663b"
+    },
+    {
+      "path": "finalCandidate",
+      "literal": true,
+      "sha256": "5bdd613413a9790de29c0d5a78070784b317b3b47142e52250b2e03bb08e5ffd"
+    },
+    {
+      "path": "environments",
+      "literal": true,
+      "sha256": "32b08d6940b3f154a0d7b6a1c1d5f49c509d36d900fd079b1a12d545c0640e66"
+    },
+    {
+      "path": "overall",
+      "literal": true,
+      "sha256": "d203c1c9054aa8142d3bb7a5b2180a105470e4e1d03e164023063c04b585c101"
+    },
+    {
+      "path": "executionThisFront",
+      "literal": true,
+      "sha256": "0468154d99da8ed2929a51b86f9081bfa89cc729695022c3cf8a84a389d20a94"
+    }
+  ],
+  "previousCurrentObservationArchived": true,
+  "designHistory": {
+    "before": 9,
+    "after": 10,
+    "priorItemsLiteral": true,
+    "r4CurrentDesignLiteral": true,
+    "pendingInstalledArchivedLiteral": true,
+    "pendingInstalledRemovedFromCurrent": true
+  },
+  "reviewHistory": {
+    "before": 9,
+    "after": 10,
+    "priorItemsLiteral": true,
+    "r4DocumentReviewLiteral": true,
+    "r4ReviewReceipt": "66adbf41a8dba8a7d6111a3750552214bf1b875f"
+  },
+  "sourceIdentity": {
+    "sourceSha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "identityRoleBranchRefsLiteral": true,
+    "onlyCurrentSourceObservationFieldsUpdated": [
+      "state",
+      "observedAtUtc"
+    ],
+    "latestTechnicalLiteral": true,
+    "latestDiagnosticInstalledLiteral": true,
+    "currentOriginalArtifactReaderLiteral": true,
+    "currentTechnicalRouteLiteral": true
+  },
+  "oldReadmeEntireLiteralOnce": true,
+  "executionAppendOnly": true,
+  "derivation": {
+    "kind": "MINIMAL_CURRENT_OBSERVATION_UPDATE_WITH_LITERAL_HISTORY_APPEND",
+    "statusTopLevelChanges": [
+      "observedAtUtc",
+      "evidence",
+      "review",
+      "publication",
+      "designObservation",
+      "designObservationHistory"
+    ],
+    "statusChangedPaths": [
+      "observedAtUtc",
+      "evidence",
+      "review.documentReview.scope",
+      "review.documentReviewHistory",
+      "publication.scope",
+      "publication.observationCutUtc",
+      "designObservation.state",
+      "designObservation.currentProductSource.state",
+      "designObservation.currentProductSource.observedAtUtc",
+      "designObservation.latestInstalled.evidenceRef",
+      "designObservation.latestInstalled.sourceSha",
+      "designObservation.latestInstalled.sourceTree",
+      "designObservation.latestInstalled.snapshotSha",
+      "designObservation.latestInstalled.snapshotTree",
+      "designObservation.latestInstalled.runId",
+      "designObservation.latestInstalled.localizedBi06",
+      "designObservation.latestInstalled.receipt.gitBlob",
+      "designObservation.latestInstalled.receipt.bytes",
+      "designObservation.latestInstalled.receipt.sha256",
+      "designObservation.latestInstalled.state",
+      "designObservation.latestInstalled.originalIntakeComplete",
+      "designObservation.currentReviewBlocker.state",
+      "designObservation.currentReviewBlocker.preview",
+      "designObservation.currentReviewBlocker.bi",
+      "designObservation.currentReviewBlocker.nextStaticDiagnosis",
+      "designObservation.independentIntakeRef",
+      "designObservation.pendingInstalled",
+      "designObservationHistory"
+    ],
+    "statusCanonicalJsonWithLF": true,
+    "readme": {
+      "kind": "NEW_R5_PREFIX_PLUS_ENTIRE_R4_PLUS_DETAILS_CLOSER",
+      "prefixBytes": 5224,
+      "prefixSha256": "9cee49968f68c5b999aded38082f8460e407906fa32921e19c4638e3710b6297",
+      "suffix": "\n</details>\n"
+    },
+    "execution": {
+      "kind": "EXACT_R4_PLUS_R5_APPEND",
+      "appendBytes": 5712,
+      "appendSha256": "66c409984232890d2a9046e1013bf97dbb03c347b02e6b6eefcc612c9ddb31b6"
+    }
+  },
+  "goLive": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasQualified": 0,
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "goNoGoReadiness": "NOT_READY",
+    "currentC16AnalyticsAtCut": "CLOSED_NEGATIVE_1_FAILED_1_PASSED",
+    "finalCandidateQualified": false,
+    "tarFinal": null,
+    "reservationsConfirmed": false,
+    "productionCutoverAuthorized": false
+  },
+  "currentReceipts": {
+    "c16Analytics": {
+      "gitBlob": "f1d38ff665811dd8daad45ad1749e5623ca325fd",
+      "bytes": 19823,
+      "sha256": "974fafe9731c4a659ebd0095548398ba66e78efac9a1459a5e60d247ae2dbb9f"
+    },
+    "c16Raw": {
+      "gitBlob": "866c4d1d905f262ece8ebe76b3e4422adea8b779",
+      "bytes": 9362,
+      "sha256": "e186e573b4f08180ba0899f91b85440c6114962f425c5b275d642c5dd8f840c2"
+    },
+    "c16Focal": {
+      "gitBlob": "354a1382f902b6336ab4298f4e4ee12ac9aee7c3",
+      "bytes": 61055,
+      "sha256": "4733eaa4874168992cb681a55a027780d04aff77c7f667fee05fb857869f8378"
+    },
+    "d26": {
+      "gitBlob": "e05b320246ae461fee1ae0ac97d04b27fcd93c94",
+      "bytes": 2050,
+      "sha256": "d1cfdef4b6b0b7a5f07e6ab9534834ac6d858c20070686121bfdbd0f404a5c4b"
+    }
+  },
+  "currentAnalytics": {
+    "run": 46038404128,
+    "attempt": 1,
+    "sourceSha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "snapshot": "dfa5cca0f7e20b92c23ea45897301c2327dc60ea",
+    "snapshotTree": "b558bb198d9b8e41702c75fb2719dea49672db2a",
+    "status": "CLOSED_NEGATIVE",
+    "passed": 1,
+    "failed": 1,
+    "ui42Captures": 6,
+    "ui43Reached": false,
+    "ui44Reached": false,
+    "biCaptures": {
+      "UI45": 7,
+      "UI46": 33
+    },
+    "firstPreviewTimeoutMs": 60000,
+    "firstPreviewStack": "72:32",
+    "markerUnion": {
+      "gitBlob": "e56b6884d9d15c83fa73622b532a98877dd86aa3",
+      "bytes": 34175,
+      "sha256": "b78bcda5d9f3394cb113ced175c97d5035205514c2b547831dc497f405e24e59",
+      "lines": 96,
+      "counts": {
+        "SF_ANALYTICS_SOURCE": 44,
+        "SF_ANALYTICS_CAPTURE": 46,
+        "SF_DESIGN_DIAGNOSTICS": 5,
+        "SF_ANALYTICS_SCOPE": 1
+      },
+      "actualGitBlobPersisted": true,
+      "literalReadback": true
+    },
+    "artifact": {
+      "id": 15219543392,
+      "bytes": 45809306,
+      "sha256": "a33e78d68c5031489e2a7eb0c7a84d029fd929f8bc6f66d1b96b2091929a6b22",
+      "received": "METADATA_ONLY",
+      "zipGets": 0
+    },
+    "currentCpuProfile": false
+  },
+  "staticFollowup": {
+    "label": "C17",
+    "state": "STATIC_SOURCE_DIAGNOSIS_ONLY",
+    "productPatch": false,
+    "newSourceObject": false,
+    "refChange": false,
+    "observer": false,
+    "run": false,
+    "qualification": false
+  },
+  "externalObservation": {
+    "refreshedByThisRevision": false,
+    "previousRefsCheckedAt": "2026-11-27T16:53:06Z",
+    "previousAccessEvidence": "operational-access-observation-2026-11-27-170257",
+    "previousAccessObservedAt": "2026-11-27T17:02:57Z",
+    "environmentAndCoordinationObjectsLiteral": true,
+    "reservationsPromoted": false
+  },
+  "review": {
+    "author": "45_STATIC_LITERAL_AND_METADATA_CHECKS_PASSED",
+    "root": "PENDING_INDEPENDENT_REVIEW",
+    "prApproval": "NOT_ANTICIPATED",
+    "ci": "NOT_EXECUTED_FOR_FINAL_COMPOSITION"
+  },
+  "authorChecks": {
+    "count": 45,
+    "failures": [],
+    "independentReview": false,
+    "checks": [
+      "literal protected gates",
+      "protected hash gates",
+      "literal protected migrationObservations",
+      "protected hash migrationObservations",
+      "literal protected authorization",
+      "protected hash authorization",
+      "literal protected finalCandidate",
+      "protected hash finalCandidate",
+      "literal protected environments",
+      "protected hash environments",
+      "literal protected overall",
+      "protected hash overall",
+      "literal protected executionThisFront",
+      "protected hash executionThisFront",
+      "90 prior entries literal",
+      "exact91 unique ids",
+      "only one new evidence",
+      "pending evidence preserved",
+      "past design history unchanged",
+      "entire R4 design archived",
+      "pending current removed and archived",
+      "past review history unchanged",
+      "R4 documentReview archived",
+      "R4 static review receipt bound",
+      "source identity role and refs unchanged",
+      "unchanged current latestTechnical",
+      "unchanged current latestDiagnosticInstalled",
+      "unchanged current currentOriginalArtifactReader",
+      "unchanged current currentTechnicalRoute",
+      "unchanged current currentOperationalAccessEvidence",
+      "latestInstalled actual C16",
+      "latestInstalled closed negative1plus1",
+      "closed receipt authentication",
+      "cases copied from real receipt",
+      "actual persisted union",
+      "artifact remains metadata only",
+      "ten migration five gates12of15zeroof5",
+      "no final source approval",
+      "new current UTC explicit",
+      "no new access observation",
+      "C17 static only explicit",
+      "README R4 entire literal once",
+      "execution exact prefix",
+      "JSON canonical full serialization",
+      "only allowed top fields"
+    ]
+  },
+  "mutations": {
+    "blobsOnly": true,
+    "documentBlobs": 3,
+    "manifestBlobs": 1,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "newPrs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "comments": 0
+  },
+  "limits": [
+    "R4 remains an immutable historical cut at17:07:16Z, when Analytics C16 was still in progress. R5 appends its actual later closure without replacing the old evidence.",
+    "The original Analytics first-preview failure is unresolved. Current source-bound BI success does not establish a causal repair of the historical C14 cancellation.",
+    "C16 focal success and the historical E11 profile do not qualify current performance, UI42–44, Release or the final composition.",
+    "Main marker sections are not artifact runtime case/result/stdio binding. The C16 artifact is metadata only; no ZIP, PNG, trace or runtime JSON was acquired for this update.",
+    "No new access or reservation check occurred. All protected objects, the prior90 evidence entries, ten Migration observations and five final gates remain literal.",
+    "C17 is static diagnosis only at this cut. This document creates no product patch, new candidate, ref, observer or run and grants no new operational authorization.",
+    "Only three proposed documentation blobs and this manifest were written. Independent root review is required before composition or publication."
+  ]
+}

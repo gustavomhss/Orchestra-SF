@@ -1,0 +1,72 @@
+{
+  "schema": "orchestra-sf.d26-c16-documentary-review.v1",
+  "at": "2026-11-27 17:04:40 UTC",
+  "status": "STATIC_ACK_D26_DOCS_UNBOUND_NOT_EXECUTED",
+  "root": {
+    "status": "ROOT_STATIC_ACK_D26_DOCS_UNBOUND",
+    "derivation": [
+      {
+        "document": "manifest",
+        "fieldChanges": 34,
+        "forwardWholeLiteral": true,
+        "inverseWholeLiteral": true
+      },
+      {
+        "document": "bounds",
+        "fieldChanges": 14,
+        "forwardWholeLiteral": true,
+        "inverseWholeLiteral": true
+      }
+    ],
+    "checks": {
+      "manifestHistorical": true,
+      "boundsHistorical": true,
+      "fourArtifacts": true,
+      "fourBindings": true,
+      "targetUnbound": true,
+      "G6": true,
+      "prior25Groups": true,
+      "globalAndBlocks": true,
+      "counts": true,
+      "fullFunctionalCountNull": true,
+      "proofChildren": true,
+      "wholeFile": true,
+      "selection": true,
+      "controlHash": true,
+      "c16Outcomes": true
+    },
+    "manifest": {
+      "gitBlob": "4b1d5ba41c5d3e42f89107150374cb44cb4f925a",
+      "bytes": 38243,
+      "sha256": "e11f4b4d264fc737d807bc329bd9dad69afba7fc97a9213242e40c4959e44f33"
+    },
+    "bounds": {
+      "gitBlob": "245d65e3f1975f61680a328a5f48686931b9cbfd",
+      "bytes": 25101,
+      "sha256": "17b650e7022945ccfaa7678b008df5e0e8322bfb8985a576390600628b69c62c"
+    },
+    "derivationMeta": {
+      "gitBlob": "ae3a5e6705de8c80ffdb8f0715c666710809c922",
+      "bytes": 40977,
+      "sha256": "c22de64650824484c9158f4b6cbe329dde3fca0a364c39164f2d29f1aea30fc7"
+    },
+    "execution": false
+  },
+  "independent": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK",
+    "checks": 37,
+    "findings": [],
+    "manifestAndBoundsAndDerivationAuthenticated": true,
+    "fieldChanges": [
+      34,
+      14
+    ],
+    "wholeForwardAndInverse": true,
+    "eightHistoricalObjectsPreserved": true,
+    "fourExecutablesAndBindingsUnchanged": true,
+    "currentRunResultsTransferred": false
+  },
+  "finalCandidate": "UNBOUND",
+  "productionApproved": false
+}

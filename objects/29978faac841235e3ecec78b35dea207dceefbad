@@ -1,0 +1,420 @@
+{
+  "schema": "orchestra-sf.c16-focal-bounds.v1",
+  "status": "STATIC_BOUNDS_NOT_EXECUTION",
+  "qualification": false,
+  "baseDriver": {
+    "git": "b89bc6ec6aa7836d077b29795581ec8a976c0f2b",
+    "bytes": 10668,
+    "sha256": "ede3118170630235972659c13110ba05c758bc650f21657b5b0b7e46fe5d4edf",
+    "lf": 169
+  },
+  "templateDriver": {
+    "git": "d45c3d2ab8348056d7d4be75c45a782480f91e8f",
+    "bytes": 10768,
+    "sha256": "2026cb2d0b7566f31331f2b172b545a8ba3441e7f1a86bc2b500edc6960e78f9",
+    "lf": 169,
+    "finalLF": true
+  },
+  "boundDriver": {
+    "git": "33966f83510cd306df0b553a3827979ae49b1064",
+    "bytes": 10783,
+    "sha256": "4c9a1664771f283260ef0c0b57f308b2003d0bedc721e5397f47b6c9ac426df6",
+    "lf": 169,
+    "finalLF": true
+  },
+  "request": {
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "finalLF": false
+  },
+  "selection": {
+    "groups": 6,
+    "syntacticRunCommandSites": 12,
+    "plannedCommands": 12,
+    "truncationFlagsRequiredFalse": 24,
+    "truncationFlagNames": [
+      "stdoutTruncated",
+      "stderrTruncated"
+    ],
+    "workingPins": 12,
+    "functionalProcesses": 2,
+    "functionalDeclarations": 12,
+    "expectedControlReports": 8,
+    "omniDeclaredContexts": 6,
+    "omniExpectedSpawnedProcesses": 12,
+    "omniExpectedDelegatedSpawns": 0,
+    "nameFilter": null,
+    "extraDiagnosticProbe": false
+  },
+  "groups": [
+    {
+      "id": "G1",
+      "title": "snapshot identifies the exact reviewed product source and tree",
+      "commands": 3,
+      "parentMs": 180000,
+      "commandTimeoutMs": [
+        60000,
+        30000,
+        30000
+      ]
+    },
+    {
+      "id": "G2",
+      "title": "CurrentChoice readonly composition preserves default and unfenced routes",
+      "commands": 1,
+      "parentMs": 420000,
+      "commandTimeoutMs": [
+        360000
+      ],
+      "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+      "tests": 7,
+      "reports": 3,
+      "bunPerTestMs": [
+        45000,
+        45000,
+        45000,
+        45000,
+        45000,
+        45000,
+        45000
+      ],
+      "nominalSumMs": 315000,
+      "nominalProcessMarginMs": 45000
+    },
+    {
+      "id": "G3",
+      "title": "C14/C15/C16 C08 projection and closed case selection preserve authorization and full-path equivalence",
+      "commands": 1,
+      "parentMs": 360000,
+      "commandTimeoutMs": [
+        300000
+      ],
+      "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "tests": 5,
+      "reports": 5,
+      "bunPerTestMs": [
+        120000,
+        120000,
+        20000,
+        20000,
+        10000
+      ],
+      "cooperativePerTestMs": [
+        110000,
+        110000,
+        18000,
+        18000,
+        8000
+      ],
+      "nominalSumMs": 290000,
+      "nominalProcessMarginMs": 10000
+    },
+    {
+      "id": "G4",
+      "title": "the CLI package preserves its original types",
+      "commands": 1,
+      "parentMs": 300000,
+      "commandTimeoutMs": [
+        240000
+      ]
+    },
+    {
+      "id": "G5",
+      "title": "the Sucafina package preserves its original types",
+      "commands": 1,
+      "parentMs": 300000,
+      "commandTimeoutMs": [
+        240000
+      ]
+    },
+    {
+      "id": "G6",
+      "title": "canonical guards use current origin dev and its actual merge base",
+      "commands": 5,
+      "parentMs": 600000,
+      "commandTimeoutMs": [
+        30000,
+        120000,
+        30000,
+        30000,
+        180000
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "group": "G1",
+      "label": "fetch source parent",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "--depth=2",
+        "origin",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "timeoutMs": 60000
+    },
+    {
+      "group": "G1",
+      "label": "snapshot identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": "G1",
+      "label": "source identity",
+      "executable": "git",
+      "args": [
+        "show",
+        "-s",
+        "--format=%H%n%T",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": "G2",
+      "label": "CurrentChoice readonly composition",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 360000
+    },
+    {
+      "group": "G3",
+      "label": "C14/C15/C16 snapshot projection and closed case selection",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 300000
+    },
+    {
+      "group": "G4",
+      "label": "CLI package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "timeoutMs": 240000
+    },
+    {
+      "group": "G5",
+      "label": "Sucafina package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 240000
+    },
+    {
+      "group": "G6",
+      "label": "inspect history completeness",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": "G6",
+      "label": "fetch current dev and source ancestry",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "[--unshallow iff preceding stdout.trim()==='true']",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "timeoutMs": 120000
+    },
+    {
+      "group": "G6",
+      "label": "current dev identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": "G6",
+      "label": "actual guard merge base",
+      "executable": "git",
+      "args": [
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": "G6",
+      "label": "canonical guardrails",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "timeoutMs": 180000
+    }
+  ],
+  "reports": {
+    "SF_C13_UNFENCED_CONTROL": 3,
+    "SF_C14_SNAPSHOT_CONTROL": 2,
+    "SF_C15_SELECTION_CONTROL": 2,
+    "SF_C16_SELECTION_CONTROL": 1,
+    "c15ExpectedOutcomeCounts": [
+      4,
+      15
+    ],
+    "c16ExpectedOutcomeCount": 31,
+    "runtimeAssertionTotal": null
+  },
+  "capture": {
+    "stdoutCapPerCommandBytes": 1048576,
+    "stderrCapPerCommandBytes": 1048576,
+    "arithmeticCommandStreamCeilingBytes": 25165824,
+    "aggregateOriginalMainCap": null,
+    "allStreamsMustBeComplete": true,
+    "truncationFailsBeforeExitAssertion": true,
+    "guardApprovalEnvironment": "GUARDRAIL_APPROVED=''",
+    "killSignal": "SIGTERM",
+    "forceKillAfter": "5 seconds"
+  },
+  "budgets": {
+    "bunTimeoutArgumentMs": 600000,
+    "totalParentBudgetsArithmeticMs": 2160000,
+    "totalCommandTimeoutsArithmeticMs": 1650000,
+    "notWallTimeForecast": true,
+    "changedExistingTimeouts": 0,
+    "extraRetriesOrFilters": 0,
+    "projectionCooperativeNominalMs": 264000,
+    "projectionBunNominalMs": 290000,
+    "projectionProcessMs": 300000,
+    "projectionParentMs": 360000,
+    "projectionNominalProcessMarginMs": 10000,
+    "overheadGuaranteed": false
+  },
+  "sourceDelta": {
+    "base": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "baseTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "source": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "reportedActualDelta": "2M",
+    "productPaths": 1,
+    "testPaths": 1,
+    "observerPaths": 0,
+    "sourcePathsFieldMeansWorkingPinCount": true
+  },
+  "derivation": {
+    "anchors": {
+      "git": "7bd64745c2e429c218245e4991e39dfbd5b5f693",
+      "bytes": 17333,
+      "sha256": "2ff819c0458f33a27ff8484f0b5b16a2255db949097f775e39f1c35131098be7",
+      "lf": 301,
+      "finalLF": true
+    },
+    "retargetDiff": {
+      "git": "111c40ee314f8a2fa008af738d980ab4d19b3820",
+      "bytes": 6964,
+      "sha256": "aa7ae6e5b7587796b815febcc5d76421dd557456a69769a803c91f0827a8f370",
+      "lf": 87,
+      "finalLF": true
+    },
+    "bindingDiff": {
+      "git": "b99ecf5cf63aebfd40cf526c0be4eccf22d0843e",
+      "bytes": 750,
+      "sha256": "3c1ded36f32939c4afd8c19d663a269b7b3682b9b104ddf947331ff22a857c65",
+      "lf": 14,
+      "finalLF": true
+    },
+    "snapshotAdditionDiff": {
+      "git": "29220207153b75fe81f6240ee20fa16527690f27",
+      "bytes": 11564,
+      "sha256": "9d82e623ecc57e01800f0141aaea93f32d63d48ec961eb022fbec244d73a880e",
+      "lf": 181,
+      "finalLF": true
+    },
+    "baseToTemplateAnchors": 10,
+    "templateToBoundTokens": 2,
+    "baseToBoundAnchors": 10,
+    "retargetHunks": 6,
+    "retargetAdded": 16,
+    "retargetRemoved": 16,
+    "snapshotHunks": 2,
+    "snapshotAdded": 170,
+    "snapshotRemoved": 0,
+    "forwardAndInverseLiteral": true
+  },
+  "controlEvidence": {
+    "base": {
+      "git": "a55818797ecf9fa6801393762bbe3261a1812576",
+      "bytes": 56757,
+      "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+      "lf": 973
+    },
+    "current": {
+      "git": "548fa992a4e5c5b25380d3e0e798993bac3e622c",
+      "bytes": 70284,
+      "sha256": "eea2944f046f7aea63ae4317db8c588f1d13756b476f1073563f7aaf08e82f0a",
+      "lf": 1196
+    },
+    "readonly": {
+      "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "bytes": 42018,
+      "sha256": "b716b6ab198354a5d74755dbd3c542475f5560a869794410b10a543129a1f82d",
+      "lf": 690
+    },
+    "sourceBounds": {
+      "git": "55215293093ff29863c8980f97ca9a74dfb7cc5b",
+      "bytes": 3863,
+      "sha256": "ba78363a7f8cce209eb7cc68d1dbbbfba785a1542b983b3ab69ac5a990c8b870"
+    },
+    "physicalOracle": "Readonly composition for both closed factories; preimage cases prove equivalence and detachedness only.",
+    "newExpectSites": 47,
+    "newAwaitSites": 27,
+    "expectedOutcomes": 31
+  },
+  "limits": [
+    "Bounds and counts are derived from the exact final files; no test, typecheck, guard or source execution has occurred in this authoring task.",
+    "The 10-second nominal projection margin does not guarantee setup, scheduling, teardown, abort cooperation or process reap.",
+    "Per-command stream caps are unchanged. Their 24MiB arithmetic ceiling is not a claim that the full Actions log will fit any aggregate transport limit.",
+    "All 12 command receipts and24 truncation flags,12 functional completions and8 full reports must come from the future current run.",
+    "No runtime assertion total, warning/rule/file count, duration or PASS is transferred from C15R or E11.",
+    "The inherited runCommand and all argv/cwd/timeout/capture/exit behavior remain literal; only the G3 evidence label changes.",
+    "The source is clean C16. Neither CPU collection nor E11 diagnostic progress is selected or claimed.",
+    "Root alone creates/audits objects, authorizes a ref/run and receives original logs. This author creates blobs only."
+  ]
+}

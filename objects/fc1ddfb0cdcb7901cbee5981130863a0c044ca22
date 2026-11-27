@@ -1,0 +1,368 @@
+{
+  "schema": "sf613-d25-parametric-bounds/v1",
+  "status": "TEXT_ONLY_UNBOUND_NOT_EXECUTED",
+  "baseBounds": "70358f42cc5dbde50c7f0783a4c002b498d333b6",
+  "parameters": [
+    {
+      "token": "__SF613_SOURCE_SHA__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_SOURCE_TREE__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_BLOB__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_SHA256__",
+      "concreteWidth": 64,
+      "state": "UNBOUND"
+    }
+  ],
+  "occurrences": {
+    "wrapper": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 0,
+      "__SF613_WRAPPER_SHA256__": 0
+    },
+    "envelope": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "finalizer": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "workflow": {
+      "__SF613_SOURCE_SHA__": 3,
+      "__SF613_SOURCE_TREE__": 2,
+      "__SF613_WRAPPER_BLOB__": 2,
+      "__SF613_WRAPPER_SHA256__": 2
+    }
+  },
+  "wrapper": {
+    "draft": {
+      "gitSha": "537183d6a1aea5b8ca7fd2f9cd16b34b3219555d",
+      "bytes": 17573,
+      "sha256": "05d7e91da175e24307707165822a1b3a3f60128c8c8f700202a543c978cc2a08",
+      "lf": 330
+    },
+    "syntacticRunCommands": 31,
+    "plannedRunCommands": 36,
+    "outerGroups": 25,
+    "expectSpawnSites": 25,
+    "arithmetic": "25 group call sites + two extra identity commands + four extra guard commands + five extra English-loop executions = 36.",
+    "preservedD24Groups": 24,
+    "preservedD24PlannedCommands": 35,
+    "addedGroups": 1,
+    "addedFunctionalDeclarations": 1,
+    "addedProcessMs": 150000,
+    "addedOuterMs": 180000,
+    "addedControlCooperativeMs": 110000,
+    "addedControlBunMs": 120000,
+    "proofParentControls": 10,
+    "proofIsolatedChildren": 6,
+    "fullSuiteUniqueFunctionalCount": null,
+    "groupInventory": [
+      {
+        "group": 1,
+        "plannedCommands": 3,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 2,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 3,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 4,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 5,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 6,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 360000,
+        "literalD21": true
+      },
+      {
+        "group": 7,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 8,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 9,
+        "plannedCommands": 5,
+        "outerTimeoutMs": 600000,
+        "literalD21": true
+      },
+      {
+        "group": 10,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 11,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 12,
+        "plannedCommands": 6,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 13,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true
+      },
+      {
+        "group": 14,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 15,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 240000,
+        "literalD21": true
+      },
+      {
+        "group": 16,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 17,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true
+      },
+      {
+        "group": 18,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true
+      },
+      {
+        "group": 19,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 20,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 21,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true
+      },
+      {
+        "group": 22,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 7
+      },
+      {
+        "group": 23,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2
+      },
+      {
+        "group": 24,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2
+      },
+      {
+        "group": 25,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "processTimeoutMs": 150000,
+        "literalQualifiedFocalBlock": true
+      }
+    ],
+    "originalGroupHashProof": {
+      "bytes": 14187,
+      "sha256": "d697431396aece846f66a83cbad4535f489594b822c97ed5964a07dbc45c1189",
+      "beforeAfterLiteral": true
+    }
+  },
+  "global": {
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000
+  },
+  "runBlocks": [
+    {
+      "name": "Initialize external evidence",
+      "line": 25,
+      "draftCharacters": 1300,
+      "draftUtf8Bytes": 1300,
+      "fourPinWidthModelCharacters": 1300,
+      "literalD24": true
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "line": 70,
+      "draftCharacters": 716,
+      "draftUtf8Bytes": 716,
+      "fourPinWidthModelCharacters": 716,
+      "literalD24": true
+    },
+    {
+      "name": "Configure git identity",
+      "line": 88,
+      "draftCharacters": 139,
+      "draftUtf8Bytes": 139,
+      "fourPinWidthModelCharacters": 139,
+      "literalD24": true
+    },
+    {
+      "name": "Run source-bound technical qualification",
+      "line": 826,
+      "draftCharacters": 3689,
+      "draftUtf8Bytes": 3689,
+      "fourPinWidthModelCharacters": 3689,
+      "literalD24": true
+    },
+    {
+      "name": "Finalize owned slot and evidence",
+      "line": 893,
+      "draftCharacters": 15833,
+      "draftUtf8Bytes": 15833,
+      "fourPinWidthModelCharacters": 15930,
+      "literalD24": false
+    }
+  ],
+  "runCharacterLimit": 21000,
+  "maximumDraftRunChars": 15833,
+  "maximumWidthModelRunChars": 15930,
+  "allDraftAndWidthModelWithinLimit": true,
+  "envelope": {
+    "draft": {
+      "gitSha": "19367d419960c838377b65adf50fb616161d672c",
+      "bytes": 43811,
+      "sha256": "725bfb488579f6d7568200a60994cccbfb8738e0c23369cdb1600609717418cc",
+      "lf": 723
+    },
+    "fourPinWidthModelUtf8Bytes": 43908,
+    "embeddedLiteral": true,
+    "derivedHashMatches": true,
+    "hexGatePreserved": true
+  },
+  "finalizer": {
+    "draft": {
+      "gitSha": "ccceacd8241da07eff178c02939980ef803eed87",
+      "bytes": 15782,
+      "sha256": "c815df0860b2bd5870ca847161010cdd2e0d6d274201ba3c2ab96069cf16d543",
+      "lf": 250
+    },
+    "fourPinWidthModelUtf8Bytes": 15879,
+    "embeddedLiteral": true
+  },
+  "loader": {
+    "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+    "bytes": 3638,
+    "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+    "literal": true
+  },
+  "emittedTestCommandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "scope": "Each runCommand capture, unchanged; not a cumulative log cap."
+  },
+  "boundaryNotes": [
+    "Group-level budgets are independent maxima, not added to justify increasing the 35/40/45 minute external limits.",
+    "Width-only model uses nonhex x characters in memory; it does not instantiate C613/T613 or any executable candidate.",
+    "Actual children and results must be received from the later bound campaign; declarations and planned commands are not evidence of PASS.",
+    "Canonical guard source is current origin/dev at future runtime; the inherited English-copy constant is historical, not a new current-dev assertion.",
+    "G1–24 bodies and their budgets are literal. G25 is the whole current C12 control, once; its current reference does not bind future C613 or transfer PASS.",
+    "No test-specific report validator or source pin is inserted into the unchanged final envelope. The later receipt must receive the original control's four reports and outcomes; the final C613 tree must contain the separately reviewed control bytes."
+  ],
+  "diffStats": [
+    {
+      "artifact": "wrapper",
+      "hunks": 3,
+      "added": 9,
+      "deleted": 2,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "envelope",
+      "hunks": 4,
+      "added": 10,
+      "deleted": 10,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "finalizer",
+      "hunks": 1,
+      "added": 3,
+      "deleted": 3,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "workflow",
+      "hunks": 7,
+      "added": 15,
+      "deleted": 15,
+      "forwardInverse": true
+    }
+  ]
+}

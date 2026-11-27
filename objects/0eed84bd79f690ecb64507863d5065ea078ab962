@@ -1,0 +1,202 @@
+{
+  "schema": "orchestra-sf.go-live-three-docs-current-intake.v1",
+  "revision": "R4",
+  "state": "REVIEWABLE_DRAFT_BLOBS_ONLY_NOT_PUBLISHED",
+  "observationCutUtc": "2026-11-27T17:07:16Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "writer": "/root",
+  "route": {
+    "pullRequest": 613,
+    "publicBranch": "sf-design-next",
+    "publicHead": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "privateBranch": "sf613-astra-finish",
+    "privateHead": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+    "actualDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "actualDevTree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "refsLastCheckedAt": "2026-11-27T16:53:06Z",
+    "sourceSha": "0860b3404ca54235997c4cdaee63bbe0659d5a7a",
+    "sourceTree": "194690fc63c26ac7feb690e44d0fea70742da88c",
+    "currentSourceIsBranchHead": false,
+    "finalCompositionCreated": false
+  },
+  "priorDraft": {
+    "gitBlob": "a46f569c18718eff18ecc4a8803e3d1f82cfae2a",
+    "bytes": 6662,
+    "sha256": "4803e2c4ac24065413608f1abe9afcbe591fffde03b184a564905e7d63240a4b"
+  },
+  "files": [
+    {
+      "path": "docs/qa/sucafina/go-live/status.json",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "82b3ca38a21534f5876fb191bd2116ef0eea191a",
+        "bytes": 542625,
+        "sha256": "b4b15868344e9a5f63b32408ddb28cf93248b144d85e41a2c476a26c952c5fff"
+      },
+      "post": {
+        "gitBlob": "fff743a2d2cc9e91fda856d55c1e0fb22ac4feaa",
+        "bytes": 568385,
+        "sha256": "f0c9cd2bd5780e73d8b77e01852cb6f93b3f2d3350f36b4416f1f2923a45ca6c"
+      }
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/README.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "a9099372d6fc46d8cd372566eaea71f88693addc",
+        "bytes": 61819,
+        "sha256": "3690784d27291be1f6aa00518816bec93b67e1a7c6891bf7ee2d37fd95de3506"
+      },
+      "post": {
+        "gitBlob": "1ab3b65c4510c7ec1a760ca4515155e1772e1b0b",
+        "bytes": 69614,
+        "sha256": "3e737dd463e68d786cdf596f48e6befe77b6facf3db790f624a43962430afed5"
+      }
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+      "mode": "100644",
+      "change": "M",
+      "pre": {
+        "gitBlob": "e21a47f762298744d75c428463712b787821eba9",
+        "bytes": 153417,
+        "sha256": "b5c924d2ff3da5229c1c7790763decdf3c8e156ae7ef557a9f6171f7e9f3a0ed"
+      },
+      "post": {
+        "gitBlob": "a04dbb2ea7a96bf5e8e9b90059d74af5e49a0625",
+        "bytes": 162081,
+        "sha256": "445ba6eb55897ebf2bd8e157948aee08cbd098c0b7f45f4d41c04d4892d34537"
+      }
+    }
+  ],
+  "evidence": {
+    "before": 81,
+    "after": 90,
+    "first81Literal": true,
+    "addedIds": [
+      "design-e11-focal-46026823740",
+      "design-e11-original-analytics-46028127606",
+      "design-e11-cpu-reader-46032200409",
+      "design-c16-clean-source-0860",
+      "design-c16-focal-46037237370",
+      "design-c16-original-analytics-46038404128",
+      "design-d26-c16-static-unbound",
+      "migration-operations-catalog-pending-proposal-20261127",
+      "operational-access-observation-2026-11-27-170257"
+    ]
+  },
+  "protectedFields": [
+    {
+      "path": "gates",
+      "literal": true,
+      "sha256": "ef9c3f912e647cc6d344c42fc2280101fc5a96e25cce48787056b88667bbf590"
+    },
+    {
+      "path": "migrationObservations",
+      "literal": true,
+      "sha256": "d7fa2101b72f3b78171b686cbcd0c4c8f21c600507dedb51f0fe5d0a4021ebc1"
+    },
+    {
+      "path": "authorization",
+      "literal": true,
+      "sha256": "adbeefb4bfbac8378105684adcbff822bf6816919965604850f3207fb8c3663b"
+    },
+    {
+      "path": "finalCandidate",
+      "literal": true,
+      "sha256": "5bdd613413a9790de29c0d5a78070784b317b3b47142e52250b2e03bb08e5ffd"
+    },
+    {
+      "path": "environments",
+      "literal": true,
+      "sha256": "32b08d6940b3f154a0d7b6a1c1d5f49c509d36d900fd079b1a12d545c0640e66"
+    },
+    {
+      "path": "overall",
+      "literal": true,
+      "sha256": "d203c1c9054aa8142d3bb7a5b2180a105470e4e1d03e164023063c04b585c101"
+    },
+    {
+      "path": "executionThisFront",
+      "literal": true,
+      "sha256": "0468154d99da8ed2929a51b86f9081bfa89cc729695022c3cf8a84a389d20a94"
+    }
+  ],
+  "previousCurrentObservationArchived": true,
+  "priorHistoryItems": 8,
+  "historyAfter": 9,
+  "oldReadmeEntireLiteralOnce": true,
+  "executionAppendOnly": true,
+  "goLive": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "qualifiedFinalGates": 0,
+    "requiredFinalGates": 5,
+    "goNoGoReadiness": "NOT_READY",
+    "currentC16AnalyticsAtCut": "IN_PROGRESS_UNRECEIVED",
+    "finalCandidateQualified": false,
+    "tarFinal": null,
+    "reservationsConfirmed": false,
+    "productionCutoverAuthorized": false
+  },
+  "currentReceipts": {
+    "e11Focal": {
+      "gitBlob": "4c5f11ccb75dcf15cd3532231b56417e64e26c50",
+      "bytes": 53308,
+      "sha256": "42ac1c5cf8eda2cd02699d6ad201cf2f9447ba164a926f5a23e0d8dd535d05aa"
+    },
+    "e11Analytics": {
+      "gitBlob": "c4ef94c7177d7272c0142081235f4ed52fdab0b1",
+      "bytes": 28244,
+      "sha256": "9744106ef5eb2e0f8066e53588773e726eddedc915196d52138b0772779a14a9"
+    },
+    "e11Reader": {
+      "gitBlob": "df0fe6b30ca0bbf3894f18490840a6d216d1dda1",
+      "bytes": 31566,
+      "sha256": "319ebd879b90a7a97366309e45a896ae1b2f37c9812d4d0db2ba48f764c13058"
+    },
+    "c16Focal": {
+      "gitBlob": "354a1382f902b6336ab4298f4e4ee12ac9aee7c3",
+      "bytes": 61055,
+      "sha256": "4733eaa4874168992cb681a55a027780d04aff77c7f667fee05fb857869f8378"
+    },
+    "c16AnalyticsAuthority": {
+      "gitBlob": "472b0f27d10436b67ba18d8d98330abb647141ff",
+      "bytes": 5851,
+      "sha256": "908133c2936b87dbe6a25300ef538cecea00e85bee894e7bd8dd07fb69508491"
+    },
+    "d26": {
+      "gitBlob": "e05b320246ae461fee1ae0ac97d04b27fcd93c94",
+      "bytes": 2050,
+      "sha256": "d1cfdef4b6b0b7a5f07e6ab9534834ac6d858c20070686121bfdbd0f404a5c4b"
+    },
+    "migrationCatalog": {
+      "gitBlob": "ba71b083d4f953efcf85181a96727df3f85f49e0",
+      "bytes": 2213,
+      "sha256": "35b7de8ccb1f2a0254d501e0f9bc0f0f9056dd2eb269d564958f2e79bee71800"
+    }
+  },
+  "review": {
+    "root": "STRUCTURED_AND_TEXT_INVARIANTS_CHECKED",
+    "independent": "PENDING",
+    "prApproval": "NOT_ANTICIPATED",
+    "ci": "NOT_EXECUTED_FOR_FINAL_COMPOSITION"
+  },
+  "mutations": {
+    "blobsOnly": true,
+    "commits": 0,
+    "refs": 0,
+    "newPrs": 0,
+    "runs": 0,
+    "originalGets": 0
+  },
+  "limits": [
+    "This is the immutable documentary cut at17:07:16Z, when C16 Analytics was in progress; later completed results must be appended separately before final publication.",
+    "The live GitHub #613/#657 records may be newer than this unpublished draft.",
+    "No historical sample count or diagnostic success qualifies current C16 performance.",
+    "First81 evidence entries and all protected objects remain literal, including historical environment access checks; the current access observation is appended as explicit evidence.",
+    "No product/dev branch or production operation is advanced by these documents."
+  ]
+}

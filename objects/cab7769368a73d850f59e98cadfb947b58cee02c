@@ -1,0 +1,581 @@
+{
+  "schema": "sf613-d26-parametric-bounds/v1",
+  "status": "TEXT_ONLY_UNBOUND_NOT_EXECUTED",
+  "baseManifest": {
+    "git": "333ca6f1b6bfaea1e823e0d475e63a7e75547eb1",
+    "bytes": 15697,
+    "sha256": "fc4a0917b2eca5ca640ab8ee23755c2ad8a4c6965e35b6295170443739aaa1c8",
+    "lf": 447
+  },
+  "baseBounds": {
+    "gitSha": "fc1ddfb0cdcb7901cbee5981130863a0c044ca22",
+    "bytes": 9795,
+    "sha256": "0caee4089ac39a99596f9c5a88f22cf2331b135d8cf90467b6b3408e0135bc09"
+  },
+  "parameters": [
+    {
+      "token": "__SF613_SOURCE_SHA__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_SOURCE_TREE__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_BLOB__",
+      "concreteWidth": 40,
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_SHA256__",
+      "concreteWidth": 64,
+      "state": "UNBOUND"
+    }
+  ],
+  "occurrences": {
+    "wrapper": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 0,
+      "__SF613_WRAPPER_SHA256__": 0
+    },
+    "envelope": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "finalizer": {
+      "__SF613_SOURCE_SHA__": 1,
+      "__SF613_SOURCE_TREE__": 1,
+      "__SF613_WRAPPER_BLOB__": 1,
+      "__SF613_WRAPPER_SHA256__": 1
+    },
+    "workflow": {
+      "__SF613_SOURCE_SHA__": 3,
+      "__SF613_SOURCE_TREE__": 2,
+      "__SF613_WRAPPER_BLOB__": 2,
+      "__SF613_WRAPPER_SHA256__": 2
+    }
+  },
+  "wrapper": {
+    "draft": {
+      "gitSha": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+      "bytes": 17940,
+      "sha256": "62d04fa664b6441e51754b4c3add59755dd190ee3f7bcb797427c56523a1c577",
+      "lf": 337
+    },
+    "outerGroups": 26,
+    "expectSpawnSites": 26,
+    "syntacticRunCommands": 32,
+    "plannedRunCommands": 37,
+    "expectedTruncationFlags": 74,
+    "arithmetic": "26 groups + two extra identity command sites + four extra guard command sites =32 sites. G12's one site executes six English reads, adding five:37 commands.",
+    "preservedD25Groups": 25,
+    "preservedD25PlannedCommands": 36,
+    "addedGroups": 1,
+    "addedCommands": 1,
+    "addedFunctionalDeclarations": 4,
+    "addedControlReports": 4,
+    "addedProcessMs": 300000,
+    "addedOuterMs": 360000,
+    "addedCooperativePerTestMs": null,
+    "addedBunPerTestMs": null,
+    "proofParentControls": 10,
+    "proofIsolatedChildren": 6,
+    "proofCountsAreSeparate": true,
+    "fullSuiteUniqueFunctionalCount": null,
+    "groupInventory": [
+      {
+        "group": 1,
+        "plannedCommands": 3,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 2,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 3,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 4,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 5,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 6,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 360000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 7,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 8,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 9,
+        "plannedCommands": 5,
+        "outerTimeoutMs": 600000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 10,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 11,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 12,
+        "plannedCommands": 6,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 13,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 300000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 14,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 15,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 240000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 16,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 17,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 18,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 660000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 19,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 20,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 21,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": true,
+        "literalD25": true
+      },
+      {
+        "group": 22,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 7,
+        "literalD25": true
+      },
+      {
+        "group": 23,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2,
+        "literalD25": true
+      },
+      {
+        "group": 24,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "literalD21": false,
+        "singleProcessTimeoutMs": 120000,
+        "declarations": 2,
+        "literalD25": true
+      },
+      {
+        "group": 25,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 180000,
+        "processTimeoutMs": 150000,
+        "literalQualifiedFocalBlock": true,
+        "literalD25": true
+      },
+      {
+        "group": 26,
+        "plannedCommands": 1,
+        "outerTimeoutMs": 360000,
+        "singleProcessTimeoutMs": 300000,
+        "declarations": 4,
+        "reports": 4,
+        "literalReviewedC14FocalBlock": true
+      }
+    ],
+    "originalGroupHashProof": {
+      "gitSha": "d435b940cf0fbe87bc5fb5451bf35392db7bc92d",
+      "bytes": 14567,
+      "sha256": "7364b4c54cc0e3e6849774e58d319a2b13a2f047cf0bec13543c80ea93b5ecbe",
+      "lf": 272,
+      "beforeAfterLiteral": true
+    },
+    "runCommandHashProof": {
+      "gitSha": "b7c6dda6b8c64ffe7ce6260e959ea1735ef1217b",
+      "bytes": 1347,
+      "sha256": "21960f990ead91989aaecb2be661ed297b71dfb2fdba2e0f5086b2e2fb214a80",
+      "lf": 24,
+      "beforeAfterLiteral": true
+    },
+    "addedPerTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      }
+    }
+  },
+  "global": {
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "unchanged": true,
+    "noBudgetIncrease": true
+  },
+  "runBlocks": [
+    {
+      "name": "Initialize external evidence",
+      "line": 25,
+      "draftCharacters": 1300,
+      "draftUtf8Bytes": 1300,
+      "fourPinWidthModelCharacters": 1300,
+      "literalD25": true
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "line": 70,
+      "draftCharacters": 716,
+      "draftUtf8Bytes": 716,
+      "fourPinWidthModelCharacters": 716,
+      "literalD25": true
+    },
+    {
+      "name": "Configure git identity",
+      "line": 88,
+      "draftCharacters": 139,
+      "draftUtf8Bytes": 139,
+      "fourPinWidthModelCharacters": 139,
+      "literalD25": true
+    },
+    {
+      "name": "Run source-bound technical qualification",
+      "line": 826,
+      "draftCharacters": 3689,
+      "draftUtf8Bytes": 3689,
+      "fourPinWidthModelCharacters": 3689,
+      "literalD25": true
+    },
+    {
+      "name": "Finalize owned slot and evidence",
+      "line": 893,
+      "draftCharacters": 15833,
+      "draftUtf8Bytes": 15833,
+      "fourPinWidthModelCharacters": 15930,
+      "literalD25": false
+    }
+  ],
+  "runCharacterLimit": 21000,
+  "maximumDraftRunChars": 15833,
+  "maximumWidthModelRunChars": 15930,
+  "allDraftAndWidthModelWithinLimit": true,
+  "envelope": {
+    "draft": {
+      "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723
+    },
+    "fourPinWidthModelUtf8Bytes": 43908,
+    "embeddedLiteral": true,
+    "derivedHashMatches": true,
+    "hexGatePreserved": true
+  },
+  "finalizer": {
+    "draft": {
+      "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250
+    },
+    "fourPinWidthModelUtf8Bytes": 15879,
+    "embeddedLiteral": true
+  },
+  "loader": {
+    "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+    "bytes": 3638,
+    "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+    "literal": true,
+    "literalD25": true
+  },
+  "emittedTestCommandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "scope": "Each runCommand capture, unchanged; not a cumulative log cap.",
+    "expectedFlagCount": 74,
+    "notCumulative": true
+  },
+  "c14Reference": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "gitBlob": "1df97636d7c9f913d333040456ac0593c87959d7",
+    "bytes": 35882,
+    "sha256": "8ee6942eabbfa443af1f584019cd51ec0ea2718b5eee58bfafb62ae52aa9629e",
+    "declarations": 2,
+    "reportPrefix": "SF_C14_SNAPSHOT_CONTROL",
+    "reports": 2,
+    "cooperativeMs": 110000,
+    "bunPerTestMs": 120000,
+    "nominalBunSumMs": 240000,
+    "wholeProcessMs": 300000,
+    "parentMs": 360000,
+    "finalC613Blob": "UNBOUND",
+    "referenceIsQualification": false
+  },
+  "arithmeticOnly": {
+    "individualCommandTimeoutSumBeforeMs": 5190000,
+    "individualCommandTimeoutSumAfterMs": 5490000,
+    "parentTimeoutSumBeforeMs": 6840000,
+    "parentTimeoutSumAfterMs": 7200000,
+    "meaning": "Independent ceiling sums, not runtime estimates or job allocations. They do not increase or establish fit within the retained35-minute process limit."
+  },
+  "boundaryNotes": [
+    "G1–25 and their budgets, including G6 at300/360s, remain literal. The unchanged G26 whole-file command now covers the current four declarations (two inherited C14 plus two C15), without a name filter or directory selection.",
+    "The seven-test CurrentChoice file is not edited or rerun in a duplicate group. The six isolated proof children retain their separate accounting.",
+    "G26 has two inherited C14 declarations at110s cooperative/120s Bun and two C15 declarations at18s/20s. The nominal280s total leaves20s inside the unchanged300s process allocation and360s parent, without guaranteeing startup, setup, disposal or reaping. Null uniform per-test fields mean mixed budgets, specified by generation.",
+    "Global process35minutes/technical step40minutes/job45minutes/finalizer3minutes, term5s/kill5s/drain10s remain literal. No performance result or sufficient runtime budget is claimed.",
+    "The per-command1MiB stdout/1MiB stderr caps and truncation rejection remain unchanged. These are not an aggregate log budget.",
+    "The same four parameters remain UNBOUND. Width-only models use nonhex x characters in memory, never actual source/driver identities.",
+    "The first four workflow run blocks and the loader remain byte-literal. Envelope/finalizer embeddings are exact, with only authorized count/schema changes.",
+    "The envelope still verifies the outer26-case summary and native Omni verdict. Reconciliation of37 actual commands/74false flags, six proof children, two C14 reports and two C15 reports (four and fifteen outcome rows) remains an intake obligation; no new parser is introduced. Eleven functional tests/seven reports describe only the separate C15 focal; the whole D26 functional count remains null.",
+    "FinalUI6 and its390-byte source request remain separate and unchanged. No focal or historical result qualifies D26, C613, Cgo or Release.",
+    "The preserved c14Reference is historical. Current C15 references and the three unchanged C14 product pins must be reconciled with actual final C613 before the four bindings are resolved. No final source content or qualification is assumed from a reference pin."
+  ],
+  "diffStats": [
+    {
+      "artifact": "wrapper",
+      "hunks": 3,
+      "added": 9,
+      "deleted": 2,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "envelope",
+      "hunks": 4,
+      "added": 10,
+      "deleted": 10,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "finalizer",
+      "hunks": 1,
+      "added": 3,
+      "deleted": 3,
+      "forwardInverse": true
+    },
+    {
+      "artifact": "workflow",
+      "hunks": 7,
+      "added": 15,
+      "deleted": 15,
+      "forwardInverse": true
+    }
+  ],
+  "c15Reference": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+    "gitBlob": "a55818797ecf9fa6801393762bbe3261a1812576",
+    "bytes": 56757,
+    "sha256": "2de4a03123e4e47e513c7fb82edc67951d68f247aecf4049290960366721bbf3",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "sourceManifest": {
+      "gitSha": "75791541a1c268fbb24c4f6aa8f9d37e8160e20f",
+      "bytes": 11823,
+      "sha256": "eabcbe18c44d211d383965b7b80b70457397ca3437c153de5caf87e5786fa3ec"
+    },
+    "declarations": 4,
+    "reportFamilies": {
+      "SF_C14_SNAPSHOT_CONTROL": 2,
+      "SF_C15_SELECTION_CONTROL": 2
+    },
+    "reports": 4,
+    "perTestBudgetsByGeneration": {
+      "inheritedC14": {
+        "declarations": 2,
+        "cooperativePerTestMs": 110000,
+        "bunPerTestMs": 120000
+      },
+      "addedC15": {
+        "declarations": 2,
+        "cooperativePerTestMs": 18000,
+        "bunPerTestMs": 20000
+      }
+    },
+    "nominalBunSumMs": 280000,
+    "nominalMarginToProcessMs": 20000,
+    "wholeProcessMs": 300000,
+    "parentMs": 360000,
+    "newReportOutcomeRows": [
+      4,
+      15
+    ],
+    "finalC613Blob": "UNBOUND",
+    "referenceIsQualification": false,
+    "focalExpectationOnly": {
+      "functionalDeclarations": 11,
+      "controlReports": 7,
+      "notWholeD26Count": true
+    }
+  },
+  "documentaryRevision": {
+    "author": "/root/teams_product",
+    "authority": "Root authorized only the D26 documentary amendment for the existing whole-file C15 controls; no executable, final binding, tree, commit, ref or run is changed.",
+    "baseManifest": {
+      "gitSha": "bc41111eb043414a799f024c69621b1da3eb4053",
+      "bytes": 23064,
+      "sha256": "05e96e810ca91716f883ceab3563f94d42455b6ce0822d4afb2b20f6b7b30c92",
+      "lf": 615
+    },
+    "baseBounds": {
+      "gitSha": "06aa6bba68129c772ea498b81dc0bddddbb856d2",
+      "bytes": 13385,
+      "sha256": "fa42f372c6ace60b17ee4a37d6a5eedfb86b2f6ebb517287a2b4f04c04aff9f8",
+      "lf": 457
+    },
+    "scope": "The original D26 executable derivation, artifacts, anchors, diff, authority and action record remain historical and literal. Only the active G26 source/control references, declaration/report expectations, mixed per-test budgets and future-intake notes are updated.",
+    "originalG26Reference": {
+      "declarations": 2,
+      "reports": 2,
+      "nominalBunSumMs": 240000,
+      "processMarginMs": 60000
+    },
+    "currentG26Reference": {
+      "declarations": 4,
+      "reports": 4,
+      "nominalBunSumMs": 280000,
+      "processMarginMs": 20000
+    },
+    "executableChanges": 0,
+    "finalBindingsState": "UNBOUND",
+    "wholeD26FunctionalCount": null,
+    "qualificationTransferred": false,
+    "originalC14ReferenceIsHistorical": true
+  },
+  "typeRepairRevision": {
+    "authority": "Root accepted the erased type-only repair and supplied audited source/tree. This amendment retargets documentary references only.",
+    "previousManifest": {
+      "gitSha": "5244ae34d7ad5827e89b013e709e123a726eea12",
+      "bytes": 29616,
+      "sha256": "f8b64331a773d712caa64034b2dc544631ea47f9458c5f2302dcd395abd73c4b",
+      "lf": 776
+    },
+    "previousBounds": {
+      "gitSha": "2f01f5cfd420a4ef40ea4121043f201bd4190349",
+      "bytes": 16996,
+      "sha256": "e09525289c900e194c2d3ea9cb14fadc2429edd8bccca7add08e23497a959f91",
+      "lf": 549
+    },
+    "repairSupport": {
+      "gitSha": "e781c4c2f0cb114fdd03167b9e7e0db4d70749e1",
+      "bytes": 8711,
+      "sha256": "76f1af8c689d2bcc09be9554d5d292088f49b9f9ea2491d028045c2a46872cc7"
+    },
+    "previousSource": "86a724371c42f6be640fcf1108900e6fe49edea6",
+    "previousTree": "2c6e05fb1ffc700b25815aa4c64964fe7740308c",
+    "previousTest": "86b2dd03f894e10a5c6a787771544a2c10a972b2",
+    "source": "069a56a60a9c12ea7c32ed54b07ee11442c35db5",
+    "sourceTree": "9d3aa9c350d7ea01416950ad8ff41ab0d9b4afc8",
+    "soleParent": "86a724371c42f6be640fcf1108900e6fe49edea6",
+    "test": "a55818797ecf9fa6801393762bbe3261a1812576",
+    "sourceDeltaAgainstParent": "1M in the existing test; exactly three <unknown> type arguments at lines698/704/956, +27 bytes. Erasure recovers the previous test literally.",
+    "cumulativeDeltaAgainstS14": "4 product files and1 existing test; the four product postimages are unchanged by this repair.",
+    "limits": "No declaration, assertion value, report, outcome oracle, deadline, argv, group, executable or final binding changes. The original C15 source proposal remains the product/reference basis plus this accepted type repair. Neither this source nor an earlier focal result qualifies final C613 or D26.",
+    "qualificationTransferred": false,
+    "finalC613State": "UNBOUND"
+  }
+}
