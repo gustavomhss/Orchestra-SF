@@ -1,0 +1,1012 @@
+{
+  "schema": "sf613-d29-derivation-v1",
+  "status": "UNBOUND_STATIC_DERIVATION_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "inherited": {
+    "manifest": {
+      "git": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+      "bytes": 24043,
+      "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+      "lf": 628,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+      "bytes": 10514,
+      "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+      "lf": 305,
+      "endsWithLF": true
+    },
+    "immutable": true
+  },
+  "files": [
+    {
+      "artifact": "wrapper",
+      "logicalDiffPath": "apps/cli/test/sf613-final-verification.test.ts",
+      "actualDriverPath": "apps/cli/test/sf613-final-verification.test.ts",
+      "companionIsReviewArtifact": false,
+      "base": {
+        "git": "30178d52800afdf6c262e792790d52351b10c5c4",
+        "bytes": 18398,
+        "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+        "lf": 344,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+        "bytes": 18854,
+        "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+        "lf": 352,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "id": 1,
+          "reason": "Informational package revision only",
+          "before": "// D28 parametric draft: driver-only verification at literal C613; final source and pins remain pending.",
+          "after": "// D29 parametric draft: driver-only verification at literal C613; final source and pins remain pending.",
+          "occurrences": 1,
+          "preimage": {
+            "git": "30178d52800afdf6c262e792790d52351b10c5c4",
+            "bytes": 18398,
+            "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+            "lf": 344,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "74c17b64bc7e9036567604dc2be990fb0cb8f9e5",
+            "bytes": 18398,
+            "sha256": "88e199f5dcbe1e1a17f514c19c75cf689688ea8a4e59adbe6499a895bb9485b4",
+            "lf": 344,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 2,
+          "reason": "Informational wrapper label; not parsed by companion executables",
+          "before": "verification: \"sf613-final-composition-literal-c-d28-r1\"",
+          "after": "verification: \"sf613-final-composition-literal-c-d29-r1\"",
+          "occurrences": 1,
+          "preimage": {
+            "git": "74c17b64bc7e9036567604dc2be990fb0cb8f9e5",
+            "bytes": 18398,
+            "sha256": "88e199f5dcbe1e1a17f514c19c75cf689688ea8a4e59adbe6499a895bb9485b4",
+            "lf": 344,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "b03920102a7ab33297286df8ccabd93b32da209c",
+            "bytes": 18398,
+            "sha256": "f6d2becb0a90635997e62dd7cf527aadfaf9443c191e9278a557323f8839b938",
+            "lf": 344,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 3,
+          "reason": "Append one whole-file G27, literal from accepted C20 focal carrier; G26 remains literal",
+          "before": "checks.live(\"C14 C08 snapshot projection preserves fresh authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14 snapshot projection\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/c08-snapshot-projection.test.ts\"], module, 300_000)\n}), 360_000)\n",
+          "after": "checks.live(\"C14 C08 snapshot projection preserves fresh authorization and full-path equivalence\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"C14 snapshot projection\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/c08-snapshot-projection.test.ts\"], module, 300_000)\n}), 360_000)\n\nchecks.live(\"Scenario lookup preserves complete candidate reads, fallback and fresh authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Scenario lookup complete candidates whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C20_SCENARIO_LOOKUP \")\n}), 60_000)\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "b03920102a7ab33297286df8ccabd93b32da209c",
+            "bytes": 18398,
+            "sha256": "f6d2becb0a90635997e62dd7cf527aadfaf9443c191e9278a557323f8839b938",
+            "lf": 344,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+            "bytes": 18854,
+            "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+            "lf": 352,
+            "endsWithLF": true
+          }
+        }
+      ],
+      "operationCount": 3,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postReadbackLiteral": true,
+      "diffSection": {
+        "bytes": 1773,
+        "sha256": "243f45b07b5f1ee3df9ae1eec721d18f6418970783da5edfd1008644784884cc",
+        "hunks": 3,
+        "additions": 10,
+        "deletions": 2,
+        "partOfFullDiff": true,
+        "separateBlobCreated": false
+      }
+    },
+    {
+      "artifact": "envelope",
+      "logicalDiffPath": "review-artifacts/sf613-final-envelope.mjs",
+      "actualDriverPath": null,
+      "companionIsReviewArtifact": true,
+      "base": {
+        "git": "26fe67808cf872c611127a7f46838074604fe690",
+        "bytes": 43811,
+        "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+        "bytes": 43811,
+        "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "id": 1,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  need(passes.length === 1 && Number(passes[0][1]) === 26 &&\n",
+          "after": "  need(passes.length === 1 && Number(passes[0][1]) === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "26fe67808cf872c611127a7f46838074604fe690",
+            "bytes": 43811,
+            "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "cf9ee7007660d78b3710c80ec6c33d35d3d29873",
+            "bytes": 43811,
+            "sha256": "9787b4ab978e54abc2ebd0339917559cee10fe6b558021dbe51c20436beceafa",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 2,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 26 PASS/0 FAIL/0 SKIP\")\n",
+          "after": "    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 27 PASS/0 FAIL/0 SKIP\")\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "cf9ee7007660d78b3710c80ec6c33d35d3d29873",
+            "bytes": 43811,
+            "sha256": "9787b4ab978e54abc2ebd0339917559cee10fe6b558021dbe51c20436beceafa",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "82214e954e050edff48d5f5160bcd449bab387bb",
+            "bytes": 43811,
+            "sha256": "db88c3017a6d7f0ade2b119d64eb07d4cdeb2302ba92c4492f3a961608e98666",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 3,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 26 &&\n",
+          "after": "  need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "82214e954e050edff48d5f5160bcd449bab387bb",
+            "bytes": 43811,
+            "sha256": "db88c3017a6d7f0ade2b119d64eb07d4cdeb2302ba92c4492f3a961608e98666",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "6c92f9b6a1b4c1d490f499cf6a315740fa169e8c",
+            "bytes": 43811,
+            "sha256": "6a180e5db476ed28885afc24ec5eaecf3a789e7166011fae40bc8dab7b83453b",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 4,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  const ran = summaries(/^Ran 26 tests across 1 file\\./)\n",
+          "after": "  const ran = summaries(/^Ran 27 tests across 1 file\\./)\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "6c92f9b6a1b4c1d490f499cf6a315740fa169e8c",
+            "bytes": 43811,
+            "sha256": "6a180e5db476ed28885afc24ec5eaecf3a789e7166011fae40bc8dab7b83453b",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "dea54d16de46b37e033134cae977ab884dd848c3",
+            "bytes": 43811,
+            "sha256": "35053ef3a9ba6193749debeb6c6df84e98c8eb3a5970129d3a96fca14b9089ef",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 5,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  const prefix = tag + \" pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "after": "  const prefix = tag + \" pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "dea54d16de46b37e033134cae977ab884dd848c3",
+            "bytes": 43811,
+            "sha256": "35053ef3a9ba6193749debeb6c6df84e98c8eb3a5970129d3a96fca14b9089ef",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "197df1a51593de9017442656eb989c6954915196",
+            "bytes": 43811,
+            "sha256": "fecbe800bcf15aaf94b284a8d384293b785995015852600e7d597307c9ed2241",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 6,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  return { pass: 26, fail: 0, skip: 0, declarations: 26, actualHeader: headers[0],\n",
+          "after": "  return { pass: 27, fail: 0, skip: 0, declarations: 27, actualHeader: headers[0],\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "197df1a51593de9017442656eb989c6954915196",
+            "bytes": 43811,
+            "sha256": "fecbe800bcf15aaf94b284a8d384293b785995015852600e7d597307c9ed2241",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "0cc00b9e2ba3fd6a2f611160a9d03ab29f18c2b6",
+            "bytes": 43811,
+            "sha256": "86a9812f7c9bf72be34a46d942d317fdf7251b5ac4632139ed5a62d4e62930f3",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 7,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "    omni: { nonce, declared: 26, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "after": "    omni: { nonce, declared: 27, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "0cc00b9e2ba3fd6a2f611160a9d03ab29f18c2b6",
+            "bytes": 43811,
+            "sha256": "86a9812f7c9bf72be34a46d942d317fdf7251b5ac4632139ed5a62d4e62930f3",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "e8086b212a15a21e090df5c964db26143075bffd",
+            "bytes": 43811,
+            "sha256": "68d312cdd97a32177c3bfed0f9ed3681dfcb5ead140aa00e7bcda5c47ead260e",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 8,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  need(originalVerdict.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "after": "  need(originalVerdict.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "e8086b212a15a21e090df5c964db26143075bffd",
+            "bytes": 43811,
+            "sha256": "68d312cdd97a32177c3bfed0f9ed3681dfcb5ead140aa00e7bcda5c47ead260e",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "c3de0da4294ad0de91cc6a672b2273e8acb0d02c",
+            "bytes": 43811,
+            "sha256": "0be82e2ff331ab7faf1a1912fadba2f8f47b28ebf3ff4ba75f435bddd55cf574",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 9,
+          "reason": "Existing outer declaration/result count26 to27; no parser change",
+          "before": "  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 26 &&\n",
+          "after": "  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "c3de0da4294ad0de91cc6a672b2273e8acb0d02c",
+            "bytes": 43811,
+            "sha256": "0be82e2ff331ab7faf1a1912fadba2f8f47b28ebf3ff4ba75f435bddd55cf574",
+            "lf": 723,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+            "bytes": 43811,
+            "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+            "lf": 723,
+            "endsWithLF": true
+          }
+        }
+      ],
+      "operationCount": 9,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postReadbackLiteral": true,
+      "diffSection": {
+        "bytes": 4228,
+        "sha256": "05c498afbf0da5c4783533983a30f2b1064e056d094c7d8f4946dcd0d41f7012",
+        "hunks": 3,
+        "additions": 9,
+        "deletions": 9,
+        "partOfFullDiff": true,
+        "separateBlobCreated": false
+      }
+    },
+    {
+      "artifact": "finalizer",
+      "logicalDiffPath": "review-artifacts/sf613-final-finalizer.mjs",
+      "actualDriverPath": null,
+      "companionIsReviewArtifact": true,
+      "base": {
+        "git": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "bytes": 15782,
+        "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "42e098a611b4275e27962f3a342eb0f0892885d0",
+        "bytes": 15782,
+        "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "id": 1,
+          "reason": "Existing outer finalizer proof count26 to27",
+          "before": "    main.run === run && main.attempt === attempt && main.result?.pass === 26 &&\n",
+          "after": "    main.run === run && main.attempt === attempt && main.result?.pass === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "9e423560670f8452eb95ebff92630f202df06a8f",
+            "bytes": 15782,
+            "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+            "lf": 250,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "24815867d83ef766907dd0ca23d7a958c4b98404",
+            "bytes": 15782,
+            "sha256": "adf660db1e8fa0d3e1de3e3a7049e993fffb42f49aed2e5b67425813b4c1df57",
+            "lf": 250,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 2,
+          "reason": "Existing outer finalizer proof count26 to27",
+          "before": "    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 26 &&\n",
+          "after": "    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "24815867d83ef766907dd0ca23d7a958c4b98404",
+            "bytes": 15782,
+            "sha256": "adf660db1e8fa0d3e1de3e3a7049e993fffb42f49aed2e5b67425813b4c1df57",
+            "lf": 250,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "02339e543109438731eb17b6bd59c85f5efd4f60",
+            "bytes": 15782,
+            "sha256": "6fcd52e7d5f09b1eccae3bdebae904f8e5392d79bc28516ce8360a2b6bae95fb",
+            "lf": 250,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 3,
+          "reason": "Existing outer finalizer proof count26 to27",
+          "before": "    main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "after": "    main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "02339e543109438731eb17b6bd59c85f5efd4f60",
+            "bytes": 15782,
+            "sha256": "6fcd52e7d5f09b1eccae3bdebae904f8e5392d79bc28516ce8360a2b6bae95fb",
+            "lf": 250,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "42e098a611b4275e27962f3a342eb0f0892885d0",
+            "bytes": 15782,
+            "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+            "lf": 250,
+            "endsWithLF": true
+          }
+        }
+      ],
+      "operationCount": 3,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postReadbackLiteral": true,
+      "diffSection": {
+        "bytes": 1591,
+        "sha256": "389482590190e198808a084b81247ffd620cc0719a7d7bd80ce12dc4b57e3662",
+        "hunks": 1,
+        "additions": 3,
+        "deletions": 3,
+        "partOfFullDiff": true,
+        "separateBlobCreated": false
+      }
+    },
+    {
+      "artifact": "workflow",
+      "logicalDiffPath": ".github/workflows/sf613-final-qualification.yml",
+      "actualDriverPath": ".github/workflows/sf613-final-qualification.yml",
+      "companionIsReviewArtifact": false,
+      "base": {
+        "git": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "bytes": 80067,
+        "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+        "lf": 1154,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+        "bytes": 80067,
+        "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+        "lf": 1154,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "id": 1,
+          "reason": "Informational workflow revision",
+          "before": "# D26 parametric draft, not a frozen candidate.",
+          "after": "# D29 parametric draft, not a frozen candidate.",
+          "occurrences": 1,
+          "preimage": {
+            "git": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+            "bytes": 80067,
+            "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "0e930dc8a2304d92df19d93787051609e9d12eb1",
+            "bytes": 80067,
+            "sha256": "cc2af7704188fb3279be93e22b70b79bff9f2acd4191f505bb16132665fe7c75",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 2,
+          "reason": "Derived exact UTF-8 envelope transport hash",
+          "before": "SF613_ENVELOPE_SHA256: \"397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1\"",
+          "after": "SF613_ENVELOPE_SHA256: \"d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955\"",
+          "occurrences": 1,
+          "preimage": {
+            "git": "0e930dc8a2304d92df19d93787051609e9d12eb1",
+            "bytes": 80067,
+            "sha256": "cc2af7704188fb3279be93e22b70b79bff9f2acd4191f505bb16132665fe7c75",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "b9b163460e8731e0cf19d183827b4179f47506b6",
+            "bytes": 80067,
+            "sha256": "8f0f0e3f4f09e1805797e6b8c75b72d179c30110f690841364c97ef61ec70b11",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 3,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              need(passes.length === 1 && Number(passes[0][1]) === 26 &&\n",
+          "after": "\n              need(passes.length === 1 && Number(passes[0][1]) === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "b9b163460e8731e0cf19d183827b4179f47506b6",
+            "bytes": 80067,
+            "sha256": "8f0f0e3f4f09e1805797e6b8c75b72d179c30110f690841364c97ef61ec70b11",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "d8680cb5acba8fde64895b7774264564bc72bad5",
+            "bytes": 80067,
+            "sha256": "b7a9237237f9384153a4af7aae6722917de1053604e2836f0c67db885d9fbfa6",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 4,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 26 PASS/0 FAIL/0 SKIP\")\n",
+          "after": "\n                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 27 PASS/0 FAIL/0 SKIP\")\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "d8680cb5acba8fde64895b7774264564bc72bad5",
+            "bytes": 80067,
+            "sha256": "b7a9237237f9384153a4af7aae6722917de1053604e2836f0c67db885d9fbfa6",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "f23cf4501fba83112901f7c562250591c40525b0",
+            "bytes": 80067,
+            "sha256": "11e138374485dbdbed461166b9e6962da8ea95b2ae7548e74075d02f6acdcd5c",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 5,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 26 &&\n",
+          "after": "\n              need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "f23cf4501fba83112901f7c562250591c40525b0",
+            "bytes": 80067,
+            "sha256": "11e138374485dbdbed461166b9e6962da8ea95b2ae7548e74075d02f6acdcd5c",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "42f1f39c8708a7c90933c4d472ef052e32cc36c0",
+            "bytes": 80067,
+            "sha256": "5d13df68c0d8ef271487748b1735a50513febb90004a7e8350e11d7963184d4e",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 6,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              const ran = summaries(/^Ran 26 tests across 1 file\\./)\n",
+          "after": "\n              const ran = summaries(/^Ran 27 tests across 1 file\\./)\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "42f1f39c8708a7c90933c4d472ef052e32cc36c0",
+            "bytes": 80067,
+            "sha256": "5d13df68c0d8ef271487748b1735a50513febb90004a7e8350e11d7963184d4e",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "86a8c20e3eb6dd7b834665942654a41680c6342c",
+            "bytes": 80067,
+            "sha256": "0a9f30aa137d32098246ef13d245e7f3cd16f6c9ceedf342f975fad1dc409b58",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 7,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              const prefix = tag + \" pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "after": "\n              const prefix = tag + \" pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "86a8c20e3eb6dd7b834665942654a41680c6342c",
+            "bytes": 80067,
+            "sha256": "0a9f30aa137d32098246ef13d245e7f3cd16f6c9ceedf342f975fad1dc409b58",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "e594018273355abe8edf065bb76092edd347490c",
+            "bytes": 80067,
+            "sha256": "f67397b2241db70992b8f99256f968d0d0f545ec64a16928d8f29a79cd06e9ae",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 8,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              return { pass: 26, fail: 0, skip: 0, declarations: 26, actualHeader: headers[0],\n",
+          "after": "\n              return { pass: 27, fail: 0, skip: 0, declarations: 27, actualHeader: headers[0],\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "e594018273355abe8edf065bb76092edd347490c",
+            "bytes": 80067,
+            "sha256": "f67397b2241db70992b8f99256f968d0d0f545ec64a16928d8f29a79cd06e9ae",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "798705254ed6a519cdee821902e8e093538f6d8f",
+            "bytes": 80067,
+            "sha256": "b6d7bc6691bc70bd7a66d866b42ba520b6715bff930cd84b14a972c8ee19addc",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 9,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n                omni: { nonce, declared: 26, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "after": "\n                omni: { nonce, declared: 27, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "798705254ed6a519cdee821902e8e093538f6d8f",
+            "bytes": 80067,
+            "sha256": "b6d7bc6691bc70bd7a66d866b42ba520b6715bff930cd84b14a972c8ee19addc",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "75aae0e111db2ff601ed1ce1732f94c46ce497d4",
+            "bytes": 80067,
+            "sha256": "ffac8d5574e23818caaab57529a5b987808669a3582d4cb69cfd76f62fa006ea",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 10,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              need(originalVerdict.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "after": "\n              need(originalVerdict.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "75aae0e111db2ff601ed1ce1732f94c46ce497d4",
+            "bytes": 80067,
+            "sha256": "ffac8d5574e23818caaab57529a5b987808669a3582d4cb69cfd76f62fa006ea",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "d1ca4a2742595a63a33ff12b140b5cce7c7d1e5f",
+            "bytes": 80067,
+            "sha256": "c84ae6a3fc66bda534f7670ae86798340302acb021363d3144a70d9e8980fc78",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 11,
+          "reason": "Literal embedded envelope counterpart",
+          "before": "\n              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 26 &&\n",
+          "after": "\n              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "d1ca4a2742595a63a33ff12b140b5cce7c7d1e5f",
+            "bytes": 80067,
+            "sha256": "c84ae6a3fc66bda534f7670ae86798340302acb021363d3144a70d9e8980fc78",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "0f7dca6d107a33b231b987ce3a66151dd5a634e8",
+            "bytes": 80067,
+            "sha256": "4aad3134be831e3862dbbda0890d3e294c1c52ad90e8314786174b62a8958679",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 12,
+          "reason": "Literal embedded finalizer counterpart",
+          "before": "\n              main.run === run && main.attempt === attempt && main.result?.pass === 26 &&\n",
+          "after": "\n              main.run === run && main.attempt === attempt && main.result?.pass === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "0f7dca6d107a33b231b987ce3a66151dd5a634e8",
+            "bytes": 80067,
+            "sha256": "4aad3134be831e3862dbbda0890d3e294c1c52ad90e8314786174b62a8958679",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "7763d597545c9d7157a53e24d27e64a83eb9c4ce",
+            "bytes": 80067,
+            "sha256": "e578aff172802dc5845532fade7d3a6f274c54602c783729e6a1c09f5bbdefb9",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 13,
+          "reason": "Literal embedded finalizer counterpart",
+          "before": "\n              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 26 &&\n",
+          "after": "\n              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 27 &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "7763d597545c9d7157a53e24d27e64a83eb9c4ce",
+            "bytes": 80067,
+            "sha256": "e578aff172802dc5845532fade7d3a6f274c54602c783729e6a1c09f5bbdefb9",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "1c86014d3a84b3cd0dd79bb80fe522e3a7e5c5c8",
+            "bytes": 80067,
+            "sha256": "6d49fe19807305ff29c28bfc4448c0f7a2ab8e7c9090f0e159bc540dbe947bc2",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        },
+        {
+          "id": 14,
+          "reason": "Literal embedded finalizer counterpart",
+          "before": "\n              main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 26 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "after": "\n              main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "occurrences": 1,
+          "preimage": {
+            "git": "1c86014d3a84b3cd0dd79bb80fe522e3a7e5c5c8",
+            "bytes": 80067,
+            "sha256": "6d49fe19807305ff29c28bfc4448c0f7a2ab8e7c9090f0e159bc540dbe947bc2",
+            "lf": 1154,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+            "bytes": 80067,
+            "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+            "lf": 1154,
+            "endsWithLF": true
+          }
+        }
+      ],
+      "operationCount": 14,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postReadbackLiteral": true,
+      "diffSection": {
+        "bytes": 7157,
+        "sha256": "0692b9f4378f56a89bae7496cfbe159009d9be04059b3ed57182447588d09eb7",
+        "hunks": 6,
+        "additions": 14,
+        "deletions": 14,
+        "partOfFullDiff": true,
+        "separateBlobCreated": false
+      }
+    }
+  ],
+  "totals": {
+    "operations": 29,
+    "files": 4,
+    "wrapperOperations": 3,
+    "envelopeOperations": 9,
+    "finalizerOperations": 3,
+    "workflowOperations": 14,
+    "hunks": 13,
+    "additions": 36,
+    "deletions": 28
+  },
+  "fullDiff": {
+    "git": "b0006a022ca0c60639f5e8a2feb38f8852ef9adf",
+    "bytes": 14749,
+    "sha256": "90c7f8761da63b117d69baf61662f28a47f7ad93bb303bb0e9dec9d58c85bcd9",
+    "lf": 190,
+    "endsWithLF": true,
+    "forwardExact": true,
+    "inverseExact": true,
+    "sections": 4,
+    "headerAndCountsVerified": true
+  },
+  "addition": {
+    "group": 27,
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+    "currentReference": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+    "wholeFile": true,
+    "processMs": 45000,
+    "parentMs": 60000,
+    "groupLiteralFromC20Focal": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "groupTextEqualsC20Focal": true
+  },
+  "preserved": {
+    "runCommand": true,
+    "G1ThroughG26": true,
+    "oldArgvCwdAndDeadlines": true,
+    "oldLoadingAndLazyFamilies": true,
+    "sixProofChildrenSeparate": true,
+    "G6G25G26": true,
+    "allOutputCaps": true,
+    "global35_40_45Minutes": true,
+    "alwaysFinalizer3Minutes": true,
+    "UI6Request390Bytes": true,
+    "originalFourBindingParameters": true,
+    "loader": {
+      "git": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "lf": 57,
+      "endsWithLF": true,
+      "literal": true
+    },
+    "noNewParser": true,
+    "noAddedDependency": true
+  },
+  "embedding": {
+    "fullEnvelopeExact": true,
+    "fullFinalizerExact": true,
+    "derivedEnvelopeSha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+    "sourceIndentSpaces": 12,
+    "finalizerIndentSpaces": 10,
+    "workflowRunAndTransportBounds": {
+      "draft": [
+        {
+          "line": 25,
+          "characters": 1300,
+          "bytes": 1300,
+          "sha256": "60e8bcea6edeca5ca65a14ff808d2a878fe46f75601d6f3e29b1e252d4a30c7b"
+        },
+        {
+          "line": 70,
+          "characters": 716,
+          "bytes": 716,
+          "sha256": "1726b0c628b94250596079284c06b6fd9f962f898cf2dabb9dc1563adbd32ff4"
+        },
+        {
+          "line": 88,
+          "characters": 139,
+          "bytes": 139,
+          "sha256": "33b5e1e86a8cd3ae4b7cdd0cfe62e99696dbd0b51eb442d78b1f6738c9712293"
+        },
+        {
+          "line": 826,
+          "characters": 3689,
+          "bytes": 3689,
+          "sha256": "9d7bd0451fd7c0bc60b3b794ae0d1bfc6360388a11aa8d46189f525f18ab7a31"
+        },
+        {
+          "line": 893,
+          "characters": 15833,
+          "bytes": 15833,
+          "sha256": "9209ef36a150eca2bc9ccf2861812bcd4971fa32320ecabb5c50681ea7e2029b"
+        }
+      ],
+      "widthModel": [
+        {
+          "line": 25,
+          "characters": 1300,
+          "bytes": 1300,
+          "sha256": "60e8bcea6edeca5ca65a14ff808d2a878fe46f75601d6f3e29b1e252d4a30c7b"
+        },
+        {
+          "line": 70,
+          "characters": 716,
+          "bytes": 716,
+          "sha256": "1726b0c628b94250596079284c06b6fd9f962f898cf2dabb9dc1563adbd32ff4"
+        },
+        {
+          "line": 88,
+          "characters": 139,
+          "bytes": 139,
+          "sha256": "33b5e1e86a8cd3ae4b7cdd0cfe62e99696dbd0b51eb442d78b1f6738c9712293"
+        },
+        {
+          "line": 826,
+          "characters": 3689,
+          "bytes": 3689,
+          "sha256": "9d7bd0451fd7c0bc60b3b794ae0d1bfc6360388a11aa8d46189f525f18ab7a31"
+        },
+        {
+          "line": 893,
+          "characters": 15930,
+          "bytes": 15930,
+          "sha256": "cc9ee9b729eea5f0b5e74cf296cdbe868c77db9b9cb2b609e51aa39e83358752"
+        }
+      ],
+      "limit": 21000,
+      "maxDraftCharacters": 15833,
+      "maxWidthCharacters": 15930,
+      "allWithinLimit": true
+    }
+  },
+  "protocol": {
+    "schemas": {
+      "envelope": "sf613-final-technical-literal-c-d26-r1",
+      "finalizer": "sf613-final-technical-finalizer-v1"
+    },
+    "wrapperVerificationConsumedByCompanions": false,
+    "numericChanges": "Existing outer-declaration/result expectations26 become27 in nine envelope lines(ten occurrences) and three finalizer lines. Values38commands/76flags are complete-intake expectations; no new runtime parser was added.",
+    "informationalLabels": "Wrapper/comment and workflow comment identify D29. Existing receipt schema identifiers and data structures remain literal."
+  },
+  "binding": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "widthModel": {
+      "wrapperBytes": 18893,
+      "envelopeBytes": 43908,
+      "finalizerBytes": 15879,
+      "workflowBytes": 80281,
+      "modelObjectsCreated": false,
+      "modelOnly": true
+    },
+    "modelsAreDataOnly": true,
+    "modelGitObjectsCreated": false
+  },
+  "futureDriver": {
+    "source": "UNBOUND_FINAL_C613",
+    "sourceTree": "UNBOUND_FINAL_C613_TREE",
+    "snapshot": null,
+    "snapshotTree": null,
+    "parents": [
+      "UNBOUND_FINAL_C613"
+    ],
+    "delta": [
+      {
+        "operation": "A",
+        "path": "apps/cli/test/sf613-final-verification.test.ts",
+        "mode": "100644"
+      },
+      {
+        "operation": "A",
+        "path": ".github/workflows/sf613-final-qualification.yml",
+        "mode": "100644"
+      }
+    ],
+    "companionFilesNotAdditionalTreePaths": true,
+    "requestMustRemainInsideFinalC613": true
+  },
+  "caveats": [
+    "Intermediate hashes in operation chains are calculations for exact reconstruction; only base/postimage/full-diff locators are asserted actual Git objects here.",
+    "The full diff compares four logical artifacts. The review-artifacts paths name standalone companion buffers and are never additional candidate/driver paths.",
+    "D28 and its historical documents remain unchanged. This proposal does not designate S20 as final C613.",
+    "No source binding, execution result, original acquisition, final technical qualification or UI6 qualification is created by this derivation."
+  ],
+  "operationsByAuthor": {
+    "newGitBlobsOnly": true,
+    "repositoryCodeExecuted": false,
+    "treeCommitRefRun": false,
+    "originalLogGet": 0,
+    "zipGet": 0
+  }
+}

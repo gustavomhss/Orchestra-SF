@@ -1,0 +1,487 @@
+{
+  "schema": "sf613-c20-analytics-final-receipt-v1",
+  "status": "CLOSED_RECEPTION_INSTALLED_RESULT_NEGATIVE",
+  "at": {
+    "current_time": "2026-11-28 06:12:15 UTC"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "receipt": {
+      "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "sourceAncestor": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "deltaFromSource": "1A .ci-run.json",
+    "deltaFromOriginalA20": "zero tree change"
+  },
+  "run": {
+    "id": 46113463330,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46113463330",
+    "status": "completed",
+    "conclusion": "failure",
+    "event": "push",
+    "created": "2026-11-28T05:44:33Z"
+  },
+  "jobs": [
+    {
+      "id": 140881932116,
+      "name": "test (ubuntu-24.04)",
+      "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "conclusion": "failure",
+      "started": "2026-11-28T05:44:35Z",
+      "completed": "2026-11-28T05:53:45Z"
+    },
+    {
+      "id": 140884025044,
+      "name": "cleanup",
+      "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "conclusion": "success",
+      "started": "2026-11-28T05:53:58Z",
+      "completed": "2026-11-28T05:54:02Z"
+    }
+  ],
+  "authority": {
+    "gitBlob": "ca30c899e8fc3de759e0dfbde119f780b58f015c",
+    "bytes": 13399,
+    "sha256": "e9d70e3d833f65a8a5f61f632d91009309d2a0d4eebf58034fa0547cdbd8b9ed",
+    "lf": 349,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "a29461b298a299fafd29d3667c67691b35b383ee",
+    "bytes": 2344,
+    "sha256": "95b8dabddeb649775ae0a00b9ad06d1ef4c9a86612b46e5baca2c38642f94908",
+    "lf": 51,
+    "endsWithLF": true
+  },
+  "runBinding": {
+    "gitBlob": "9a883649c7ee75c732bf6187f74cd3f4a5943ea9",
+    "bytes": 3554,
+    "sha256": "2af78bae0c5ff31181c9b41a887d0a14e29b841530d6b38cd24eb9472c3b5acc",
+    "lf": 103,
+    "endsWithLF": true
+  },
+  "triggerHistory": {
+    "originalSnapshot": {
+      "sha": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "node_id": "C_kwDOVsSYptoAKDYzY2RmYmVjNWIxOWVjMTA3OTIxMTYzZTgyYTY2MWMyNDJkODJjNGU",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com",
+        "date": "2026-11-28T05:15:46Z"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com",
+        "date": "2026-11-28T05:15:46Z"
+      },
+      "tree": {
+        "sha": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/97e5c83f6096fe1654e87b7d4f054842512c7bdc"
+      },
+      "message": "test(sucafina): run original installed Analytics on C20",
+      "parents": [
+        {
+          "sha": "2228172b29080b411850ec98a4cdaa66020db5e6",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/2228172b29080b411850ec98a4cdaa66020db5e6",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/2228172b29080b411850ec98a4cdaa66020db5e6"
+        }
+      ],
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "originalAuthority": {
+      "gitBlob": "8a93717dc476e8a2b897da16bcc61085d307426b",
+      "bytes": 15295,
+      "sha256": "c17422480c6ef32d89c81a3b1eb5ed278b695c402f0a2dd41da34fe731e20a16",
+      "lf": 408,
+      "endsWithLF": true
+    },
+    "originalActivation": {
+      "gitBlob": "cfbed204c4050bc9d3eac360562a06a9fe852732",
+      "bytes": 2791,
+      "sha256": "eb82a55df92d99307ec97a5f2fb618c678b26ddfd190651dc1566415072e0a29",
+      "lf": 82,
+      "endsWithLF": true
+    },
+    "recoveryObject": {
+      "gitBlob": "eaf3953a5a6e6dce1d81e30796cc573d1dfe713f",
+      "bytes": 2784,
+      "sha256": "2f68eb4ba91cca7e239291b6a5f57adca23d5ea590d991173c8d6c358e6b77e2",
+      "lf": 65,
+      "endsWithLF": true
+    },
+    "recoveryPeer": {
+      "reviewer": "/root/focal_migration",
+      "receivedAt": {
+        "current_time": "2026-11-28 05:44:17 UTC"
+      },
+      "positiveChecks": 19,
+      "findings": [],
+      "source": "Independent explicit Git-read collaboration ACK",
+      "commits": {
+        "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+        "oldSnapshot": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+        "proposedSnapshot": "4e1d12142119d4b2f508cf880563373d11d1b9e8"
+      },
+      "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+      "recomputedTrees": 2,
+      "treeDeltaZero": true,
+      "requestExact295BytesNoLF": true,
+      "limitations": [
+        "Peer did not query Actions/ref status; zero counts are attributed to root preflight.",
+        "Delayed prior event and branch-name cleanup race remain possible."
+      ]
+    },
+    "oneRecoveryCas": true,
+    "sourceTestsWorkflowTimeoutsUnchanged": true,
+    "oldHeadObservedRunCount": 0,
+    "causeOfInitialMissingRun": "unknown",
+    "noFurtherAutomaticRecovery": true
+  },
+  "originals": {
+    "closed": {
+      "at": {
+        "current_time": "2026-11-28 05:56:05 UTC"
+      },
+      "mainGets": 1,
+      "cleanupGets": 1,
+      "source": "full decoded originals, actual Git parts and literal readback/recomposition",
+      "reacquisitionAllowed": false
+    },
+    "mainManifest": {
+      "gitBlob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+      "bytes": 5660,
+      "sha256": "043c1393154d59c11e100e3c17d3930b45d1f1cf3f291230674ecd65bbbdfefc",
+      "lf": 194,
+      "endsWithLF": true
+    },
+    "mainWholeCalculatedOnly": {
+      "gitBlob": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "lf": 1843,
+      "endsWithLF": true
+    },
+    "mainActualPartCount": 11,
+    "cleanupManifest": {
+      "gitBlob": "49792468dd541958ce957eb9bbeecb31bf5f25f5",
+      "bytes": 1822,
+      "sha256": "43f9466b12c9984b484a2efd0de6f719203978fe25537b18740fde6dc7d2bc6f",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "cleanupActualWhole": {
+      "gitBlob": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+      "bytes": 2281,
+      "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "aec31c26492817c63075fb86714534fcfd38a239",
+      "bytes": 26384,
+      "sha256": "3660a1421957e514ea3ef186ef29b9185f076e4a84515f50345c3ceb20277e86",
+      "lf": 581,
+      "endsWithLF": true
+    }
+  },
+  "selection": {
+    "actualTests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "config": "e2e/playwright.production.config.ts",
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ],
+    "testOwnedInstallations": 2,
+    "distinctDiscoveredInstallations": true,
+    "diagnosticOverlay": false,
+    "originalBiCdpAcquisitionObserver": true,
+    "profiler": false,
+    "sourceSelectionProofPreviouslyClosed": true,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "previewTimeoutMs": 60000,
+    "sensitivityTimeoutMs": 120000,
+    "jobMinutes": 45,
+    "sourceSelectionReceipt": {
+      "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+      "bytes": 15090,
+      "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+      "lf": 473,
+      "endsWithLF": true
+    },
+    "originalRequest": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    }
+  },
+  "outcome": {
+    "selectedTests": 2,
+    "failed": 2,
+    "passed": 0,
+    "skippedTestsObserved": 0,
+    "retries": 0,
+    "repeatEach": 1,
+    "workers": 1,
+    "first": {
+      "location": "design-wave-five-analytics.spec.ts:12:1",
+      "failureLocation": "design-wave-five-analytics.spec.ts:72:32",
+      "error": "TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "capturedUI42": 6,
+      "unreached": [
+        "UI43",
+        "UI44"
+      ],
+      "previewRequestSequence": 3,
+      "previewNativeTerminalObserved": false
+    },
+    "second": {
+      "location": "design-wave-five-analytics.spec.ts:443:1",
+      "failureLocation": "design-wave-five-analytics.spec.ts:611:38 (acquire), 610:30 (captureOriginalBiData)",
+      "error": "Error: page.waitForResponse: Original BI request failed",
+      "view": "BI06",
+      "phases": [
+        {
+          "line": 1653,
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "native-request-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "sameNativeRequest": false,
+          "bodyObserved": false,
+          "http": null,
+          "teardownPhase": "observing",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "line": 1655,
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "network-loading-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "networkLoadingFailed": true,
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "capturesUI45": 6,
+      "capturesUI46": 13,
+      "completedBI06Readback": false
+    },
+    "historyResults": [
+      {
+        "line": 1203,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "line": 1205,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 266,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "line": 1223,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "line": 1225,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 488,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "counts": {
+      "SF_DESIGN_DISCOVERY": 2,
+      "SF_ANALYTICS_SOURCE": 34,
+      "SF_OWNER_ADMISSION_READS": 4,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_ANALYTICS_CAPTURE": 25,
+      "SF_DESIGN_DIAGNOSTICS": 6
+    },
+    "biReadback": {
+      "http": 200,
+      "rows": 36,
+      "numericValues": 14,
+      "missing": 22
+    },
+    "sourcesHTTP": [
+      200,
+      200
+    ],
+    "emptyConsolePageErrorPairs": 4
+  },
+  "derived": {
+    "extraction": {
+      "gitBlob": "6fb900709324b30feeb3450357ad613e04b856c4",
+      "bytes": 61497,
+      "sha256": "cc17058384306b5632b52529d5f06dada9c91b8ab12192d805143d5752e50a31",
+      "lf": 2206,
+      "endsWithLF": true
+    },
+    "markers": {
+      "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "endsWithLF": true
+    },
+    "contexts": {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true
+    },
+    "discoveryAndOwner": {
+      "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "endsWithLF": true
+    }
+  },
+  "review": {
+    "root": {
+      "gitBlob": "e5ccedc063611f0fb236eeecb25c912a0f88b858",
+      "bytes": 4788,
+      "sha256": "51d7b46515efd830ee619c2f91e40341ddc1d9dda5067fc910b4ab35c5276bdf",
+      "lf": 200,
+      "endsWithLF": true
+    },
+    "rootChecks": 34,
+    "independent": {
+      "gitBlob": "447d9112daa7df012afa9cdc854d963037e9e219",
+      "bytes": 20646,
+      "sha256": "3d4cbb7f4442edb74e60ede0f9ed6bb42170d3166bbd95ad25bc70976f1b4ad9",
+      "lf": 724,
+      "endsWithLF": true
+    },
+    "independentReceptionChecks": 44,
+    "independentRootDocumentaryChecks": 5,
+    "peerSupersededAmbiguousField": {
+      "gitBlob": "24265cc83696687b97cb5e28ed2734ffb1e47e4e",
+      "bytes": 20591,
+      "sha256": "8542ab6853e06977980889210074e6260d9b2900e12c382dd14ab77ce9884fb0",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "r2Change": "Only selection.observer removed and diagnosticOverlay:false/originalBiCdpAcquisitionObserver:true added, +55 bytes/+1 LF; root forward/inverse literal parity checked"
+  },
+  "focal": {
+    "receipt": {
+      "gitBlob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+      "bytes": 9782,
+      "sha256": "7401a044afe296feb43ec5a3a3ace6dd0486152451449b64d52c5e01dd29ea48",
+      "lf": 285,
+      "endsWithLF": true
+    },
+    "run": 46110276545,
+    "scope": "Prior C20 focal16 functional/2250 assertions accepted only within its recorded scope; does not override installed failures."
+  },
+  "artifact": {
+    "id": 15250367884,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 30531866,
+    "reportedDigest": "sha256:94a6b83eefccbeffc862fad7fe86c8aad82bdd0724dcbb4f456215e02bd227da",
+    "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46113463330/artifacts/15250367884",
+    "reportedUploadedFiles": 91,
+    "zipAcquisitions": 0,
+    "metadataOnly": true,
+    "bytesNotIndependentlyVerified": true
+  },
+  "cleanup": {
+    "conclusion": "success",
+    "actualMatchingRefs": [],
+    "observedAt": {
+      "current_time": "2026-11-28 05:55:17 UTC"
+    },
+    "logUsesDeleteOrTrue": true,
+    "absenceVerifiedSeparately": true
+  },
+  "qualification": {
+    "historicalAcceptedAreas": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "UI42": false,
+    "UI43": false,
+    "UI44": false,
+    "currentBIPass": false,
+    "finalC613": false,
+    "finalGoLiveCandidate": false,
+    "productionAuthorized": false
+  },
+  "next": {
+    "nativeSelection": "Read-only audit established that C20 selection still follows broad native materialization; proposed C21 must prove applicable installed admission and preserve existing fallbacks before any run.",
+    "biFailure": "No exclusive product or acquisition cause established. Preserve current negative result and require the original complete suite on an eventual changed candidate.",
+    "archive": "R8 preparation may retain this closed C20 result; no code promotion authorized by this receipt."
+  },
+  "limits": [
+    "Reception ACK only: current original Analytics has two failed tests, no BI PASS and no new functional qualification.",
+    "Main whole Git hash is calculated only. Only the eleven named parts, cleanup and documentary/derived Git blobs were retrieved.",
+    "Original job logs and ZIP were not acquired by this peer. Root's one-GET preservation declarations and matching-refs observation are attributed to root.",
+    "Preview sequence 3 has an exact-owner POST marker and no response marker before the failure; this does not prove a server deadlock, final server outcome or CPU cost.",
+    "BI06 false sameNativeRequest, false bodyObserved and null HTTP describe the observer's uncompleted acquisition, not proof of a different request or of absent earlier headers/Response.",
+    "Native-view BI06 rendering is not bound by a Request/body digest to the canceled original GET; no causal link is inferred.",
+    "No completed BI06 acquisition, Portuguese stage, negative403 or final SF_ANALYTICS_SCOPE is attested in this run. Earlier BI PASS results are not transferred.",
+    "Artifact ID, size, digest and reported91 upload files are metadata/log observations only; ZIP bytes and entry inventory were not received.",
+    "The same-tree recovery and one effective run do not establish why the earlier event produced no observed run; old-head absence is limited to root's observed cut.",
+    "No current performance improvement, physical native projection admission, D29 execution, production approval, new ref or rerun is asserted.",
+    "The original BI CDP acquisition observer is present. No E13/E14 diagnostic overlay or CPU profiler was active.",
+    "No source tuple or result is transferred to future finalC613/Migration/Release/tar.",
+    "Originals stay closed through runtime recovery; only preserved Git copies were re-read."
+  ]
+}

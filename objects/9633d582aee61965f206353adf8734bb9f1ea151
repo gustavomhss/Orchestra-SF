@@ -1,0 +1,4413 @@
+{
+  "schema": "sf613-evidence-r8-actual-input-catalog-v1",
+  "status": "CLOSED_ENUMERATED_INPUT_SET_PROPOSAL_BLOBS_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "preparedAtUtc": "2026-11-28 06:33:25 UTC",
+  "author": "/root/teams_product",
+  "authority": "Root authorized only catalog/index/README/derivation/manifest blobs and literal Git readback. Root alone reviews and creates archive trees/commits/ref publication.",
+  "publishedBase": {
+    "commit": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+    "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+    "objectsTree": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+    "index": {
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298",
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "lf": 30299,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a",
+      "bytes": 52301,
+      "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+      "lf": 443,
+      "endsWithLF": true
+    },
+    "catalog": {
+      "gitBlob": "85f7f805e9d4fd0f785dbb3ed55281e1709728ec",
+      "bytes": 130823,
+      "sha256": "7c39d4ac5f0d491c435637a797e7062f49e2b653e737f86dff1000b065c1d186",
+      "lf": 4190,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "031e2f510036d68ea1e5e31470a13dc9772c161e",
+      "bytes": 23236,
+      "sha256": "9dbe2d5489b9af6a1f377f3bfff0dc74dc924ba38386579d300cd886fea3c44c",
+      "lf": 623,
+      "endsWithLF": true
+    },
+    "publication": {
+      "gitBlob": "5fd024d632b7937c9f708944ca99847bff28feb7",
+      "bytes": 5214,
+      "sha256": "4c3a2a00193cd3d477c9258d6d2135abc6d2bb2aab41387ccd6ee95b3c2c6ef1",
+      "lf": 152,
+      "endsWithLF": true
+    }
+  },
+  "scope": {
+    "included": [
+      "C20 source package and static reviews",
+      "C20 focal source binding, driver package, authority, activation, closed original logs, report union, root and peer receipts",
+      "D29 static UNBOUND package and reviews",
+      "R7 archive proposal/reviews/publication controls",
+      "C20 original Analytics selection, original A20 trigger and distinct single A20r recovery, closed originals and three derived unions, root/peer/final receipts",
+      "One closed BI06 read-only negative audit, without causal or acceptance effect"
+    ],
+    "excluded": [
+      "C21 and later source/control proposals",
+      "checkpoints and runtime helper stores used only for discovery",
+      "calculated-only whole C20 Analytics main",
+      "calculated C20 report model and D29 embedded loader/intermediate derivation hashes",
+      "UI6/future bindings",
+      "artifact ZIP bytes; no artifact ZIP acquisition for C20",
+      "Git commits and trees as blob entries"
+    ],
+    "preservation": "All 727 published R7 object metadata and the ordered 825 membership prefixes, 47 groups, 69 streams and 231 part references remain literal. This catalog enumerates current inputs; it does not redefine historical groups or intakes.",
+    "sourcePathPolicy": "Original source/workflow/request paths are metadata only; archived bodies reside exclusively at objects/<actualGitBlob>. The archive root has only README.md, index.json and objects.",
+    "transitiveClosure": "Finite enumerated actual inputs only. Referenced source pins, computed intermediates and historical transitive references are not silently promoted to new objects. The prior archive remains intact.",
+    "reconstruction": {
+      "priorMemoryInventory": "Close's preliminary 93-object inventory had no durable catalog and was lost; it is not treated as an authenticated input.",
+      "currentCoreUnique": 88,
+      "currentCoreNew": 58,
+      "currentCoreNewBytes": 2401842,
+      "currentCoreReused": 30,
+      "note": "The 58 actual new core blobs and their byte sum agree with the prior summary; reused inputs are included only when supported by the preserved documents. No five presumed reused entries were invented to force the former total."
+    }
+  },
+  "orderedRetentionParents": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+      "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+      "role": "published R7 archive"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+      "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+      "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "role": "executed C20 focal; retains clean S20"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+      "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "role": "executed C20 Analytics recovery snapshot; retains original A20 and clean S20"
+    }
+  ],
+  "retention": {
+    "currentArchiveCommit": null,
+    "currentArchiveTree": null,
+    "refPublished": false,
+    "parentMetadataIndependentlyRead": true,
+    "ancestry": [
+      "R8 planned -> R7 -> prior archives",
+      "R8 planned -> D20 -> S20 -> S19",
+      "R8 planned -> A20r -> A20 -> S20"
+    ],
+    "textualShaIsNotGitReachability": true,
+    "rootMustAuditAndPublishRef": true,
+    "noGarbageCollectionDeadlineAssumed": true
+  },
+  "proofStates": {
+    "C20Source": "REVIEWED_CLEAN_SOURCE_OBJECT_1M1A",
+    "C20Focal": "CLOSED_PASS_FOCAL_ONLY_16_FUNCTIONAL_2250_ASSERTIONS",
+    "C20Analytics": "CLOSED_NEGATIVE_TWO_FAILED_ZERO_PASSED",
+    "C20FirstPreview": "ORIGINAL_60000_MS_WAITER_TIMEOUT_SPEC72_32",
+    "C20BI06": "ORIGINAL_ACQUISITION_FAILED_ERR_ABORTED_NO_COMPLETE_ORIGINAL_BODY",
+    "C20BI06Audit": "CLOSED_READONLY_ORIGIN_OF_CANCELLATION_NOT_DEMONSTRATED",
+    "C20PeerR1": "SUPERSEDED_ONLY_AMBIGUOUS_OBSERVER_FIELD",
+    "C20PeerR2": "EFFECTIVE_RECEPTION_ACK_44_PLUS_5_DOCUMENTARY_CHECKS",
+    "D29": "STATIC_REVIEWED_FOUR_FINAL_BINDINGS_UNBOUND",
+    "R7": "PUBLISHED_DOCUMENTARY_ARCHIVE",
+    "R8": "PROPOSED_DOCUMENTARY_BLOBS_NO_PUBLICATION",
+    "historicalAcceptedAreas": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "productionAuthorized": false
+  },
+  "closedAnalyticsFacts": {
+    "finalReceipt": {
+      "gitBlob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+      "bytes": 17645,
+      "sha256": "41920631bbef0bfeabc6480f976bd185da46211aaba6af7c3aee3836559e8742",
+      "lf": 487,
+      "endsWithLF": true
+    },
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "originalSnapshot": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "effectiveSnapshot": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "contentTree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "run": 46113463330,
+    "attempt": 1,
+    "mainJob": 140881932116,
+    "cleanupJob": 140884025044,
+    "originalTriggerThenSingleRecovery": true,
+    "originalHeadObservedRunsBeforeRecovery": 0,
+    "initialMissingEventCause": "unknown",
+    "anotherAutomaticRecovery": false,
+    "outcomes": {
+      "failed": 2,
+      "passed": 0,
+      "preview": "timeout at original 60-second waiter",
+      "BI": "initial BI06 original acquisition failed; no current BI PASS"
+    },
+    "selection": {
+      "actualTests": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "config": "e2e/playwright.production.config.ts",
+      "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "titles": [
+        "wave five analytics: native scenarios, recorded results and sensitivity",
+        "wave five analytics: question catalog and original contextual BI"
+      ],
+      "testOwnedInstallations": 2,
+      "distinctDiscoveredInstallations": true,
+      "diagnosticOverlay": false,
+      "originalBiCdpAcquisitionObserver": true,
+      "profiler": false,
+      "sourceSelectionProofPreviouslyClosed": true,
+      "caseTimeoutMs": [
+        780000,
+        660000
+      ],
+      "previewTimeoutMs": 60000,
+      "sensitivityTimeoutMs": 120000,
+      "jobMinutes": 45,
+      "sourceSelectionReceipt": {
+        "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+        "bytes": 15090,
+        "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+        "lf": 473,
+        "endsWithLF": true
+      },
+      "originalRequest": {
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    "observations": {
+      "coreMarkers": 65,
+      "source": 34,
+      "captures": 25,
+      "diagnostics": 6,
+      "contexts": 2,
+      "discoveryAndOwner": 6,
+      "UI42": 6,
+      "UI43": 0,
+      "UI44": 0,
+      "BI45": 6,
+      "BI46": 13,
+      "BI06CompletedAcquisitions": 0,
+      "PortugueseCompleted": false,
+      "scopeMarkerPresent": false
+    },
+    "artifact": {
+      "id": 15250367884,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 30531866,
+      "reportedDigest": "sha256:94a6b83eefccbeffc862fad7fe86c8aad82bdd0724dcbb4f456215e02bd227da",
+      "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46113463330/artifacts/15250367884",
+      "reportedUploadedFiles": 91,
+      "zipAcquisitions": 0,
+      "metadataOnly": true,
+      "bytesNotIndependentlyVerified": true
+    },
+    "rootOriginalGets": {
+      "main": 1,
+      "cleanup": 1,
+      "closedAt": "2026-11-28 05:56:05 UTC"
+    },
+    "archiveAuthorOriginalGets": 0,
+    "archiveAuthorZipGets": 0,
+    "limits": [
+      "No C20 native projection admission or speedup inferred.",
+      "Original BI CDP acquisition observer was active; no diagnostic overlay or profiler.",
+      "False/false/null observation fields do not prove a different Request or absence of HTTP.",
+      "Later rendered BI06 data is not joined to the failed original acquisition.",
+      "No result from an earlier BI PASS is transferred to C20."
+    ]
+  },
+  "BI06Audit": {
+    "receipt": {
+      "gitBlob": "54454e1309bbc0235d8850e58edfc7a52a8a421e",
+      "bytes": 20477,
+      "sha256": "15e40825bf29163110ea7a87d34f68e70dc59533e14d299cd21c5981f3e1f85b",
+      "lf": 416,
+      "endsWithLF": true
+    },
+    "status": "CLOSED_READONLY_ORIGIN_OF_CANCELLATION_NOT_DEMONSTRATED",
+    "effectOnAcceptance": "none; C20 remains negative",
+    "unresolved": [
+      "No original-body/status/Request proof joins the rendered BI06 projection to the failed acquisition.",
+      "The cancellation initiator and its relation to UI controller/route/fence state are not recorded.",
+      "The failed acquisition cannot be classified as a harmless cancellation race, a product regression or a mere observer failure from this evidence.",
+      "C20 remains a negative original-suite result. A future candidate must pass the complete original suite with unchanged waiters and no retry/readback substitute."
+    ],
+    "sourceCitationPolicy": "The 11 pins remain explicit inside this audit. Only already enumerated actual blobs are separately copied under objects; other citations are not claimed as separate new archived bodies or as independently re-reviewed here."
+  },
+  "totals": {
+    "uniqueActualInputBlobs": 121,
+    "logicalMemberships": 141,
+    "newRelativeToR7": 89,
+    "newBytes": 5760074,
+    "reusedFromR7": 32,
+    "inputLogicalBlobBytes": 6698973,
+    "groups": 5,
+    "streams": 8,
+    "partReferences": 18,
+    "streamLogicalBytes": 3242292,
+    "catalogSelfNotIncluded": true
+  },
+  "groups": [
+    {
+      "id": "C20-source",
+      "uniqueBlobs": 18,
+      "memberships": 18
+    },
+    {
+      "id": "C20-focal",
+      "uniqueBlobs": 55,
+      "memberships": 55
+    },
+    {
+      "id": "D29-final-qualification",
+      "uniqueBlobs": 25,
+      "memberships": 25
+    },
+    {
+      "id": "R7-archive-control",
+      "uniqueBlobs": 8,
+      "memberships": 8
+    },
+    {
+      "id": "C20-Analytics",
+      "uniqueBlobs": 35,
+      "memberships": 35
+    }
+  ],
+  "objects": [
+    {
+      "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "objectReceipt",
+          "source": {
+            "readback": "dd18243713f7e713f9e544b7569b53550b64fde7"
+          }
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.objectReceipt",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.objectReceipt"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "source.receipt",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "source.receipt"
+              }
+            },
+            {
+              "role": "prerequisites.sourceObject",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.sourceObject"
+              }
+            }
+          ]
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.receipt",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.receipt"
+          }
+        },
+        {
+          "group": "C20-Analytics",
+          "role": "source.receipt",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "source.receipt"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+      "bytes": 3614,
+      "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+      "lf": 36,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "product",
+          "source": {
+            "readback": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "files.0.postimage",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "files.0.postimage"
+              }
+            },
+            {
+              "role": "pins.product",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.product"
+              }
+            },
+            {
+              "role": "productDelta.after",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "productDelta.after"
+              }
+            },
+            {
+              "role": "completeDerivation.source",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "completeDerivation.source"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.leaves.0",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.leaves.0"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "workingPins.modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "workingPins[15]"
+              }
+            }
+          ]
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.pins.0",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.pins.0"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+      "bytes": 16889,
+      "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+      "lf": 260,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "test",
+          "source": {
+            "readback": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "files.1.postimage",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "files.1.postimage"
+              }
+            },
+            {
+              "role": "control",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "control"
+              }
+            },
+            {
+              "role": "pins.test",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.test"
+              }
+            },
+            {
+              "role": "completeDerivation.test",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "completeDerivation.test"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.leaves.1",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.leaves.1"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "workingPins.modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "workingPins[16]"
+              }
+            }
+          ]
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.pins.1",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.pins.1"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "selection.G27.currentReference",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "selection.G27.currentReference"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+      "bytes": 11676,
+      "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+      "lf": 290,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "manifest",
+          "source": {
+            "readback": "bd715ad354cf1ff557e5d8e277978ab5db3bec20"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "pins.manifest",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.manifest"
+              }
+            },
+            {
+              "role": "manifest",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "manifest"
+              }
+            },
+            {
+              "role": "completeDerivation.manifest",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "completeDerivation.manifest"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.productPackage.manifest",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.productPackage.manifest"
+          }
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.sourceManifest",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.sourceManifest"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "93ea40e7dcf364582a3316739cac3350d252171e",
+      "bytes": 24334,
+      "sha256": "693e4627cd85130d630f44ee9fd1ca0768ae842ed3f98359d59e58ebbf8e5cf4",
+      "lf": 154,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "derivation",
+          "source": {
+            "readback": "93ea40e7dcf364582a3316739cac3350d252171e"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "support.derivation",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "support.derivation"
+              }
+            },
+            {
+              "role": "pins.derivation",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.derivation"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.productPackage.derivation",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.productPackage.derivation"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c80be5b69c74e83cf18986a867f59abafb4b3145",
+      "bytes": 19846,
+      "sha256": "8205a0b4147d4cf94090dd2554ef9244d43889be4ba8d488e8d39c3931ec5680",
+      "lf": 287,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "diff",
+          "source": {
+            "readback": "c80be5b69c74e83cf18986a867f59abafb4b3145"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "support.fullDiff",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "support.fullDiff"
+              }
+            },
+            {
+              "role": "pins.diff",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.diff"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.productPackage.fullDiff",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.productPackage.fullDiff"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "779cf3ff515733d40b85a199b7900f28271f1812",
+      "bytes": 9356,
+      "sha256": "c12f8ead3a8da07780279cecaa7ee984b3bb6aa5d34e11745eb2aa6d9c5564ef",
+      "lf": 174,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "bounds",
+          "source": {
+            "readback": "779cf3ff515733d40b85a199b7900f28271f1812"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "support.bounds",
+              "source": {
+                "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+                "pointer": "support.bounds"
+              }
+            },
+            {
+              "role": "pins.bounds",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.bounds"
+              }
+            },
+            {
+              "role": "bounds",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "bounds"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.productPackage.bounds",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.productPackage.bounds"
+          }
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.sourceBounds",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.sourceBounds"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+      "bytes": 7320,
+      "sha256": "91c1dc3b6adb82a21ab10218ea13b623371984f81a1444b47c7924f158b3393b",
+      "lf": 201,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "rootReview",
+          "source": {
+            "readback": "77840e3a92ca4078d0e7328bf1cf0b34beb37188"
+          }
+        },
+        {
+          "group": "C20-focal",
+          "role": "prerequisites.sourceRoot",
+          "source": {
+            "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+            "pointer": "prerequisites.sourceRoot"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+      "bytes": 9824,
+      "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+      "lf": 296,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "peerReview",
+          "source": {
+            "readback": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "peer",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "peer"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "source.independentProductReview",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "source.independentProductReview"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.sourcePeer",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.sourcePeer"
+              }
+            }
+          ]
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "sourceReference.currentC20Reference.independentSourceReview",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "sourceReference.currentC20Reference.independentSourceReview"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+      "bytes": 10965,
+      "sha256": "bf7671a5fda99ad5d32685374285a09ac9e5ce00e0fc9701facd668872daf11d",
+      "lf": 322,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "authority",
+          "source": {
+            "readback": "9eedfb5efc88c415bbf704f18ebecac6941ef511"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.authority",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.authority"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7ba9611f7f3bccdb742007ca20b2696e0862e866",
+      "bytes": 2685,
+      "sha256": "b42cc09c735fe6b78f4c296923e0f4c8bbf96ca8772ac1c5664b952939cce3c9",
+      "lf": 84,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "activation",
+          "source": {
+            "readback": "7ba9611f7f3bccdb742007ca20b2696e0862e866"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.activation",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.activation"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+      "bytes": 9782,
+      "sha256": "7401a044afe296feb43ec5a3a3ace6dd0486152451449b64d52c5e01dd29ea48",
+      "lf": 285,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "final",
+          "source": {
+            "readback": "f128f06b68304d3075054b6d27c5c5884dd382f1"
+          }
+        },
+        {
+          "group": "C20-Analytics",
+          "role": "focal.receipt",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "focal.receipt"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "b594f835834317f430e93890ee1ec3ae428166c3",
+      "bytes": 97257,
+      "sha256": "fc5b3943df4afdc73168e7dbec6fa37eb8a9b77fb0662077e3d6e4af71dc1c10",
+      "lf": 1780,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "rootIntake",
+          "source": {
+            "readback": "b594f835834317f430e93890ee1ec3ae428166c3"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "reviews.root.receipt",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "reviews.root.receipt"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7c9521aa9d0b6e4d631a7eefb3457bc20a2475c9",
+      "bytes": 15714,
+      "sha256": "9b5c43968bf500655a38f2c85dafd91aac9e2a6ebff54ebb6f5d929b8fcfbeee",
+      "lf": 566,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "peerIntake",
+          "source": {
+            "readback": "7c9521aa9d0b6e4d631a7eefb3457bc20a2475c9"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "reviews.peer.receipt",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "reviews.peer.receipt"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "dc533ebd030a26cdd50d59a31d6a8b004eb00476",
+      "bytes": 9028,
+      "sha256": "a9dcdb1ef972576962cba288d9900317616aaa66a199a5458d07a6683750e2bc",
+      "lf": 297,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "context",
+          "source": {
+            "readback": "dc533ebd030a26cdd50d59a31d6a8b004eb00476"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "originals.context",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "originals.context"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878",
+      "bytes": 9815,
+      "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+      "lf": 7,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "reports",
+          "source": {
+            "readback": "8053a3b3549290836fba6c88cb3b813c18b85878"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "derived.reportsUnion",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "derived.reportsUnion"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "9811b76037aa9ca98c4b9962c783acd0896ca375",
+      "bytes": 14082,
+      "sha256": "8131662a41dc4508481e0adeecb9b8eb894d1f516c95211b937e547d0d8fd4a2",
+      "lf": 1,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "guard",
+          "source": {
+            "readback": "9811b76037aa9ca98c4b9962c783acd0896ca375"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "derived.guard",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "derived.guard"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8",
+      "bytes": 109188,
+      "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+      "lf": 900,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "main",
+          "source": {
+            "readback": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "originals.main",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "originals.main"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7620b00b4a259518f03f0de9f48d18fdf46ce3db",
+      "bytes": 1763,
+      "sha256": "c1944bbdf06c67ea952c49b4f439de43016e29fdb2a7899a9823aa1f614484c4",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "mainManifest",
+          "source": {
+            "readback": "7620b00b4a259518f03f0de9f48d18fdf46ce3db"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "originals.mainManifest",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "originals.mainManifest"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "264bc691b48cd33a090ff03781993466478f3d00",
+      "bytes": 2280,
+      "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+      "lf": 39,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "cleanup",
+          "source": {
+            "readback": "264bc691b48cd33a090ff03781993466478f3d00"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "originals.cleanup",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "originals.cleanup"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "e9885e74f63475d6cf1c67bbaf14d4e327370003",
+      "bytes": 1753,
+      "sha256": "53e50a31a363a1e27f38b9d281fbe1ca2b4c0c6fe2e3f54eac83e7f191b27f87",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "cleanupManifest",
+          "source": {
+            "readback": "e9885e74f63475d6cf1c67bbaf14d4e327370003"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "originals.cleanupManifest",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "originals.cleanupManifest"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+      "bytes": 23923,
+      "sha256": "2ab417a42ce8d5bb794a83b75a14303f953cd35cf47e987d000df6111217d5d0",
+      "lf": 616,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "manifest",
+          "source": {
+            "readback": "3e037217b0477aeacafe4bad193469c76e54ee81"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+      "bytes": 18854,
+      "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+      "lf": 352,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "wrapper",
+          "source": {
+            "readback": "859b092f6cd56884cd6ff35b6002dcc2ddacb748"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "artifacts.wrapper",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "artifacts.wrapper"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+      "bytes": 43811,
+      "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+      "lf": 723,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "envelope",
+          "source": {
+            "readback": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "artifacts.envelope",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "artifacts.envelope"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0",
+      "bytes": 15782,
+      "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+      "lf": 250,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "finalizer",
+          "source": {
+            "readback": "42e098a611b4275e27962f3a342eb0f0892885d0"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "artifacts.finalizer",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "artifacts.finalizer"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+      "bytes": 80067,
+      "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+      "lf": 1154,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "workflow",
+          "source": {
+            "readback": "526c3893a085cbc359dab98fcb7dd31fc299c8dc"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "artifacts.workflow",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "artifacts.workflow"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c52212709d4b4a1bbfaf6d7e22139657b920a171",
+      "bytes": 40677,
+      "sha256": "2bfdb7193f69dd4b3bbb82e11acadbae8d9fba47ec8c52c7b5bd3dc240a8b12a",
+      "lf": 1012,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "derivation",
+          "source": {
+            "readback": "c52212709d4b4a1bbfaf6d7e22139657b920a171"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "supports.derivation",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "supports.derivation"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "b0006a022ca0c60639f5e8a2feb38f8852ef9adf",
+      "bytes": 14749,
+      "sha256": "90c7f8761da63b117d69baf61662f28a47f7ad93bb303bb0e9dec9d58c85bcd9",
+      "lf": 190,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "diff",
+          "source": {
+            "readback": "b0006a022ca0c60639f5e8a2feb38f8852ef9adf"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "supports.fullDiff",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "supports.fullDiff"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+      "bytes": 15757,
+      "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6",
+      "lf": 464,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "bounds",
+          "source": {
+            "readback": "78a9b35e47e2160cff0acc4b0fdb52540527de48"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "supports.bounds",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "supports.bounds"
+              }
+            },
+            {
+              "role": "budgets.bounds",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "budgets.bounds"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7e0925ab79ca0ae81da46decf756f7138df3db3f",
+      "bytes": 18196,
+      "sha256": "d0231911165ba973c00d8a7b0c383d6807d5a9ab949ab9c4cf23e4a5984914b5",
+      "lf": 514,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "rootReview",
+          "source": {
+            "readback": "7e0925ab79ca0ae81da46decf756f7138df3db3f"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "39c328efe12ceaf4ed4a20d76cb3da9779677195",
+      "bytes": 21042,
+      "sha256": "59e8845209e5db71681f2ef42247347c3808bea7e22f25f15af63f390162ce37",
+      "lf": 710,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "peerReview",
+          "source": {
+            "readback": "39c328efe12ceaf4ed4a20d76cb3da9779677195"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "85f7f805e9d4fd0f785dbb3ed55281e1709728ec",
+      "bytes": 130823,
+      "sha256": "7c39d4ac5f0d491c435637a797e7062f49e2b653e737f86dff1000b065c1d186",
+      "lf": 4190,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "catalog",
+          "source": {
+            "readback": "85f7f805e9d4fd0f785dbb3ed55281e1709728ec"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298",
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "lf": 30299,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "index",
+          "source": {
+            "readback": "4f6f057cedd70af85393d29b33ff5bad88aeb298"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a",
+      "bytes": 52301,
+      "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+      "lf": 443,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "readme",
+          "source": {
+            "readback": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "dfcd4cf10f41badec9b12fa37e5d3d4d080e62e3",
+      "bytes": 318153,
+      "sha256": "d162014adf99a9a819ab818dd69aed78dd887fd9ada892ffc07dddc102a24300",
+      "lf": 8636,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "derivation",
+          "source": {
+            "readback": "dfcd4cf10f41badec9b12fa37e5d3d4d080e62e3"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "031e2f510036d68ea1e5e31470a13dc9772c161e",
+      "bytes": 23236,
+      "sha256": "9dbe2d5489b9af6a1f377f3bfff0dc74dc924ba38386579d300cd886fea3c44c",
+      "lf": 623,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "manifest",
+          "source": {
+            "readback": "031e2f510036d68ea1e5e31470a13dc9772c161e"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "e9354a13ee2c134be84813af889637a6fb0918e6",
+      "bytes": 16036,
+      "sha256": "1bedcbdf0861b7c38f075bcaee38ba442ac1cc328bcbcd86a34ae843d91232d0",
+      "lf": 489,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "rootReview",
+          "source": {
+            "readback": "e9354a13ee2c134be84813af889637a6fb0918e6"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "da40e81f7d1e1b868442c901732990169305b0ff",
+      "bytes": 18802,
+      "sha256": "aa741c1760e73301772e37c400374a88341e99649a61a066c1cd279f81e2e614",
+      "lf": 638,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "peerReview",
+          "source": {
+            "readback": "da40e81f7d1e1b868442c901732990169305b0ff"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "5fd024d632b7937c9f708944ca99847bff28feb7",
+      "bytes": 5214,
+      "sha256": "4c3a2a00193cd3d477c9258d6d2135abc6d2bb2aab41387ccd6ee95b3c2c6ef1",
+      "lf": 152,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R7-archive-control",
+          "role": "publication",
+          "source": {
+            "readback": "5fd024d632b7937c9f708944ca99847bff28feb7"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "bytes": 3994,
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "lf": 35,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "files.0.preimage",
+          "source": {
+            "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+            "pointer": "files.0.preimage"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "pins.preimage",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.preimage"
+              }
+            },
+            {
+              "role": "preliminary.lookup",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "preliminary.lookup"
+              }
+            },
+            {
+              "role": "productDelta.before",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "productDelta.before"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+      "bytes": 67334,
+      "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+      "lf": 891,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "unchangedContract",
+          "source": {
+            "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+            "pointer": "unchangedContract"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "pins.provider",
+              "source": {
+                "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+                "pointer": "pins.provider"
+              }
+            },
+            {
+              "role": "preliminary.provider",
+              "source": {
+                "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+                "pointer": "preliminary.provider"
+              }
+            }
+          ]
+        },
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[8]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+      "bytes": 42278,
+      "sha256": "8acd1b2070a9dd56b5fc31d8e170d02d9082cb3851d613b45dfe1c9db0968059",
+      "lf": 691,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "existingCoverage.0",
+          "source": {
+            "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+            "pointer": "existingCoverage.0"
+          }
+        },
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[13]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "33d17c2ed2a01b1af4758f911de648ed05e314d9",
+      "bytes": 32093,
+      "sha256": "c6a750f21f420ca59a8daa7f10863746996b61bb8b12e51021403a900b708597",
+      "lf": 547,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "existingCoverage.1",
+          "source": {
+            "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+            "pointer": "existingCoverage.1"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "658704da58e5c1a291f5be18fa73684b8fdbaa43",
+      "bytes": 14178,
+      "sha256": "1cb2944977679e6df68c720fac0707324d1077049c8b0525d6bee75afeb6200f",
+      "lf": 280,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "existingCoverage.2",
+          "source": {
+            "blob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+            "pointer": "existingCoverage.2"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a747a2fbe51ce66a21f4ed69e737792e61502b30",
+      "bytes": 4175,
+      "sha256": "d5f79ad92a7f929f2689ab9d8cf38e8d07219299c350c62cf2d57ed8d3485d93",
+      "lf": 130,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "snapshot.receipt",
+          "source": {
+            "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+            "pointer": "snapshot.receipt"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.focalObject",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.focalObject"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a578f8c1da56a0f70de7e19b92068c666e71c190",
+      "bytes": 23965,
+      "sha256": "bf0dfdc0334280597961ed8ba6177de309f661d3d6319aeb190b76487e824915",
+      "lf": 653,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "review.root",
+          "source": {
+            "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+            "pointer": "review.root"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.focalStaticRoot",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.focalStaticRoot"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a56445a29a2991255fdad3b4c928d87a9ebdc70b",
+      "bytes": 17898,
+      "sha256": "b1c98c0171fd3607ee820667567bb2d305cbf57f3808d8159288d215a095b6e7",
+      "lf": 530,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "review.independent",
+          "source": {
+            "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+            "pointer": "review.independent"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "prerequisites.focalStaticPeer",
+              "source": {
+                "blob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+                "pointer": "prerequisites.focalStaticPeer"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+      "bytes": 23370,
+      "sha256": "cdaf8e4e8d2a7ad9e155b7b7b1ddc5fe12c7bb97d337f0c636f5231d5d998d85",
+      "lf": 618,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "review.manifest",
+          "source": {
+            "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+            "pointer": "review.manifest"
+          }
+        },
+        {
+          "group": "D29-final-qualification",
+          "role": "historicalC20Focal.focalPackage",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "historicalC20Focal.focalPackage"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "18106309b4323e73b405da100766d491305ed5df",
+      "bytes": 10134,
+      "sha256": "a284831785d85fedf7d289e0fd6d4b450817e10519ace547c592b2e1ecb3603c",
+      "lf": 335,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.currentBoundBounds",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.currentBoundBounds"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "budgets.currentBounds",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "budgets.currentBounds"
+              }
+            },
+            {
+              "role": "packageBlobsBeforeThisManifest.9",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.9"
+              }
+            },
+            {
+              "role": "review.bounds",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "review.bounds"
+              }
+            },
+            {
+              "role": "budgets.currentBounds",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "budgets.currentBounds"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c23311b50fe3aed7212951b6fa4aa3aba31dfad2",
+      "bytes": 7011,
+      "sha256": "5eab807917bdafee1b03d940b36537c9f51adf626aea8de6b3b72bd8ab8c93a9",
+      "lf": 216,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.bindingReceipt",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.bindingReceipt"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.8",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.8"
+              }
+            },
+            {
+              "role": "review.binding",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "review.binding"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "08aa33dd56b067e01cf043cece9855b4b8446721",
+      "bytes": 16558,
+      "sha256": "19536f435e16977dfa3715d2333b8864a763f160b4947bdfea78cb830c835bde",
+      "lf": 478,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "review.readerFinal",
+          "source": {
+            "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+            "pointer": "review.readerFinal"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+      "bytes": 12927,
+      "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+      "lf": 194,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "proposedSnapshot.changes.1",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "proposedSnapshot.changes.1"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.5",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.5"
+              }
+            },
+            {
+              "role": "payloads.wrapper",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "payloads.wrapper"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "proposedSnapshot.changes.0",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "proposedSnapshot.changes.0"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "payloads.request",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "payloads.request"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "budgets.workflow",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "budgets.workflow"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "budgets.workflow",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "budgets.workflow"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "bytes": 19419,
+      "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+      "lf": 391,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "budgets.runner",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "budgets.runner"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "budgets.runner",
+              "source": {
+                "blob": "9eedfb5efc88c415bbf704f18ebecac6941ef511",
+                "pointer": "budgets.runner"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+      "bytes": 24043,
+      "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+      "lf": 628,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.manifest",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.manifest"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "sourceReference.inheritedHistory.manifest",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "sourceReference.inheritedHistory.manifest"
+              }
+            },
+            {
+              "role": "futureIntake.inheritedRequirements.manifest",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "futureIntake.inheritedRequirements.manifest"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+      "bytes": 10514,
+      "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+      "lf": 305,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.bounds",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.bounds"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "basis.priorD28Support.bounds",
+              "source": {
+                "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+                "pointer": "basis.priorD28Support.bounds"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "30178d52800afdf6c262e792790d52351b10c5c4",
+      "bytes": 18398,
+      "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+      "lf": 344,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.originalArtifacts.wrapper",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.originalArtifacts.wrapper"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.originalArtifacts.envelope",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.originalArtifacts.envelope"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.originalArtifacts.finalizer",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.originalArtifacts.finalizer"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.originalArtifacts.workflow",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.originalArtifacts.workflow"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+      "bytes": 9618,
+      "sha256": "ad9391a1259616000eb3d91bb519c77d2d5eda18a84f4a71bc8a74c94ad5f157",
+      "lf": 283,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.priorD28Support.derivation",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.priorD28Support.derivation"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+      "bytes": 1816,
+      "sha256": "8c04cb10767f4a76fefe7f19ec3820c301515cfa5b35c2c03e467e9c5ee26437",
+      "lf": 32,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "D29-final-qualification",
+          "role": "basis.priorD28Support.diff",
+          "source": {
+            "blob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+            "pointer": "basis.priorD28Support.diff"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "1ea31adde022e3bf1fd54075da14be9e1210f75e",
+      "bytes": 11888,
+      "sha256": "67501ff0a4d30c587b9c61bac8cb65416201ed84f5474c28a57a230abecaacaa",
+      "lf": 182,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "carrier",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "carrier"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+      "bytes": 12892,
+      "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+      "lf": 194,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.template",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.template"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.0",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.0"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "7487bf635fbb614d35e138698fdd9bbb9bfecccd",
+      "bytes": 22008,
+      "sha256": "98374d689f65ba13ac2e1c0226ac2234dc7eddb0f93f463df2ea87cedc132f05",
+      "lf": 402,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.templateSupport",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.templateSupport"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.1",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.1"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "d5db2616c2f9c2d8093b75937decbc5eeab5ed92",
+      "bytes": 7259,
+      "sha256": "182df399063ca889dc668811652e53a080548271d78d7385eca0dbd2e441895b",
+      "lf": 93,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.retargetDiff",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.retargetDiff"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.2",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.2"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "8a3330e0ee6620040f84e94c23bdce2dfbd8215b",
+      "bytes": 13843,
+      "sha256": "96d075815608c5cd98ebd16e2cc2942d8d5d461009fdda7877d63375a9fcc38b",
+      "lf": 208,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.templateAdditionDiff",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.templateAdditionDiff"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.3",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.3"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "102f92158ba6949f74df63a2a4e7df17158be3ed",
+      "bytes": 826,
+      "sha256": "cd46b862349ee563089474d85db2afd24e36a5a0287b64eda3068b7b747aa49d",
+      "lf": 15,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.bindingDiff",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.bindingDiff"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.6",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.6"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "f123bbfccc051183a8c45d7c9e4b0eab823d91fb",
+      "bytes": 13878,
+      "sha256": "88fb27fdee7312d2107c8313ce6a535f202266fde908be0609a25c4753dd037d",
+      "lf": 208,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.boundAdditionDiff",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.boundAdditionDiff"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.7",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.7"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "82b99e4eafce14f14817d366ca3b396a555c8b8d",
+      "bytes": 9057,
+      "sha256": "3c37c3a6d50e51a0f4c7d6fdff395f2321f7529cbaf5fc5d843a58cf53e0be71",
+      "lf": 305,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "derivation.historicalUnboundBounds",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "derivation.historicalUnboundBounds"
+          },
+          "alsoReferencedAs": [
+            {
+              "role": "packageBlobsBeforeThisManifest.4",
+              "source": {
+                "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+                "pointer": "packageBlobsBeforeThisManifest.4"
+              }
+            }
+          ]
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "bytes": 46151,
+      "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+      "lf": 533,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[0]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479",
+      "bytes": 60735,
+      "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+      "lf": 891,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[1]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+      "bytes": 96231,
+      "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+      "lf": 1685,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[2]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab",
+      "bytes": 12451,
+      "sha256": "11b611014da00ba0192527dc79ded7a97d65a2a01e37f5d3305e7845def15a28",
+      "lf": 204,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[3]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "bytes": 4667,
+      "sha256": "41d15d919b969d24671a7cec27516f164c899682d5fe12d2fd2676f0ad633574",
+      "lf": 52,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[4]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5",
+      "bytes": 20985,
+      "sha256": "42e4d739499050d14b872751617326c5cf1e9d872894dfe9d07a637261cf8d43",
+      "lf": 313,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[5]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+      "bytes": 2037,
+      "sha256": "ab667441ef3ae1ce301051245d2becddab52681cce306ab1b9f68ff730e8920e",
+      "lf": 37,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[6]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+      "bytes": 32461,
+      "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+      "lf": 404,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[7]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "39e6da84a3dd815721484affaf8315731ded073b",
+      "bytes": 8973,
+      "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+      "lf": 187,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[9]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+      "lf": 1462,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[10]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+      "bytes": 8386,
+      "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+      "lf": 185,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[11]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+      "bytes": 14108,
+      "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+      "lf": 114,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[12]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "bytes": 34160,
+      "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+      "lf": 587,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-focal",
+          "role": "workingPins.modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+          "source": {
+            "blob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+            "pointer": "workingPins[14]"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "4d657ba72e9aa7f0bd63d854e9a7fef8e3d9c8b8",
+      "bytes": 13358,
+      "sha256": "8c2cbd3561d8631dc05351b36ec919dcb9e7e9ae6f0d2e18a1ce0b4a6bb12046",
+      "lf": 220,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "pins.ui",
+          "source": {
+            "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+            "pointer": "pins.ui"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "bytes": 2313,
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "lf": 41,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "pins.deadline",
+          "source": {
+            "blob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+            "pointer": "pins.deadline"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c3aaf4b12a7fc44e3f7bba144de5df346d41953c",
+      "bytes": 7730,
+      "sha256": "1c28f1d902969a06694f6b6feb1121157cae28cba23aa0d466d2b3dbea930ac0",
+      "lf": 250,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "readerReception.root",
+          "source": {
+            "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+            "pointer": "readerReception.root"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "a3924c196f2818241886c4fe4a0dea7d7fde8be1",
+      "bytes": 5272,
+      "sha256": "e767767b87b7561b92766eb07844d94c1162ec1a25616d9a4b127dbaf1a92e87",
+      "lf": 189,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-source",
+          "role": "readerReception.transport",
+          "source": {
+            "blob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+            "pointer": "readerReception.transport"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "ca30c899e8fc3de759e0dfbde119f780b58f015c",
+      "bytes": 13399,
+      "sha256": "e9d70e3d833f65a8a5f61f632d91009309d2a0d4eebf58034fa0547cdbd8b9ed",
+      "lf": 349,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "authority",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "authority"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a29461b298a299fafd29d3667c67691b35b383ee",
+      "bytes": 2344,
+      "sha256": "95b8dabddeb649775ae0a00b9ad06d1ef4c9a86612b46e5baca2c38642f94908",
+      "lf": 51,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "activation",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "activation"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "9a883649c7ee75c732bf6187f74cd3f4a5943ea9",
+      "bytes": 3554,
+      "sha256": "2af78bae0c5ff31181c9b41a887d0a14e29b841530d6b38cd24eb9472c3b5acc",
+      "lf": 103,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "runBinding",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "runBinding"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "8a93717dc476e8a2b897da16bcc61085d307426b",
+      "bytes": 15295,
+      "sha256": "c17422480c6ef32d89c81a3b1eb5ed278b695c402f0a2dd41da34fe731e20a16",
+      "lf": 408,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "triggerHistory.originalAuthority",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "triggerHistory.originalAuthority"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "cfbed204c4050bc9d3eac360562a06a9fe852732",
+      "bytes": 2791,
+      "sha256": "eb82a55df92d99307ec97a5f2fb618c678b26ddfd190651dc1566415072e0a29",
+      "lf": 82,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "triggerHistory.originalActivation",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "triggerHistory.originalActivation"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "eaf3953a5a6e6dce1d81e30796cc573d1dfe713f",
+      "bytes": 2784,
+      "sha256": "2f68eb4ba91cca7e239291b6a5f57adca23d5ea590d991173c8d6c358e6b77e2",
+      "lf": 65,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "triggerHistory.recoveryObject",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "triggerHistory.recoveryObject"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+      "bytes": 5660,
+      "sha256": "043c1393154d59c11e100e3c17d3930b45d1f1cf3f291230674ecd65bbbdfefc",
+      "lf": 194,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "originals.mainManifest",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "originals.mainManifest"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "49792468dd541958ce957eb9bbeecb31bf5f25f5",
+      "bytes": 1822,
+      "sha256": "43f9466b12c9984b484a2efd0de6f719203978fe25537b18740fde6dc7d2bc6f",
+      "lf": 62,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "originals.cleanupManifest",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "originals.cleanupManifest"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+      "bytes": 2281,
+      "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+      "lf": 39,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "originals.cleanupActualWhole",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "originals.cleanupActualWhole"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "aec31c26492817c63075fb86714534fcfd38a239",
+      "bytes": 26384,
+      "sha256": "3660a1421957e514ea3ef186ef29b9185f076e4a84515f50345c3ceb20277e86",
+      "lf": 581,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "originals.terminalContext",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "originals.terminalContext"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+      "bytes": 15090,
+      "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+      "lf": 473,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "selection.sourceSelectionReceipt",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "selection.sourceSelectionReceipt"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "selection.originalRequest",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "selection.originalRequest"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "6fb900709324b30feeb3450357ad613e04b856c4",
+      "bytes": 61497,
+      "sha256": "cc17058384306b5632b52529d5f06dada9c91b8ab12192d805143d5752e50a31",
+      "lf": 2206,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "derived.extraction",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "derived.extraction"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "derived.markers",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "derived.markers"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "derived.contexts",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "derived.contexts"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatchesPublishedR7": true,
+        "literalGitReadbackForNew": false
+      }
+    },
+    {
+      "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "derived.discoveryAndOwner",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "derived.discoveryAndOwner"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "e5ccedc063611f0fb236eeecb25c912a0f88b858",
+      "bytes": 4788,
+      "sha256": "51d7b46515efd830ee619c2f91e40341ddc1d9dda5067fc910b4ab35c5276bdf",
+      "lf": 200,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "review.root",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "review.root"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "447d9112daa7df012afa9cdc854d963037e9e219",
+      "bytes": 20646,
+      "sha256": "3d4cbb7f4442edb74e60ede0f9ed6bb42170d3166bbd95ad25bc70976f1b4ad9",
+      "lf": 724,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "review.independent",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "review.independent"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "24265cc83696687b97cb5e28ed2734ffb1e47e4e",
+      "bytes": 20591,
+      "sha256": "8542ab6853e06977980889210074e6260d9b2900e12c382dd14ab77ce9884fb0",
+      "lf": 723,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "review.peerSupersededAmbiguousField",
+          "source": {
+            "blob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+            "pointer": "review.peerSupersededAmbiguousField"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "08883ef2127007d2696d123295997abeb083c098",
+      "bytes": 7884,
+      "sha256": "4dab22a071befe023ce2bfc4d25573ccaec0e7f8a1a26548df40a2db78cc147f",
+      "lf": 237,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "originalSnapshotReceipt",
+          "source": {
+            "readback": "08883ef2127007d2696d123295997abeb083c098"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+      "bytes": 17645,
+      "sha256": "41920631bbef0bfeabc6480f976bd185da46211aaba6af7c3aee3836559e8742",
+      "lf": 487,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "finalReceipt",
+          "source": {
+            "readback": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c69c26f6c94d07fd6bb318cb7711289f6d9e8072",
+      "bytes": 300000,
+      "sha256": "7563ae17f6e0c1cb1610733212370027fc34829ef62970707ed5e6054e4b79c8",
+      "lf": 1184,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-01",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[0]",
+            "order": 1,
+            "startCodeUnit": 0,
+            "endCodeUnit": 297350
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "c75fef82e1ce0868261c25947149737772261e26",
+      "bytes": 300000,
+      "sha256": "0f4973e8890c19c70a1fe0b6a376d2ffe77aac09e06c2f2188de71b5ef56b073",
+      "lf": 46,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-02",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[1]",
+            "order": 2,
+            "startCodeUnit": 297350,
+            "endCodeUnit": 597350
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "f2c14864f3aca17c8a2a48d0b3ea7001394bd5cd",
+      "bytes": 300000,
+      "sha256": "48ba3887f8570ba8c01c8d5b7d6605ae6b1b91f1cb6b21fa0bcca3affbce4232",
+      "lf": 182,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-03",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[2]",
+            "order": 3,
+            "startCodeUnit": 597350,
+            "endCodeUnit": 895187
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "387f3e050686b53c1a5bad826abda4fd29b2e1da",
+      "bytes": 300000,
+      "sha256": "f55d520f1678ec2db364ec7e7db4d39c33a41593cffc2f6ca9b59dbd2d77d1e4",
+      "lf": 34,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-04",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[3]",
+            "order": 4,
+            "startCodeUnit": 895187,
+            "endCodeUnit": 1195187
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "753861981c39698acb6570ccd3cc2413736ae525",
+      "bytes": 300000,
+      "sha256": "ecc110fb8f9643613cae5f9f755810f6c7c6835bd7966d63279fbc4bb2872c0d",
+      "lf": 38,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-05",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[4]",
+            "order": 5,
+            "startCodeUnit": 1195187,
+            "endCodeUnit": 1495187
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "b7b85a1dd0ad61f61299ff22135da353d9a41b34",
+      "bytes": 300000,
+      "sha256": "c062f6fba6abebb7d228571bff0f1c29b610f9e6e877f302dfb7c06906dc78f3",
+      "lf": 32,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-06",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[5]",
+            "order": 6,
+            "startCodeUnit": 1495187,
+            "endCodeUnit": 1795187
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a289c42949015e82e3f7580a607b0094fc1979e8",
+      "bytes": 300000,
+      "sha256": "8036e6ba7986e5dcdb94268d759ebc315b0775324d50beb90aece4fbd30da6ef",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-07",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[6]",
+            "order": 7,
+            "startCodeUnit": 1795187,
+            "endCodeUnit": 2095187
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "f74201615a0f5ed37174e84ae1e92b379aabf1ce",
+      "bytes": 300000,
+      "sha256": "85488006e355c86ee05086fe0767c01457e6458389189d44e990943fcad8bca3",
+      "lf": 30,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-08",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[7]",
+            "order": 8,
+            "startCodeUnit": 2095187,
+            "endCodeUnit": 2395185
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "a8884a9ec0ca53a25bcbb85a3807dd2000fc0f3f",
+      "bytes": 300000,
+      "sha256": "3009a9870493b126002b1dc17c8ce2461aad1e9375537bd059cdf8b805460f0a",
+      "lf": 38,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-09",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[8]",
+            "order": 9,
+            "startCodeUnit": 2395185,
+            "endCodeUnit": 2695182
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "71b5be1faf0edeb5602db8726f9019e3043eba02",
+      "bytes": 300000,
+      "sha256": "6893ca3d4eca2f68bffa9862afeb9cb4e0848d37e679c774291e8b90cfcb8ec2",
+      "lf": 46,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-10",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[9]",
+            "order": 10,
+            "startCodeUnit": 2695182,
+            "endCodeUnit": 2995124
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "5087df738185002c8e219592613b31a8c78473ad",
+      "bytes": 89836,
+      "sha256": "707cd2b844700fc83eb37e94db295b67bcb5e0997a4d28cd072f8c74214c54c3",
+      "lf": 177,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "main-part-11",
+          "source": {
+            "blob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+            "pointer": "parts[10]",
+            "order": 11,
+            "startCodeUnit": 2995124,
+            "endCodeUnit": 3079982
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    },
+    {
+      "gitBlob": "54454e1309bbc0235d8850e58edfc7a52a8a421e",
+      "bytes": 20477,
+      "sha256": "15e40825bf29163110ea7a87d34f68e70dc59533e14d299cd21c5981f3e1f85b",
+      "lf": 416,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "C20-Analytics",
+          "role": "BI06-negative-cancellation-audit",
+          "source": {
+            "readback": "54454e1309bbc0235d8850e58edfc7a52a8a421e"
+          }
+        }
+      ],
+      "authentication": {
+        "listedInPublishedR7": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatchesPublishedR7": null,
+        "literalGitReadbackForNew": true
+      }
+    }
+  ],
+  "streams": [
+    {
+      "id": "C20-focal-main",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "job": 140872033935,
+      "role": "main",
+      "kind": "original-log",
+      "attempt": 1,
+      "bytes": 109188,
+      "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+      "lf": 900,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8",
+          "bytes": 109188,
+          "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+          "startCodeUnit": 0,
+          "endCodeUnit": 109186,
+          "startByte": 0,
+          "endByte": 109188
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "preservationManifest": "7620b00b4a259518f03f0de9f48d18fdf46ce3db",
+        "rootOriginalGets": 1,
+        "archiveAuthorOriginalGets": 0,
+        "originalsClosed": true,
+        "notAnArtifactZip": true
+      }
+    },
+    {
+      "id": "C20-focal-cleanup",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "job": 140872674275,
+      "role": "cleanup",
+      "kind": "original-log",
+      "attempt": 1,
+      "bytes": 2280,
+      "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "264bc691b48cd33a090ff03781993466478f3d00",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "264bc691b48cd33a090ff03781993466478f3d00",
+          "bytes": 2280,
+          "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2278,
+          "startByte": 0,
+          "endByte": 2280
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "preservationManifest": "e9885e74f63475d6cf1c67bbaf14d4e327370003",
+        "rootOriginalGets": 1,
+        "archiveAuthorOriginalGets": 0,
+        "originalsClosed": true,
+        "notAnArtifactZip": true
+      }
+    },
+    {
+      "id": "C20-focal-reports",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "role": "reports",
+      "kind": "derived-union",
+      "attempt": 1,
+      "bytes": 9815,
+      "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+      "lf": 7,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "8053a3b3549290836fba6c88cb3b813c18b85878",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878",
+          "bytes": 9815,
+          "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+          "startCodeUnit": 0,
+          "endCodeUnit": 9815,
+          "startByte": 0,
+          "endByte": 9815
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "original": false,
+        "sourceMainManifest": "7620b00b4a259518f03f0de9f48d18fdf46ce3db",
+        "carrierPrefixOnlyRemoved": true,
+        "literalLinesInOriginalOrder": true,
+        "lines": 7,
+        "notSourceOrRuntimePayloadModification": true
+      }
+    },
+    {
+      "id": "C20-Analytics-main",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "job": 140881932116,
+      "role": "main",
+      "kind": "original-log",
+      "attempt": 1,
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "lf": 1843,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "wholeGitBlobPersisted": false,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "c69c26f6c94d07fd6bb318cb7711289f6d9e8072",
+          "bytes": 300000,
+          "sha256": "7563ae17f6e0c1cb1610733212370027fc34829ef62970707ed5e6054e4b79c8",
+          "startCodeUnit": 0,
+          "endCodeUnit": 297350,
+          "startByte": 0,
+          "endByte": 300000
+        },
+        {
+          "index": 2,
+          "gitBlob": "c75fef82e1ce0868261c25947149737772261e26",
+          "bytes": 300000,
+          "sha256": "0f4973e8890c19c70a1fe0b6a376d2ffe77aac09e06c2f2188de71b5ef56b073",
+          "startCodeUnit": 297350,
+          "endCodeUnit": 597350,
+          "startByte": 300000,
+          "endByte": 600000
+        },
+        {
+          "index": 3,
+          "gitBlob": "f2c14864f3aca17c8a2a48d0b3ea7001394bd5cd",
+          "bytes": 300000,
+          "sha256": "48ba3887f8570ba8c01c8d5b7d6605ae6b1b91f1cb6b21fa0bcca3affbce4232",
+          "startCodeUnit": 597350,
+          "endCodeUnit": 895187,
+          "startByte": 600000,
+          "endByte": 900000
+        },
+        {
+          "index": 4,
+          "gitBlob": "387f3e050686b53c1a5bad826abda4fd29b2e1da",
+          "bytes": 300000,
+          "sha256": "f55d520f1678ec2db364ec7e7db4d39c33a41593cffc2f6ca9b59dbd2d77d1e4",
+          "startCodeUnit": 895187,
+          "endCodeUnit": 1195187,
+          "startByte": 900000,
+          "endByte": 1200000
+        },
+        {
+          "index": 5,
+          "gitBlob": "753861981c39698acb6570ccd3cc2413736ae525",
+          "bytes": 300000,
+          "sha256": "ecc110fb8f9643613cae5f9f755810f6c7c6835bd7966d63279fbc4bb2872c0d",
+          "startCodeUnit": 1195187,
+          "endCodeUnit": 1495187,
+          "startByte": 1200000,
+          "endByte": 1500000
+        },
+        {
+          "index": 6,
+          "gitBlob": "b7b85a1dd0ad61f61299ff22135da353d9a41b34",
+          "bytes": 300000,
+          "sha256": "c062f6fba6abebb7d228571bff0f1c29b610f9e6e877f302dfb7c06906dc78f3",
+          "startCodeUnit": 1495187,
+          "endCodeUnit": 1795187,
+          "startByte": 1500000,
+          "endByte": 1800000
+        },
+        {
+          "index": 7,
+          "gitBlob": "a289c42949015e82e3f7580a607b0094fc1979e8",
+          "bytes": 300000,
+          "sha256": "8036e6ba7986e5dcdb94268d759ebc315b0775324d50beb90aece4fbd30da6ef",
+          "startCodeUnit": 1795187,
+          "endCodeUnit": 2095187,
+          "startByte": 1800000,
+          "endByte": 2100000
+        },
+        {
+          "index": 8,
+          "gitBlob": "f74201615a0f5ed37174e84ae1e92b379aabf1ce",
+          "bytes": 300000,
+          "sha256": "85488006e355c86ee05086fe0767c01457e6458389189d44e990943fcad8bca3",
+          "startCodeUnit": 2095187,
+          "endCodeUnit": 2395185,
+          "startByte": 2100000,
+          "endByte": 2400000
+        },
+        {
+          "index": 9,
+          "gitBlob": "a8884a9ec0ca53a25bcbb85a3807dd2000fc0f3f",
+          "bytes": 300000,
+          "sha256": "3009a9870493b126002b1dc17c8ce2461aad1e9375537bd059cdf8b805460f0a",
+          "startCodeUnit": 2395185,
+          "endCodeUnit": 2695182,
+          "startByte": 2400000,
+          "endByte": 2700000
+        },
+        {
+          "index": 10,
+          "gitBlob": "71b5be1faf0edeb5602db8726f9019e3043eba02",
+          "bytes": 300000,
+          "sha256": "6893ca3d4eca2f68bffa9862afeb9cb4e0848d37e679c774291e8b90cfcb8ec2",
+          "startCodeUnit": 2695182,
+          "endCodeUnit": 2995124,
+          "startByte": 2700000,
+          "endByte": 3000000
+        },
+        {
+          "index": 11,
+          "gitBlob": "5087df738185002c8e219592613b31a8c78473ad",
+          "bytes": 89836,
+          "sha256": "707cd2b844700fc83eb37e94db295b67bcb5e0997a4d28cd072f8c74214c54c3",
+          "startCodeUnit": 2995124,
+          "endCodeUnit": 3079982,
+          "startByte": 3000000,
+          "endByte": 3089836
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0,
+        2104525
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "preservationManifest": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+        "rootOriginalGets": 1,
+        "archiveAuthorOriginalGets": 0,
+        "originalsClosed": true,
+        "notAnArtifactZip": true
+      }
+    },
+    {
+      "id": "C20-Analytics-cleanup",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "job": 140884025044,
+      "role": "cleanup",
+      "kind": "original-log",
+      "attempt": 1,
+      "bytes": 2281,
+      "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+          "bytes": 2281,
+          "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2279,
+          "startByte": 0,
+          "endByte": 2281
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "preservationManifest": "49792468dd541958ce957eb9bbeecb31bf5f25f5",
+        "rootOriginalGets": 1,
+        "archiveAuthorOriginalGets": 0,
+        "originalsClosed": true,
+        "notAnArtifactZip": true
+      }
+    },
+    {
+      "id": "C20-Analytics-markers",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "role": "markers",
+      "kind": "derived-union",
+      "attempt": 1,
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+          "bytes": 22526,
+          "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+          "startCodeUnit": 0,
+          "endCodeUnit": 22450,
+          "startByte": 0,
+          "endByte": 22526
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "original": false,
+        "sourceMainManifest": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+        "carrierPrefixOnlyRemoved": true,
+        "literalLinesInOriginalOrder": true,
+        "lines": 65,
+        "notSourceOrRuntimePayloadModification": true
+      }
+    },
+    {
+      "id": "C20-Analytics-contexts",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "role": "contexts",
+      "kind": "derived-union",
+      "attempt": 1,
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+          "bytes": 5428,
+          "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+          "startCodeUnit": 0,
+          "endCodeUnit": 5428,
+          "startByte": 0,
+          "endByte": 5428
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "original": false,
+        "sourceMainManifest": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+        "carrierPrefixOnlyRemoved": true,
+        "literalLinesInOriginalOrder": true,
+        "lines": 2,
+        "notSourceOrRuntimePayloadModification": true
+      }
+    },
+    {
+      "id": "C20-Analytics-discovery-owner",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "role": "discovery-and-owner",
+      "kind": "derived-union",
+      "attempt": 1,
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "29898c93968c0de965f8524338db48e52f7c9505",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+          "bytes": 938,
+          "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+          "startCodeUnit": 0,
+          "endCodeUnit": 938,
+          "startByte": 0,
+          "endByte": 938
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators, BOM, CR or LF normalization.",
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noOriginalOrZipAcquisition": true
+      },
+      "scope": {
+        "original": false,
+        "sourceMainManifest": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+        "carrierPrefixOnlyRemoved": true,
+        "literalLinesInOriginalOrder": true,
+        "lines": 6,
+        "notSourceOrRuntimePayloadModification": true
+      }
+    }
+  ],
+  "exclusions": {
+    "calculatedWholeMain": {
+      "gitBlob": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "actualBlob": false,
+      "representedBy": "11 real ordered parts"
+    },
+    "calculatedModels": [
+      {
+        "sha": "d97707a2a5a6f9199161a35931bd0e7fedc93b44",
+        "role": "C20 modeled report, not a persisted input"
+      },
+      {
+        "sha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+        "role": "D29 embedded loader hash, not a persisted standalone input"
+      }
+    ],
+    "derivationIntermediateHashes": "Retained as metadata inside the actual derivation documents, not promoted to objects/<sha> without a distinct actual input.",
+    "discoveryCheckpoint": "8b011095695974a619f29f38a871eab3b4263b54; read for discovery only and excluded from objects.",
+    "instructionsOnly": "Root AGENTS was read for instructions and is not added merely because it was consulted.",
+    "excludedLaterWork": "C21; no blobs from that work are enumerated.",
+    "artifactZip": "C20 artifact15250367884 is metadata only. ZERO ZIP acquisitions.",
+    "currentProposalSelfReference": "Current index, README, derivation and manifesto are not recursively included. The catalog will be an actual object in the proposed index after literal readback."
+  },
+  "supersededActualObjects": [
+    {
+      "gitBlob": "24265cc83696687b97cb5e28ed2734ffb1e47e4e",
+      "status": "SUPERSEDED_DOCUMENTARY_FIELD_ONLY",
+      "effective": "447d9112daa7df012afa9cdc854d963037e9e219",
+      "change": "Only observer:false becomes diagnosticOverlay:false and originalBiCdpAcquisitionObserver:true; other 44+5 checks and content preserved."
+    }
+  ],
+  "verification": {
+    "newBodiesRehashed": 89,
+    "reusedMetadataMatchedToPublishedIndex": 32,
+    "baseTreeAudit": {
+      "rootExact": true,
+      "objectsEntriesExact": true,
+      "objectEntries": 727,
+      "completeTreeResponses": true,
+      "bodyReadsForInherited727": false,
+      "commitAndPlannedParentsRead": true
+    },
+    "newStreamsRecomposed": 8,
+    "actualPartReferencesChecked": 18,
+    "unionParities": [
+      {
+        "id": "C20-focal-reports",
+        "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878",
+        "lines": 7,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 7,
+        "firstStart": 70919,
+        "lastEnd": 104622
+      },
+      {
+        "id": "C20-Analytics-markers",
+        "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+        "lines": 65,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 65,
+        "firstStart": 93348,
+        "lastEnd": 3060371
+      },
+      {
+        "id": "C20-Analytics-contexts",
+        "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "lines": 2,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 2,
+        "firstStart": 98089,
+        "lastEnd": 405321
+      },
+      {
+        "id": "C20-Analytics-discovery-owner",
+        "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+        "lines": 6,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 6,
+        "firstStart": 93074,
+        "lastEnd": 2914801
+      }
+    ],
+    "hashOrByteMismatches": 0,
+    "validationIsPureDataOnly": true,
+    "repositoryCodeExecuted": false,
+    "originalActionsGets": 0,
+    "artifactZipGets": 0,
+    "noSemanticRetest": true
+  },
+  "authorEffects": {
+    "createdArtifactKinds": [
+      "catalog",
+      "index",
+      "README",
+      "derivation",
+      "manifesto"
+    ],
+    "treeCreated": false,
+    "commitCreated": false,
+    "refChanged": false,
+    "workflowRunCreated": false,
+    "commentsChanged": false,
+    "productSourceChanged": false
+  }
+}

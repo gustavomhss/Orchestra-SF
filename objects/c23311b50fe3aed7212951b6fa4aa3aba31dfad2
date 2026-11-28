@@ -1,0 +1,216 @@
+{
+  "schema": "sf613-c20-focal-source-binding-v1",
+  "status": "SOURCE_BOUND_STATIC_FOCAL_SNAPSHOT_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "template": {
+    "git": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+    "bytes": 12892,
+    "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "bound": {
+    "git": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "bytes": 12927,
+    "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "parents": [
+      "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    ],
+    "scope": "Clean C19 plus only one product callback opt-in and its consumer control. Diagnostic E14 and reader workflow are excluded.",
+    "receipt": {
+      "git": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    },
+    "sourceCommitRead": true,
+    "sourceObjectCreatedBy": "root",
+    "treeAuditReportedByRoot": {
+      "pairs": 10,
+      "literalSiblings": 239,
+      "changes": "1M1A"
+    },
+    "productIndependentReview": {
+      "git": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+      "bytes": 9824,
+      "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+      "lf": 296,
+      "endsWithLF": true
+    }
+  },
+  "operations": [
+    {
+      "id": 1,
+      "before": "UNBOUND_C20_SOURCE_SHA",
+      "after": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "occurrences": 1,
+      "preimage": {
+        "git": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+        "bytes": 12892,
+        "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+        "lf": 194,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "197168faa2ed915b4caed143f3d16059b78eb05d",
+        "bytes": 12910,
+        "sha256": "9362f30ce0fb06dbfac2aaec7e0c1e6010b27521949d37964f621e9dbfb2efe2",
+        "lf": 194,
+        "endsWithLF": true
+      },
+      "intermediateGitCalculatedOnly": true
+    },
+    {
+      "id": 2,
+      "before": "UNBOUND_C20_SOURCE_TREE",
+      "after": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+      "occurrences": 1,
+      "preimage": {
+        "git": "197168faa2ed915b4caed143f3d16059b78eb05d",
+        "bytes": 12910,
+        "sha256": "9362f30ce0fb06dbfac2aaec7e0c1e6010b27521949d37964f621e9dbfb2efe2",
+        "lf": 194,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+        "bytes": 12927,
+        "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+        "lf": 194,
+        "endsWithLF": true
+      },
+      "intermediateGitCalculatedOnly": false
+    }
+  ],
+  "assertions": {
+    "twoUniqueSentinels": true,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "onlyTwoTokensChanged": true,
+    "deltaBytes": 35,
+    "deltaLF": 0,
+    "allOtherExecutableBytesLiteral": true,
+    "sourceGuardRetained": true,
+    "sourceOnlyWorkingPins": 17,
+    "runCommandAndG2ThroughG7Literal": true,
+    "sourcePinsChangedDuringBinding": false,
+    "bindDiff": {
+      "hunks": 1,
+      "additions": 2,
+      "deletions": 2
+    },
+    "fullSnapshotDiff": {
+      "hunks": 2,
+      "additions": 195,
+      "deletions": 0
+    }
+  },
+  "bindDiff": {
+    "git": "102f92158ba6949f74df63a2a4e7df17158be3ed",
+    "bytes": 826,
+    "sha256": "cd46b862349ee563089474d85db2afd24e36a5a0287b64eda3068b7b747aa49d",
+    "lf": 15,
+    "endsWithLF": true
+  },
+  "fullSnapshotDiff": {
+    "git": "f123bbfccc051183a8c45d7c9e4b0eab823d91fb",
+    "bytes": 13878,
+    "sha256": "88fb27fdee7312d2107c8313ce6a535f202266fde908be0609a25c4753dd037d",
+    "lf": 208,
+    "endsWithLF": true
+  },
+  "immutableTemplateSupport": {
+    "derivation": {
+      "git": "7487bf635fbb614d35e138698fdd9bbb9bfecccd",
+      "bytes": 22008,
+      "sha256": "98374d689f65ba13ac2e1c0226ac2234dc7eddb0f93f463df2ea87cedc132f05",
+      "lf": 402,
+      "endsWithLF": true
+    },
+    "retargetDiff": {
+      "git": "d5db2616c2f9c2d8093b75937decbc5eeab5ed92",
+      "bytes": 7259,
+      "sha256": "182df399063ca889dc668811652e53a080548271d78d7385eca0dbd2e441895b",
+      "lf": 93,
+      "endsWithLF": true
+    },
+    "fullDiff": {
+      "git": "8a3330e0ee6620040f84e94c23bdce2dfbd8215b",
+      "bytes": 13843,
+      "sha256": "96d075815608c5cd98ebd16e2cc2942d8d5d461009fdda7877d63375a9fcc38b",
+      "lf": 208,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "82b99e4eafce14f14817d366ca3b396a555c8b8d",
+      "bytes": 9057,
+      "sha256": "3c37c3a6d50e51a0f4c7d6fdff395f2321f7529cbaf5fc5d843a58cf53e0be71",
+      "lf": 305,
+      "endsWithLF": true
+    }
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false,
+    "literal": true,
+    "noFinalLF": true
+  },
+  "futureSnapshot": {
+    "commit": null,
+    "tree": null,
+    "parents": [
+      "2228172b29080b411850ec98a4cdaa66020db5e6"
+    ],
+    "changes": [
+      {
+        "operation": "A",
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "blob": "4a7b64a8392138f1b79d386557e48ac4453617f5"
+      },
+      {
+        "operation": "A",
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "mode": "100644",
+        "blob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4"
+      }
+    ],
+    "precondition": "Root must audit exact two additions and their absent preimages in S20 before any activation. Root is the sole object/ref/run operator."
+  },
+  "selfPin": {
+    "absent": true,
+    "reason": "The executable cannot contain its own Git content identity. Its actual membership is checked by the root snapshot tree audit; the 17 executable pins cover source leaves only."
+  },
+  "expectations": {
+    "groups": 8,
+    "commands": 14,
+    "truncationFlagsRequiredFalse": 28,
+    "sourcePins": 17,
+    "functionalDeclarations": 16,
+    "controlReports": 7,
+    "actualResults": null
+  },
+  "operationsByAuthor": {
+    "gitBlobsOnly": true,
+    "repositoryCodeExecuted": false,
+    "sourceTreeCommitRefRunCreated": false,
+    "originalLogsOrZipAcquired": false
+  },
+  "limits": [
+    "The first operation's intermediate Git identity is calculated data, not an assertion that a blob was created for it.",
+    "S20 product/source review is static. No focal result, Analytics qualification, final D28 execution or production authorization follows from this binding.",
+    "The template and its historical UNBOUND supports are preserved verbatim; this document binds only the actual source and tree."
+  ]
+}

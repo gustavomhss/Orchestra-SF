@@ -1,0 +1,566 @@
+{
+  "schema": "sf613-c20-focal-independent-intake-v1",
+  "status": "INDEPENDENT_FOCAL_PASS_ONLY",
+  "reviewer": "/root/teams_product",
+  "atUtc": "2026-11-28 05:15:06 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Independent intake of the closed C20 focal originals exclusively through preserved Git copies; no original endpoint, ZIP, test, ref or run acquisition by reviewer.",
+  "inputs": {
+    "main": {
+      "bytes": 109188,
+      "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+      "gitBlob": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8"
+    },
+    "mainManifest": {
+      "bytes": 1763,
+      "sha256": "c1944bbdf06c67ea952c49b4f439de43016e29fdb2a7899a9823aa1f614484c4",
+      "gitBlob": "7620b00b4a259518f03f0de9f48d18fdf46ce3db"
+    },
+    "cleanup": {
+      "bytes": 2280,
+      "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+      "gitBlob": "264bc691b48cd33a090ff03781993466478f3d00"
+    },
+    "cleanupManifest": {
+      "bytes": 1753,
+      "sha256": "53e50a31a363a1e27f38b9d281fbe1ca2b4c0c6fe2e3f54eac83e7f191b27f87",
+      "gitBlob": "e9885e74f63475d6cf1c67bbaf14d4e327370003"
+    },
+    "terminalContext": {
+      "bytes": 9028,
+      "sha256": "a9dcdb1ef972576962cba288d9900317616aaa66a199a5458d07a6683750e2bc",
+      "gitBlob": "dc533ebd030a26cdd50d59a31d6a8b004eb00476"
+    },
+    "rootIntake": {
+      "bytes": 97257,
+      "sha256": "fc5b3943df4afdc73168e7dbec6fa37eb8a9b77fb0662077e3d6e4af71dc1c10",
+      "gitBlob": "b594f835834317f430e93890ee1ec3ae428166c3"
+    },
+    "reportUnionActuallyCreatedByRoot": {
+      "bytes": 9815,
+      "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+      "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878"
+    },
+    "guardActuallyCreatedByRoot": {
+      "bytes": 14082,
+      "sha256": "8131662a41dc4508481e0adeecb9b8eb894d1f516c95211b937e547d0d8fd4a2",
+      "gitBlob": "9811b76037aa9ca98c4b9962c783acd0896ca375"
+    }
+  },
+  "reviewedSourceAndDriver": {
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "snapshot": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+    "snapshotTree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+    "sourceParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "snapshotParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourcePackagePeer": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+    "sourceDriverObjectPeer": "a56445a29a2991255fdad3b4c928d87a9ebdc70b",
+    "wrapper": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "request": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "workingPins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "sha": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "sha": "39e6da84a3dd815721484affaf8315731ded073b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "sha": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "sha": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "sha": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+      }
+    ]
+  },
+  "observed": {
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "snapshot": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+    "snapshotTree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+    "run": 46110276545,
+    "attempt": 1,
+    "inner": [
+      {
+        "file": "cases-read-contract.test.ts",
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "elapsed": "243.00ms",
+        "footerLine": 777
+      },
+      {
+        "file": "c08-snapshot-projection.test.ts",
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "elapsed": "613.00ms",
+        "footerLine": 800
+      },
+      {
+        "file": "portfolio-selection-preferences-read.test.ts",
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "elapsed": "229.00ms",
+        "footerLine": 846
+      },
+      {
+        "file": "scenario-lookup-selection.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "elapsed": "156.00ms",
+        "footerLine": 866
+      }
+    ],
+    "innerTests": 16,
+    "innerAssertions": 2250,
+    "outerTests": 8,
+    "outerAssertions": 38,
+    "commands": 14,
+    "truncationFlags": 28,
+    "reports": 7,
+    "guards": {
+      "rules": 78,
+      "files": 859,
+      "warnings": 40,
+      "errors": 0,
+      "approved": 0,
+      "bootstrap": false
+    },
+    "omni": {
+      "nonce": "6ee8697b073888fa1b6a9964c1cc3561",
+      "declared": 8,
+      "spawns": 14,
+      "delegated": 0
+    },
+    "runtime": {
+      "version": "1.3.14",
+      "printedRevision": "0d9b296af"
+    }
+  },
+  "observedReports": [
+    {
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "line": 786,
+      "outcomes": 3,
+      "qualification": false
+    },
+    {
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "line": 787,
+      "outcomes": 17,
+      "qualification": false
+    },
+    {
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "line": 788,
+      "outcomes": 4,
+      "qualification": false
+    },
+    {
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "line": 790,
+      "outcomes": 15,
+      "qualification": false
+    },
+    {
+      "prefix": "SF_C16_SELECTION_CONTROL",
+      "line": 791,
+      "outcomes": 31,
+      "identityProjectionCases": 9,
+      "qualification": false
+    },
+    {
+      "prefix": "SF_C19_PORTFOLIO_CASES",
+      "line": 839,
+      "payload": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      }
+    },
+    {
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "line": 856,
+      "payload": {
+        "schema": "sf-c20-scenario-lookup-v1",
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ]
+      }
+    }
+  ],
+  "observedTypes": {
+    "cli": {
+      "exitCode": 0,
+      "durationMs": 32712
+    },
+    "sucafina": {
+      "exitCode": 0,
+      "durationMs": 29131
+    }
+  },
+  "observedGuardAncestry": {
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "baseRequested": "origin/dev",
+    "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+  },
+  "terminalMetadata": {
+    "runConclusion": "success",
+    "mainJob": 140872033935,
+    "mainConclusion": "success",
+    "cleanupJob": 140872674275,
+    "cleanupConclusion": "success",
+    "branch": "ci-run-sf613c20",
+    "rootMatchingRefs": [],
+    "rootArtifacts": 0,
+    "observationsSource": "dc533ebd030a26cdd50d59a31d6a8b004eb00476"
+  },
+  "checks": [
+    {
+      "id": "main-literal-hash",
+      "pass": true
+    },
+    {
+      "id": "cleanup-literal-hash",
+      "pass": true
+    },
+    {
+      "id": "main-framing",
+      "pass": true
+    },
+    {
+      "id": "cleanup-framing",
+      "pass": true
+    },
+    {
+      "id": "main-manifest",
+      "pass": true
+    },
+    {
+      "id": "cleanup-manifest",
+      "pass": true
+    },
+    {
+      "id": "context-run",
+      "pass": true
+    },
+    {
+      "id": "context-both-jobs",
+      "pass": true
+    },
+    {
+      "id": "authority-link",
+      "pass": true
+    },
+    {
+      "id": "activation-link",
+      "pass": true
+    },
+    {
+      "id": "eight-identities",
+      "pass": true
+    },
+    {
+      "id": "actual-head-output",
+      "pass": true
+    },
+    {
+      "id": "actual-source-output",
+      "pass": true
+    },
+    {
+      "id": "actual-tree-output",
+      "pass": true
+    },
+    {
+      "id": "seventeen-working-pins",
+      "pass": true
+    },
+    {
+      "id": "metadata-distinct-from-actual",
+      "pass": true
+    },
+    {
+      "id": "fourteen-command-records",
+      "pass": true
+    },
+    {
+      "id": "command-identities",
+      "pass": true
+    },
+    {
+      "id": "all-command-exits-zero",
+      "pass": true
+    },
+    {
+      "id": "twentyeight-no-truncation-flags",
+      "pass": true
+    },
+    {
+      "id": "four-functional-whole-files",
+      "pass": true
+    },
+    {
+      "id": "types-two-original-packages",
+      "pass": true
+    },
+    {
+      "id": "guard-original-command",
+      "pass": true
+    },
+    {
+      "id": "history-unshallowed",
+      "pass": true
+    },
+    {
+      "id": "actual-dev-output",
+      "pass": true
+    },
+    {
+      "id": "actual-merge-base-output",
+      "pass": true
+    },
+    {
+      "id": "guard-base-agrees",
+      "pass": true
+    },
+    {
+      "id": "guard-rule-file-count",
+      "pass": true
+    },
+    {
+      "id": "guard-findings-warn-only",
+      "pass": true
+    },
+    {
+      "id": "guard-errors-approvals-bootstrap",
+      "pass": true
+    },
+    {
+      "id": "functional-four-footers",
+      "pass": true
+    },
+    {
+      "id": "functional-totals-derived",
+      "pass": true
+    },
+    {
+      "id": "outer-footer-distinct",
+      "pass": true
+    },
+    {
+      "id": "all-passed-lines",
+      "pass": true
+    },
+    {
+      "id": "seven-report-family-counts",
+      "pass": true
+    },
+    {
+      "id": "C14-complete",
+      "pass": true
+    },
+    {
+      "id": "C15-complete",
+      "pass": true
+    },
+    {
+      "id": "C16-C17-complete",
+      "pass": true
+    },
+    {
+      "id": "C19-payload",
+      "pass": true
+    },
+    {
+      "id": "C20-payload-fourteen",
+      "pass": true
+    },
+    {
+      "id": "six-prior-payloads-literal",
+      "pass": true
+    },
+    {
+      "id": "C20-report-byte-model",
+      "pass": true
+    },
+    {
+      "id": "runtime-observed",
+      "pass": true
+    },
+    {
+      "id": "omni-nonce-correlated",
+      "pass": true
+    },
+    {
+      "id": "omni-positive-final",
+      "pass": true
+    },
+    {
+      "id": "strict-production-environment",
+      "pass": true
+    },
+    {
+      "id": "main-complete-footer",
+      "pass": true
+    },
+    {
+      "id": "cleanup-command-footer",
+      "pass": true
+    },
+    {
+      "id": "root-observed-ref-absence",
+      "pass": true
+    },
+    {
+      "id": "root-observed-artifacts-zero",
+      "pass": true
+    }
+  ],
+  "checkCount": 50,
+  "additionalDocumentaryChecks": [
+    {
+      "id": "root-intake-current-tuple",
+      "pass": true
+    },
+    {
+      "id": "root-intake-observed-totals",
+      "pass": true
+    },
+    {
+      "id": "root-intake-limited-status",
+      "pass": true
+    },
+    {
+      "id": "report-union-exact",
+      "pass": true
+    },
+    {
+      "id": "guard-exact",
+      "pass": true
+    }
+  ],
+  "additionalDocumentaryCheckCount": 5,
+  "originalPreservation": {
+    "rootReportedOriginalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "rootReportedPreservedBeforeInterpretation": true,
+    "peerOriginalGets": 0,
+    "peerZipGets": 0,
+    "main": {
+      "lf": 900,
+      "bomByteOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    }
+  },
+  "limits": [
+    "The four functional footers are 7/843, 5/757, 3/503 and 1/147; the separate outer8/38 footer occurs before the last child header/footer. Totals are derived from actual footers, not declaration or expect-site counts.",
+    "All seven emitted report JSON bodies are complete; the first six report lines exactly match the preserved C19 focal intake. This is receipt equality, not an additional execution.",
+    "C20 fourteen report labels describe internal consumer invocations in one test; they are not fourteen tests or Omni child spawns.",
+    "The custom post-materialization authorizer probes are C08 evidence. This focal does not establish native projection admission, production performance, installed Analytics, final C613, Migration/Release or go-live.",
+    "Bun reports version1.3.14 and abbreviated revision0d9b296af; no unprinted full revision is transferred.",
+    "Branch absence and zero artifacts come from authenticated root metadata. DELETE with || true alone does not prove absence, and reviewer issued no new branch or Actions metadata query.",
+    "Warnings are40 guard findings, all warn severity; the Actions runner additionally printed a Node20 deprecation warning. Neither is silently converted into an error or waiver.",
+    "The readbacks authenticate the exact decoded original strings preserved by root, including BOM and LF. No original or ZIP endpoint was revisited."
+  ],
+  "effects": {
+    "gitBlobCreates": 1,
+    "gitReadback": true,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "repositoryExecutions": 0,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "productQualification": false,
+  "productionAuthorized": false
+}

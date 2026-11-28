@@ -1,0 +1,174 @@
+{
+  "schema": "sf613-c20-scenario-lookup-bounds-v1",
+  "status": "STATIC_PROPOSAL_CI_AND_ANALYTICS_PENDING",
+  "scope": {
+    "baseSource": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "baseTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "sourceObject": null,
+    "sourceTree": null,
+    "changedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "operation": "M",
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "operation": "A",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      }
+    ],
+    "productFiles": 1,
+    "newTestFiles": 1,
+    "sourceDelta": "1A1M",
+    "providerOrNativeChanges": 0,
+    "diagnosticOverlays": 0
+  },
+  "preservedProtocol": {
+    "factory": "selectSfScenarioCandidates",
+    "provider": {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "git": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+      "bytes": 67334,
+      "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+      "lf": 891,
+      "endsWithLF": true
+    },
+    "predicateLiteralCharacters": 510,
+    "lookupAwaitSites": 7,
+    "checks": "All source statements other than import and third argument of state.read remain literal; catch, statuses, both cases.read and both readHistoricalScenario calls, final revalidation and aborted guard remain."
+  },
+  "readSet": {
+    "scope": "Complete decisionResults object graph; filter only after structuredClone, including unmatched envelopes and aliases/cycles reachable from that graph.",
+    "eligibility": "Existing factory requires non-proxy frozen context and frozen own-data binding strings; existing scenarioResultMap requires own enumerable data map, plain/null prototype, non-array/non-proxy state/map.",
+    "fallback": "Unregistered/opaque/wrapped callback or rejected context/map retains full C08 state clone and original functional predicate.",
+    "callbackIdentity": "Factory constructs a new named read callback. Identity/name/toString of the old inline arrow is not preserved or asserted. Custom port observations outside callback invocation behavior are not given an invented equivalence promise.",
+    "lateCapture": "Request and context references remain captured, not caseRef.id snapshots; digest primitives retain their original earlier computation point.",
+    "excludedEffects": "Effects and failures confined to unrelated namespaces are deliberately outside this declared read-set. The proposal does not promise full-state clone effects.",
+    "unchangedFirstSnapshot": "productReadSelection excludes scenarioReads from cases/case-identities native narrowing. This change does not avoid initial/native snapshot materialization or reduce the decisionResults graph.",
+    "authority": "Existing first authorize, selected clone/read, aborted check and second authorize/sameAuthority remain; no authority or result cache.",
+    "forbiddenClaims": [
+      "No alias-preservation assertion across separately selected namespaces",
+      "No pre-filtered result map",
+      "No clone elision",
+      "No replay/revalidation/scheduling removal",
+      "No change to resolveCase or full-state sample"
+    ]
+  },
+  "functionalSelection": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+    "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+    "wholeFile": true,
+    "filter": null,
+    "newBunDeclarations": 1,
+    "internalConsumerInvocations": 14,
+    "expectedReportFamilies": [
+      "SF_C20_SCENARIO_LOOKUP"
+    ],
+    "expectedReportCount": 1,
+    "staticExpectSites": 45,
+    "staticAwaitSites": 16,
+    "actualAssertions": null,
+    "actualDurationMs": null,
+    "actualResult": null,
+    "title": "Scenario lookup selects the complete candidate graph and retains late reads, fallback and fresh authority",
+    "earlierTestsUnmodified": true,
+    "otherFunctionalSelection": "Not chosen by this source package; future root-approved focal may select existing gates without treating historical results as current."
+  },
+  "testBoundaries": {
+    "cooperativeMs": 18000,
+    "bunMs": 20000,
+    "nominalDifferenceMs": 2000,
+    "cooperativeMechanism": "Existing compositionTestDeadline; checks at each consumer run and each controlled authorize; signal passed through Request to LocalStore; close releases owned UI context, store and directory.",
+    "preemptionLimit": "Cooperative deadline is not preemption of synchronous work or proof of fixture/cleanup wall time; Bun outer deadline is a separate gate.",
+    "subprocessesAdded": 0,
+    "globalIntrinsicsMutated": 0,
+    "newSleepsOrRetries": 0,
+    "networkDependency": "No application/network request is sent; Request objects are control inputs.",
+    "processMs": null,
+    "parentMs": null,
+    "wrapperOrWorkflowModified": false,
+    "resources": "One temporary directory, one real LocalStore, one seeded graph; all fourteen consumer calls are sequential, read-only/commit-false C08 observations. Graph hooks/cycles are injected into each disposable snapshot after native materialization.",
+    "report": {
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "schema": "sf-c20-scenario-lookup-v1",
+      "expectedChecks": [
+        "consumer-selects-complete-detached-results",
+        "opaque-wrapper-keeps-full-state",
+        "mutable-context-uses-opaque-fallback",
+        "proxy-context-uses-opaque-fallback",
+        "map-prototype-uses-opaque-fallback",
+        "request-key-remains-late-after-admission",
+        "mutable-binding-is-observed-after-admission",
+        "admission-denied-does-not-disclose",
+        "egress-revoked-does-not-disclose",
+        "abort-does-not-disclose",
+        "unmatched-getter-selected",
+        "unmatched-getter-opaque",
+        "unmatched-function-selected",
+        "unmatched-function-opaque"
+      ],
+      "modelBytesIncludingPrefixAndLF": 564,
+      "modelSha256": "4a1128cbf4c9ba67274aee658012244e8cebab175d7dd559a4bea519322dd913",
+      "boundedByConstruction": true,
+      "emission": "Exactly one own report, after every assertion, if the test reaches success. No report is fabricated on timeout or failure.",
+      "notAJobStdoutCap": true
+    }
+  },
+  "coverage": [
+    {
+      "group": "Selected route and opaque wrapper",
+      "runs": 2,
+      "oracle": "Actual consumer callback passed intact versus wrapped into existing full-state path; outside getter zero versus one, unmatched getter once, two authorizations, newest selection, aliases/cycle and detached shared graph."
+    },
+    {
+      "group": "Conservative fallback",
+      "runs": 3,
+      "oracle": "Mutable context, proxy context and nonplain map all observe outside getter; proxy registration does not invoke descriptor traps and binding reads follow first authorize."
+    },
+    {
+      "group": "Late request",
+      "runs": 1,
+      "oracle": "Before C08 exactly original first encodeCaseRef ID access; first authorize changes referenced request key, actual filter and final cases/history reads observe the later key."
+    },
+    {
+      "group": "Late mutable binding",
+      "runs": 1,
+      "oracle": "Binding accessRevision changes after admission; opaque callback returns undefined with fresh second authorization and no historical-result disclosure."
+    },
+    {
+      "group": "Fresh authority and cancellation",
+      "runs": 3,
+      "oracle": "First authorization denied, second revoked, or signal aborted during reachable cloning; no history read or disclosed candidate value."
+    },
+    {
+      "group": "Unmatched reachable failures",
+      "runs": 4,
+      "oracle": "Getter sentinel and uncloneable function on nonmatching envelope fail in selected and wrapped paths. The failed field is not reachable from matched envelopes through the shared graph, so filtering before clone would lose the oracle; one C08 read/one authorization/one failure, no replay."
+    }
+  ],
+  "qualificationLimits": [
+    "Lookup, LocalStore, C08 and UI context factory are real; cases/history/host dependencies are controlled.",
+    "authorize injection happens after the native snapshot exists: this proves C08 selection/fallback behavior, not native projection admission or physical clone savings.",
+    "This is one finite consumer control, not installed end-to-end acceptance, a new generic selector matrix, or a measured performance result.",
+    "No existing suite or caller deadline is increased; no source, CI snapshot, commit, ref or run exists for C20 in this proposal.",
+    "Execution/activation remains gated by root decision after E14 artifact reception and independent source/test review."
+  ],
+  "staticChecks": {
+    "reportModelBytes": 564,
+    "productForwardInverse": true,
+    "fullDiffForwardInverse": true,
+    "forbiddenAnyType": false,
+    "doubleCast": false,
+    "globalThisMutation": false,
+    "providerHashUnchanged": true
+  }
+}

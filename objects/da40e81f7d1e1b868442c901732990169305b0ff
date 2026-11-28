@@ -1,0 +1,638 @@
+{
+  "schema": "sf613-evidence-r7-independent-documentary-review-v1",
+  "status": "ACK_DOCUMENTARY_PROPOSAL_NO_FINDING_PENDING_ROOT_ACTUAL_TREE_AND_PUBLICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/teams_product",
+  "atUtc": "2026-11-28 05:28:41 UTC",
+  "authorization": "Root authorized exactly one Git JSON review blob and literal readback; no trees, commits, refs, runs, original log or ZIP acquisition.",
+  "package": {
+    "catalog": {
+      "bytes": 130823,
+      "sha256": "7c39d4ac5f0d491c435637a797e7062f49e2b653e737f86dff1000b065c1d186",
+      "gitBlob": "85f7f805e9d4fd0f785dbb3ed55281e1709728ec"
+    },
+    "index": {
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298"
+    },
+    "readme": {
+      "bytes": 52301,
+      "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+      "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a"
+    },
+    "derivation": {
+      "bytes": 318153,
+      "sha256": "d162014adf99a9a819ab818dd69aed78dd887fd9ada892ffc07dddc102a24300",
+      "gitBlob": "dfcd4cf10f41badec9b12fa37e5d3d4d080e62e3"
+    },
+    "manifest": {
+      "bytes": 23236,
+      "sha256": "9dbe2d5489b9af6a1f377f3bfff0dc74dc924ba38386579d300cd886fea3c44c",
+      "gitBlob": "031e2f510036d68ea1e5e31470a13dc9772c161e"
+    }
+  },
+  "base": {
+    "commit": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5",
+    "tree": "768afcf3f8722bf0e3a33f2b21ea803917b18dc4",
+    "objectsTree": "4c417fe3f2a274a7c9c6d8a0897bbc811a15219c",
+    "index": {
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77"
+    },
+    "readme": {
+      "bytes": 44360,
+      "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+      "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5"
+    }
+  },
+  "review": {
+    "scope": "Independent finite documentary and structural review; no repeat of 119 body fetches or 15 stream recompositions already performed by author/root. Their checks are not counted here.",
+    "counts": {
+      "catalog": 17,
+      "preservation": 33,
+      "semantics": 18
+    },
+    "total": 68,
+    "passed": 68,
+    "failed": 0,
+    "checks": [
+      {
+        "number": 1,
+        "id": "catalog-authenticated",
+        "pass": true
+      },
+      {
+        "number": 2,
+        "id": "unique-135",
+        "pass": true
+      },
+      {
+        "number": 3,
+        "id": "partition-119-new-16-reused",
+        "pass": true
+      },
+      {
+        "number": 4,
+        "id": "new-bytes",
+        "pass": true
+      },
+      {
+        "number": 5,
+        "id": "reused-metadata-literal",
+        "pass": true
+      },
+      {
+        "number": 6,
+        "id": "membership-total",
+        "pass": true
+      },
+      {
+        "number": 7,
+        "id": "group-counts",
+        "pass": true
+      },
+      {
+        "number": 8,
+        "id": "stream-part-count",
+        "pass": true
+      },
+      {
+        "number": 9,
+        "id": "stream-part-locators-closed",
+        "pass": true
+      },
+      {
+        "number": 10,
+        "id": "stream-byte-ranges-contiguous",
+        "pass": true
+      },
+      {
+        "number": 11,
+        "id": "calculated-wholes-not-blobs",
+        "pass": true
+      },
+      {
+        "number": 12,
+        "id": "superseded-real-objects-listed",
+        "pass": true
+      },
+      {
+        "number": 13,
+        "id": "superseded-not-accepted-streamparts",
+        "pass": true
+      },
+      {
+        "number": 14,
+        "id": "three-commit-parents-separate",
+        "pass": true
+      },
+      {
+        "number": 15,
+        "id": "C20-excluded",
+        "pass": true
+      },
+      {
+        "number": 16,
+        "id": "catalog-not-selfreferential",
+        "pass": true
+      },
+      {
+        "number": 17,
+        "id": "projected-counts",
+        "pass": true
+      },
+      {
+        "number": 18,
+        "id": "R6-object-order-and-all-metadata",
+        "pass": true
+      },
+      {
+        "number": 19,
+        "id": "R6-membership-ordered-prefixes",
+        "pass": true
+      },
+      {
+        "number": 20,
+        "id": "only-sixteen-old-arrays-extended-by-seventeen-memberships",
+        "pass": true
+      },
+      {
+        "number": 21,
+        "id": "R6-groups-literal-prefix",
+        "pass": true
+      },
+      {
+        "number": 22,
+        "id": "R6-streams-literal-prefix",
+        "pass": true
+      },
+      {
+        "number": 23,
+        "id": "R6-derivedEvidence-literal-values",
+        "pass": true
+      },
+      {
+        "number": 24,
+        "id": "R6-excluded-literal-values",
+        "pass": true
+      },
+      {
+        "number": 25,
+        "id": "R6-documentarySnapshots-literal-values",
+        "pass": true
+      },
+      {
+        "number": 26,
+        "id": "R6-currentProduct-literal",
+        "pass": true
+      },
+      {
+        "number": 27,
+        "id": "R6-currentFinalQualification-literal",
+        "pass": true
+      },
+      {
+        "number": 28,
+        "id": "R6-proofStates-literal-values",
+        "pass": true
+      },
+      {
+        "number": 29,
+        "id": "unique-sha-and-path",
+        "pass": true
+      },
+      {
+        "number": 30,
+        "id": "all-objects-blob100644-sha-path",
+        "pass": true
+      },
+      {
+        "number": 31,
+        "id": "catalog-metadata-in-index",
+        "pass": true
+      },
+      {
+        "number": 32,
+        "id": "catalog-membership-roles-order-and-provenance",
+        "pass": true
+      },
+      {
+        "number": 33,
+        "id": "new-object-order-exact-catalog-plus-actual-catalog",
+        "pass": true
+      },
+      {
+        "number": 34,
+        "id": "actual-catalog-object-metadata-and-single-membership",
+        "pass": true
+      },
+      {
+        "number": 35,
+        "id": "new-groups-have-exact-resolving-memberships",
+        "pass": true
+      },
+      {
+        "number": 36,
+        "id": "new-group-items-cover-every-new-membership-once",
+        "pass": true
+      },
+      {
+        "number": 37,
+        "id": "new-streams-exact-catalog-plus-input-locator",
+        "pass": true
+      },
+      {
+        "number": 38,
+        "id": "all-stream-parts-resolve-metadata",
+        "pass": true
+      },
+      {
+        "number": 39,
+        "id": "recomputed-final-totals",
+        "pass": true
+      },
+      {
+        "number": 40,
+        "id": "manifest-totals-and-root-file-byte-sum",
+        "pass": true
+      },
+      {
+        "number": 41,
+        "id": "manifest-package-four-locators",
+        "pass": true
+      },
+      {
+        "number": 42,
+        "id": "manifest-base-index-readme",
+        "pass": true
+      },
+      {
+        "number": 43,
+        "id": "manifest-derivation-counts",
+        "pass": true
+      },
+      {
+        "number": 44,
+        "id": "manifest-file-delta",
+        "pass": true
+      },
+      {
+        "number": 45,
+        "id": "planned-parents-not-blob-entries",
+        "pass": true
+      },
+      {
+        "number": 46,
+        "id": "retention-ordered-parents-coherent",
+        "pass": true
+      },
+      {
+        "number": 47,
+        "id": "calculated-wholes-current-self-and-C20-checkpoint-excluded",
+        "pass": true
+      },
+      {
+        "number": 48,
+        "id": "superseded-real-objects-are-not-accepted-stream-parts",
+        "pass": true
+      },
+      {
+        "number": 49,
+        "id": "no-C20-group-or-membership",
+        "pass": true
+      },
+      {
+        "number": 50,
+        "id": "archive-stays-proposal-no-ref-run",
+        "pass": true
+      },
+      {
+        "number": 51,
+        "id": "focalFinal-auth-matches-catalog",
+        "pass": true
+      },
+      {
+        "number": 52,
+        "id": "analyticsFinal-auth-matches-catalog",
+        "pass": true
+      },
+      {
+        "number": 53,
+        "id": "readerFinal-auth-matches-catalog",
+        "pass": true
+      },
+      {
+        "number": 54,
+        "id": "readerTerminal-auth-matches-catalog",
+        "pass": true
+      },
+      {
+        "number": 55,
+        "id": "ordered-parent-objects-authenticate",
+        "pass": true
+      },
+      {
+        "number": 56,
+        "id": "Analytics-direct-source-kept-by-focal-parent",
+        "pass": true
+      },
+      {
+        "number": 57,
+        "id": "focal-actual-functional-and-outer",
+        "pass": true
+      },
+      {
+        "number": 58,
+        "id": "focal-actual-commands-and-flags",
+        "pass": true
+      },
+      {
+        "number": 59,
+        "id": "Analytics-negative-original-waiter",
+        "pass": true
+      },
+      {
+        "number": 60,
+        "id": "Analytics-partial-areas-and-no-new-qualification",
+        "pass": true
+      },
+      {
+        "number": 61,
+        "id": "reader-final-terminal-prefix-only-semantics",
+        "pass": true
+      },
+      {
+        "number": 62,
+        "id": "reader-transport-counts",
+        "pass": true
+      },
+      {
+        "number": 63,
+        "id": "reader-streams-exact-export-metadata-and-roles",
+        "pass": true
+      },
+      {
+        "number": 64,
+        "id": "reader-last-boundary-not-terminal",
+        "pass": true
+      },
+      {
+        "number": 65,
+        "id": "selected-four-CRC-versus-two-exported-original-CRC",
+        "pass": true
+      },
+      {
+        "number": 66,
+        "id": "original-calculated-whole-and-two-parts",
+        "pass": true
+      },
+      {
+        "number": 67,
+        "id": "current-index-scope-coherent",
+        "pass": true
+      },
+      {
+        "number": 68,
+        "id": "archive-does-not-claim-publish-or-new-execution",
+        "pass": true
+      }
+    ],
+    "accounting": "The 176 derivation operations are not counted as 176 additional top-level review checks. Author/root body and stream audits are not counted as this reviewer's checks.",
+    "notRepeated": [
+      "119 new input-body fetches/rehashes performed by the archive author",
+      "Root's 120 new-body rehashes including the actual catalog",
+      "Author/root recomposition of all 15 new streams and 32 part references",
+      "Historical product, control, or original-log intake reviews already closed"
+    ]
+  },
+  "derivation": {
+    "artifact": {
+      "bytes": 318153,
+      "sha256": "d162014adf99a9a819ab818dd69aed78dd887fd9ada892ffc07dddc102a24300",
+      "gitBlob": "dfcd4cf10f41badec9b12fa37e5d3d4d080e62e3"
+    },
+    "operations": 176,
+    "counts": {
+      "replace": 8,
+      "add": 3,
+      "append": 165
+    },
+    "uniquePreconditionsAndPerValueFingerprintsChecked": true,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "forward": {
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298"
+    },
+    "inverse": {
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77"
+    },
+    "readme": {
+      "formula": "new prefix + complete R6 README + suffix",
+      "prefixBytes": 5624,
+      "baseBytes": 44360,
+      "suffixBytes": 2317,
+      "prefixSha256": "1ef6fe1632dd4b20fd66cc284d85a5bd5977eb982afaf6e2d96a48e9f184a642",
+      "suffixSha256": "c8ba808aa3cdc15abd2bc75e98211b595c39a4d2f4f1320e49c1f7b4e0aa9cc4",
+      "base": {
+        "bytes": 44360,
+        "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+        "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5"
+      },
+      "forwardLiteral": true,
+      "inverseLiteral": true,
+      "baseOccursExactlyOnce": true,
+      "fragmentHashesAreNotGitObjectLocators": true
+    }
+  },
+  "preservation": {
+    "oldObjectsMetadataAndOrder": 607,
+    "oldMembershipOrderedPrefixes": 683,
+    "oldGroupsLiteral": 40,
+    "oldStreamsLiteral": 54,
+    "oldPartReferencesLiteral": 199,
+    "inheritedObjectsWithAppendedMemberships": 16,
+    "membershipsAppendedToInheritedObjects": 17,
+    "preexistingDerivedEvidenceExclusionsAndDocumentarySnapshotsLiteral": true,
+    "currentProductS19LiteralToR6": true,
+    "currentFinalQualificationD28LiteralToR6": true,
+    "fourFinalBindingsRemainUnbound": true,
+    "newObjects": 120,
+    "newObjectBytes": 9756382,
+    "newMemberships": 142,
+    "totals": {
+      "objects": 727,
+      "blobBytes": 73074593,
+      "memberships": 825,
+      "groups": 47,
+      "streams": 69,
+      "partReferences": 231,
+      "ownTreeFiles": 729,
+      "ownTreeLogicalFileBytes": 74143225
+    },
+    "plannedDelta": {
+      "additions": 120,
+      "modifications": 2,
+      "deletions": 0,
+      "modified": [
+        "README.md",
+        "index.json"
+      ]
+    },
+    "paths": "Every listed body is type blob, mode 100644, at objects/<exact SHA>; root tree is proposed to contain only README.md, index.json, objects."
+  },
+  "retention": {
+    "orderedParents": [
+      {
+        "order": 1,
+        "sha": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5",
+        "tree": "768afcf3f8722bf0e3a33f2b21ea803917b18dc4",
+        "role": "published R6"
+      },
+      {
+        "order": 2,
+        "sha": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "tree": "934f7bab75f8ee4638cf9042db94dd9b954e1fd3",
+        "soleParent": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "role": "executed E14 focal, retaining the same source used directly by Analytics"
+      },
+      {
+        "order": 3,
+        "sha": "64af705904c2ca5b61a6837560f005718ee122d3",
+        "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+        "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "role": "executed E14 reader"
+      }
+    ],
+    "immutableCommitMetadataReadIndependently": true,
+    "focalParentRetainsDirectAnalyticsSource": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "readerSoleParentCleanS19": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "noCommitOrTreePromotedToBlobEntry": true,
+    "expectedRef": "refs/heads/sf613-evidence",
+    "expectedOld": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5",
+    "actualR7TreeNotYetAuditedInThisReceipt": true,
+    "rootFreshLeaseAndNonforcePublicationRequired": true
+  },
+  "documentaryEvidence": {
+    "focalFinal": {
+      "bytes": 50998,
+      "sha256": "47a9465fe7945b884619eaccb64adc472a142ffbff4a9418557156899ec0d080",
+      "gitBlob": "7080a6a7dd0780c56ecaaf2883adb7049cd88ed9"
+    },
+    "analyticsFinal": {
+      "bytes": 26747,
+      "sha256": "ae0efeac400f71fc21df5e89f0e67a50ffbc1375a583c260eb2ee37337922fad",
+      "gitBlob": "2a15d6b33dba361af8f4f1b30084cacc61521788"
+    },
+    "readerFinal": {
+      "bytes": 16558,
+      "sha256": "19536f435e16977dfa3715d2333b8864a763f160b4947bdfea78cb830c835bde",
+      "gitBlob": "08aa33dd56b067e01cf043cece9855b4b8446721"
+    },
+    "readerTerminal": {
+      "bytes": 2013,
+      "sha256": "b16c254b1a5c68b6a0ce1d76b75111fff42bca88b6c0a1d1bfe251fbf73c9966",
+      "gitBlob": "0f14b3cde6d6fab5c4ff6851cb4fd95df26da879"
+    },
+    "scope": "Authenticated and compared final receipt/terminal data with the package. This is not a new intake or a rerun of the reader.",
+    "focal": {
+      "run": 46102111383,
+      "attempt": 1,
+      "functional": 16,
+      "functionalAssertions": 2146,
+      "outer": 8,
+      "outerAssertions": 46,
+      "commands": 14,
+      "truncationFlagsFalse": 28,
+      "qualification": "FOCAL_PASS_ONLY"
+    },
+    "analytics": {
+      "run": 46103050850,
+      "attempt": 1,
+      "failed": 1,
+      "passed": 1,
+      "previewWaiterMs": 60000,
+      "spec": "72:32",
+      "UI42PartialCaptures": 6,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "BI": "passed in that run",
+      "newAcceptedAreas": 0
+    },
+    "reader": {
+      "run": 46108929460,
+      "attempt": 1,
+      "files": 6,
+      "uniqueBodies": 5,
+      "chunks": 11,
+      "payloadBytes": 156394,
+      "records": 21,
+      "eventBytes": 11961,
+      "sequence": [
+        1,
+        21
+      ],
+      "partialTailBytes": 0,
+      "fileRuntimeMainLiteral": true,
+      "requestBoundaryObserved": false,
+      "coverageComplete": false,
+      "pending": 2,
+      "evidenceIssues": 0,
+      "lastObserved": {
+        "point": "analysis-persist",
+        "sequence": 21,
+        "elapsedTenthMs": 349739
+      },
+      "rawRuntimeAndSelectionReportsExported": false
+    },
+    "crcScope": {
+      "zipEntries": 150,
+      "selectedContentPaths": 4,
+      "unselectedMetadataOnly": 146,
+      "selectedCrcVerifiedByReviewedReader": 4,
+      "exportedOriginalCrcRecomputedByRootAndClose": 2,
+      "reviewerRecomputedCrcInThisDocumentaryReview": 0
+    }
+  },
+  "exclusions": {
+    "calculatedOnlyWholes": [
+      "cf0ce74a5c480b10d494e3dcbe3bb71239778c91",
+      "b6f0be9e13bf357be427804fa5dc218e677c7600"
+    ],
+    "mixedCheckpoint": "c03c7a01e68884c046939696fc3a39d8afcba697",
+    "C20": true,
+    "zipAndAuditZipBodies": true,
+    "unexportedRawReports": true,
+    "currentProposalIndexReadmeDerivationManifestSelfEntries": true,
+    "supersededRealDrafts": "Retained with explicit historical status; none is a part of the accepted new streams.",
+    "catalog": "Actual created catalog is included once; no future self-hash is inferred.",
+    "absenceScope": "Exclusion is finite-corpus scope, not proof that a SHA does not exist anywhere in Git."
+  },
+  "limits": [
+    "Reader transport and literal prefix consistency do not establish Request closure or complete coverage.",
+    "The last received persistence entry does not establish server state at the browser's 60-second timeout, lock/SQL causality, or a safe product change.",
+    "Native monotonic, launcher, Playwright and Actions clocks are not reconciled; overlapping/inclusive durations are not summed as exclusive costs.",
+    "Focal PASS and reader transport PASS do not repair the original negative Analytics run.",
+    "Historical 12/15 qualification and zero new accepted areas remain unchanged; no final C613, D28 execution, UI6, release, tar, production or reservations are accepted.",
+    "This review does not establish transitive closure of every embedded historical SHA or a complete artifact archive."
+  ],
+  "effects": {
+    "repositoryCodeExecutions": 0,
+    "originalActionsGets": 0,
+    "artifactZipGets": 0,
+    "auditZipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "comments": 0,
+    "pullRequests": 0,
+    "authorizedReviewBlobs": 1
+  },
+  "persistenceProtocol": "Create this JSON blob once, fetch the returned blob, and compare its entire UTF-8 content, Git blob hash, byte count and SHA256 literally. The resulting locator/readback outcome is reported separately."
+}

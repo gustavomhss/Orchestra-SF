@@ -1,0 +1,200 @@
+{
+  "schema": "sf613-c20-analytics-root-intake-v1",
+  "status": "ROOT_INTAKE_NEGATIVE_PENDING_INDEPENDENT_RECEIPT",
+  "at": {
+    "current_time": "2026-11-28 06:06:31 UTC"
+  },
+  "context": {
+    "gitBlob": "aec31c26492817c63075fb86714534fcfd38a239",
+    "bytes": 26384,
+    "sha256": "3660a1421957e514ea3ef186ef29b9185f076e4a84515f50345c3ceb20277e86",
+    "lf": 581,
+    "endsWithLF": true
+  },
+  "runBinding": {
+    "gitBlob": "9a883649c7ee75c732bf6187f74cd3f4a5943ea9",
+    "bytes": 3554,
+    "sha256": "2af78bae0c5ff31181c9b41a887d0a14e29b841530d6b38cd24eb9472c3b5acc",
+    "lf": 103,
+    "endsWithLF": true
+  },
+  "extraction": {
+    "gitBlob": "6fb900709324b30feeb3450357ad613e04b856c4",
+    "bytes": 61497,
+    "sha256": "cc17058384306b5632b52529d5f06dada9c91b8ab12192d805143d5752e50a31",
+    "lf": 2206,
+    "endsWithLF": true
+  },
+  "checks": [
+    {
+      "name": "run46113463330/1 failure at effective4e1d snapshot",
+      "pass": true
+    },
+    {
+      "name": "exacttwojobs mainfailure cleanuppass",
+      "pass": true
+    },
+    {
+      "name": "originalsclosed oneGETeach",
+      "pass": true
+    },
+    {
+      "name": "mainoriginalcompletepartsandliteralrecomposition",
+      "pass": true
+    },
+    {
+      "name": "cleanuporiginalcompletepartsandliteralrecomposition",
+      "pass": true
+    },
+    {
+      "name": "actualcheckoutmatches",
+      "pass": true
+    },
+    {
+      "name": "twooriginaltestsoneworker",
+      "pass": true
+    },
+    {
+      "name": "zeroRetriesoneRepeat",
+      "pass": true
+    },
+    {
+      "name": "twofailedfooterandexits1",
+      "pass": true
+    },
+    {
+      "name": "preview60000msoriginalwaiterat72",
+      "pass": true
+    },
+    {
+      "name": "34sourcemarkers",
+      "pass": true
+    },
+    {
+      "name": "25capturemarkers",
+      "pass": true
+    },
+    {
+      "name": "6diagnosticmarkers",
+      "pass": true
+    },
+    {
+      "name": "twohistoryoriginalrequestsboth200",
+      "pass": true
+    },
+    {
+      "name": "seq3previewenteredwithoutterminalmarker",
+      "pass": true
+    },
+    {
+      "name": "UI42fourlisttwoconfigure",
+      "pass": true
+    },
+    {
+      "name": "UI43UI44unreached",
+      "pass": true
+    },
+    {
+      "name": "twocontexts200exactfiveresources",
+      "pass": true
+    },
+    {
+      "name": "noscopemarker",
+      "pass": true
+    },
+    {
+      "name": "twodistincttestownedinstallations",
+      "pass": true
+    },
+    {
+      "name": "fourownerrecordsandeight200",
+      "pass": true
+    },
+    {
+      "name": "fourerrorarraypairsempty",
+      "pass": true
+    },
+    {
+      "name": "BI01readback36rows14numeric22missing",
+      "pass": true
+    },
+    {
+      "name": "twooriginalfinancialsources200",
+      "pass": true
+    },
+    {
+      "name": "BInineteenpartialcaptures",
+      "pass": true
+    },
+    {
+      "name": "BI06twoERR_ABORTEDmarkersnocompletedreadback",
+      "pass": true
+    },
+    {
+      "name": "actualBI611and610stack",
+      "pass": true
+    },
+    {
+      "name": "oneartifactexactrunhead",
+      "pass": true
+    },
+    {
+      "name": "artifactuploadmetadatadigestmatch",
+      "pass": true
+    },
+    {
+      "name": "ninetyoneuploadfileszeroZIP",
+      "pass": true
+    },
+    {
+      "name": "actualsnapshotrefabsent",
+      "pass": true
+    },
+    {
+      "name": "noobservedoldA20runatterminalcut",
+      "pass": true
+    },
+    {
+      "name": "originalA20exactrequestonly",
+      "pass": true
+    },
+    {
+      "name": "recoveryidenticaltreeparentA20",
+      "pass": true
+    }
+  ],
+  "checkCount": 34,
+  "failedChecks": 0,
+  "recovery": {
+    "checkpoint": {
+      "gitBlob": "8b011095695974a619f29f38a871eab3b4263b54",
+      "bytes": 86608,
+      "sha256": "7dece1a13590287778c25be9f427e45a4570ec2c610ac5f1a7be4b8d0503c826",
+      "lf": 1419,
+      "endsWithLF": true
+    },
+    "recomposedOnlyFromActualGitParts": true,
+    "originalsClosed": {
+      "at": {
+        "current_time": "2026-11-28 05:56:05 UTC"
+      },
+      "mainGets": 1,
+      "cleanupGets": 1,
+      "source": "full decoded originals, actual Git parts and literal readback/recomposition",
+      "reacquisitionAllowed": false
+    },
+    "interruptedDraftHasNoKnownCreatedObjectOrAuthority": true
+  },
+  "qualification": {
+    "historicalAccepted": 12,
+    "total": 15,
+    "newAccepted": 0,
+    "installedAcceptance": false
+  },
+  "productionAuthorized": false,
+  "limits": [
+    "BI fields bodyObserved/http/sameNativeRequest are observer-state fields, not proof of absent HTTP or a different request. Product versus acquisition race remains under investigation.",
+    "No exclusive causal or performance inference from this installed failure.",
+    "This intake records the exact C20 effective snapshot; it does not qualify any future integrated candidate."
+  ]
+}

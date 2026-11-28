@@ -1,0 +1,402 @@
+{
+  "schema": "sf613-c20-focal-derivation-v1",
+  "status": "UNBOUND_STATIC_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "git": "1ea31adde022e3bf1fd54075da14be9e1210f75e",
+    "bytes": 11888,
+    "sha256": "67501ff0a4d30c587b9c61bac8cb65416201ed84f5474c28a57a230abecaacaa",
+    "lf": 182,
+    "endsWithLF": true
+  },
+  "postimage": {
+    "git": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+    "bytes": 12892,
+    "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "operations": [
+    {
+      "label": "future C20 source sentinel",
+      "before": "const source = \"7393cd010086f4a12d61ae9bb5db13534bd18aa0\"\n",
+      "after": "const source = \"UNBOUND_C20_SOURCE_SHA\"\n",
+      "index": 1,
+      "preimage": {
+        "git": "1ea31adde022e3bf1fd54075da14be9e1210f75e",
+        "bytes": 11888,
+        "sha256": "67501ff0a4d30c587b9c61bac8cb65416201ed84f5474c28a57a230abecaacaa",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "73d5593c702f5cf00cd64c1ba9b847edd5a5593f",
+        "bytes": 11870,
+        "sha256": "6e5bb8d742c3d14d2b402d3a4fa1a4a159908a1f6e5e2677a880d4f1108b9582",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "future C20 tree sentinel",
+      "before": "const sourceTree = \"31954cfe7df07455d8b137f6f4f1e4d94a316fc3\"\n",
+      "after": "const sourceTree = \"UNBOUND_C20_SOURCE_TREE\"\n",
+      "index": 2,
+      "preimage": {
+        "git": "73d5593c702f5cf00cd64c1ba9b847edd5a5593f",
+        "bytes": 11870,
+        "sha256": "6e5bb8d742c3d14d2b402d3a4fa1a4a159908a1f6e5e2677a880d4f1108b9582",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "5a8991de470a747085b2e33340f098333ef1e9de",
+        "bytes": 11853,
+        "sha256": "c08385755d22f1ac7a3c959621ac636cbb94e40b03af957807ef50f33769128d",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "binding refusal label",
+      "before": "throw new Error(\"C19 source and tree must be bound to reviewed Git objects before execution\")",
+      "after": "throw new Error(\"C20 source and tree must be bound to reviewed Git objects before execution\")",
+      "index": 3,
+      "preimage": {
+        "git": "5a8991de470a747085b2e33340f098333ef1e9de",
+        "bytes": 11853,
+        "sha256": "c08385755d22f1ac7a3c959621ac636cbb94e40b03af957807ef50f33769128d",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "c7dace813f22100593e57ccdadde13c31acc88ce",
+        "bytes": 11853,
+        "sha256": "544c808018236e4c9528d1a7cab027fbb151e7ec64504144e1bde32b537b5a1d",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "verification family",
+      "before": "verification: \"sf613-c19-portfolio-cases-focal\", source, sourceTree,",
+      "after": "verification: \"sf613-c20-scenario-candidates-focal\", source, sourceTree,",
+      "index": 4,
+      "preimage": {
+        "git": "c7dace813f22100593e57ccdadde13c31acc88ce",
+        "bytes": 11853,
+        "sha256": "544c808018236e4c9528d1a7cab027fbb151e7ec64504144e1bde32b537b5a1d",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "41b765df3f3d46b103f5bfad448c5b12256e3615",
+        "bytes": 11857,
+        "sha256": "e7512adbb86097711aaa4821e2225e250953329224d3fa75ada87341282d6bf8",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "G1 C20 metadata",
+      "before": "  process.stdout.write(JSON.stringify({ portfolioCasesManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 15, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"455c02a7a05a6dd3262ae15b184419897366fde4\",\n    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },\n    expectedControlReports: 6, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"explicit complete-cases declarations at portfolio read, inspect and register; original callback bodies, lookup order and mixed reads preserved\",\n    assertions: \"whole-file cases contract, C08 projection and Portfolio consumer controls; effects outside the declared cases graph are excluded by contract; observed test and assertion totals require the actual footers\",\n    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "after": "  process.stdout.write(JSON.stringify({ scenarioCandidatesManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 17, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"7393cd010086f4a12d61ae9bb5db13534bd18aa0\",\n    expectedGroups: 8, expectedCommands: 14, functionalProcessesLaunched: 4,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1 },\n    expectedControlReports: 7, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"existing closed scenario-candidates factory clones the complete decisionResults graph before filtering; original lookup predicate, late request key and guards preserved\",\n    callbackIdentity: \"factory creates a new callback; no identity, name or toString equivalence with the prior inline arrow\",\n    assertions: \"whole-file cases contract, C08 projection, Portfolio and scenario lookup consumers; explicit read-set effects only; observed test and assertion totals require actual footers\",\n    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n    scenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, internalInvocations: 14, nominalSum: 20000, process: 45000, parent: 60000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "index": 5,
+      "preimage": {
+        "git": "41b765df3f3d46b103f5bfad448c5b12256e3615",
+        "bytes": 11857,
+        "sha256": "e7512adbb86097711aaa4821e2225e250953329224d3fa75ada87341282d6bf8",
+        "lf": 182,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "de0f73cab73ce0d7718983d326396e80904e999f",
+        "bytes": 12156,
+        "sha256": "c81c6ddc13f845910d68cc5977af3e4cf96b696b7b58c633665b27269821b7fd",
+        "lf": 184,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "two additional reviewed source pins",
+      "before": "    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"68ae48f9a039180824f5471a1de27c0ca34be088\"],\n",
+      "after": "    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"68ae48f9a039180824f5471a1de27c0ca34be088\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts\",\"c8dd1c26b46ea7c287db80d0ca5746205e45f1ef\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"],\n",
+      "index": 6,
+      "preimage": {
+        "git": "de0f73cab73ce0d7718983d326396e80904e999f",
+        "bytes": 12156,
+        "sha256": "c81c6ddc13f845910d68cc5977af3e4cf96b696b7b58c633665b27269821b7fd",
+        "lf": 184,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "8a593f7b756a0589d5ef21121ac13951875ab681",
+        "bytes": 12417,
+        "sha256": "a999290086baec51f42689e909877bce449ce8c4505e6320b928760fbf742c31",
+        "lf": 186,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "G1 observed pin receipt counts",
+      "before": "    snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,\n    functionalProcessesLaunched: 3, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },\n    expectedControlReports: 6 }) + \"\\n\")\n",
+      "after": "    snapshot, files: observed, expectedGroups: 8, expectedCommands: 14,\n    functionalProcessesLaunched: 4, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1 },\n    expectedControlReports: 7 }) + \"\\n\")\n",
+      "index": 7,
+      "preimage": {
+        "git": "8a593f7b756a0589d5ef21121ac13951875ab681",
+        "bytes": 12417,
+        "sha256": "a999290086baec51f42689e909877bce449ce8c4505e6320b928760fbf742c31",
+        "lf": 186,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "40b7db4467f6b9845446113e514a4ac3f5373c24",
+        "bytes": 12436,
+        "sha256": "56c9b251f0379902a64c9e809834302a1c3d2d3ab13f8401ddc0fb03fbd81dea",
+        "lf": 186,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    },
+    {
+      "label": "append only G8, preserve G7 literal",
+      "before": "checks.live(\"Portfolio selection preserves its cases and preferences read contracts\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Portfolio selection cases and preferences whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"], module, 120_000)\n  expect(output).toContain(\"SF_C19_PORTFOLIO_CASES \")\n}), 180_000)\n",
+      "after": "checks.live(\"Portfolio selection preserves its cases and preferences read contracts\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Portfolio selection cases and preferences whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"], module, 120_000)\n  expect(output).toContain(\"SF_C19_PORTFOLIO_CASES \")\n}), 180_000)\n\nchecks.live(\"Scenario lookup preserves complete candidate reads, fallback and fresh authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Scenario lookup complete candidates whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C20_SCENARIO_LOOKUP \")\n}), 60_000)\n",
+      "index": 8,
+      "preimage": {
+        "git": "40b7db4467f6b9845446113e514a4ac3f5373c24",
+        "bytes": 12436,
+        "sha256": "56c9b251f0379902a64c9e809834302a1c3d2d3ab13f8401ddc0fb03fbd81dea",
+        "lf": 186,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "postimage": {
+        "git": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+        "bytes": 12892,
+        "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+        "lf": 194,
+        "endsWithLF": true,
+        "gitIdentityCalculated": true
+      },
+      "beforeOccurrences": 1,
+      "afterOccurrences": 1
+    }
+  ],
+  "retargetDiff": {
+    "git": "d5db2616c2f9c2d8093b75937decbc5eeab5ed92",
+    "bytes": 7259,
+    "sha256": "182df399063ca889dc668811652e53a080548271d78d7385eca0dbd2e441895b",
+    "lf": 93,
+    "endsWithLF": true,
+    "hunks": 6,
+    "additions": 27,
+    "deletions": 15,
+    "forwardExact": true,
+    "inverseExact": true
+  },
+  "fullSnapshotAdditionDiff": {
+    "git": "8a3330e0ee6620040f84e94c23bdce2dfbd8215b",
+    "bytes": 13843,
+    "sha256": "96d075815608c5cd98ebd16e2cc2942d8d5d461009fdda7877d63375a9fcc38b",
+    "lf": 208,
+    "endsWithLF": true,
+    "hunks": 2,
+    "additions": 195,
+    "deletions": 0,
+    "forwardExact": true,
+    "inverseExact": true,
+    "requestNoFinalLF": true,
+    "paths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-proof-verification.test.ts"
+    ],
+    "sourcePrecondition": "Both overlay paths absent in future S20; root must verify actual source object. They are absent in clean S19."
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false,
+    "reusedLiteral": true
+  },
+  "preserved": {
+    "runCommandLiteral": true,
+    "G2ThroughG7Literal": true,
+    "all13ExistingCommandCallTextsLiteral": true,
+    "commandCallsBefore": [
+      "runCommand(\"fetch source parent\", \"git\", [\n    \"fetch\", \"--no-tags\", \"--depth=2\", \"origin\", process.env.GITHUB_SHA!,\n  ], repository, 60_000)",
+      "runCommand(\"snapshot identity\", \"git\", [\"rev-parse\", \"HEAD\"], repository, 30_000)",
+      "runCommand(\"source identity\", \"git\", [\n    \"show\", \"-s\", \"--format=%H%n%T\", \"HEAD^\",\n  ], repository, 30_000)",
+      "runCommand(\"complete cases read-set contract whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/cases-read-contract.test.ts\"], module, 120_000)",
+      "runCommand(\"C14/C15/C16/C17 snapshot projection and closed case selection\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/c08-snapshot-projection.test.ts\"], module, 300_000)",
+      "runCommand(\"CLI package typecheck\", process.execPath, [\"run\", \"typecheck\"], path.join(repository, \"apps/cli\"), 240_000)",
+      "runCommand(\"Sucafina package typecheck\", process.execPath, [\"run\", \"typecheck\"], module, 240_000)",
+      "runCommand(\"inspect history completeness\", \"git\", [\n    \"rev-parse\", \"--is-shallow-repository\",\n  ], repository, 30_000)",
+      "runCommand(\"fetch current dev and source ancestry\", \"git\", [\n    \"fetch\", \"--no-tags\", ...(shallow.trim() === \"true\" ? [\"--unshallow\"] : []),\n    \"origin\", \"+refs/heads/dev:refs/remotes/origin/dev\", process.env.GITHUB_SHA!,\n  ], repository, 120_000)",
+      "runCommand(\"current dev identity\", \"git\", [\n    \"rev-parse\", \"--verify\", \"refs/remotes/origin/dev^{commit}\",\n  ], repository, 30_000)",
+      "runCommand(\"actual guard merge base\", \"git\", [\n    \"merge-base\", \"HEAD\", \"origin/dev\",\n  ], repository, 30_000)",
+      "runCommand(\"canonical guardrails\", process.execPath, [\n    \"run\", \"check:guards\", \"--base\", \"origin/dev\", \"--json\",\n  ], repository)",
+      "runCommand(\"Portfolio selection cases and preferences whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"], module, 120_000)"
+    ],
+    "commandCallsAfterPrefixSha256": "74c4af9a8572c1bef4a8e635bbaa35588f6bbbc66724c08c3f150f0434442844",
+    "all15ExistingPinTuplesLiteral": true,
+    "oldPins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "git": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "git": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "git": "5fc0028474aa52c148a30c093d39bc9a471f9a24"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "git": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "git": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "git": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "git": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "git": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "git": "5b453e1672aa98616e814ac64900517d1ae4f60a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "git": "39e6da84a3dd815721484affaf8315731ded073b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "git": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "git": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "git": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "git": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      }
+    ],
+    "fetchDepth": 2,
+    "sourceIdentityFormat": "%H%n%T",
+    "sourceIdentityRef": "HEAD^",
+    "noAdditionalAncestryCommand": true,
+    "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+    "G6ActualDevAndMergeBaseUnchanged": true,
+    "flagsAndCapsEngineLiteral": true,
+    "allPriorTimeoutsLiteral": true
+  },
+  "added": {
+    "command": "runCommand(\"Scenario lookup complete candidates whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"], module, 45_000)",
+    "group": "G8",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+      }
+    ],
+    "expectedGroups": 8,
+    "expectedCommands": 14,
+    "expectedFalseTruncationFlags": 28,
+    "expectedSourcePins": 17,
+    "functionalProcesses": 4,
+    "staticDeclarations": 16,
+    "expectedControlReports": 7
+  },
+  "binding": {
+    "sentinels": [
+      {
+        "value": "UNBOUND_C20_SOURCE_SHA",
+        "occurrences": 1
+      },
+      {
+        "value": "UNBOUND_C20_SOURCE_TREE",
+        "occurrences": 1
+      }
+    ],
+    "guardBeforeAnyProcesses": true,
+    "sourceSha": "UNBOUND_C20_SOURCE_SHA",
+    "sourceTree": "UNBOUND_C20_SOURCE_TREE",
+    "boundSizeWithTwo40HexValues": 12927,
+    "actualBoundBlob": null,
+    "sourceObject": null,
+    "focalSnapshot": null
+  },
+  "selfPin": {
+    "executableSelfPinAbsent": true,
+    "reason": "The driver preserves the carrier model: its own content cannot embed and require its own Git content hash without changing that hash. Root verifies wrapper membership/content in the actual D tree; G1 hashes the 17 source leaves only.",
+    "requestNotIncludedAmong17SourcePins": true
+  },
+  "effects": {
+    "newGitBlobsOnly": true,
+    "repositoryCodeExecuted": false,
+    "sourceOrTreeOrCommitOrRefOrRunCreated": false,
+    "originalLogsOrZipAcquired": false
+  },
+  "actualResults": {
+    "tests": null,
+    "assertions": null,
+    "duration": null,
+    "run": null
+  }
+}

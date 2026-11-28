@@ -1,0 +1,296 @@
+{
+  "schema": "sf613-c20-independent-static-review-v1",
+  "status": "STATIC_SOURCE_CONTROL_PACKAGE_ACK",
+  "reviewer": "/root/teams_product",
+  "reviewedAt": "2026-11-28 04:47:28 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "kind": "clean C19 source",
+    "futureSource": null,
+    "futureTree": null,
+    "focalSnapshot": null,
+    "focalTree": null
+  },
+  "pins": {
+    "preimage": {
+      "bytes": 3994,
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "gitBlob": "40c78dee5908cd8af58cc3d58435f3cfb4542045"
+    },
+    "product": {
+      "bytes": 3614,
+      "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+    },
+    "test": {
+      "bytes": 16889,
+      "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+    },
+    "provider": {
+      "bytes": 67334,
+      "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+      "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a"
+    },
+    "ui": {
+      "bytes": 13358,
+      "sha256": "8c2cbd3561d8631dc05351b36ec919dcb9e7e9ae6f0d2e18a1ce0b4a6bb12046",
+      "gitBlob": "4d657ba72e9aa7f0bd63d854e9a7fef8e3d9c8b8"
+    },
+    "deadline": {
+      "bytes": 2313,
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    "manifest": {
+      "bytes": 11676,
+      "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+      "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20"
+    },
+    "bounds": {
+      "bytes": 9356,
+      "sha256": "c12f8ead3a8da07780279cecaa7ee984b3bb6aa5d34e11745eb2aa6d9c5564ef",
+      "gitBlob": "779cf3ff515733d40b85a199b7900f28271f1812"
+    },
+    "derivation": {
+      "bytes": 24334,
+      "sha256": "693e4627cd85130d630f44ee9fd1ca0768ae842ed3f98359d59e58ebbf8e5cf4",
+      "gitBlob": "93ea40e7dcf364582a3316739cac3350d252171e"
+    },
+    "diff": {
+      "bytes": 19846,
+      "sha256": "8205a0b4147d4cf94090dd2554ef9244d43889be4ba8d488e8d39c3931ec5680",
+      "gitBlob": "c80be5b69c74e83cf18986a867f59abafb4b3145"
+    }
+  },
+  "derivation": {
+    "productOperations": 2,
+    "fullDiffHunks": 3,
+    "addedLines": 262,
+    "deletedLines": 1,
+    "delta": "1A1M",
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "predicateLiteralCharacters": 510,
+    "lookupAwaitSites": 7,
+    "allOtherProductBytesLiteral": true,
+    "existingProviderUnchanged": true
+  },
+  "staticDataChecks": {
+    "count": 25,
+    "items": [
+      {
+        "id": "forward-operation-1",
+        "pass": true
+      },
+      {
+        "id": "forward-operation-2",
+        "pass": true
+      },
+      {
+        "id": "inverse-operation-2",
+        "pass": true
+      },
+      {
+        "id": "inverse-operation-1",
+        "pass": true
+      },
+      {
+        "id": "whole-preimage",
+        "pass": true
+      },
+      {
+        "id": "new-test-full-content",
+        "pass": true
+      },
+      {
+        "id": "predicate-exact",
+        "pass": true
+      },
+      {
+        "id": "await-sites-seven",
+        "pass": true
+      },
+      {
+        "id": "full-diff-forward-product",
+        "pass": true
+      },
+      {
+        "id": "full-diff-forward-test",
+        "pass": true
+      },
+      {
+        "id": "full-diff-inverse-product",
+        "pass": true
+      },
+      {
+        "id": "full-diff-inverse-addition",
+        "pass": true
+      },
+      {
+        "id": "manifest-product",
+        "pass": true
+      },
+      {
+        "id": "manifest-test",
+        "pass": true
+      },
+      {
+        "id": "manifest-preimage",
+        "pass": true
+      },
+      {
+        "id": "manifest-derivation",
+        "pass": true
+      },
+      {
+        "id": "manifest-diff",
+        "pass": true
+      },
+      {
+        "id": "manifest-bounds",
+        "pass": true
+      },
+      {
+        "id": "manifest-provider",
+        "pass": true
+      },
+      {
+        "id": "addition-absent-in-parent-directory",
+        "pass": true
+      },
+      {
+        "id": "declarations-one",
+        "pass": true
+      },
+      {
+        "id": "expect-sites-45",
+        "pass": true
+      },
+      {
+        "id": "await-sites-16",
+        "pass": true
+      },
+      {
+        "id": "fourteen-labels",
+        "pass": true
+      },
+      {
+        "id": "report-model",
+        "pass": true
+      }
+    ]
+  },
+  "semanticReview": {
+    "count": 12,
+    "items": [
+      {
+        "id": "closed-factory",
+        "result": "PASS",
+        "statement": "Only the existing selectSfScenarioCandidates import and the state.read callback argument change; complete predicate and short-circuit ordering remain literal."
+      },
+      {
+        "id": "late-capture",
+        "result": "PASS",
+        "statement": "Factory retains request/context references; the original first encodeCaseRef remains the only ID access before state.read in the controlled cases."
+      },
+      {
+        "id": "complete-graph",
+        "result": "PASS",
+        "statement": "Provider clones the complete decisionResults graph before filtering, including unmatched envelopes and graph edges reachable from that namespace."
+      },
+      {
+        "id": "conservative-fallback",
+        "result": "PASS",
+        "statement": "Opaque wrapper, mutable context, proxy context and nonplain map retain the full C08 callback route; registration of proxy context avoids descriptor traps."
+      },
+      {
+        "id": "authority-and-catch",
+        "result": "PASS",
+        "statement": "Existing first/second authorizations, sameAuthority, aborted check and lookup catch remain unchanged. No candidate/history is disclosed by the negative controls."
+      },
+      {
+        "id": "detachment",
+        "result": "PASS",
+        "statement": "Control observes a fresh graph detached from the C08 source and preserves aliases/cycles across matched envelopes; mutation of its clone does not mutate the source."
+      },
+      {
+        "id": "negative-discriminants",
+        "result": "PASS",
+        "statement": "Unmatched getter sentinel and uncloneable function would be bypassed by filtering before clone, and both selected/opaque modes require their real failures without replay."
+      },
+      {
+        "id": "assertion-placement",
+        "result": "PASS",
+        "statement": "Control assertions run after the real lookup, outside its catch; the adapter records and rethrows C08 errors for identity checking."
+      },
+      {
+        "id": "resources-and-deadline",
+        "result": "PASS",
+        "statement": "Owned resources close in reverse order through compositionTestDeadline; expiration and cleanup failures are aggregated after cleanup, rather than silently swallowed."
+      },
+      {
+        "id": "declared-scope",
+        "result": "PASS",
+        "statement": "Post-materialization authorize probes attest the C08 selection boundary only. scenarioReads remains excluded from native cases/case-identities selection."
+      },
+      {
+        "id": "compatibility-limit",
+        "result": "PASS",
+        "statement": "The factory creates a new callback; identity/name/toString and clone effects of excluded namespaces are not asserted equivalent."
+      },
+      {
+        "id": "no-runtime-transfer",
+        "result": "PASS",
+        "statement": "One declaration/fourteen invocations/one report and static sites/budgets are expectations only; no current test result, performance gain or installed qualification is claimed."
+      }
+    ]
+  },
+  "control": {
+    "declarations": 1,
+    "internalSequentialInvocations": 14,
+    "staticExpectSites": 45,
+    "staticAwaitSites": 16,
+    "reportPrefix": "SF_C20_SCENARIO_LOOKUP",
+    "expectedReports": 1,
+    "expectedLabels": 14,
+    "reportModel": {
+      "bytes": 564,
+      "sha256": "4a1128cbf4c9ba67274aee658012244e8cebab175d7dd559a4bea519322dd913",
+      "gitBlob": "d97707a2a5a6f9199161a35931bd0e7fedc93b44"
+    },
+    "cooperativeMs": 18000,
+    "bunMs": 20000,
+    "actualAssertions": null,
+    "actualResult": null,
+    "actualDurationMs": null,
+    "sourceObject": null,
+    "focalSnapshot": null,
+    "run": null
+  },
+  "limits": [
+    "Lookup, LocalStore, C08 and UI context factory are real; cases/history/host and authorization probes are controlled.",
+    "The probe is installed after native snapshot materialization and supplies no native projection, initial snapshot cost or installed performance proof.",
+    "The full decisionResults graph is still cloned before filtering; no batch-clone elision, authority cache or removed revalidation is authorized.",
+    "Effects/failures confined to unrelated namespaces are outside the explicit read-set; global full-state clone equivalence is not claimed.",
+    "No promise is made about the new callback's identity, name or source text as seen by introspective custom ports.",
+    "Static counts and the564-byte report model are not runtime assertion totals or output received from CI.",
+    "This review does not create or qualify a source/focal tree, ref, workflow run or original Analytics result."
+  ],
+  "operationsByReviewer": {
+    "repositoryExecution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "output": "This authorized compact JSON Git blob only."
+  },
+  "conclusion": "No static blocker found in the exact proposed product/control/package. Any source object and future focal/Analytics remain root-only decisions."
+}

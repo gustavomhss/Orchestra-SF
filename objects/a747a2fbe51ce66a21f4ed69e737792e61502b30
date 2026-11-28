@@ -1,0 +1,130 @@
+{
+  "schema": "sf613-c20-focal-object-receipt-v1",
+  "status": "OBJECT_CREATED_NO_REF_NO_RUN_PENDING_FINAL_PEER_AUDIT",
+  "at": {
+    "current_time": "2026-11-28 04:58:50 UTC"
+  },
+  "commit": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+  "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+  "parents": [
+    "2228172b29080b411850ec98a4cdaa66020db5e6"
+  ],
+  "message": "ci(sucafina): qualify the scenario lookup read set",
+  "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+  "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+  "sourceReceipt": {
+    "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+    "bytes": 7142,
+    "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+    "lf": 212,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+    "bytes": 23370,
+    "sha256": "cdaf8e4e8d2a7ad9e155b7b7b1ddc5fe12c7bb97d337f0c636f5231d5d998d85",
+    "lf": 618,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "18106309b4323e73b405da100766d491305ed5df",
+    "bytes": 10134,
+    "sha256": "a284831785d85fedf7d289e0fd6d4b450817e10519ace547c592b2e1ecb3603c",
+    "lf": 335,
+    "endsWithLF": true
+  },
+  "binding": {
+    "gitBlob": "c23311b50fe3aed7212951b6fa4aa3aba31dfad2",
+    "bytes": 7011,
+    "sha256": "5eab807917bdafee1b03d940b36537c9f51adf626aea8de6b3b72bd8ab8c93a9",
+    "lf": 216,
+    "endsWithLF": true
+  },
+  "rootStaticReview": {
+    "gitBlob": "a578f8c1da56a0f70de7e19b92068c666e71c190",
+    "bytes": 23965,
+    "sha256": "bf0dfdc0334280597961ed8ba6177de309f661d3d6319aeb190b76487e824915",
+    "lf": 653,
+    "endsWithLF": true
+  },
+  "wrapper": {
+    "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "bytes": 12927,
+    "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "delta": {
+    "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "after": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+    "complete": true,
+    "pairs": [
+      {
+        "path": "",
+        "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "after": "dceea7764dbc87e11e4d6f2347c1926d556bd22b"
+      },
+      {
+        "path": "apps",
+        "before": "97f6afed0e864fca3fad5302f28098863f0ec75c",
+        "after": "52ba73d7406a524850aaae967454e08440de4f0e"
+      },
+      {
+        "path": "apps/cli",
+        "before": "efeb9bbff12872095eb348700a38b1208df130d8",
+        "after": "cd2ae6e62618a43adc3fffc3e1f061b037234cff"
+      },
+      {
+        "path": "apps/cli/test",
+        "before": "29adf3d3ce3e264321f60112c1d354313c5fa7a9",
+        "after": "647933428fd9a189f6cf23e54d04958d802f2960"
+      }
+    ],
+    "literalSiblings": 124,
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+          "size": 247,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4a7b64a8392138f1b79d386557e48ac4453617f5"
+        }
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sucafina-proof-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+          "size": 12927,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4"
+        }
+      }
+    ]
+  },
+  "readerClosed": {
+    "gitBlob": "08aa33dd56b067e01cf043cece9855b4b8446721",
+    "bytes": 16558,
+    "sha256": "19536f435e16977dfa3715d2333b8864a763f160b4947bdfea78cb830c835bde",
+    "lf": 478,
+    "endsWithLF": true
+  },
+  "refCreated": false,
+  "runCreated": false,
+  "productionAuthorized": false
+}

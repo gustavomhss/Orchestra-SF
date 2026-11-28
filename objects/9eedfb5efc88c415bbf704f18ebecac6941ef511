@@ -1,0 +1,322 @@
+{
+  "schema": "sf613-c20-focal-single-execution-authority-v1",
+  "status": "AUTHORIZED_ONCE_PENDING_ACTIVATION",
+  "at": {
+    "current_time": "2026-11-28 05:02:32 UTC"
+  },
+  "operator": "/root",
+  "basis": "User mandate to complete #613 and go-live evidence through reviewed work in GitHub. This is isolated Linux Actions qualification only; production cutover approval is absent.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "ci-run-sf613c20",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "parent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "receipt": {
+      "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+    "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+    "parents": [
+      "2228172b29080b411850ec98a4cdaa66020db5e6"
+    ],
+    "delta": "2A",
+    "receipt": {
+      "gitBlob": "a747a2fbe51ce66a21f4ed69e737792e61502b30",
+      "bytes": 4175,
+      "sha256": "d5f79ad92a7f929f2689ab9d8cf38e8d07219299c350c62cf2d57ed8d3485d93",
+      "lf": 130,
+      "endsWithLF": true
+    }
+  },
+  "review": {
+    "root": {
+      "gitBlob": "a578f8c1da56a0f70de7e19b92068c666e71c190",
+      "bytes": 23965,
+      "sha256": "bf0dfdc0334280597961ed8ba6177de309f661d3d6319aeb190b76487e824915",
+      "lf": 653,
+      "endsWithLF": true
+    },
+    "independent": {
+      "gitBlob": "a56445a29a2991255fdad3b4c928d87a9ebdc70b",
+      "bytes": 17898,
+      "sha256": "b1c98c0171fd3607ee820667567bb2d305cbf57f3808d8159288d215a095b6e7",
+      "lf": 530,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+      "bytes": 23370,
+      "sha256": "cdaf8e4e8d2a7ad9e155b7b7b1ddc5fe12c7bb97d337f0c636f5231d5d998d85",
+      "lf": 618,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "18106309b4323e73b405da100766d491305ed5df",
+      "bytes": 10134,
+      "sha256": "a284831785d85fedf7d289e0fd6d4b450817e10519ace547c592b2e1ecb3603c",
+      "lf": 335,
+      "endsWithLF": true
+    },
+    "binding": {
+      "gitBlob": "c23311b50fe3aed7212951b6fa4aa3aba31dfad2",
+      "bytes": 7011,
+      "sha256": "5eab807917bdafee1b03d940b36537c9f51adf626aea8de6b3b72bd8ab8c93a9",
+      "lf": 216,
+      "endsWithLF": true
+    },
+    "readerFinal": {
+      "gitBlob": "08aa33dd56b067e01cf043cece9855b4b8446721",
+      "bytes": 16558,
+      "sha256": "19536f435e16977dfa3715d2333b8864a763f160b4947bdfea78cb830c835bde",
+      "lf": 478,
+      "endsWithLF": true
+    }
+  },
+  "payloads": {
+    "wrapper": {
+      "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+      "bytes": 12927,
+      "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+      "lf": 194,
+      "endsWithLF": true
+    },
+    "request": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    }
+  },
+  "selection": {
+    "groups": 8,
+    "commandReceiptsExpected": 14,
+    "truncationFlagsRequiredFalse": 28,
+    "sourceWorkingPins": 17,
+    "functionalProcesses": 4,
+    "declarationCountFromFiles": 16,
+    "controlReportsExpected": 7,
+    "files": [
+      {
+        "group": "G2",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "git": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+        "declarations": 7,
+        "reports": 0,
+        "processMs": 120000,
+        "parentMs": 180000,
+        "change": "Literal C19 selection and source leaf"
+      },
+      {
+        "group": "G3",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "declarations": 5,
+        "reports": 5,
+        "processMs": 300000,
+        "parentMs": 360000,
+        "change": "Literal C19 selection and source leaf, including 31 C16 outcomes and nine nested C17 identityProjection cases"
+      },
+      {
+        "group": "G7",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "git": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "declarations": 3,
+        "reports": 1,
+        "processMs": 120000,
+        "parentMs": 180000,
+        "change": "Literal C19 selection and source leaf"
+      },
+      {
+        "group": "G8",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "declarations": 1,
+        "reports": 1,
+        "processMs": 45000,
+        "parentMs": 60000,
+        "bunMs": 20000,
+        "cooperativeMs": 18000,
+        "internalConsumerInvocations": 14,
+        "change": "One new whole-file command; existing test deadlines are not changed"
+      }
+    ],
+    "reportMap": [
+      {
+        "group": "G2",
+        "prefix": null,
+        "expected": 0
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "expected": 2
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "expected": 2
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C16_SELECTION_CONTROL",
+        "expected": 1,
+        "preservedC16Outcomes": 31,
+        "identityProjectionCases": 9
+      },
+      {
+        "group": "G7",
+        "prefix": "SF_C19_PORTFOLIO_CASES",
+        "expected": 1
+      },
+      {
+        "group": "G8",
+        "prefix": "SF_C20_SCENARIO_LOOKUP",
+        "expected": 1,
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ],
+        "modelBytesWithPrefixAndLF": 564
+      }
+    ],
+    "C20InternalInvocationsAreNotExtraTestsOrSubprocesses": true,
+    "assertionTotal": null,
+    "observedFunctionalTotal": null,
+    "observedReportTotal": null,
+    "actualDurations": null,
+    "countScope": "Static selected declarations and own control-report emissions only. Actual PASS/fail/assertions require future complete command output and footers."
+  },
+  "budgets": {
+    "currentBounds": {
+      "git": "18106309b4323e73b405da100766d491305ed5df",
+      "bytes": 10134,
+      "sha256": "a284831785d85fedf7d289e0fd6d4b450817e10519ace547c592b2e1ecb3603c",
+      "lf": 335,
+      "endsWithLF": true
+    },
+    "commandBudgetSumMs": 1575000,
+    "parentBudgetSumMs": 2160000,
+    "mainJobTimeoutMs": 2700000,
+    "nominalSharedOverheadMs": 540000,
+    "nominalSharedOverheadGuaranteed": false,
+    "inherited13CommandBudgetsSumMs": 1530000,
+    "inherited7ParentBudgetsSumMs": 2100000,
+    "newGroupProcessMs": 45000,
+    "newGroupParentMs": 60000,
+    "newBunDeadlineMs": 20000,
+    "newCooperativeDeadlineMs": 18000,
+    "oldDeadlinesAndWorkflowAndRunnerUnchanged": true,
+    "workflow": {
+      "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true
+    },
+    "runner": {
+      "git": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "bytes": 19419,
+      "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+      "lf": 391,
+      "endsWithLF": true
+    },
+    "output": {
+      "stdoutPerCommandBytes": 1048576,
+      "stderrPerCommandBytes": 1048576,
+      "arithmetic14CommandStreamsMaxBytes": 29360128,
+      "aggregateMainCap": null,
+      "anyTruncationThrows": true,
+      "killSignal": "SIGTERM",
+      "forceKillAfterMs": 5000
+    },
+    "originalOuterRequestTimeoutMs": 600000,
+    "interpretation": "The 36-minute sum of parents leaves a nominal nine minutes within the unchanged 45-minute main job. Setup, shared scheduling, teardown and receipts consume this allowance; it is not a timing guarantee or a performance prediction. Cleanup is a separate job."
+  },
+  "triggerAudit": {
+    "at": {
+      "current_time": "2026-11-28 05:00:22 UTC"
+    },
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "workflowTree": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+    "branch": "ci-run-sf613c20",
+    "parentWorkflowCount": 18,
+    "matchingPushWorkflow": [
+      "test-ci.yml"
+    ],
+    "unrelatedPushTriggers": [
+      "teams-az02-ci",
+      "dev",
+      "http-team-proof",
+      "g05-http-*",
+      "team-domain-bridge",
+      "team-factory-hooks",
+      "budget-source-read",
+      "native-journeys",
+      "teams-qa-executor",
+      "teams-landing-proof",
+      "teams-admin-check",
+      "g08-proof-source",
+      "az02-host-restart",
+      "release-build-*",
+      "go-live-package",
+      "g07-qualify-*",
+      "go-live-recovery",
+      "tp-scan-*"
+    ],
+    "noProductionWorkflowTriggered": true,
+    "provenance": "Same full workflow tree as the 18 authenticated workflow on-sections. Reviewed each push branch against the concrete ci-run-sf613c20 name."
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 05:02:03 UTC"
+    },
+    "matchingRefs": [],
+    "runs": 0,
+    "devObserved": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+  },
+  "authorized": {
+    "refCreation": 1,
+    "focalRun": 1,
+    "attempt": 1,
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "jobIntakeOnlyAfterBothTerminal": true,
+    "completePreservationBeforeInterpretation": true,
+    "originalReceiver": "/root",
+    "reviewerInputs": "Preserved Git copies only"
+  },
+  "notAuthorizedByThisReceipt": {
+    "rerun": true,
+    "oldOriginalAcquisition": true,
+    "zipAcquisition": true,
+    "newDiagnosticOrAnalyticsRun": true,
+    "finalGateAcceptance": true,
+    "production": true
+  },
+  "limits": [
+    "Static counts are expectations only. Actual footers/reports/commands/flags/guard output and source identity must be received.",
+    "The four files run whole, without filter/retry or increased existing deadlines.",
+    "The prod channel is the CI build configuration, not a production cutover.",
+    "C20 remains unqualified for installed Analytics, final candidate, Migration/Release or go-live."
+  ]
+}

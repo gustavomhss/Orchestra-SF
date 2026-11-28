@@ -1,0 +1,15 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+index f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff..2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4 100644
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -11,8 +11,8 @@
+ 
+ const repository = path.resolve(import.meta.dir, "../../..")
+ const module = path.join(repository, "modules/sucafina/Sucafinav1")
+-const source = "UNBOUND_C20_SOURCE_SHA"
+-const sourceTree = "UNBOUND_C20_SOURCE_TREE"
++const source = "2228172b29080b411850ec98a4cdaa66020db5e6"
++const sourceTree = "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+ const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+ const checks = testEffect(LayerNode.compile(AppProcess.node))
+ 

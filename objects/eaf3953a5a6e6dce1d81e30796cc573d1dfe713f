@@ -1,0 +1,65 @@
+{
+  "schema": "sf613-c20-analytics-trigger-recovery-object-v1",
+  "at": {
+    "current_time": "2026-11-28 05:40:17 UTC"
+  },
+  "status": "SAME_TREE_EMPTY_CHILD_OBJECT_ONLY_NO_REF_MOVE",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+  },
+  "oldSnapshot": {
+    "commit": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "sourceSoleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "originalObjectReceipt": {
+      "gitBlob": "08883ef2127007d2696d123295997abeb083c098",
+      "bytes": 7884,
+      "sha256": "4dab22a071befe023ce2bfc4d25573ccaec0e7f8a1a26548df40a2db78cc147f",
+      "lf": 237,
+      "endsWithLF": true
+    },
+    "originalPreflight": {
+      "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+      "bytes": 15090,
+      "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+      "lf": 473,
+      "endsWithLF": true
+    },
+    "branchCreateIssued": {
+      "at": {
+        "current_time": "2026-11-28 05:20:08 UTC"
+      },
+      "branch": "ci-run-sf613c20a",
+      "sha": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "authority": "8a93717dc476e8a2b897da16bcc61085d307426b"
+    },
+    "observedRunsAtCut": 0
+  },
+  "proposedSnapshot": {
+    "commit": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "emptyTreeDelta": true,
+    "message": "test(sucafina): renew C20 Analytics trigger with unchanged bytes"
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 05:40:15 UTC"
+    },
+    "branch": "ci-run-sf613c20a",
+    "ref": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "branchRuns": 0,
+    "oldHeadRuns": 0,
+    "oldHeadCheckRuns": 0,
+    "oldHeadCheckSuites": 0
+  },
+  "reason": "No run or check observed after more than twenty minutes from the single branch creation. This object permits one separately reviewed nonforce fast-forward trigger repair with identical bytes; no result or root cause is inferred.",
+  "limits": [
+    "No ref moved and no new run triggered by creating this commit object.",
+    "One possible future repair only; recheck old/new head and branch runs immediately before CAS. If any old run appears first, stop the repair.",
+    "A delayed old event remains possible. The existing cleanup deletes by branch name without comparing SHA, so no exclusivity or eventual run is guaranteed.",
+    "Source S20 and all request/spec/config/workflow bytes are identical. Any accepted result must bind to the actual executed new SHA.",
+    "No workflow/trigger/config changes, no production operation and no new installed qualification."
+  ]
+}

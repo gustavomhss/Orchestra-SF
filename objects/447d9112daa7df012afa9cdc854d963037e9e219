@@ -1,0 +1,724 @@
+{
+  "schema": "sf613-c20-analytics-independent-intake-v1",
+  "status": "CLOSED_RECEPTION_INSTALLED_RESULT_NEGATIVE",
+  "reviewer": "/root/teams_product",
+  "at": {
+    "current_time": "2026-11-28 06:08:57 UTC"
+  },
+  "scope": "Independent reception of preserved Git copies for the effective C20 Analytics run, including documentary comparison to the root intake; no repository execution, new original-log acquisition or ZIP acquisition.",
+  "tuple": {
+    "run": 46113463330,
+    "attempt": 1,
+    "mainJob": 140881932116,
+    "cleanupJob": 140884025044,
+    "branch": "ci-run-sf613c20a",
+    "effectiveHead": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "effectiveTree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "actualCommitIndependentlyReadByGit": true,
+    "priorIndependentA20RequestTreeReceipt": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+    "treeUnchangedByRecovery": true
+  },
+  "inputs": {
+    "mainManifest": {
+      "bytes": 5660,
+      "sha256": "043c1393154d59c11e100e3c17d3930b45d1f1cf3f291230674ecd65bbbdfefc",
+      "gitBlob": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9"
+    },
+    "cleanupManifest": {
+      "bytes": 1822,
+      "sha256": "43f9466b12c9984b484a2efd0de6f719203978fe25537b18740fde6dc7d2bc6f",
+      "gitBlob": "49792468dd541958ce957eb9bbeecb31bf5f25f5"
+    },
+    "cleanup": {
+      "bytes": 2281,
+      "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+      "gitBlob": "af180bae350c5daddb38f1a9a21da9ee5c9495ba"
+    },
+    "terminalContext": {
+      "bytes": 26384,
+      "sha256": "3660a1421957e514ea3ef186ef29b9185f076e4a84515f50345c3ceb20277e86",
+      "gitBlob": "aec31c26492817c63075fb86714534fcfd38a239"
+    },
+    "runBinding": {
+      "bytes": 3554,
+      "sha256": "2af78bae0c5ff31181c9b41a887d0a14e29b841530d6b38cd24eb9472c3b5acc",
+      "gitBlob": "9a883649c7ee75c732bf6187f74cd3f4a5943ea9"
+    },
+    "effectiveAuthority": {
+      "bytes": 13399,
+      "sha256": "e9d70e3d833f65a8a5f61f632d91009309d2a0d4eebf58034fa0547cdbd8b9ed",
+      "gitBlob": "ca30c899e8fc3de759e0dfbde119f780b58f015c"
+    }
+  },
+  "main": {
+    "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+    "wholeCalculatedOnly": {
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "gitBlob": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "lf": 1843,
+      "bomBytes": [
+        0,
+        2104525
+      ],
+      "calculatedWholeOnly": true
+    },
+    "wholeBlobActuallyCreated": false,
+    "wholeBlobRetrieved": false,
+    "parts": [
+      {
+        "ordinal": 1,
+        "gitBlob": "c69c26f6c94d07fd6bb318cb7711289f6d9e8072",
+        "bytes": 300000,
+        "sha256": "7563ae17f6e0c1cb1610733212370027fc34829ef62970707ed5e6054e4b79c8",
+        "byteStart": 0,
+        "byteEnd": 300000,
+        "utf16Start": 0,
+        "utf16End": 297350
+      },
+      {
+        "ordinal": 2,
+        "gitBlob": "c75fef82e1ce0868261c25947149737772261e26",
+        "bytes": 300000,
+        "sha256": "0f4973e8890c19c70a1fe0b6a376d2ffe77aac09e06c2f2188de71b5ef56b073",
+        "byteStart": 300000,
+        "byteEnd": 600000,
+        "utf16Start": 297350,
+        "utf16End": 597350
+      },
+      {
+        "ordinal": 3,
+        "gitBlob": "f2c14864f3aca17c8a2a48d0b3ea7001394bd5cd",
+        "bytes": 300000,
+        "sha256": "48ba3887f8570ba8c01c8d5b7d6605ae6b1b91f1cb6b21fa0bcca3affbce4232",
+        "byteStart": 600000,
+        "byteEnd": 900000,
+        "utf16Start": 597350,
+        "utf16End": 895187
+      },
+      {
+        "ordinal": 4,
+        "gitBlob": "387f3e050686b53c1a5bad826abda4fd29b2e1da",
+        "bytes": 300000,
+        "sha256": "f55d520f1678ec2db364ec7e7db4d39c33a41593cffc2f6ca9b59dbd2d77d1e4",
+        "byteStart": 900000,
+        "byteEnd": 1200000,
+        "utf16Start": 895187,
+        "utf16End": 1195187
+      },
+      {
+        "ordinal": 5,
+        "gitBlob": "753861981c39698acb6570ccd3cc2413736ae525",
+        "bytes": 300000,
+        "sha256": "ecc110fb8f9643613cae5f9f755810f6c7c6835bd7966d63279fbc4bb2872c0d",
+        "byteStart": 1200000,
+        "byteEnd": 1500000,
+        "utf16Start": 1195187,
+        "utf16End": 1495187
+      },
+      {
+        "ordinal": 6,
+        "gitBlob": "b7b85a1dd0ad61f61299ff22135da353d9a41b34",
+        "bytes": 300000,
+        "sha256": "c062f6fba6abebb7d228571bff0f1c29b610f9e6e877f302dfb7c06906dc78f3",
+        "byteStart": 1500000,
+        "byteEnd": 1800000,
+        "utf16Start": 1495187,
+        "utf16End": 1795187
+      },
+      {
+        "ordinal": 7,
+        "gitBlob": "a289c42949015e82e3f7580a607b0094fc1979e8",
+        "bytes": 300000,
+        "sha256": "8036e6ba7986e5dcdb94268d759ebc315b0775324d50beb90aece4fbd30da6ef",
+        "byteStart": 1800000,
+        "byteEnd": 2100000,
+        "utf16Start": 1795187,
+        "utf16End": 2095187
+      },
+      {
+        "ordinal": 8,
+        "gitBlob": "f74201615a0f5ed37174e84ae1e92b379aabf1ce",
+        "bytes": 300000,
+        "sha256": "85488006e355c86ee05086fe0767c01457e6458389189d44e990943fcad8bca3",
+        "byteStart": 2100000,
+        "byteEnd": 2400000,
+        "utf16Start": 2095187,
+        "utf16End": 2395185
+      },
+      {
+        "ordinal": 9,
+        "gitBlob": "a8884a9ec0ca53a25bcbb85a3807dd2000fc0f3f",
+        "bytes": 300000,
+        "sha256": "3009a9870493b126002b1dc17c8ce2461aad1e9375537bd059cdf8b805460f0a",
+        "byteStart": 2400000,
+        "byteEnd": 2700000,
+        "utf16Start": 2395185,
+        "utf16End": 2695182
+      },
+      {
+        "ordinal": 10,
+        "gitBlob": "71b5be1faf0edeb5602db8726f9019e3043eba02",
+        "bytes": 300000,
+        "sha256": "6893ca3d4eca2f68bffa9862afeb9cb4e0848d37e679c774291e8b90cfcb8ec2",
+        "byteStart": 2700000,
+        "byteEnd": 3000000,
+        "utf16Start": 2695182,
+        "utf16End": 2995124
+      },
+      {
+        "ordinal": 11,
+        "gitBlob": "5087df738185002c8e219592613b31a8c78473ad",
+        "bytes": 89836,
+        "sha256": "707cd2b844700fc83eb37e94db295b67bcb5e0997a4d28cd072f8c74214c54c3",
+        "byteStart": 3000000,
+        "byteEnd": 3089836,
+        "utf16Start": 2995124,
+        "utf16End": 3079982
+      }
+    ],
+    "allPartsIndependentlyAuthenticated": true,
+    "concatenationLiteral": true,
+    "rootOriginalGets": 1
+  },
+  "cleanup": {
+    "bytes": 2281,
+    "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+    "gitBlob": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+    "lf": 39,
+    "bomBytes": [
+      0
+    ],
+    "endsWithLF": true,
+    "rootOriginalGets": 1,
+    "terminalSuccess": true
+  },
+  "selection": {
+    "actualTests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "config": "e2e/playwright.production.config.ts",
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ],
+    "testOwnedInstallations": 2,
+    "distinctDiscoveredInstallations": true,
+    "diagnosticOverlay": false,
+    "originalBiCdpAcquisitionObserver": true,
+    "profiler": false,
+    "sourceSelectionProofPreviouslyClosed": true
+  },
+  "observed": {
+    "run": 46113463330,
+    "attempt": 1,
+    "failed": 2,
+    "passed": 0,
+    "firstFailure": {
+      "type": "TimeoutError",
+      "waiterMs": 60000,
+      "spec": "72:32",
+      "requestSequence": 3,
+      "responseMarkersObserved": 0
+    },
+    "secondFailure": {
+      "message": "Original BI request failed",
+      "spec": "611:38",
+      "caller": "610:30",
+      "helper": "143:30",
+      "initialBI06": true,
+      "markers": [
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "native-request-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "sameNativeRequest": false,
+          "bodyObserved": false,
+          "http": null,
+          "teardownPhase": "observing",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "network-loading-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "networkLoadingFailed": true,
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ]
+    },
+    "captures": {
+      "total": 25,
+      "UI42": 6,
+      "UI45": 6,
+      "UI46": 13
+    },
+    "counts": {
+      "SF_DESIGN_DISCOVERY": 2,
+      "SF_ANALYTICS_SOURCE": 34,
+      "SF_OWNER_ADMISSION_READS": 4,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_ANALYTICS_CAPTURE": 25,
+      "SF_DESIGN_DIAGNOSTICS": 6
+    },
+    "coreMarkers": 65,
+    "consolePageEmptyPairs": 4,
+    "BI01": {
+      "http": 200,
+      "rows": 36,
+      "numericValues": 14,
+      "missing": 22
+    },
+    "sourcesHTTP": [
+      200,
+      200
+    ]
+  },
+  "derivedUnions": [
+    {
+      "role": "markersUnion",
+      "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "literalOrderedParityToCurrentMain": true,
+      "createdBy": "root"
+    },
+    {
+      "role": "contextsUnion",
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "literalOrderedParityToCurrentMain": true,
+      "createdBy": "root"
+    },
+    {
+      "role": "auxiliaryUnion",
+      "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "literalOrderedParityToCurrentMain": true,
+      "createdBy": "root"
+    }
+  ],
+  "lineEvidence": {
+    "checkout": [
+      146
+    ],
+    "selection": [
+      999,
+      1027
+    ],
+    "failedFooter": [
+      1778,
+      1781,
+      1782
+    ],
+    "firstFailure": [
+      1267,
+      1276
+    ],
+    "historyAndPreview": [
+      {
+        "line": 1203,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1
+      },
+      {
+        "line": 1205,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1
+      },
+      {
+        "line": 1223,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2
+      },
+      {
+        "line": 1225,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2
+      },
+      {
+        "line": 1243,
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3
+      }
+    ],
+    "BI06FailureMarkers": [
+      1653,
+      1655
+    ],
+    "secondFailure": [
+      1677,
+      1686,
+      1687,
+      1689
+    ],
+    "captures": [
+      1177,
+      1189,
+      1195,
+      1201,
+      1221,
+      1241,
+      1423,
+      1437,
+      1443,
+      1449,
+      1461,
+      1475,
+      1497,
+      1513,
+      1529,
+      1537,
+      1543,
+      1549,
+      1555,
+      1573,
+      1591,
+      1597,
+      1603,
+      1625,
+      1647
+    ],
+    "contexts": [
+      1165,
+      1207
+    ],
+    "diagnostics": [
+      1245,
+      1247,
+      1263,
+      1657,
+      1659,
+      1673
+    ],
+    "artifact": [
+      1807,
+      1815,
+      1817,
+      1819,
+      1820
+    ],
+    "cleanup": {
+      "guardedDelete": [
+        31,
+        32
+      ],
+      "targetBranch": 37,
+      "orphanProcessFooter": 39
+    }
+  },
+  "artifact": {
+    "id": 15250367884,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 30531866,
+    "sha256": "94a6b83eefccbeffc862fad7fe86c8aad82bdd0724dcbb4f456215e02bd227da",
+    "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "run": 46113463330,
+    "reportedUploadFiles": 91,
+    "uploadAndMetadataMatch": true,
+    "metadataOnly": true,
+    "zipGets": 0,
+    "inventoryNotReceived": true
+  },
+  "branchAbsence": {
+    "observedBy": "root",
+    "sourceContext": {
+      "bytes": 26384,
+      "sha256": "3660a1421957e514ea3ef186ef29b9185f076e4a84515f50345c3ceb20277e86",
+      "gitBlob": "aec31c26492817c63075fb86714534fcfd38a239"
+    },
+    "at": {
+      "current_time": "2026-11-28 05:55:17 UTC"
+    },
+    "matchingRefs": [],
+    "notInferredFromDeleteCommand": true
+  },
+  "checks": {
+    "count": 44,
+    "passed": 44,
+    "failed": 0,
+    "items": [
+      {
+        "id": "01-main-manifest-pin",
+        "pass": true
+      },
+      {
+        "id": "02-cleanup-and-manifest-pins",
+        "pass": true
+      },
+      {
+        "id": "03-context-run-binding-authority-pins",
+        "pass": true
+      },
+      {
+        "id": "04-eleven-part-content-hashes",
+        "pass": true
+      },
+      {
+        "id": "05-parts-contiguous-ordered-recomposition",
+        "pass": true
+      },
+      {
+        "id": "06-main-digest-lf-bom",
+        "pass": true
+      },
+      {
+        "id": "07-main-whole-calculated-only",
+        "pass": true
+      },
+      {
+        "id": "08-cleanup-complete-lf-bom",
+        "pass": true
+      },
+      {
+        "id": "09-original-receipt-tuple-and-acquisition",
+        "pass": true
+      },
+      {
+        "id": "10-independent-A20r-Git-object",
+        "pass": true
+      },
+      {
+        "id": "11-clean-S20-and-effective-head-binding",
+        "pass": true
+      },
+      {
+        "id": "12-terminal-run-and-jobs",
+        "pass": true
+      },
+      {
+        "id": "13-main-checkout-effective-head",
+        "pass": true
+      },
+      {
+        "id": "14-original-selection-observed",
+        "pass": true
+      },
+      {
+        "id": "15-original-titles-in-actual-main",
+        "pass": true
+      },
+      {
+        "id": "16-two-distinct-test-installations",
+        "pass": true
+      },
+      {
+        "id": "17-actual-footer-two-failures",
+        "pass": true
+      },
+      {
+        "id": "18-first-case-sixty-second-waiter",
+        "pass": true
+      },
+      {
+        "id": "19-history-sequences-separate-complete",
+        "pass": true
+      },
+      {
+        "id": "20-preview-sequence-three-boundary",
+        "pass": true
+      },
+      {
+        "id": "21-original-preparation-readbacks",
+        "pass": true
+      },
+      {
+        "id": "22-original-UI42-context-readbacks",
+        "pass": true
+      },
+      {
+        "id": "23-UI42-captures",
+        "pass": true
+      },
+      {
+        "id": "24-no-later-first-case-captures",
+        "pass": true
+      },
+      {
+        "id": "25-current-BI-captures",
+        "pass": true
+      },
+      {
+        "id": "26-BI01-readback",
+        "pass": true
+      },
+      {
+        "id": "27-two-source-bodies-and-value-identity",
+        "pass": true
+      },
+      {
+        "id": "28-BI06-failure-markers",
+        "pass": true
+      },
+      {
+        "id": "29-second-case-initial-BI06-location",
+        "pass": true
+      },
+      {
+        "id": "30-no-later-BI-acceptance-transfer",
+        "pass": true
+      },
+      {
+        "id": "31-error-diagnostics-four-empty-pairs",
+        "pass": true
+      },
+      {
+        "id": "32-native-view-ready-statuses-delimited",
+        "pass": true
+      },
+      {
+        "id": "33-current-marker-populations",
+        "pass": true
+      },
+      {
+        "id": "34-no-E13-E14-CPU-population",
+        "pass": true
+      },
+      {
+        "id": "35-artifact-metadata-matches-original-upload",
+        "pass": true
+      },
+      {
+        "id": "36-upload-file-count-only-reported",
+        "pass": true
+      },
+      {
+        "id": "37-cleanup-target-and-footer",
+        "pass": true
+      },
+      {
+        "id": "38-root-post-cleanup-matching-refs",
+        "pass": true
+      },
+      {
+        "id": "39-markersUnion-literal-current-main-parity",
+        "pass": true
+      },
+      {
+        "id": "40-contextsUnion-literal-current-main-parity",
+        "pass": true
+      },
+      {
+        "id": "41-auxiliaryUnion-literal-current-main-parity",
+        "pass": true
+      },
+      {
+        "id": "42-preview-filter-before-snippet-output",
+        "pass": true
+      },
+      {
+        "id": "43-original-acquisition-and-no-ZIP-limits",
+        "pass": true
+      },
+      {
+        "id": "44-effective-run-recovery-and-qualification-limits",
+        "pass": true
+      }
+    ]
+  },
+  "rootDocumentaryComparison": {
+    "receipt": {
+      "bytes": 4788,
+      "sha256": "51d7b46515efd830ee619c2f91e40341ddc1d9dda5067fc910b4ab35c5276bdf",
+      "gitBlob": "e5ccedc063611f0fb236eeecb25c912a0f88b858"
+    },
+    "statusAtRootCut": "ROOT_INTAKE_NEGATIVE_PENDING_INDEPENDENT_RECEIPT",
+    "rootChecks": 34,
+    "rootChecksNotRecountedAsPeerChecks": true,
+    "additionalDocumentaryChecks": [
+      {
+        "id": "root-pin-authenticated",
+        "pass": true
+      },
+      {
+        "id": "root-context-and-run-binding-identical",
+        "pass": true
+      },
+      {
+        "id": "root-separate-34-checks-recorded-without-transfer",
+        "pass": true
+      },
+      {
+        "id": "root-two-failures-and-current-boundaries-concordant",
+        "pass": true
+      },
+      {
+        "id": "root-zero-new-qualification-and-closed-originals",
+        "pass": true
+      }
+    ],
+    "extractionReferencedByRootNotReauditedHere": {
+      "gitBlob": "6fb900709324b30feeb3450357ad613e04b856c4",
+      "bytes": 61497,
+      "sha256": "cc17058384306b5632b52529d5f06dada9c91b8ab12192d805143d5752e50a31",
+      "lf": 2206,
+      "endsWithLF": true
+    },
+    "rootHistoricalCoverage": {
+      "accepted": 12,
+      "total": 15,
+      "newAccepted": 0
+    },
+    "historicalCoverageNotNewlyQualified": true
+  },
+  "runtimeRecovery": {
+    "dataRuntimeWasReplacedDuringPureCheckAssembly": true,
+    "noExternalMutationWasPending": true,
+    "resumedUsingOnlySamePreservedGitPartsAndNewlyPreservedRootUnions": true,
+    "originalGetsAfterReplacement": 0,
+    "zipGetsAfterReplacement": 0
+  },
+  "acquisitionLimits": {
+    "peerOriginalGets": 0,
+    "peerZipGets": 0,
+    "rootOriginalsClosedAt": "2026-11-28 05:56:05 UTC",
+    "newRepositoryExecution": false,
+    "newRefs": false,
+    "newTrees": false,
+    "newCommits": false,
+    "newRuns": false,
+    "onlyAuthorizedMutation": "this independent JSON evidence blob followed by literal Git readback"
+  },
+  "qualification": {
+    "installedAccepted": false,
+    "newAccepted": 0,
+    "productionAuthorized": false,
+    "performanceGainInferred": false,
+    "nativePhysicalProjectionAdmissionInferred": false,
+    "focalPassNotTransferred": true
+  },
+  "limitations": [
+    "Reception ACK only: current original Analytics has two failed tests, no BI PASS and no new functional qualification.",
+    "Main whole Git hash is calculated only. Only the eleven named parts, cleanup and documentary/derived Git blobs were retrieved.",
+    "Original job logs and ZIP were not acquired by this peer. Root's one-GET preservation declarations and matching-refs observation are attributed to root.",
+    "Preview sequence 3 has an exact-owner POST marker and no response marker before the failure; this does not prove a server deadlock, final server outcome or CPU cost.",
+    "BI06 false sameNativeRequest, false bodyObserved and null HTTP describe the observer's uncompleted acquisition, not proof of a different request or of absent earlier headers/Response.",
+    "Native-view BI06 rendering is not bound by a Request/body digest to the canceled original GET; no causal link is inferred.",
+    "No completed BI06 acquisition, Portuguese stage, negative403 or final SF_ANALYTICS_SCOPE is attested in this run. Earlier BI PASS results are not transferred.",
+    "Artifact ID, size, digest and reported91 upload files are metadata/log observations only; ZIP bytes and entry inventory were not received.",
+    "The same-tree recovery and one effective run do not establish why the earlier event produced no observed run; old-head absence is limited to root's observed cut.",
+    "No current performance improvement, physical native projection admission, D29 execution, production approval, new ref or rerun is asserted."
+  ]
+}

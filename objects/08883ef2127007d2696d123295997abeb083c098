@@ -1,0 +1,237 @@
+{
+  "schema": "sf613-c20-original-analytics-object-v1",
+  "at": {
+    "current_time": "2026-11-28 05:15:47 UTC"
+  },
+  "status": "OBJECT_VERIFIED_REF_NOT_CREATED",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+  },
+  "snapshot": {
+    "commit": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6"
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "treeAudit": {
+    "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "after": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "complete": true,
+    "pairs": [
+      {
+        "path": "",
+        "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "after": "97e5c83f6096fe1654e87b7d4f054842512c7bdc"
+      }
+    ],
+    "literalSiblings": 45,
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "size": 295,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+        }
+      }
+    ]
+  },
+  "readbackVerified": true,
+  "selectionPinsInSource": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "bytes": 4384,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+      ]
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "bytes": 1892,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "bytes": 21102,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b",
+        "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+      "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+      "bytes": 719,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b",
+        "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "bytes": 12321,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b",
+        "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+      "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+      "bytes": 15525,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+        "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+        "70a27499a675203fefe9733f4c8de6be66d27b8b",
+        "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+      ]
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "bytes": 5823,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "97f6afed0e864fca3fad5302f28098863f0ec75c",
+        "efeb9bbff12872095eb348700a38b1208df130d8",
+        "29adf3d3ce3e264321f60112c1d354313c5fa7a9",
+        "f4d268326af2ae64a3c35d4c8c7e465eead81138"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "bytes": 13217,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "97f6afed0e864fca3fad5302f28098863f0ec75c",
+        "efeb9bbff12872095eb348700a38b1208df130d8",
+        "70c44875126a2d732d2ad9f6af3ce25b7fc4c6ed",
+        "4b1162788f28a3d5df912868c08f6456c1069034"
+      ]
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "bytes": 4225,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+      ]
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "bytes": 17001,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "8260a6fff2f4a343e3b599b0056ebe3841e0c3b0"
+      ]
+    },
+    {
+      "path": "script/test-ci.ts",
+      "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "bytes": 19419,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "8260a6fff2f4a343e3b599b0056ebe3841e0c3b0"
+      ]
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "mode": "100644",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7"
+      ]
+    }
+  ],
+  "preflight": {
+    "branch": "ci-run-sf613c20a",
+    "branchAbsent": true,
+    "priorRuns": 0
+  },
+  "limits": [
+    "Only exact 1A request on clean S20; no E14 overlay or focal wrapper.",
+    "No branch, run, installed result or production approval follows from object creation."
+  ]
+}

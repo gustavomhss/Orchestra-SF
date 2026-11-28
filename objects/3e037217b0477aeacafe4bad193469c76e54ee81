@@ -1,0 +1,616 @@
+{
+  "schema": "sf613-d29-final-qualification-manifest-v1",
+  "status": "DRAFT_UNBOUND_REVIEWABLE_NO_FINAL_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized proposed wrapper/envelope/finalizer/workflow and derivation/bounds/manifest blobs with exact readback. No source/tree/commit/ref/run or original/ZIP acquisition is authorized to this writer.",
+  "basis": {
+    "manifest": {
+      "git": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+      "bytes": 24043,
+      "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+      "lf": 628,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+      "bytes": 10514,
+      "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+      "lf": 305,
+      "endsWithLF": true
+    },
+    "originalArtifacts": {
+      "wrapper": {
+        "git": "30178d52800afdf6c262e792790d52351b10c5c4",
+        "bytes": 18398,
+        "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+        "lf": 344,
+        "endsWithLF": true
+      },
+      "envelope": {
+        "git": "26fe67808cf872c611127a7f46838074604fe690",
+        "bytes": 43811,
+        "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "finalizer": {
+        "git": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "bytes": 15782,
+        "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "workflow": {
+        "git": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "bytes": 80067,
+        "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+        "lf": 1154,
+        "endsWithLF": true
+      }
+    },
+    "priorD28Support": {
+      "derivation": {
+        "gitSha": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+        "bytes": 9618,
+        "sha256": "ad9391a1259616000eb3d91bb519c77d2d5eda18a84f4a71bc8a74c94ad5f157",
+        "lf": 283,
+        "created": true,
+        "readback": true
+      },
+      "diff": {
+        "gitSha": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+        "bytes": 1816,
+        "sha256": "8c04cb10767f4a76fefe7f19ec3820c301515cfa5b35c2c03e467e9c5ee26437",
+        "lf": 32,
+        "created": true,
+        "readback": true
+      },
+      "bounds": {
+        "gitSha": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+        "bytes": 10514,
+        "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+        "lf": 305,
+        "created": true,
+        "readback": true
+      }
+    },
+    "historyPolicy": "D28 and all earlier manifests, bounds, source references and receipts remain byte-literal historical objects. This supplement overrides only the four current executable artifact identities, adds G27 and updates active outer counts and current C20 intake."
+  },
+  "artifacts": {
+    "wrapper": {
+      "git": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+      "bytes": 18854,
+      "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+      "lf": 352,
+      "endsWithLF": true,
+      "path": "apps/cli/test/sf613-final-verification.test.ts",
+      "logicalReviewPath": "apps/cli/test/sf613-final-verification.test.ts",
+      "companionOnly": false,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "envelope": {
+      "git": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+      "bytes": 43811,
+      "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+      "lf": 723,
+      "endsWithLF": true,
+      "path": null,
+      "logicalReviewPath": "review-artifacts/sf613-final-envelope.mjs",
+      "companionOnly": true,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "finalizer": {
+      "git": "42e098a611b4275e27962f3a342eb0f0892885d0",
+      "bytes": 15782,
+      "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+      "lf": 250,
+      "endsWithLF": true,
+      "path": null,
+      "logicalReviewPath": "review-artifacts/sf613-final-finalizer.mjs",
+      "companionOnly": true,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "workflow": {
+      "git": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+      "bytes": 80067,
+      "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+      "lf": 1154,
+      "endsWithLF": true,
+      "path": ".github/workflows/sf613-final-qualification.yml",
+      "logicalReviewPath": ".github/workflows/sf613-final-qualification.yml",
+      "companionOnly": false,
+      "created": true,
+      "readbackLiteral": true
+    }
+  },
+  "supports": {
+    "derivation": {
+      "git": "c52212709d4b4a1bbfaf6d7e22139657b920a171",
+      "bytes": 40677,
+      "sha256": "2bfdb7193f69dd4b3bbb82e11acadbae8d9fba47ec8c52c7b5bd3dc240a8b12a",
+      "lf": 1012,
+      "endsWithLF": true,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "fullDiff": {
+      "git": "b0006a022ca0c60639f5e8a2feb38f8852ef9adf",
+      "bytes": 14749,
+      "sha256": "90c7f8761da63b117d69baf61662f28a47f7ad93bb303bb0e9dec9d58c85bcd9",
+      "lf": 190,
+      "endsWithLF": true,
+      "created": true,
+      "readbackLiteral": true
+    },
+    "bounds": {
+      "git": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+      "bytes": 15757,
+      "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6",
+      "lf": 464,
+      "endsWithLF": true,
+      "created": true,
+      "readbackLiteral": true
+    }
+  },
+  "delta": {
+    "artifactsChanged": 4,
+    "uniqueReversibleOperations": 29,
+    "operationsByArtifact": {
+      "wrapper": 3,
+      "envelope": 9,
+      "finalizer": 3,
+      "workflow": 14
+    },
+    "hunks": 13,
+    "addedLines": 36,
+    "removedLines": 28,
+    "allForwardInverseExact": true,
+    "changes": [
+      "Wrapper: informational D29 comment/label plus appended whole-file G27. The G27 body is literal from the accepted C20 focal carrier.",
+      "Envelope: nine existing outer declaration/result lines, containing ten numeric expectations, change26 to27.",
+      "Finalizer: three existing result/Omni checks change26 to27.",
+      "Workflow: informational D29 comment, exact changed envelope/finalizer embeddings, and derived envelope transport digest."
+    ],
+    "preserved": "All G1-G26 bodies, runCommand, previous argv/cwd, process/parent budgets, output caps, guards, typechecks, loaders, ownership/finalizer mechanics, six separate proof children, prior loading/lazy families, and literal UI6 request requirements.",
+    "newGroups": 1,
+    "newCommandSites": 1,
+    "newEffectiveCommands": 1,
+    "newTruncationFlags": 2,
+    "noNewRuntimeParser": true,
+    "noProductOrTestSourceEdit": true,
+    "reviewArtifactPathsAreNotAdditionalDriverLeaves": true
+  },
+  "protocol": {
+    "wrapperVerification": "sf613-final-composition-literal-c-d29-r1",
+    "wrapperVerificationConsumedByEnvelopeFinalizerOrWorkflow": false,
+    "retainedEnvelopeReceiptSchema": "sf613-final-technical-literal-c-d26-r1",
+    "retainedFinalizerSchema": "sf613-final-technical-finalizer-v1",
+    "interpretation": "D29 is a package revision with27outer cases. Existing receipt field names/schema identifiers are retained as protocol history; all active outer result/Omni count checks now require27. No new schema family or parser is introduced."
+  },
+  "target": {
+    "source": "__SF613_SOURCE_SHA__",
+    "sourceTree": "__SF613_SOURCE_TREE__",
+    "sourceState": "UNBOUND",
+    "driver": "UNBOUND_PENDING_FINAL_C613_AND_CONCRETE_REVIEW",
+    "driverTree": "UNBOUND",
+    "soleParent": "__SF613_SOURCE_SHA__",
+    "branch": "sf613-final-ci",
+    "futureDelta": [
+      {
+        "path": ".github/workflows/sf613-final-qualification.yml",
+        "status": "A",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sf613-final-verification.test.ts",
+        "status": "A",
+        "mode": "100644"
+      }
+    ],
+    "companionsAreBlobsNotAdditionalDriverPaths": true,
+    "unchangedUIRequestInsideSource": true,
+    "precondition": "Root must audit both absent preimages and exact2A against the actual accepted final C613; S20 is not automatically that candidate."
+  },
+  "placeholders": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFourBindingParameters": true,
+    "currentReferencePinsDoNotBindC613": true
+  },
+  "sourceReference": {
+    "finalC613": "UNBOUND",
+    "inheritedHistory": {
+      "manifest": {
+        "git": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+        "bytes": 24043,
+        "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+        "lf": 628,
+        "endsWithLF": true
+      },
+      "fields": [
+        "sourceReference",
+        "historicalC19Focal",
+        "selection",
+        "futureIntake"
+      ],
+      "preservedAsHistory": true
+    },
+    "currentC20Reference": {
+      "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+      "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "receipt": {
+        "git": "dd18243713f7e713f9e544b7569b53550b64fde7",
+        "bytes": 7142,
+        "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+        "lf": 212,
+        "endsWithLF": true
+      },
+      "sourceManifest": {
+        "git": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+        "bytes": 11676,
+        "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+        "lf": 290,
+        "endsWithLF": true
+      },
+      "sourceBounds": {
+        "git": "779cf3ff515733d40b85a199b7900f28271f1812",
+        "bytes": 9356,
+        "sha256": "c12f8ead3a8da07780279cecaa7ee984b3bb6aa5d34e11745eb2aa6d9c5564ef",
+        "lf": 174,
+        "endsWithLF": true
+      },
+      "independentSourceReview": {
+        "git": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+        "bytes": 9824,
+        "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+        "lf": 296,
+        "endsWithLF": true
+      },
+      "pins": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+          "bytes": 3614,
+          "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+          "lf": 36,
+          "endsWithLF": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+          "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+          "bytes": 16889,
+          "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+          "lf": 260,
+          "endsWithLF": true
+        }
+      ],
+      "finalC613Pins": "UNBOUND_RECONCILE_AFTER_SOURCE_ACCEPTANCE",
+      "scope": "Only the existing scenario-candidates factory opt-in and one consumer control; no Provider/native reduction or diagnostic overlay."
+    }
+  },
+  "historicalC20Focal": {
+    "run": 46110276545,
+    "attempt": 1,
+    "state": "ROOT_REPORTED_FOCAL_ACCEPTED_ONLY",
+    "receiptLocator": null,
+    "provenance": "Root reported acceptance in the authorization for this D29 proposal; the final durable focal receipt locator was not provided to this writer at this cut. No original or log was acquired by this author.",
+    "reported": {
+      "functionalPass": 16,
+      "functionalAssertions": 2250,
+      "outerPass": 8,
+      "outerAssertions": 38,
+      "commands": 14,
+      "truncationFlagsFalse": 28,
+      "controlReports": 7
+    },
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "focalPackage": {
+      "git": "624b227ba66d30cb37c6116a73fd6afc543403b2",
+      "bytes": 23370,
+      "sha256": "cdaf8e4e8d2a7ad9e155b7b7b1ddc5fe12c7bb97d337f0c636f5231d5d998d85",
+      "lf": 618,
+      "endsWithLF": true
+    },
+    "meaning": "Historical scoped focal only. These are not whole-D29 counts, not final-candidate qualification, and not an Analytics or UI6 result."
+  },
+  "selection": {
+    "groups": 27,
+    "expectSpawnSites": 27,
+    "syntacticCommandSites": 33,
+    "englishReadLoopExecutions": 6,
+    "effectiveCommands": 38,
+    "truncationFlagsRequiredFalse": 76,
+    "fullSuiteUniqueFunctionalCount": null,
+    "fullSuiteReportTotal": null,
+    "fullSuiteAssertionTotal": null,
+    "proofChildren": 6,
+    "priorGroupsLiteral": "G1-G26",
+    "G27": {
+      "group": 27,
+      "title": "Scenario lookup preserves complete candidate reads, fallback and fresh authority",
+      "commandLabel": "Scenario lookup complete candidates whole-file",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "currentReference": {
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      },
+      "finalC613Blob": "UNBOUND",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "executable": "process.execPath",
+      "argv": [
+        "test",
+        "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+      ],
+      "processMs": 45000,
+      "parentMs": 60000,
+      "cooperativeMs": 18000,
+      "bunMs": 20000,
+      "currentReferenceDeclarations": 1,
+      "currentReferencePublicReports": 1,
+      "currentReferenceInternalInvocations": 14,
+      "internalInvocationsAreNotTestsOrSubprocesses": true,
+      "addedOwnSubprocesses": 0,
+      "wholeFile": true,
+      "nameFilter": null,
+      "retries": 0,
+      "newGlobalTimeout": false,
+      "prefixCheckOnly": "SF_C20_SCENARIO_LOOKUP ",
+      "newRuntimeParser": false,
+      "nominalProcessMarginAboveBunMs": 25000,
+      "nominalParentMarginAboveProcessMs": 15000,
+      "marginMeaning": "Arithmetic only, with setup/disposal/scheduling shared; no runtime duration or complete-job fit is promised."
+    },
+    "preservedG6G25G26": true,
+    "allPriorLoadingAndLazyFamiliesPreserved": true,
+    "newOwnSubprocessesInsideG27": 0,
+    "currentReferenceAddedDeclaration": 1,
+    "currentReferenceAddedReport": 1,
+    "C20InternalInvocations": 14,
+    "noCountTransferFromFocal": true
+  },
+  "futureIntake": {
+    "inheritedRequirements": {
+      "manifest": {
+        "git": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+        "bytes": 24043,
+        "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+        "lf": 628,
+        "endsWithLF": true
+      },
+      "field": "futureIntake",
+      "preservedExceptOuterCountOverrides": true
+    },
+    "outerPassRequired": 27,
+    "failRequired": 0,
+    "skipRequired": 0,
+    "plannedCommands": 38,
+    "truncationFlagsRequiredFalse": 76,
+    "omni": {
+      "declared": 27,
+      "ownSpawns": 38,
+      "delegated": 0,
+      "nonce": "CURRENT_RUN_REQUIRED",
+      "scope": "Outer wrapper only; nested children remain separate."
+    },
+    "proofChildrenSeparately": 6,
+    "G27": {
+      "wholeFile": true,
+      "currentReferenceExpectedDeclarations": 1,
+      "expectedPublicReports": 1,
+      "report": "SF_C20_SCENARIO_LOOKUP",
+      "completePayloadRequired": true,
+      "expectedCheckLabels": [
+        "consumer-selects-complete-detached-results",
+        "opaque-wrapper-keeps-full-state",
+        "mutable-context-uses-opaque-fallback",
+        "proxy-context-uses-opaque-fallback",
+        "map-prototype-uses-opaque-fallback",
+        "request-key-remains-late-after-admission",
+        "mutable-binding-is-observed-after-admission",
+        "admission-denied-does-not-disclose",
+        "egress-revoked-does-not-disclose",
+        "abort-does-not-disclose",
+        "unmatched-getter-selected",
+        "unmatched-getter-opaque",
+        "unmatched-function-selected",
+        "unmatched-function-opaque"
+      ],
+      "all14InternalInvocationsRequiredByCurrentControl": true
+    },
+    "C20ReportModel": {
+      "prefix": "SF_C20_SCENARIO_LOOKUP ",
+      "schema": "sf-c20-scenario-lookup-v1",
+      "expectedCount": 1,
+      "checks": [
+        "consumer-selects-complete-detached-results",
+        "opaque-wrapper-keeps-full-state",
+        "mutable-context-uses-opaque-fallback",
+        "proxy-context-uses-opaque-fallback",
+        "map-prototype-uses-opaque-fallback",
+        "request-key-remains-late-after-admission",
+        "mutable-binding-is-observed-after-admission",
+        "admission-denied-does-not-disclose",
+        "egress-revoked-does-not-disclose",
+        "abort-does-not-disclose",
+        "unmatched-getter-selected",
+        "unmatched-getter-opaque",
+        "unmatched-function-selected",
+        "unmatched-function-opaque"
+      ],
+      "bytesIncludingLF": 564,
+      "sha256": "4a1128cbf4c9ba67274aee658012244e8cebab175d7dd559a4bea519322dd913",
+      "syntheticModelOnly": true,
+      "reportBlobCreated": false,
+      "capEffect": "The model covers only this control's one line, not Bun footers/other test output or whole-job capture."
+    },
+    "wholeSuiteFunctionalCount": null,
+    "wholeSuiteReportTotal": null,
+    "wholeSuiteAssertions": null,
+    "actualFooterAndPayloadReceptionRequired": true,
+    "historicalFocalOrReferencePinsDoNotQualifyFinalSource": true,
+    "rootSoleOriginalReceiver": true,
+    "noNewRuntimeParser": true
+  },
+  "budgets": {
+    "bounds": {
+      "git": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+      "bytes": 15757,
+      "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6",
+      "lf": 464,
+      "endsWithLF": true
+    },
+    "G27": {
+      "cooperativeMs": 18000,
+      "bunMs": 20000,
+      "processMs": 45000,
+      "parentMs": 60000
+    },
+    "global": {
+      "processMs": 2100000,
+      "technicalStepMinutes": 40,
+      "jobMinutes": 45,
+      "alwaysFinalizerMinutes": 3,
+      "termGraceMs": 5000,
+      "killGraceMs": 5000,
+      "stdioDrainMs": 10000,
+      "unchanged": true
+    },
+    "commandCapture": {
+      "stdoutMaxBytes": 1048576,
+      "stderrMaxBytes": 1048576,
+      "truncationFails": true,
+      "requiredFalseFlags": 76,
+      "notCumulative": true
+    },
+    "inheritedAllGroupsAndCapsLiteral": true,
+    "noBudgetIncrease": true,
+    "noAggregateDeadlineFitClaim": true,
+    "arithmeticSums": {
+      "priorCommandMs": 5490000,
+      "newCommandMs": 5535000,
+      "priorParentMs": 7200000,
+      "newParentMs": 7260000
+    },
+    "workflowRunCharacterLimit": 21000,
+    "maximumDraftRunCharacters": 15833,
+    "maximumWidthModelRunCharacters": 15930,
+    "widthOnlyBindingModel": {
+      "wrapperBytes": 18893,
+      "envelopeBytes": 43908,
+      "finalizerBytes": 15879,
+      "workflowBytes": 80281,
+      "modelObjectsCreated": false,
+      "modelOnly": true
+    },
+    "envelopeDigest": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+    "fullEmbeddingsVerified": true,
+    "loaderLiteral": {
+      "git": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "lf": 57,
+      "endsWithLF": true,
+      "literal": true
+    }
+  },
+  "uiRequest": {
+    "inheritsLiteral": {
+      "path": ".ci-run.json",
+      "bytes": 390,
+      "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+      "state": "REQUIRED_FINAL_C613_BYTES_NOT_CREATED_BY_THIS_PACKAGE",
+      "mustBeInsideFinalC613": true,
+      "unchangedByD": true,
+      "finalUI": "Three original specs/six cases remain separate qualification on the literal final candidate. D26 neither modifies nor runs FinalUI."
+    },
+    "changed": false,
+    "statement": "The390B original UI6 request must remain inside final C613. This package neither edits that request nor executes UI6."
+  },
+  "concretization": [
+    "Root first qualifies Analytics and accepts the actual integrated final C613. S20 and the scoped focal receipt are references, not that final candidate.",
+    "Reconcile C20's two reference leaves and all inherited source/control references against final C613, without reverting full files merely to satisfy a historical pin.",
+    "Bind source SHA/tree into the wrapper; create/read back its actual Git blob and compute SHA256. Then bind only those same source values and the actual wrapper blob/SHA256 in envelope/finalizer.",
+    "Rebuild exact workflow embeddings and recompute the bound envelope transport digest. The digest is derived, not a fifth manually supplied binding.",
+    "Root and the independent reviewer audit sole-parent D with exactly two additions: workflow and wrapper. The standalone companion buffers are not additional tree paths.",
+    "Only root may activate one reviewed final technical execution under separate concrete authority. Receive current main/finalizer/cleanup evidence and reconcile27outer cases,38commands,76flags and existing nested controls plus G27.",
+    "Original UI6 and all Release/Migration/environment gates remain separate; no focal receipt substitutes for them."
+  ],
+  "limits": [
+    "All four final bindings are deliberately UNBOUND. No final source/driver, run, runtime nonce or output is claimed by this proposal.",
+    "The only new selected functional file is the existing C20 consumer. No test matrix, source helper, observer, sampler, cache, clone elision or scheduling change was authored here.",
+    "The C20 factory returns a new named callback; identity/name/toString equivalence with the prior arrow is not promised. It clones the complete decisionResults graph before filtering.",
+    "The control's selected/fallback, reachable-failure and fresh-authority evidence is at C08 after native materialization with controlled dependencies. It is not installed native projection or measured performance.",
+    "Current source-local declaration/report counts and prior focal assertions must not become global D29 totals. Actual assertions and duration come only from the future run.",
+    "The sums of individual ceilings exceed the preserved global deadline even in D28; no aggregate fit guarantee or budget increase follows from this proposal.",
+    "All D28 and earlier objects are preserved literally. No tree/commit/ref/run or original/ZIP acquisition was performed."
+  ],
+  "actions": {
+    "tree": 0,
+    "commit": 0,
+    "ref": 0,
+    "run": 0,
+    "originalLogGet": 0,
+    "zipGet": 0,
+    "repositoryExecution": false,
+    "sourceOrTestEdits": 0
+  },
+  "independentReview": {
+    "state": "PENDING_D29_PROPOSAL_REVIEW",
+    "reviewTiming": "Root and Teams after the separate Analytics task; this document is not activation authority."
+  }
+}

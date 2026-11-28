@@ -1,0 +1,201 @@
+{
+  "schema": "sf613-c20-root-static-source-review-v1",
+  "status": "SOURCE_CONTROL_ACCEPTED_FOR_OBJECT_CREATION_NO_EXECUTION",
+  "at": {
+    "current_time": "2026-11-28 04:50:08 UTC"
+  },
+  "sourceParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+  "sourceParentTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+  "manifest": {
+    "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+    "bytes": 11676,
+    "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+    "lf": 290,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "779cf3ff515733d40b85a199b7900f28271f1812",
+    "bytes": 9356,
+    "sha256": "c12f8ead3a8da07780279cecaa7ee984b3bb6aa5d34e11745eb2aa6d9c5564ef",
+    "lf": 174,
+    "endsWithLF": true
+  },
+  "peer": {
+    "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+    "bytes": 9824,
+    "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+    "lf": 296,
+    "endsWithLF": true
+  },
+  "preliminary": {
+    "schema": "sf613-c20-lookup-prereview-data-v1",
+    "status": "READ_ONLY_NO_PATCH",
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "lookup": {
+      "gitBlob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "bytes": 3994,
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "lf": 35,
+      "endsWithLF": true
+    },
+    "provider": {
+      "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+      "bytes": 67334,
+      "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+      "lf": 891,
+      "endsWithLF": true
+    },
+    "predicateLiteralEqual": true,
+    "lookupAwaitTokens": 7,
+    "selectedGraph": "entire decisionResults before Object.values/filter; not found-only results",
+    "limits": [
+      "No measured gain or exclusive causal attribution.",
+      "Factory creates a callback; no literal callback identity/name/toString equality with old inline arrow.",
+      "Contract omits namespaces outside decisionResults; it is not global full-state clone equivalence.",
+      "Native initial materialization and before/after authority checks remain."
+    ],
+    "patchCreated": false
+  },
+  "productDelta": {
+    "before": {
+      "gitBlob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "bytes": 3994,
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "lf": 35,
+      "endsWithLF": true
+    },
+    "after": {
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+      "bytes": 3614,
+      "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+      "lf": 36,
+      "endsWithLF": true
+    },
+    "uniqueAnchors": 2,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "awaitBefore": 7,
+    "awaitAfter": 7,
+    "changes": [
+      "one factory import",
+      "factory-owned same predicate argument"
+    ],
+    "providerChanged": false,
+    "testsPending": true
+  },
+  "completeDerivation": {
+    "status": "STATIC_TEXT_VERIFIED",
+    "anchors": 2,
+    "additionExact": true,
+    "diffs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "hunks": 2,
+        "added": 2,
+        "removed": 1,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "hunks": 1,
+        "added": 260,
+        "removed": 0,
+        "forward": true,
+        "inverse": true
+      }
+    ],
+    "source": {
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+      "bytes": 3614,
+      "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+      "lf": 36,
+      "endsWithLF": true
+    },
+    "test": {
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+      "bytes": 16889,
+      "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+      "lf": 260,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+      "bytes": 11676,
+      "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+      "lf": 290,
+      "endsWithLF": true
+    },
+    "testExecution": false
+  },
+  "paths": [
+    {
+      "present": true,
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "entry": {
+        "path": "scenario-lookup.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+        "size": 3994,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/40c78dee5908cd8af58cc3d58435f3cfb4542045"
+      },
+      "trees": [
+        "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "a27ea6f047f44308b4ab2f2df79c08b6c5164237",
+        "9758cc619b78775ca016b364b0be890a0b2e3913",
+        "16b2e80ad6b96efc72ba54714bc8c74a0ee3ecc6",
+        "e2eff7799770bc783749e09461467999faad5fdd",
+        "744e942882a9b643bd52eb27707fbe9d079848e7"
+      ]
+    },
+    {
+      "present": false,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "trees": [
+        "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "a27ea6f047f44308b4ab2f2df79c08b6c5164237",
+        "9758cc619b78775ca016b364b0be890a0b2e3913",
+        "16b2e80ad6b96efc72ba54714bc8c74a0ee3ecc6",
+        "ec80277e5a7864d5e4d69bafc375c738fa9dd6d5",
+        "41eeb3b1e578908f4151d388dba54c41155370d8",
+        "a6d8e4360d7ce3a8bce1ac38de3d92fb8468edb8",
+        "5248eb81448c9363ee26114bbcf361f0a14f8e35"
+      ]
+    }
+  ],
+  "semanticReview": {
+    "wholeSourceAndTestRead": true,
+    "onlyProductChanges": "Existing selector import and third argument of state.read; seven awaits and all remaining bytes literal.",
+    "readSet": "Full decisionResults graph before filtering; unrelated namespace effects excluded by declared contract.",
+    "functionalTest": "One Bun declaration, 14 sequential real-consumer/C08 invocations with controlled case/history/host ports; chosen/fallback/late capture and authority/error/disclosure oracles.",
+    "nativeLimit": "Probes installed after native materialization; no new native projection or measured performance claim.",
+    "callbackLimit": "New factory callback identity/name/toString differ, no equivalence claimed.",
+    "unchanged": "Provider/native, other callbacks, original Analytics waiters, old functional controls and final D28."
+  },
+  "readerReception": {
+    "root": {
+      "gitBlob": "c3aaf4b12a7fc44e3f7bba144de5df346d41953c",
+      "bytes": 7730,
+      "sha256": "1c28f1d902969a06694f6b6feb1121157cae28cba23aa0d466d2b3dbea930ac0",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "transport": {
+      "gitBlob": "a3924c196f2818241886c4fe4a0dea7d7fde8be1",
+      "bytes": 5272,
+      "sha256": "e767767b87b7561b92766eb07844d94c1162ec1a25616d9a4b127dbaf1a92e87",
+      "lf": 189,
+      "endsWithLF": true
+    },
+    "outcome": "21 events exact across main, original file and runtime; no terminal or extra causal boundary. Prior Analytics remains negative.",
+    "independentFinalPending": true
+  },
+  "authority": {
+    "treeCommitOnly": true,
+    "ref": false,
+    "run": false,
+    "production": false
+  }
+}

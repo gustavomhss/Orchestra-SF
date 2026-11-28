@@ -1,0 +1,408 @@
+{
+  "schema": "sf613-c20-original-analytics-execution-authority-v1",
+  "status": "READY_ONE_ORIGINAL_INSTALLED_ANALYTICS_EXECUTION",
+  "at": {
+    "current_time": "2026-11-28 05:19:55 UTC"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "authorization": "User mandate to finish existing #613 through reviewed integration in dev. One original installed Analytics execution is justified by the reviewed clean C20 source and its independently accepted focal. No production cutover authorization.",
+  "purpose": "Test the two unchanged original Analytics journeys and their original response deadlines on clean S20. No unchanged-source automatic rerun.",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "objectReceipt": {
+      "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    },
+    "rootStaticReview": {
+      "gitBlob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+      "bytes": 7320,
+      "sha256": "91c1dc3b6adb82a21ab10218ea13b623371984f81a1444b47c7924f158b3393b",
+      "lf": 201,
+      "endsWithLF": true
+    },
+    "peerStaticReview": {
+      "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+      "bytes": 9824,
+      "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+      "lf": 296,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "message": "test(sucafina): run original installed Analytics on C20",
+    "plannedBranch": "ci-run-sf613c20a",
+    "runAtThisReview": null,
+    "objectReceipt": {
+      "gitBlob": "08883ef2127007d2696d123295997abeb083c098",
+      "bytes": 7884,
+      "sha256": "4dab22a071befe023ce2bfc4d25573ccaec0e7f8a1a26548df40a2db78cc147f",
+      "lf": 237,
+      "endsWithLF": true
+    },
+    "delta": "1A 100644 .ci-run.json",
+    "treeAudit": {
+      "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+      "after": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+          "after": "97e5c83f6096fe1654e87b7d4f054842512c7bdc"
+        }
+      ],
+      "literalSiblings": 45,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+            "size": 295,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+          }
+        }
+      ]
+    },
+    "readbackVerified": true
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "testTitles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ],
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "testTimeoutSeconds": [
+      780,
+      660
+    ],
+    "previewWaitersSeconds": [
+      60,
+      60
+    ],
+    "sensitivityWaiterSeconds": 120,
+    "jobMinutes": 45,
+    "host": "ubuntu-24.04",
+    "testOwnedInstallations": 2,
+    "onePerTest": true,
+    "localizedContextReusesItsTestInstallation": true,
+    "observer": false,
+    "profiler": false,
+    "originalDeadlineAndSelectionBytesUnchanged": true,
+    "pins": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "mode": "100644",
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "bytes": 56661,
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "mode": "100644",
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "bytes": 4384,
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/playwright.config.ts",
+        "mode": "100644",
+        "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "bytes": 1892,
+        "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "mode": "100644",
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "bytes": 21102,
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "mode": "100644",
+        "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "bytes": 719,
+        "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "mode": "100644",
+        "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "bytes": 15525,
+        "sha256": "c4e921a271e7a39669b9c962c0aa3601dd589ef5f43d928f733aa6f5b963b653",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "mode": "100644",
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/package.json",
+        "mode": "100644",
+        "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "bytes": 4225,
+        "sha256": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "mode": "100644",
+        "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "bytes": 17001,
+        "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": "script/test-ci.ts",
+        "mode": "100644",
+        "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "bytes": 19419,
+        "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "mode": "100644",
+        "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476,
+        "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+        "resolvedInActualSourceTree": true,
+        "retainedInAnalyticsByLiteralSubtree": true
+      }
+    ],
+    "workersRetriesRepeatEnforcedBy": "Unchanged script/test-ci-request.ts 5007e482… playwrightArgs overrides base CI retries2 with --workers1 --retries0 --repeat-each1."
+  },
+  "focalPrerequisite": {
+    "run": 46110276545,
+    "attempt": 1,
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "snapshot": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+    "snapshotTree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+    "status": "CLOSED_FOCAL_PASS_ONLY",
+    "finalReceipt": {
+      "gitBlob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+      "bytes": 9782,
+      "sha256": "7401a044afe296feb43ec5a3a3ace6dd0486152451449b64d52c5e01dd29ea48",
+      "lf": 285,
+      "endsWithLF": true
+    },
+    "rootIntake": {
+      "gitBlob": "b594f835834317f430e93890ee1ec3ae428166c3",
+      "bytes": 97257,
+      "sha256": "fc5b3943df4afdc73168e7dbec6fa37eb8a9b77fb0662077e3d6e4af71dc1c10",
+      "lf": 1780,
+      "endsWithLF": true
+    },
+    "peerIntake": {
+      "gitBlob": "7c9521aa9d0b6e4d631a7eefb3457bc20a2475c9",
+      "bytes": 15714,
+      "sha256": "9b5c43968bf500655a38f2c85dafd91aac9e2a6ebff54ebb6f5d929b8fcfbeee",
+      "lf": 566,
+      "endsWithLF": true
+    },
+    "rootChecks": 22,
+    "peerIntakeChecks": 50,
+    "peerDocumentaryChecks": 5,
+    "finalDocumentaryChecks": 12,
+    "functionalTests": 16,
+    "functionalAssertions": 2250,
+    "outerTests": 8,
+    "outerAssertions": 38,
+    "commands": 14,
+    "falseTruncationFlags": 28,
+    "reports": 7,
+    "originalsClosed": true
+  },
+  "independentOriginalAnalyticsReview": {
+    "reviewer": "/root/teams_product",
+    "receipt": {
+      "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+      "bytes": 15090,
+      "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+      "lf": 473,
+      "endsWithLF": true
+    },
+    "selectionChecks": 12,
+    "objectChecks": 12,
+    "focalFinalDocumentaryChecks": 12,
+    "findings": []
+  },
+  "triggerAudit": {
+    "at": {
+      "current_time": "2026-11-28 05:19:55 UTC"
+    },
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "workflowTree": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+    "branch": "ci-run-sf613c20a",
+    "parentWorkflowCount": 18,
+    "matchingPushWorkflow": [
+      "test-ci.yml"
+    ],
+    "unrelatedPushTriggers": [
+      "teams-az02-ci",
+      "dev",
+      "http-team-proof",
+      "g05-http-*",
+      "team-domain-bridge",
+      "team-factory-hooks",
+      "budget-source-read",
+      "native-journeys",
+      "teams-qa-executor",
+      "teams-landing-proof",
+      "teams-admin-check",
+      "g08-proof-source",
+      "az02-host-restart",
+      "release-build-*",
+      "go-live-package",
+      "g07-qualify-*",
+      "go-live-recovery",
+      "tp-scan-*"
+    ],
+    "noProductionWorkflowTriggered": true,
+    "provenance": "The 18 complete workflow definitions and their on-sections are unchanged in the same actual workflow tree. Concrete ci-run-sf613c20a matches only the existing test-ci.yml ci-run-* push trigger. No create or production workflow is triggered."
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 05:18:23 UTC"
+    },
+    "branch": "ci-run-sf613c20a",
+    "branchAbsent": true,
+    "priorRuns": 0,
+    "refs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5"
+    },
+    "maximumActivations": 1,
+    "automaticReruns": false,
+    "run": null,
+    "jobs": null
+  },
+  "intake": {
+    "onlyAfterRunAndBothJobsTerminal": true,
+    "originalMainGetsMaximum": 1,
+    "originalCleanupGetsMaximum": 1,
+    "preserveCompleteDecodedOriginalBeforeInterpretation": true,
+    "literalGitReadbackBeforeParse": true,
+    "metadataBeforeArtifacts": true,
+    "zipDownloadsAuthorizedByThisReceipt": 0,
+    "artifactReaderRequiresSeparateConcreteNeedAndReview": true,
+    "agentsAcquireOriginals": false
+  },
+  "priorResults": {
+    "C19": {
+      "run": 46094695101,
+      "outcome": "First preview original60s timeout and BI pass; closed."
+    },
+    "E14": {
+      "run": 46103050850,
+      "outcome": "Diagnostic original60s preview timeout and BI pass; closed."
+    },
+    "E14Reader": {
+      "run": 46108929460,
+      "receipt": {
+        "gitBlob": "08aa33dd56b067e01cf043cece9855b4b8446721",
+        "bytes": 16558,
+        "sha256": "19536f435e16977dfa3715d2333b8864a763f160b4947bdfea78cb830c835bde",
+        "lf": 478,
+        "endsWithLF": true
+      },
+      "status": "Closed transport pass and consistent 21-record prefix only; no Request close or complete coverage."
+    }
+  },
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "currentInstalledAnalytics": false,
+    "finalC613": false,
+    "finalGoLive": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "C20 opts scenario lookup into the existing complete decisionResults read-set contract. It does not change the initial native materialization, and no performance gain is assumed.",
+    "All observer/profiler overlays remain excluded; original two-test request and original deadlines are retained.",
+    "The prod channel in the CI request selects the original bundle build. It is not a production cutover.",
+    "This one run qualifies only its actual source/snapshot and its observed installed behavior. Future integrated C613 and go-live require their own bound evidence.",
+    "Final #613 integrated UI6/technical execution, independent approved-head review and dev merge remain pending. Migration/Release, final tar, G08/G10 reservations and production decision remain pending."
+  ]
+}

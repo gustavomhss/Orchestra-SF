@@ -1,0 +1,250 @@
+import fs from "node:fs"
+import path from "node:path"
+import { createHash } from "node:crypto"
+import { spawnSync } from "node:child_process"
+
+const SOURCE = "__SF613_SOURCE_SHA__"
+const TREE = "__SF613_SOURCE_TREE__"
+const WRAPPER_BLOB = "__SF613_WRAPPER_BLOB__"
+const WRAPPER_SHA256 = "__SF613_WRAPPER_SHA256__"
+const SLOT = "apps/cli/test/sf613-final-verification.test.ts"
+const UI_SHA256 = "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2"
+const failures = []
+const result = { schema: "sf613-final-technical-finalizer-v1", status: "FAIL", goLiveAcceptance: false,
+  source: SOURCE, sourceTree: TREE, driver: process.env.GITHUB_SHA,
+  run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+  technicalStepOutcome: process.env.SF613_TECH_OUTCOME, processCleanup: [], slotCleanup: "not-attempted",
+  refCleanup: "not-performed; D retained for audit; removal requires an available authorized capability", errors: failures }
+let evidence, root, main
+const hash = bytes => createHash("sha256").update(bytes).digest("hex")
+const blob = bytes => createHash("sha1").update("blob " + bytes.length + "\0").update(bytes).digest("hex")
+const need = (condition, message) => { if (!condition) throw new Error(message) }
+const fail = (stage, error) => failures.push({ stage, message: error instanceof Error ? error.message : String(error) })
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+function sameBirth(a, b) { return a && b && a.pid === b.pid && a.group === b.group && a.session === b.session &&
+  a.starttime === b.starttime && a.bootId === b.bootId }
+function birth(pid) {
+  try {
+    const text = fs.readFileSync("/proc/" + pid + "/stat", "utf8")
+    const tail = text.slice(text.lastIndexOf(")") + 2).trim().split(/\s+/)
+    return { pid, group: Number(tail[2]), session: Number(tail[3]), starttime: tail[19],
+      bootId: fs.readFileSync("/proc/sys/kernel/random/boot_id", "utf8").trim() }
+  } catch (error) { if (error.code === "ENOENT" || error.code === "ESRCH") return null; throw error }
+}
+function alive(pid) {
+  try { process.kill(-pid, 0); return true } catch (error) { if (error.code === "ESRCH") return false; throw error }
+}
+async function waitGone(pid, budget) {
+  const until = performance.now() + budget
+  while (alive(pid) && performance.now() < until) await sleep(50)
+  return !alive(pid)
+}
+function write(relative, bytes) {
+  const fd = fs.openSync(path.join(evidence, relative),
+    fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_WRONLY, 0o600)
+  try { fs.writeFileSync(fd, bytes); fs.fsyncSync(fd) } finally { fs.closeSync(fd) }
+}
+function json(relative, value) { write(relative, Buffer.from(JSON.stringify(value, null, 2) + "\n")) }
+function readJson(relative) {
+  const file = path.join(evidence, relative)
+  const st = fs.lstatSync(file)
+  need(st.isFile() && !st.isSymbolicLink() && st.nlink === 1, "Unsafe evidence input " + relative)
+  return JSON.parse(fs.readFileSync(file, "utf8"))
+}
+function directories(chain) {
+  need(Array.isArray(chain) && chain.length > 0 && chain.at(-1).path === path.join(root, path.dirname(SLOT)),
+    "Missing original slot directory identities")
+  for (const expected of chain) {
+    const st = fs.lstatSync(expected.path, { bigint: true })
+    need(st.isDirectory() && !st.isSymbolicLink() && fs.realpathSync(expected.path) === expected.path &&
+      String(st.dev) === expected.dev && String(st.ino) === expected.ino, "Directory identity drift")
+  }
+}
+let gitSerial = 0
+function git(label, args) {
+  const invocation = spawnSync("git", args, { cwd: root, shell: false, timeout: 30000,
+    maxBuffer: 16 * 1024 * 1024, env: { ...process.env, GIT_OPTIONAL_LOCKS: "0" } })
+  const prefix = "finalizer-git-" + String(++gitSerial).padStart(2, "0") + "-" + label
+  const stdout = invocation.stdout ?? Buffer.alloc(0), stderr = invocation.stderr ?? Buffer.alloc(0)
+  write(prefix + ".stdout.bin", stdout); write(prefix + ".stderr.bin", stderr)
+  need(!invocation.error && invocation.status === 0 && invocation.signal === null, "Final Git observation failed: " + label)
+  return stdout
+}
+try {
+  const run = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+  need(/^[1-9]\d*$/.test(run ?? "") && /^[1-9]\d*$/.test(attempt ?? ""), "Invalid run/attempt")
+  evidence = fs.realpathSync(process.env.SF613_EVIDENCE)
+  need(evidence === path.join(fs.realpathSync(process.env.RUNNER_TEMP), "sf613-final-" + run + "-" + attempt),
+    "Unexpected evidence location")
+  const es = fs.lstatSync(evidence)
+  need(es.isDirectory() && !es.isSymbolicLink() && es.uid === process.getuid() && (es.mode & 0o777) === 0o700,
+    "Unsafe evidence directory")
+  const bootstrap = readJson("bootstrap.json")
+  need(bootstrap.driver === process.env.GITHUB_SHA && bootstrap.run === run && bootstrap.attempt === attempt,
+    "Bootstrap identity mismatch")
+  root = fs.realpathSync(process.env.GITHUB_WORKSPACE)
+  need(root === path.resolve(process.env.GITHUB_WORKSPACE) && evidence !== root &&
+    !evidence.startsWith(root + path.sep), "Evidence/checkout boundary mismatch")
+  try { main = readJson("receipt.json") } catch (error) { fail("main-receipt", error) }
+
+  for (const name of fs.readdirSync(evidence).filter(name => /^\d{3}-[a-z0-9-]+\.process-start\.json$/.test(name)).sort()) {
+    try {
+      const record = readJson(name), expected = record.birth
+      need(record.source === SOURCE && record.driver === process.env.GITHUB_SHA && record.run === run &&
+        record.attempt === attempt && Number.isSafeInteger(expected?.pid) && expected.pid > 0 &&
+        expected.group === expected.pid && expected.session === expected.pid, "Process receipt identity mismatch")
+      const current = birth(expected.pid)
+      if (!current) {
+        need(!alive(expected.pid), "Unidentified remaining process group; refuse to signal by recycled number")
+        result.processCleanup.push({ label: record.label, pid: expected.pid, result: "already-gone" })
+      } else if (!sameBirth(current, expected)) {
+        fail("process-birth-drift", new Error("Recorded process number has another birth; it was not signaled: " + record.label))
+        result.processCleanup.push({ label: record.label, pid: expected.pid, result: "birth-different; not-signaled" })
+      } else {
+        fail("remaining-owned-process", new Error("Owned process remained after the technical step: " + record.label))
+        process.kill(-expected.pid, "SIGTERM")
+        if (!await waitGone(expected.pid, 5000)) {
+          const again = birth(expected.pid)
+          need(sameBirth(again, expected), "Lost process-birth identity; refuse SIGKILL")
+          process.kill(-expected.pid, "SIGKILL")
+          need(await waitGone(expected.pid, 5000), "Owned process group did not finalize")
+        }
+        result.processCleanup.push({ label: record.label, pid: expected.pid, result: "terminated-owned-birth" })
+      }
+    } catch (error) { fail("process-finalization", error) }
+  }
+
+  const slot = path.join(root, SLOT)
+  let slotExists = false
+  try { fs.lstatSync(slot); slotExists = true } catch (error) { if (error.code !== "ENOENT") throw error }
+  if (slotExists) {
+    need(main?.slot?.cleanup !== "removed-own-inode", "A new slot appeared after successful removal; refuse to touch it")
+    need(!failures.some(value => value.stage === "process-finalization"), "Process ownership unresolved; refuse slot cleanup")
+    const created = readJson("slot-created.json"), initial = readJson("envelope-started.json")
+    need(created.source === SOURCE && created.sourceTree === TREE && created.driver === process.env.GITHUB_SHA &&
+      created.run === run && created.attempt === attempt, "Slot creation identity mismatch")
+    directories(initial.directories)
+    const directoryFd = fs.openSync(path.dirname(slot),
+      fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW)
+    try {
+      const parent = fs.fstatSync(directoryFd, { bigint: true }), expectedParent = initial.directories.at(-1)
+      need(String(parent.dev) === expectedParent.dev && String(parent.ino) === expectedParent.ino,
+        "Slot parent changed before finalizer acquisition")
+      const anchoredSlot = "/proc/self/fd/" + directoryFd + "/" + path.basename(slot)
+      const fd = fs.openSync(anchoredSlot, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW)
+      try {
+        const own = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(anchoredSlot, { bigint: true })
+        need(own.isFile() && named.isFile() && !named.isSymbolicLink() && own.nlink === 1n && named.nlink === 1n &&
+          String(own.dev) === created.before.dev && String(own.ino) === created.before.ino &&
+          own.dev === named.dev && own.ino === named.ino && (own.mode & 0o777n) === 0o600n, "Refuse foreign slot inode/type/mode")
+        const bytes = fs.readFileSync(fd)
+        need(hash(bytes) === WRAPPER_SHA256 && blob(bytes) === WRAPPER_BLOB, "Refuse drifted slot bytes")
+        directories(initial.directories)
+        const finalName = fs.lstatSync(anchoredSlot, { bigint: true })
+        need(finalName.dev === own.dev && finalName.ino === own.ino && finalName.isFile() && finalName.nlink === 1n,
+          "Slot identity changed before cleanup")
+        fs.unlinkSync(anchoredSlot)
+        result.slotCleanup = "removed-own-inode-after-failed-step"
+      } finally { fs.closeSync(fd) }
+    } finally { fs.closeSync(directoryFd) }
+  } else result.slotCleanup = "already-absent"
+  try { fs.lstatSync(slot); throw new Error("Slot remains") } catch (error) { if (error.code !== "ENOENT") throw error }
+
+  need(git("head", ["rev-parse", "HEAD"]).toString("utf8").trim() === SOURCE &&
+    git("tree", ["rev-parse", "HEAD^{tree}"]).toString("utf8").trim() === TREE, "Final literal C/T mismatch")
+  const index = git("whole-index", ["ls-files", "--stage", "-z"])
+  const beforeIndexNames = fs.readdirSync(evidence).filter(name => /^\d{3}-before-whole-index\.stdout\.bin$/.test(name))
+  need(beforeIndexNames.length === 1 && index.equals(fs.readFileSync(path.join(evidence, beforeIndexNames[0]))),
+    "Final whole index does not equal before")
+  need(git("tracked", ["diff", "--no-ext-diff", "--no-textconv", "--exit-code"]).length === 0 &&
+    git("staged", ["diff", "--cached", "--no-ext-diff", "--no-textconv", "--exit-code"]).length === 0 &&
+    git("status", ["status", "--porcelain=v1", "--untracked-files=all", "-z"]).length === 0, "Final worktree/index is not clean")
+  const uiPath = path.join(root, ".ci-run.json"), uiStat = fs.lstatSync(uiPath)
+  need(uiStat.isFile() && !uiStat.isSymbolicLink() && uiStat.nlink === 1 && uiStat.size === 390, "Final UI request file identity mismatch")
+  const ui = fs.readFileSync(uiPath)
+  need(hash(ui) === UI_SHA256, "Final UI request bytes changed")
+  result.finalCheckout = { head: SOURCE, tree: TREE, clean: true, indexBytes: index.length,
+    indexSha256: hash(index), uiBytes: ui.length, uiSha256: hash(ui), slotAbsent: true }
+
+  need(main?.status === "PASS" && main.technicalQualification === true && main.goLiveAcceptance === false &&
+    main.source === SOURCE && main.sourceTree === TREE && main.driver === process.env.GITHUB_SHA &&
+    main.run === run && main.attempt === attempt && main.result?.pass === 27 &&
+    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 27 &&
+    main.result?.omni?.spawns > 0 && main.result?.omni?.delegated === 0 &&
+    main.originalOmniVerdict?.source === SOURCE && main.originalOmniVerdict?.function === "controlVerdict" &&
+    main.originalOmniVerdict?.verdict?.startsWith("omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); ") &&
+    main.slot?.cleanup === "removed-own-inode" && process.env.SF613_TECH_OUTCOME === "success",
+    "No successful, complete, source-bound original technical receipt")
+} catch (error) { fail("finalizer", error) }
+// Prepare and hash the inventory before writing the terminal result.
+// This manifest is evidence inventory, never an independent PASS verdict.
+if (evidence) {
+  try {
+    const files = []
+    for (const name of fs.readdirSync(evidence).sort()) {
+      need(name !== "finalization.json" && name !== "evidence-manifest.json", "Finalizer output already exists")
+      const filename = path.join(evidence, name), st = fs.lstatSync(filename)
+      need(st.isFile() && !st.isSymbolicLink() && st.nlink === 1, "Unexpected evidence directory entry")
+      const digest = createHash("sha256")
+      let bytes = 0
+      for await (const chunk of fs.createReadStream(filename)) { bytes += chunk.length; digest.update(chunk) }
+      files.push({ path: name, bytes, sha256: digest.digest("hex") })
+    }
+    const manifestBytes = Buffer.from(JSON.stringify({
+      schema: "sf613-final-evidence-manifest-v1", source: SOURCE, sourceTree: TREE,
+      driver: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT,
+      state: "INVENTORY_PREPARED", independentQualification: false, goLiveAcceptance: false,
+      terminalReceipt: "finalization.json",
+      excludedSelfAndTerminalReceipt: ["evidence-manifest.json", "finalization.json"], files,
+    }, null, 2) + "\n")
+    write("evidence-manifest.json", manifestBytes)
+    result.evidenceManifest = { path: "evidence-manifest.json", bytes: manifestBytes.length, sha256: hash(manifestBytes) }
+  } catch (error) { fail("evidence-finalization", error) }
+}
+result.status = failures.length === 0 ? "PASS" : "FAIL"
+result.finishedAt = new Date().toISOString()
+if (evidence) {
+  const terminal = path.join(evidence, "finalization.json")
+  let fd, owned, closed = false
+  try {
+    fd = fs.openSync(terminal, fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW | fs.constants.O_RDWR, 0o600)
+    owned = fs.fstatSync(fd, { bigint: true })
+    need(owned.isFile() && owned.nlink === 1n, "Unsafe owned terminal receipt")
+    fs.writeFileSync(fd, JSON.stringify(result, null, 2) + "\n")
+    fs.fsyncSync(fd)
+    fs.closeSync(fd); closed = true
+  } catch (error) {
+    fail("terminal-receipt-write", error)
+    result.status = "FAIL"
+    // One bounded best effort on this finalizer's own descriptor/inode only.
+    // A broken disk/runner cannot promise persistence; job success is always required.
+    if (fd !== undefined && owned) {
+      try {
+        const current = fs.fstatSync(fd, { bigint: true }), named = fs.lstatSync(terminal, { bigint: true })
+        need(current.dev === owned.dev && current.ino === owned.ino && named.dev === owned.dev &&
+          named.ino === owned.ino && current.nlink === 1n && named.nlink === 1n && named.isFile(),
+          "Refuse to rewrite a foreign terminal receipt")
+        fs.ftruncateSync(fd, 0)
+        const failureBytes = Buffer.from(JSON.stringify(result, null, 2) + "\n")
+        need(fs.writeSync(fd, failureBytes, 0, failureBytes.length, 0) === failureBytes.length,
+          "Incomplete FAIL terminal receipt")
+        fs.fsyncSync(fd)
+        fs.closeSync(fd); closed = true
+      } catch (secondary) {
+        fail("terminal-receipt-fail-contingency", secondary)
+        try {
+          const named = fs.lstatSync(terminal, { bigint: true })
+          need(named.dev === owned.dev && named.ino === owned.ino && named.nlink === 1n && named.isFile(),
+            "Refuse to remove a foreign terminal receipt")
+          fs.unlinkSync(terminal)
+        } catch (cleanupError) { fail("terminal-receipt-owned-cleanup", cleanupError) }
+      }
+    }
+  } finally {
+    if (fd !== undefined && !closed) {
+      try { fs.closeSync(fd) } catch (error) { fail("terminal-receipt-close", error); result.status = "FAIL" }
+    }
+  }
+}
+process.stdout.write(JSON.stringify(result) + "\n")
+process.exitCode = result.status === "PASS" ? 0 : 1

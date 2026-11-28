@@ -1,0 +1,51 @@
+{
+  "schema": "sf613-c20-analytics-trigger-recovery-activation-v1",
+  "at": {
+    "current_time": "2026-11-28 05:44:32 UTC"
+  },
+  "status": "ONE_NONFORCE_RECOVERY_APPLIED_RUN_ASSOCIATION_PENDING",
+  "authority": {
+    "gitBlob": "ca30c899e8fc3de759e0dfbde119f780b58f015c",
+    "bytes": 13399,
+    "sha256": "e9d70e3d833f65a8a5f61f632d91009309d2a0d4eebf58034fa0547cdbd8b9ed",
+    "lf": 349,
+    "endsWithLF": true
+  },
+  "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+  "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+  "previousSnapshot": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+  "effectiveSnapshot": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+  "snapshotTree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+  "branch": "ci-run-sf613c20a",
+  "referenceAdvances": 1,
+  "force": false,
+  "refReadback": {
+    "ref": "refs/heads/ci-run-sf613c20a",
+    "node_id": "REF_kwDOVsSYprtyZWZzL2hlYWRzL2NpLXJ1bi1zZjYxM2MyMGE",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/ci-run-sf613c20a",
+    "object": {
+      "sha": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/4e1d12142119d4b2f508cf880563373d11d1b9e8"
+    }
+  },
+  "objectReceipt": {
+    "gitBlob": "eaf3953a5a6e6dce1d81e30796cc573d1dfe713f",
+    "bytes": 2784,
+    "sha256": "2f68eb4ba91cca7e239291b6a5f57adca23d5ea590d991173c8d6c358e6b77e2",
+    "lf": 65,
+    "endsWithLF": true
+  },
+  "peerChecks": 19,
+  "originalGets": 0,
+  "zipGets": 0,
+  "noFurtherAutomaticRepair": true,
+  "qualification": false,
+  "productionAuthorized": false,
+  "limits": [
+    "The workflow's enabled state remains unobserved; the connector does not support that endpoint. A new event is not a guarantee of run creation.",
+    "A late original event can still create a second run. Existing cleanup deletes by branch name without a head comparison; either cleanup may delete the shared temporary ref. Immutable snapshots and run IDs remain distinct.",
+    "If any old run/check appears before CAS, stop the repair. If multiple runs appear afterwards, record both and assess the effective run without combining evidence.",
+    "No request, test, workflow trigger, timeout, retry, source product file, protection, approval or production setting is changed."
+  ]
+}

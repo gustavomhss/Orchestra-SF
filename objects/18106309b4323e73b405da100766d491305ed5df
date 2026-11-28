@@ -1,0 +1,335 @@
+{
+  "schema": "sf613-c20-focal-bound-bounds-v1",
+  "status": "SOURCE_BOUND_STATIC_FOCAL_SNAPSHOT_PENDING",
+  "template": {
+    "git": "f849443cddaa0de0ac7b7f3c7b24fec08bdf60ff",
+    "bytes": 12892,
+    "sha256": "dabe645974e0da04ed996e83e7e7364822bc21380abf59633974f6326d90e1f7",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "carrier": {
+    "git": "1ea31adde022e3bf1fd54075da14be9e1210f75e",
+    "bytes": 11888,
+    "sha256": "67501ff0a4d30c587b9c61bac8cb65416201ed84f5474c28a57a230abecaacaa",
+    "lf": 182,
+    "endsWithLF": true
+  },
+  "identities": {
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "sourceDeltaBase": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "sourceReceipt": {
+      "git": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    },
+    "snapshot": "UNBOUND",
+    "snapshotTree": "UNBOUND",
+    "run": "UNBOUND",
+    "attempt": "UNBOUND"
+  },
+  "groups": [
+    {
+      "id": "G1",
+      "commands": 3,
+      "processMs": [
+        60000,
+        30000,
+        30000
+      ],
+      "parentMs": 180000,
+      "selection": "Source/snapshot identity and 17 source file hashes"
+    },
+    {
+      "id": "G2",
+      "commands": 1,
+      "processMs": [
+        120000
+      ],
+      "parentMs": 180000,
+      "selection": "cases-read-contract.test.ts whole file",
+      "declarations": 7,
+      "reports": 0,
+      "bunNominalMs": 105000,
+      "cooperativePerTestMs": 12000
+    },
+    {
+      "id": "G3",
+      "commands": 1,
+      "processMs": [
+        300000
+      ],
+      "parentMs": 360000,
+      "selection": "c08-snapshot-projection.test.ts whole file",
+      "declarations": 5,
+      "reports": 5,
+      "bunNominalMs": 290000,
+      "cooperativeNominalMs": 264000
+    },
+    {
+      "id": "G4",
+      "commands": 1,
+      "processMs": [
+        240000
+      ],
+      "parentMs": 300000,
+      "selection": "CLI bun run typecheck"
+    },
+    {
+      "id": "G5",
+      "commands": 1,
+      "processMs": [
+        240000
+      ],
+      "parentMs": 300000,
+      "selection": "Sucafina bun run typecheck"
+    },
+    {
+      "id": "G6",
+      "commands": 5,
+      "processMs": [
+        30000,
+        120000,
+        30000,
+        30000,
+        180000
+      ],
+      "parentMs": 600000,
+      "selection": "actual origin/dev / merge-base / canonical guards"
+    },
+    {
+      "id": "G7",
+      "commands": 1,
+      "processMs": [
+        120000
+      ],
+      "parentMs": 180000,
+      "selection": "portfolio-selection-preferences-read.test.ts whole file",
+      "declarations": 3,
+      "reports": 1,
+      "bunNominalMs": 50000,
+      "cooperativeNominalMs": 42000
+    },
+    {
+      "id": "G8",
+      "commands": 1,
+      "processMs": [
+        45000
+      ],
+      "parentMs": 60000,
+      "selection": "scenario-lookup-selection.test.ts whole file",
+      "declarations": 1,
+      "reports": 1,
+      "bunNominalMs": 20000,
+      "cooperativeNominalMs": 18000,
+      "internalConsumerInvocations": 14
+    }
+  ],
+  "totals": {
+    "groups": 8,
+    "commands": 14,
+    "truncationFlagsRequiredFalse": 28,
+    "sourceWorkingPins": 17,
+    "functionalProcesses": 4,
+    "staticBunDeclarations": 16,
+    "expectedControlReports": 7,
+    "actualTests": null,
+    "actualAssertions": null,
+    "actualDurationMs": null
+  },
+  "commandBudgets": {
+    "sumMs": 1575000,
+    "baseSumMs": 1530000,
+    "addedMs": 45000,
+    "all13PriorArgvCwdTimeoutsLiteral": true
+  },
+  "parentBudgets": {
+    "sumMs": 2160000,
+    "baseSumMs": 2100000,
+    "addedMs": 60000
+  },
+  "mainWorkflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "bytes": 18476,
+    "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+    "lf": 337,
+    "endsWithLF": true,
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "jobTimeoutMs": 2700000,
+    "timeoutLine": 28,
+    "nominalSharedOverheadMs": 540000,
+    "overheadGuaranteed": false,
+    "changed": false,
+    "cleanupSeparate": true,
+    "cleanupDoesNotExtendMain": true
+  },
+  "runner": {
+    "path": "script/test-ci.ts",
+    "git": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "bytes": 19419,
+    "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+    "lf": 391,
+    "endsWithLF": true,
+    "changed": false,
+    "followWaitIsNotJobTimeout": true
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false,
+    "same247BytesNoLF": true,
+    "outerBunTimeoutArgumentMs": 600000,
+    "argumentScope": "Outer carrier tests only; all four nested functional files carry no global --timeout argument."
+  },
+  "capture": {
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "arithmeticAllCommandStreamsBytes": 29360128,
+    "aggregateMainCap": null,
+    "completeReceiptRequired": true,
+    "anyTruncationThrowsBeforeExitAssertion": true,
+    "killSignal": "SIGTERM",
+    "forceKillAfterMs": 5000,
+    "guardApprovalEnvironment": "GUARDRAIL_APPROVED=''",
+    "engineLiteral": true,
+    "newEmitterOrParser": false
+  },
+  "reportMap": [
+    {
+      "group": "G2",
+      "prefix": null,
+      "expected": 0
+    },
+    {
+      "group": "G3",
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "expected": 2
+    },
+    {
+      "group": "G3",
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "expected": 2
+    },
+    {
+      "group": "G3",
+      "prefix": "SF_C16_SELECTION_CONTROL",
+      "expected": 1,
+      "preservedC16Outcomes": 31,
+      "identityProjectionCases": 9
+    },
+    {
+      "group": "G7",
+      "prefix": "SF_C19_PORTFOLIO_CASES",
+      "expected": 1
+    },
+    {
+      "group": "G8",
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "expected": 1,
+      "checks": [
+        "consumer-selects-complete-detached-results",
+        "opaque-wrapper-keeps-full-state",
+        "mutable-context-uses-opaque-fallback",
+        "proxy-context-uses-opaque-fallback",
+        "map-prototype-uses-opaque-fallback",
+        "request-key-remains-late-after-admission",
+        "mutable-binding-is-observed-after-admission",
+        "admission-denied-does-not-disclose",
+        "egress-revoked-does-not-disclose",
+        "abort-does-not-disclose",
+        "unmatched-getter-selected",
+        "unmatched-getter-opaque",
+        "unmatched-function-selected",
+        "unmatched-function-opaque"
+      ],
+      "modelBytesWithPrefixAndLF": 564
+    }
+  ],
+  "newGroup": {
+    "title": "Scenario lookup preserves complete candidate reads, fallback and fresh authority",
+    "cwd": "modules/sucafina/Sucafinav1",
+    "executable": "process.execPath",
+    "argv": [
+      "test",
+      "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+    ],
+    "processMs": 45000,
+    "parentMs": 60000,
+    "nominalProcessAboveBunMs": 25000,
+    "nominalParentAboveProcessMs": 15000,
+    "prefixAssertionOnly": "SF_C20_SCENARIO_LOOKUP ",
+    "addedSubprocessesInsideConsumer": 0,
+    "retries": 0,
+    "nameFilter": null
+  },
+  "omni": {
+    "outerDeclaredExpected": 8,
+    "outerSpawnReceiptsExpected": 14,
+    "outerDelegatedExpected": 0,
+    "actualNonce": "UNBOUND",
+    "claimScope": "Only the wrapper's own declared contexts/commands. Do not promote this to a universal inventory of all processes in the job."
+  },
+  "pins": {
+    "sourceOnlyCount": 17,
+    "old15Literal": true,
+    "additional": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      }
+    ],
+    "excludesExecutableSelfHash": true,
+    "selfHashReason": "Root audits actual D membership; no Git selfpin is embedded in the driver.",
+    "wrapperExpectedBoundSizeOnly": 12927,
+    "wrapperBoundBytes": 12927,
+    "wrapperBoundBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4"
+  },
+  "limits": [
+    "The source and tree are now bound to the reviewed S20 object by exactly two replacements. Root must separately construct and audit the focal snapshot before activation.",
+    "Parent sums and per-command output ceilings are arithmetic bounds, not forecasts or guaranteed setup/teardown allowance.",
+    "No test deadline, old command, workflow or runner limit is increased. G8 is one additional whole-file command.",
+    "The C20 consumer uses real lookup/LocalStore/C08 with controlled host/case/history and post-materialization probes; it is not native or installed qualification.",
+    "No focal PASS, assertion count, CPU measurement, Analytics result or final D28 execution is presumed.",
+    "No source/tree/commit/ref/run/original/ZIP is created or acquired by this authoring package."
+  ],
+  "immutableTemplateBounds": {
+    "git": "82b99e4eafce14f14817d366ca3b396a555c8b8d",
+    "bytes": 9057,
+    "sha256": "3c37c3a6d50e51a0f4c7d6fdff395f2321f7529cbaf5fc5d843a58cf53e0be71",
+    "lf": 305,
+    "endsWithLF": true
+  },
+  "bound": {
+    "git": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "bytes": 12927,
+    "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "binding": {
+    "git": "c23311b50fe3aed7212951b6fa4aa3aba31dfad2",
+    "bytes": 7011,
+    "sha256": "5eab807917bdafee1b03d940b36537c9f51adf626aea8de6b3b72bd8ab8c93a9",
+    "lf": 216,
+    "endsWithLF": true
+  }
+}

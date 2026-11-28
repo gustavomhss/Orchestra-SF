@@ -1,0 +1,2206 @@
+{
+  "schema": "sf613-c20-analytics-root-extraction-v1",
+  "at": {
+    "current_time": "2026-11-28 06:03:25 UTC"
+  },
+  "source": {
+    "sha": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+  },
+  "snapshot": {
+    "sha": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc"
+  },
+  "run": {
+    "id": 46113463330,
+    "attempt": 1,
+    "main": 140881932116,
+    "cleanup": 140884025044
+  },
+  "original": {
+    "gitBlob": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+    "bytes": 3089836,
+    "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+    "lf": 1843,
+    "endsWithLF": true
+  },
+  "closed": {
+    "at": {
+      "current_time": "2026-11-28 05:56:05 UTC"
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "source": "full decoded originals, actual Git parts and literal readback/recomposition",
+    "reacquisitionAllowed": false
+  },
+  "method": "Exact marker family prefix and JSON literal extracted from already preserved decoded original. ANSI and timestamp are excluded only from these derived unions; original buffers and Git parts remain untouched. SF_DESIGN_PREVIEW is excluded before snippet interpretation. No ZIP acquired.",
+  "unions": [
+    {
+      "prefix": "c20_analytics_markers_union",
+      "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "endsWithLF": true,
+      "count": 65,
+      "lines": [
+        1125,
+        1127,
+        1129,
+        1131,
+        1133,
+        1135,
+        1137,
+        1139,
+        1141,
+        1143,
+        1145,
+        1147,
+        1149,
+        1151,
+        1153,
+        1155,
+        1157,
+        1159,
+        1161,
+        1177,
+        1189,
+        1195,
+        1201,
+        1203,
+        1205,
+        1221,
+        1223,
+        1225,
+        1241,
+        1243,
+        1245,
+        1247,
+        1263,
+        1423,
+        1437,
+        1443,
+        1449,
+        1461,
+        1475,
+        1479,
+        1481,
+        1483,
+        1497,
+        1513,
+        1529,
+        1537,
+        1543,
+        1549,
+        1555,
+        1573,
+        1591,
+        1597,
+        1603,
+        1605,
+        1607,
+        1625,
+        1627,
+        1629,
+        1647,
+        1649,
+        1653,
+        1655,
+        1657,
+        1659,
+        1673
+      ]
+    },
+    {
+      "prefix": "c20_analytics_contexts_union",
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true,
+      "count": 2,
+      "lines": [
+        1165,
+        1207
+      ]
+    },
+    {
+      "prefix": "c20_analytics_discovery_owner_union",
+      "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "endsWithLF": true,
+      "count": 6,
+      "lines": [
+        1123,
+        1163,
+        1407,
+        1409,
+        1477,
+        1651
+      ]
+    }
+  ],
+  "counts": {
+    "SF_DESIGN_DISCOVERY": 2,
+    "SF_ANALYTICS_SOURCE": 34,
+    "SF_OWNER_ADMISSION_READS": 4,
+    "SF_ANALYTICS_CONTEXT": 2,
+    "SF_ANALYTICS_CAPTURE": 25,
+    "SF_DESIGN_DIAGNOSTICS": 6
+  },
+  "outcomes": {
+    "selectedTests": 2,
+    "failed": 2,
+    "passed": 0,
+    "skippedTestsObserved": 0,
+    "retries": 0,
+    "repeatEach": 1,
+    "workers": 1,
+    "first": {
+      "location": "design-wave-five-analytics.spec.ts:12:1",
+      "failureLocation": "design-wave-five-analytics.spec.ts:72:32",
+      "error": "TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "capturedUI42": 6,
+      "unreached": [
+        "UI43",
+        "UI44"
+      ],
+      "previewRequestSequence": 3,
+      "previewNativeTerminalObserved": false
+    },
+    "second": {
+      "location": "design-wave-five-analytics.spec.ts:443:1",
+      "failureLocation": "design-wave-five-analytics.spec.ts:611:38 (acquire), 610:30 (captureOriginalBiData)",
+      "error": "Error: page.waitForResponse: Original BI request failed",
+      "view": "BI06",
+      "phases": [
+        {
+          "line": 1653,
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "native-request-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "sameNativeRequest": false,
+          "bodyObserved": false,
+          "http": null,
+          "teardownPhase": "observing",
+          "errorText": "net::ERR_ABORTED"
+        },
+        {
+          "line": 1655,
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "network-loading-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "networkLoadingFailed": true,
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      ],
+      "capturesUI45": 6,
+      "capturesUI46": 13,
+      "completedBI06Readback": false
+    }
+  },
+  "events": [
+    {
+      "line": 1123,
+      "marker": "SF_DESIGN_DISCOVERY",
+      "value": {
+        "selector": "native-workspace",
+        "count": 1,
+        "installations": [
+          {
+            "installationId": "974d219d-366f-4d4a-b043-d502f61527ac",
+            "projectId": "global",
+            "hostId": "bacb38d7-a10c-4116-8cf5-1b006862daba"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1125,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1127,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1129,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "parameter-source-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1131,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-promote-parameter",
+        "http": 200,
+        "status": "ok",
+        "parameterPeriod": {
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "parameterUnit": "USD"
+      }
+    },
+    {
+      "line": 1133,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1135,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1137,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-criteria",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1139,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-criteria",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 1036
+      }
+    },
+    {
+      "line": 1141,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1143,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-rule-fixture-registered-readback",
+        "status": "ok",
+        "caseVersion": 6,
+        "criterionId": "f93f15dd-f35a-4f87-88e8-86d8be542959",
+        "ruleRef": "criterion-rule:47bb4c53a03a2f5f8c6cff8d4739d4a49d2b2847e0d2cf4dbfb2a783d65309a4",
+        "previousVersion": 1,
+        "ruleVersion": 2,
+        "baselineRef": "decision-result:94c479a1bb457cec74b14277c1976c64bdf87bffe603deac43cf2e3ad6605df2",
+        "scenarioRef": "decision-result:d4cb1117d174ca4ccaa74fffe4d9b44382cbd1d19964d5d0d0e01df6786e92d9",
+        "parameterRef": "44017638-2b21-4071-9501-ab068155890d:2",
+        "parameterUnit": "USD",
+        "resultUnit": "USD",
+        "engineVersion": "planner-runtime-v1",
+        "sourceReferences": [
+          {
+            "refId": "planner-version:a8e32181-8339-482a-a877-dae91895eea6:03007bc3-df8c-4300-b687-d631116945dd:1",
+            "refDigest": "0fb28b01913164ac52fbb4c1077a9ea154088aad681a472aab5bcf8df7534463"
+          },
+          {
+            "refId": "planner-version:335ceebb-8233-4acc-8b46-e346cf264246:377e49cd-fafc-4236-beaf-eee481c5f6df:1",
+            "refDigest": "f158fae6ea2b3ad1351aea566a5e2562f751b4fd8f50459700ad7d3092520988"
+          }
+        ],
+        "originalCaseUnchanged": true,
+        "originalUnitsReadbackMatched": true,
+        "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+      }
+    },
+    {
+      "line": 1145,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1147,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 37744
+      }
+    },
+    {
+      "line": 1149,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "portfolio-selection-fixture-basis",
+        "initialVersion": 0,
+        "basis": "new-isolated-fixture-with-no-prior-registration",
+        "caseVersion": 6,
+        "criteriaCount": 1
+      }
+    },
+    {
+      "line": 1151,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-select-portfolio",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1153,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-select-portfolio",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 21762
+      }
+    },
+    {
+      "line": 1155,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1157,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1159,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 34471
+      }
+    },
+    {
+      "line": 1161,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "portfolio-selection-registered-readback",
+        "status": "ok",
+        "selectionVersion": 1,
+        "caseVersion": 6,
+        "originalAlternativePairMatched": true,
+        "originalCriteriaMatched": true,
+        "currentComparisonUnchanged": true,
+        "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+      }
+    },
+    {
+      "line": 1163,
+      "marker": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 4614.169193000009
+          },
+          {
+            "status": 200,
+            "elapsedMs": 6546.279341999994
+          }
+        ]
+      }
+    },
+    {
+      "line": 1165,
+      "marker": "SF_ANALYTICS_CONTEXT",
+      "value": {
+        "stage": "UI42-list",
+        "http": 200,
+        "status": "ok",
+        "acquisition": "authenticated-original-readback",
+        "ownerBinding": "exact",
+        "resources": [
+          {
+            "family": "decisions",
+            "resource": "case-intent",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "decisions",
+            "resource": "assumptions",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "campaign",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "results",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "sensitivity",
+            "state": "ready",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-sensitivity-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-units",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1177,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1189,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1195,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1201,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1203,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1205,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 266,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    },
+    {
+      "line": 1207,
+      "marker": "SF_ANALYTICS_CONTEXT",
+      "value": {
+        "stage": "UI42-empty-case",
+        "http": 200,
+        "status": "ok",
+        "acquisition": "authenticated-original-readback",
+        "ownerBinding": "exact",
+        "resources": [
+          {
+            "family": "decisions",
+            "resource": "case-intent",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "decisions",
+            "resource": "assumptions",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "campaign",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "results",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "sensitivity",
+            "state": "ready",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-sensitivity-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-units",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1221,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "line": 1223,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1225,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 488,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    },
+    {
+      "line": 1241,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "line": 1243,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1245,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1247,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "native-view",
+        "state": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "text": "Context and access⁨127.0.0.1:44129⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.f93f15dd-f35a-4f87-88e8-86d8be542959 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+        }
+      }
+    },
+    {
+      "line": 1263,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1407,
+      "marker": "SF_DESIGN_DISCOVERY",
+      "value": {
+        "selector": "native-workspace",
+        "count": 1,
+        "installations": [
+          {
+            "installationId": "5b7c4ab8-4181-4c2c-a367-d2a8c5b76dc2",
+            "projectId": "global",
+            "hostId": "51cc48ec-7381-4c54-9a58-3a7bf7697c02"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1409,
+      "marker": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 4591.6556779999955
+          },
+          {
+            "status": 200,
+            "elapsedMs": 6375.987485999998
+          }
+        ]
+      }
+    },
+    {
+      "line": 1423,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1437,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1443,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "width": 390,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1449,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-light-320-test-data",
+        "width": 320,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1461,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-authorized-financial-context-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "context"
+      }
+    },
+    {
+      "line": 1475,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-financial-source-values-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1477,
+      "marker": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2418.4017139999924
+          },
+          {
+            "status": 200,
+            "elapsedMs": 4235.996251999997
+          }
+        ]
+      }
+    },
+    {
+      "line": 1479,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-binding-readback",
+        "view": "BI01",
+        "selectedValueId": "budget:2026-01:effective",
+        "referenceId": "sf-source:bafe1807-b1b5-4a08-bca7-87886466dd3a:1",
+        "valueBindingCount": 48,
+        "distinctReferenceDigests": 1,
+        "bindings": [
+          {
+            "valueId": "budget:2026-01:basis",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:effective",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:actual",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:forecast",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:basis",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:effective",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:actual",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:forecast",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:basis",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:effective",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:actual",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:forecast",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:basis",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:effective",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:actual",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:forecast",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:basis",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:effective",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:actual",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:forecast",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:basis",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:effective",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:actual",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:forecast",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:basis",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:effective",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:actual",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:forecast",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:basis",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:effective",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:actual",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:forecast",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:basis",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:effective",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:actual",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:forecast",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:basis",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:effective",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:actual",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:forecast",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:basis",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:effective",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:actual",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:forecast",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:basis",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:effective",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:actual",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:forecast",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1481,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-original-scalar-dom",
+        "locale": "en-US",
+        "observations": []
+      }
+    },
+    {
+      "line": 1483,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-readback",
+        "view": "BI01",
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22
+      }
+    },
+    {
+      "line": 1497,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-selected-context-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1513,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1529,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1537,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1543,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1549,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1555,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1573,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1591,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1597,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1603,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1605,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-body-acquisition",
+        "selectedValueId": "budget:2026-01:effective",
+        "http": 200,
+        "acquisition": "native-response"
+      }
+    },
+    {
+      "line": 1607,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-original-destinations",
+        "selectedValueId": "budget:2026-01:effective",
+        "installedOrigin": "http://127.0.0.1:44445",
+        "installedMount": "/sucafina",
+        "links": [
+          {
+            "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:44445/orchestra/sf-dashboard/budget?year=2026"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1625,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-resolved-original-source-1-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1627,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-body-acquisition",
+        "selectedValueId": "budget:2026-01:actual",
+        "http": 200,
+        "acquisition": "native-response"
+      }
+    },
+    {
+      "line": 1629,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-original-destinations",
+        "selectedValueId": "budget:2026-01:actual",
+        "installedOrigin": "http://127.0.0.1:44445",
+        "installedMount": "/sucafina",
+        "links": [
+          {
+            "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:44445/orchestra/sf-dashboard/budget?year=2026"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1647,
+      "marker": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-resolved-original-source-2-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1649,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-identity-regression",
+        "selectedValues": [
+          "budget:2026-01:effective",
+          "budget:2026-01:actual"
+        ],
+        "samePublishedReference": true,
+        "exactValueAndDigestQueries": 2,
+        "originalProjectionRetained": true
+      }
+    },
+    {
+      "line": 1651,
+      "marker": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2509.6346849999973
+          },
+          {
+            "status": 200,
+            "elapsedMs": 4263.5616350000055
+          }
+        ]
+      }
+    },
+    {
+      "line": 1653,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "native-request-failed",
+        "acquisitionFailure": true,
+        "errorClass": "Error",
+        "sameNativeRequest": false,
+        "bodyObserved": false,
+        "http": null,
+        "teardownPhase": "observing",
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "line": 1655,
+      "marker": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "network-loading-failed",
+        "acquisitionFailure": true,
+        "errorClass": "Error",
+        "networkLoadingFailed": true,
+        "errorText": "net::ERR_ABORTED",
+        "canceled": true
+      }
+    },
+    {
+      "line": 1657,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1659,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "native-view",
+        "state": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "text": "Context and access⁨127.0.0.1:44445⁩ · Analysis detailsAnalysis detailsCurrent operations and observed datesWhich approvals have waited longest?Analysis viewChoose an authorized viewHow do budget, actuals and outlook evolve?Which components explain the difference?What contributes to the variance?How are capacity and costs distributed?Where are open requests?Which approvals have waited longest?What was opened and completed?Which milestones are planned or completed?Which components support the alternative?Which date changes cost or feasibility?Which variable changes the condition?Start dateEnd dateChoose contextAuthorized selectionsSelectionUse an authorized selectionPedidos autorizados · 2026-01-01 – 2026-12-31 · 7 registrosRelated source pagesAbrir pedidos e suas aprovações — procurement: RequestsView dataOperational analysisWhich approvals have waited longest?PeriodJan 1, 2026 – Dec 31, 2026CurrencyUSDProjection / engine version1 / procurement-v1Partial coveragePartial coverage; missing items remain visibleUnknown age or dates are not converted to zero.Idade comprovada na etapadaysIdade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00136017 daysJan 1, 2026 – Dec 31, 20260.00136017Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00136017 daysJan 1, 2026 – Dec 31, 20260.00136017Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00136017 daysJan 1, 2026 – Dec 31, 20260.00136017Jan 1, 2026 – Dec 31, 20260.00136017daysJan 1, 2026 – Dec 31, 20260.00136017daysJan 1, 2026 – Dec 31, 20260.00136017daysOpen original sourceOpen original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Open original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Open original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Source limitationsPedidos sem idade comprovada permanecem na tabela como indisponíveis.Authorized operational measuresMeasureValueUnitPeriodEvidenceSource referenceShow detailsIdade comprovada na etapa0.00136017daysJan 1, 2026 – Dec 31, 2026Confirmed80bf0ecd-23bc-4460-900a-8f09a962281eShow detailsIdade comprovada na etapa0.00136017daysJan 1, 2026 – Dec 31, 2026Confirmed922a4e53-3299-4e88-a009-c2ae0471c882Show detailsIdade comprovada na etapa0.00136017daysJan 1, 2026 – Dec 31, 2026Confirmed89c26bcc-6341-4a14-8ebf-f781a750e9f8Show detailsThe source links are loading or unavailable."
+        }
+      }
+    },
+    {
+      "line": 1673,
+      "marker": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    }
+  ],
+  "footer": [
+    {
+      "line": 1778,
+      "body": "\u001b[1A\u001b[2K  2 failed"
+    },
+    {
+      "line": 1779,
+      "body": "    [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity "
+    },
+    {
+      "line": 1780,
+      "body": "    [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:443:1 › wave five analytics: question catalog and original contextual BI "
+    },
+    {
+      "line": 1781,
+      "body": "error: script \"test:e2e:local\" exited with code 1"
+    },
+    {
+      "line": 1782,
+      "body": "##[error]Process completed with exit code 1."
+    }
+  ],
+  "qualification": {
+    "historicalAcceptedAreas": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "installedAcceptance": false,
+    "finalCandidate": false,
+    "goLiveGateAcceptance": false,
+    "productionApproval": false
+  },
+  "limits": [
+    "2 FAILED supersedes any preliminary assumption of BI PASS.",
+    "Captures are partial progression evidence and not accepted areas.",
+    "No inference that C20 caused BI cancellation; no SQL, lock, CPU, full request terminal, or exclusive cause was observed.",
+    "Build channel prod is not production deployment."
+  ]
+}

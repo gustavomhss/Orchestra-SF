@@ -1,0 +1,103 @@
+{
+  "schema": "sf613-c20-effective-analytics-run-binding-v1",
+  "at": {
+    "current_time": "2026-11-28 05:46:17 UTC"
+  },
+  "status": "ACTIVE_RUN_PENDING_ORIGINAL_INTAKE",
+  "source": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "objectReceipt": {
+      "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+      "bytes": 7142,
+      "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+      "lf": 212,
+      "endsWithLF": true
+    },
+    "rootStaticReview": {
+      "gitBlob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+      "bytes": 7320,
+      "sha256": "91c1dc3b6adb82a21ab10218ea13b623371984f81a1444b47c7924f158b3393b",
+      "lf": 201,
+      "endsWithLF": true
+    },
+    "peerStaticReview": {
+      "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+      "bytes": 9824,
+      "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+      "lf": 296,
+      "endsWithLF": true
+    }
+  },
+  "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+  "effectiveSnapshot": {
+    "commit": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "sourceAncestor": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "requestOnlyTreeRelativeToSource": true,
+    "treeIdenticalToOriginalSnapshot": true,
+    "objectReceipt": {
+      "gitBlob": "eaf3953a5a6e6dce1d81e30796cc573d1dfe713f",
+      "bytes": 2784,
+      "sha256": "2f68eb4ba91cca7e239291b6a5f57adca23d5ea590d991173c8d6c358e6b77e2",
+      "lf": 65,
+      "endsWithLF": true
+    }
+  },
+  "run": {
+    "id": 46113463330,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46113463330",
+    "attempt": 1,
+    "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "branch": "ci-run-sf613c20a",
+    "event": "push",
+    "path": ".github/workflows/test-ci.yml",
+    "status": "in_progress",
+    "conclusion": null,
+    "created": "2026-11-28T05:44:33Z",
+    "started": "2026-11-28T05:44:33Z"
+  },
+  "main": {
+    "id": 140881932116,
+    "name": "test (ubuntu-24.04)"
+  },
+  "cleanup": null,
+  "authority": {
+    "gitBlob": "ca30c899e8fc3de759e0dfbde119f780b58f015c",
+    "bytes": 13399,
+    "sha256": "e9d70e3d833f65a8a5f61f632d91009309d2a0d4eebf58034fa0547cdbd8b9ed",
+    "lf": 349,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "a29461b298a299fafd29d3667c67691b35b383ee",
+    "bytes": 2344,
+    "sha256": "95b8dabddeb649775ae0a00b9ad06d1ef4c9a86612b46e5baca2c38642f94908",
+    "lf": 51,
+    "endsWithLF": true
+  },
+  "originalSnapshot": {
+    "head": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+    "authority": {
+      "gitBlob": "8a93717dc476e8a2b897da16bcc61085d307426b",
+      "bytes": 15295,
+      "sha256": "c17422480c6ef32d89c81a3b1eb5ed278b695c402f0a2dd41da34fe731e20a16",
+      "lf": 408,
+      "endsWithLF": true
+    },
+    "observedRunCountBeforeRepair": 0
+  },
+  "branchRunCountAtBinding": 1,
+  "originalGets": 0,
+  "zipGets": 0,
+  "noFurtherAutomaticRepair": true,
+  "qualification": false,
+  "productionAuthorized": false,
+  "limits": [
+    "Observed one run at this cut is not a guarantee that an old event can never appear.",
+    "No installed outcome exists until terminal jobs and complete current receipts are received.",
+    "Actual CI head is A20r; no result is attributed to the earlier unobserved A20 event or to a future candidate."
+  ]
+}

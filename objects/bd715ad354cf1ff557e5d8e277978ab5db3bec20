@@ -1,0 +1,290 @@
+{
+  "schema": "sf613-c20-scenario-lookup-package-v1",
+  "status": "PROPOSED_BLOBS_STATIC_REVIEW_PENDING_NO_EXECUTION",
+  "objective": "Opt the one closed scenario-lookup decisionResults callback into the existing selectSfScenarioCandidates factory, with one finite consumer control.",
+  "author": "/root/focal_migration",
+  "authorization": {
+    "scope": "Git blobs/readback only: one product edit, one consumer test, derivation/full diff/bounds/manifest. Root retains source/tree/commit/ref/run operations and original reception.",
+    "newRunAuthorized": false,
+    "sourceObjectCreatedByAuthor": false,
+    "originalOrZipAcquisition": false
+  },
+  "base": {
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "kind": "clean C19 source",
+    "futureSource": null,
+    "futureTree": null,
+    "focalSnapshot": null,
+    "focalTree": null
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "mode": "100644",
+      "operation": "M",
+      "preimage": {
+        "git": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+        "bytes": 3994,
+        "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+        "lf": 35,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      "readbackLiteral": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "mode": "100644",
+      "operation": "A",
+      "preimage": null,
+      "absenceConfirmedAtBase": true,
+      "parentTree": "5248eb81448c9363ee26114bbcf361f0a14f8e35",
+      "postimage": {
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      },
+      "readbackLiteral": true
+    }
+  ],
+  "support": {
+    "derivation": {
+      "git": "93ea40e7dcf364582a3316739cac3350d252171e",
+      "bytes": 24334,
+      "sha256": "693e4627cd85130d630f44ee9fd1ca0768ae842ed3f98359d59e58ebbf8e5cf4",
+      "lf": 154,
+      "endsWithLF": true
+    },
+    "fullDiff": {
+      "git": "c80be5b69c74e83cf18986a867f59abafb4b3145",
+      "bytes": 19846,
+      "sha256": "8205a0b4147d4cf94090dd2554ef9244d43889be4ba8d488e8d39c3931ec5680",
+      "lf": 287,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "779cf3ff515733d40b85a199b7900f28271f1812",
+      "bytes": 9356,
+      "sha256": "c12f8ead3a8da07780279cecaa7ee984b3bb6aa5d34e11745eb2aa6d9c5564ef",
+      "lf": 174,
+      "endsWithLF": true
+    },
+    "allReadbackLiteral": true
+  },
+  "derivationSummary": {
+    "productUniqueAnchors": 2,
+    "newFileAdditions": 1,
+    "delta": "1A1M",
+    "fullHunks": 3,
+    "additions": 262,
+    "deletions": 1,
+    "forwardExact": true,
+    "inverseExact": true,
+    "productAwaitSitesBefore": 7,
+    "productAwaitSitesAfter": 7,
+    "lookupPredicateLiteralCharacters": 510,
+    "productBytesOutsideAnchorsLiteral": true
+  },
+  "unchangedContract": {
+    "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+    "git": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+    "bytes": 67334,
+    "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+    "lf": 891,
+    "endsWithLF": true,
+    "factory": "selectSfScenarioCandidates",
+    "factoryLines": [
+      385,
+      403
+    ],
+    "predicateLine": 393,
+    "mapGateLines": [
+      406,
+      411
+    ],
+    "cloneLine": 603,
+    "authorityLines": [
+      546,
+      615,
+      616
+    ],
+    "abortLine": 612,
+    "nativeSelectionExclusionLines": [
+      457,
+      468
+    ],
+    "contract": "Factory owns a callback reading the complete decisionResults graph. All envelopes are cloned together before filtering. Context/map eligibility is conservative; other namespaces are outside the explicit graph.",
+    "callbackDifference": "The new factory callback is not literally the prior inline arrow. Identity, name and toString remain observable differences to introspective custom ports. Claimed preservation is the exact predicate and its short-circuit order, captured references/late key, returned values and reachable errors under the declared invocation contract.",
+    "nativeLimit": "No Provider/native file changes and no additional native narrowing: scenarioReads is expressly excluded from cases/case-identities native selection. Initial snapshot work and full decisionResults cloning remain."
+  },
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+    "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+    "bytes": 16889,
+    "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+    "lf": 260,
+    "endsWithLF": true,
+    "declarations": 1,
+    "staticExpectSites": 45,
+    "staticAwaitSites": 16,
+    "internalSequentialInvocations": 14,
+    "reportPrefix": "SF_C20_SCENARIO_LOOKUP",
+    "reportSchema": "sf-c20-scenario-lookup-v1",
+    "reportCountExpected": 1,
+    "checksExpected": [
+      "consumer-selects-complete-detached-results",
+      "opaque-wrapper-keeps-full-state",
+      "mutable-context-uses-opaque-fallback",
+      "proxy-context-uses-opaque-fallback",
+      "map-prototype-uses-opaque-fallback",
+      "request-key-remains-late-after-admission",
+      "mutable-binding-is-observed-after-admission",
+      "admission-denied-does-not-disclose",
+      "egress-revoked-does-not-disclose",
+      "abort-does-not-disclose",
+      "unmatched-getter-selected",
+      "unmatched-getter-opaque",
+      "unmatched-function-selected",
+      "unmatched-function-opaque"
+    ],
+    "cooperativeMs": 18000,
+    "bunMs": 20000,
+    "reportModelBytesWithPrefixAndLF": 564,
+    "actualAssertions": null,
+    "actualDurationMs": null,
+    "actualPassFail": null,
+    "realComponents": [
+      "createDecisionScenarioLookup",
+      "createSfProductState",
+      "openLocalStore",
+      "initializeAbsentSfProductState",
+      "createSfUiAuthority"
+    ],
+    "controlledComponents": [
+      "DecisionCasePort",
+      "historical-result port",
+      "requestFor/revalidate host callbacks",
+      "C08 authorize probes after native materialization"
+    ],
+    "assertionLocations": "Assertions follow the actual lookup outside its catch. The state-port adapter records/rethrows original C08 clone errors for sentinel identity; the product catch and resulting statuses remain real.",
+    "selectedVsFallbackOracle": "The actual callback is forwarded unchanged or intentionally wrapped into the original opaque C08 branch. Unrelated preference getter is omitted only in selected mode; unmatched scenario getter remains reached in all clone paths.",
+    "graphOracle": "Matched old/new envelopes share one detached cyclic object. Getter/function faults live on a nonmatching envelope outside paths from matched envelopes; filtering before clone would incorrectly bypass them.",
+    "lateOracle": "First encodeCaseRef accounts for the only key read before state.read. Authorize changes the referenced request key; later filtering and final cases/history calls must see that value. Mutable binding drift is separately observed after admission.",
+    "negativeOracle": "Admission denial, egress revocation and abort disclose no candidate/history; unmatched getter/function errors are observed without another C08 read or replay.",
+    "interpretation": "This proves the actual C08 consumer route under controlled ports, not native projection, installed acceptance, full-state clone-effect equivalence, or measured performance.",
+    "additionalSubprocesses": 0,
+    "globalIntrinsicMutation": false,
+    "fullMatrixCopied": false
+  },
+  "existingCoverage": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "git": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+      "bytes": 42278,
+      "sha256": "8acd1b2070a9dd56b5fc31d8e170d02d9082cb3851d613b45dfe1c9db0968059",
+      "lf": 691,
+      "endsWithLF": true,
+      "sites": [
+        [
+          138,
+          199
+        ],
+        [
+          201,
+          282
+        ],
+        [
+          371,
+          474
+        ]
+      ],
+      "role": "Cases-only helper identity, complete reachable graph, fresh C08 authority and abort. The callback identity assertion at141–142 is specific to selectSfCasesRead and is NOT transferred to the scenario factory.",
+      "selectedForNewFocal": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-preferences-selection.test.ts",
+      "git": "33d17c2ed2a01b1af4758f911de648ed05e314d9",
+      "bytes": 32093,
+      "sha256": "c6a750f21f420ca59a8daa7f10863746996b61bb8b12e51021403a900b708597",
+      "lf": 547,
+      "endsWithLF": true,
+      "sites": [
+        [
+          93,
+          172
+        ],
+        [
+          243,
+          332
+        ]
+      ],
+      "role": "Existing factory-style tests of opaque callback invocation: values/errors/order/late captures, conservative fallback and reachable errors. No name/toString equivalence assertion.",
+      "selectedForNewFocal": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+      "git": "658704da58e5c1a291f5be18fa73684b8fdbaa43",
+      "bytes": 14178,
+      "sha256": "1cb2944977679e6df68c720fac0707324d1077049c8b0525d6bee75afeb6200f",
+      "lf": 280,
+      "endsWithLF": true,
+      "sites": [
+        [
+          145,
+          217
+        ]
+      ],
+      "role": "Existing consumer examples of denied admission without proxy traps, opaque map/context fallback and fresh authorization. Different selector, not direct scenario-lookup evidence.",
+      "selectedForNewFocal": false
+    }
+  ],
+  "coverageGap": "No dedicated scenario-lookup consumer test was located in the inspected S19 integration directory and related selected tests. New file supplies the missing real-consumer+C08 route oracle; no claim that a default-branch search proves repository-wide absence.",
+  "untouched": [
+    "Provider and its factory/map gate",
+    "LocalStore/CurrentChoice/SourcePersistence/ProductAuthority",
+    "resolveCase and pre-write cases-only callbacks",
+    "historical result ref selectors",
+    "full-state sample",
+    "all prior tests",
+    "all old command/process/parent budgets",
+    "D28 and diagnostic E14 source"
+  ],
+  "instructions": {
+    "root": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "rootRead": true,
+    "nestedAgentsObserved": [],
+    "testsOnlyOnAuthorizedCI": true,
+    "typechecksUseBun": true,
+    "guardsBase": "origin/dev",
+    "noImportedAliases": true,
+    "noAnyOrDoubleCast": true
+  },
+  "verification": {
+    "bytesHashedAndReadback": true,
+    "anchorsAndFullDiffAppliedAndInvertedAsPureText": true,
+    "repositoryCodeExecuted": false,
+    "testsRun": false,
+    "typechecksRun": false,
+    "guardsRun": false,
+    "rootReviewPending": true,
+    "peerReviewPending": true
+  },
+  "futureDecision": {
+    "activation": "Root decision only after E14 artifact reception and independent C20 review.",
+    "focalSelection": null,
+    "sourceCommit": null,
+    "analyticsRun": null,
+    "benefitClaim": false,
+    "causalClaim": false,
+    "productQualification": "Previous original Analytics negative is not changed by this static proposal."
+  }
+}

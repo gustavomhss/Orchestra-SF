@@ -1,0 +1,416 @@
+{
+  "schema": "sf613-c20-bi06-negative-investigation-v1",
+  "status": "CLOSED_READONLY_ORIGIN_OF_CANCELLATION_NOT_DEMONSTRATED",
+  "purpose": "Documentary negative investigation for future evidence archive R8. This is not an acceptance, product qualification, causal finding or execution authority.",
+  "author": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Persist only the previously completed read-only BI06 analysis. No new source investigation was performed for this document.",
+  "tuple": {
+    "runId": 46113463330,
+    "attempt": 1,
+    "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+    "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+    "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "mainJobId": 140881932116,
+    "cleanupJobId": 140884025044,
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success",
+    "originalAcquisitionsClosedByRootAt": "2026-11-28T05:56:05Z"
+  },
+  "linkedRootReceipts": {
+    "finalC20": {
+      "gitBlob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+      "role": "Final C20 receipt supplied by root for linkage",
+      "readAgainForThisPersistence": false
+    },
+    "currentIntake": {
+      "gitBlob": "e5ccedc063611f0fb236eeecb25c912a0f88b858",
+      "bytes": 4788,
+      "sha256": "51d7b46515efd830ee619c2f91e40341ddc1d9dda5067fc910b4ab35c5276bdf",
+      "role": "Root intake with 34 checks; locator/metadata supplied by root",
+      "readAgainForThisPersistence": false
+    }
+  },
+  "authentication": {
+    "manifest": "9a07f7e1ef1ecc460e7f757e0c17d14c21849be9",
+    "manifestBytes": 5660,
+    "manifestSha256": "043c1393154d59c11e100e3c17d3930b45d1f1cf3f291230674ecd65bbbdfefc",
+    "mainParts": 11,
+    "mainBytes": 3089836,
+    "mainLF": 1843,
+    "mainSha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+    "wholeGitCalculatedOnly": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+    "context": "aec31c26492817c63075fb86714534fcfd38a239",
+    "allPartsAndWholeAuthenticatedBeforeParse": true,
+    "previewPayloadsExcludedFromOutput": true
+  },
+  "acquisitionBoundary": {
+    "rootOriginalsAlreadyClosed": true,
+    "agentOriginalGets": 0,
+    "agentZipGets": 0,
+    "wholeCalculatedNeverFetched": true,
+    "artifactId": 15250367884,
+    "artifactStatus": "METADATA_ONLY_NO_ZIP",
+    "previewImagePayloadsNotUsedAsCausalEvidence": true
+  },
+  "observedOutcome": {
+    "originalSuite": "Two original Analytics journeys; both failed on this execution.",
+    "firstJourney": "First portfolio preview remained a 60-second waiter timeout at spec72; this document does not reopen its diagnosis.",
+    "biJourney": "First en-US BI06 original acquisition failed at spec611:38, invoked from610:30; later operational-response/age assertions were not reached.",
+    "error": "page.waitForResponse: Original BI request failed",
+    "noBiWaiterExpiryClaim": true,
+    "noBiAcceptanceFromRenderedSnapshot": true,
+    "noRegressionAttributionToC20": true
+  },
+  "sequence": [
+    {
+      "utc": "2026-11-28T05:53:38.3100625Z",
+      "event": "SF_OWNER_ADMISSION_READS",
+      "interpretation": "two context responses 200; not BI06 request start"
+    },
+    {
+      "utc": "2026-11-28T05:53:38.9698334Z",
+      "event": "native-request-failed",
+      "interpretation": "ERR_ABORTED; observing; observed[] not completed"
+    },
+    {
+      "utc": "2026-11-28T05:53:38.9807021Z",
+      "event": "network-loading-failed",
+      "interpretation": "saved CDP requestId; canceled:true; no teardownPhase field"
+    },
+    {
+      "utc": "2026-11-28T05:53:39.2130969Z",
+      "event": "wave-three-failure",
+      "interpretation": "no console/page errors recorded"
+    },
+    {
+      "utc": "2026-11-28T05:53:39.2191707Z",
+      "event": "native-view",
+      "interpretation": "ready/ready/ready; BI06 operational data rendered"
+    },
+    {
+      "utc": "2026-11-28T05:53:39.7762610Z",
+      "event": "wave-three-page-closed",
+      "interpretation": "later than acquisition failure"
+    }
+  ],
+  "temporalLimits": [
+    "These are original main-log UTC emission timestamps, not a merged browser/CDP/server clock.",
+    "The admission marker is not the BI06 GET start. No exact GET duration is derived.",
+    "The native requestfailed marker says observing; the later CDP loadingFailed marker has no teardownPhase field.",
+    "The helper's own detach follows the primary failure path, while recorded page close is later. This does not establish the producer of the original cancellation."
+  ],
+  "observerFieldSemantics": [
+    {
+      "field": "sameNativeRequest:false",
+      "anchor": "helper71–80,143–154",
+      "meaning": "No completed observed entry supplied an equal native Request at that point. The optional-chain comparison is false when the completed entry is absent.",
+      "notProofOf": "A different or unrelated Request."
+    },
+    {
+      "field": "bodyObserved:false",
+      "anchor": "helper43,73–79,143–154",
+      "meaning": "The completed acquisition entry was not appended; append occurs after CDP body, native completion and identity/primary-failure checks.",
+      "notProofOf": "No bytes were consumed or no data were rendered by the UI."
+    },
+    {
+      "field": "http:null",
+      "anchor": "helper73–79",
+      "meaning": "No completed observed Response was available for the status lookup.",
+      "notProofOf": "No HTTP response or headers existed."
+    },
+    {
+      "field": "networkLoadingFailed:true,canceled:true",
+      "anchor": "helper123–127",
+      "meaning": "The event requestId equals the retained CDP networkRequest.id and CDP reported canceled true.",
+      "notProofOf": "An exclusively unrelated request, the origin of cancellation, or completed body identity."
+    },
+    {
+      "field": "final cardinalities",
+      "anchor": "helper191–198",
+      "meaning": "The one-request/one-response/one-finish assertions execute only after successful acquisition.",
+      "notProofOf": "Observed counts on this failed execution; missing completion does not imply zero."
+    }
+  ],
+  "staticFindings": [
+    {
+      "id": "F01",
+      "finding": "The spec navigates to BI06, chooses context and selection, then arms the original response wait, clicks View data once and awaits that promise. No later spec navigation occurs before this failure.",
+      "sources": [
+        "spec",
+        "waveThree"
+      ]
+    },
+    {
+      "id": "F02",
+      "finding": "View data is type=button outside the form. The catalog preview function does not abort in data publication or its busy=false finally.",
+      "sources": [
+        "catalog"
+      ]
+    },
+    {
+      "id": "F03",
+      "finding": "Explicit catalog abort paths are read supersession, filter/selection change, route/fence revocation and cleanup. Current runtime records do not identify which, if any, ran for the canceled request.",
+      "sources": [
+        "catalog"
+      ]
+    },
+    {
+      "id": "F04",
+      "finding": "The route effect reads surfaceId/route.params.viewId. The fence effect reads F01 generation/status/accessRevision/principalRef. Publishing BI data/readState/busy does not itself write those dependencies in the inspected source.",
+      "sources": [
+        "catalog",
+        "context"
+      ]
+    },
+    {
+      "id": "F05",
+      "finding": "F01's load effect untracks load(selection); ready() reads/caches admitted access rather than triggering a new context load per BI result. The operational renderer derives a model and leaves source reads in explicit callbacks.",
+      "sources": [
+        "context",
+        "ownerRuntime",
+        "visual"
+      ]
+    },
+    {
+      "id": "F06",
+      "finding": "The JSON transport forwards the call AbortSignal, reads and decodes the body, validates output and returns a typed response. Its 32 MiB overflow cancellation is reachable code but not observed in this execution.",
+      "sources": [
+        "biClient",
+        "transport"
+      ]
+    },
+    {
+      "id": "F07",
+      "finding": "No static chain from setStore(data) to an aborting effect was demonstrated. This is a bounded source conclusion, not runtime proof that route/fence/cleanup never changed.",
+      "sources": [
+        "catalog",
+        "context",
+        "ownerRuntime",
+        "visual"
+      ]
+    }
+  ],
+  "sourcePins": [
+    {
+      "id": "spec",
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lf": 814,
+      "anchors": [
+        "606–621: navigation/selection, original response waiter and one View data click",
+        "623–641: post-acquisition original-response and age assertions not reached"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts"
+    },
+    {
+      "id": "helper",
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "bytes": 21102,
+      "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+      "lf": 364,
+      "anchors": [
+        "28–36: exact owner/method/path/operation/view matcher",
+        "63–81: native request/finished/failed listeners and observed-entry-derived fields",
+        "84–127: CDP requestId tracking, original body read and loadingFailed correlation",
+        "138–199: acquire/observe ordering, primary failure, teardown and successful cardinality checks"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts"
+    },
+    {
+      "id": "catalog",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+      "gitBlob": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75",
+      "bytes": 25041,
+      "sha256": "7c5c9c33432cf8c2d849094d29a7af31ecffa723896f752ec5755c7c159c45f6",
+      "lf": 487,
+      "anchors": [
+        "92–122: revokeReads, route effect and F01 fence effect",
+        "144–167: changed and prepareRead/supersession",
+        "197–225: data consumption, current guard, setStore(data), busy finally",
+        "351–426: form, input/selection abort handlers and type=button View data",
+        "430–479: data renderer and explicit source actions"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx"
+    },
+    {
+      "id": "biClient",
+      "path": "packages/client/src/sucafina/bi.ts",
+      "gitBlob": "396d7120e6db25be1dae4255edaa7e87f8544def",
+      "bytes": 2603,
+      "sha256": "d9fc6ed90457b1cff0baebdb9b1d3e87df9f1e763afa540f35b4e659abafbde1",
+      "lf": 53,
+      "anchors": [
+        "22–51: typed BI client forwards call options to transport; four existing operations"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/client/src/sucafina/bi.ts"
+    },
+    {
+      "id": "transport",
+      "path": "packages/client/src/sucafina/transport.ts",
+      "gitBlob": "6f28a2ecb4ef14375748c2685ac0acd24bece600",
+      "bytes": 56823,
+      "sha256": "46d293690597bb309005add47e0cb1b3f23d68ed5ed376692f73f2a8f87900d3",
+      "lf": 1025,
+      "anchors": [
+        "428–467: original fetch with literal signal, bounded JSON and abort/current guards",
+        "475–528: output codec/schema validation before typed response",
+        "911–936: 32 MiB bound, cancel only on observed excess in this JSON reader"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/client/src/sucafina/transport.ts"
+    },
+    {
+      "id": "context",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+      "gitBlob": "76d1df3a5acec67f85db553e9b5c7ce933022759",
+      "bytes": 24391,
+      "sha256": "456addb63186107f6ca24ffa5445cffd6c8c88ca1e8046249d0adcf8a6cd1595",
+      "lf": 519,
+      "anchors": [
+        "58–77: owner load fence and generation publication",
+        "196–239: transport bound to context load",
+        "345–360: ready access is read/cache; no reload from ready()",
+        "390–404: selection effect uses untrack, owner cleanup"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx"
+    },
+    {
+      "id": "ownerRuntime",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx",
+      "gitBlob": "29b223479e4861a208326850b8f2845e962cecbb",
+      "bytes": 37642,
+      "sha256": "13a14f263535b8e9a5cf7977ea965056974f18734c017c012eedee54a5a64eb9",
+      "lf": 756,
+      "anchors": [
+        "410–413: native fetch receiver preserved",
+        "448–492: authenticated transport construction/reuse",
+        "630–716: explicit owner/path/generation route effects"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/src/orchestra/chapters/sucafina/host/owner-runtime231.tsx"
+    },
+    {
+      "id": "visual",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx",
+      "gitBlob": "249c80eac6c43cb68f709b0c18c01644d7a7f191",
+      "bytes": 13759,
+      "sha256": "325e839fbc64a12355b2c6c653ba1eba725d0049d73cbdf6339235f0046824b6",
+      "lf": 228,
+      "anchors": [
+        "9–46: renderer derives chart model; source actions remain callbacks",
+        "120,179,208: source/selection callbacks attached to clicks"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/visual.tsx"
+    },
+    {
+      "id": "waveThree",
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+      "gitBlob": "b3c02539245cce5091e0f200e84d3021016074ea",
+      "bytes": 10068,
+      "sha256": "8a36118cfd8a40dc4003c1c816c58a880c4bb670be858d452b0ef964a6e37cf4",
+      "lf": 180,
+      "anchors": [
+        "8–24: original browser context, trace/video off, retries zero",
+        "28–59: page-close diagnostic and failure snapshot after test failure",
+        "63–122: original page.goto/admissions/ready and ownership URL checks"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/packages/app-shell/e2e/sucafina/design-support/wave-three.ts"
+    },
+    {
+      "id": "package",
+      "path": "package.json",
+      "gitBlob": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+      "bytes": 6447,
+      "sha256": "b247a153a647c4a6aa4e60153246511df6c5e12899c9e66b184cc97ced58fb5e",
+      "lf": 180,
+      "anchors": [
+        "workspaces.catalog.solid-js: declared 1.9.10",
+        "patchedDependencies.solid-js@1.9.10: local patch declaration"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/package.json"
+    },
+    {
+      "id": "solidPatch",
+      "path": "patches/solid-js@1.9.10.patch",
+      "gitBlob": "0571d5c8c670e195971139b39356115d26620671",
+      "bytes": 7438,
+      "sha256": "39237cb3d5579f537af78343c7d77e3e441a205372030bb742e03c87ada72cdf",
+      "lf": 194,
+      "anchors": [
+        "patch changes dist cleanup/transition behavior; no store implementation hunk"
+      ],
+      "sourceCommit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2228172b29080b411850ec98a4cdaa66020db5e6/patches/solid-js%401.9.10.patch"
+    }
+  ],
+  "externalSolidSource": {
+    "declaredDependencyVersion": "1.9.10",
+    "declaration": {
+      "gitBlob": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+      "path": "package.json",
+      "field": "workspaces.catalog.solid-js"
+    },
+    "officialUrl": "https://github.com/solidjs/solid/blob/v1.9.10/packages/solid/store/src/store.ts",
+    "retrievedOfficialUrl": "https://raw.githubusercontent.com/solidjs/solid/v1.9.10/packages/solid/store/src/store.ts",
+    "inspectedAnchors": [
+      "createStore501–520: setter operates on unwrappedStore inside batch",
+      "setProperty212–240 and updatePath269–312: raw-store writes and notifications"
+    ],
+    "localPatch": {
+      "gitBlob": "0571d5c8c670e195971139b39356115d26620671",
+      "path": "patches/solid-js@1.9.10.patch",
+      "sha256": "39237cb3d5579f537af78343c7d77e3e441a205372030bb742e03c87ada72cdf",
+      "scope": "Changes cleanup/transition implementations in dist files; no store.ts implementation hunk."
+    },
+    "attribution": "Official upstream source plus the locally declared version/patch were inspected as static code. This is not a runtime module-byte attestation or an observed dependency trace of the failed browser."
+  },
+  "peerCorroboration": {
+    "reviewer": "/root/teams_product",
+    "scope": "Independent main intake confirmed the only BI06 SOURCE records are native-request-failed and network-loading-failed; no BI06 completed/HTTP/body/readback marker.",
+    "notTransferred": "No peer source edit, rerun or acceptance is inferred."
+  },
+  "conclusions": [
+    "Spec610/611/614/619/620 arms original wait, clicks once and awaits original observation; no later spec navigation before failure.",
+    "sameNativeRequest:false is comparison against absent completed observed entry; not evidence of another Request.",
+    "bodyObserved:false and http:null describe absent completed acquisition entry; not no response/no UI consumption.",
+    "CDP failure is restricted to retained networkRequest.id; cannot classify cancellation exclusively as foreign request.",
+    "Native failure observing precedes this helper's detach transition; later CDP marker does not publish teardownPhase.",
+    "Catalog preview data/ready/busy setters do not write route/fence effect dependencies or abort in finally.",
+    "Explicit UI abort sites remain supersession, selection/filter changes, route/fence revocation and cleanup; none selected by current runtime records.",
+    "F01 load effect uses untrack; body renderer does not initiate a replacement BI request.",
+    "Rendered BI06 data is not joined to the failed Request/body/status; original BI06 assertions beyond acquisition not reached.",
+    "No cause or regression attributed to C20; no PASS from UI snapshot and no readback/retry substitution."
+  ],
+  "unresolved": [
+    "No original-body/status/Request proof joins the rendered BI06 projection to the failed acquisition.",
+    "The cancellation initiator and its relation to UI controller/route/fence state are not recorded.",
+    "The failed acquisition cannot be classified as a harmless cancellation race, a product regression or a mere observer failure from this evidence.",
+    "C20 remains a negative original-suite result. A future candidate must pass the complete original suite with unchanged waiters and no retry/readback substitute."
+  ],
+  "allowedEffectsOfThisPersistence": {
+    "gitDocumentBlobs": 1,
+    "requiredLiteralReadback": true,
+    "sourceOrTestEdits": 0,
+    "observers": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "authorityBoundary": "Root remains sole integration/run/original receiver. This document grants no further execution, collection, patch, merge, qualification or go-live authority."
+}

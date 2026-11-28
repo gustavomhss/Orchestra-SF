@@ -1,0 +1,154 @@
+{
+  "schema": "sf613-c20-scenario-lookup-derivation-v1",
+  "status": "STATIC_PROPOSAL_ONLY_NO_EXECUTION",
+  "base": {
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "mode": "100644",
+      "operation": "modify",
+      "preimage": {
+        "git": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+        "bytes": 3994,
+        "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+        "lf": 35,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "index": 1,
+          "label": "import existing closed factory",
+          "before": "import { encodeCaseRef } from \"./case-port.ts\"\n",
+          "after": "import { encodeCaseRef } from \"./case-port.ts\"\nimport { selectSfScenarioCandidates } from \"../host-binding/state-provider.ts\"\n",
+          "beforeOccurrences": 1,
+          "afterOccurrences": 1,
+          "preimage": {
+            "git": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+            "bytes": 3994,
+            "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+            "lf": 35,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "e2f15560549e2e4cd7d0572f29d6544a196a905e",
+            "bytes": 4073,
+            "sha256": "12eb6a481c9c869785d6376b265ffd078a50f8740bf89927800f7f5108320c87",
+            "lf": 36,
+            "endsWithLF": true
+          }
+        },
+        {
+          "index": 2,
+          "label": "opt in exact scenario candidates predicate",
+          "before": "      const records = await input.state.read(source, \"cases\", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === \"scenario\" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined)\n",
+          "after": "      const records = await input.state.read(source, \"cases\", selectSfScenarioCandidates(request, requestDigest, resultDigest, context))\n",
+          "beforeOccurrences": 1,
+          "afterOccurrences": 1,
+          "preimage": {
+            "git": "e2f15560549e2e4cd7d0572f29d6544a196a905e",
+            "bytes": 4073,
+            "sha256": "12eb6a481c9c869785d6376b265ffd078a50f8740bf89927800f7f5108320c87",
+            "lf": 36,
+            "endsWithLF": true
+          },
+          "postimage": {
+            "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+            "bytes": 3614,
+            "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+            "lf": 36,
+            "endsWithLF": true
+          }
+        }
+      ],
+      "forwardExact": true,
+      "inverseExact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "mode": "100644",
+      "operation": "add",
+      "preimage": null,
+      "absence": {
+        "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "parentTree": "5248eb81448c9363ee26114bbcf361f0a14f8e35",
+        "parentPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration",
+        "observedAbsent": true
+      },
+      "postimage": {
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      },
+      "content": "import { expect, test } from \"bun:test\"\nimport { mkdtemp, realpath, rm } from \"node:fs/promises\"\nimport { tmpdir } from \"node:os\"\nimport { join } from \"node:path\"\nimport type { AuthorizedCaseProjection } from \"../../../../product/contracts/business-context.ts\"\nimport type { DecisionCase } from \"../../../../product/contracts/decisions.ts\"\nimport type { SfProductState, SfProductStatePort, SfStateAuthority, SfStoredDecisionResult } from \"../../../../product/contracts/state.ts\"\nimport type { Snapshot } from \"../../../../runtime/contract.ts\"\nimport { digestSfValue } from \"../../../../product/contracts/canonical.ts\"\nimport { encodeCaseRef } from \"../../../../product/decisions/case-port.ts\"\nimport { createDecisionScenarioLookup } from \"../../../../product/decisions/scenario-lookup.ts\"\nimport { createSfProductState, initializeAbsentSfProductState } from \"../../../../product/host-binding/state-provider.ts\"\nimport { createSfUiAuthority } from \"../../../../product/integration/ui-authority.ts\"\nimport { openLocalStore } from \"../../../../runtime/local-store.ts\"\nimport { compositionTestDeadline } from \"./composition-test-deadline.ts\"\n\ntype LookupInput = Parameters<typeof createDecisionScenarioLookup>[0]\ntype Mode = \"selected\" | \"mutable-context\" | \"mutable-binding-drift\" | \"proxy-context\" | \"map-prototype\" | \"late-request\" |\n  \"admission-denied\" | \"egress-revoked\" | \"abort\" | \"unmatched-getter\" | \"unmatched-function\"\nconst actor: SfStateAuthority = { principalRef: \"person\", policyVersion: \"policy\", accessRevision: \"access\" }\n\nfunction decision(id: string): DecisionCase {\n  const horizon = { start: \"2027-01-01\", end: \"2027-12-31\" }\n  return { id, incarnation: \"case-inc\", version: 2, state: \"comparing\", objective: \"Candidate read contract\",\n    horizon, currency: \"USD\", criteria: [], participants: [actor.principalRef], sourceRefs: [],\n    alternatives: [{ id: \"alternative\", version: 1, title: \"Controlled persisted scenario\",\n      scenario: { baseRef: \"source\", operations: [], assumptions: [] },\n      result: { id: \"scenario\", version: 1, components: [], currency: \"USD\", horizon, sourceRefs: [],\n        unresolvedConditions: [\"Controlled source ports\"], restrictions: [], comparisonStatus: \"conditioned\",\n        costCoverage: { basisId: \"basis\", basisVersion: 1, alternativeId: \"alternative\", alternativeVersion: 1,\n          currency: \"USD\", horizon, coverageState: \"pending\", entries: [], derivedMissingCategoryIds: [\"training\"],\n          evaluatedSourceRefs: [], issues: [\"Controlled source ports\"] }, knownSubtotal: null, total: null } }],\n    costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }\n}\n\n/** Real lookup, LocalStore and C08; case/history/host ports are controlled.\n * authorize injects graph probes after the native snapshot was materialized.\n * These oracles qualify the C08 read-set, not native projection or installed performance.\n * The factory returns a new callback: opaque behavior means values and observation\n * order, not preservation of the old inline function identity, name or source. */\ntest(\"Scenario lookup selects the complete candidate graph and retains late reads, fallback and fresh authority\", async () => {\n  const deadline = compositionTestDeadline(\"scenario-lookup-selection\", 18_000)\n  try {\n    const directory = await mkdtemp(join(await realpath(tmpdir()), \"sf-scenario-lookup-\"))\n    deadline.own(() => rm(directory, { recursive: true, force: true }))\n    const store = await openLocalStore(join(directory, \"store\"))\n    deadline.own(() => store.dispose())\n    await initializeAbsentSfProductState(store, () => \"scenario-lookup-state\")\n    const alternative = decision(\"selected\").alternatives[0]!\n    const requestDigest = digestSfValue(alternative.scenario), resultDigest = digestSfValue(alternative.result)\n    const stored = (id: string, resultRef: string, version = 2): SfStoredDecisionResult => ({\n      schema: \"sf-decision-result-v1\", kind: \"scenario\", resultRef, caseRef: { id, incarnation: \"case-inc\", version },\n      ...actor, requestDigest, resultDigest, sourceRefs: [], createdAt: \"2027-02-02T00:00:00Z\", result: alternative.result,\n    })\n    const originals = { older: stored(\"selected\", \"older\", 1), selected: stored(\"selected\", \"selected\"),\n      other: stored(\"other\", \"other\"), irrelevant: stored(\"irrelevant\", \"irrelevant\") }\n    await store.transaction(\"dashboard\", async (snapshot) => {\n      const state = snapshot.data.__sfProductV1 as SfProductState\n      state.cases.selected = decision(\"selected\")\n      state.cases.other = decision(\"other\")\n      state.decisionResults = originals\n      return { commit: true, value: undefined }\n    })\n    const ui = createSfUiAuthority({\n      authorize: async () => ({ ...actor, installationId: \"installation\", projectId: \"project\" }),\n      commandIdentity: async () => \"scenario-lookup-control\", createId: () => \"scenario-lookup-context\",\n      now: () => Date.parse(\"2027-02-02T00:00:00Z\"),\n    })\n    const admission = await ui.admit(new Request(\"https://scenario.example.test/context\", { signal: deadline.signal }),\n      \"sf_forecast_compare\", \"a\".repeat(64))\n    if (admission.status !== \"ok\" || !await ui.validate(admission.value, \"sf_forecast_compare\", \"a\".repeat(64)))\n      throw new Error(\"The control UI context was not admitted\")\n    const call = admission.value\n    deadline.own(() => ui.finish(call))\n    const checks: string[] = []\n\n    const run = async (mode: Mode, opaque = false) => {\n      deadline.check()\n      const cancellation = new AbortController()\n      const transport = new Request(\"https://scenario.example.test/lookup\", {\n        signal: AbortSignal.any([deadline.signal, cancellation.signal]),\n      })\n      const audit: {\n        authority: number; reads: number; inside: number; outside: number; unexpected: number\n        contextGets: number; contextDescriptors: number; idReads: number; beforeReadIds: number; currentId: string\n        events: string[]; caseRefs: string[]; resultRefs: string[]; values: unknown[]; failures: unknown[]\n        sourceMap?: NonNullable<SfProductState[\"decisionResults\"]>; shared?: object\n      } = { authority: 0, reads: 0, inside: 0, outside: 0, unexpected: 0, contextGets: 0, contextDescriptors: 0,\n        idReads: 0, beforeReadIds: 0, currentId: \"selected\", events: [], caseRefs: [], resultRefs: [], values: [], failures: [] }\n      const sentinel = new Error(\"Unmatched scenario envelope remains reachable\")\n      const context = mode === \"mutable-context\" || mode === \"mutable-binding-drift\" ? { ...call, binding: { ...call.binding } }\n        : mode === \"proxy-context\" ? new Proxy(call, {\n          get: (target, key, receiver) => { audit.contextGets++; audit.events.push(\"context.\" + String(key)); return Reflect.get(target, key, receiver) },\n          getOwnPropertyDescriptor: (target, key) => { audit.contextDescriptors++; return Reflect.getOwnPropertyDescriptor(target, key) },\n          ownKeys: (target) => { audit.contextDescriptors++; return Reflect.ownKeys(target) },\n        }) : call\n      const incoming = { caseRef: { get id() { audit.idReads++; return audit.currentId },\n        incarnation: \"case-inc\", version: 2 }, alternativeId: \"alternative\", alternativeVersion: 1 }\n      const provider = createSfProductState({ persistence: store, createId: () => \"unused\",\n        authorize: async (_request, snapshot: Snapshot) => {\n          deadline.check()\n          audit.events.push(\"authorize-\" + ++audit.authority)\n          if (mode === \"admission-denied\" || mode === \"egress-revoked\" && audit.authority === 2) return undefined\n          if (audit.authority === 1) {\n            const state = snapshot.data.__sfProductV1 as SfProductState\n            const map = state.decisionResults\n            if (!map?.older || !map.selected || !map.irrelevant) throw new Error(\"Candidate graph is missing\")\n            audit.sourceMap = map\n            const shared = { amount: 12 }\n            audit.shared = shared\n            Reflect.set(shared, \"self\", shared)\n            Reflect.set(map.older, \"graph\", shared)\n            Reflect.set(map.selected, \"graph\", shared)\n            Reflect.set(map.irrelevant, \"graph\", shared)\n            state.preferences.shared = shared\n            Object.defineProperty(state.preferences, \"outsideReadSet\", { enumerable: true, get: () => {\n              audit.outside++; return \"Only the opaque full-state clone reads this field\"\n            } })\n            // This envelope does not match either requested case. Its own failure\n            // is not reachable through the shared object on a matched envelope.\n            Object.defineProperty(map.irrelevant, \"unmatchedField\", { enumerable: true, get: () => {\n              audit.inside++\n              if (mode === \"unmatched-getter\") throw sentinel\n              if (mode === \"abort\") cancellation.abort(new Error(\"Cancelled during candidate cloning\"))\n              return \"Unmatched candidate was cloned before filtering\"\n            } })\n            if (mode === \"unmatched-function\") Reflect.set(map.irrelevant, \"uncloneable\", () => undefined)\n            if (mode === \"map-prototype\") Object.setPrototypeOf(map, { inherited: true })\n            if (mode === \"late-request\") audit.currentId = \"other\"\n            if (mode === \"mutable-binding-drift\") Reflect.set(context.binding, \"accessRevision\", \"changed after admission\")\n          }\n          return { ...actor }\n        },\n        resolveTarget: async () => undefined,\n      })\n      const state: SfProductStatePort = { ...provider, read: async (source, namespace, read) => {\n        audit.events.push(\"state-read\")\n        audit.reads++\n        audit.beforeReadIds = audit.idReads\n        try {\n          // Deliberately wrapping the actual consumer callback removes only its\n          // private factory registration; no predicate is reimplemented here.\n          const result = await provider.read(source, namespace, opaque ? (value, authority) => read(value, authority) : read)\n          if (result.status === \"ok\") audit.values.push(result.value)\n          return result\n        } catch (error) { audit.failures.push(error); throw error }\n      } }\n      const unexpected = async () => { audit.unexpected++; throw new Error(\"Unexpected controlled port operation\") }\n      const cases: LookupInput[\"cases\"] = { draft: unexpected, prepareIntent: unexpected, read: async (request) => {\n        audit.events.push(\"case-read\")\n        audit.caseRefs.push(request.caseRef)\n        const id = request.caseRef === encodeCaseRef({ id: \"other\", incarnation: \"case-inc\" }) ? \"other\" : \"selected\"\n        const value: AuthorizedCaseProjection = { context: { kind: \"ui\", installationId: \"installation\", projectId: \"project\", ...actor },\n          case: { ...decision(id), preparedChanges: [], receipts: [] }, events: [], evidenceRefs: [], checkedAt: \"2027-02-02T00:00:00Z\" }\n        return { status: \"ok\", value }\n      } }\n      const results: LookupInput[\"results\"] = { write: unexpected, read: unexpected, readByRequest: unexpected,\n        readForCalculation: unexpected, readHistoricalCalculation: unexpected,\n        readHistoricalScenario: async ({ resultRef }) => {\n          audit.events.push(\"historical-read\")\n          audit.resultRefs.push(resultRef)\n          const value = resultRef === \"other\" ? originals.other : originals.selected\n          return { status: \"ok\", value }\n        },\n      }\n      const lookup = createDecisionScenarioLookup({ state, cases, results, host: {\n        requestFor: () => transport,\n        revalidate: async () => { audit.events.push(\"host\"); return true },\n      } })\n      const outcome = await lookup(incoming, context)\n      expect(audit.unexpected).toBe(0)\n      expect(audit.reads).toBe(1)\n      // The sole earlier ID read belongs to the original first encodeCaseRef.\n      // Registration must not snapshot or coerce the mutable request key.\n      expect(audit.beforeReadIds).toBe(1)\n      expect(audit.contextDescriptors).toBe(0)\n      return { outcome, audit, sentinel, cancelled: cancellation.signal.aborted }\n    }\n\n    for (const opaque of [false, true]) {\n      const value = await run(\"selected\", opaque)\n      expect(value.outcome).toEqual({ status: \"ok\", value: { resultRef: \"selected\", requestDigest, resultDigest } })\n      expect(value.audit.events).toEqual([\"host\", \"case-read\", \"state-read\", \"authorize-1\", \"authorize-2\",\n        \"historical-read\", \"case-read\", \"historical-read\", \"host\"])\n      expect(value.audit.resultRefs).toEqual([\"selected\", \"selected\"])\n      expect(value.audit.inside).toBe(1)\n      expect(value.audit.outside).toBe(opaque ? 1 : 0)\n      const candidates: unknown = value.audit.values[0]\n      if (!Array.isArray(candidates) || candidates.length !== 2) throw new Error(\"Both matching envelopes must be retained before newest selection\")\n      const older: unknown = candidates[0], latest: unknown = candidates[1]\n      if (!older || typeof older !== \"object\" || !latest || typeof latest !== \"object\") throw new Error(\"Cloned candidates are missing\")\n      const graph: unknown = Reflect.get(latest, \"graph\")\n      if (!graph || typeof graph !== \"object\") throw new Error(\"Cloned graph is missing\")\n      expect(latest).not.toBe(value.audit.sourceMap?.selected)\n      expect(older).not.toBe(value.audit.sourceMap?.older)\n      expect(graph).not.toBe(value.audit.shared)\n      expect(Reflect.get(older, \"graph\")).toBe(graph)\n      expect(Reflect.get(graph, \"self\")).toBe(graph)\n      Reflect.set(graph, \"amount\", 99)\n      expect(Reflect.get(value.audit.shared!, \"amount\")).toBe(12)\n      checks.push(opaque ? \"opaque-wrapper-keeps-full-state\" : \"consumer-selects-complete-detached-results\")\n    }\n    for (const mode of [\"mutable-context\", \"proxy-context\", \"map-prototype\"] as const) {\n      const value = await run(mode)\n      expect(value.outcome).toEqual({ status: \"ok\", value: { resultRef: \"selected\", requestDigest, resultDigest } })\n      expect(value.audit.authority).toBe(2)\n      expect(value.audit.inside).toBe(1)\n      expect(value.audit.outside).toBe(1)\n      if (mode === \"proxy-context\") {\n        expect(value.audit.contextGets).toBe(3)\n        expect(value.audit.events.indexOf(\"context.binding\")).toBeGreaterThan(value.audit.events.indexOf(\"authorize-1\"))\n      }\n      checks.push(mode + \"-uses-opaque-fallback\")\n    }\n    const late = await run(\"late-request\")\n    expect(late.outcome).toEqual({ status: \"ok\", value: { resultRef: \"other\", requestDigest, resultDigest } })\n    expect(late.audit.caseRefs).toEqual([\"case:selected:case-inc\", \"case:other:case-inc\"])\n    expect(late.audit.resultRefs).toEqual([\"other\", \"other\"])\n    expect(late.audit.authority).toBe(2)\n    expect(late.audit.outside).toBe(0)\n    checks.push(\"request-key-remains-late-after-admission\")\n    const drift = await run(\"mutable-binding-drift\")\n    expect(drift.outcome).toEqual({ status: \"unavailable\", reason: \"scenario-result-unavailable\" })\n    expect(drift.audit.authority).toBe(2)\n    expect(drift.audit.outside).toBe(1)\n    expect(drift.audit.values).toEqual([undefined])\n    expect(drift.audit.resultRefs).toEqual([])\n    checks.push(\"mutable-binding-is-observed-after-admission\")\n\n    for (const mode of [\"admission-denied\", \"egress-revoked\", \"abort\"] as const) {\n      const value = await run(mode)\n      expect(value.outcome).toEqual({ status: \"unavailable\", reason: \"scenario-result-unavailable\" })\n      expect(value.audit.authority).toBe(mode === \"egress-revoked\" ? 2 : 1)\n      expect(value.audit.inside).toBe(mode === \"admission-denied\" ? 0 : 1)\n      expect(value.audit.resultRefs).toEqual([])\n      expect(value.audit.caseRefs).toEqual([\"case:selected:case-inc\"])\n      expect(value.audit.values).toEqual([])\n      expect(value.cancelled).toBe(mode === \"abort\")\n      checks.push(mode + \"-does-not-disclose\")\n    }\n    for (const mode of [\"unmatched-getter\", \"unmatched-function\"] as const) {\n      for (const opaque of [false, true]) {\n        const value = await run(mode, opaque)\n        expect(value.outcome).toEqual({ status: \"unavailable\", reason: \"scenario-result-unavailable\" })\n        expect(value.audit.authority).toBe(1)\n        expect(value.audit.inside).toBe(1)\n        expect(value.audit.resultRefs).toEqual([])\n        expect(value.audit.failures).toHaveLength(1)\n        if (mode === \"unmatched-getter\") expect(value.audit.failures[0]).toBe(value.sentinel)\n        if (mode === \"unmatched-function\") {\n          const error = value.audit.failures[0]\n          if (!(error instanceof Error)) throw new Error(\"The reachable clone failure was lost\")\n          expect(error.name).toBe(\"DataCloneError\")\n        }\n        checks.push(mode + (opaque ? \"-opaque\" : \"-selected\"))\n      }\n    }\n    console.info(\"SF_C20_SCENARIO_LOOKUP \" + JSON.stringify({ schema: \"sf-c20-scenario-lookup-v1\", checks }))\n  } finally { await deadline.close() }\n}, 20_000)\n",
+      "forwardExact": true,
+      "inverseRemovesExactlyThisFile": true
+    }
+  ],
+  "fullDiff": {
+    "git": "c80be5b69c74e83cf18986a867f59abafb4b3145",
+    "bytes": 19846,
+    "sha256": "8205a0b4147d4cf94090dd2554ef9244d43889be4ba8d488e8d39c3931ec5680",
+    "lf": 287,
+    "endsWithLF": true,
+    "hunks": 3,
+    "additions": 262,
+    "deletions": 1,
+    "forwardExact": true,
+    "inverseExact": true
+  },
+  "predicate": {
+    "provider": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+    "providerLine": 393,
+    "preimageLookupLine": 21,
+    "exact": true,
+    "characters": 510,
+    "text": "authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? Object.values(state.decisionResults ?? {}).filter((item) => item.kind === \"scenario\" && item.caseRef.id === request.caseRef.id && item.caseRef.incarnation === request.caseRef.incarnation && item.caseRef.version <= request.caseRef.version && item.requestDigest === requestDigest && item.resultDigest === resultDigest) : undefined"
+  },
+  "preserved": {
+    "awaitSitesBefore": 7,
+    "awaitSitesAfter": 7,
+    "catchLiteral": true,
+    "allLookupBytesOutsideTwoAnchorsLiteral": true,
+    "providerUnmodified": true,
+    "nativeUnmodified": true,
+    "allPriorTestFilesUnmodified": true
+  },
+  "instructions": {
+    "root": {
+      "git": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "read": true
+    },
+    "ancestorDirectoriesInspected": [
+      "modules",
+      "modules/sucafina",
+      "modules/sucafina/Sucafinav1",
+      "modules/sucafina/Sucafinav1/product",
+      "modules/sucafina/Sucafinav1/product/decisions",
+      "modules/sucafina/Sucafinav1/test",
+      "modules/sucafina/Sucafinav1/test/product",
+      "modules/sucafina/Sucafinav1/test/product/wp10",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration"
+    ],
+    "additionalAgentsFilesObserved": [],
+    "localRepoExecution": false
+  },
+  "limitations": [
+    "Factory constructs a new callback. Identity, name and toString equivalence with the previous inline arrow is not claimed.",
+    "Graph selected is complete decisionResults, before filtering; graph reachable through aliases and unmatched envelopes remains in scope.",
+    "Explicit read-set excludes effects/failures confined to unrelated namespaces. It is not full-state-clone equivalence.",
+    "This derivation authenticates text. It is not a typecheck, test execution, installed qualification or measured benefit.",
+    "No source/tree/commit/ref/run or original/ZIP was created/acquired by this proposal author."
+  ]
+}

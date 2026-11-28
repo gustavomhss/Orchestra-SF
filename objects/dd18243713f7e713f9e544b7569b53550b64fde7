@@ -1,0 +1,212 @@
+{
+  "schema": "sf613-c20-clean-source-object-receipt-v1",
+  "status": "CLEAN_SOURCE_OBJECT_CREATED_NO_REF_NO_RUN",
+  "at": {
+    "current_time": "2026-11-28 04:50:30 UTC"
+  },
+  "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+  "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+  "parents": [
+    "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+  ],
+  "message": "refactor(sucafina): declare the scenario lookup read set",
+  "delta": {
+    "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "after": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "complete": true,
+    "pairs": [
+      {
+        "path": "",
+        "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "after": "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+      },
+      {
+        "path": "modules",
+        "before": "a27ea6f047f44308b4ab2f2df79c08b6c5164237",
+        "after": "5efee20f3fcda894999789bc4501681cd2453b88"
+      },
+      {
+        "path": "modules/sucafina",
+        "before": "9758cc619b78775ca016b364b0be890a0b2e3913",
+        "after": "2437e4cc15be85b319c1057fc776ab6e53991af1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1",
+        "before": "16b2e80ad6b96efc72ba54714bc8c74a0ee3ecc6",
+        "after": "1635c7cd7c3f50ecde28adf0fe735c69a92e9b6b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product",
+        "before": "e2eff7799770bc783749e09461467999faad5fdd",
+        "after": "e7dcf93f5eaad61e037e40cea886bc59cc5aca2b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions",
+        "before": "744e942882a9b643bd52eb27707fbe9d079848e7",
+        "after": "021f9c00585fcfabdfdab69f3a4dfffa1f19ef5d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test",
+        "before": "ec80277e5a7864d5e4d69bafc375c738fa9dd6d5",
+        "after": "e6055d086beadb457b531da2ab882a7b878759d2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product",
+        "before": "41eeb3b1e578908f4151d388dba54c41155370d8",
+        "after": "6750774166ef6340acfe0610830980cbecbedd6f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10",
+        "before": "a6d8e4360d7ce3a8bce1ac38de3d92fb8468edb8",
+        "after": "34e230d45209ef2e971fc5d2f885f267d1c4e1f9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration",
+        "before": "5248eb81448c9363ee26114bbcf361f0a14f8e35",
+        "after": "08e7702c3a0fccd8097d761c79dcff47ea0feda6"
+      }
+    ],
+    "literalSiblings": 239,
+    "changes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "kind": "M",
+        "before": {
+          "path": "scenario-lookup.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+          "size": 3994,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/40c78dee5908cd8af58cc3d58435f3cfb4542045"
+        },
+        "after": {
+          "path": "scenario-lookup.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+          "size": 3614,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "scenario-lookup-selection.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+          "size": 16889,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1c4b73e4d170a358c0065bd674817f98edd6e86f"
+        }
+      }
+    ]
+  },
+  "manifest": {
+    "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+    "bytes": 11676,
+    "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+    "lf": 290,
+    "endsWithLF": true
+  },
+  "rootReview": {
+    "gitBlob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+    "bytes": 7320,
+    "sha256": "91c1dc3b6adb82a21ab10218ea13b623371984f81a1444b47c7924f158b3393b",
+    "lf": 201,
+    "endsWithLF": true
+  },
+  "independentReview": {
+    "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+    "bytes": 9824,
+    "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+    "lf": 296,
+    "endsWithLF": true
+  },
+  "sourceFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "mode": "100644",
+      "operation": "M",
+      "preimage": {
+        "git": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+        "bytes": 3994,
+        "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+        "lf": 35,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      "readbackLiteral": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "mode": "100644",
+      "operation": "A",
+      "preimage": null,
+      "absenceConfirmedAtBase": true,
+      "parentTree": "5248eb81448c9363ee26114bbcf361f0a14f8e35",
+      "postimage": {
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      },
+      "readbackLiteral": true
+    }
+  ],
+  "absence": [
+    {
+      "present": false,
+      "path": ".ci-run.json",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+      ]
+    },
+    {
+      "present": false,
+      "path": "sf613-focal.test.ts",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+      ]
+    },
+    {
+      "present": false,
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7"
+      ]
+    }
+  ],
+  "reader": {
+    "rootEvidence": {
+      "gitBlob": "c3aaf4b12a7fc44e3f7bba144de5df346d41953c",
+      "bytes": 7730,
+      "sha256": "1c28f1d902969a06694f6b6feb1121157cae28cba23aa0d466d2b3dbea930ac0",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "transport": {
+      "gitBlob": "a3924c196f2818241886c4fe4a0dea7d7fde8be1",
+      "bytes": 5272,
+      "sha256": "e767767b87b7561b92766eb07844d94c1162ec1a25616d9a4b127dbaf1a92e87",
+      "lf": 189,
+      "endsWithLF": true
+    },
+    "independentFinalPending": true
+  },
+  "sourceScope": "Clean C19 plus only one product callback opt-in and its consumer control. Diagnostic E14 and reader workflow are excluded.",
+  "refCreated": false,
+  "runCreated": false,
+  "productQualified": false,
+  "productionAuthorized": false
+}
