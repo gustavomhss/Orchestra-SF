@@ -1,6 +1,9 @@
 import type { BrowserContext } from "@playwright/test"
 import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+import { createHash } from "node:crypto"
+import { Buffer } from "node:buffer"
+import { chmodSync, closeSync, fstatSync, fsyncSync, lstatSync, mkdtempSync, openSync, realpathSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -59,9 +62,10 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
     const installed = yield* Effect.gen(function* () {
       const ready = yield* Deferred.make<void, Error>()
       const diagnostic = { tail: "" }
+      const eventEnvironment = preparePreviewE14EventEnvironment(repository, root)
       const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
         cwd: repository,
-        env: isolatedEnvironment(root),
+        env: { ...isolatedEnvironment(root), ...eventEnvironment },
         extendEnv: false,
         stdin: "ignore",
         stdout: "pipe",
@@ -71,6 +75,10 @@ export async function withDesignInstallation<T>(use: (installation: DesignInstal
       }))
       owned.child = child
       yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+        if (((line.startsWith("SF_PREVIEW_E14_EVENT ") && line.length + 1 <= 1024) ||
+          (line.startsWith("SF_PREVIEW_E14_LAUNCHER ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }
+        }
         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
@@ -203,4 +211,57 @@ function readOperatorSessionCookie(headers: Headers, hostname: string, mount: st
 
 function redact(value: string) {
   return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]")
+}
+
+
+/** Diagnostic files survive the two original private roots; failure never blocks launch. */
+function preparePreviewE14EventEnvironment(repository: string, privateRoot: string): Record<string, string> {
+  const directoryKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_BINDING"
+  const disabled = { [directoryKey]: "", [bindingKey]: "" }
+  const source = "7393cd010086f4a12d61ae9bb5db13534bd18aa0", sourceTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+  let fd: number | undefined, stage = "gate"
+  try {
+    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+    if (process.env.GITHUB_ACTIONS !== "true" || process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+        process.platform !== "linux" || process.arch !== "x64" || !snapshot || !/^[a-f0-9]{40}$/.test(snapshot) ||
+        !runId || !/^[0-9]{1,20}$/.test(runId) || attempt !== "1") throw new Error("cpu-gate")
+    stage = "base"
+    const base = path.join(realpathSync(repository), "test-ci-evidence"), baseInfo = lstatSync(base)
+    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error("cpu-base")
+    stage = "directory"
+    const directory = mkdtempSync(path.join(base, "sf613-e14-event-"))
+    chmodSync(directory, 0o700)
+    const relative = path.relative(realpathSync(privateRoot), directory)
+    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||
+        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
+      throw new Error("cpu-root")
+    const nonce = path.basename(directory)
+    if (!/^sf613-e14-event-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
+    const binding = { schema: "sf-preview-e14-event-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
+    const launcher = { ...binding, qualification: false, state: "prepared", processRole: "native-cli",
+      entry: "apps/cli/src/index.ts", command: "serve", streamName: "preview-events.jsonl",
+      relativeDirectory: "test-ci-evidence/" + nonce, createdUtcMs: Date.now(),
+      childGraceMs: 2000, adapterGraceMs: 10000,
+      limits: "Preparation is not proof of Request selection, phase completion, event transport or successful fsync." }
+    stage = "launcher"
+    const text = JSON.stringify(launcher) + "\n", launcherBytes = Buffer.byteLength(text, "utf8")
+    if (launcherBytes > 8192) throw new Error("cpu-launcher-size")
+    const launcherSha256 = createHash("sha256").update(text, "utf8").digest("hex")
+    fd = openSync(path.join(directory, "launcher.json"), "wx", 0o600)
+    writeFileSync(fd, text, "utf8")
+    fsyncSync(fd)
+    const written = fstatSync(fd)
+    if (!written.isFile() || written.size !== launcherBytes) throw new Error("cpu-launcher-write")
+    closeSync(fd)
+    fd = undefined
+    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }
+  } catch {
+    try {
+      console.info("SF_PREVIEW_E14_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e14-launcher-v1", source, sourceTree,
+        qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }))
+    } catch { /* Original setup/spawn remains authoritative. */ }
+    return disabled
+  } finally {
+    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve original setup outcome. */ } }
+  }
 }
