@@ -24,7 +24,7 @@ type AuthorityDataReader = <S extends Surface>(surfaces: readonly S[]) => Readon
 // Only openLocalStore can register its own closed reader. This is neither an
 // adapter capability nor an authorization cache; unknown owners stay legacy.
 const readonlyAuthorityReaders = new WeakMap<object, AuthorityDataReader>()
-type LocalProductRead = Readonly<{ current: () => boolean; selection: "cases" | "preferences" | "case-identities" | undefined }>
+type LocalProductRead = Readonly<{ current: () => boolean; selection: "cases" | "preferences" | "case-identities" | "decisionResults" | undefined }>
 const localProductReads = new WeakMap<object, LocalProductRead>()
 const productReadGet = WeakMap.prototype.get, productReadSet = WeakMap.prototype.set, productReadApply = Reflect.apply
 const localSnapshotAuthorities = new WeakMap<object, { read: object; current: () => boolean }>()
@@ -293,7 +293,7 @@ export async function openLocalStore(directory: string, options: {
     return structuredClone({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")),
       versions: snapshot.versions, sfSources: snapshot.sfSources, sequences: {}, audit: [], notices: [] }) satisfies Snapshot
   }
-  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: "cases" | "preferences" | "case-identities") => {
+  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: "cases" | "preferences" | "case-identities" | "decisionResults") => {
     const snapshot = requireDashboardSource(scope, identity)
     if (!snapshot) throw new Error("Local Dashboard product view unavailable")
     return productSnapshotView.copy(snapshot, selection,
@@ -632,8 +632,8 @@ export async function openLocalStore(directory: string, options: {
           ? productSnapshotView.property(product, "identity") : undefined
         const callback = identity ? productSnapshotView.property(product, "work") : undefined
         const selected = callback ? productSnapshotView.property(product, "selection") : undefined
-        const selection: "cases" | "preferences" | "case-identities" | undefined = selected && productSnapshotView.own(selected, "value") &&
-          (selected.value === "cases" || selected.value === "preferences" || selected.value === "case-identities") ? selected.value : undefined
+        const selection: "cases" | "preferences" | "case-identities" | "decisionResults" | undefined = selected && productSnapshotView.own(selected, "value") &&
+          (selected.value === "cases" || selected.value === "preferences" || selected.value === "case-identities" || selected.value === "decisionResults") ? selected.value : undefined
         // CurrentChoice's wrapped route changes work and retains the full path.
         const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
           callback && productSnapshotView.own(callback, "value") && callback.value === work &&
@@ -1501,7 +1501,7 @@ const productSnapshotView = (() => {
     }
     return selected
   }
-  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities", normalizedIdentities: boolean) => {
+  const selectedState = (value: unknown, selection: "cases" | "preferences" | "case-identities" | "decisionResults", normalizedIdentities: boolean) => {
     if (!current() || !selectionCurrent() || !plain(value)) return undefined
     const state = descriptors(value), names = keys(state)
     for (let index = 0; index < names.length; index++) {
@@ -1527,6 +1527,9 @@ const productSnapshotView = (() => {
     // Legacy or incomplete v1 state keeps the full copy; this path never
     // creates a missing field or repairs an invalid map.
     if (!plain(field("biArtifacts"))) return undefined
+    // An absent/undefined collection would take the Provider's opaque fallback.
+    // Keep the full view unless its original whole-collection route is usable.
+    if (selection === "decisionResults" && field("decisionResults") === undefined) return undefined
     const selected: Record<string, unknown> = {}
     for (let index = 0; index < names.length; index++) {
       const name = names[index]!, value = state[name]!.value
@@ -1540,7 +1543,7 @@ const productSnapshotView = (() => {
     }
     return selected
   }
-  const copy = (snapshot: Snapshot, selection?: "cases" | "preferences" | "case-identities", normalized = false) => {
+  const copy = (snapshot: Snapshot, selection?: "cases" | "preferences" | "case-identities" | "decisionResults", normalized = false) => {
     const normalizedIdentities = selection === "case-identities" && normalized && identitySnapshotBirth.current()
     const data: Record<string, unknown> = {}
     const fields = descriptors(snapshot.data), names = keys(fields)

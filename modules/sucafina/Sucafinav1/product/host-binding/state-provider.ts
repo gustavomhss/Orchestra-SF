@@ -447,13 +447,14 @@ function caseIdentityMap(state: SfProductState) {
 
 const productStateReaders = new WeakMap<SfProductStatePort, (persistence: Persistence) => boolean>()
 const productSnapshotReads = new WeakMap<object, (transaction: object) => boolean>()
-const productSnapshotSelections = new WeakMap<object, (transaction: object) => "cases" | "preferences" | "case-identities" | undefined>()
+const productSnapshotSelections = new WeakMap<object, (transaction: object) => "cases" | "preferences" | "case-identities" | "decisionResults" | undefined>()
 const selectionGet = WeakMap.prototype.get, selectionSet = WeakMap.prototype.set, selectionApply = Reflect.apply
 const selectionValue = <T>(registry: WeakMap<object, T>, read: object): T | undefined =>
   selectionApply(selectionGet, registry, [read])
 
-// Only closed cases factories and explicit whole-graph declarations may narrow
-// the native copy. Never inspect IDs or run selectors before authorization.
+// Only closed factories and explicit whole-graph declarations may narrow the
+// native copy. Scenario candidates retain the entire decisionResults collection;
+// never inspect IDs, filter envelopes or run selectors before authorization.
 function productReadSelection(namespace: SfStateNamespace, read: object) {
   if (selectionValue(readinessReads, read)) return undefined
   if (namespace === "cases" && !selectionValue(resultReads, read) && !selectionValue(scenarioReads, read)) {
@@ -464,6 +465,9 @@ function productReadSelection(namespace: SfStateNamespace, read: object) {
     if (selected ? !graph && !identity : !identity && graph === read) return "cases" as const
     if (identity && !selected && !graph) return "case-identities" as const
   }
+  if (namespace === "cases" && selectionValue(scenarioReads, read) && !selectionValue(caseReads, read) &&
+    !selectionValue(resultReads, read) && !selectionValue(caseGraphReads, read) && !selectionValue(caseIdentityReads, read))
+    return "decisionResults" as const
   if (namespace === "preferences" && selectionValue(preferencesReads, read) === read) return "preferences" as const
   return undefined
 }
@@ -580,12 +584,15 @@ export function createSfProductState(input: {
               (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)
             : projection.selection === "case-identities"
             ? readiness || selection || resultSelection || casesSelection || scenarioSelection || !identitySelection
+            : projection.selection === "decisionResults"
+            ? readiness || selection || resultSelection || casesSelection || !scenarioSelection || identitySelection
             : readiness || preferencesSelection !== read))
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
           if (projection.selection === "cases" && casesSelection === read) selectedCases = projectCasesRead(state)
           if (projection.selection === "preferences") selectedPreferences = projectPreferencesRead(state)
           if (projection.selection === "cases" ? selection ? !cases : identitySelection ? !identityCases : !selectedCases
-            : projection.selection === "case-identities" ? !identityCases : !selectedPreferences)
+            : projection.selection === "case-identities" ? !identityCases
+            : projection.selection === "decisionResults" ? !scenarioResults : !selectedPreferences)
             return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
         }
         // Keep missing/inherited, accessor and malformed lookups on the original
