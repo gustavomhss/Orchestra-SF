@@ -1,0 +1,146 @@
+{
+  "schema": "sf613-r6-archive-publication-receipt-v1",
+  "status": "PUBLISHED_REVIEWED_DOCUMENTARY_ARCHIVE_ONLY",
+  "publishedAt": "2026-11-28 02:29:57 UTC",
+  "observedAfter": "2026-11-28 02:30:39 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf613-evidence",
+  "commit": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5",
+  "tree": "768afcf3f8722bf0e3a33f2b21ea803917b18dc4",
+  "objectsTree": "4c417fe3f2a274a7c9c6d8a0897bbc811a15219c",
+  "orderedParents": [
+    "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "86e365fe047f86597751c7e8222011dca4b0a0af",
+    "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b"
+  ],
+  "commitMessage": "docs(sucafina): preserve C19 qualification evidence",
+  "package": {
+    "catalog": {
+      "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+      "bytes": 84274,
+      "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+      "lf": 2778,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+      "lf": 25416,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5",
+      "bytes": 44360,
+      "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "09f7fbe3fa61a3d23e566fea7b974d5d5b27f1e4",
+      "bytes": 188635,
+      "sha256": "497f62867d66c1c1aa41c34c4964c8da746065d255f3e8c78bda7c223123e447",
+      "lf": 4916,
+      "endsWithLF": true
+    }
+  },
+  "rootReview": {
+    "gitBlob": "9bf6679617f3910f5f5d1a59444883a151634b29",
+    "bytes": 10633,
+    "sha256": "942a6f03ce743a982a758bd020a11e98d9719a040cc327eff19c40fdbd383d8b",
+    "lf": 315,
+    "endsWithLF": true
+  },
+  "independent": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_COMPLETE_DOCUMENTARY_PROPOSAL_NO_FINDINGS",
+    "checks": 65,
+    "indexFullForwardInverse": true,
+    "readmeFullForwardInverse": true
+  },
+  "actualTreeAudit": {
+    "pairs": [
+      {
+        "path": "",
+        "before": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+        "after": "768afcf3f8722bf0e3a33f2b21ea803917b18dc4"
+      },
+      {
+        "path": "objects",
+        "before": "2684a14e7d2ea7c0ed1b4bc9b76aa6592fb6350e",
+        "after": "4c417fe3f2a274a7c9c6d8a0897bbc811a15219c"
+      }
+    ],
+    "literalSiblings": 535,
+    "addedObjects": 72,
+    "modifiedRootFiles": 2,
+    "removed": 0,
+    "ownRootEntries": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "objects": 607,
+    "objectBytes": 63318211,
+    "ownFiles": 609,
+    "ownBytes": 64221275,
+    "hashedTreesExact": true,
+    "all607LeafMappingsVerified": true,
+    "noWorkflowLayout": true
+  },
+  "preservation": {
+    "priorObjects": 535,
+    "priorMemberships": 584,
+    "priorGroups": 35,
+    "priorStreams": 48,
+    "priorPartReferences": 177,
+    "resultMemberships": 683,
+    "resultGroups": 40,
+    "resultStreams": 54,
+    "resultPartReferences": 199,
+    "newBodiesRehashed": 71,
+    "newInputCatalogCreatedAndReadback": true,
+    "newStreamsRecomposed": 6,
+    "newPartReferences": 22
+  },
+  "publication": {
+    "expectedOldRef": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "force": false,
+    "compareAndSwap": true,
+    "readbackExact": true,
+    "before": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "7685a790349b7a3b9c3e68cfe56b96fd4963b762"
+    },
+    "after": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5"
+    },
+    "workflowRunsForCommit": 0
+  },
+  "qualification": {
+    "C19Focal": "FOCAL_PASS_ONLY",
+    "C19Analytics": "CLOSED_NEGATIVE_FIRST_PREVIEW_TIMEOUT_BI_PASS",
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "D28": "FOUR_FINAL_BINDINGS_UNBOUND_NOT_EXECUTED",
+    "finalC613": null,
+    "finalTar": null,
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "This commit is a documentary evidence archive with its own root; it is not a product integration or qualification candidate.",
+    "Original Actions logs were acquired only in the closed C19 intake; this publication used preserved Git blobs. No original or ZIP was acquired during archive publication.",
+    "The calculated Analytics main whole hash and calculated UI6 request remain excluded from actual objects. E14 is subsequent and has no objects in this corpus.",
+    "No change to dev, the public #613 head, private writer ref or historical ledger was observed at publication.",
+    "G08/G10 reservations and usable execution/access arrangements remain unconfirmed in the recorded cut; the existing host authorization is preserved."
+  ]
+}

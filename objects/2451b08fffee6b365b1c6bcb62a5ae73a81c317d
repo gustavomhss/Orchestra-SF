@@ -1,0 +1,413 @@
+{
+  "schema": "sf613-e14-reader-independent-review-v1",
+  "status": "STATIC_PACKAGE_AND_ACTUAL_OBJECT_ACK",
+  "reviewer": "/root/teams_product",
+  "reviewedAt": "2026-11-28 04:43:35 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Independent static review and pure-data derivation/object audit only; this receipt is not run or ZIP acquisition authority.",
+  "final": {
+    "manifest": {
+      "bytes": 19946,
+      "sha256": "b95b4850c2ff84f582449106a19c8f12150022fa40722bcad7bf233da97756e2",
+      "gitBlob": "d283188d13f993843119cd5017014e69c9334201"
+    },
+    "python": {
+      "bytes": 89383,
+      "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+      "gitBlob": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416"
+    },
+    "workflow": {
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988"
+    },
+    "bounds": {
+      "bytes": 15875,
+      "sha256": "bb98c245adf762a643f141e3403764c1601cd84dbd38cfd648a870198647ff91",
+      "gitBlob": "78992ee565ace0f713cc530a85c73cba7b5892bb"
+    }
+  },
+  "supports": [
+    {
+      "role": "pythonDerivation",
+      "bytes": 197460,
+      "sha256": "5ab09fc6df2d03a7814724eea362fbb2fa95459c2813d616ac2a1810648d78f6",
+      "gitBlob": "7a8ca2321d07a2f79c3c0ded4e0719c6567862ef"
+    },
+    {
+      "role": "yamlDerivation",
+      "bytes": 239306,
+      "sha256": "26b17b5c19d9a6461b6d5208c4d853b92a09ac7984e21f222b36178fda43d5d5",
+      "gitBlob": "e6342e1c1893ccba9fd42df3783539f4b38ea5cc"
+    },
+    {
+      "role": "pythonDiff",
+      "bytes": 136659,
+      "sha256": "782cda87b8d889403480faeadeaf49a4b4a45e0e3d3d8599b9c21e5fd0513789",
+      "gitBlob": "81411e37cc1894520d8ee434d162377c3134a69f"
+    },
+    {
+      "role": "yamlDiff",
+      "bytes": 159912,
+      "sha256": "41e2183bfa1d0ebb6f22805660c035b8cebbfe470dbcb8e75bcfe8bb82bde871",
+      "gitBlob": "71556e7142fd568c3abd7e6bf2859ff5595c9e8c"
+    },
+    {
+      "role": "workflowAdditionDiff",
+      "bytes": 108477,
+      "sha256": "17847f38d89d73ab6aee692281ce3deb63fcc88bb0d219234da7ed2c21452b51",
+      "gitBlob": "284701333f708580d65ff04c4840fa6cf3b235a3"
+    },
+    {
+      "role": "R1→R2",
+      "bytes": 5649,
+      "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+      "gitBlob": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e"
+    },
+    {
+      "role": "R2→R3",
+      "bytes": 2819,
+      "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+      "gitBlob": "5c53428976b97c2ef6597e9fb39b0d7b0562182d"
+    }
+  ],
+  "originalClosedIntake": {
+    "run": 46103050850,
+    "attempt": 1,
+    "root": {
+      "gitSha": "2a15d6b33dba361af8f4f1b30084cacc61521788",
+      "bytes": 26747,
+      "sha256": "ae0efeac400f71fc21df5e89f0e67a50ffbc1375a583c260eb2ee37337922fad",
+      "lf": 770
+    },
+    "peer": {
+      "gitSha": "0f6fc8a20444b78ac12faee79b384eebb5c8e757",
+      "bytes": 16565,
+      "sha256": "cb7121f793426610daad36376c9e7187ffaba964d10b0d1a8c87d15c7065af52",
+      "lf": 454
+    },
+    "mainPrefix": {
+      "gitSha": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+      "bytes": 11961,
+      "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+      "lf": 21,
+      "records": 21,
+      "sequences": [
+        1,
+        21
+      ],
+      "nonce": "sf613-e14-event-QBamrL",
+      "pid": 3974,
+      "parentPid": 3924,
+      "request": 1,
+      "terminal": false,
+      "overflow": false,
+      "lastPoint": "analysis-persist",
+      "lastElapsedTenthMs": 349739
+    },
+    "artifact": {
+      "id": 15246707437,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45863814,
+      "sha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+      "zipAcquired": false
+    }
+  },
+  "actualObject": {
+    "commit": "64af705904c2ca5b61a6837560f005718ee122d3",
+    "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "parents": [
+      "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    ],
+    "parentTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "treePairs": 3,
+    "literalSiblings": 69,
+    "recomputedTreeHashes": 6,
+    "delta": [
+      {
+        "status": "A",
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "mode": "100644",
+        "blob": "eb5b6ee1388c2bd9536106f308d7888808133988"
+      }
+    ],
+    "ciRunAbsent": true,
+    "rootReceipt": {
+      "bytes": 4865,
+      "sha256": "026e55e9f99129518496f42c49fc7794f2a7572e823463f6d18bf4bb40864f73",
+      "gitBlob": "b7235555932265cbdeac136f37111036c19b8281"
+    }
+  },
+  "checks": {
+    "kind": "Grouped static/data checks, not runtime assertions",
+    "count": 44,
+    "items": [
+      {
+        "id": "payload-authentication",
+        "result": "PASS",
+        "statement": "Python R3, workflow R3, bounds and manifest exact Git blob/SHA256/byte/LF authentication."
+      },
+      {
+        "id": "manifest-links",
+        "result": "PASS",
+        "statement": "All ten manifest payload/support/correction locators match independently authenticated cached bytes."
+      },
+      {
+        "id": "python-derivation",
+        "result": "PASS",
+        "statement": "27 unique ordered operations, fragment metadata, complete forward and inverse equal E12 and R3."
+      },
+      {
+        "id": "workflow-derivation",
+        "result": "PASS",
+        "statement": "Five ordered operations reconstruct and invert the entire workflow."
+      },
+      {
+        "id": "python-unified-diff",
+        "result": "PASS",
+        "statement": "21 hunks, +625/-970, complete forward/inverse equal the two Python payloads."
+      },
+      {
+        "id": "workflow-unified-diff",
+        "result": "PASS",
+        "statement": "24 hunks, +629/-974, complete forward/inverse equal the two workflows."
+      },
+      {
+        "id": "addition-diff",
+        "result": "PASS",
+        "statement": "One hunk, +1359/-0, creates exactly the final workflow and reverses to absence."
+      },
+      {
+        "id": "gap-correction-derivation",
+        "result": "PASS",
+        "statement": "R1 to R2: three Python and four YAML operations invert literally."
+      },
+      {
+        "id": "coverage-correction-derivation",
+        "result": "PASS",
+        "statement": "R2 to R3: one Python and two YAML operations invert literally."
+      },
+      {
+        "id": "function-partition",
+        "result": "PASS",
+        "statement": "19 infrastructure functions literal, nine modified, sixteen removed and twelve added; no unaccounted function."
+      },
+      {
+        "id": "download-reuse",
+        "result": "PASS",
+        "statement": "download_original and storage host validation remain literal to E12."
+      },
+      {
+        "id": "bootstrap-and-embedding",
+        "result": "PASS",
+        "statement": "R3 Python is embedded exactly with its SHA256; bootstrap remains literal outside bound values."
+      },
+      {
+        "id": "main-prefix-binding",
+        "result": "PASS",
+        "statement": "Embedded main prefix equals preserved Git blob775e26, 11961 B, SHA256bedef5ee..., 21 LF records."
+      },
+      {
+        "id": "main-prefix-before-acquisition",
+        "result": "PASS",
+        "statement": "The same event parser validates the bound main prefix before artifact acquisition."
+      },
+      {
+        "id": "target-identities",
+        "result": "PASS",
+        "statement": "Static bindings match closed E14 run/attempt, jobs, artifact, clean S19 and diagnostic snapshot; nine overlay pins remain exact."
+      },
+      {
+        "id": "four-path-selection",
+        "result": "PASS",
+        "statement": "Only the exact event, launcher, runtime and selection paths can reach source.open."
+      },
+      {
+        "id": "digest-before-open",
+        "result": "PASS",
+        "statement": "Compressed length and SHA256 are checked during acquisition and the preserved ZIP is rehashed before ZipFile."
+      },
+      {
+        "id": "directory-versus-crc",
+        "result": "PASS",
+        "statement": "Central directory guards cover all entries; content reads and CRC claims are restricted to selected entries."
+      },
+      {
+        "id": "raw-preservation",
+        "result": "PASS",
+        "statement": "Existing selected members that pass acquisition limits/CRC are saved before parsing; invalid/partial content is not repaired."
+      },
+      {
+        "id": "report-byte-concatenation",
+        "result": "PASS",
+        "statement": "Runtime chunks concatenate within case/result/stream before strict UTF8 decoding; no chronological merge is invented."
+      },
+      {
+        "id": "carrier-normalization",
+        "result": "PASS",
+        "statement": "Only initial ANSI CSI is removed and literal LF splits records; CR, tails and Unicode separators are not normalized."
+      },
+      {
+        "id": "finite-event-validation",
+        "result": "PASS",
+        "statement": "Exact E14 envelope/vocabulary/tuple and numeric limits, duplicate JSON keys and nonfinite values are handled explicitly."
+      },
+      {
+        "id": "gap-acceptance",
+        "result": "PASS",
+        "statement": "Received sequence gaps are explicit and both sides must be contiguous from one for consistencyProven."
+      },
+      {
+        "id": "entry-close-coverage",
+        "result": "PASS",
+        "statement": "coverageComplete additionally rejects observed units/phases without matching closes; Request boundary remains separate."
+      },
+      {
+        "id": "stream-comparison",
+        "result": "PASS",
+        "statement": "File/runtime/main literal comparisons classify identical, compatible prefix, gapped and contradictory evidence without assuming equality."
+      },
+      {
+        "id": "runtime-membership",
+        "result": "PASS",
+        "statement": "Current two-case titles/config/outcomes and selected case1/result1/stdout membership are validated before consistency acceptance."
+      },
+      {
+        "id": "absence-and-failure",
+        "result": "PASS",
+        "statement": "Missing/invalid evidence remains pending/invalid; successful byte transport alone does not assert consistency or complete coverage."
+      },
+      {
+        "id": "selected-input-sum",
+        "result": "PASS",
+        "statement": "Four expanded input caps sum to 67181568 B."
+      },
+      {
+        "id": "export-models",
+        "result": "PASS",
+        "statement": "Six export caps sum to 662528 B; independent base64 calculation gives 883380 B across at most40 chunks."
+      },
+      {
+        "id": "frame-models",
+        "result": "PASS",
+        "statement": "All six empty-frame byte/hash models match, maximum277 B; metadata allowance remains1024 B per chunk."
+      },
+      {
+        "id": "whole-emitter-bound",
+        "result": "PASS",
+        "statement": "883380 +40*1024 +32768 =957108 B, below7 MiB emitter and8 MiB main limits."
+      },
+      {
+        "id": "joint-export-preflight",
+        "result": "PASS",
+        "statement": "Core payloads and terminal are prepared/preflighted before the first successful export chunk."
+      },
+      {
+        "id": "bounds-locators",
+        "result": "PASS",
+        "statement": "All twelve bounds line locators match the final R3 Python."
+      },
+      {
+        "id": "redirect-and-secret-boundary",
+        "result": "PASS",
+        "statement": "One authorized artifact endpoint request, explicit bounded unsigned storage redirects; no secret headers forwarded or signed URL/error body printed."
+      },
+      {
+        "id": "no-retry-or-extra-read",
+        "result": "PASS",
+        "statement": "No artifact body retry/resume, original job-log acquisition, nested ZIP/HTML/CPU/trace/content expansion."
+      },
+      {
+        "id": "actual-commit",
+        "result": "PASS",
+        "statement": "Git commit read confirms exact D64af7059/tree9ffa31bc and sole clean S19 parent."
+      },
+      {
+        "id": "actual-tree-delta",
+        "result": "PASS",
+        "statement": "Independent three-pair audit finds69 unchanged siblings and exactly one added workflow."
+      },
+      {
+        "id": "tree-hashes",
+        "result": "PASS",
+        "statement": "All six pre/post Git tree hashes independently recomputed and matched."
+      },
+      {
+        "id": "actual-file-mode",
+        "result": "PASS",
+        "statement": "The sole new leaf is100644 workfloweb5b6ee,107037 B; .ci-run.json is absent."
+      },
+      {
+        "id": "repository-instructions",
+        "result": "PASS",
+        "statement": "Applicable root AGENTS read; .github and workflows contain no nearer AGENTS and parent lacks reader workflow."
+      },
+      {
+        "id": "trigger-and-runtime-scope",
+        "result": "PASS",
+        "statement": "Exact sf613-artifact-e14event push trigger, outside ci-run-*; read-only permissions, no checkout/repository import/subprocess/Omni claim."
+      },
+      {
+        "id": "intake-and-object-receipt-linkage",
+        "result": "PASS",
+        "statement": "Manifest current intake/root receipt/peer receipt and root object receipt agree with already authenticated closed observations and independently audited object."
+      },
+      {
+        "id": "supersession",
+        "result": "PASS",
+        "statement": "R1 and R2 remain documented as superseded without execution; R3 alone is accepted."
+      },
+      {
+        "id": "unobserved-target-limit",
+        "result": "PASS",
+        "statement": "ZIP member presence, CRC, file content/completion and file/runtime correlation remain unobserved until separate root-only acquisition."
+      }
+    ]
+  },
+  "resolvedFindings": [
+    {
+      "id": "R1-gapped-subsequence-consistency",
+      "origin": "root, independently corroborated",
+      "resolution": "R2 explicitly records gaps and requires sequenceContiguousFromOne on both sides."
+    },
+    {
+      "id": "terminal-versus-observed-entry-close-coverage",
+      "origin": "independent review",
+      "resolution": "R3 requires closes for every observed unit and phase before coverageComplete; RequestBoundaryObserved remains separate."
+    }
+  ],
+  "bounds": {
+    "selectedExpandedMaximumBytes": 67181568,
+    "rawExportMaximumBytes": 662528,
+    "base64MaximumBytes": 883380,
+    "chunksMaximum": 40,
+    "emptyFrameModelMaximumBytes": 277,
+    "chunkMetadataAllowanceBytes": 1024,
+    "terminalAllowanceBytes": 32768,
+    "successEmitterConservativeMaximumBytes": 957108,
+    "emitterCapBytes": 7340032,
+    "receiverCapBytes": 8388608,
+    "modelsAreNotObservedRuntime": true
+  },
+  "limits": [
+    "No product success, timing improvement, causal completion or new source correction follows from this static ACK.",
+    "A reader may transport exact invalid, partial or contradictory evidence successfully; evidence consistency and coverage are separate classifications.",
+    "CRC/content claims apply only to the four selected members. Other entries receive directory-metadata validation only.",
+    "Compatible prefixes do not prove complete observation. Missing closes or terminal records do not prove server deadlock or zero work.",
+    "Compare body exits are not outer Promise settlement; lexical stages and lineage populations stay distinct, with no conservation or cross-clock inference.",
+    "The producer emits Request close before subsequent fsync/close; received file bytes cannot establish those producer syscalls.",
+    "Current artifact metadata and21-event main prefix do not establish any ZIP member presence or content.",
+    "Inherited workflow-trigger audit of the other18 workflows is attributed to the authenticated root receipt; this reviewer independently checked the new exact isolated trigger and tree delta."
+  ],
+  "operationsByReviewer": {
+    "repositoryOrReaderExecution": 0,
+    "originalJobLogGets": 0,
+    "zipGets": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsCreatedOrMoved": 0,
+    "runsCreated": 0,
+    "output": "This compact JSON Git blob only."
+  },
+  "conclusion": "No remaining static blocker in the exact R3 payload/package/object. Root alone may issue a separate concrete activation and single-acquisition authority."
+}

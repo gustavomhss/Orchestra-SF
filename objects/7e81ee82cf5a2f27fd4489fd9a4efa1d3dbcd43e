@@ -1,0 +1,79 @@
+{
+  "schema": "sf613-e14-reader-r1-r2-correction-v1",
+  "status": "STATIC_PROPOSAL_NO_EXECUTION",
+  "reason": "A gapped subsequence must not receive evidence consistency acceptance. Transport and original bytes remain separate.",
+  "python": {
+    "preimage": {
+      "gitSha": "75cfb14709c5acfbb5ec8fc2841a65af0ba51504",
+      "bytes": 88778,
+      "sha256": "4a586565fb7b35a3627603e2da89dd2364c9cc6baddfde75c9cfa072be822074",
+      "lf": 1296
+    },
+    "postimage": {
+      "gitSha": "e13c6ae230881651f2a1ee46ff731fef2f7c2a7d",
+      "bytes": 89285,
+      "sha256": "77c50d921285d21456f5e452ee8c1530adca2927a5521f694f2600d22588591c",
+      "lf": 1303
+    },
+    "operations": [
+      {
+        "label": "Make missing observed sequences explicit without repairing originals",
+        "before": "    sequences = [row[\"sequence\"] for row in rows]\n    contiguous = bool(rows) and not result[\"issues\"] and sequences == list(range(1, len(rows) + 1))\n",
+        "after": "    sequences = [row[\"sequence\"] for row in rows]\n    gaps = sorted(set(range(1, max(sequences) + 1)) - set(sequences)) if sequences else []\n    if gaps:\n        result[\"issues\"].append(evidence_issue(\"E14_SEQUENCE_GAPS\", origin))\n    contiguous = bool(rows) and not result[\"issues\"] and sequences == list(range(1, len(rows) + 1))\n"
+      },
+      {
+        "label": "Publish received sequence coverage",
+        "before": "        \"validRecords\": len(rows), \"sequenceContiguousFromOne\": contiguous and starts,\n        \"sequences\": sequences, \"kindCounts\": {kind: sum(row[\"kind\"] == kind for row in rows)\n",
+        "after": "        \"validRecords\": len(rows), \"sequenceContiguousFromOne\": contiguous and starts,\n        \"missingSequencesInObservedRange\": gaps,\n        \"sequenceState\": \"CONTIGUOUS_FROM_ONE\" if contiguous and starts else \"GAPPED\" if gaps else \"EMPTY\" if not rows else \"INVALID_OR_PARTIAL\",\n        \"sequences\": sequences, \"kindCounts\": {kind: sum(row[\"kind\"] == kind for row in rows)\n"
+      },
+      {
+        "label": "Require two contiguous received prefixes for consistency ACK",
+        "before": "            \"consistencyProven\": bool(shared) and not conflicts and left[\"summary\"][\"formatValid\"] and right[\"summary\"][\"formatValid\"],\n",
+        "after": "            \"consistencyProven\": bool(shared) and not conflicts\n                and left[\"summary\"][\"formatValid\"] and right[\"summary\"][\"formatValid\"]\n                and left[\"summary\"][\"sequenceContiguousFromOne\"] and right[\"summary\"][\"sequenceContiguousFromOne\"],\n"
+      }
+    ]
+  },
+  "yaml": {
+    "preimage": {
+      "gitSha": "9100d0657fa46bafb3700c3860032c1aa21d92b9",
+      "bytes": 106336,
+      "sha256": "656a43279869af965e4ccffd24dfbc09162131c4836d81eec9cbcfef5f61b211",
+      "lf": 1351
+    },
+    "postimage": {
+      "gitSha": "6dfe4c09dcbd3ea95d8a55a433d2946b9b2dc798",
+      "bytes": 106927,
+      "sha256": "76201a005efb4976a1e13c0de98f99d88e72f9d407cc237a430ebeaf2c80e92f",
+      "lf": 1358
+    },
+    "operations": [
+      {
+        "label": "Python R2 bootstrap digest",
+        "before": "4a586565fb7b35a3627603e2da89dd2364c9cc6baddfde75c9cfa072be822074",
+        "after": "77c50d921285d21456f5e452ee8c1530adca2927a5521f694f2600d22588591c"
+      },
+      {
+        "label": "Embedded Make missing observed sequences explicit without repairing originals",
+        "before": "                sequences = [row[\"sequence\"] for row in rows]\n                contiguous = bool(rows) and not result[\"issues\"] and sequences == list(range(1, len(rows) + 1))\n",
+        "after": "                sequences = [row[\"sequence\"] for row in rows]\n                gaps = sorted(set(range(1, max(sequences) + 1)) - set(sequences)) if sequences else []\n                if gaps:\n                    result[\"issues\"].append(evidence_issue(\"E14_SEQUENCE_GAPS\", origin))\n                contiguous = bool(rows) and not result[\"issues\"] and sequences == list(range(1, len(rows) + 1))\n"
+      },
+      {
+        "label": "Embedded Publish received sequence coverage",
+        "before": "                    \"validRecords\": len(rows), \"sequenceContiguousFromOne\": contiguous and starts,\n                    \"sequences\": sequences, \"kindCounts\": {kind: sum(row[\"kind\"] == kind for row in rows)\n",
+        "after": "                    \"validRecords\": len(rows), \"sequenceContiguousFromOne\": contiguous and starts,\n                    \"missingSequencesInObservedRange\": gaps,\n                    \"sequenceState\": \"CONTIGUOUS_FROM_ONE\" if contiguous and starts else \"GAPPED\" if gaps else \"EMPTY\" if not rows else \"INVALID_OR_PARTIAL\",\n                    \"sequences\": sequences, \"kindCounts\": {kind: sum(row[\"kind\"] == kind for row in rows)\n"
+      },
+      {
+        "label": "Embedded Require two contiguous received prefixes for consistency ACK",
+        "before": "                        \"consistencyProven\": bool(shared) and not conflicts and left[\"summary\"][\"formatValid\"] and right[\"summary\"][\"formatValid\"],\n",
+        "after": "                        \"consistencyProven\": bool(shared) and not conflicts\n                            and left[\"summary\"][\"formatValid\"] and right[\"summary\"][\"formatValid\"]\n                            and left[\"summary\"][\"sequenceContiguousFromOne\"] and right[\"summary\"][\"sequenceContiguousFromOne\"],\n"
+      }
+    ]
+  },
+  "verification": {
+    "eachAnchorUnique": true,
+    "forwardExact": true,
+    "inverseExact": true,
+    "repoOrReaderExecuted": false,
+    "zipAcquired": false
+  }
+}

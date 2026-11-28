@@ -1,0 +1,558 @@
+{
+  "schema": "sf613-e14-original-event-reader-package-v1",
+  "status": "ROOT_OBJECT_REPORTED_STATIC_PAYLOAD_REVIEWED_PACKAGE_REVIEW_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "purpose": "Receive only the current E14 event file and launch metadata, correlate the original two-case runtime and compare exact received streams before inferring any remaining product boundary.",
+  "author": "/root/close_pr613",
+  "scope": {
+    "authorized": "Proposed Python/workflow/derivation/bounds/manifest blobs with readback only.",
+    "rootOnly": [
+      "tree/commit creation",
+      "ref activation",
+      "workflow execution",
+      "original artifact acquisition",
+      "original reader-main receipt"
+    ],
+    "noProductChange": true,
+    "noRepositoryExecutionByAuthor": true,
+    "noReaderExecutionByAuthor": true,
+    "noOriginalJobLogGetByAuthor": true,
+    "noZipAcquired": true,
+    "noAuditZipAcquisition": true,
+    "noNewCPUProfile": true,
+    "noNewObserver": true,
+    "noTimeoutOrRetryChange": true,
+    "r7InventoryPaused": true,
+    "productQualification": false
+  },
+  "base": {
+    "python": {
+      "gitSha": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+      "lf": 1649
+    },
+    "workflow": {
+      "gitSha": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+      "lf": 1704
+    },
+    "priorReaderManifest": {
+      "gitSha": "6786b07bf3420446cec5aa4e343df99ad60fac70",
+      "bytes": 21038,
+      "sha256": "92314943c20c59b741db9f9208ba57a270071e82aff2b0c4ed5321f7fe625968",
+      "lf": 611
+    },
+    "priorReaderBounds": {
+      "gitSha": "dd7f1811082b9f35a7a0e14a25ea722755a70934",
+      "bytes": 12999,
+      "sha256": "ecc186b870d0096d7a65b03cf6be7c669cee7b8aa129d0d3018d7c6156703fde",
+      "lf": 447
+    },
+    "priorRun": 46066111400,
+    "priorAttempt": 1,
+    "reuse": "Prior reader code and transport only. Prior artifacts, original logs, CPU outcomes, tuples and captures are not reacquired or transferred."
+  },
+  "currentIntake": {
+    "run": 46103050850,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 140849610421,
+        "role": "main",
+        "conclusion": "failure"
+      },
+      {
+        "id": 140852594308,
+        "role": "cleanup",
+        "conclusion": "success"
+      }
+    ],
+    "productOutcome": "First original preview waits60000ms at spec72:32 and fails; BI passes. This is a bound runtime-validation target, not a new reader result.",
+    "rootFinal": {
+      "gitSha": "2a15d6b33dba361af8f4f1b30084cacc61521788",
+      "bytes": 26747,
+      "sha256": "ae0efeac400f71fc21df5e89f0e67a50ffbc1375a583c260eb2ee37337922fad",
+      "lf": 770
+    },
+    "peerFinal": {
+      "gitSha": "0f6fc8a20444b78ac12faee79b384eebb5c8e757",
+      "bytes": 16565,
+      "sha256": "cb7121f793426610daad36376c9e7187ffaba964d10b0d1a8c87d15c7065af52",
+      "lf": 454
+    },
+    "cleanSource": {
+      "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    "snapshot": {
+      "commit": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+      "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+      "parents": [
+        "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+      ],
+      "delta": "2A7M"
+    },
+    "artifact": {
+      "id": 15246707437,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45863814,
+      "sha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+      "zipAcquired": false
+    },
+    "mainPrefix": {
+      "gitSha": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+      "bytes": 11961,
+      "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+      "lf": 21,
+      "records": 21,
+      "sequences": [
+        1,
+        21
+      ],
+      "nonce": "sf613-e14-event-QBamrL",
+      "pid": 3974,
+      "parentPid": 3924,
+      "request": 1,
+      "terminal": false,
+      "overflow": false,
+      "lastPoint": "analysis-persist",
+      "lastElapsedTenthMs": 349739
+    },
+    "notObservedYet": [
+      "Selected ZIP member presence",
+      "Launcher original bytes/hash",
+      "Event-file original bytes/hash/CRC",
+      "Runtime case/result/stdout membership",
+      "File/main/runtime literal relation",
+      "Additional events or Request close"
+    ]
+  },
+  "payloads": {
+    "python": {
+      "role": "Embedded Python companion",
+      "gitSha": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+      "bytes": 89383,
+      "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+      "lf": 1304,
+      "readbackExact": true
+    },
+    "workflow": {
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "mode": "100644",
+      "gitSha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "lf": 1359,
+      "readbackExact": true
+    },
+    "bounds": {
+      "gitSha": "78992ee565ace0f713cc530a85c73cba7b5892bb",
+      "bytes": 15875,
+      "sha256": "bb98c245adf762a643f141e3403764c1601cd84dbd38cfd648a870198647ff91",
+      "lf": 433,
+      "readbackExact": true
+    },
+    "supports": [
+      {
+        "role": "pythonDerivation",
+        "gitSha": "7a8ca2321d07a2f79c3c0ded4e0719c6567862ef",
+        "bytes": 197460,
+        "sha256": "5ab09fc6df2d03a7814724eea362fbb2fa95459c2813d616ac2a1810648d78f6",
+        "lf": 595,
+        "readbackExact": true
+      },
+      {
+        "role": "yamlDerivation",
+        "gitSha": "e6342e1c1893ccba9fd42df3783539f4b38ea5cc",
+        "bytes": 239306,
+        "sha256": "26b17b5c19d9a6461b6d5208c4d853b92a09ac7984e21f222b36178fda43d5d5",
+        "lf": 151,
+        "readbackExact": true
+      },
+      {
+        "role": "pythonDiff",
+        "gitSha": "81411e37cc1894520d8ee434d162377c3134a69f",
+        "bytes": 136659,
+        "sha256": "782cda87b8d889403480faeadeaf49a4b4a45e0e3d3d8599b9c21e5fd0513789",
+        "lf": 1847,
+        "readbackExact": true
+      },
+      {
+        "role": "yamlDiff",
+        "gitSha": "71556e7142fd568c3abd7e6bf2859ff5595c9e8c",
+        "bytes": 159912,
+        "sha256": "41e2183bfa1d0ebb6f22805660c035b8cebbfe470dbcb8e75bcfe8bb82bde871",
+        "lf": 1882,
+        "readbackExact": true
+      },
+      {
+        "role": "workflowAdditionDiff",
+        "gitSha": "284701333f708580d65ff04c4840fa6cf3b235a3",
+        "bytes": 108477,
+        "sha256": "17847f38d89d73ab6aee692281ce3deb63fcc88bb0d219234da7ed2c21452b51",
+        "lf": 1362,
+        "readbackExact": true
+      }
+    ],
+    "corrections": [
+      {
+        "from": "R1",
+        "to": "R2",
+        "gitSha": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e",
+        "bytes": 5649,
+        "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+        "lf": 79,
+        "pythonAnchors": 3,
+        "yamlAnchors": 4,
+        "reason": "Reject consistency acceptance for gapped received subsequences."
+      },
+      {
+        "from": "R2",
+        "to": "R3",
+        "gitSha": "5c53428976b97c2ef6597e9fb39b0d7b0562182d",
+        "bytes": 2819,
+        "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+        "lf": 61,
+        "pythonAnchors": 1,
+        "yamlAnchors": 2,
+        "reason": "Coverage additionally needs closes for every observed unit/phase; Request boundary stays separate."
+      }
+    ]
+  },
+  "superseded": [
+    {
+      "revision": "R1",
+      "python": {
+        "gitSha": "75cfb14709c5acfbb5ec8fc2841a65af0ba51504",
+        "bytes": 88778,
+        "sha256": "4a586565fb7b35a3627603e2da89dd2364c9cc6baddfde75c9cfa072be822074",
+        "lf": 1296
+      },
+      "workflow": {
+        "gitSha": "9100d0657fa46bafb3700c3860032c1aa21d92b9",
+        "bytes": 106336,
+        "sha256": "656a43279869af965e4ccffd24dfbc09162131c4836d81eec9cbcfef5f61b211",
+        "lf": 1351
+      },
+      "status": "STATICALLY_SUPERSEDED_NO_EXECUTION",
+      "reason": "Gap and observed-close coverage fixes follow."
+    },
+    {
+      "revision": "R2",
+      "python": {
+        "gitSha": "e13c6ae230881651f2a1ee46ff731fef2f7c2a7d",
+        "bytes": 89285,
+        "sha256": "77c50d921285d21456f5e452ee8c1530adca2927a5521f694f2600d22588591c",
+        "lf": 1303
+      },
+      "workflow": {
+        "gitSha": "6dfe4c09dcbd3ea95d8a55a433d2946b9b2dc798",
+        "bytes": 106927,
+        "sha256": "76201a005efb4976a1e13c0de98f99d88e72f9d407cc237a430ebeaf2c80e92f",
+        "lf": 1358
+      },
+      "status": "STATICALLY_SUPERSEDED_NO_EXECUTION",
+      "reason": "Observed unit/phase closure requirement follows."
+    }
+  ],
+  "derivation": {
+    "python": {
+      "base": {
+        "gitSha": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+        "bytes": 98691,
+        "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+        "lf": 1649
+      },
+      "postimage": {
+        "gitSha": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+        "bytes": 89383,
+        "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+        "lf": 1304
+      },
+      "orderedOperations": 27,
+      "allAnchorsUnique": true,
+      "forwardLiteral": true,
+      "inverseLiteral": true,
+      "hunks": 21,
+      "plus": 625,
+      "minus": 970
+    },
+    "workflow": {
+      "base": {
+        "gitSha": "13db57775b23b9603ea1018dc734ffd314942811",
+        "bytes": 120481,
+        "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+        "lf": 1704
+      },
+      "postimage": {
+        "gitSha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+        "bytes": 107037,
+        "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+        "lf": 1359
+      },
+      "orderedOperations": 5,
+      "allAnchorsUnique": true,
+      "forwardLiteral": true,
+      "inverseLiteral": true,
+      "hunks": 24,
+      "plus": 629,
+      "minus": 974,
+      "changes": [
+        "single push branch",
+        "concurrency binding",
+        "embedded Python bootstrap hash",
+        "literal complete Python embedding",
+        "audit artifact run name"
+      ]
+    },
+    "actualSourceDelta": {
+      "parent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "parentTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "preimage": "ABSENT",
+      "mode": "100644",
+      "postimage": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "changes": "1A",
+      "fullAdditionHunks": 1,
+      "addedLines": 1359,
+      "deletedLines": 0
+    },
+    "functionPartition": {
+      "same": [
+        "need",
+        "digest",
+        "canonical",
+        "write_bytes",
+        "save_json",
+        "checked",
+        "pending",
+        "wire_line",
+        "write_wire",
+        "bounded_read",
+        "api",
+        "pages",
+        "storage_url_allowed",
+        "download_original",
+        "path_parts",
+        "read_file",
+        "tests_from_report",
+        "report_configuration",
+        "error_summary"
+      ],
+      "changed": [
+        "check_original_and_reader",
+        "inspect_zip",
+        "marker_stream",
+        "parse_runtime_and_selection",
+        "ensure_inventory",
+        "prepare_core_export",
+        "finalize_core",
+        "report_failure",
+        "main"
+      ],
+      "removed": [
+        "locate_suffix",
+        "one_original_json",
+        "unpack_html_reports",
+        "safe_time",
+        "safe_failure",
+        "network_row",
+        "trace_operation",
+        "trace_rows",
+        "inventory_error_context_and_pngs",
+        "e12_routes",
+        "e12_selection",
+        "e12_unique_object",
+        "parse_e12_markers",
+        "cpu_json_object",
+        "cpu_present_fields",
+        "parse_cpu_originals"
+      ],
+      "new": [
+        "evidence_issue",
+        "unique_object",
+        "reject_constant",
+        "selected_inputs",
+        "selected_json",
+        "e14_integer",
+        "validate_e14_event",
+        "parse_event_stream",
+        "compare_event_streams",
+        "preflight_main_prefix",
+        "parse_launcher",
+        "analyze_e14_inputs"
+      ]
+    },
+    "method": "Own JavaScript literal-string operations, Git blob/SHA256 metadata and independently applied/inverted unified diffs. Neither Python nor repository code executed.",
+    "byteGuarantees": [
+      "19 infrastructure definitions remain literal.",
+      "CPU/profile/trace/network/HTML/nested ZIP parsers are removed, not merely hidden behind a branch.",
+      "download_original is literal and has one call site; source.open has one site guarded by the exact four-path selection.",
+      "main validates embedded775e26 with the same event parser before any artifact acquisition.",
+      "Bootstrap and upload suffix remain literal except the bound audit name; no checkout, subprocess or Omni claim."
+    ]
+  },
+  "exactSelection": [
+    {
+      "key": "events",
+      "path": "test-ci-evidence/sf613-e14-event-QBamrL/preview-events.jsonl",
+      "maximumBytes": 64512
+    },
+    {
+      "key": "launcher",
+      "path": "test-ci-evidence/sf613-e14-event-QBamrL/launcher.json",
+      "maximumBytes": 8192
+    },
+    {
+      "key": "runtime",
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "maximumBytes": 33554432
+    },
+    {
+      "key": "selection",
+      "path": "test-ci-evidence/playwright-selection.json",
+      "maximumBytes": 33554432
+    }
+  ],
+  "validation": {
+    "originalIdentity": [
+      "Reader sole parent/one-workflow delta/ref/API binding",
+      "Diagnostic snapshot sole parent/actual nine-path overlay",
+      "Original run attempt1 and terminal two jobs",
+      "Artifact run membership/id/name/size/digest/nonexpired",
+      "Request295B/spec/config real Git pins"
+    ],
+    "zip": [
+      "Compressed byte count and SHA256 before any ZipFile",
+      "Preserved ZIP rehash immediately before open",
+      "Central-directory path/type/size/encryption/method/duplicate checks",
+      "Content opens only four exact allowlisted members",
+      "Size and CRC for selected contents only",
+      "No HTML, profiler, screenshots, traces or nested ZIP reads"
+    ],
+    "events": [
+      "Finite exact E14 envelope and event vocabulary",
+      "Current source/snapshot/run/nonce/PID tuple",
+      "Preserve literal bytes, CR, tails and empty files",
+      "At most63 complete records parsed,1024Bperline",
+      "Explicit received-sequence gaps",
+      "Same sequence differing bytes is evidence contradiction",
+      "Compatible prefixes remain classified differences",
+      "Request boundary and coverage separated, no closure fabricated"
+    ],
+    "runtime": [
+      "Byte chunks concatenated within case/result/stream before strict UTF8",
+      "Initial ANSI CSI removal only",
+      "Exactly two known titles/config workers1/retries0/repeat1",
+      "One result per case, failed/passed and current timeout location",
+      "Selected Request membership must be case1/result1/stdout for consistency acceptance",
+      "stdout/stderr concatenation order never implies temporal interleaving"
+    ],
+    "preservation": "The four selected raw members that exist and pass acquisition caps/CRC are copied before parser work. Content invalidity is reported without repairing or discarding those bytes.",
+    "transport": "Six possible exports, each original/derived explicitly identified; absent original has no fabricated export. A successful reader receipt means byte transport, never product success or automatic evidence consistency.",
+    "outputMeaning": "evidenceConsistencyAccepted requires validated launcher/runtime membership, valid contiguous prefixes and no shared-sequence contradiction. coverageComplete also requires observed entry/close pairing, not terminal zero counters alone."
+  },
+  "boundsSummary": {
+    "selectedExpandedMaximumBytes": 67181568,
+    "exportCaps": [
+      64512,
+      8192,
+      65536,
+      131072,
+      262144,
+      131072
+    ],
+    "exportCapNames": [
+      "events",
+      "launcher",
+      "runtimeEvents",
+      "summary",
+      "inventory",
+      "receipt"
+    ],
+    "maximumRawPayloadBytes": 662528,
+    "maximumBase64Bytes": 883380,
+    "maximumChunks": 40,
+    "maximumSuccessEmitterBytes": 957108,
+    "emitterCapBytes": 7340032,
+    "mainReceiverCapBytes": 8388608,
+    "workflowMinutes": 20,
+    "noRetry": true,
+    "computedModelsAreNotActualReceivedFiles": true
+  },
+  "instructions": {
+    "rootAgents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "githubTree": "7663f4b9fe0fdee867137b9e719f29058339317d",
+    "workflowsTree": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+    "nestedAgentsAbsent": true,
+    "readerWorkflowAbsentInCleanSource": true,
+    "branch": "sf613-artifact-e14event",
+    "branchHasThreeHyphenSeparatedWords": true,
+    "notCiRunPrefix": true,
+    "parentWorkflowTriggerAudit": {
+      "source": "root object receipt",
+      "parentWorkflowCount": 18,
+      "matchingPushTriggers": false
+    }
+  },
+  "rootReportedObject": {
+    "status": "OBJECT_CREATED_NO_REF_NO_RUN_NO_ZIP",
+    "operator": "/root",
+    "receipt": {
+      "gitSha": "b7235555932265cbdeac136f37111036c19b8281",
+      "bytes": 4865,
+      "sha256": "026e55e9f99129518496f42c49fc7794f2a7572e823463f6d18bf4bb40864f73",
+      "lf": 167
+    },
+    "commit": "64af705904c2ca5b61a6837560f005718ee122d3",
+    "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "parents": [
+      "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    ],
+    "workflow": {
+      "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "lf": 1359,
+      "endsWithLF": true
+    },
+    "treeAudit": {
+      "pairs": 3,
+      "literalSiblings": 69,
+      "delta": "1A",
+      "ciRequestAbsent": true
+    },
+    "refCreated": false,
+    "runCreated": false,
+    "zipGets": 0,
+    "note": "The author authenticated the root's complete receipt; tree/commit creation was performed by root, not this author."
+  },
+  "reviewState": {
+    "payloadRoot": "Static R3 code/correction ACK recorded in root receipt.",
+    "payloadIndependent": "Teams statically ACKed Python/workflow R3, then27+5operations and all three full patches; final bounds/manifest binding review pending.",
+    "packageFinalReview": "PENDING_ROOT_AND_TEAMS_BINDING",
+    "futureAcquisition": "Requires separate root authority and sole activation; this package is not that authority."
+  },
+  "operationalState": {
+    "branchCreatedByAuthor": false,
+    "runCreatedByAuthor": false,
+    "originalZipGetsByAuthor": 0,
+    "originalJobLogGetsByAuthor": 0,
+    "sourceProductChanged": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "No new test/probe/run was performed.",
+    "Static review and data models do not establish ZIP membership, CRC, file completion, runtime correlation or successful CI.",
+    "The artifact size/digest and current main prefix are immutable intake targets, not evidence that any inner file has already been read.",
+    "Partial file writes/fsync/close can leave shorter bytes than stdout; stdout failures can leave the file longer. Their outcomes are classified from received data only.",
+    "The native request-close is emitted before later fsync/close; file integrity and transport do not prove those producer syscalls.",
+    "A valid incomplete file identical to the known21-line prefix still leaves the causal boundary unresolved; no new product patch follows automatically.",
+    "Native, Actions and Playwright clocks remain separate; no exclusive duration, database delay, Promise settlement or speedup is inferred.",
+    "The future reader must not fetch previous E11/E12 ZIPs/logs or the audit artifact it creates."
+  ]
+}

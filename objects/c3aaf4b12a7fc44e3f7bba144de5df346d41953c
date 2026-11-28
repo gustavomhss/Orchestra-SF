@@ -1,0 +1,250 @@
+{
+  "schema": "sf613-e14-reader-root-evidence-review-v1",
+  "status": "ROOT_ACCEPTED_PENDING_INDEPENDENT_RECEIPT",
+  "checks": [
+    {
+      "id": "reader_commit_tree_workflow_run",
+      "pass": true
+    },
+    {
+      "id": "reader_no_checkout_or_repo_execution",
+      "pass": true
+    },
+    {
+      "id": "original_source_snapshot",
+      "pass": true
+    },
+    {
+      "id": "original_two_jobs",
+      "pass": true
+    },
+    {
+      "id": "compressed_zip_verified_once",
+      "pass": true
+    },
+    {
+      "id": "inventory_export_pin",
+      "pass": true
+    },
+    {
+      "id": "inventory_150_unique_ids_paths",
+      "pass": true
+    },
+    {
+      "id": "only_four_selected_paths",
+      "pass": true
+    },
+    {
+      "id": "selected_crc_and_size_attested_by_reader",
+      "pass": true
+    },
+    {
+      "id": "selected_original_metadata_agreement",
+      "pass": true
+    },
+    {
+      "id": "selected_total_expansion",
+      "pass": true
+    },
+    {
+      "id": "unselected_metadata_only",
+      "pass": true
+    },
+    {
+      "id": "events_original_export_inventory_binding",
+      "pass": true
+    },
+    {
+      "id": "events_original_crc_independent",
+      "pass": true
+    },
+    {
+      "id": "launcher_original_export_inventory_binding",
+      "pass": true
+    },
+    {
+      "id": "launcher_original_crc_independent",
+      "pass": true
+    },
+    {
+      "id": "main_file_runtime_literal",
+      "pass": true
+    },
+    {
+      "id": "21_contiguous_records_no_tail",
+      "pass": true
+    },
+    {
+      "id": "exact_request_tuple",
+      "pass": true
+    },
+    {
+      "id": "monotonic_local_clock",
+      "pass": true
+    },
+    {
+      "id": "no_terminal_or_overflow",
+      "pass": true
+    },
+    {
+      "id": "observed_entries_without_closes",
+      "pass": true
+    },
+    {
+      "id": "matching_prefix_comparisons",
+      "pass": true
+    },
+    {
+      "id": "consistency_not_coverage",
+      "pass": true
+    },
+    {
+      "id": "launcher_exact_metadata",
+      "pass": true
+    },
+    {
+      "id": "launcher_parser_agreement",
+      "pass": true
+    },
+    {
+      "id": "reader_runtime_configuration",
+      "pass": true
+    },
+    {
+      "id": "reader_runtime_case_outcomes",
+      "pass": true
+    },
+    {
+      "id": "reader_runtime_original_waiter",
+      "pass": true
+    },
+    {
+      "id": "runtime_event_membership",
+      "pass": true
+    },
+    {
+      "id": "receipt_summary_crosslink",
+      "pass": true
+    },
+    {
+      "id": "pending_only_missing_request_close",
+      "pass": true
+    },
+    {
+      "id": "no_product_acceptance",
+      "pass": true
+    }
+  ],
+  "checkCount": 33,
+  "transport": {
+    "gitBlob": "a3924c196f2818241886c4fe4a0dea7d7fde8be1",
+    "bytes": 5272,
+    "sha256": "e767767b87b7561b92766eb07844d94c1162ec1a25616d9a4b127dbaf1a92e87",
+    "lf": 189,
+    "endsWithLF": true
+  },
+  "originalMain": {
+    "gitBlob": "cd5c36c0fb817d9c50e27559216c5b428b2328fb",
+    "bytes": 2109,
+    "sha256": "6f886636a546c3dd02e159680988939f42b9c6485511ac1154748c9e287a1aa2",
+    "lf": 74,
+    "endsWithLF": true
+  },
+  "events": {
+    "gitBlob": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+    "bytes": 11961,
+    "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+    "lf": 21,
+    "endsWithLF": true
+  },
+  "launcher": {
+    "gitBlob": "0724de3d2194d9bd2237ba35f06749ab45f092c9",
+    "bytes": 676,
+    "sha256": "ac8f048d04cdc608655f8b4acc2f9c6b2b3ee06418e64c1f75b3036b529dc81b",
+    "lf": 1,
+    "endsWithLF": true
+  },
+  "runtimeEvents": {
+    "gitBlob": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+    "bytes": 11961,
+    "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+    "lf": 21,
+    "endsWithLF": true
+  },
+  "summary": {
+    "gitBlob": "f2f207f0fec9150a9a235f38817518c5b90737da",
+    "bytes": 27840,
+    "sha256": "74077fbd81ae05dad3839674b9c4db3f9dd55ea00a87b91907313c8cc23f838b",
+    "lf": 970,
+    "endsWithLF": true
+  },
+  "inventory": {
+    "gitBlob": "770f0fa1f877442b6eba8ef6c9b3a06d89bd492f",
+    "bytes": 68078,
+    "sha256": "afb843dc3140bfbed60ce9ac6db343c9806a8dc5ed45392eb9be18776d3c67c2",
+    "lf": 1861,
+    "endsWithLF": true
+  },
+  "readerReceipt": {
+    "gitBlob": "7db2fc3dd6cae4f9ff926ac8bf1c047be526d544",
+    "bytes": 35878,
+    "sha256": "6a2c68922498d26e321e3e4af59d5a6b4fdfdc6f6fb776700ffe4c61743a80a4",
+    "lf": 1157,
+    "endsWithLF": true
+  },
+  "observed": {
+    "records": 21,
+    "missingObservedUnitCloses": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "phasesWithoutObservedClose": [
+      {
+        "phase": 8,
+        "unit": 2,
+        "point": "combination-evaluate",
+        "sequence": 11
+      },
+      {
+        "phase": 9,
+        "unit": 3,
+        "point": "production-analysis",
+        "sequence": 13
+      },
+      {
+        "phase": 4,
+        "unit": 4,
+        "point": "analysis-persist",
+        "sequence": 21
+      }
+    ],
+    "consistencyAccepted": true,
+    "requestBoundaryObserved": false,
+    "coverageComplete": false,
+    "productQualification": false
+  },
+  "limits": [
+    "One acquisition of the bound original artifact; no retry or resume, no old artifact/log reacquisition and no audit ZIP acquisition.",
+    "The signed storage request receives no GitHub token, cookie or referer; at most three redirect hops occur before one response body.",
+    "The complete compressed original is preserved and checked by exact bytes/SHA256 before ZipFile is opened.",
+    "Only four exact top-level paths are opened. Other entries are central-directory metadata only; no screenshots, traces, profiler, HTML or nested ZIP is read.",
+    "Selected entry size and CRC are verified; this is not all-entry CRC verification. Missing selected files have no fabricated original export.",
+    "Original event/launcher bytes remain exact, including zero bytes, malformed JSON or a non-LF tail. Only complete LF records enter schema validation.",
+    "Runtime stdout/stderr are concatenated within one case/result/stream before strict UTF-8 decoding. Only initial ANSI CSI is removed from event records; CR and non-LF tails are retained.",
+    "Main/file/runtime comparisons classify byte prefixes and shared-sequence differences. Unequal transport streams are evidence, not repaired or forced equal.",
+    "A success reader job/terminal attests bounded byte transport only. evidenceConsistencyAccepted is false for invalid or contradictory evidence; product qualification is always false.",
+    "A received Request close is separate from complete coverage and cannot attest to the later fsync/close. No missing close proves that a phase was still open at the 60-second timeout.",
+    "Compare counters describe synchronous body exits, not Promise settlement. The 11 stage triples and lineage axis retain their producer semantics; no inferred conservation is imposed.",
+    "Native monotonic tenths-ms, launcher wall clock, Playwright timestamps and Actions clocks are not unified. Inclusive/nested/concurrent spans are never summed as exclusive cost.",
+    "The six raw export caps sum exactly662528B. All base64 chunks and terminal are preflighted jointly under7MiB; the root receiver verifies the whole main under8MiB.",
+    "No credential, signed URL, request/response body or raw error message is emitted. Raw selected reports remain preserved but are not exported as arbitrary text."
+  ],
+  "rootDidNotReceiveRawReports": true,
+  "selectedCrcOrigin": "All four verified in reviewed Actions reader; root independently recomputed CRC for exported event and launcher bytes only.",
+  "originalZipState": "Acquired once by reviewed reader; closed. Audit ZIP forbidden.",
+  "at": {
+    "current_time": "2026-11-28 04:49:23 UTC"
+  }
+}

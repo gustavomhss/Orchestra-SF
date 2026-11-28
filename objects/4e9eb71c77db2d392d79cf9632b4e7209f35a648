@@ -1,0 +1,373 @@
+{
+  "schema": "sf613-e14-analytics-execution-authority-v1",
+  "status": "READY_ONE_ORIGINAL_INSTALLED_DIAGNOSTIC_ANALYTICS_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "authorization": "User mandate to finish existing #613 and diagnose original installed journeys. One bounded original Analytics run after E14 source/control review and independently received focal. Production cutover is not authorized.",
+  "purpose": "Observe the first Portfolio analysis on the original installed Analytics journeys after C19 still timed out at 60 seconds. E14 adds bounded phase/branch/body-exit observation and preserves original calls and waiters. This diagnostic is not a clean product fix or final qualification.",
+  "source": {
+    "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "role": "clean S19 underlying diagnostic; event source/sourceTree identify this clean base"
+  },
+  "snapshot": {
+    "commit": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "delta": "2A7M",
+    "objectReceipt": {
+      "gitBlob": "98bf24ec513b66c14ca7d5173a75d19b8c29ca29",
+      "bytes": 3663,
+      "sha256": "8d997c302a7ce754df7cc8cb7b4bb05bc6955e9a3da5b87715c07691d84f3c36",
+      "lf": 115,
+      "endsWithLF": true
+    },
+    "sourceManifest": {
+      "gitBlob": "137739c767d7951c517fee96bb1081ccec0e5a93",
+      "bytes": 29629,
+      "sha256": "957ad9b8a47996d9f14d1717f7bd4d0ab3ffb177f504d5e36b7e34035d7c9139",
+      "lf": 706,
+      "endsWithLF": true
+    },
+    "sourceBounds": {
+      "gitBlob": "e348de4270c8add6a6d239f5ba4723959a00d8a8",
+      "bytes": 26764,
+      "sha256": "a5c807616fc39020e91afa89d30464fa027f1af29d3cf958aed60c49d998cac0",
+      "lf": 453,
+      "endsWithLF": true
+    },
+    "staticReview": {
+      "gitBlob": "81f9f0ff64205a547bbd7b4bb6b0a4f93ee426d1",
+      "bytes": 19019,
+      "sha256": "618c45f4a36e6f7fd27106a33a946fe899ce44325f01aeaa4e76c794a508b8f5",
+      "lf": 461,
+      "endsWithLF": true
+    },
+    "readbackVerified": true,
+    "sourceRequestAlreadyIncluded": true,
+    "noNewSnapshotCommit": true
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "firstPreviewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "pins": [
+      {
+        "bytes": 56661,
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+      },
+      {
+        "bytes": 4384,
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+      },
+      {
+        "bytes": 21102,
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+      }
+    ],
+    "originalTimeoutsUnchanged": true,
+    "observer": "E14 bounded first-Request/first-analysis instrumentation",
+    "profiler": false,
+    "workersRetriesAndRepeatEnforcedBy": "script/test-ci-request.ts 5007e48270b80c83eb719d35cec9e6343206a195 playwrightArgs overrides defaults"
+  },
+  "snapshotPins": [
+    {
+      "path": ".ci-run.json",
+      "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "mode": "100644"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "sha": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "mode": "100644"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "mode": "100644"
+    }
+  ],
+  "conditionalCampaignBound": {
+    "sourceBounds": {
+      "gitBlob": "e348de4270c8add6a6d239f5ba4723959a00d8a8",
+      "bytes": 26764,
+      "sha256": "a5c807616fc39020e91afa89d30464fa027f1af29d3cf958aed60c49d998cac0",
+      "lf": 453,
+      "endsWithLF": true
+    },
+    "selectionMemo": {
+      "gitBlob": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    },
+    "memoUse": "Reuse only fixed journey/client mapping reasoning and unchanged pins; E13 helper quotas are not reused.",
+    "unchangedSelectionPins": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "sha": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/client/src/sucafina/bi.ts",
+        "sha": "396d7120e6db25be1dae4255edaa7e87f8544def",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "sha": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "sha": "b3c02539245cce5091e0f200e84d3021016074ea",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/schema/src/sucafina/bi.ts",
+        "sha": "02504f838da6680a5fff1d1f9f6a337d075d68ca",
+        "mode": "100644"
+      }
+    ],
+    "perProducerRecords": 63,
+    "perProducerBytes": 64512,
+    "perLineBytes": 1024,
+    "totalFixedSelectionRecords": 64,
+    "totalFixedSelectionBytes": 65536,
+    "requires": "Exactly original two tests, one worker, no retry/repeat, original installation lifecycle and unchanged BI operation mapping; no unlisted traffic or restarts.",
+    "noCrossProcessGlobalLatch": true,
+    "mirroredLogCopies": "Transport copies are distinguished from unique producer events; do not silently merge producers."
+  },
+  "focalPrerequisite": {
+    "run": 46102111383,
+    "attempt": 1,
+    "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "diagnosticSource": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "diagnosticTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "status": "CLOSED_FOCAL_PASS_ONLY",
+    "receipt": {
+      "gitBlob": "7080a6a7dd0780c56ecaaf2883adb7049cd88ed9",
+      "bytes": 50998,
+      "sha256": "47a9465fe7945b884619eaccb64adc472a142ffbff4a9418557156899ec0d080",
+      "lf": 1752,
+      "endsWithLF": true
+    },
+    "peerReceipt": {
+      "gitBlob": "6f31e1e333bf24e42664e50ae18806015397997f",
+      "bytes": 18136,
+      "sha256": "af70a7c9c69d992a0949061353caae0e436bdc727496327640c4eb5f0bad1447",
+      "lf": 605,
+      "endsWithLF": true
+    },
+    "functional": {
+      "passed": 16,
+      "assertions": 2146
+    },
+    "outer": {
+      "passed": 8,
+      "assertions": 46
+    },
+    "rootChecks": 42,
+    "peerChecks": 54,
+    "originalsClosed": true
+  },
+  "independentSelectionAck": {
+    "reviewer": "/root/close_pr613",
+    "status": "ACK_ORIGINAL_ANALYTICS_SELECTION_ON_E14",
+    "receivedAt": {
+      "current_time": "2026-11-28 03:26:47 UTC"
+    },
+    "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "request": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "pins": [
+      {
+        "path": ".ci-run.json",
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "mode": "100644"
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "mode": "100644"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "mode": "100644"
+      }
+    ],
+    "originalJourneys": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "previewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "caseSeconds": [
+      780,
+      660
+    ],
+    "bridges": {
+      "outer": "a9fb4f79968e3c753424f01534b1f7b5e61895fe",
+      "inner": "4dce572e3fdace2042ae3c9a1102606b300f6d8d"
+    },
+    "noNewSnapshotNeeded": true,
+    "testsOrOriginalsOrMutations": 0,
+    "findings": []
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 03:27:01 UTC"
+    },
+    "branch": "ci-run-sf613e14a",
+    "branchAbsent": true,
+    "existingSnapshotRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5"
+    },
+    "maximumActivations": 1,
+    "automaticReruns": false
+  },
+  "intake": {
+    "onlyAfterRunAndBothJobsTerminal": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "preserveCompleteOriginalBeforeInterpretation": true,
+    "literalReadbackBeforeParse": true,
+    "artifactsFirstAction": "metadata only",
+    "originalZip": "Only upon concrete need with separately reviewed bounded reader for the actual artifact.",
+    "auditZipDownloads": 0,
+    "automaticRetries": false,
+    "agentsAcquireOriginals": false
+  },
+  "priorNegativeAnalytics": {
+    "run": 46094695101,
+    "attempt": 1,
+    "snapshot": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "finalReceipt": {
+      "gitBlob": "86a38860ee558c6c21d2356a9f7770209d5b986a",
+      "bytes": 27557,
+      "sha256": "b2168f11bf09a3369691323c35f45d09635fa7772872c6780d8d4756e729bd80",
+      "lf": 859,
+      "endsWithLF": true
+    },
+    "result": "First portfolio preview timed out at original 60s; second BI journey passed. No new area accepted."
+  },
+  "qualification": {
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "final613Candidate": false,
+    "finalGoLiveQualified": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "E14 is diagnostic and must not become the clean #613 product candidate.",
+    "Counters distinguish function-body exit, original await fulfillment, and caller clones/guards; they do not prove exterior Promise settlement or exclusive CPU.",
+    "Missing terminal is an incomplete prefix, not proof of a frozen product or automatic quota exhaustion.",
+    "The new focal report uses synthetic observer mechanisms and controlled ports; it does not prove installed identity/grants or recovery.",
+    "No latency improvement, retries, deadline expansion or authority weakening is claimed.",
+    "No old original logs or ZIPs may be reacquired; all C19 and E13 originals remain closed."
+  ],
+  "at": {
+    "current_time": "2026-11-28 03:28:52 UTC"
+  }
+}

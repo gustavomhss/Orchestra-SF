@@ -1,0 +1,651 @@
+{
+  "schema": "sf613-e14-root-source-review-v1",
+  "status": "STATIC_SOURCE_ACK_FOR_IMMUTABLE_OBJECTS_ONLY",
+  "reviewer": "Astra root",
+  "observedAt": {
+    "current_time": "2026-11-28 03:01:33 UTC"
+  },
+  "cleanParent": {
+    "sha": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+  },
+  "calculatedTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+  "calculatedTreeNotYetCreated": true,
+  "shape": {
+    "added": 2,
+    "modified": 7
+  },
+  "sourceDerivation": {
+    "gitBlob": "f0bdf33365f1d6626766e670f338430009ca3b7f",
+    "bytes": 161752,
+    "sha256": "2e89b74055c5af78f3e0a30240a8d377c6222e4c6472b0644e0cf2f52daca2f6",
+    "lf": 922,
+    "endsWithLF": true
+  },
+  "fullDiff": {
+    "gitBlob": "ba97e0d4b6c90bfc0f90793ca2bb2ce3ead79d8c",
+    "bytes": 122225,
+    "sha256": "002ef0a3fabd6d7de949a11c1df47056ca4dd43823a2c7fb4bf600612afb04c3",
+    "lf": 1278,
+    "endsWithLF": true
+  },
+  "membership": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "pre": {
+        "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "d5cb9fff2fc1a725250f9710449f9d13f3a942c7",
+        "bytes": 14101,
+        "sha256": "2cb60a140ee06191f3794211c4c5b4ea686cfde7306f0c07508aa30ec14890ee",
+        "lf": 145,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "pre": {
+        "gitBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "lf": 129,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "094f788a27d01b91d6601333a4e8f99ac40db556",
+        "bytes": 18817,
+        "sha256": "892f9a5b7f1f46dffff3f4cec6f612e7b83bbca153da968d166904f7b4829c5f",
+        "lf": 140,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "pre": {
+        "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "lf": 85,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "03859dbbf10fd6ca551f987736e445d2ff8b3431",
+        "bytes": 9455,
+        "sha256": "ecb47e6efc32b98a2f0ca7e70702d5b593c06b9bea088856019088da8b8d05d2",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "pre": {
+        "gitBlob": "47c4388c34c21c7294b0ffc34e4adcbe65b138de",
+        "bytes": 9554,
+        "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "4b1d4578d558456772ab04e05e33d13231ca7502",
+        "bytes": 10956,
+        "sha256": "a26d486a7d26375de77772c3497920a945df794351299fdc6da77cd2bccd09cc",
+        "lf": 102,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "pre": {
+        "gitBlob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+        "bytes": 11633,
+        "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+        "lf": 115,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6",
+        "bytes": 12548,
+        "sha256": "13afa93fc0101564a70700bb4871402db00bf83a81ce109c2850f4c2bcb4e5ee",
+        "lf": 126,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "pre": {
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "4dce572e3fdace2042ae3c9a1102606b300f6d8d",
+        "bytes": 10356,
+        "sha256": "5deececcefcf4391d76d1612b143bb7091b5ecbd8beddbd63fab7c4f28688cd3",
+        "lf": 184,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "pre": {
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206,
+        "endsWithLF": true
+      },
+      "post": {
+        "gitBlob": "a9fb4f79968e3c753424f01534b1f7b5e61895fe",
+        "bytes": 16468,
+        "sha256": "81725bd498f02eab5cb903057fc96abdd7e36c2f0238af2b3ccef378b81fa19f",
+        "lf": 267,
+        "endsWithLF": true
+      },
+      "sourceMembershipVerified": true
+    }
+  ],
+  "helper": {
+    "helper": {
+      "gitBlob": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+      "bytes": 26983,
+      "sha256": "6efb7c185cb73acf14e699c091a5bf89ff9f113b10105a73c60ebc9d2ac343e6",
+      "lf": 456,
+      "endsWithLF": true
+    },
+    "readComplete": true,
+    "firstFinding": {
+      "r1": "89586577de9e3223247f874a9e8a02caaaa5858d",
+      "kind": "Critical reservations globally keyed without first-analysis owner.",
+      "fixedIn": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+      "staticFixVerified": true,
+      "dynamicControlPending": true
+    },
+    "checks": [
+      "Source and tree bound to clean S19; qualification false.",
+      "32 detail places, 28 admitted unit close places, request enter/close/overflow total63 rows.",
+      "First analysis admission and entry remain reserved after generic units/details.",
+      "Critical ownership now private reference equality to first analysis Unit; critical IDs1-5 independent.",
+      "Each admitted phase reserves its close before executing work.",
+      "Compare scopes update aggregates/checkpoints, not per-compare event units.",
+      "Four global checkpoints at body exits1/8/32/128 independent of detail pool.",
+      "Stage axis separate from comparison parent/depth and prior E13 taxonomy.",
+      "Async body-exit counters do not imply outer Promise settlement.",
+      "Original await taps return exact value before later clone/guard.",
+      "Explicit thrown discriminant preserves throw undefined and work invocation once.",
+      "Closed scopes/parents reject late attribution instead of reparenting.",
+      "Final operation latches before observational hooks; terminal only actual finish.",
+      "Partial writer/clock/storage faults retain explicit limitations.",
+      "Record protocol uses technical enums/IDs/counters; no business values/errors.",
+      "Static envelope conservative bounds883/849B include prefix/LF; actual runtime control pending.",
+      "Helper contains no await/.then to assimilate work return."
+    ],
+    "executableAcceptance": false,
+    "operationalObservation": {
+      "checkedAtUtc": "2026-11-28T02:43:37Z",
+      "since": "2026-11-28T01:46:38Z",
+      "channels": [
+        673,
+        628,
+        657
+      ],
+      "newExternalAcknowledgements": 0,
+      "onlyChangedComment": {
+        "id": 7231393526,
+        "kind": "ownContinuation"
+      },
+      "operationalReservationsConfirmed": false,
+      "guestRouteNewlyExposed": false,
+      "originalLogGets": 0
+    },
+    "apiScope": "One active awaited phase per Unit, as actual sequential callers guarantee. Concurrent Units have independent lexical scopes. Reusing one Unit handle for overlapping phases is outside the caller contract."
+  },
+  "derivationChecks": {
+    "reviews": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "anchors": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "anchors": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "anchors": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "anchors": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "anchors": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 2
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "anchors": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 4
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "anchors": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 4
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts",
+        "addition": true,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 1
+      },
+      {
+        "path": ".ci-run.json",
+        "addition": true,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "hunks": 1
+      }
+    ],
+    "counts": {
+      "files": 9,
+      "hunks": 20,
+      "added": 879,
+      "removed": 248
+    },
+    "modifiedFileAnchors": 18,
+    "allIntermediatesHashed": true,
+    "intermediateGitObjectsFetched": false
+  },
+  "reuseChecks": {
+    "helperRevisionAnchors": 6,
+    "helperRevisionForwardInverse": true,
+    "callers": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "literalRetarget": true
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "literalRetarget": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "literalRetarget": true
+      }
+    ],
+    "runOnceLiteral": true,
+    "runOnceCalculatedOnly": {
+      "gitBlob": "5e921101d00c6512faa91593698640ca9402922a",
+      "bytes": 1436,
+      "sha256": "6370cc7e4b6bd5fb61197296110d029368a25e396e6b89c6e28e7ae4391f49f7",
+      "lf": 37,
+      "endsWithLF": true
+    },
+    "admissionTailRetargetOnly": true,
+    "helperReuseHunks": 10,
+    "helperReuseForwardInverse": true
+  },
+  "callerAwaitAndThenCounts": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "beforeAwaits": 7,
+      "afterAwaits": 7,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "beforeAwaits": 11,
+      "afterAwaits": 11,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "beforeAwaits": 18,
+      "afterAwaits": 18,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "beforeAwaits": 19,
+      "afterAwaits": 19,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "beforeAwaits": 22,
+      "afterAwaits": 22,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "beforeAwaits": 13,
+      "afterAwaits": 13,
+      "beforeThen": 0,
+      "afterThen": 0
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "beforeAwaits": 16,
+      "afterAwaits": 16,
+      "beforeThen": 0,
+      "afterThen": 0
+    }
+  ],
+  "peer": {
+    "reviewer": "/root/teams_product",
+    "status": "STATIC_SOURCE_ACK_ONLY",
+    "cleanParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "helper": {
+      "gitBlob": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+      "bytes": 26983,
+      "sha256": "6efb7c185cb73acf14e699c091a5bf89ff9f113b10105a73c60ebc9d2ac343e6",
+      "lf": 456,
+      "endsWithLF": true
+    },
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "pre": {
+          "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+          "bytes": 13217,
+          "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+          "lf": 134,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "d5cb9fff2fc1a725250f9710449f9d13f3a942c7",
+          "bytes": 14101,
+          "sha256": "2cb60a140ee06191f3794211c4c5b4ea686cfde7306f0c07508aa30ec14890ee",
+          "lf": 145,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "pre": {
+          "gitBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+          "bytes": 17484,
+          "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+          "lf": 129,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "094f788a27d01b91d6601333a4e8f99ac40db556",
+          "bytes": 18817,
+          "sha256": "892f9a5b7f1f46dffff3f4cec6f612e7b83bbca153da968d166904f7b4829c5f",
+          "lf": 140,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "pre": {
+          "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+          "bytes": 8591,
+          "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+          "lf": 85,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "03859dbbf10fd6ca551f987736e445d2ff8b3431",
+          "bytes": 9455,
+          "sha256": "ecb47e6efc32b98a2f0ca7e70702d5b593c06b9bea088856019088da8b8d05d2",
+          "lf": 91,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "pre": {
+          "gitBlob": "47c4388c34c21c7294b0ffc34e4adcbe65b138de",
+          "bytes": 9554,
+          "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+          "lf": 91,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "4b1d4578d558456772ab04e05e33d13231ca7502",
+          "bytes": 10956,
+          "sha256": "a26d486a7d26375de77772c3497920a945df794351299fdc6da77cd2bccd09cc",
+          "lf": 102,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "pre": {
+          "gitBlob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+          "bytes": 11633,
+          "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+          "lf": 115,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6",
+          "bytes": 12548,
+          "sha256": "13afa93fc0101564a70700bb4871402db00bf83a81ce109c2850f4c2bcb4e5ee",
+          "lf": 126,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "pre": {
+          "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "bytes": 5823,
+          "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+          "lf": 121,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "4dce572e3fdace2042ae3c9a1102606b300f6d8d",
+          "bytes": 10356,
+          "sha256": "5deececcefcf4391d76d1612b143bb7091b5ecbd8beddbd63fab7c4f28688cd3",
+          "lf": 184,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "pre": {
+          "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "bytes": 12321,
+          "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+          "lf": 206,
+          "endsWithLF": true
+        },
+        "post": {
+          "gitBlob": "a9fb4f79968e3c753424f01534b1f7b5e61895fe",
+          "bytes": 16468,
+          "sha256": "81725bd498f02eab5cb903057fc96abdd7e36c2f0238af2b3ccef378b81fa19f",
+          "lf": 267,
+          "endsWithLF": true
+        },
+        "sourceMembershipVerified": true
+      }
+    ],
+    "request": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "derivation": {
+      "gitBlob": "f0bdf33365f1d6626766e670f338430009ca3b7f",
+      "bytes": 161752,
+      "sha256": "2e89b74055c5af78f3e0a30240a8d377c6222e4c6472b0644e0cf2f52daca2f6",
+      "lf": 922,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "ba97e0d4b6c90bfc0f90793ca2bb2ce3ead79d8c",
+      "bytes": 122225,
+      "sha256": "002ef0a3fabd6d7de949a11c1df47056ca4dd43823a2c7fb4bf600612afb04c3",
+      "lf": 1278,
+      "endsWithLF": true
+    },
+    "forwardInverse": true,
+    "anchors": 18,
+    "hunks": 20,
+    "added": 879,
+    "removed": 248,
+    "sourceObjectCreationAllowed": true,
+    "executionAllowed": false
+  },
+  "instructions": {
+    "root": {
+      "gitBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223,
+      "endsWithLF": true
+    },
+    "appShell": {
+      "gitBlob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "bytes": 5333,
+      "sha256": "085a84754d37145690b286ea7f37103be07511d361e34c807fe08af27d5df9a9",
+      "lf": 56,
+      "endsWithLF": true
+    },
+    "e2e": {
+      "gitBlob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "bytes": 2379,
+      "sha256": "87f2775fafa79874744ead17751b8df5c6b74b38ea66e70e02beeeeba1a121f9",
+      "lf": 22,
+      "endsWithLF": true
+    },
+    "guides": {
+      "observedAtUtc": "2026-11-28T02:44:00Z",
+      "source": "packages/app-shell/e2e/AGENTS.md",
+      "instructionBlob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "guides": [
+        {
+          "url": "https://playwright.dev/docs/best-practices",
+          "refs": [
+            "turn391936667view0",
+            "turn554424549view0"
+          ]
+        },
+        {
+          "url": "https://playwright.dev/docs/actionability",
+          "refs": [
+            "turn391936667view1"
+          ]
+        },
+        {
+          "url": "https://playwright.dev/docs/test-assertions",
+          "refs": [
+            "turn514328887view2",
+            "turn887720616view0",
+            "turn108009392view0",
+            "turn266822161view1"
+          ]
+        },
+        {
+          "url": "https://playwright.dev/docs/locators",
+          "refs": [
+            "turn514328887view3",
+            "turn108009392view2",
+            "turn758101988view0",
+            "turn758101988view1",
+            "turn266822161view0"
+          ]
+        },
+        {
+          "url": "https://playwright.dev/docs/network",
+          "refs": [
+            "turn887720616view1",
+            "turn108009392view1"
+          ]
+        },
+        {
+          "url": "https://playwright.dev/docs/browser-contexts",
+          "refs": [
+            "turn554424549view1"
+          ]
+        }
+      ],
+      "applied": [
+        "Keep the original UI journeys, selectors, waits and deadlines unchanged.",
+        "Unique scoped user-facing locators and web-first assertions remain authoritative.",
+        "Register request/response waits before actions; no action retries or sleep-based synchronization.",
+        "Retain independent browser contexts and installation data per journey.",
+        "CI Linux only, no local test execution; documentation examples do not override repository policy."
+      ],
+      "scope": "Read relevant guide bodies; no browser/test execution."
+    }
+  },
+  "semanticReview": [
+    "All seven proposed files and helper read in full. Original callee/receiver/argument expressions remain inside one synchronous thunk; no product expression is pre-read.",
+    "All original awaits remain; retained clone/guard timing is separate from returned-await marker.",
+    "Persistence and binding branches are marked inside the original branch; no product predicate is repeated.",
+    "Production optional analysis methods retain their original guards and property expression; only erased non-null type assertions added.",
+    "Existing HTTP catch/finally and human-authority finish remain inside diagnostic outer catch/finally.",
+    "Existing scenario batch whole-array and per-entry clones remain literal.",
+    "Existing sensitivity body, UI spec, production config, selectors and deadlines are not changed.",
+    "HTTP and both installation bridges are finite literal retargets of accepted E13 implementation; inherited transport/write limits retained.",
+    "Counter timestamps identify aggregate boundaries; compare-body return is not outer Promise settlement or exclusive CPU cost."
+  ],
+  "authorization": {
+    "createTreeAndCommit": true,
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "branchActivation": false,
+    "run": false,
+    "merge": false,
+    "productionCutover": false
+  },
+  "limits": [
+    "Diagnostic overlay only; no new area or installed qualification.",
+    "C19 original Analytics remains closed negative; original logs and ZIPs not reacquired.",
+    "Source manifest and focal envelope final review still pending; no execution authority in this receipt."
+  ],
+  "effects": {
+    "repositoryCodeExecutedLocally": false,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

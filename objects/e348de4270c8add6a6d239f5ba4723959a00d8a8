@@ -1,0 +1,453 @@
+{
+  "schema": "sf613-e14-source-bounds-v1",
+  "status": "STATIC_BOUND_PROPOSAL_NO_RUNTIME",
+  "createdUtc": "2026-11-28T02:56:55Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "cleanBase": {
+    "sha": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+  },
+  "diagnosticSource": "UNBOUND",
+  "diagnosticTree": "UNBOUND",
+  "helper": {
+    "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts",
+    "gitSha": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+    "bytes": 26983,
+    "sha256": "6efb7c185cb73acf14e699c091a5bf89ff9f113b10105a73c60ebc9d2ac343e6",
+    "lf": 456,
+    "endsWithLF": true
+  },
+  "question": "Which explicit boundary remains open in the first preview, and which original persist/bind branches are taken, while separating accumulated compare body progress from an unreturned original await?",
+  "quota": {
+    "unit": "Complete attempted ASCII line, including SF_PREVIEW_E14_EVENT prefix and LF. A failed/partial file write or stdout false/throw is not retried.",
+    "classes": [
+      {
+        "class": "critical-phase-detail",
+        "places": 10,
+        "rule": "Five pairs belong only to the private first analysis Unit. A call reserves enter+close together. A skip reserves the same pair but emits one branch row. Reserved IDs1-5 cannot be consumed by other phases."
+      },
+      {
+        "class": "compare-body-checkpoint-detail",
+        "places": 4,
+        "rule": "Global per selected Request, at body exits1/8/32/128. Each threshold latched before output. Never consumes general or critical places."
+      },
+      {
+        "class": "first-analysis-entry-detail",
+        "places": 1,
+        "rule": "Reserved independently of general places. The same first Unit privately owns all five critical pairs."
+      },
+      {
+        "class": "general-detail",
+        "places": 17,
+        "rule": "HTTP boundaries, other unit entries and noncritical or repeated phases. A phase consumes two places at admission; no late close allocation. A repeated skip may conservatively consume a pair for one row."
+      },
+      {
+        "class": "unit-close",
+        "places": 28,
+        "rule": "One close reservation per admitted unit, outside the32 details. Twenty-seven generic admissions cannot consume the first analysis admission. No synthetic close is emitted for an abandoned unit."
+      },
+      {
+        "class": "request-enter",
+        "places": 1,
+        "rule": "Dedicated, not a detail."
+      },
+      {
+        "class": "overflow",
+        "places": 1,
+        "rule": "First explicit omission only, outside detail budget. Later omissions update bounded dropped counters but do not add overflow rows."
+      },
+      {
+        "class": "request-close",
+        "places": 1,
+        "rule": "Dedicated, only when the HTTP caller actually invokes finish. Never synthesized after timeout or death."
+      }
+    ],
+    "detailsMaximum": 32,
+    "unitCloseMaximum": 28,
+    "otherMaximum": 3,
+    "streamMaximumRecords": 63,
+    "streamMaximumBytes": 64512,
+    "lineMaximumBytes": 1024,
+    "formula": "(10 + 4 + 1 + 17) + 28 + (1 + 1 + 1) = 63; 63 * 1024 = 64512",
+    "noDoubleCounting": "Critical and general phase closes are included in their allocated pair inside32. Unit closes are a separate kind outside32. Checkpoints are already inside32; they are not added again.",
+    "admissionProof": "firstAnalysis is a private Unit reference set once before its entry emission. reservePhase and firstCritical compare the exact Unit. markBranch uses the same reservePhase. Other analysis units can consume only general places, never these critical IDs or pairs.",
+    "scopeOfGuarantee": "Reservations survive detail/checkpoint saturation and other-unit admission. They are not an emission/delivery guarantee under process death, scope failure, output failure or caller non-reachability. The first analysis must remain under its live lexical ancestry.",
+    "omissionBehavior": "Overflow does not disable protected critical sites, checkpoint counters or closes. Emission/attribution faults and late closed ancestors remain explicit limits.",
+    "branchPairs": [
+      {
+        "point": "analysis-persist",
+        "called": "phase-enter then phase-close if reached",
+        "skipped": "branch= reuse-result in original truthy resultRef arm"
+      },
+      {
+        "point": "analysis-bind",
+        "called": "phase-enter then phase-close if original previousBinding.status !== ok",
+        "skipped": "branch= binding-present in the corresponding original else arm"
+      }
+    ]
+  },
+  "phasePoints": [
+    {
+      "point": "port-authority-initial",
+      "stage": 1,
+      "critical": false
+    },
+    {
+      "point": "candidates-initial",
+      "stage": 1,
+      "critical": false
+    },
+    {
+      "point": "combination-evaluate",
+      "stage": 2,
+      "critical": false
+    },
+    {
+      "point": "port-authority-final",
+      "stage": 1,
+      "critical": false
+    },
+    {
+      "point": "evaluations-recheck",
+      "stage": 1,
+      "critical": false
+    },
+    {
+      "point": "candidates-final",
+      "stage": 1,
+      "critical": false
+    },
+    {
+      "point": "analysis-select-initial",
+      "stage": 4,
+      "critical": true,
+      "id": 1
+    },
+    {
+      "point": "analysis-compare",
+      "stage": 5,
+      "critical": false
+    },
+    {
+      "point": "analysis-persist",
+      "stage": 6,
+      "critical": true,
+      "id": 4
+    },
+    {
+      "point": "analysis-bind",
+      "stage": 7,
+      "critical": true,
+      "id": 5
+    },
+    {
+      "point": "analysis-select-final",
+      "stage": 8,
+      "critical": true,
+      "id": 2
+    },
+    {
+      "point": "analysis-revalidate",
+      "stage": 9,
+      "critical": true,
+      "id": 3
+    },
+    {
+      "point": "production-analysis",
+      "stage": 3,
+      "critical": false
+    },
+    {
+      "point": "production-analysis-revalidate",
+      "stage": 10,
+      "critical": false
+    }
+  ],
+  "units": {
+    "kinds": [
+      "port",
+      "combination",
+      "analysis",
+      "analysis-revalidation",
+      "production-assess",
+      "production-revalidation"
+    ],
+    "maximumAdmitted": 28,
+    "firstAnalysisAdmissionReserved": true,
+    "closeOutcome": [
+      "body-returned",
+      "body-threw"
+    ],
+    "parentMeaning": "Private lexical scope owner at admission, not a reconstructed physical stack.",
+    "combinationMeaning": "Only the original host.evaluate arm after the duplicate-target branch, through the remainder of that loop iteration. Duplicate-target combinations that continue earlier do not create this unit.",
+    "entryReservedMeaning": "The slot was allocated; it is not evidence that file or stdout delivery succeeded."
+  },
+  "comparisons": {
+    "name": "compareBodies",
+    "unit": "Instrumented compareScenarios body under a live selected Request lexical scope.",
+    "fields": [
+      "bodyEntered",
+      "bodyReturned",
+      "bodyThrew",
+      "open",
+      "maxDepth",
+      "untracked"
+    ],
+    "stageNames": [
+      "unclassified",
+      "port",
+      "combination",
+      "production-analysis",
+      "select-initial",
+      "analysis-compare",
+      "persist",
+      "bind",
+      "select-final",
+      "analysis-revalidate",
+      "production-analysis-revalidate"
+    ],
+    "stageLayout": "33 numbers: eleven triples in the stated order; each triple is bodyEntered/bodyReturned/bodyThrew. The stage is fixed in the lexical token at compare entry.",
+    "lineageFields": [
+      "scoped-root",
+      "scoped-child",
+      "stage-unclassified"
+    ],
+    "lineageDefinition": "At body entry: stage0 goes to stage-unclassified; otherwise parentCompare0 is scoped-root and a nonzero explicit compare ancestor is scoped-child. Parent/depth are retained as a separate axis in checkpoint rows, including when stage0.",
+    "e13Compatibility": "This is an E14 taxonomy of explicit scoped ancestry. No claim equates these counters to E13 direct/nested/population totals.",
+    "checkpoints": [
+      1,
+      8,
+      32,
+      128
+    ],
+    "checkpointKind": "compare-body-checkpoint",
+    "checkpointMeaning": "A cumulative body-exit threshold, not settlement of an exterior Promise. Body return does not prove async thenable adoption, caller clone/guard, semantic PortResult success, phase completion, CPU cost or lock ownership.",
+    "activeCompareMaximum": 64,
+    "trackedCompareIdsMaximum": 65535,
+    "genericPhaseIdsMaximum": 65530,
+    "criticalPhaseIds": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "countCap": 65535,
+    "saturationMeaning": "The helper's bump sets saturated only when an increment is attempted on a value already at65535; reaching65535 exactly can still leave saturated=false. It means a censored clamp attempt, not equality with any slot at the cap. Admission limits, untracked and dropped are separate axes. Unowned/disabled scopes are not counted, so omitted/unpublished values remain unknown rather than zero.",
+    "bodyScope": "runSfE14Compare scopes the original awaited dependency expressions without extra awaits or .then. Synchronous work outside those explicit expressions is not claimed as an exhaustive physical stack. Closed ancestors never migrate a late child to a later stage.",
+    "aggregateSnapshots": "Counters are published at reserved critical/general phase rows when allocated, unit closes, four checkpoints and Request close. A phase left open after the last checkpoint can have unreported progress."
+  },
+  "ownershipAndReentry": {
+    "work": "runOnce is literal from E13 R7. One original invocation; exact returned value/Promise/thenable; exact thrown value including undefined; ALS return/error is not authoritative. No .then or extra await was added.",
+    "stateBeforeOutput": "Compare closed latch/counts/unlink, phase detach and unit closed/open counts are updated before emission. Reentrant observer calls during emission do not change counters. Request close invalidates ownership immediately and is serialized after the current line.",
+    "lateWork": "A token resolves only to its own immutable scope and live ancestors. A closed phase/unit/compare or disabled scope is unavailable, not reassigned. Request close emits no invented body/phase exits.",
+    "faults": "Request-close faultsBefore describes the cut before its own emission. It does not attest to subsequent fsync/fstat/close success or all transport delivery.",
+    "memory": "At most28 unit handles are admitted, at most64 compare handles are indexed as open, and at most one active phase belongs to each unit. Phase/compare IDs are also capped65535 each. Retired scopes can remain reachable through bounded ancestry. The exact Request reference is retained only for identity checks until finish, without reading or copying its body/members; no product result, case ID, error or arbitrary event/value list is retained.",
+    "activePhaseContract": "The effective callers use at most one original awaited phase per Unit at a time. Concurrent Units keep distinct immutable lexical scopes; this proposal does not claim support for overlapping phases of the same Unit."
+  },
+  "campaign": {
+    "selectionMemo": {
+      "gitSha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    },
+    "memoStatus": "E13 historical static selection argument reused only after S18→S19 exact2M leaves the original spec/BI clients/fixture contract unchanged.",
+    "changedS18ToS19": [
+      "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+    ],
+    "sourceRequest": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "captureInstallationsMaximum": 1,
+    "noncapturingBIInstallationsMaximum": 1,
+    "launcherDisabledMaximumPerInstallation": 1,
+    "launcherDisabledLineBytesMaximum": 1024,
+    "aggregateMaximumRecords": 64,
+    "aggregateMaximumBytes": 65536,
+    "formula": "max(63 capture events + 1 noncapturing BI launcher-disabled, 2 disabled) = 64; max(63KiB + 1KiB, 2KiB) = 64KiB.",
+    "bridgeProof": "Outer refusal clears both E14 env keys; inner sees both empty and emits no second disabled. Outer success + inner refusal emits at most one disabled and clears both keys for the helper, excluding capture in that installation. Original BI routes do not call decision-portfolio-preview; the local BI preview name invokes bi-data.",
+    "limits": [
+      "This bound is conditional on the original fixed two-journey selection and unchanged client operation mappings, with no unexpected extra traffic or process restarts.",
+      "No global cross-process latch is claimed. Per native module, selectionTried allows one setup attempt.",
+      "A line can be forwarded through each existing bridge; these are literal transport copies of one logical producer record, not extra logical events. Raw logs may contain mirrored representations.",
+      "No previous PASS/timeout/absence of markers is used to prove current behavior."
+    ]
+  },
+  "model": {
+    "method": "Pure data construction and UTF8 length only; no repository/helper code executed.",
+    "recordModels": [
+      {
+        "kind": "request-enter",
+        "bytes": 556,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"request-enter\",\"elapsedTenthMs\":999999999,\"maxEvents\":63,\"maxBytes\":64512,\"maxLineBytes\":1024,\"detailSlots\":32,\"unitCloseSlots\":28,\"activeCompareSlots\":64}\n"
+      },
+      {
+        "kind": "http-boundary",
+        "bytes": 475,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"http-boundary\",\"elapsedTenthMs\":999999999,\"point\":\"case-callback-entered\"}\n"
+      },
+      {
+        "kind": "unit-enter",
+        "bytes": 523,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"unit-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"parentUnit\":28,\"parentPhase\":65535}\n"
+      },
+      {
+        "kind": "phase-enter",
+        "bytes": 828,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"phase-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n"
+      },
+      {
+        "kind": "phase-close",
+        "bytes": 855,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"phase-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"outcome\":\"await-returned\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n"
+      },
+      {
+        "kind": "unit-close",
+        "bytes": 846,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"unit-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"outcome\":\"body-returned\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false,\"entryReserved\":false}\n"
+      },
+      {
+        "kind": "branch",
+        "bytes": 811,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"branch\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"analysis-persist\",\"branch\":\"binding-present\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n"
+      },
+      {
+        "kind": "compare-body-checkpoint",
+        "bytes": 840,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"compare-body-checkpoint\",\"elapsedTenthMs\":999999999,\"bodyExits\":128,\"compare\":65535,\"parentCompare\":65535,\"depth\":63,\"stage\":10,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n"
+      },
+      {
+        "kind": "overflow",
+        "bytes": 509,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"overflow\",\"elapsedTenthMs\":999999999,\"reason\":\"compare\",\"generalUsed\":17,\"unitsAdmitted\":28,\"dropped\":65535}\n"
+      },
+      {
+        "kind": "request-close",
+        "bytes": 889,
+        "line": "SF_PREVIEW_E14_EVENT {\"schema\":\"sf-preview-causal-e14-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e14-event-xxxxxx\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":63,\"kind\":\"request-close\",\"elapsedTenthMs\":999999999,\"outcome\":\"returned\",\"eventsBefore\":62,\"bytesBefore\":63488,\"dropped\":65535,\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false,\"faultsBefore\":[0,0,0,0,0,0]}\n"
+      }
+    ],
+    "envelope": {
+      "schema": "sf-preview-causal-e14-event-v1",
+      "source": "ffffffffffffffffffffffffffffffffffffffff",
+      "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+      "qualification": false,
+      "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+      "runId": "99999999999999999999",
+      "attempt": "1",
+      "nonce": "sf613-e14-event-xxxxxx",
+      "pid": 2147483647,
+      "parentPid": 2147483647,
+      "request": 1,
+      "sequence": 63,
+      "kind": "",
+      "elapsedTenthMs": 999999999
+    },
+    "maximumConservativeLineBytes": 889,
+    "headroomBytes": 135,
+    "values": "20-digit runId, full40-digit hashes,10-digit PID/parent,9-digit elapsed, widest enums and conservative65535 numeric arrays. Actual indexed open/depth caps are tighter. Hard1024 byte+ASCII guard applies regardless."
+  },
+  "runtime": {
+    "platform": "linux",
+    "arch": "x64",
+    "bunVersion": "1.3.14",
+    "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "profileSampling": false,
+    "releaseQualification": false
+  },
+  "unchanged": {
+    "waitForResponseMs": 60000,
+    "originalSpecAndConfig": true,
+    "originalTwoJourneys": true,
+    "extraWaits": false,
+    "actionRetriesAdded": false,
+    "spawnCwdArgsRuntimeCleanup": "Original paths, spawn options and lifecycle unchanged outside the two E14 environment forwards and bounded line pass-through.",
+    "callers": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "awaitsBefore": 7,
+        "awaitsAfter": 7,
+        "thenAdded": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "awaitsBefore": 11,
+        "awaitsAfter": 11,
+        "thenAdded": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "awaitsBefore": 18,
+        "awaitsAfter": 18,
+        "thenAdded": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "awaitsBefore": 19,
+        "awaitsAfter": 19,
+        "thenAdded": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "awaitsBefore": 22,
+        "awaitsAfter": 22,
+        "thenAdded": 0
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "awaitsBefore": 13,
+        "awaitsAfter": 13,
+        "thenAdded": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "awaitsBefore": 16,
+        "awaitsAfter": 16,
+        "thenAdded": 0
+      }
+    ],
+    "original120SecondBudget": "The sensitivity-evaluate wait at original spec line203 remains120000ms; original preview waits remain60000ms. These are response waits, not a blanket120s deadline for every selected test.",
+    "originalSpec": {
+      "gitSha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+    }
+  },
+  "perturbation": [
+    "At most63 bounded file write attempts and63 bounded stdout attempts per selected Request, plus bounded launcher metadata; fsync occurs on actual close, not a timer.",
+    "Scope bookkeeping/counter work is additional diagnostic work. Its elapsed interval includes observers and other synchronous activity; it is not an exclusive CPU measurement or proof of a lock.",
+    "No wall-clock overhead guarantee is made. The original60s/120s budgets remain unchanged."
+  ],
+  "pending": [
+    "Root-created diagnostic source/tree binding with exact2A7M and sourceBaseS19. These fields intentionally remain UNBOUND in this proposal.",
+    "Separate focal wrapper/control package, root activation authority and eventual complete intake.",
+    "Current runtime capture/result cannot be inferred from this proposal."
+  ],
+  "effects": {
+    "proposalBlobsOnly": true,
+    "repositoryCodeExecuted": false,
+    "sourceObjectsCreated": false,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "staticReview": {
+    "source": "Root and Teams inspected the helper R2, seven callers and literal forward/inverse derivation. Teams reports no remaining source-code blocker.",
+    "control": "Separate author Close owns the focal controls and wrapper; source review does not substitute for their package or runtime intake.",
+    "helperR1": "Rejected for missing private first-analysis ownership; only R2 is current."
+  }
+}

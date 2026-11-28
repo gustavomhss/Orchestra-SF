@@ -1,0 +1,970 @@
+{
+  "archiveSummary": {
+    "archives": 1,
+    "entries": 150,
+    "nestedArchivesOpened": 0,
+    "selectedCrcVerified": 4,
+    "selectedExpandedBytes": 4839535,
+    "selectedFiles": {
+      "events": {
+        "bytes": 11961,
+        "empty": false,
+        "file": 5,
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/preview-events.jsonl",
+        "presence": "PRESENT",
+        "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307"
+      },
+      "launcher": {
+        "bytes": 676,
+        "empty": false,
+        "file": 4,
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/launcher.json",
+        "presence": "PRESENT",
+        "sha256": "ac8f048d04cdc608655f8b4acc2f9c6b2b3ee06418e64c1f75b3036b529dc81b"
+      },
+      "runtime": {
+        "bytes": 4823832,
+        "empty": false,
+        "file": 0,
+        "path": "test-ci-evidence/playwright-runtime.json",
+        "presence": "PRESENT",
+        "sha256": "7d2d7c5742a023a60506f806ffd3f82ad47ec258e003d5e4a38fcb4c0bb0f97f"
+      },
+      "selection": {
+        "bytes": 3066,
+        "empty": false,
+        "file": 1,
+        "path": "test-ci-evidence/playwright-selection.json",
+        "presence": "PRESENT",
+        "sha256": "bb7a670be421e4ccda0ccdf5f9bce119cfaba241cb9fc8048299955b9f9f52d1"
+      }
+    },
+    "unselectedContentsVerified": false,
+    "unselectedEntriesMetadataOnly": 146
+  },
+  "artifact": {
+    "bytes": 45863814,
+    "downloadCount": 1,
+    "expired": false,
+    "id": 15246707437,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+    "verifiedBytes": 45863814,
+    "verifiedSha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936"
+  },
+  "attempt": 1,
+  "boundMainPrefix": {
+    "blob": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+    "bytes": 11961,
+    "completeLines": 21,
+    "coverageComplete": false,
+    "formatValid": true,
+    "issues": [],
+    "kindCounts": {
+      "compare-body-checkpoint": 2,
+      "http-boundary": 3,
+      "phase-close": 4,
+      "phase-enter": 7,
+      "request-enter": 1,
+      "unit-enter": 4
+    },
+    "lastObserved": {
+      "attempt": "1",
+      "compareBodies": [
+        15,
+        15,
+        0,
+        0,
+        1,
+        0
+      ],
+      "elapsedTenthMs": 349739,
+      "kind": "phase-enter",
+      "lineage": [
+        5,
+        10,
+        0
+      ],
+      "nonce": "sf613-e14-event-QBamrL",
+      "parentPid": 3924,
+      "phase": 4,
+      "pid": 3974,
+      "point": "analysis-persist",
+      "qualification": false,
+      "request": 1,
+      "runId": "46103050850",
+      "saturated": false,
+      "schema": "sf-preview-causal-e14-event-v1",
+      "sequence": 21,
+      "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+      "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "stage": 6,
+      "stages": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        12,
+        12,
+        0,
+        3,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "unit": 4
+    },
+    "missingSequencesInObservedRange": [],
+    "origin": "preserved-main-prefix",
+    "phaseLifetimes": [
+      {
+        "closeSequence": 7,
+        "closedTenthMs": 5699,
+        "enterSequence": 6,
+        "enteredTenthMs": 5685,
+        "inclusiveSpanTenthMs": 14,
+        "outcome": "await-returned",
+        "phase": 6,
+        "point": "port-authority-initial",
+        "unit": 1
+      },
+      {
+        "closeSequence": 9,
+        "closedTenthMs": 8124,
+        "enterSequence": 8,
+        "enteredTenthMs": 5700,
+        "inclusiveSpanTenthMs": 2424,
+        "outcome": "await-returned",
+        "phase": 7,
+        "point": "candidates-initial",
+        "unit": 1
+      },
+      {
+        "closeSequence": 18,
+        "closedTenthMs": 308442,
+        "enterSequence": 15,
+        "enteredTenthMs": 18839,
+        "inclusiveSpanTenthMs": 289603,
+        "outcome": "await-returned",
+        "phase": 1,
+        "point": "analysis-select-initial",
+        "unit": 4
+      },
+      {
+        "closeSequence": 20,
+        "closedTenthMs": 349523,
+        "enterSequence": 19,
+        "enteredTenthMs": 310719,
+        "inclusiveSpanTenthMs": 38804,
+        "outcome": "await-returned",
+        "phase": 10,
+        "point": "analysis-compare",
+        "unit": 4
+      }
+    ],
+    "phasesWithoutObservedClose": [
+      {
+        "enterSequence": 11,
+        "enteredTenthMs": 8130,
+        "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+        "phase": 8,
+        "point": "combination-evaluate",
+        "unit": 2
+      },
+      {
+        "enterSequence": 13,
+        "enteredTenthMs": 18824,
+        "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+        "phase": 9,
+        "point": "production-analysis",
+        "unit": 3
+      },
+      {
+        "enterSequence": 21,
+        "enteredTenthMs": 349739,
+        "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+        "phase": 4,
+        "point": "analysis-persist",
+        "unit": 4
+      }
+    ],
+    "preflight": "Validated by the same E14 parser before any artifact acquisition; no original file is fabricated.",
+    "requestBoundaryObserved": false,
+    "requestClose": null,
+    "sequenceContiguousFromOne": true,
+    "sequenceState": "CONTIGUOUS_FROM_ONE",
+    "sequences": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+    ],
+    "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+    "tailBytes": 0,
+    "tailSha256": null,
+    "unitsWithoutObservedClose": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "unparsedCompleteSuffixBytes": 0,
+    "unparsedCompleteSuffixSha256": null,
+    "validRecords": 21
+  },
+  "e14": {
+    "comparisons": [
+      {
+        "commonPrefixBytes": 11961,
+        "conflictingSequences": [],
+        "consistencyProven": true,
+        "leftBytes": 11961,
+        "meaning": "Literal bytes and shared sequences only; no unobserved record or inter-stream chronology is inferred.",
+        "onlyLeftSequences": [],
+        "onlyRightSequences": [],
+        "pair": "main-to-file",
+        "relation": "IDENTICAL_BYTES",
+        "rightBytes": 11961,
+        "sharedSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      {
+        "commonPrefixBytes": 11961,
+        "conflictingSequences": [],
+        "consistencyProven": true,
+        "leftBytes": 11961,
+        "meaning": "Literal bytes and shared sequences only; no unobserved record or inter-stream chronology is inferred.",
+        "onlyLeftSequences": [],
+        "onlyRightSequences": [],
+        "pair": "main-to-runtime",
+        "relation": "IDENTICAL_BYTES",
+        "rightBytes": 11961,
+        "sharedSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      },
+      {
+        "commonPrefixBytes": 11961,
+        "conflictingSequences": [],
+        "consistencyProven": true,
+        "leftBytes": 11961,
+        "meaning": "Literal bytes and shared sequences only; no unobserved record or inter-stream chronology is inferred.",
+        "onlyLeftSequences": [],
+        "onlyRightSequences": [],
+        "pair": "runtime-to-file",
+        "relation": "IDENTICAL_BYTES",
+        "rightBytes": 11961,
+        "sharedSequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ]
+      }
+    ],
+    "evidenceConsistencyAccepted": true,
+    "file": {
+      "bytes": 11961,
+      "completeLines": 21,
+      "coverageComplete": false,
+      "formatValid": true,
+      "issues": [],
+      "kindCounts": {
+        "compare-body-checkpoint": 2,
+        "http-boundary": 3,
+        "phase-close": 4,
+        "phase-enter": 7,
+        "request-enter": 1,
+        "unit-enter": 4
+      },
+      "lastObserved": {
+        "attempt": "1",
+        "compareBodies": [
+          15,
+          15,
+          0,
+          0,
+          1,
+          0
+        ],
+        "elapsedTenthMs": 349739,
+        "kind": "phase-enter",
+        "lineage": [
+          5,
+          10,
+          0
+        ],
+        "nonce": "sf613-e14-event-QBamrL",
+        "parentPid": 3924,
+        "phase": 4,
+        "pid": 3974,
+        "point": "analysis-persist",
+        "qualification": false,
+        "request": 1,
+        "runId": "46103050850",
+        "saturated": false,
+        "schema": "sf-preview-causal-e14-event-v1",
+        "sequence": 21,
+        "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "stage": 6,
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "unit": 4
+      },
+      "missingSequencesInObservedRange": [],
+      "origin": "artifact-file",
+      "phaseLifetimes": [
+        {
+          "closeSequence": 7,
+          "closedTenthMs": 5699,
+          "enterSequence": 6,
+          "enteredTenthMs": 5685,
+          "inclusiveSpanTenthMs": 14,
+          "outcome": "await-returned",
+          "phase": 6,
+          "point": "port-authority-initial",
+          "unit": 1
+        },
+        {
+          "closeSequence": 9,
+          "closedTenthMs": 8124,
+          "enterSequence": 8,
+          "enteredTenthMs": 5700,
+          "inclusiveSpanTenthMs": 2424,
+          "outcome": "await-returned",
+          "phase": 7,
+          "point": "candidates-initial",
+          "unit": 1
+        },
+        {
+          "closeSequence": 18,
+          "closedTenthMs": 308442,
+          "enterSequence": 15,
+          "enteredTenthMs": 18839,
+          "inclusiveSpanTenthMs": 289603,
+          "outcome": "await-returned",
+          "phase": 1,
+          "point": "analysis-select-initial",
+          "unit": 4
+        },
+        {
+          "closeSequence": 20,
+          "closedTenthMs": 349523,
+          "enterSequence": 19,
+          "enteredTenthMs": 310719,
+          "inclusiveSpanTenthMs": 38804,
+          "outcome": "await-returned",
+          "phase": 10,
+          "point": "analysis-compare",
+          "unit": 4
+        }
+      ],
+      "phasesWithoutObservedClose": [
+        {
+          "enterSequence": 11,
+          "enteredTenthMs": 8130,
+          "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+          "phase": 8,
+          "point": "combination-evaluate",
+          "unit": 2
+        },
+        {
+          "enterSequence": 13,
+          "enteredTenthMs": 18824,
+          "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+          "phase": 9,
+          "point": "production-analysis",
+          "unit": 3
+        },
+        {
+          "enterSequence": 21,
+          "enteredTenthMs": 349739,
+          "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+          "phase": 4,
+          "point": "analysis-persist",
+          "unit": 4
+        }
+      ],
+      "requestBoundaryObserved": false,
+      "requestClose": null,
+      "sequenceContiguousFromOne": true,
+      "sequenceState": "CONTIGUOUS_FROM_ONE",
+      "sequences": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+      "tailBytes": 0,
+      "tailSha256": null,
+      "unitsWithoutObservedClose": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "unparsedCompleteSuffixBytes": 0,
+      "unparsedCompleteSuffixSha256": null,
+      "validRecords": 21
+    },
+    "fileCoverageComplete": false,
+    "fileRequestBoundaryObserved": false,
+    "launcher": {
+      "bytes": 676,
+      "fields": {
+        "adapterGraceMs": 10000,
+        "attempt": "1",
+        "childGraceMs": 2000,
+        "command": "serve",
+        "createdUtcMs": 1795836697179,
+        "entry": "apps/cli/src/index.ts",
+        "limits": "Preparation is not proof of Request selection, phase completion, event transport or successful fsync.",
+        "nonce": "sf613-e14-event-QBamrL",
+        "processRole": "native-cli",
+        "qualification": false,
+        "relativeDirectory": "test-ci-evidence/sf613-e14-event-QBamrL",
+        "runId": "46103050850",
+        "schema": "sf-preview-e14-event-launch-v1",
+        "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "state": "prepared",
+        "streamName": "preview-events.jsonl"
+      },
+      "meaning": "Prepared metadata matches this capture tuple. It does not prove stream completion or successful later fsync.",
+      "sha256": "ac8f048d04cdc608655f8b4acc2f9c6b2b3ee06418e64c1f75b3036b529dc81b",
+      "status": "VALIDATED"
+    },
+    "mainRequestBoundaryObserved": false,
+    "meaning": "Missing closure stays a received prefix. Counter body exits are not Promise settlement; intervals are inclusive and never summed.",
+    "runtimeRequestBoundaryObserved": false,
+    "runtimeStreams": [
+      {
+        "bytes": 11961,
+        "completeLines": 21,
+        "coverageComplete": false,
+        "formatValid": true,
+        "issues": [],
+        "kindCounts": {
+          "compare-body-checkpoint": 2,
+          "http-boundary": 3,
+          "phase-close": 4,
+          "phase-enter": 7,
+          "request-enter": 1,
+          "unit-enter": 4
+        },
+        "lastObserved": {
+          "attempt": "1",
+          "compareBodies": [
+            15,
+            15,
+            0,
+            0,
+            1,
+            0
+          ],
+          "elapsedTenthMs": 349739,
+          "kind": "phase-enter",
+          "lineage": [
+            5,
+            10,
+            0
+          ],
+          "nonce": "sf613-e14-event-QBamrL",
+          "parentPid": 3924,
+          "phase": 4,
+          "pid": 3974,
+          "point": "analysis-persist",
+          "qualification": false,
+          "request": 1,
+          "runId": "46103050850",
+          "saturated": false,
+          "schema": "sf-preview-causal-e14-event-v1",
+          "sequence": 21,
+          "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+          "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+          "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+          "stage": 6,
+          "stages": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            12,
+            12,
+            0,
+            3,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "unit": 4
+        },
+        "membership": {
+          "bytes": 753105,
+          "case": 1,
+          "markerBytes": 11961,
+          "markerPath": "derived/runtime-case-1-result-1-stdout-e14-events.log",
+          "markerRecordsIncludingTail": 21,
+          "markerSha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+          "result": 1,
+          "sha256": "395c1b12da7e0b31193ce0392f49c11554290f697985abadb6f761297d561145",
+          "stream": "stdout"
+        },
+        "missingSequencesInObservedRange": [],
+        "origin": "runtime-case-1-result-1-stdout",
+        "phaseLifetimes": [
+          {
+            "closeSequence": 7,
+            "closedTenthMs": 5699,
+            "enterSequence": 6,
+            "enteredTenthMs": 5685,
+            "inclusiveSpanTenthMs": 14,
+            "outcome": "await-returned",
+            "phase": 6,
+            "point": "port-authority-initial",
+            "unit": 1
+          },
+          {
+            "closeSequence": 9,
+            "closedTenthMs": 8124,
+            "enterSequence": 8,
+            "enteredTenthMs": 5700,
+            "inclusiveSpanTenthMs": 2424,
+            "outcome": "await-returned",
+            "phase": 7,
+            "point": "candidates-initial",
+            "unit": 1
+          },
+          {
+            "closeSequence": 18,
+            "closedTenthMs": 308442,
+            "enterSequence": 15,
+            "enteredTenthMs": 18839,
+            "inclusiveSpanTenthMs": 289603,
+            "outcome": "await-returned",
+            "phase": 1,
+            "point": "analysis-select-initial",
+            "unit": 4
+          },
+          {
+            "closeSequence": 20,
+            "closedTenthMs": 349523,
+            "enterSequence": 19,
+            "enteredTenthMs": 310719,
+            "inclusiveSpanTenthMs": 38804,
+            "outcome": "await-returned",
+            "phase": 10,
+            "point": "analysis-compare",
+            "unit": 4
+          }
+        ],
+        "phasesWithoutObservedClose": [
+          {
+            "enterSequence": 11,
+            "enteredTenthMs": 8130,
+            "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+            "phase": 8,
+            "point": "combination-evaluate",
+            "unit": 2
+          },
+          {
+            "enterSequence": 13,
+            "enteredTenthMs": 18824,
+            "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+            "phase": 9,
+            "point": "production-analysis",
+            "unit": 3
+          },
+          {
+            "enterSequence": 21,
+            "enteredTenthMs": 349739,
+            "meaning": "No close in this received stream; not a claim about timeout or final server state.",
+            "phase": 4,
+            "point": "analysis-persist",
+            "unit": 4
+          }
+        ],
+        "requestBoundaryObserved": false,
+        "requestClose": null,
+        "sequenceContiguousFromOne": true,
+        "sequenceState": "CONTIGUOUS_FROM_ONE",
+        "sequences": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21
+        ],
+        "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+        "tailBytes": 0,
+        "tailSha256": null,
+        "unitsWithoutObservedClose": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "unparsedCompleteSuffixBytes": 0,
+        "unparsedCompleteSuffixSha256": null,
+        "validRecords": 21
+      }
+    ]
+  },
+  "evidenceIssues": [],
+  "kind": "e14-original-event-summary",
+  "limits": [
+    "One acquisition of the bound original artifact; no retry or resume, no old artifact/log reacquisition and no audit ZIP acquisition.",
+    "The signed storage request receives no GitHub token, cookie or referer; at most three redirect hops occur before one response body.",
+    "The complete compressed original is preserved and checked by exact bytes/SHA256 before ZipFile is opened.",
+    "Only four exact top-level paths are opened. Other entries are central-directory metadata only; no screenshots, traces, profiler, HTML or nested ZIP is read.",
+    "Selected entry size and CRC are verified; this is not all-entry CRC verification. Missing selected files have no fabricated original export.",
+    "Original event/launcher bytes remain exact, including zero bytes, malformed JSON or a non-LF tail. Only complete LF records enter schema validation.",
+    "Runtime stdout/stderr are concatenated within one case/result/stream before strict UTF-8 decoding. Only initial ANSI CSI is removed from event records; CR and non-LF tails are retained.",
+    "Main/file/runtime comparisons classify byte prefixes and shared-sequence differences. Unequal transport streams are evidence, not repaired or forced equal.",
+    "A success reader job/terminal attests bounded byte transport only. evidenceConsistencyAccepted is false for invalid or contradictory evidence; product qualification is always false.",
+    "A received Request close is separate from complete coverage and cannot attest to the later fsync/close. No missing close proves that a phase was still open at the 60-second timeout.",
+    "Compare counters describe synchronous body exits, not Promise settlement. The 11 stage triples and lineage axis retain their producer semantics; no inferred conservation is imposed.",
+    "Native monotonic tenths-ms, launcher wall clock, Playwright timestamps and Actions clocks are not unified. Inclusive/nested/concurrent spans are never summed as exclusive cost.",
+    "The six raw export caps sum exactly662528B. All base64 chunks and terminal are preflighted jointly under7MiB; the root receiver verifies the whole main under8MiB.",
+    "No credential, signed URL, request/response body or raw error message is emitted. Raw selected reports remain preserved but are not exported as arbitrary text."
+  ],
+  "pending": [
+    {
+      "code": "E14_FILE_HAS_NO_VALIDATED_REQUEST_CLOSE"
+    },
+    {
+      "code": "E14_RUNTIME_HAS_NO_VALIDATED_REQUEST_CLOSE"
+    }
+  ],
+  "qualification": false,
+  "run": 46103050850,
+  "schema": 1,
+  "selectionRuntime": {
+    "cases": [
+      {
+        "attachmentCount": 9,
+        "durationMs": 265789,
+        "errors": [
+          {
+            "messageBytes": 769,
+            "messageSha256": "ef98b217daca065793bb20e3e848a9671eeb071ac4762cc2a4ece35c09eb230b",
+            "source": {
+              "column": 32,
+              "file": "design-wave-five-analytics.spec.ts",
+              "line": 72
+            },
+            "stackBytes": 0,
+            "stackSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "timeout60000": true,
+            "waitForResponse": true
+          }
+        ],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-28T03:31:35.835Z",
+        "status": "failed",
+        "stdioStreams": [
+          {
+            "bytes": 753105,
+            "case": 1,
+            "markerBytes": 11961,
+            "markerPath": "derived/runtime-case-1-result-1-stdout-e14-events.log",
+            "markerRecordsIncludingTail": 21,
+            "markerSha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+            "result": 1,
+            "sha256": "395c1b12da7e0b31193ce0392f49c11554290f697985abadb6f761297d561145",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 1,
+            "markerBytes": 0,
+            "markerPath": "derived/runtime-case-1-result-1-stderr-e14-events.log",
+            "markerRecordsIncludingTail": 0,
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+        "workerIndex": 0
+      },
+      {
+        "attachmentCount": 40,
+        "durationMs": 78582,
+        "errors": [],
+        "parallelIndex": 0,
+        "retry": 0,
+        "startTime": "2026-11-28T03:37:51.223Z",
+        "status": "passed",
+        "stdioStreams": [
+          {
+            "bytes": 3995333,
+            "case": 2,
+            "markerBytes": 0,
+            "markerPath": "derived/runtime-case-2-result-1-stdout-e14-events.log",
+            "markerRecordsIncludingTail": 0,
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "30dcd88e281999e3e8447ffcebbbc13a468ccea904b6d63fc224887a608dd4d6",
+            "stream": "stdout"
+          },
+          {
+            "bytes": 0,
+            "case": 2,
+            "markerBytes": 0,
+            "markerPath": "derived/runtime-case-2-result-1-stderr-e14-events.log",
+            "markerRecordsIncludingTail": 0,
+            "markerSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "result": 1,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stream": "stderr"
+          }
+        ],
+        "title": "wave five analytics: question catalog and original contextual BI",
+        "workerIndex": 1
+      }
+    ],
+    "order": "Case/result order, stdout then stderr; this is not temporal interleaving.",
+    "originalJsonExport": "Raw selected reports are preserved locally; arbitrary report strings are not emitted.",
+    "runtime": {
+      "bytes": 4823832,
+      "empty": false,
+      "file": 0,
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "presence": "PRESENT",
+      "sha256": "7d2d7c5742a023a60506f806ffd3f82ad47ec258e003d5e4a38fcb4c0bb0f97f"
+    },
+    "runtimeConfig": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "selection": {
+      "bytes": 3066,
+      "empty": false,
+      "file": 1,
+      "path": "test-ci-evidence/playwright-selection.json",
+      "presence": "PRESENT",
+      "sha256": "bb7a670be421e4ccda0ccdf5f9bce119cfaba241cb9fc8048299955b9f9f52d1"
+    },
+    "selectionConfig": {
+      "projects": [
+        {
+          "id": "chromium",
+          "name": "chromium",
+          "repeatEach": 1,
+          "retries": 0
+        }
+      ],
+      "workers": 1
+    },
+    "status": "VALIDATED",
+    "tests": 2,
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ]
+  },
+  "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+  "snapshotTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+  "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+  "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+}

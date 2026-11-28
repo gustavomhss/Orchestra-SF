@@ -1,0 +1,181 @@
+{
+  "schema": "sf613-e14-log-event-extraction-v1",
+  "status": "PRESERVED_LOG_PREFIX_ONLY_NOT_ARTIFACT_FILE",
+  "sourceMainManifest": {
+    "gitBlob": "283b0171f1fe7572d85429de1d6449258d87f681",
+    "bytes": 7867,
+    "sha256": "8e55962c2fff2272c04d03b546089dd532d2a802dd6beab0034553772795cc29",
+    "lf": 270,
+    "endsWithLF": true
+  },
+  "wholeCalculated": {
+    "gitBlob": "cf0ce74a5c480b10d494e3dcbe3bb71239778c91",
+    "bytes": 4883386,
+    "sha256": "f98782d7c75e3388fab7de6230345e6e83b5cac270b228273bdadf0c8ab3de28",
+    "lf": 2026,
+    "endsWithLF": true
+  },
+  "wholeIsCreated": false,
+  "eventUnion": {
+    "gitBlob": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+    "bytes": 11961,
+    "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+    "lf": 21,
+    "endsWithLF": true
+  },
+  "rows": [
+    {
+      "sourceLine": 1257,
+      "sequence": 1,
+      "bytes": 527,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1259,
+      "sequence": 2,
+      "bytes": 438,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1261,
+      "sequence": 3,
+      "bytes": 439,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1263,
+      "sequence": 4,
+      "bytes": 448,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1265,
+      "sequence": 5,
+      "bytes": 471,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1267,
+      "sequence": 6,
+      "bytes": 619,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1269,
+      "sequence": 7,
+      "bytes": 646,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1271,
+      "sequence": 8,
+      "bytes": 615,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1273,
+      "sequence": 9,
+      "bytes": 642,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1275,
+      "sequence": 10,
+      "bytes": 479,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1277,
+      "sequence": 11,
+      "bytes": 618,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1279,
+      "sequence": 12,
+      "bytes": 486,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1281,
+      "sequence": 13,
+      "bytes": 618,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1283,
+      "sequence": 14,
+      "bytes": 477,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1285,
+      "sequence": 15,
+      "bytes": 622,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1287,
+      "sequence": 16,
+      "bytes": 635,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1289,
+      "sequence": 17,
+      "bytes": 636,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1291,
+      "sequence": 18,
+      "bytes": 654,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1293,
+      "sequence": 19,
+      "bytes": 621,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1295,
+      "sequence": 20,
+      "bytes": 649,
+      "removedAnsiBytes": 8
+    },
+    {
+      "sourceLine": 1297,
+      "sequence": 21,
+      "bytes": 621,
+      "removedAnsiBytes": 8
+    }
+  ],
+  "count": 21,
+  "maxLineBytes": 654,
+  "sequenceFirst": 1,
+  "sequenceLast": 21,
+  "identity": {
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "run": 46103050850,
+    "attempt": 1,
+    "nonce": "sf613-e14-event-QBamrL",
+    "pid": 3974,
+    "parentPid": 3924,
+    "request": 1
+  },
+  "terminalReceived": false,
+  "overflowReceived": false,
+  "producerCopies": 1,
+  "limitations": [
+    "Only complete standalone event lines in the preserved job log are included. No artifact event file has been acquired.",
+    "The same eight ANSI transport bytes were stripped; JSON bodies are literal. Timestamps remain in the full preserved main log.",
+    "No terminal means unknown subsequent progress; absent phase-close does not prove operation still running at HTTP timeout.",
+    "Calculated whole main Git hash is not an actual blob. No original or ZIP re-acquisition."
+  ],
+  "at": {
+    "current_time": "2026-11-28 03:45:24 UTC"
+  }
+}

@@ -1,0 +1,500 @@
+{
+  "schema": "sf613-e14-reader-independent-intake-v1",
+  "status": "ACK_TRANSPORT_COMPLETE_CONSISTENT_PREFIX_REQUEST_CLOSURE_UNOBSERVED",
+  "reviewer": "close_pr613",
+  "basis": "Independent recomposition and parsing of preserved Git bytes only; no original Actions-log or artifact acquisition by this reviewer.",
+  "reader": {
+    "runId": 46108929460,
+    "attempt": 1,
+    "jobId": 140867878284,
+    "jobName": "original-artifact",
+    "status": "completed",
+    "conclusion": "success",
+    "commit": "64af705904c2ca5b61a6837560f005718ee122d3",
+    "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "authority": {
+      "gitSha": "afda4ac5080ca79564b9ed30eaa354f6a6a5bb4b",
+      "bytes": 4898,
+      "sha256": "de7fe2da5cecd8d849f8275ea7a94581a175cd828bee401781970ccffb5f713a",
+      "lf": 140
+    },
+    "activationContext": {
+      "gitSha": "5216c4d38fdd63307adfacbd52ae18033a9e74ec",
+      "bytes": 3238,
+      "sha256": "b3951ccecb9a79161eabc3a496e0e055ca713936f536e39681fab6a0519253c0",
+      "lf": 99
+    }
+  },
+  "preservedMain": {
+    "manifest": {
+      "gitSha": "cd5c36c0fb817d9c50e27559216c5b428b2328fb",
+      "bytes": 2109,
+      "sha256": "6f886636a546c3dd02e159680988939f42b9c6485511ac1154748c9e287a1aa2",
+      "lf": 74
+    },
+    "parts": [
+      {
+        "ordinal": 1,
+        "gitBlob": "ce18c28de142258e385fab00507ffa9451d699e3",
+        "bytes": 300000,
+        "sha256": "79ff9568ad1481a2854e3ba96156df1559cca6b14686d8590936bfbfe5c28621",
+        "lf": 1373,
+        "byteStart": 0,
+        "byteEnd": 300000
+      },
+      {
+        "ordinal": 2,
+        "gitBlob": "aeb41c4e96ea542df5dd2d201962e3f0cc17d198",
+        "bytes": 9793,
+        "sha256": "9d0e869f54fa0bca688fb8da0c93a9d5f59fb99968a7402e2448f5e41f04ce5c",
+        "lf": 33,
+        "byteStart": 300000,
+        "byteEnd": 309793
+      }
+    ],
+    "wholeCalculatedOnly": {
+      "gitBlob": "b6f0be9e13bf357be427804fa5dc218e677c7600",
+      "bytes": 309793,
+      "sha256": "40c11983fb0ca1a36c29bd075bbb6647d2cdc6bcfe480ed51c6b572a1a754e70",
+      "lf": 1406,
+      "endsWithLF": true
+    },
+    "wholeBlobCreated": false,
+    "wholeBlobFetched": false,
+    "bomByteOffsets": [
+      0
+    ],
+    "literalRecomposition": true
+  },
+  "transport": {
+    "exports": 6,
+    "uniqueExportBodies": 5,
+    "chunks": 11,
+    "payloadBytes": 156394,
+    "chunkWireBytes": 211269,
+    "terminalBytes": 2013,
+    "totalSelectedWireBytes": 213282,
+    "terminalLine": 1375,
+    "coreBytesComplete": true,
+    "receiptBase64Complete": true,
+    "status": "RECEIVED_WITH_PENDING_OBSERVATION",
+    "exportsMetadata": [
+      {
+        "name": "original-preview-events.jsonl",
+        "gitSha": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+        "bytes": 11961,
+        "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+        "lf": 21,
+        "mime": "application/octet-stream",
+        "original": true,
+        "chunks": 1,
+        "file": 5
+      },
+      {
+        "name": "original-e14-launcher.json",
+        "gitSha": "0724de3d2194d9bd2237ba35f06749ab45f092c9",
+        "bytes": 676,
+        "sha256": "ac8f048d04cdc608655f8b4acc2f9c6b2b3ee06418e64c1f75b3036b529dc81b",
+        "lf": 1,
+        "mime": "application/octet-stream",
+        "original": true,
+        "chunks": 1,
+        "file": 4
+      },
+      {
+        "name": "runtime-e14-events.log",
+        "gitSha": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+        "bytes": 11961,
+        "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+        "lf": 21,
+        "mime": "application/octet-stream",
+        "original": false,
+        "chunks": 1
+      },
+      {
+        "name": "safe-summary.json",
+        "gitSha": "f2f207f0fec9150a9a235f38817518c5b90737da",
+        "bytes": 27840,
+        "sha256": "74077fbd81ae05dad3839674b9c4db3f9dd55ea00a87b91907313c8cc23f838b",
+        "lf": 970,
+        "mime": "application/json",
+        "original": false,
+        "chunks": 2
+      },
+      {
+        "name": "inventory.json",
+        "gitSha": "770f0fa1f877442b6eba8ef6c9b3a06d89bd492f",
+        "bytes": 68078,
+        "sha256": "afb843dc3140bfbed60ce9ac6db343c9806a8dc5ed45392eb9be18776d3c67c2",
+        "lf": 1861,
+        "mime": "application/json",
+        "original": false,
+        "chunks": 4
+      },
+      {
+        "name": "receipt.json",
+        "gitSha": "7db2fc3dd6cae4f9ff926ac8bf1c047be526d544",
+        "bytes": 35878,
+        "sha256": "6a2c68922498d26e321e3e4af59d5a6b4fdfdc6f6fb776700ffe4c61743a80a4",
+        "lf": 1157,
+        "mime": "application/json",
+        "original": false,
+        "chunks": 2
+      }
+    ],
+    "rootTransport": {
+      "gitSha": "a3924c196f2818241886c4fe4a0dea7d7fde8be1",
+      "bytes": 5272,
+      "sha256": "e767767b87b7561b92766eb07844d94c1162ec1a25616d9a4b127dbaf1a92e87",
+      "lf": 189
+    },
+    "rootSemantics": {
+      "gitSha": "c3aaf4b12a7fc44e3f7bba144de5df346d41953c",
+      "bytes": 7730,
+      "sha256": "1c28f1d902969a06694f6b6feb1121157cae28cba23aa0d466d2b3dbea930ac0",
+      "lf": 250
+    },
+    "rootExportReadbacksLiteral": true
+  },
+  "originalArtifact": {
+    "runId": 46103050850,
+    "attempt": 1,
+    "artifactId": 15246707437,
+    "bytes": 45863814,
+    "sha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+    "downloadCountReportedByReviewedReader": 1,
+    "zipAcquisitionsByReviewer": 0,
+    "originalLogAcquisitionsByReviewer": 0
+  },
+  "inventory": {
+    "entries": 150,
+    "selectedPaths": 4,
+    "selectedExpandedBytes": 4839535,
+    "declaredExpandedBytes": 49394156,
+    "unselectedMetadataOnly": 146,
+    "allEntriesVerified": false,
+    "nestedZipOpened": false,
+    "selectedCrcVerifiedByReviewedReader": 4,
+    "independentlyRecomputedExportedCrc": [
+      {
+        "name": "original-preview-events.jsonl",
+        "file": 5,
+        "crc32": "daab812d"
+      },
+      {
+        "name": "original-e14-launcher.json",
+        "file": 4,
+        "crc32": "9c8ba101"
+      }
+    ],
+    "rawRuntimeAndSelectionReportsExported": false
+  },
+  "observed": {
+    "fileRuntimeMainLiteralEquality": true,
+    "bytes": 11961,
+    "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+    "lf": 21,
+    "records": 21,
+    "sequence": [
+      1,
+      21
+    ],
+    "sequenceContiguousFromOne": true,
+    "partialTailBytes": 0,
+    "tuple": {
+      "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+      "runId": "46103050850",
+      "attempt": "1",
+      "pid": 3974,
+      "parentPid": 3924,
+      "nonce": "sf613-e14-event-QBamrL",
+      "request": 1,
+      "qualification": false
+    },
+    "kindCounts": {
+      "request-enter": 1,
+      "http-boundary": 3,
+      "unit-enter": 4,
+      "phase-enter": 7,
+      "phase-close": 4,
+      "compare-body-checkpoint": 2
+    },
+    "receivedPhasePairs": [
+      {
+        "unit": 1,
+        "phase": 6,
+        "point": "port-authority-initial",
+        "enterSequence": 6,
+        "closeSequence": 7,
+        "outcome": "await-returned",
+        "enteredTenthMs": 5685,
+        "closedTenthMs": 5699,
+        "inclusiveSpanTenthMs": 14
+      },
+      {
+        "unit": 1,
+        "phase": 7,
+        "point": "candidates-initial",
+        "enterSequence": 8,
+        "closeSequence": 9,
+        "outcome": "await-returned",
+        "enteredTenthMs": 5700,
+        "closedTenthMs": 8124,
+        "inclusiveSpanTenthMs": 2424
+      },
+      {
+        "unit": 4,
+        "phase": 1,
+        "point": "analysis-select-initial",
+        "enterSequence": 15,
+        "closeSequence": 18,
+        "outcome": "await-returned",
+        "enteredTenthMs": 18839,
+        "closedTenthMs": 308442,
+        "inclusiveSpanTenthMs": 289603
+      },
+      {
+        "unit": 4,
+        "phase": 10,
+        "point": "analysis-compare",
+        "enterSequence": 19,
+        "closeSequence": 20,
+        "outcome": "await-returned",
+        "enteredTenthMs": 310719,
+        "closedTenthMs": 349523,
+        "inclusiveSpanTenthMs": 38804
+      }
+    ],
+    "unitEntriesWithoutObservedClose": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "phasesWithoutObservedClose": [
+      {
+        "phase": 8,
+        "unit": 2,
+        "point": "combination-evaluate",
+        "sequence": 11
+      },
+      {
+        "phase": 9,
+        "unit": 3,
+        "point": "production-analysis",
+        "sequence": 13
+      },
+      {
+        "phase": 4,
+        "unit": 4,
+        "point": "analysis-persist",
+        "sequence": 21
+      }
+    ],
+    "lastReceived": {
+      "sequence": 21,
+      "kind": "phase-enter",
+      "point": "analysis-persist",
+      "unit": 4,
+      "phase": 4,
+      "stage": 6,
+      "elapsedTenthMs": 349739,
+      "compareBodies": [
+        15,
+        15,
+        0,
+        0,
+        1,
+        0
+      ],
+      "stages": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        12,
+        12,
+        0,
+        3,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "lineage": [
+        5,
+        10,
+        0
+      ],
+      "saturated": false
+    },
+    "requestCloseReceived": false,
+    "overflowReceived": false,
+    "launcherState": "prepared"
+  },
+  "classification": {
+    "evidenceConsistencyAccepted": true,
+    "fileRequestBoundaryObserved": false,
+    "runtimeRequestBoundaryObserved": false,
+    "fileCoverageComplete": false,
+    "pending": [
+      "E14_FILE_HAS_NO_VALIDATED_REQUEST_CLOSE",
+      "E14_RUNTIME_HAS_NO_VALIDATED_REQUEST_CLOSE"
+    ],
+    "evidenceIssues": [],
+    "transportFailures": [],
+    "readerExitCode": 0,
+    "productQualification": false,
+    "originalProductOutcome": "First preview failed at original 60000ms waitForResponse, spec72:32; BI passed."
+  },
+  "runtimeSummaryScope": {
+    "source": "Reviewed reader summary/receipt; raw selected reports were not exported to this reviewer.",
+    "selection": {
+      "cases": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1
+    },
+    "results": [
+      "failed",
+      "passed"
+    ],
+    "caseOneSelectedEvents": {
+      "case": 1,
+      "result": 1,
+      "stream": "stdout",
+      "records": 21
+    },
+    "caseTwoE14Events": 0,
+    "workerIndexLimit": "Case worker indexes 0 and 1 do not establish parallel workers; configuration workers=1 and parallelIndex=0 remain the actual selected contract."
+  },
+  "independentChecks": {
+    "count": 80,
+    "passed": 80,
+    "failed": 0,
+    "labels": [
+      "single terminal",
+      "successful byte terminal",
+      "terminal follows every chunk",
+      "six selected exports",
+      "chunk metadata original-preview-events.jsonl",
+      "chunk sequence original-preview-events.jsonl",
+      "chunk cap original-preview-events.jsonl",
+      "chunk framing original-preview-events.jsonl",
+      "canonical base64 original-preview-events.jsonl",
+      "export bytes/hash/cap original-preview-events.jsonl",
+      "terminal export metadata original-preview-events.jsonl",
+      "chunk metadata original-e14-launcher.json",
+      "chunk sequence original-e14-launcher.json",
+      "chunk cap original-e14-launcher.json",
+      "chunk framing original-e14-launcher.json",
+      "canonical base64 original-e14-launcher.json",
+      "export bytes/hash/cap original-e14-launcher.json",
+      "terminal export metadata original-e14-launcher.json",
+      "chunk metadata runtime-e14-events.log",
+      "chunk sequence runtime-e14-events.log",
+      "chunk cap runtime-e14-events.log",
+      "chunk framing runtime-e14-events.log",
+      "canonical base64 runtime-e14-events.log",
+      "export bytes/hash/cap runtime-e14-events.log",
+      "terminal export metadata runtime-e14-events.log",
+      "chunk metadata safe-summary.json",
+      "chunk sequence safe-summary.json",
+      "chunk cap safe-summary.json",
+      "chunk framing safe-summary.json",
+      "canonical base64 safe-summary.json",
+      "export bytes/hash/cap safe-summary.json",
+      "terminal export metadata safe-summary.json",
+      "chunk metadata inventory.json",
+      "chunk sequence inventory.json",
+      "chunk cap inventory.json",
+      "chunk framing inventory.json",
+      "canonical base64 inventory.json",
+      "export bytes/hash/cap inventory.json",
+      "terminal export metadata inventory.json",
+      "chunk metadata receipt.json",
+      "chunk sequence receipt.json",
+      "chunk cap receipt.json",
+      "chunk framing receipt.json",
+      "canonical base64 receipt.json",
+      "export bytes/hash/cap receipt.json",
+      "terminal export metadata receipt.json",
+      "terminal totals",
+      "joint wire budget",
+      "receipt attestation",
+      "closed reader identity",
+      "reader and root receipt binding",
+      "current original run/clean/snapshot distinct",
+      "one immutable artifact declared verified",
+      "original jobs terminal known",
+      "two pending closes only",
+      "summary and receipt current parser binding",
+      "receipt inventory hash and bytes",
+      "inventory 150 ordered entries",
+      "four exact selected originals",
+      "146 entries metadata only",
+      "selected expansion totals",
+      "declared expansion and CRC qualification",
+      "actual exported CRC/inventory original-preview-events.jsonl",
+      "actual exported CRC/inventory original-e14-launcher.json",
+      "launcher exact tuple and preparation",
+      "launcher summary matches original",
+      "two runtime cases exact statuses",
+      "workers retry repeat configuration",
+      "current first waiter location",
+      "runtime selected stream membership",
+      "file runtime and main literally identical",
+      "raw event boundaries",
+      "event tuple and contiguous sequences",
+      "finite event clocks and vectors",
+      "event counts match safe summary",
+      "no terminal or overflow and exact last boundary",
+      "observed phase pair intervals",
+      "unclosed received entries only",
+      "three literal comparisons no conflicts",
+      "transport consistency boundary coverage distinction"
+    ]
+  },
+  "limits": [
+    "Complete bounded transport attests the preserved bytes of the immutable artifact member, not completion of the observed Request.",
+    "Artifact-file and runtime exports add no event beyond the known main-log prefix. There is no validated Request close, overflow, terminal event, or producer fsync/close proof.",
+    "The last received analysis-persist entry at 349739 tenths-ms does not prove persistence remained open at the 60-second browser timeout, nor establish SQL, lock, CPU or scheduler causality.",
+    "Native monotonic, launcher wall, Playwright and Actions clocks remain separate. Received phase spans are inclusive and are not summed as exclusive cost.",
+    "Compare counters describe synchronous body exits, not Promise settlement, and do not prove per-call purity or Request-exclusive CPU.",
+    "All four selected CRCs are verified by the reviewed reader. This reviewer independently recomputed only the two originals actually exported; raw runtime and selection reports are outside these exported bytes.",
+    "Other ZIP members are metadata only. No screenshots, traces, profiler, HTML, nested ZIP, old artifact, audit ZIP, or original log was acquired by this reviewer.",
+    "No product change, qualification, production authorization, new run, ref, commit or tree is implied by this ACK.",
+    "Root reports the reader branch still exists because delete_ref is unavailable; this ACK does not claim branch deletion or require another run."
+  ],
+  "rootReportedAuditArtifact": {
+    "id": 15248955974,
+    "bytes": 48928285,
+    "sha256": "e35414da04342a9c64c8ce5e6db1f3bfeb87e882ab2ef9eaad234b5f60a70571",
+    "metadataOnly": true,
+    "acquisitionAuthorized": false
+  }
+}

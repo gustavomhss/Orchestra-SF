@@ -1,0 +1,4916 @@
+{
+  "schema": "sf613-evidence-r6-manifest-v1",
+  "status": "PROPOSED_FINAL_INCREMENT_BLOBS_ONLY_ROOT_AND_PEER_REVIEW_PENDING",
+  "revision": "SIXTH_C19_CLOSED_NEGATIVE_AND_D28_STATIC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "preparedAtUtc": "2026-11-28 02:15:11 UTC",
+  "author": "/root/close_pr613",
+  "authority": "Root authorized four proposal blobs after final C19 root/peer reception. Root alone may create archive tree/commit and publish nonforce after review. No product, final-candidate, E14, run, original Actions or ZIP action is authorized by this package.",
+  "inputCatalog": {
+    "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+    "bytes": 84274,
+    "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+    "lf": 2778,
+    "endsWithLF": true,
+    "created": true,
+    "literalReadback": true
+  },
+  "preimages": {
+    "commit": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+    "objectsTree": "2684a14e7d2ea7c0ed1b4bc9b76aa6592fb6350e",
+    "index": {
+      "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "bytes": 743023,
+      "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a"
+    },
+    "readme": {
+      "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "bytes": 33219,
+      "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498"
+    },
+    "manifest": {
+      "gitBlob": "c408b4f69264f9816d44d921f855263e0c816b7b",
+      "bytes": 108573,
+      "sha256": "b14453a6c6031fcd6c1fe27ea4ab7f9fbddbfd4535bf5506c9c0e656dff98bdc"
+    },
+    "rootReview": {
+      "gitBlob": "1c8c5052ee74efd0678211a7b7cde33126f3e173",
+      "bytes": 6191,
+      "sha256": "31d1bffd118fc702fbf18e8ba527607eefc9e415d344b07493b5296a2830815c"
+    },
+    "publicationReceipt": {
+      "gitBlob": "a6e5f0b6f22d93079b85a667fdb6e0611faa8456",
+      "bytes": 4773,
+      "sha256": "175f5ec5dc3163534315029867846f90cc1c193dcfd5455fa5dcab1b1d9ebe75"
+    }
+  },
+  "proposedOutputs": {
+    "catalog": {
+      "pathInProposedArchive": "objects/5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+      "mode": "100644",
+      "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+      "bytes": 84274,
+      "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+      "lf": 2778,
+      "endsWithLF": true,
+      "created": true,
+      "literalReadback": true
+    },
+    "index": {
+      "path": "index.json",
+      "mode": "100644",
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+      "lf": 25416,
+      "endsWithLF": true,
+      "created": true,
+      "literalReadback": true
+    },
+    "readme": {
+      "path": "README.md",
+      "mode": "100644",
+      "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5",
+      "bytes": 44360,
+      "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+      "lf": 369,
+      "endsWithLF": true,
+      "created": true,
+      "literalReadback": true
+    },
+    "manifest": {
+      "pathInProposedArchive": null,
+      "createdAsSeparateReviewBlob": true,
+      "reason": "The manifest neither lists its own hash nor enters objects; a later increment may preserve it."
+    }
+  },
+  "proposedArchive": {
+    "ref": "refs/heads/sf613-evidence",
+    "expectedOldRef": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "force": false,
+    "tree": null,
+    "commit": null,
+    "objectsTree": null,
+    "refUpdated": false,
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+        "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+        "role": "previous published evidence archive R5"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "86e365fe047f86597751c7e8222011dca4b0a0af",
+        "tree": "e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2",
+        "role": "executed C19 focal",
+        "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+        "tree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+        "role": "executed original C19 Analytics",
+        "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+      }
+    ],
+    "ownTree": true,
+    "rootFiles": [
+      "README.md",
+      "index.json"
+    ],
+    "objectsDirectory": "objects",
+    "allFilesMode": "100644",
+    "allObjectPaths": "objects/<actual-git-blob-sha>",
+    "reservedRootsAbsent": [
+      ".github",
+      ".ci-run.json",
+      "apps",
+      "modules",
+      "packages"
+    ],
+    "sourceLayoutsAreMetadataOnly": true,
+    "plannedDiffAgainstPublishedR5": {
+      "addedActualObjectFiles": 72,
+      "modifiedRootFiles": 2,
+      "removedFiles": 0
+    },
+    "objectFiles": 607,
+    "allBlobFilesIncludingIndexAndReadme": 609,
+    "objectPayloadBytes": 63318211,
+    "allBlobBytesIncludingIndexAndReadme": 64221275,
+    "publicationOwner": "/root",
+    "noWorkflowOrRunRequested": true
+  },
+  "totals": {
+    "base": {
+      "objects": 535,
+      "memberships": 584,
+      "groups": 35,
+      "streams": 48,
+      "partReferences": 177,
+      "objectBytes": 56651409
+    },
+    "input": {
+      "objects": 92,
+      "memberships": 98,
+      "groups": 5,
+      "streams": 6,
+      "partReferences": 22,
+      "objectBytes": 7280964
+    },
+    "overlapWithBase": {
+      "objects": 21,
+      "bytes": 698436,
+      "newMembershipsOnInheritedObjects": 22
+    },
+    "additionalInputCatalog": {
+      "objects": 1,
+      "memberships": 1,
+      "objectBytes": 84274,
+      "newGroup": false
+    },
+    "added": {
+      "objects": 72,
+      "memberships": 99,
+      "groups": 5,
+      "streams": 6,
+      "partReferences": 22,
+      "objectBytes": 6666802
+    },
+    "result": {
+      "objects": 607,
+      "memberships": 683,
+      "groups": 40,
+      "streams": 54,
+      "partReferences": 199,
+      "objectBytes": 63318211
+    },
+    "typedStreamResult": {
+      "originalJobLogs": 30,
+      "exportFiles": 14,
+      "derivedAnalyticsMarkerUnions": 5,
+      "derivedFocalReportUnions": 4,
+      "derivedObservationEventUnions": 1,
+      "allDerivedUnions": 10
+    },
+    "newGroups": [
+      {
+        "id": "C19-source",
+        "objects": 12,
+        "memberships": 12
+      },
+      {
+        "id": "C19-focal",
+        "objects": 35,
+        "memberships": 35
+      },
+      {
+        "id": "D28-final-qualification",
+        "objects": 14,
+        "memberships": 14
+      },
+      {
+        "id": "C19-analytics",
+        "objects": 31,
+        "memberships": 31
+      },
+      {
+        "id": "R5-archive-control",
+        "objects": 7,
+        "memberships": 7
+      }
+    ]
+  },
+  "derivation": {
+    "mechanism": "Pure JSON/text data operations over preserved Git blobs; no repository execution.",
+    "baseCanonicalPrettyJsonLf": true,
+    "postCanonicalPrettyJsonLf": true,
+    "operationCount": 113,
+    "fieldReplacements": 64,
+    "fieldAdditions": 22,
+    "arrayAppends": 27,
+    "operations": [
+      {
+        "kind": "replace-field",
+        "path": "/revision",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/revision",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 30,
+          "sha256": "545df1d9136c499c6901c62cfee22049365e68b2b89759ed5911b133c0765b59"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/revision",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "9b3a4e7b58ac4537ccb13222266d090d4531a11797b719d915abf16bd2725425"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 1
+      },
+      {
+        "kind": "replace-field",
+        "path": "/preparedAtUtc",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/preparedAtUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "1cc1e2cb1d50cc9475f5ef12b72ed36be0e3df6b85ef9d50bea587af78b77e41"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/preparedAtUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "68e4abe03576a5bda81ffc2ebd345b38818caabebe358b9e841712d68d3eabb3"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 2
+      },
+      {
+        "kind": "replace-field",
+        "path": "/author",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/author",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 23,
+          "sha256": "a785cfe0175177d856e7214dfc75aca809577940a35b9d0c1b27bf1846ed815e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/author",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 19,
+          "sha256": "f6071202e90ad8303a9ad721ed09824f81064925e5516f37d571c0d1d71eab6c"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 3
+      },
+      {
+        "kind": "replace-field",
+        "path": "/authority",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/authority",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 334,
+          "sha256": "4c943bc25cc5554ad1cecda6ab0e1ffd94456d5d625b06533631a7f181196f97"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/authority",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 305,
+          "sha256": "d0c436fed517055989a974d68bd7080a4895d7fea3a45f5249673a2222b8f20b"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 4
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/commit",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/commit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "fed4ef010cbe6b3426bab57a8d063dd7abfaabeb9b49043bf95393f57aa3888e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/commit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "90006c3a28773cd626650e14d85819beea6c64235eb84e96934a4540f7570bb4"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 5
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/tree",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/tree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "64a87f52bf1627d6e675673a978260f0848d720d38d781bd21704242bd5ce37f"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/tree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "5a0134666b74f220ba2b3faea30ac09ee30c8d159ef828ab4b68a7a3c672e696"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 6
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/objectsTree",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/objectsTree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "df876475a4ab80862faac7210a662ab9e65658524e8647a2294d9a7e5b439df6"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/objectsTree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "7864cd228860d4e4dba86afb41d08f9a92ffd906f09b34613081693f7b2168da"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 7
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/index/gitBlob",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/index/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "caf65f6679947f1cdbf76534b620991b731b6789a291541fe4307c89d15fa92e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/index/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "27abd7c8be9e9b795ee4b00f46768da9d28fe0048d95d6cf1462a2d8bbd2bc72"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 8
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/index/bytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/index/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 6,
+          "sha256": "423af905507c2913cd3dc06c80ee78f92bc14febd8b74c2c19871a73cf5531ab"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/index/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 6,
+          "sha256": "8a111573eb0647f280fc89c9deec17097da93c620134ad9f39ef5a3537376f07"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 9
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/index/sha256",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/index/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "6ed8e58ec535dfb40b794b1f0246801f64d93da98a067bf23d316996c9d9025f"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/index/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "8ce9c051f09e938abed6322f0ddd65ebcc2dac1b6de05fbf25d1dc8ead5d7a42"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 10
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/readme/gitBlob",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/readme/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "f55b921ce8f4c3b751a40fafaf146208a33999808afb3247dab024fb01199fdb"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/readme/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "64d6f11c82068288a205ca39d9a566db167927370218d57446ad7fc432f42867"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 11
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/readme/bytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/readme/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "5df554dd8bf1aaa5dec1372e908c8c8b87c36f69c2104a250934cb55a26750a8"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/readme/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "263adf80a7a9a4b242f23439bef8846e8003f35bfe104db48e09860440b3d9fd"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 12
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/readme/sha256",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/readme/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "debbd9fee4f33f3ec91c3e72a50eec698edc078aa321a3d340fc824a49ced233"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/readme/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "679a5686bb7864878f89fd9bcb8c22f20cbe871f9182dbcac9339542bce6bab9"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 13
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/manifest/gitBlob",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/manifest/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "a99dfc9ce15d4384c18b508dc335ad97803c18b5b05d55bf60ffede1cc2298b0"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/manifest/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "44bdd90675057b64276c5856e45934363f66506ee6df9f1e16eb23c3b38b4cbe"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 14
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/manifest/bytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/manifest/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "0a30f6519b14493e39fce9927ee0c4d8e271a80d9fc3e842d493b4d4ac373f63"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/manifest/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 6,
+          "sha256": "1d191d5a2fe96f851a44014d916214211e9cab9f638e5cd595316a9a7c394677"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 15
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/manifest/sha256",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/manifest/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "7d06ddbb70681f8bebb4333c0bf23706ebe506692465586a2c903e85371ad4d0"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/manifest/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "bf3de3eb37f497d7971620847bdf29beb3ed8fe40ecc4ba585c66c44e3c76a0f"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 16
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/rootReview/gitBlob",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/rootReview/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "5e333135ea1618609d38286476040e83e7243731c174dde0931d3533b7bdbec6"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/rootReview/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "27c5e2ac24c9c4543003c74591e166a607918cd47941df76f8c7c4357caea4d0"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 17
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/rootReview/bytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/rootReview/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "cb91409e37b7d68879a856ba38c6a048e131bad1bdbb6908ff46203cfc507244"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/rootReview/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "638353fafb8d4108c26ce24eac34680acaddf1b6acd7c78f0e4d5250b9ddd6a5"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 18
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/rootReview/sha256",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/rootReview/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "72214f58c87a65ece626d0842499d93ebfb9768fecde085507618ea4ece9b8c6"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/rootReview/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "5ffedb63b1b79a04a8fb0ce3c85e503746f710342bdac535b17a5dc20c390925"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 19
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/publicationReceipt/gitBlob",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "43268931028123caff33c81fbfdc366555e55fb01b43d689f4d855211e43943a"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/gitBlob",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "c94204f32eeeabdca90793b5622a4d1759cef6bbf0fb2e4d841ba8cc88c3ae08"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 20
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/publicationReceipt/bytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "4ebbca3ca29aad239c616dc000e64740e45889345d2ff989e14b2526a0ee82eb"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/bytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "53b1751856e39e4be69e1892b16d96ba0ba12017625a1ace4c9db013bcb040a4"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 21
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/previousPublished/publicationReceipt/sha256",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "8d8ec4eec85922b05db3725622e721e9dd9c0754aac6a08b4b2f40654c250284"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/previousPublished/publicationReceipt/sha256",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 66,
+          "sha256": "294cf434d5a72064ee068a1b223cff52445e89b8ca27168a9a7e94027a25e5f8"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 22
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/expectedRefBeforeUpdate",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/expectedRefBeforeUpdate",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "fed4ef010cbe6b3426bab57a8d063dd7abfaabeb9b49043bf95393f57aa3888e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/expectedRefBeforeUpdate",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "90006c3a28773cd626650e14d85819beea6c64235eb84e96934a4540f7570bb4"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 23
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/priorPublicationObserved/sourceReceipt",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/priorPublicationObserved/sourceReceipt",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "43268931028123caff33c81fbfdc366555e55fb01b43d689f4d855211e43943a"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/priorPublicationObserved/sourceReceipt",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "c94204f32eeeabdca90793b5622a4d1759cef6bbf0fb2e4d841ba8cc88c3ae08"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 24
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/priorPublicationObserved/atUtc",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/priorPublicationObserved/atUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "7d4ad4e94280fed4f5003658ed5508ab3ab0e453fb6cb8a2ddd139ca861d79be"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/priorPublicationObserved/atUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "159a4e87a72af238ee88a19eda0e8cebf457d94665a56fbc4948deab079ab4a3"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 25
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/priorPublicationObserved/head",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/priorPublicationObserved/head",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "fed4ef010cbe6b3426bab57a8d063dd7abfaabeb9b49043bf95393f57aa3888e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/priorPublicationObserved/head",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "90006c3a28773cd626650e14d85819beea6c64235eb84e96934a4540f7570bb4"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 26
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/priorPublicationObserved/scope",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/priorPublicationObserved/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 122,
+          "sha256": "8d3c0ed51568d4a6a04c22b12c217352ce475ccd3b6c51fe77226d704e86d8f3"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/priorPublicationObserved/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 122,
+          "sha256": "0d2e95d69d6d3e645296f7dd18b1fa9263df175ff28e342d1734dcea96584266"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 27
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/orderedParents",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/orderedParents",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 389,
+          "sha256": "ddea0113d7d77216f6e8e89e2d94ab453120fac60586396d4f312aebc23e6b4e"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/orderedParents",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 611,
+          "sha256": "e38cd944a9efc58ae9f2d44cd3badf4ad111e187fc0c3c41e0664bf6fa27bcf8"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 28
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/treeEntryContract",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/treeEntryContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 303,
+          "sha256": "1bae4dff5662089fe672f93ad64cbd319f9e5f916ee6d2f5aca2171af2e58568"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/treeEntryContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 348,
+          "sha256": "166eb1013b572e4f13bc6f9f64ac00e79dc776b76cdb08c7eeb857ab0cadb11d"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 29
+      },
+      {
+        "kind": "replace-field",
+        "path": "/archiveProposal/parentReachabilityPurpose",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/parentReachabilityPurpose",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 371,
+          "sha256": "463885262ae1ce458d584a1eb9fe80aacee7e13d70ad4206dc339473e1584d5a"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/archiveProposal/parentReachabilityPurpose",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 328,
+          "sha256": "299f120fb58a9d0bdeac4194d0755a59d807834dc44bee634a61c5bd5c884fdd"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 30
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/closedScope",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/closedScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 530,
+          "sha256": "6aceff1505477bc54b2a8723f04a0e816c38341766df47147b425adf3a1f5a70"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/closedScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 498,
+          "sha256": "e40d76d85f0a83756dc4f44080676c2219de0983df6ae01ea9156f2cdc2b0596"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 31
+      },
+      {
+        "kind": "append-array",
+        "path": "/coverage/completeOriginalStreams",
+        "beforeLength": 26,
+        "afterLength": 30,
+        "appendCount": 4,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/completeOriginalStreams",
+          "startIndex": 26,
+          "endIndexExclusive": 30,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 83,
+          "sha256": "4fe857deafce4749a1f9b07f24ada70f383b6f621bc01b912acf7f68a4a502b6"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 32
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/originalLogStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/originalLogStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "5f9c4ab08cac7457e9111a30e4664920607ea2c115a1433d7be98e97e64244ca"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/originalLogStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "624b60c58c9d8bfb6ff1886c2fd605d2adeb6ea4da576068201b6c6958ce93f4"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 33
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/derivedMarkerUnionStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedMarkerUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/derivedMarkerUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 34
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/typedStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/typedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/typedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "2fca346db656187102ce806ac732e06a62df0dbb2829e511a770556d398e1a6e"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 35
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/C19Source",
+        "parentKeyIndex": 30,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/C19Source",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 45,
+          "sha256": "710e290aa504fb88aad2b1b11e66cffeab7c67b34e0cadf59ba449a53efeac17"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 36
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/C19Focal",
+        "parentKeyIndex": 31,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/C19Focal",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 24,
+          "sha256": "1a864140e3f5a6e67e4f814a7a0f0a545e02d4630a6df367f172043ea778af2f"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 37
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/C19Analytics",
+        "parentKeyIndex": 32,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/C19Analytics",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 47,
+          "sha256": "b41826a1b4f66f72d0a01a0bf4346e818ec14c9f3f189f98f64c8da8d3d8a400"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 38
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/D28",
+        "parentKeyIndex": 33,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/D28",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 45,
+          "sha256": "23c61ce9663736fae7b876fec9a476229ae94cb2cdc99b9a23f60e9d01212a38"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 39
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/C19OperationalObservation",
+        "parentKeyIndex": 34,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/C19OperationalObservation",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 57,
+          "sha256": "d57378363ba48bbe25a69f646a8c6ead473726993efe44de3717a930dcf4bd88"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 40
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentProofStates/C19ClosedCheckpoint",
+        "parentKeyIndex": 35,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProofStates/C19ClosedCheckpoint",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 57,
+          "sha256": "326a05723d4eaf9febc9960f175345cf869d880a66d74536916dcf319d930b44"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 41
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/historicalReferencePolicy",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/historicalReferencePolicy",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 473,
+          "sha256": "9933b1f1b42ecd623e69631775424b15360d8965802b049152fea940530f77f6"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/historicalReferencePolicy",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 406,
+          "sha256": "8e7762c4b07b6170f1d2e8729a8dc735e5d0afdf285aade1895c27e61347cacc"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 42
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/derivedReportUnionStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedReportUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/derivedReportUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 43
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/derivedUnionStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "2c624232cdd221771294dfbb310aca000a0df6ac8b66b696d90ef06fdefb64a3"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/derivedUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 44
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/currentProduct/clean",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProduct/clean",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "250483e6fcab33f4211ce5e1bcaed094fd7e5c0d326edad57ff1986168a0010d"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProduct/clean",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "3bd872cc45ce164ba2444f76940f322cb64f65d9342dd1fbee6fc52e4bc712ee"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 45
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/currentProduct/tree",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProduct/tree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "deadc46e6cbc590f1812a9e8f66c1e345a54c60b0d9b589c315bc552421f5a84"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProduct/tree",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "861e939c4109242554e042cc527da24c23399235b124668a3b74e237c6fd49d0"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 46
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/currentProduct/soleParent",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProduct/soleParent",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "8a78bcb170a3afacbfff49585a9d46b5dcda3d4f5b382486cb4f5c763b9b3647"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProduct/soleParent",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "250483e6fcab33f4211ce5e1bcaed094fd7e5c0d326edad57ff1986168a0010d"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 47
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/currentProduct/UI42",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProduct/UI42",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 60,
+          "sha256": "ddce4b237774c4e460fb043b62e98b4e92afcc8265d04f2a9931fc206693db96"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProduct/UI42",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 73,
+          "sha256": "60e26dd2927b94f6d7ec6ca4cdd6dd94a26a0a175b3caee396f973cb89c476a6"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 48
+      },
+      {
+        "kind": "replace-field",
+        "path": "/coverage/currentProduct/BI",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProduct/BI",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 52,
+          "sha256": "804a3f2842ab2050c750b43f7374fc57506862cf8fcf64e558b7c3b5168bc495"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentProduct/BI",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 69,
+          "sha256": "8db97ef3c0164bf2936c58403aaf6eeac31de46db25bb994675ea4ff2defe65d"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 49
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/c19UnderlyingEnumeratedCorpusClosed",
+        "parentKeyIndex": 23,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/c19UnderlyingEnumeratedCorpusClosed",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 50
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/currentFinalQualification",
+        "parentKeyIndex": 24,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/currentFinalQualification",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 342,
+          "sha256": "9cdaa8f6d5dc6e5c7c42df0164941e86b3f2d9957927b2936b0f556c0f98cd7a"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 51
+      },
+      {
+        "kind": "add-field",
+        "path": "/coverage/operationalAccessObservation",
+        "parentKeyIndex": 25,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/coverage/operationalAccessObservation",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 384,
+          "sha256": "59e705c3a104bc7009f43421a3f7d6ace681f74d975c17a4efd68a0d067790df"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 52
+      },
+      {
+        "kind": "append-array",
+        "path": "/groups",
+        "beforeLength": 35,
+        "afterLength": 40,
+        "appendCount": 5,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/groups",
+          "startIndex": 35,
+          "endIndexExclusive": 40,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 17372,
+          "sha256": "7d79baed53492c43f7403a740f43036ba60b6dd67f7300eb1f81257faf41502a"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 53
+      },
+      {
+        "kind": "append-array",
+        "path": "/streams",
+        "beforeLength": 48,
+        "afterLength": 54,
+        "appendCount": 6,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/streams",
+          "startIndex": 48,
+          "endIndexExclusive": 54,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 8791,
+          "sha256": "960d3291763c088117234035ec841c4261d6cf129efec1aadf62193f7a22c532"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 54
+      },
+      {
+        "kind": "add-field",
+        "path": "/derivedEvidence/C19",
+        "parentKeyIndex": 9,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/derivedEvidence/C19",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2166,
+          "sha256": "28c22bdf9a9ae2161c20e180073249f5508e507590022306886ceac2edc5383c"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 55
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/10/memberships",
+        "beforeLength": 2,
+        "afterLength": 3,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/10/memberships",
+          "startIndex": 2,
+          "endIndexExclusive": 3,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 153,
+          "sha256": "377c5f5759f0bd3c7bb75004bcc4b8344234b7d6f60bcf3da5176935078b3a21"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 56
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/21/memberships",
+        "beforeLength": 2,
+        "afterLength": 3,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/21/memberships",
+          "startIndex": 2,
+          "endIndexExclusive": 3,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 153,
+          "sha256": "91cd6360040cf01e043a6685ecc16d0896086f94fd14e39713278b1478063be0"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 57
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/24/memberships",
+        "beforeLength": 5,
+        "afterLength": 6,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/24/memberships",
+          "startIndex": 5,
+          "endIndexExclusive": 6,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 138,
+          "sha256": "e08af6f1b43325840507a46dfe694530004492ac3e7581c68f7d2a2dbe4137fc"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 58
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/45/memberships",
+        "beforeLength": 2,
+        "afterLength": 3,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/45/memberships",
+          "startIndex": 2,
+          "endIndexExclusive": 3,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 154,
+          "sha256": "5fc33198fc0b26d25373a5fac80b8fd3b53f0fef3d41f994a5ebfc536daa4aed"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 59
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/70/memberships",
+        "beforeLength": 6,
+        "afterLength": 7,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/70/memberships",
+          "startIndex": 6,
+          "endIndexExclusive": 7,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 151,
+          "sha256": "b06c7a999a29589978e834e3cdaab205cd68df2a13dd95bea80c9deee8b934b5"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 60
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/90/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/90/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "4ef0c69cef37b99e83b4046d30d6a7dcebd20d4f8ea831d871545e5a0e811039"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 61
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/96/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/96/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "7d420f6c2b8e6eb4fde4ed688ea03d5c0c3b36c040e4e5e018b6e32d8da85b49"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 62
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/163/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/163/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "382111693c09da22265dbbf8fba21e92a10265f29fc4b2b64bd563190760ecfa"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 63
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/174/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/174/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "c43c7e9f76c1f68993adf114bf744d7261b2e51c71404fe3b104e1cac09c3381"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 64
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/181/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/181/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "9ee428f22a45cfef0785d257f4ba0fd75beb961f08543f166ef867843fdb3a2e"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 65
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/189/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/189/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "d1535fc6e6c7a01b6681d66e1a2c04b02ff139f7224b70ec208bd48999f0894b"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 66
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/191/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/191/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "a250a0720d87b7b1c8979a01d6c9d7c16b747b22724a372ef4ad9225425e699d"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 67
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/209/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/209/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 145,
+          "sha256": "43afcdb0f69f2a2862a46834b591dcc7113f90d46c007010877edfb53df47c0a"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 68
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/217/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/217/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "05ddc176c497b8616a8de25083042c1095119a3871ed6e9dea95fbe9c07d44ac"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 69
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/219/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/219/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 144,
+          "sha256": "3b95f0fa832fc9915f630d09470903057124877df3972f59c7562fd9e8cfd4ed"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 70
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/222/memberships",
+        "beforeLength": 1,
+        "afterLength": 3,
+        "appendCount": 2,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/222/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 3,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 289,
+          "sha256": "5af818fdcf4348858e450d6094225aa0b0500c604aed621fe7bf9a7b68efac70"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 71
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/380/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/380/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 145,
+          "sha256": "6dd4bcf7ba9f266664e4cd7f43bdc405cba6cfa79febad685e4d2e33d79f511c"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 72
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/397/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/397/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 152,
+          "sha256": "923349e36e17ab3f97f4800548951fd9174c1fe9565b5b8ba2a06d022aa769a5"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 73
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/398/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/398/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 143,
+          "sha256": "b5121ebba45df2a3bbc43c3d8f8cb0f5e22ada93e2b5997f3506a7c58d2e391e"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 74
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/428/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/428/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 157,
+          "sha256": "96df09534b43a2e164b6a7a5bd8091c86f9dca3973e10afd8f53d914372eb93f"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 75
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects/534/memberships",
+        "beforeLength": 1,
+        "afterLength": 2,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects/534/memberships",
+          "startIndex": 1,
+          "endIndexExclusive": 2,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 153,
+          "sha256": "25faad21d2859d0a70be861ec4ed561625c23ec9abc92ee29cb365d29a32b04f"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 76
+      },
+      {
+        "kind": "append-array",
+        "path": "/objects",
+        "beforeLength": 535,
+        "afterLength": 607,
+        "appendCount": 72,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/objects",
+          "startIndex": 535,
+          "endIndexExclusive": 607,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 31088,
+          "sha256": "ab0490a0474acf281f871761c2ef6f3c214272e707694c15eace1357a3507fc0"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 77
+      },
+      {
+        "kind": "replace-field",
+        "path": "/excluded/packageSelfReferences",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/excluded/packageSelfReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 186,
+          "sha256": "cdc2f75ff37928cb263d96792f86e5c57542aad03ff40f90c4e99de83af7845c"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/excluded/packageSelfReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 254,
+          "sha256": "e31ffa5a1f799cc1967b469279251b6b12a922d05af21a729d7e8d1030cd6247"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 78
+      },
+      {
+        "kind": "add-field",
+        "path": "/excluded/C19",
+        "parentKeyIndex": 10,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/excluded/C19",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1039,
+          "sha256": "97df9f11a1a19563ec19214e87630a0f10c343bd3e0e60c7610cfb265a08145a"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 79
+      },
+      {
+        "kind": "replace-field",
+        "path": "/unresolvedReferences",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/unresolvedReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 976,
+          "sha256": "4402ebb1dd67d220ada9cedf41c167a2626ad6487f332af80d2aecaf2514b234"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/unresolvedReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1524,
+          "sha256": "c6265f8d76c1fd9cd9f90591beec00f9664e3ecf0d90a1dcfe8f11bb0b31cf0b"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 80
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/uniqueBlobCount",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/uniqueBlobCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "20ca98162ba780883712eb701c84e4c06f73aba78e903935a9ad799193b4627f"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/uniqueBlobCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "67eab6db6703cdf9acf656bbb09640fcde2ff197786adbd9ae9c14936fc8d159"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 81
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/logicalMembershipCount",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/logicalMembershipCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "085bcb597bbd610a7f0f955301d0fe3734b92a7144e87f68e8b5beec1a09b55b"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/logicalMembershipCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "07bed92aab16ecdd9c886a79e44f0c0b02d70c746c593eaa3b8acf24e687bcd8"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 82
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/totalBlobBytes",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalBlobBytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 8,
+          "sha256": "0ea86623dae2db7151e7a7739f5d240f2823cd18e1d2c5fb730156626f4c28de"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/totalBlobBytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 8,
+          "sha256": "8b181aca0e165540f76357bab4a6061dedd38434bc5cf952a065357d1e654e93"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 83
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/previousObjects",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousObjects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "5627b4a8f9efbd8fbdadaf4177824186f8c734f320935c88e926bc027af6c50f"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/previousObjects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "20ca98162ba780883712eb701c84e4c06f73aba78e903935a9ad799193b4627f"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 84
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/previousMemberships",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "227445a988500528d7826c6921d2e3b4a79ccf3a94cc3bcf7b667e3ae4990b36"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/previousMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "085bcb597bbd610a7f0f955301d0fe3734b92a7144e87f68e8b5beec1a09b55b"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 85
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/newObjectsRelativeToPreviousIndex",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newObjectsRelativeToPreviousIndex",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "6e4001871c0cf27c7634ef1dc478408f642410fd3a444e2a88e301f5c4a35a4d"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/newObjectsRelativeToPreviousIndex",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "8722616204217eddb39e7df969e0698aed8e599ba62ed2de1ce49b03ade0fede"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 86
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/newMemberships",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "6e4001871c0cf27c7634ef1dc478408f642410fd3a444e2a88e301f5c4a35a4d"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/newMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "8c1f1046219ddd216a023f792356ddf127fce372a72ec9b4cdac989ee5b0b455"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 87
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/newStreamsVerifiedThisIncrement",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newStreamsVerifiedThisIncrement",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/newStreamsVerifiedThisIncrement",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 88
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/newPartReferencesVerified",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newPartReferencesVerified",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "c2356069e9d1e79ca924378153cfbbfb4d4416b1f99d41a2940bfdb66c5319db"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/newPartReferencesVerified",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 89
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/totalTypedStreams",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalTypedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/totalTypedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "2fca346db656187102ce806ac732e06a62df0dbb2829e511a770556d398e1a6e"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 90
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/totalPartReferences",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalPartReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "8cd2510271575d8430c05368315a87b9c4784c7389a47496080c1e615a2a00b6"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/totalPartReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "5a39cadd1b007093db50744797c7a04a34f73b35ed444704206705b02597d6fd"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 91
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/previousPublishedObjectAudit",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousPublishedObjectAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 333,
+          "sha256": "04e605f10718c2b5ba5665f90c22ca74a23d553d667267fddd2230df35261f4f"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/previousPublishedObjectAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 407,
+          "sha256": "244464b7d939b1ec9f1eae4198a07a358d738f8ff370f0ae327b4add89ae8faa"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 92
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/inheritedStreamAudit",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/inheritedStreamAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 232,
+          "sha256": "59321c3ad1ef957bbf559b3a2edb1c5e7c3ca462f4296832aff34b689f27fa07"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/inheritedStreamAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 228,
+          "sha256": "a679cfde6f43a834469e779a8c7ed406ebd9c606e923711141c7e3817e631716"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 93
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/parentContract",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/parentContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 231,
+          "sha256": "b52d66e8ab6830f4113bcf0e933b731e59a444e755c5d034b0f4b48a3b9ada69"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/parentContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 219,
+          "sha256": "fc68988e440f9df6f9508ea7330be33e7e7b7a3e694510e5895b9c5775a1cc17"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 94
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/inheritedVerificationKeysScope",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/inheritedVerificationKeysScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 199,
+          "sha256": "e21c4e651a8d14751400f21416f53d49e12e6db39d0747a2bf5a99e7839b84aa"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/inheritedVerificationKeysScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 146,
+          "sha256": "b40cfc7cd93dae069dde14ca7f8f486cb98df8936f2e8ead313b2ef3eed81eff"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 95
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/oldGroupsPreservedCount",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldGroupsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/oldGroupsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "9f14025af0065b30e47e23ebb3b491d39ae8ed17d33739e5ff3827ffb3634953"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 96
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/oldStreamsPreservedCount",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldStreamsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/oldStreamsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 97
+      },
+      {
+        "kind": "replace-field",
+        "path": "/verification/oldPartReferencesPreservedCount",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldPartReferencesPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "620c9c332101a5bae955c66ae72268fbcd3972766179522c8deede6a249addb7"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/oldPartReferencesPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "8cd2510271575d8430c05368315a87b9c4784c7389a47496080c1e615a2a00b6"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 98
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CatalogEntriesAuthenticated",
+        "parentKeyIndex": 54,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CatalogEntriesAuthenticated",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "8241649609f88ccd2a0a5b233a07a538ec313ff6adf695aa44a969dbca39f67d"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 99
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CatalogNewBodiesRehashed",
+        "parentKeyIndex": 55,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CatalogNewBodiesRehashed",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "7f2253d7e228b22a08bda1f09c516f6fead81df6536eb02fa991a34bb38d9be8"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 100
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CatalogReusedBodiesRehashed",
+        "parentKeyIndex": 56,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CatalogReusedBodiesRehashed",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 101
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CatalogReusedEntriesMatchedToR5",
+        "parentKeyIndex": 57,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CatalogReusedEntriesMatchedToR5",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "6f4b6612125fb3a0daecd2799dfd6c9c299424fd920f9b308110a2c1fbd8f443"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 102
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CatalogItselfCreatedReadback",
+        "parentKeyIndex": 58,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CatalogItselfCreatedReadback",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 103
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19SixStreamsVerified",
+        "parentKeyIndex": 59,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19SixStreamsVerified",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 104
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19CalculatedOnlyMainExcluded",
+        "parentKeyIndex": 60,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19CalculatedOnlyMainExcluded",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 105
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19ArtifactContentsAcquired",
+        "parentKeyIndex": 61,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19ArtifactContentsAcquired",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 106
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19RootAndPeerReceiptsPreserved",
+        "parentKeyIndex": 62,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19RootAndPeerReceiptsPreserved",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 107
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19ArchiveAuthorOriginalGets",
+        "parentKeyIndex": 63,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19ArchiveAuthorOriginalGets",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 108
+      },
+      {
+        "kind": "add-field",
+        "path": "/verification/C19ArchiveAuthorZipGets",
+        "parentKeyIndex": 64,
+        "beforePresent": false,
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/verification/C19ArchiveAuthorZipGets",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        },
+        "rule": "Append this new key in the documented final object order; inverse deletes it.",
+        "order": 109
+      },
+      {
+        "kind": "replace-field",
+        "path": "/authorEffects/plannedPackageBlobs",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/authorEffects/plannedPackageBlobs",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/authorEffects/plannedPackageBlobs",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 110
+      },
+      {
+        "kind": "replace-field",
+        "path": "/authorEffects/scope",
+        "before": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/authorEffects/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 231,
+          "sha256": "9f438ca38d6e731099dc7c6c12b8bca7a8a8ac65455213e6ec4e92bf21dc02d3"
+        },
+        "after": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/authorEffects/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 134,
+          "sha256": "83bcf11e788cd62998b83a1a7692ba42378f6275828b0161617945c7e0af4afb"
+        },
+        "rule": "Replace only this value; preserve key order.",
+        "order": 111
+      },
+      {
+        "kind": "append-array",
+        "path": "/revisionHistory",
+        "beforeLength": 4,
+        "afterLength": 5,
+        "appendCount": 1,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/revisionHistory",
+          "startIndex": 4,
+          "endIndexExclusive": 5,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 14125,
+          "sha256": "bc13795a2f9f8781cedd3929c694409374f76cd7640fcc9e82d8b1e558894684"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 112
+      },
+      {
+        "kind": "append-array",
+        "path": "/resolvedReferences",
+        "beforeLength": 5,
+        "afterLength": 7,
+        "appendCount": 2,
+        "append": {
+          "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+          "pointer": "/resolvedReferences",
+          "startIndex": 5,
+          "endIndexExclusive": 7,
+          "serialization": "JSON.stringify(array slice), no LF",
+          "bytes": 732,
+          "sha256": "bc10d8760f71839e535ee768c885f75de1b99e0bdb935e1856e87db7b7f4ba5e"
+        },
+        "rule": "After any prior child operations, keep the current prefix and append this exact suffix; inverse removes only the exact suffix.",
+        "order": 113
+      }
+    ],
+    "completeForwardLiteral": true,
+    "completeInverseLiteral": true,
+    "source": {
+      "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "bytes": 743023,
+      "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a"
+    },
+    "post": {
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f"
+    },
+    "inverseRemovesOnlyAddedKeysSuffixesAndRestoresReplacedValues": true
+  },
+  "literalPreservation": {
+    "previousObjectMetadataExact": true,
+    "previousObjectOrderExact": true,
+    "previousMembershipPrefixesExact": true,
+    "previousObjectCount": 535,
+    "previousMembershipCount": 584,
+    "previousGroupsPrefixExact": 35,
+    "previousStreamsPrefixExact": 48,
+    "previousPartReferencesLiteral": 177,
+    "previousDocumentarySnapshotsExact": true,
+    "previousRevisionHistoryPrefixExact": true,
+    "completeR5IndexAndReadmePreservedAsActualObjects": true,
+    "inheritedObjectsWithAppendedMemberships": [
+      {
+        "index": 10,
+        "sha": "26fe67808cf872c611127a7f46838074604fe690",
+        "previousMemberships": 2,
+        "addedMemberships": 1
+      },
+      {
+        "index": 21,
+        "sha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "previousMemberships": 2,
+        "addedMemberships": 1
+      },
+      {
+        "index": 24,
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "previousMemberships": 5,
+        "addedMemberships": 1
+      },
+      {
+        "index": 45,
+        "sha": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "previousMemberships": 2,
+        "addedMemberships": 1
+      },
+      {
+        "index": 70,
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "previousMemberships": 6,
+        "addedMemberships": 1
+      },
+      {
+        "index": 90,
+        "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 96,
+        "sha": "244d46ee41e9ce288a7260938174a57161137bab",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 163,
+        "sha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 174,
+        "sha": "ccc5ea87046144843e1751b1288e907974d24ca5",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 181,
+        "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 189,
+        "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 191,
+        "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 209,
+        "sha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 217,
+        "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 219,
+        "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 222,
+        "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "previousMemberships": 1,
+        "addedMemberships": 2
+      },
+      {
+        "index": 380,
+        "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 397,
+        "sha": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 398,
+        "sha": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 428,
+        "sha": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      },
+      {
+        "index": 534,
+        "sha": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "previousMemberships": 1,
+        "addedMemberships": 1
+      }
+    ],
+    "currentParentOrderCheckedAgainstActualGit": true,
+    "noHistoricalBodyRewrite": true
+  },
+  "readmeDerivation": {
+    "mechanism": "prefix + complete literal R5 README + suffix; inverse removes only the exact prefix and suffix.",
+    "pre": {
+      "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "bytes": 33219,
+      "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+      "lf": 282,
+      "endsWithLF": true
+    },
+    "post": {
+      "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5",
+      "bytes": 44360,
+      "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "prefix": {
+      "bytes": 11129,
+      "sha256": "f82e1454163962f5d32d134a82357915442e4140df4c2afdd13c513e16f9a26f",
+      "text": "# Evidências do Orchestra-SF — arquivo do #613\n\nEste sexto incremento documental preserva o R5 publicado e acrescenta C19, seu focal fechado, o Analytics original negativo, o pacote D28 estático e os recibos operacionais no alcance registrado. A proposta contém somente este README, `index.json` e blobs em `objects/`. A raiz ainda precisa revisar e publicar a árvore documental. Não há candidato final C613, nova qualificação de área, aceite de Release ou autorização de produção.\n\n## Conteúdo e preservação\n\nO [index.json](index.json) relaciona **607 blobs reais**, **63.318.211 B** em `objects/<git-sha>`, **683 memberships**, **40 grupos** e **54 streams**, com **199 referências a partes**. O incremento acrescenta **72 objetos / 6.666.802 B**, **99 memberships**, **cinco grupos** e **seis streams / 22 referências a partes**. Os **535 objetos, 584 memberships, 35 grupos e 48 streams** do R5 permanecem na ordem original; seus metadados e os prefixos de memberships são literais.\n\nO [catálogo R6](objects/5a51ed2d66b8f442559ef973a07ffa54064d31fc) enumera **92 blobs distintos / 7.280.964 B** e **98 memberships**. Desses, **71 blobs / 6.582.528 B** são novos para o arquivo; **21 blobs** já estavam no R5 e recebem apenas memberships adicionais. Os 71 corpos novos e quatro corpos reutilizados foram rehashados neste incremento. Os outros 17 reutilizados conservam a autenticação do R5, cujo índice foi cotejado com todos os 535 objetos da árvore publicada. Não se alega nova aquisição dos 535 corpos históricos. O catálogo acrescenta seus próprios **84.274 B** como objeto real no grupo de controle do arquivo, sem listar a si mesmo em seu conteúdo.\n\n| Grupo acrescentado | Blobs distintos no grupo / memberships |\n| --- | ---: |\n| C19-source | 12 |\n| C19-focal | 35 |\n| D28-final-qualification | 14 |\n| C19-analytics | 31 |\n| R5-archive-control | 7 |\n\nUm mesmo blob pode pertencer a mais de um grupo; os totais globais deduplicam pelo SHA Git. O grupo `R5-archive-control` conserva o [índice R5](objects/2f80c037c70071b8bb756f44439047b1e5ac50d0), o [README R5](objects/8e76aea8b7c6881d648ce8df6e64455c6bc692bd), o [manifesto R5](objects/c408b4f69264f9816d44d921f855263e0c816b7b), o [review da raiz](objects/1c8c5052ee74efd0678211a7b7cde33126f3e173), o [recibo de publicação](objects/a6e5f0b6f22d93079b85a667fdb6e0611faa8456), o catálogo de entrada anterior já arquivado e o catálogo atual de R6. O README R5 inteiro também está preservado no bloco histórico ao final. Os rótulos históricos R5/R6/R7 de documentos de go-live não são renomeados por esta revisão do arquivo.\n\n## Resultado C19 e limite de qualificação\n\nA fonte limpa C19 é `7393cd010086f4a12d61ae9bb5db13534bd18aa0`, árvore `31954cfe7df07455d8b137f6f4f1e4d94a316fc3`, pai único S18 `455c02a7a05a6dd3262ae15b184419897366fde4`. Seu [manifesto de fonte](objects/1fe5ee9573055f405d10dc27450b3783e2275f29) e [review](objects/f3c4154ddc93d049770b8669d68a9a53fada8653) registram duas modificações: os três opt-ins ao contrato existente de leitura do grafo cases em Portfolio selection e o controle de consumidor correspondente. O contrato é um read-set explícito; não promete equivalência de efeitos exclusivos de namespaces não alcançados. As chamadas e verificações preservadas permanecem documentadas no pacote.\n\n| Evidência | Resultado recebido | Alcance |\n| --- | --- | --- |\n| Focal 46093171031/1 | **15 casos / 2.103 assertions**; sete grupos externos / 34 assertions; 13 comandos, 26 flags de truncamento falsas, 15 pins e seis reports | FOCAL_PASS_ONLY, com 36 cotejos da raiz e 53 independentes. |\n| Analytics original 46094695101/1 | **Um caso falhou e um passou**, duração reportada de 9,3 min; primeiro preview com timeout original de **60.000 ms**, spec **72:32** | UI42 teve seis capturas parciais; UI43/UI44 não foram alcançadas. BI passou apenas nesse snapshot. |\n| D28 | Revisão estática, quatro bindings finais **UNBOUND** | Nenhuma execução ou qualificação de composição final. |\n| Áreas e produção | **12/15 áreas históricas**, **zero novas** | Nenhum ganho de desempenho demonstrado, C613 final, tar verificado, Release, Migração ou go-live estabelecido. |\n\nO [recibo focal](objects/c5a95b9191392d8da949adadd44aedf8cf3f9ce1) preserva as populações **7/843** do contrato cases, **5/757** da projeção C08 e **3/503** do consumidor Portfolio. O novo report `SF_C19_PORTFOLIO_CASES` recebeu **6/9/6/3/1** nos cinco contadores documentados. A fixture do consumidor usa autorização opaca: seu resultado não mede materialização física estreita nem benefício temporal. As matrizes genéricas e controles antigos permanecem separados.\n\nO [recibo Analytics final](objects/86a38860ee558c6c21d2356a9f7770209d5b986a) e o [parecer independente](objects/08328f984a266a8ebe356b4220ea7c82694bdff2) fecharam **28 + 41 cotejos de integridade**, com resultado negativo de produto. O único POST `decision-portfolio-preview` de sequência 3 está registrado às `2026-11-28T01:52:13.6911930Z`, com vínculo `exact`, sem resposta correspondente nos marcadores recebidos.\n\nA história anterior de results é preservada como observada: sequência 1 inclui `native-request-failed` e HTTP 200 com `response-body-unavailable`; sequência 2 termina em HTTP 200/`ok`/`array`. Esses registros não são a requisição de preview. Não estabelecem a causa do timeout. BI recebeu **40 capturas** — sete UI45 e 33 UI46 — e as leituras originais concluíram no snapshot atual. Esse resultado não transfere aceite para outra composição.\n\nO Analytics executou `ac5274a52bed83db4c86c1cf2ea53d36b96aa84b`, árvore `5c7de31ad8a10c4b41e5e0a839417eb43198fd0c`, filho único de S19 com apenas o request original de **295 B sem LF**. Spec, seed, duas jornadas, um worker, retry zero, repeat um, preview de 60 s e sensibilidade de 120 s foram mantidos. Não houve overlay E13, profiler ou novo observador nesse source.\n\n## D28 permanece paramétrico\n\nO [manifesto D28 vigente](objects/b980dfc157b4b5fbe8c70cf7e324beca63f7a281) conserva **26 grupos, 32 sites sintáticos, 37 comandos efetivos e 74 flags de truncamento**, além dos seis filhos de prova separados. Os quatro bindings de source, tree e identidades do wrapper permanecem `UNBOUND`; os totais funcionais e de reports da futura seleção completa permanecem `null`.\n\nG23 usa o título sem número fixo para casos e preferências, com o controle `68ae48f9a039180824f5471a1de27c0ca34be088`: **três declarações**, deadlines Bun de **15/15/20 s**, nominal de 50 s, processo de 120 s e pai de 180 s. Envelope, finalizer, workflow, argv e gates continuam literais. O [review da raiz](objects/27f39a06e070ac81100c511a9326de6048fd2d85) contém 37 cotejos e o [review independente](objects/3f9da09feb817f8e5f3b713f2f86cc8d66a28e44), 75.\n\nO [manifesto anterior](objects/094468973ff9ff14121c424d6c7d60e01e4d6e26), com locator de receipt ainda nulo, permanece histórico. A [derivação de campo](objects/6b10fc47e5df6376889be69cd93ed2297bfccace) liga somente o recibo focal fechado. Nenhum número do focal foi copiado para resultados futuros de D28, e S19 não é declarado candidato final.\n\n## Streams reais e exclusões\n\n| Stream C19 acrescentado | Partes reais | Bytes |\n| --- | ---: | ---: |\n| Focal main | 1 | 105.958 |\n| Focal cleanup | 1 | 2.281 |\n| Focal reports | 1 | 9.251 |\n| Analytics main | 17 | 4.866.399 |\n| Analytics cleanup | 1 | 2.281 |\n| Analytics markers | 1 | 34.316 |\n\nAs seis composições foram autenticadas a partir dos blobs Git efetivos, com ordem, LF e BOM preservados. A [união focal](objects/6b59ebdc105a00b9053854139dadfd10ba4e0551) contém seis reports. A [união Analytics](objects/fa71c102ec320dfe7baf497af583db07bd7344ac) contém **97 linhas: 45 SOURCE, 46 CAPTURE, cinco DIAGNOSTICS e um SCOPE**. A extração das uniões remove somente o transporte de timestamp/ANSI; os payloads não são reserializados. Os originais permanecem intactos.\n\nO [manifesto do main Analytics](objects/d48e9674a25b694c17db6c770c0116ec8c2ff1bb) lista as 17 partes reais. O inteiro recomposto tem SHA256 `23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a`, 1.976 LF e BOM nos offsets **0, 2.104.899 e 4.224.262**. Seu Git SHA `d5dacd1ea8b65419de9a47eef69134ab32c8471f` é **somente calculado**; não foi adquirido ou criado e não está em `objects/`.\n\nO artefato **15242603880**, 45.814.109 B, SHA256 `bccc5ec8ff3eb6c7c57f34211fa59bbf691d072af0faf115f5f1ed3857b47392`, é **metadata only**, com **zero aquisições ZIP**. Este incremento não contém runtime JSON, PNG, trace, membros do ZIP ou prova de CRC desses membros. O request UI6 de 390 B permanece texto/identidade calculada dentro do checkpoint; não é objeto de request nem execução final.\n\n## Cortes operacionais e checkpoints\n\nO [checkpoint anterior](objects/45304b589465dfdaa584f9783aeef13d1dd6ae47) conserva o corte em progresso. O [checkpoint posterior](objects/8863b12b4c3b52d26ea43844986c7857faa19b95) registra todos os originais até C19 fechados, incluindo os dois GETs emitidos e os manifestos/recibo atuais; o receiver de aquisição encerrado foi omitido. Helpers textuais nesses checkpoints são dados históricos e não autorizam reexecução ou nova aquisição.\n\nA [observação operacional final](objects/8283eabd80da4413a0e3fc720ae3c8e1be281e4d) tem corte de acesso em **01:49:46 UTC**. Ela preserva a autorização prévia do host e o caminho do operador Codex local; registra falta de confirmações/rota disponível nesse corte e reservas G08/G10 pendentes. Não declara outage global. O campo de zero GETs é restrito à observação de acesso; os **dois originais Analytics** foram recebidos separadamente e fechados às **01:58:34 UTC**. O draft operacional `0e1e265…` não foi incluído.\n\nE14 é posterior e fica fora do corpus deste incremento. Sua menção nos recibos/checkpoints registra apenas autoria futura; não adiciona fonte, controle, execução ou autorização ao arquivo R6.\n\n## Retenção e publicação proposta\n\nA árvore documental tem apenas `README.md`, `index.json` e `objects/<sha>`, todos os arquivos em modo `100644`. Os pais planejados, nesta ordem, são:\n\n1. R5 publicado: `7685a790349b7a3b9c3e68cfe56b96fd4963b762`, árvore `4cee3a5483cbeb8911d242e16b86c418a7bc0a4c`.\n2. Focal C19 executado: `86e365fe047f86597751c7e8222011dca4b0a0af`, árvore `e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2`.\n3. Analytics C19 executado: `ac5274a52bed83db4c86c1cf2ea53d36b96aa84b`, árvore `5c7de31ad8a10c4b41e5e0a839417eb43198fd0c`.\n\nOs dois últimos são filhos distintos de S19; a cadeia já retém S18 e as fontes anteriores. Commits e árvores são identidades de retenção, não entradas de blob. A raiz deve revalidar a ref esperada R5 antes de atualizar `sf613-evidence` sem force. Este autor cria somente catálogo, índice, README e manifesto propostos; não cria árvore, commit, ref, workflow, run, alteração de produto, aquisição original ou ZIP. As refs de produto e o ledger histórico permanecem separados.\n\n<details>\n<summary>README R5 publicado — histórico literal</summary>\n\n"
+    },
+    "suffix": {
+      "bytes": 12,
+      "sha256": "310be9616c9388d38c33b50cb282767e95eabea403910b1052c501b733300599",
+      "text": "\n</details>\n"
+    },
+    "baseOccurrenceCount": 1,
+    "baseFullTextLiteral": true,
+    "forwardLiteral": true,
+    "inverseLiteral": true
+  },
+  "authentication": {
+    "catalogEntries": 92,
+    "newInputBodiesRehashed": 71,
+    "reusedEntriesMatchedToPublishedR5": 21,
+    "reusedBodiesRehashedThisIncrement": 4,
+    "remainingReusedBodiesUsePriorAuthenticatedR5Metadata": 17,
+    "allNewInputBodiesGitShaBytesSha256LfAndTerminationMatched": true,
+    "catalogCreatedAndReadback": true,
+    "indexCreatedAndReadback": true,
+    "readmeCreatedAndReadback": true,
+    "objectChecks": [
+      {
+        "index": 0,
+        "gitBlob": "4b57e77f42de37dca0c0d09b52fad8f6e309b218",
+        "bytes": 13851,
+        "sha256": "f46f6aa63f9426d8d708a167b92c077a4c12a56d6928abd8e1224c24b7ca2afa",
+        "lf": 112,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 1,
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+        "bytes": 14108,
+        "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+        "lf": 114,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 2,
+        "gitBlob": "d9db1d5a9236d35ea8512fbd73e88c4f14c728ad",
+        "bytes": 23131,
+        "sha256": "18f158c1b17a9e7e7c8134b2c46c5b9297de032fc4317e98f1d8c1ef94ba41db",
+        "lf": 407,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 3,
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "bytes": 34160,
+        "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+        "lf": 587,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 4,
+        "gitBlob": "4ba94f80c6db4dc5f57f0687e0a9f6cfdfc61316",
+        "bytes": 19122,
+        "sha256": "4044de667de70edd1ee89c19050dcbc1f609c1eb0fa35e0831c7c97c5b7ef657",
+        "lf": 115,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 5,
+        "gitBlob": "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+        "bytes": 17454,
+        "sha256": "3cf3e62476a08db7c9e40475a9b9353d838bee390cc05549ca77bb6604a9cb3c",
+        "lf": 237,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 6,
+        "gitBlob": "ce71ce54a3e27b112ff3c089365bfb7404678037",
+        "bytes": 6976,
+        "sha256": "bd9d210bfb802754eb9f3da890e41f631da07cce9d388e5fb2046eccc225c382",
+        "lf": 178,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 7,
+        "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+        "bytes": 13382,
+        "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+        "lf": 268,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 8,
+        "gitBlob": "f3c4154ddc93d049770b8669d68a9a53fada8653",
+        "bytes": 10234,
+        "sha256": "382a0022e5dea3de13f1e1e207ca73b0afec8417093c357e0da5f18b79e2e0ad",
+        "lf": 345,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 9,
+        "gitBlob": "d9ed0100986ff9be178d195587b50c671b2934c2",
+        "bytes": 3130,
+        "sha256": "fd21afb8d62e2eeb68180c1ffa69b598aef8f84b2f197b4f3f91d6de06706ac4",
+        "lf": 106,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 10,
+        "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+        "bytes": 42278,
+        "sha256": "8acd1b2070a9dd56b5fc31d8e170d02d9082cb3851d613b45dfe1c9db0968059",
+        "lf": 691,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 11,
+        "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "bytes": 87176,
+        "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+        "lf": 1462,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 12,
+        "gitBlob": "805b84b88b73c844454dd85cc9cc2d9cb3d51a68",
+        "bytes": 21231,
+        "sha256": "0a2b444a59e0c53dfb6b380b5b41602bf07ff01ff7d7af1588ca1ce99fd0bc96",
+        "lf": 597,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 13,
+        "gitBlob": "59ea9cbcc1abd94211c94d7a1c980e2325d9973d",
+        "bytes": 13025,
+        "sha256": "293c3edf15c797fe67f363feea5def7b68f28cbc9910ce924ca29df4a53efed6",
+        "lf": 479,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 14,
+        "gitBlob": "27ee729c20d3d4f2bf4b5db7df05c013d25b4420",
+        "bytes": 11845,
+        "sha256": "cfb1187a86629be89fb437c156a70782e5c4125c391a0d3bd63dd9b326729e58",
+        "lf": 182,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 15,
+        "gitBlob": "1ea31adde022e3bf1fd54075da14be9e1210f75e",
+        "bytes": 11888,
+        "sha256": "67501ff0a4d30c587b9c61bac8cb65416201ed84f5474c28a57a230abecaacaa",
+        "lf": 182,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 16,
+        "gitBlob": "73d3686ce9ef0f4c2e67518681d1c4d0a5603898",
+        "bytes": 8940,
+        "sha256": "8843f73952206c65675b9d4457c76ce884282e6e8eb88f5228d09d0a35028a6c",
+        "lf": 274,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 17,
+        "gitBlob": "4fd6f0255c1bf30f0971710caf7de7a2d1b1545b",
+        "bytes": 24976,
+        "sha256": "66b541d230647b12853ee44b98c3766f923308d04ccbd04bf3e30e6c7e7100fc",
+        "lf": 436,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 18,
+        "gitBlob": "24f0b4668dea805ec45b5c3601269474205e9a78",
+        "bytes": 9374,
+        "sha256": "cac3f55d63ba6d26af5c20231725bf936cef291c4ddb98ba6f663c9a7b245d95",
+        "lf": 116,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 19,
+        "gitBlob": "9dce69e489dc019d5069278faecfd5da60ef80c5",
+        "bytes": 12637,
+        "sha256": "c8a4c9a809a4ad8b28763ce1e4a69d0e5411cac3e0ddc4a6dce314e743f01704",
+        "lf": 194,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 20,
+        "gitBlob": "9108a8732dc28f95e8dd9f8a2c35efd5aa30b31d",
+        "bytes": 7876,
+        "sha256": "46da15f199f30d38ef705261131394d5fe09158e6571ce2b591bc4b144777da9",
+        "lf": 238,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 21,
+        "gitBlob": "d745cfcf11fe40d1665268462ca9118c8137d7d0",
+        "bytes": 1543,
+        "sha256": "f8c147779f9d644a78b977ab7963aa5745bd4d1c234980992adb3fa91540ec78",
+        "lf": 47,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 22,
+        "gitBlob": "ca9ae3ecf71c5047c9dc89db408601b59ff37981",
+        "bytes": 105958,
+        "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de",
+        "lf": 880,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 23,
+        "gitBlob": "5f3a8a5f5e6b1ec3c883bcb0606d3f9cc7a39f9b",
+        "bytes": 1763,
+        "sha256": "60bbc36c6fb1178958b34d0617118a60c119d3a2a497be01355b3688eeca90a4",
+        "lf": 61,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 24,
+        "gitBlob": "1a9a9a1b6f550aa492656abf04ed45d85da6245e",
+        "bytes": 2281,
+        "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0",
+        "lf": 39,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 25,
+        "gitBlob": "06028991f11ac0518f4c7066a71f5257244431cc",
+        "bytes": 1753,
+        "sha256": "c4273ec1e93bfe0d8e7b39008e555c67c12f239efdccb7683c4a082fc5f0ec86",
+        "lf": 61,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 26,
+        "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+        "bytes": 9251,
+        "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+        "lf": 6,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 27,
+        "gitBlob": "90d7dc7699f32a1596b78d56f35228973afcfab0",
+        "bytes": 13929,
+        "sha256": "5a516ccbd4f4e3592cd5763cde57d6cb5d03c8ea6a33a59721a0d30612ef7a9c",
+        "lf": 482,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 28,
+        "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+        "bytes": 103238,
+        "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e",
+        "lf": 1982,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 29,
+        "gitBlob": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+        "lf": 182,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 30,
+        "gitBlob": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+        "bytes": 31420,
+        "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed",
+        "lf": 784,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 31,
+        "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+        "lf": 0,
+        "endsWithLF": false,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 32,
+        "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+        "bytes": 46151,
+        "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+        "lf": 533,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 33,
+        "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 34,
+        "gitBlob": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 35,
+        "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab",
+        "bytes": 12451,
+        "sha256": "11b611014da00ba0192527dc79ded7a97d65a2a01e37f5d3305e7845def15a28",
+        "lf": 204,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 36,
+        "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+        "bytes": 4667,
+        "sha256": "41d15d919b969d24671a7cec27516f164c899682d5fe12d2fd2676f0ad633574",
+        "lf": 52,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 37,
+        "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5",
+        "bytes": 20985,
+        "sha256": "42e4d739499050d14b872751617326c5cf1e9d872894dfe9d07a637261cf8d43",
+        "lf": 313,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 38,
+        "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+        "bytes": 2037,
+        "sha256": "ab667441ef3ae1ce301051245d2becddab52681cce306ab1b9f68ff730e8920e",
+        "lf": 37,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 39,
+        "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+        "bytes": 32461,
+        "sha256": "5ffad6ad9daf7d61699a043a7e68f6e4031f60e123d33bbce150107cd1c02057",
+        "lf": 404,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 40,
+        "gitBlob": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 41,
+        "gitBlob": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 42,
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+        "bytes": 8386,
+        "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+        "lf": 185,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 43,
+        "gitBlob": "30178d52800afdf6c262e792790d52351b10c5c4",
+        "bytes": 18398,
+        "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+        "lf": 344,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 44,
+        "gitBlob": "094468973ff9ff14121c424d6c7d60e01e4d6e26",
+        "bytes": 23358,
+        "sha256": "18e67d0192397a89bf655dc8a5eedb23916d4ac07eeb724e937858c144ac9d47",
+        "lf": 619,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 45,
+        "gitBlob": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+        "bytes": 24043,
+        "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+        "lf": 628,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 46,
+        "gitBlob": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+        "bytes": 10514,
+        "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+        "lf": 305,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 47,
+        "gitBlob": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+        "bytes": 9618,
+        "sha256": "ad9391a1259616000eb3d91bb519c77d2d5eda18a84f4a71bc8a74c94ad5f157",
+        "lf": 283,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 48,
+        "gitBlob": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+        "bytes": 1816,
+        "sha256": "8c04cb10767f4a76fefe7f19ec3820c301515cfa5b35c2c03e467e9c5ee26437",
+        "lf": 32,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 49,
+        "gitBlob": "6b10fc47e5df6376889be69cd93ed2297bfccace",
+        "bytes": 3561,
+        "sha256": "235b173f213fea600eea8ee35d373df4f296cc5608b22d932cd4fc60b546b2a1",
+        "lf": 71,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 50,
+        "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+        "bytes": 18381,
+        "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+        "lf": 344,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 51,
+        "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+        "bytes": 43811,
+        "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+        "lf": 723,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 52,
+        "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "bytes": 15782,
+        "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+        "lf": 250,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 53,
+        "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "bytes": 80067,
+        "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+        "lf": 1154,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 54,
+        "gitBlob": "27f39a06e070ac81100c511a9326de6048fd2d85",
+        "bytes": 6989,
+        "sha256": "90cde794cff5564505d7b4aed41fdc64533ebf23909dfd9a48aa1a30e310e6e7",
+        "lf": 264,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 55,
+        "gitBlob": "3f9da09feb817f8e5f3b713f2f86cc8d66a28e44",
+        "bytes": 4354,
+        "sha256": "4e19d471e1e55b3eed93fee1f613aa48d846b34061595a018e83b4859f502cd2",
+        "lf": 124,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 56,
+        "gitBlob": "5e84772c4a35ff8d7adedfb62819ce42677610ac",
+        "bytes": 17301,
+        "sha256": "4320edcf03679cc204265b7f4f092eaf85f5209035cdf030b7c3e742641b2d4b",
+        "lf": 494,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 57,
+        "gitBlob": "e00158fc0832d32c05b8f2699b14bb19bb48b00f",
+        "bytes": 967,
+        "sha256": "b6b5875aa2c389229e58323c7d3eae4e46d3600c76fa112d9c6d5f6183348006",
+        "lf": 28,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 58,
+        "gitBlob": "45304b589465dfdaa584f9783aeef13d1dd6ae47",
+        "bytes": 21774,
+        "sha256": "95dd4d1bf2801de0d2f1d83cc867153ed1524f6f3e154799c2a7ac13fa218f97",
+        "lf": 143,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 59,
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0,
+        "endsWithLF": false,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 60,
+        "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+        "bytes": 743023,
+        "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a",
+        "lf": 22006,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 61,
+        "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+        "bytes": 33219,
+        "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+        "lf": 282,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 62,
+        "gitBlob": "c408b4f69264f9816d44d921f855263e0c816b7b",
+        "bytes": 108573,
+        "sha256": "b14453a6c6031fcd6c1fe27ea4ab7f9fbddbfd4535bf5506c9c0e656dff98bdc",
+        "lf": 2714,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 63,
+        "gitBlob": "1c8c5052ee74efd0678211a7b7cde33126f3e173",
+        "bytes": 6191,
+        "sha256": "31d1bffd118fc702fbf18e8ba527607eefc9e415d344b07493b5296a2830815c",
+        "lf": 160,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 64,
+        "gitBlob": "a6e5f0b6f22d93079b85a667fdb6e0611faa8456",
+        "bytes": 4773,
+        "sha256": "175f5ec5dc3163534315029867846f90cc1c193dcfd5455fa5dcab1b1d9ebe75",
+        "lf": 145,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 65,
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "bytes": 48822,
+        "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+        "lf": 1452,
+        "endsWithLF": true,
+        "existingInR5": true,
+        "bodyRehashedThisIncrement": false,
+        "metadataMatched": true
+      },
+      {
+        "index": 66,
+        "gitBlob": "5f279f638d9142a998abc353bd74da2584550eb4",
+        "bytes": 2141,
+        "sha256": "d4a64221f43450853ae3390f56f54c9c1a47a7d382ca38a989d73e4e93176461",
+        "lf": 63,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 67,
+        "gitBlob": "d48e9674a25b694c17db6c770c0116ec8c2ff1bb",
+        "bytes": 7934,
+        "sha256": "858e614f903285ad5633e216c9a28737f02718b11d0dbb9e6f5c62b9b07d20e7",
+        "lf": 273,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 68,
+        "gitBlob": "91380dc5423921989aa22b3acc8040e6bebd3ab0",
+        "bytes": 1761,
+        "sha256": "3d72bec98a4f9bb0234824d59644e2de1844b9f258c4e2d6e7e868694cd495ca",
+        "lf": 61,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 69,
+        "gitBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+        "bytes": 2281,
+        "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+        "lf": 39,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 70,
+        "gitBlob": "fa71c102ec320dfe7baf497af583db07bd7344ac",
+        "bytes": 34316,
+        "sha256": "fc2f119f794a473199abbf33dcc4ec5b446a478e258ba4d272ad9ad7686b8cab",
+        "lf": 97,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 71,
+        "gitBlob": "c8d2bcc05a8f9b4b9e25873e05b05d068ce9430a",
+        "bytes": 300000,
+        "sha256": "d7d2a382455baa13ff89335cb278ea5eacd2f0226b932187958e88daabfd6d9a",
+        "lf": 1186,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 72,
+        "gitBlob": "99748fea2e5cec2f1140319a818bdad5106f7938",
+        "bytes": 300000,
+        "sha256": "bc280e766bd26afdfab265b36bbbff7ca3e0ea000a853ecd32ec9443a9887424",
+        "lf": 48,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 73,
+        "gitBlob": "225070f8c698627dbd3e5fa6064889144532e381",
+        "bytes": 300000,
+        "sha256": "a5bbea853583ef0b16fb2d7b29dfc3fd1fd6452c507c039ac83b4f40e26a2314",
+        "lf": 182,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 74,
+        "gitBlob": "46647af91dd94cc3595fae36d2886b1a1b2517b8",
+        "bytes": 300000,
+        "sha256": "10987d8a82abc010d26a0f4a90d05f0649caeaed8bcaec1a985a79fc13849b37",
+        "lf": 34,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 75,
+        "gitBlob": "b0d30d07a8c98c2bd08ce872ed5b83d388f36e69",
+        "bytes": 300000,
+        "sha256": "675ed222b626add0f4b56b2c97f9f47dd6a0d66850b398f56f8d4b4d2fbb58a3",
+        "lf": 38,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 76,
+        "gitBlob": "39c680a4508175a4c4f2e53b4d4e565738aa7d85",
+        "bytes": 300000,
+        "sha256": "85286586cd5a5528c95e87cc40214fa584f5b35c917ab0529bff28a80fd17d52",
+        "lf": 32,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 77,
+        "gitBlob": "ac92bb694660b1e11e405828b78861513ba474e7",
+        "bytes": 300000,
+        "sha256": "381bb517f0a5661a8c04627488ef4b11b564c8a786eeac519edc6b37137fb438",
+        "lf": 36,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 78,
+        "gitBlob": "71d8c48bcd3419b83a22d58380f69daf243da856",
+        "bytes": 300000,
+        "sha256": "14873d09319eb494a077653f7881524ed4de07fb8b7a93b8c7497ad28f05e83c",
+        "lf": 30,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 79,
+        "gitBlob": "8721662f7db715147c0bb6f12c42a4e7c9d622b7",
+        "bytes": 300000,
+        "sha256": "7a304bdeb865ba583180e9ab15391d3d070db1004a6360583ff043a06ebc8cbb",
+        "lf": 38,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 80,
+        "gitBlob": "97dfbd93e4fb11fe9f2732574749cd4fdae99dc6",
+        "bytes": 300000,
+        "sha256": "03df6db405d51fed5084a9fa03229ee77581f6850ee4838f6314f871b4a0b744",
+        "lf": 50,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 81,
+        "gitBlob": "84f19b8ec8e1a0da4d2f625c5e9b088df1a60482",
+        "bytes": 300000,
+        "sha256": "cf7a07576d00259710c925bf34530f5e159a7714311636b4acfbf4614271350c",
+        "lf": 30,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 82,
+        "gitBlob": "bafafaf11eacd50f6921501aa62e343e9e0611fc",
+        "bytes": 300000,
+        "sha256": "c484a79ffaa6ff43a6eb3acdb9c073a48cbfc8c149ce8f2572137c6b55ba5e45",
+        "lf": 36,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 83,
+        "gitBlob": "927c928c396e496602ebd816410c89e986ef5f35",
+        "bytes": 300000,
+        "sha256": "80119027eb93261b7a3398d9dbf5f4f77e529a6a17ae4418c591160a0b603dac",
+        "lf": 32,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 84,
+        "gitBlob": "86219a7daf45e93512bbef54013ae9e06b58b650",
+        "bytes": 300000,
+        "sha256": "9589494204a4f81249ffb432636cd05f50546e07221445e5d0fccdfc89eb59f7",
+        "lf": 36,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 85,
+        "gitBlob": "e1b1083a01c0c53d6384e4aa191f1d8b7fdb66c5",
+        "bytes": 300000,
+        "sha256": "552808a804143666e7f00282b26b9b521d3c2067f0b5f00e61ade8a288dd2be1",
+        "lf": 36,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 86,
+        "gitBlob": "4cc211e26d3a65343addf18ad01eff3cf156ce69",
+        "bytes": 300000,
+        "sha256": "e6db5943c9dde710ce294b68b141f2db69d17cdabd2d9fe04f7ad0102761ecc4",
+        "lf": 46,
+        "endsWithLF": false,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 87,
+        "gitBlob": "408b33408f5e995e52523000967858921b6a00ad",
+        "bytes": 66399,
+        "sha256": "c47dbd22b378fed2df8ceb6180d0e1ca944932ef263be90fe93817bd3996ed0d",
+        "lf": 86,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 88,
+        "gitBlob": "86a38860ee558c6c21d2356a9f7770209d5b986a",
+        "bytes": 27557,
+        "sha256": "b2168f11bf09a3369691323c35f45d09635fa7772872c6780d8d4756e729bd80",
+        "lf": 859,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 89,
+        "gitBlob": "08328f984a266a8ebe356b4220ea7c82694bdff2",
+        "bytes": 13675,
+        "sha256": "3218b18c7768064b54c3d0355996ceb5d266e883aa3d96bb5ad66da73a0faa29",
+        "lf": 1,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 90,
+        "gitBlob": "8283eabd80da4413a0e3fc720ae3c8e1be281e4d",
+        "bytes": 3721,
+        "sha256": "ca7d83c0a8756539b50b7983ea730ae581615a4db0efe557c90236b3708d052b",
+        "lf": 76,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      },
+      {
+        "index": 91,
+        "gitBlob": "8863b12b4c3b52d26ea43844986c7857faa19b95",
+        "bytes": 24937,
+        "sha256": "ede9364b859aa612d51d76b3c4434a8b09d6965965157df88a0f15588c6f960e",
+        "lf": 266,
+        "endsWithLF": true,
+        "existingInR5": false,
+        "bodyRehashedThisIncrement": true,
+        "metadataMatched": true
+      }
+    ],
+    "newStreams": [
+      {
+        "id": "C19-focal-main",
+        "group": "C19-focal",
+        "role": "main",
+        "kind": "original-log",
+        "run": 46093171031,
+        "attempt": 1,
+        "job": 140818516840,
+        "bytes": 105958,
+        "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de",
+        "lf": 880,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "ca9ae3ecf71c5047c9dc89db408601b59ff37981",
+        "wholeGitBlobPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "ca9ae3ecf71c5047c9dc89db408601b59ff37981",
+            "bytes": 105958,
+            "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de",
+            "startCodeUnit": 0,
+            "endCodeUnit": 105956
+          }
+        ],
+        "byteOrderMarkByteOffsets": [
+          0
+        ],
+        "concatenation": "Exact UTF-8 payload; single actual Git blob, with no separator or normalization.",
+        "verification": {
+          "actualBlobAuthenticated": true,
+          "literalMatch": true
+        }
+      },
+      {
+        "id": "C19-focal-cleanup",
+        "group": "C19-focal",
+        "role": "cleanup",
+        "kind": "original-log",
+        "run": 46093171031,
+        "attempt": 1,
+        "job": 140819087676,
+        "bytes": 2281,
+        "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0",
+        "lf": 39,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "1a9a9a1b6f550aa492656abf04ed45d85da6245e",
+        "wholeGitBlobPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "1a9a9a1b6f550aa492656abf04ed45d85da6245e",
+            "bytes": 2281,
+            "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0",
+            "startCodeUnit": 0,
+            "endCodeUnit": 2279
+          }
+        ],
+        "byteOrderMarkByteOffsets": [
+          0
+        ],
+        "concatenation": "Exact UTF-8 payload; single actual Git blob, with no separator or normalization.",
+        "verification": {
+          "actualBlobAuthenticated": true,
+          "literalMatch": true
+        }
+      },
+      {
+        "id": "C19-focal-reports",
+        "group": "C19-focal",
+        "role": "reports",
+        "kind": "derived-union",
+        "run": 46093171031,
+        "attempt": 1,
+        "job": 140818516840,
+        "bytes": 9251,
+        "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+        "lf": 6,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+        "wholeGitBlobPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+            "bytes": 9251,
+            "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+            "startCodeUnit": 0,
+            "endCodeUnit": 9251
+          }
+        ],
+        "byteOrderMarkByteOffsets": [],
+        "concatenation": "Exact UTF-8 payload; single actual Git blob, with no separator or normalization.",
+        "verification": {
+          "actualBlobAuthenticated": true,
+          "literalMatch": true
+        }
+      },
+      {
+        "id": "C19-analytics-main",
+        "group": "C19-analytics",
+        "role": "main",
+        "kind": "original-log",
+        "run": 46094695101,
+        "attempt": 1,
+        "job": 140823266913,
+        "bytes": 4866399,
+        "sha256": "23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a",
+        "lf": 1976,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "d5dacd1ea8b65419de9a47eef69134ab32c8471f",
+        "wholeGitBlobPersisted": false,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "c8d2bcc05a8f9b4b9e25873e05b05d068ce9430a",
+            "bytes": 300000,
+            "sha256": "d7d2a382455baa13ff89335cb278ea5eacd2f0226b932187958e88daabfd6d9a",
+            "startCodeUnit": 0,
+            "endCodeUnit": 297350
+          },
+          {
+            "index": 2,
+            "gitBlob": "99748fea2e5cec2f1140319a818bdad5106f7938",
+            "bytes": 300000,
+            "sha256": "bc280e766bd26afdfab265b36bbbff7ca3e0ea000a853ecd32ec9443a9887424",
+            "startCodeUnit": 297350,
+            "endCodeUnit": 597350
+          },
+          {
+            "index": 3,
+            "gitBlob": "225070f8c698627dbd3e5fa6064889144532e381",
+            "bytes": 300000,
+            "sha256": "a5bbea853583ef0b16fb2d7b29dfc3fd1fd6452c507c039ac83b4f40e26a2314",
+            "startCodeUnit": 597350,
+            "endCodeUnit": 895187
+          },
+          {
+            "index": 4,
+            "gitBlob": "46647af91dd94cc3595fae36d2886b1a1b2517b8",
+            "bytes": 300000,
+            "sha256": "10987d8a82abc010d26a0f4a90d05f0649caeaed8bcaec1a985a79fc13849b37",
+            "startCodeUnit": 895187,
+            "endCodeUnit": 1195187
+          },
+          {
+            "index": 5,
+            "gitBlob": "b0d30d07a8c98c2bd08ce872ed5b83d388f36e69",
+            "bytes": 300000,
+            "sha256": "675ed222b626add0f4b56b2c97f9f47dd6a0d66850b398f56f8d4b4d2fbb58a3",
+            "startCodeUnit": 1195187,
+            "endCodeUnit": 1495187
+          },
+          {
+            "index": 6,
+            "gitBlob": "39c680a4508175a4c4f2e53b4d4e565738aa7d85",
+            "bytes": 300000,
+            "sha256": "85286586cd5a5528c95e87cc40214fa584f5b35c917ab0529bff28a80fd17d52",
+            "startCodeUnit": 1495187,
+            "endCodeUnit": 1795187
+          },
+          {
+            "index": 7,
+            "gitBlob": "ac92bb694660b1e11e405828b78861513ba474e7",
+            "bytes": 300000,
+            "sha256": "381bb517f0a5661a8c04627488ef4b11b564c8a786eeac519edc6b37137fb438",
+            "startCodeUnit": 1795187,
+            "endCodeUnit": 2095187
+          },
+          {
+            "index": 8,
+            "gitBlob": "71d8c48bcd3419b83a22d58380f69daf243da856",
+            "bytes": 300000,
+            "sha256": "14873d09319eb494a077653f7881524ed4de07fb8b7a93b8c7497ad28f05e83c",
+            "startCodeUnit": 2095187,
+            "endCodeUnit": 2395185
+          },
+          {
+            "index": 9,
+            "gitBlob": "8721662f7db715147c0bb6f12c42a4e7c9d622b7",
+            "bytes": 300000,
+            "sha256": "7a304bdeb865ba583180e9ab15391d3d070db1004a6360583ff043a06ebc8cbb",
+            "startCodeUnit": 2395185,
+            "endCodeUnit": 2695182
+          },
+          {
+            "index": 10,
+            "gitBlob": "97dfbd93e4fb11fe9f2732574749cd4fdae99dc6",
+            "bytes": 300000,
+            "sha256": "03df6db405d51fed5084a9fa03229ee77581f6850ee4838f6314f871b4a0b744",
+            "startCodeUnit": 2695182,
+            "endCodeUnit": 2995179
+          },
+          {
+            "index": 11,
+            "gitBlob": "84f19b8ec8e1a0da4d2f625c5e9b088df1a60482",
+            "bytes": 300000,
+            "sha256": "cf7a07576d00259710c925bf34530f5e159a7714311636b4acfbf4614271350c",
+            "startCodeUnit": 2995179,
+            "endCodeUnit": 3295179
+          },
+          {
+            "index": 12,
+            "gitBlob": "bafafaf11eacd50f6921501aa62e343e9e0611fc",
+            "bytes": 300000,
+            "sha256": "c484a79ffaa6ff43a6eb3acdb9c073a48cbfc8c149ce8f2572137c6b55ba5e45",
+            "startCodeUnit": 3295179,
+            "endCodeUnit": 3595179
+          },
+          {
+            "index": 13,
+            "gitBlob": "927c928c396e496602ebd816410c89e986ef5f35",
+            "bytes": 300000,
+            "sha256": "80119027eb93261b7a3398d9dbf5f4f77e529a6a17ae4418c591160a0b603dac",
+            "startCodeUnit": 3595179,
+            "endCodeUnit": 3895179
+          },
+          {
+            "index": 14,
+            "gitBlob": "86219a7daf45e93512bbef54013ae9e06b58b650",
+            "bytes": 300000,
+            "sha256": "9589494204a4f81249ffb432636cd05f50546e07221445e5d0fccdfc89eb59f7",
+            "startCodeUnit": 3895179,
+            "endCodeUnit": 4195176
+          },
+          {
+            "index": 15,
+            "gitBlob": "e1b1083a01c0c53d6384e4aa191f1d8b7fdb66c5",
+            "bytes": 300000,
+            "sha256": "552808a804143666e7f00282b26b9b521d3c2067f0b5f00e61ade8a288dd2be1",
+            "startCodeUnit": 4195176,
+            "endCodeUnit": 4495174
+          },
+          {
+            "index": 16,
+            "gitBlob": "4cc211e26d3a65343addf18ad01eff3cf156ce69",
+            "bytes": 300000,
+            "sha256": "e6db5943c9dde710ce294b68b141f2db69d17cdabd2d9fe04f7ad0102761ecc4",
+            "startCodeUnit": 4495174,
+            "endCodeUnit": 4795174
+          },
+          {
+            "index": 17,
+            "gitBlob": "408b33408f5e995e52523000967858921b6a00ad",
+            "bytes": 66399,
+            "sha256": "c47dbd22b378fed2df8ceb6180d0e1ca944932ef263be90fe93817bd3996ed0d",
+            "startCodeUnit": 4795174,
+            "endCodeUnit": 4861569
+          }
+        ],
+        "byteOrderMarkByteOffsets": [
+          0,
+          2104899,
+          4224262
+        ],
+        "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+        "catalog": {
+          "gitBlob": "d48e9674a25b694c17db6c770c0116ec8c2ff1bb",
+          "pointer": "parts"
+        },
+        "verification": {
+          "allActualPartsAuthenticated": true,
+          "codeUnitRangesContiguous": true,
+          "exactOrderedConcatenation": true,
+          "wholeGitShaBytesSha256LfMatched": true,
+          "bomByteOffsetsMatched": true,
+          "wholeBlobNotFetchedOrCreated": true,
+          "noOriginalOrZipAcquisition": true
+        }
+      },
+      {
+        "id": "C19-analytics-cleanup",
+        "group": "C19-analytics",
+        "role": "cleanup",
+        "kind": "original-log",
+        "run": 46094695101,
+        "attempt": 1,
+        "job": 140825965023,
+        "bytes": 2281,
+        "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+        "lf": 39,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+        "wholeGitBlobPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+            "bytes": 2281,
+            "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+            "startCodeUnit": 0,
+            "endCodeUnit": 2279
+          }
+        ],
+        "byteOrderMarkByteOffsets": [
+          0
+        ],
+        "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+        "verification": {
+          "allActualPartsAuthenticated": true,
+          "codeUnitRangesContiguous": true,
+          "exactOrderedConcatenation": true,
+          "wholeGitShaBytesSha256LfMatched": true,
+          "noOriginalOrZipAcquisition": true
+        }
+      },
+      {
+        "id": "C19-analytics-markers",
+        "group": "C19-analytics",
+        "role": "markers",
+        "kind": "derived-union",
+        "run": 46094695101,
+        "attempt": 1,
+        "job": 140823266913,
+        "bytes": 34316,
+        "sha256": "fc2f119f794a473199abbf33dcc4ec5b446a478e258ba4d272ad9ad7686b8cab",
+        "lf": 97,
+        "endsWithLF": true,
+        "wholeGitBlobCalculated": "fa71c102ec320dfe7baf497af583db07bd7344ac",
+        "wholeGitBlobPersisted": true,
+        "parts": [
+          {
+            "index": 1,
+            "gitBlob": "fa71c102ec320dfe7baf497af583db07bd7344ac",
+            "bytes": 34316,
+            "sha256": "fc2f119f794a473199abbf33dcc4ec5b446a478e258ba4d272ad9ad7686b8cab",
+            "startCodeUnit": 0,
+            "endCodeUnit": 34292
+          }
+        ],
+        "byteOrderMarkByteOffsets": [],
+        "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+        "verification": {
+          "allActualPartsAuthenticated": true,
+          "codeUnitRangesContiguous": true,
+          "exactOrderedConcatenation": true,
+          "wholeGitShaBytesSha256LfMatched": true,
+          "noOriginalOrZipAcquisition": true
+        }
+      }
+    ],
+    "newStreamsCount": 6,
+    "newPartReferences": 22,
+    "originalPartConcatenation": "All six added streams were authenticated/recomposed as pure data. Four original job streams use actual parts; the 17-part Analytics whole is calculated-only. BOM/line endings are preserved.",
+    "derivedUnions": "Six-report focal and 97-marker Analytics unions were reproduced literally from preserved main copies after removing timestamp/ANSI carrier only, without JSON reserialization.",
+    "previousCorpus": "The actual 535-entry R5 objects tree and complete index/README/manifest/review/publication were authenticated. Prior R5 body/stream audits are retained; no fresh GET of all 535 bodies is claimed.",
+    "totalPureStructuralChecks": 798,
+    "allPassed": true,
+    "structuralCheckNames": [
+      "607 objects",
+      "683 memberships",
+      "40 groups",
+      "54 streams",
+      "199 part references",
+      "63318211 object bytes",
+      "72 added objects",
+      "99 new memberships",
+      "old groups literal",
+      "old streams literal",
+      "old object 0",
+      "old object 1",
+      "old object 2",
+      "old object 3",
+      "old object 4",
+      "old object 5",
+      "old object 6",
+      "old object 7",
+      "old object 8",
+      "old object 9",
+      "old object 10",
+      "old object 11",
+      "old object 12",
+      "old object 13",
+      "old object 14",
+      "old object 15",
+      "old object 16",
+      "old object 17",
+      "old object 18",
+      "old object 19",
+      "old object 20",
+      "old object 21",
+      "old object 22",
+      "old object 23",
+      "old object 24",
+      "old object 25",
+      "old object 26",
+      "old object 27",
+      "old object 28",
+      "old object 29",
+      "old object 30",
+      "old object 31",
+      "old object 32",
+      "old object 33",
+      "old object 34",
+      "old object 35",
+      "old object 36",
+      "old object 37",
+      "old object 38",
+      "old object 39",
+      "old object 40",
+      "old object 41",
+      "old object 42",
+      "old object 43",
+      "old object 44",
+      "old object 45",
+      "old object 46",
+      "old object 47",
+      "old object 48",
+      "old object 49",
+      "old object 50",
+      "old object 51",
+      "old object 52",
+      "old object 53",
+      "old object 54",
+      "old object 55",
+      "old object 56",
+      "old object 57",
+      "old object 58",
+      "old object 59",
+      "old object 60",
+      "old object 61",
+      "old object 62",
+      "old object 63",
+      "old object 64",
+      "old object 65",
+      "old object 66",
+      "old object 67",
+      "old object 68",
+      "old object 69",
+      "old object 70",
+      "old object 71",
+      "old object 72",
+      "old object 73",
+      "old object 74",
+      "old object 75",
+      "old object 76",
+      "old object 77",
+      "old object 78",
+      "old object 79",
+      "old object 80",
+      "old object 81",
+      "old object 82",
+      "old object 83",
+      "old object 84",
+      "old object 85",
+      "old object 86",
+      "old object 87",
+      "old object 88",
+      "old object 89",
+      "old object 90",
+      "old object 91",
+      "old object 92",
+      "old object 93",
+      "old object 94",
+      "old object 95",
+      "old object 96",
+      "old object 97",
+      "old object 98",
+      "old object 99",
+      "old object 100",
+      "old object 101",
+      "old object 102",
+      "old object 103",
+      "old object 104",
+      "old object 105",
+      "old object 106",
+      "old object 107",
+      "old object 108",
+      "old object 109",
+      "old object 110",
+      "old object 111",
+      "old object 112",
+      "old object 113",
+      "old object 114",
+      "old object 115",
+      "old object 116",
+      "old object 117",
+      "old object 118",
+      "old object 119",
+      "old object 120",
+      "old object 121",
+      "old object 122",
+      "old object 123",
+      "old object 124",
+      "old object 125",
+      "old object 126",
+      "old object 127",
+      "old object 128",
+      "old object 129",
+      "old object 130",
+      "old object 131",
+      "old object 132",
+      "old object 133",
+      "old object 134",
+      "old object 135",
+      "old object 136",
+      "old object 137",
+      "old object 138",
+      "old object 139",
+      "old object 140",
+      "old object 141",
+      "old object 142",
+      "old object 143",
+      "old object 144",
+      "old object 145",
+      "old object 146",
+      "old object 147",
+      "old object 148",
+      "old object 149",
+      "old object 150",
+      "old object 151",
+      "old object 152",
+      "old object 153",
+      "old object 154",
+      "old object 155",
+      "old object 156",
+      "old object 157",
+      "old object 158",
+      "old object 159",
+      "old object 160",
+      "old object 161",
+      "old object 162",
+      "old object 163",
+      "old object 164",
+      "old object 165",
+      "old object 166",
+      "old object 167",
+      "old object 168",
+      "old object 169",
+      "old object 170",
+      "old object 171",
+      "old object 172",
+      "old object 173",
+      "old object 174",
+      "old object 175",
+      "old object 176",
+      "old object 177",
+      "old object 178",
+      "old object 179",
+      "old object 180",
+      "old object 181",
+      "old object 182",
+      "old object 183",
+      "old object 184",
+      "old object 185",
+      "old object 186",
+      "old object 187",
+      "old object 188",
+      "old object 189",
+      "old object 190",
+      "old object 191",
+      "old object 192",
+      "old object 193",
+      "old object 194",
+      "old object 195",
+      "old object 196",
+      "old object 197",
+      "old object 198",
+      "old object 199",
+      "old object 200",
+      "old object 201",
+      "old object 202",
+      "old object 203",
+      "old object 204",
+      "old object 205",
+      "old object 206",
+      "old object 207",
+      "old object 208",
+      "old object 209",
+      "old object 210",
+      "old object 211",
+      "old object 212",
+      "old object 213",
+      "old object 214",
+      "old object 215",
+      "old object 216",
+      "old object 217",
+      "old object 218",
+      "old object 219",
+      "old object 220",
+      "old object 221",
+      "old object 222",
+      "old object 223",
+      "old object 224",
+      "old object 225",
+      "old object 226",
+      "old object 227",
+      "old object 228",
+      "old object 229",
+      "old object 230",
+      "old object 231",
+      "old object 232",
+      "old object 233",
+      "old object 234",
+      "old object 235",
+      "old object 236",
+      "old object 237",
+      "old object 238",
+      "old object 239",
+      "old object 240",
+      "old object 241",
+      "old object 242",
+      "old object 243",
+      "old object 244",
+      "old object 245",
+      "old object 246",
+      "old object 247",
+      "old object 248",
+      "old object 249",
+      "old object 250",
+      "old object 251",
+      "old object 252",
+      "old object 253",
+      "old object 254",
+      "old object 255",
+      "old object 256",
+      "old object 257",
+      "old object 258",
+      "old object 259",
+      "old object 260",
+      "old object 261",
+      "old object 262",
+      "old object 263",
+      "old object 264",
+      "old object 265",
+      "old object 266",
+      "old object 267",
+      "old object 268",
+      "old object 269",
+      "old object 270",
+      "old object 271",
+      "old object 272",
+      "old object 273",
+      "old object 274",
+      "old object 275",
+      "old object 276",
+      "old object 277",
+      "old object 278",
+      "old object 279",
+      "old object 280",
+      "old object 281",
+      "old object 282",
+      "old object 283",
+      "old object 284",
+      "old object 285",
+      "old object 286",
+      "old object 287",
+      "old object 288",
+      "old object 289",
+      "old object 290",
+      "old object 291",
+      "old object 292",
+      "old object 293",
+      "old object 294",
+      "old object 295",
+      "old object 296",
+      "old object 297",
+      "old object 298",
+      "old object 299",
+      "old object 300",
+      "old object 301",
+      "old object 302",
+      "old object 303",
+      "old object 304",
+      "old object 305",
+      "old object 306",
+      "old object 307",
+      "old object 308",
+      "old object 309",
+      "old object 310",
+      "old object 311",
+      "old object 312",
+      "old object 313",
+      "old object 314",
+      "old object 315",
+      "old object 316",
+      "old object 317",
+      "old object 318",
+      "old object 319",
+      "old object 320",
+      "old object 321",
+      "old object 322",
+      "old object 323",
+      "old object 324",
+      "old object 325",
+      "old object 326",
+      "old object 327",
+      "old object 328",
+      "old object 329",
+      "old object 330",
+      "old object 331",
+      "old object 332",
+      "old object 333",
+      "old object 334",
+      "old object 335",
+      "old object 336",
+      "old object 337",
+      "old object 338",
+      "old object 339",
+      "old object 340",
+      "old object 341",
+      "old object 342",
+      "old object 343",
+      "old object 344",
+      "old object 345",
+      "old object 346",
+      "old object 347",
+      "old object 348",
+      "old object 349",
+      "old object 350",
+      "old object 351",
+      "old object 352",
+      "old object 353",
+      "old object 354",
+      "old object 355",
+      "old object 356",
+      "old object 357",
+      "old object 358",
+      "old object 359",
+      "old object 360",
+      "old object 361",
+      "old object 362",
+      "old object 363",
+      "old object 364",
+      "old object 365",
+      "old object 366",
+      "old object 367",
+      "old object 368",
+      "old object 369",
+      "old object 370",
+      "old object 371",
+      "old object 372",
+      "old object 373",
+      "old object 374",
+      "old object 375",
+      "old object 376",
+      "old object 377",
+      "old object 378",
+      "old object 379",
+      "old object 380",
+      "old object 381",
+      "old object 382",
+      "old object 383",
+      "old object 384",
+      "old object 385",
+      "old object 386",
+      "old object 387",
+      "old object 388",
+      "old object 389",
+      "old object 390",
+      "old object 391",
+      "old object 392",
+      "old object 393",
+      "old object 394",
+      "old object 395",
+      "old object 396",
+      "old object 397",
+      "old object 398",
+      "old object 399",
+      "old object 400",
+      "old object 401",
+      "old object 402",
+      "old object 403",
+      "old object 404",
+      "old object 405",
+      "old object 406",
+      "old object 407",
+      "old object 408",
+      "old object 409",
+      "old object 410",
+      "old object 411",
+      "old object 412",
+      "old object 413",
+      "old object 414",
+      "old object 415",
+      "old object 416",
+      "old object 417",
+      "old object 418",
+      "old object 419",
+      "old object 420",
+      "old object 421",
+      "old object 422",
+      "old object 423",
+      "old object 424",
+      "old object 425",
+      "old object 426",
+      "old object 427",
+      "old object 428",
+      "old object 429",
+      "old object 430",
+      "old object 431",
+      "old object 432",
+      "old object 433",
+      "old object 434",
+      "old object 435",
+      "old object 436",
+      "old object 437",
+      "old object 438",
+      "old object 439",
+      "old object 440",
+      "old object 441",
+      "old object 442",
+      "old object 443",
+      "old object 444",
+      "old object 445",
+      "old object 446",
+      "old object 447",
+      "old object 448",
+      "old object 449",
+      "old object 450",
+      "old object 451",
+      "old object 452",
+      "old object 453",
+      "old object 454",
+      "old object 455",
+      "old object 456",
+      "old object 457",
+      "old object 458",
+      "old object 459",
+      "old object 460",
+      "old object 461",
+      "old object 462",
+      "old object 463",
+      "old object 464",
+      "old object 465",
+      "old object 466",
+      "old object 467",
+      "old object 468",
+      "old object 469",
+      "old object 470",
+      "old object 471",
+      "old object 472",
+      "old object 473",
+      "old object 474",
+      "old object 475",
+      "old object 476",
+      "old object 477",
+      "old object 478",
+      "old object 479",
+      "old object 480",
+      "old object 481",
+      "old object 482",
+      "old object 483",
+      "old object 484",
+      "old object 485",
+      "old object 486",
+      "old object 487",
+      "old object 488",
+      "old object 489",
+      "old object 490",
+      "old object 491",
+      "old object 492",
+      "old object 493",
+      "old object 494",
+      "old object 495",
+      "old object 496",
+      "old object 497",
+      "old object 498",
+      "old object 499",
+      "old object 500",
+      "old object 501",
+      "old object 502",
+      "old object 503",
+      "old object 504",
+      "old object 505",
+      "old object 506",
+      "old object 507",
+      "old object 508",
+      "old object 509",
+      "old object 510",
+      "old object 511",
+      "old object 512",
+      "old object 513",
+      "old object 514",
+      "old object 515",
+      "old object 516",
+      "old object 517",
+      "old object 518",
+      "old object 519",
+      "old object 520",
+      "old object 521",
+      "old object 522",
+      "old object 523",
+      "old object 524",
+      "old object 525",
+      "old object 526",
+      "old object 527",
+      "old object 528",
+      "old object 529",
+      "old object 530",
+      "old object 531",
+      "old object 532",
+      "old object 533",
+      "old object 534",
+      "no duplicate object SHA",
+      "exact object paths and modes",
+      "excluded computed main",
+      "excluded UI6 computed request",
+      "excluded rejected operational draft",
+      "historical documentary snapshots literal",
+      "old revision history literal",
+      "six incoming stream ranges",
+      "stream-part C16-focal-main/1",
+      "stream-part C16-focal-cleanup/1",
+      "stream-part C16-Analytics-main/1",
+      "stream-part C16-Analytics-main/2",
+      "stream-part C16-Analytics-main/3",
+      "stream-part C16-Analytics-main/4",
+      "stream-part C16-Analytics-main/5",
+      "stream-part C16-Analytics-main/6",
+      "stream-part C16-Analytics-main/7",
+      "stream-part C16-Analytics-main/8",
+      "stream-part C16-Analytics-main/9",
+      "stream-part C16-Analytics-main/10",
+      "stream-part C16-Analytics-main/11",
+      "stream-part C16-Analytics-main/12",
+      "stream-part C16-Analytics-main/13",
+      "stream-part C16-Analytics-main/14",
+      "stream-part C16-Analytics-main/15",
+      "stream-part C16-Analytics-main/16",
+      "stream-part C16-Analytics-main/17",
+      "stream-part C16-Analytics-cleanup/1",
+      "stream-part E11-focal-main/1",
+      "stream-part E11-focal-cleanup/1",
+      "stream-part E11-Analytics-main/1",
+      "stream-part E11-Analytics-main/2",
+      "stream-part E11-Analytics-main/3",
+      "stream-part E11-Analytics-main/4",
+      "stream-part E11-Analytics-main/5",
+      "stream-part E11-Analytics-main/6",
+      "stream-part E11-Analytics-main/7",
+      "stream-part E11-Analytics-main/8",
+      "stream-part E11-Analytics-main/9",
+      "stream-part E11-Analytics-main/10",
+      "stream-part E11-Analytics-main/11",
+      "stream-part E11-Analytics-main/12",
+      "stream-part E11-Analytics-main/13",
+      "stream-part E11-Analytics-main/14",
+      "stream-part E11-Analytics-main/15",
+      "stream-part E11-Analytics-main/16",
+      "stream-part E11-Analytics-main/17",
+      "stream-part E11-Analytics-cleanup/1",
+      "stream-part E11-reader-main/1",
+      "stream-part E11-reader-main/2",
+      "stream-part E11-reader-main/3",
+      "stream-part E11-reader-main/4",
+      "stream-part E11-reader-main/5",
+      "stream-part E11-reader-main/6",
+      "stream-part E11-reader-main/7",
+      "stream-part E11-reader-main/8",
+      "stream-part E11-reader-main/9",
+      "stream-part E11-reader-main/10",
+      "stream-part E11-export-profile/1",
+      "stream-part E11-export-profile/2",
+      "stream-part E11-export-profile/3",
+      "stream-part E11-export-profile/4",
+      "stream-part E11-export-profile/5",
+      "stream-part E11-export-profile/6",
+      "stream-part E11-export-profile/7",
+      "stream-part E11-export-markers/1",
+      "stream-part E11-export-collection/1",
+      "stream-part E11-export-launcher/1",
+      "stream-part E11-export-summary/1",
+      "stream-part E11-export-inventory/1",
+      "stream-part E11-export-receipt/1",
+      "stream-part E11-Analytics-marker-union/1",
+      "stream-part C17-focal-main/1",
+      "stream-part C17-focal-cleanup/1",
+      "stream-part C17-Analytics-main/1",
+      "stream-part C17-Analytics-main/2",
+      "stream-part C17-Analytics-main/3",
+      "stream-part C17-Analytics-main/4",
+      "stream-part C17-Analytics-main/5",
+      "stream-part C17-Analytics-main/6",
+      "stream-part C17-Analytics-main/7",
+      "stream-part C17-Analytics-main/8",
+      "stream-part C17-Analytics-main/9",
+      "stream-part C17-Analytics-main/10",
+      "stream-part C17-Analytics-main/11",
+      "stream-part C17-Analytics-main/12",
+      "stream-part C17-Analytics-main/13",
+      "stream-part C17-Analytics-main/14",
+      "stream-part C17-Analytics-main/15",
+      "stream-part C17-Analytics-main/16",
+      "stream-part C17-Analytics-main/17",
+      "stream-part C17-Analytics-cleanup/1",
+      "stream-part E12-focal-main/1",
+      "stream-part E12-focal-cleanup/1",
+      "stream-part E12-focal-report_union/1",
+      "stream-part E12-Analytics-main/1",
+      "stream-part E12-Analytics-main/2",
+      "stream-part E12-Analytics-main/3",
+      "stream-part E12-Analytics-main/4",
+      "stream-part E12-Analytics-main/5",
+      "stream-part E12-Analytics-main/6",
+      "stream-part E12-Analytics-main/7",
+      "stream-part E12-Analytics-main/8",
+      "stream-part E12-Analytics-main/9",
+      "stream-part E12-Analytics-main/10",
+      "stream-part E12-Analytics-main/11",
+      "stream-part E12-Analytics-main/12",
+      "stream-part E12-Analytics-main/13",
+      "stream-part E12-Analytics-main/14",
+      "stream-part E12-Analytics-main/15",
+      "stream-part E12-Analytics-main/16",
+      "stream-part E12-Analytics-main/17",
+      "stream-part E12-Analytics-cleanup/1",
+      "stream-part E12-Analytics-marker_union/1",
+      "stream-part E12-reader-main/1",
+      "stream-part E12-reader-main/2",
+      "stream-part E12-reader-main/3",
+      "stream-part E12-reader-main/4",
+      "stream-part E12-reader-main/5",
+      "stream-part E12-reader-main/6",
+      "stream-part E12-reader-main/7",
+      "stream-part E12-reader-main/8",
+      "stream-part E12-reader-main/9",
+      "stream-part E12-reader-main/10",
+      "stream-part E12-reader-main/11",
+      "stream-part E12-reader-exports-profile/1",
+      "stream-part E12-reader-exports-profile/2",
+      "stream-part E12-reader-exports-profile/3",
+      "stream-part E12-reader-exports-profile/4",
+      "stream-part E12-reader-exports-profile/5",
+      "stream-part E12-reader-exports-profile/6",
+      "stream-part E12-reader-exports-profile/7",
+      "stream-part E12-reader-exports-profile/8",
+      "stream-part E12-reader-exports-markers/1",
+      "stream-part E12-reader-exports-collection/1",
+      "stream-part E12-reader-exports-launcher/1",
+      "stream-part E12-reader-exports-summary/1",
+      "stream-part E12-reader-exports-inventory/1",
+      "stream-part E12-reader-exports-receipt/1",
+      "stream-part C18-focal-main/1",
+      "stream-part C18-focal-cleanup/1",
+      "stream-part C18-focal-reports/1",
+      "stream-part C18-analytics-main/1",
+      "stream-part C18-analytics-main/2",
+      "stream-part C18-analytics-main/3",
+      "stream-part C18-analytics-main/4",
+      "stream-part C18-analytics-main/5",
+      "stream-part C18-analytics-main/6",
+      "stream-part C18-analytics-main/7",
+      "stream-part C18-analytics-main/8",
+      "stream-part C18-analytics-main/9",
+      "stream-part C18-analytics-main/10",
+      "stream-part C18-analytics-main/11",
+      "stream-part C18-analytics-main/12",
+      "stream-part C18-analytics-main/13",
+      "stream-part C18-analytics-main/14",
+      "stream-part C18-analytics-main/15",
+      "stream-part C18-analytics-main/16",
+      "stream-part C18-analytics-main/17",
+      "stream-part C18-analytics-cleanup/1",
+      "stream-part C18-analytics-markers/1",
+      "stream-part E13-focal-main/1",
+      "stream-part E13-focal-cleanup/1",
+      "stream-part E13-focal-reports/1",
+      "stream-part E13-analytics-main/1",
+      "stream-part E13-analytics-main/2",
+      "stream-part E13-analytics-main/3",
+      "stream-part E13-analytics-main/4",
+      "stream-part E13-analytics-main/5",
+      "stream-part E13-analytics-main/6",
+      "stream-part E13-analytics-main/7",
+      "stream-part E13-analytics-main/8",
+      "stream-part E13-analytics-main/9",
+      "stream-part E13-analytics-main/10",
+      "stream-part E13-analytics-main/11",
+      "stream-part E13-analytics-main/12",
+      "stream-part E13-analytics-main/13",
+      "stream-part E13-analytics-main/14",
+      "stream-part E13-analytics-main/15",
+      "stream-part E13-analytics-main/16",
+      "stream-part E13-analytics-main/17",
+      "stream-part E13-analytics-main/18",
+      "stream-part E13-analytics-cleanup/1",
+      "stream-part E13-analytics-markers/1",
+      "stream-part E13-analytics-events/1",
+      "stream-part C19-focal-main/1",
+      "stream-part C19-focal-cleanup/1",
+      "stream-part C19-focal-reports/1",
+      "stream-part C19-analytics-main/1",
+      "stream-part C19-analytics-main/2",
+      "stream-part C19-analytics-main/3",
+      "stream-part C19-analytics-main/4",
+      "stream-part C19-analytics-main/5",
+      "stream-part C19-analytics-main/6",
+      "stream-part C19-analytics-main/7",
+      "stream-part C19-analytics-main/8",
+      "stream-part C19-analytics-main/9",
+      "stream-part C19-analytics-main/10",
+      "stream-part C19-analytics-main/11",
+      "stream-part C19-analytics-main/12",
+      "stream-part C19-analytics-main/13",
+      "stream-part C19-analytics-main/14",
+      "stream-part C19-analytics-main/15",
+      "stream-part C19-analytics-main/16",
+      "stream-part C19-analytics-main/17",
+      "stream-part C19-analytics-cleanup/1",
+      "stream-part C19-analytics-markers/1",
+      "group R5",
+      "group C16-source",
+      "group C16-focal",
+      "group D26-C16",
+      "group C16-Analytics",
+      "group E11-Analytics",
+      "group E11-analysis",
+      "group E11-exports",
+      "group E11-focal",
+      "group E11-reader",
+      "group E11-source",
+      "group C17-closed-and-support",
+      "group ARCHIVE-INCREMENT-2",
+      "group R7",
+      "group E12-source",
+      "group E12-control",
+      "group E12-focal",
+      "group E12-Analytics",
+      "group archive-R2",
+      "group E12-reader",
+      "group E12-analysis",
+      "group E12-reader-exports",
+      "group ARCHIVE-INCREMENT-3",
+      "group C18-source",
+      "group C18-focal",
+      "group C18-analytics",
+      "group D27-final-qualification",
+      "group C18-reception-and-next-question",
+      "group R3-archive-control",
+      "group E13-source",
+      "group E13-control",
+      "group E13-focal",
+      "group E13-analytics",
+      "group E13-control-plane",
+      "group R4-archive-control",
+      "group C19-source",
+      "group C19-focal",
+      "group D28-final-qualification",
+      "group C19-analytics",
+      "group R5-archive-control",
+      "21 inherited objects receive only memberships",
+      "22 added inherited memberships",
+      "index has no self hash",
+      "readme object links resolve",
+      "catalog no calculated-only main object",
+      "no current refs populated"
+    ],
+    "roundtrip": {
+      "indexForward": true,
+      "indexInverse": true,
+      "readmeForward": true,
+      "readmeInverse": true
+    },
+    "parentMetadataChecked": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+        "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+        "role": "previous published evidence archive R5"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "86e365fe047f86597751c7e8222011dca4b0a0af",
+        "tree": "e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2",
+        "role": "executed C19 focal",
+        "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+        "tree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+        "role": "executed original C19 Analytics",
+        "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+      }
+    ]
+  },
+  "currentC19": {
+    "source": {
+      "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+    },
+    "focal": {
+      "receipt": {
+        "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+        "bytes": 103238,
+        "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e"
+      },
+      "functionalTests": 15,
+      "functionalAssertions": 2103,
+      "outerTests": 7,
+      "outerAssertions": 34,
+      "commands": 13,
+      "falseTruncationFlags": 26,
+      "reports": 6,
+      "rootChecks": 36,
+      "peerChecks": 53,
+      "scope": "FOCAL_PASS_ONLY"
+    },
+    "analytics": {
+      "receipt": {
+        "gitBlob": "86a38860ee558c6c21d2356a9f7770209d5b986a",
+        "bytes": 27557,
+        "sha256": "b2168f11bf09a3369691323c35f45d09635fa7772872c6780d8d4756e729bd80",
+        "lf": 859
+      },
+      "independentReceipt": {
+        "gitBlob": "08328f984a266a8ebe356b4220ea7c82694bdff2",
+        "bytes": 13675,
+        "sha256": "3218b18c7768064b54c3d0355996ceb5d266e883aa3d96bb5ad66da73a0faa29",
+        "lf": 1
+      },
+      "rootChecks": 28,
+      "peerChecks": 41,
+      "failed": 1,
+      "passed": 1,
+      "firstPreviewMs": 60000,
+      "location": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+      "UI42Captures": 6,
+      "UI42Qualified": false,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "BICaptures": 40,
+      "BIPassedOnThisSnapshot": true,
+      "sourceMarkers": 45,
+      "captureMarkers": 46,
+      "diagnosticMarkers": 5,
+      "scopeMarkers": 1,
+      "historyPrecision": "Results sequence 1 includes both native-request-failed and HTTP 200 with response-body-unavailable; sequence 2 is 200/ok/array. Neither is the unique preview POST sequence 3; no matching preview response is observed.",
+      "newQualifiedAreas": 0,
+      "noDemonstratedPerformanceGain": true
+    },
+    "D28": {
+      "manifest": {
+        "gitBlob": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+        "bytes": 24043,
+        "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123"
+      },
+      "rootReview": {
+        "gitBlob": "27f39a06e070ac81100c511a9326de6048fd2d85",
+        "bytes": 6989,
+        "sha256": "90cde794cff5564505d7b4aed41fdc64533ebf23909dfd9a48aa1a30e310e6e7",
+        "lf": 264
+      },
+      "peerReview": {
+        "gitBlob": "3f9da09feb817f8e5f3b713f2f86cc8d66a28e44",
+        "bytes": 4354,
+        "sha256": "4e19d471e1e55b3eed93fee1f613aa48d846b34061595a018e83b4859f502cd2",
+        "lf": 124
+      },
+      "status": "STATIC_ONLY_FOUR_FINAL_BINDINGS_UNBOUND",
+      "groups": 26,
+      "syntacticCommandSites": 32,
+      "effectiveCommands": 37,
+      "truncationFlags": 74,
+      "G23Declarations": 3,
+      "wholeSuiteFunctionalTotal": null,
+      "wholeSuiteReportTotal": null,
+      "execution": null
+    },
+    "operationalObservation": {
+      "final": {
+        "gitBlob": "8283eabd80da4413a0e3fc720ae3c8e1be281e4d",
+        "bytes": 3721,
+        "sha256": "ca7d83c0a8756539b50b7983ea730ae581615a4db0efe557c90236b3708d052b",
+        "lf": 76
+      },
+      "accessCutUtc": "2026-11-28 01:49:46 UTC",
+      "originalGetsForAccessObservation": 0,
+      "analyticsOriginalGetsClosed": 2,
+      "hostAuthorizationAlreadyExists": true,
+      "globalOutageClaimed": false,
+      "G08AndG10ReservationsPending": true,
+      "finalCandidate": null,
+      "verifiedTar": null,
+      "scope": "The observation records missing confirmations/access at its own cut; it does not revoke the existing host authorization or authorize reopening closed originals."
+    },
+    "checkpointOrder": [
+      {
+        "cut": "in-progress historical",
+        "gitBlob": "45304b589465dfdaa584f9783aeef13d1dd6ae47",
+        "bytes": 21774,
+        "sha256": "95dd4d1bf2801de0d2f1d83cc867153ed1524f6f3e154799c2a7ac13fa218f97",
+        "lf": 143
+      },
+      {
+        "cut": "closed subsequent",
+        "gitBlob": "8863b12b4c3b52d26ea43844986c7857faa19b95",
+        "bytes": 24937,
+        "sha256": "ede9364b859aa612d51d76b3c4434a8b09d6965965157df88a0f15588c6f960e",
+        "lf": 266
+      }
+    ],
+    "allOriginalsThroughC19Closed": true,
+    "sourceIsNotFinalC613": true,
+    "newQualifiedAreas": 0,
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "noDemonstratedPerformanceGain": true
+  },
+  "exclusionsAndLimits": {
+    "calculatedOnlyWholeMain": {
+      "gitBlob": "d5dacd1ea8b65419de9a47eef69134ab32c8471f",
+      "bytes": 4866399,
+      "sha256": "23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a",
+      "lf": 1976,
+      "endsWithLF": true,
+      "actuallyCreated": false,
+      "acquiredByThisAuthor": false,
+      "includeInObjects": false
+    },
+    "UI6Request390Bytes": {
+      "gitBlobCalculated": "2bd57a54180a099bbf904d188fe6e0eb22362cea",
+      "actualBlobCreated": false,
+      "acquired": false,
+      "includeInObjects": false,
+      "source": "Text/calculated identity carried in closed checkpoint only."
+    },
+    "artifact": {
+      "id": 15242603880,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45814109,
+      "sha256": "bccc5ec8ff3eb6c7c57f34211fa59bbf691d072af0faf115f5f1ed3857b47392",
+      "metadataOnly": true,
+      "zipGets": 0,
+      "includeInObjects": false
+    },
+    "rejectedOperationalDraft": {
+      "shaPrefix": "0e1e265",
+      "included": false
+    },
+    "E14": {
+      "artifactsIncluded": false,
+      "runsIncluded": false,
+      "scope": "Only mention of future diagnostic authorship inside historical C19 receipt/checkpoint; no E14 object package is included."
+    },
+    "commitsAndTreesAreMetadataNotBlobEntries": true,
+    "catalogOwnHashNotSelfIncluded": true,
+    "noTransitiveHistoricalReferenceClosure": true
+  },
+  "reviews": {
+    "catalogRootReported": "Root authenticated all 71 new bodies and six streams; 21 reused metadata match R5. Reported in the current review session.",
+    "catalogPeerReported": {
+      "reviewer": "/root/teams_product",
+      "checks": 20,
+      "status": "ACK_CATALOG_ONLY"
+    },
+    "completePackageRoot": null,
+    "completePackagePeer": null,
+    "noPublicationBeforeFullReview": true
+  },
+  "authorEffects": {
+    "proposedGitBlobs": 4,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "sourceEdits": 0,
+    "repositoryExecutions": 0,
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "pullRequests": 0,
+    "externalComments": 0,
+    "scope": "Archive proposal only. The later E14 control/wrapper assignment is not part of this package."
+  }
+}

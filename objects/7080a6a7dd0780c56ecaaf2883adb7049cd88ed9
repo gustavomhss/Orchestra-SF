@@ -1,0 +1,1752 @@
+{
+  "schema": "sf613-e14-focal-result-receipt-v1",
+  "status": "CLOSED_FOCAL_PASS_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "cleanParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "objectReceipt": {
+      "gitBlob": "98bf24ec513b66c14ca7d5173a75d19b8c29ca29",
+      "bytes": 3663,
+      "sha256": "8d997c302a7ce754df7cc8cb7b4bb05bc6955e9a3da5b87715c07691d84f3c36",
+      "lf": 115,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "tree": "934f7bab75f8ee4638cf9042db94dd9b954e1fd3",
+    "soleParent": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "objectReceipt": {
+      "gitBlob": "9133dbb9320e9c8a52f12eadb571349a3f808ce4",
+      "bytes": 4420,
+      "sha256": "7f52a206efb50c9c0f7ca22294f7b676b97f73815bf5716a508756c6d5dc3a66",
+      "lf": 135,
+      "endsWithLF": true
+    }
+  },
+  "run": {
+    "id": 46102111383,
+    "run_attempt": 1,
+    "head_sha": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "head_branch": "ci-run-sf613e14f",
+    "event": "push",
+    "path": ".github/workflows/test-ci.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46102111383",
+    "created_at": "2026-11-28T03:17:10Z",
+    "updated_at": "2026-11-28T03:19:45Z",
+    "run_started_at": "2026-11-28T03:17:10Z"
+  },
+  "jobs": [
+    {
+      "id": 140846639754,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T03:17:26Z",
+      "completed_at": "2026-11-28T03:19:36Z",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46102111383/job/140846639754"
+    },
+    {
+      "id": 140847255435,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T03:19:38Z",
+      "completed_at": "2026-11-28T03:19:44Z",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46102111383/job/140847255435"
+    }
+  ],
+  "authority": {
+    "gitBlob": "c21f65a3a47eb96d8367e5384213487fe12d444f",
+    "bytes": 10495,
+    "sha256": "629cbecff3dfc0d4da5a70d8462d95d722398a63e9e3a3787092f22de17bdd09",
+    "lf": 338,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "869bac95d11efc144eafeaa4b8357608c8236eec",
+    "bytes": 1156,
+    "sha256": "68893ace417b5bb8f9319a2115dacc840fd5649164aeda213ebef4a0770cce57",
+    "lf": 38,
+    "endsWithLF": true
+  },
+  "intakeContext": {
+    "gitBlob": "67ad87b40fd0c265e2812d1fc8556d77676c9c4e",
+    "bytes": 10868,
+    "sha256": "b9f5ca68d200065496b39d78d4317c4853c2de00d695c0b13592a7ca1f391b21",
+    "lf": 332,
+    "endsWithLF": true
+  },
+  "originals": {
+    "main": {
+      "actualBlob": {
+        "gitBlob": "6d28907518a267cb2fee06b9956648eb05c4c38c",
+        "bytes": 119608,
+        "sha256": "bbbdd91bce6d1723f73bff26fe2633a8bca5b6eb41a040d2177673a209c57366",
+        "lf": 895,
+        "endsWithLF": true
+      },
+      "manifest": {
+        "gitBlob": "d628d1733859f72389b8c7f62e34bbdeccbdf763",
+        "bytes": 1696,
+        "sha256": "ac152d863695147643b151aa63a878078f3cc0a9a947a8cccf08054e383ad213",
+        "lf": 58,
+        "endsWithLF": true
+      },
+      "gets": 1,
+      "closed": true
+    },
+    "cleanup": {
+      "actualBlob": {
+        "gitBlob": "9e02e244074c2ee0dfe39b6a56c8ef7ae88c1aa1",
+        "bytes": 2281,
+        "sha256": "0cbb517d9a2483977607eda2fb5830875990b25837f0e8dfcd136293d83c7826",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "manifest": {
+        "gitBlob": "5d6631a5cfe0adfe20ab5b1bba61296dc5c76bd2",
+        "bytes": 1686,
+        "sha256": "b21ccfa6274c693c424bf5dd940214bb1754dc4849f31b35bc7afce26855d77f",
+        "lf": 58,
+        "endsWithLF": true
+      },
+      "gets": 1,
+      "closed": true
+    },
+    "closedAt": {
+      "current_time": "2026-11-28 03:20:30 UTC"
+    },
+    "literalBeforeInterpretation": true,
+    "zipGets": 0
+  },
+  "result": {
+    "selection": {
+      "wholeFiles": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "apps/cli/test/sf613-preview-e14-observation.test.ts"
+      ],
+      "nameFilter": null
+    },
+    "functional": {
+      "passed": 16,
+      "failed": 0,
+      "assertions": 2146
+    },
+    "outer": {
+      "passed": 8,
+      "failed": 0,
+      "assertions": 46,
+      "observedElapsed": "80.73s"
+    },
+    "actualFooterLines": [
+      {
+        "line": 773,
+        "body": " 7 pass"
+      },
+      {
+        "line": 774,
+        "body": " 0 fail"
+      },
+      {
+        "line": 775,
+        "body": " 843 expect() calls"
+      },
+      {
+        "line": 776,
+        "body": "Ran 7 tests across 1 file. [272.00ms]"
+      },
+      {
+        "line": 795,
+        "body": " 5 pass"
+      },
+      {
+        "line": 796,
+        "body": " 0 fail"
+      },
+      {
+        "line": 797,
+        "body": " 757 expect() calls"
+      },
+      {
+        "line": 798,
+        "body": "Ran 5 tests across 1 file. [623.00ms]"
+      },
+      {
+        "line": 841,
+        "body": " 3 pass"
+      },
+      {
+        "line": 842,
+        "body": " 0 fail"
+      },
+      {
+        "line": 843,
+        "body": " 503 expect() calls"
+      },
+      {
+        "line": 844,
+        "body": "Ran 3 tests across 1 file. [220.00ms]"
+      },
+      {
+        "line": 856,
+        "body": " 1 pass"
+      },
+      {
+        "line": 857,
+        "body": " 0 fail"
+      },
+      {
+        "line": 858,
+        "body": " 43 expect() calls"
+      },
+      {
+        "line": 862,
+        "body": " 8 pass"
+      },
+      {
+        "line": 863,
+        "body": " 0 fail"
+      },
+      {
+        "line": 864,
+        "body": " 46 expect() calls"
+      },
+      {
+        "line": 865,
+        "body": "Ran 8 tests across 1 file. [80.73s]"
+      }
+    ],
+    "commands": [
+      {
+        "line": 745,
+        "gate": "fetch source parent",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=3",
+          "origin",
+          "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 213,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 749,
+        "gate": "snapshot identity",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 752,
+        "gate": "source identity",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "show",
+          "-s",
+          "--format=%H%n%T%n%P",
+          "HEAD^"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 4,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 760,
+        "gate": "complete cases read-set contract whole-file",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/cases-read-contract.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 282,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 779,
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 634,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 801,
+        "gate": "CLI package typecheck",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 29304,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 806,
+        "gate": "Sucafina package typecheck",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 26755,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 811,
+        "gate": "inspect history completeness",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "rev-parse",
+          "--is-shallow-repository"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 814,
+        "gate": "fetch current dev and source ancestry",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--unshallow",
+          "origin",
+          "+refs/heads/dev:refs/remotes/origin/dev",
+          "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 20499,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 819,
+        "gate": "current dev identity",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 822,
+        "gate": "actual guard merge base",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "git",
+          "merge-base",
+          "HEAD",
+          "origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 8,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 826,
+        "gate": "canonical guardrails",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev",
+          "--json"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 1573,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 832,
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 229,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 849,
+        "gate": "E14 first-analysis observation whole-file",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+        "run": "46102111383",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/sf613-preview-e14-observation.test.ts"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 959,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ],
+    "reportedSourceBlobs": {
+      "line": 757,
+      "gate": "reviewed source blobs",
+      "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+      "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+      "snapshot": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sha": "b7de9404461591ce0162d496ec917a47fb72a479"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "sha": "39e6da84a3dd815721484affaf8315731ded073b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+          "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+          "sha": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+          "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts",
+          "sha": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "sha": "d5cb9fff2fc1a725250f9710449f9d13f3a942c7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "sha": "094f788a27d01b91d6601333a4e8f99ac40db556"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "sha": "03859dbbf10fd6ca551f987736e445d2ff8b3431"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+          "sha": "4b1d4578d558456772ab04e05e33d13231ca7502"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+          "sha": "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "sha": "4dce572e3fdace2042ae3c9a1102606b300f6d8d"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "sha": "a9fb4f79968e3c753424f01534b1f7b5e61895fe"
+        },
+        {
+          "path": "apps/cli/test/sf613-preview-e14-observation.test.ts",
+          "sha": "2e6cc75ca3a99ee2a38ad2924240d87fa25b3066"
+        },
+        {
+          "path": "apps/cli/test/fixture/sf613-preview-e14-observation.ts",
+          "sha": "542861d14c872c679ab1f41a9ed88d26a8085426"
+        }
+      ],
+      "expectedGroups": 8,
+      "expectedCommands": 14,
+      "functionalProcessesLaunched": 4,
+      "staticDeclarationSites": {
+        "casesContract": 7,
+        "projection": 5,
+        "portfolioSelection": 3,
+        "diagnostic": 1
+      },
+      "expectedControlReports": 7
+    },
+    "declaredManifestIsNotRuntimeTotals": {
+      "line": 744,
+      "e14ObservationManifest": {
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "cleanSource": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "cleanTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "qualification": false,
+        "sourcePaths": 23,
+        "workingPaths": 25,
+        "diagnosticSourceDeltaPaths": 9,
+        "deltaBase": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "expectedGroups": 8,
+        "expectedCommands": 14,
+        "functionalProcessesLaunched": 4,
+        "staticDeclarationSites": {
+          "casesContract": 7,
+          "projection": 5,
+          "portfolioSelection": 3,
+          "diagnostic": 1
+        },
+        "expectedControlReports": 7,
+        "preservedC16Outcomes": 31,
+        "identityProjectionOracles": 9,
+        "nameFilter": null,
+        "mechanism": "bounded first-Request observation with first-analysis critical reservations, lexical stages and compare body exits",
+        "assertions": "existing cases, projection and Portfolio consumer files remain whole; the diagnostic uses real analysis with controlled ports and synthetic observer mechanisms; actual totals require the run footers",
+        "casesControlsMs": {
+          "cooperativePerTest": 12000,
+          "bunPerTest": 15000,
+          "declaredTests": 7,
+          "nominalSum": 105000,
+          "process": 120000,
+          "parent": 180000
+        },
+        "projectionControlsMs": {
+          "inheritedC14": {
+            "cooperativePerTest": 110000,
+            "bunPerTest": 120000,
+            "selectedTests": 2
+          },
+          "inheritedC15": {
+            "cooperativePerTest": 18000,
+            "bunPerTest": 20000,
+            "selectedTests": 2
+          },
+          "retainedC16": {
+            "cooperativePerTest": 8000,
+            "bunPerTest": 10000,
+            "selectedTests": 1
+          },
+          "selectedTests": 5,
+          "nominalSum": 290000,
+          "process": 300000,
+          "parent": 360000
+        },
+        "portfolioControlsMs": {
+          "inheritedCooperative": [
+            12000,
+            12000
+          ],
+          "inheritedBun": [
+            15000,
+            15000
+          ],
+          "addedCooperative": 18000,
+          "addedBun": 20000,
+          "declaredTests": 3,
+          "nominalSum": 50000,
+          "process": 120000,
+          "parent": 180000
+        },
+        "diagnosticControlsMs": {
+          "declaredTests": 1,
+          "isolatedModes": 8,
+          "childProcess": 3000,
+          "childNominalSum": 24000,
+          "bun": 35000,
+          "process": 60000,
+          "parent": 90000,
+          "childStdoutBytes": 65536,
+          "childStderrBytes": 65536,
+          "parentReportBytes": 16384
+        },
+        "typecheckMs": {
+          "process": 240000,
+          "parent": 300000
+        },
+        "guardsMs": {
+          "defaultProcess": 180000,
+          "parent": 600000
+        },
+        "snapshotOverlays": [
+          ".ci-run.json",
+          "apps/cli/test/sucafina-proof-verification.test.ts",
+          "apps/cli/test/sf613-preview-e14-observation.test.ts",
+          "apps/cli/test/fixture/sf613-preview-e14-observation.ts"
+        ],
+        "overlayDelta": {
+          "added": 3,
+          "modified": 1,
+          "analyticsRequestReplacedByFocalRequest": true
+        }
+      }
+    },
+    "reports": {
+      "unionActualBlob": {
+        "gitBlob": "978b8c5e39fa79758de49718200eb7838e61e3eb",
+        "bytes": 18727,
+        "sha256": "4cd63ad3cbe9a317c4a7d917db259cc7aca2f13a2377fb363d67d976656bf8dc",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "emissions": [
+        {
+          "sourceLine": 781,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "bytes": 585,
+          "sha256": "4b26dc61cc6f0f0f33fcc2727faad9ec7e9b9dc5608954658ef210a2ab04c977"
+        },
+        {
+          "sourceLine": 783,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "bytes": 1581,
+          "sha256": "178661688acccc8be65a0fc0d435ad070b2487d82a4f491d108d10b133aef9a3"
+        },
+        {
+          "sourceLine": 784,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "bytes": 591,
+          "sha256": "e6a13b7deddc596bc7eb7bbaaf642fc593cc90c46ef96fee0cff162ff823517a"
+        },
+        {
+          "sourceLine": 785,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "bytes": 1937,
+          "sha256": "59a3294a3386606a3153a9798a80ad576eec21b1fb9cf2c2b3dc5fbf69674c22"
+        },
+        {
+          "sourceLine": 786,
+          "prefix": "SF_C16_SELECTION_CONTROL",
+          "bytes": 4407,
+          "sha256": "28ae0d25800202dcb4b9ba32a2c25b305ca3df65591a1a2f5df3793a9c3a82c0"
+        },
+        {
+          "sourceLine": 834,
+          "prefix": "SF_C19_PORTFOLIO_CASES",
+          "bytes": 150,
+          "sha256": "361f33924b2654e03c112c3fa163165b67c1983ab3b2c058cf12f81270f1bc2c"
+        },
+        {
+          "sourceLine": 851,
+          "prefix": "SF_E14_OBSERVATION_CONTROL",
+          "bytes": 9476,
+          "sha256": "a481b1a0fb81c11535da679e1eccc2500b0cc5b765b30a765dc293c42733f7ca"
+        }
+      ],
+      "sixInheritedPayloadsLiteral": true,
+      "newE14Report": {
+        "sourceLine": 851,
+        "bytes": 9476,
+        "synthetic": true,
+        "modes": [
+          {
+            "mode": "flow",
+            "pid": 3118,
+            "checks": [
+              "exact-promise-and-unassimilated-value",
+              "foreign-and-wrong-handle-use-neutral-scope",
+              "entries-persist-before-units-return",
+              "overlapping-stages-and-compare-parent-are-independent",
+              "real-callers-early-return-denial-and-exact-rejection",
+              "lookup-receiver-arguments-once",
+              "parent-rejection-does-not-close-sibling",
+              "reentrant-close-serialized-and-late-ignored"
+            ],
+            "records": 28,
+            "stdoutAttempts": 28,
+            "stdoutBytes": 16229,
+            "fileBytes": 16229,
+            "stdoutSha256": "337221181dc32bec544a998eff72c0cc2591f88b0897b52428952a497d27fa01",
+            "fileSha256": "337221181dc32bec544a998eff72c0cc2591f88b0897b52428952a497d27fa01",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-qThfZs",
+              "pid": 3118,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 28,
+              "kind": "request-close",
+              "elapsedTenthMs": 30,
+              "outcome": "returned",
+              "eventsBefore": 27,
+              "bytesBefore": 15552,
+              "dropped": 0,
+              "openUnits": 0,
+              "openPhases": 0,
+              "compareBodies": [
+                9,
+                5,
+                3,
+                1,
+                1,
+                0
+              ],
+              "stages": [
+                4,
+                2,
+                2,
+                2,
+                0,
+                1,
+                0,
+                0,
+                0,
+                2,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0
+              ],
+              "lineage": [
+                4,
+                1,
+                4
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                1
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "mechanism",
+            "pid": 3133,
+            "checks": [
+              "first-analysis-entry-and-close-reserved-after-other-units",
+              "untapped-phase-is-abandoned-not-rejected",
+              "duplicate-and-tardy-thunk-never-replay",
+              "mechanism-result-and-swallowed-error-not-authoritative",
+              "before-noinvoke-after-faults-preserve-work",
+              "fallback-disables-attribution"
+            ],
+            "records": 49,
+            "stdoutAttempts": 49,
+            "stdoutBytes": 27640,
+            "fileBytes": 27640,
+            "stdoutSha256": "f6c2d7616176108ebce3ed8f14561534c6f94b9002839d672ac48af4956af0dd",
+            "fileSha256": "f6c2d7616176108ebce3ed8f14561534c6f94b9002839d672ac48af4956af0dd",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-ybF7dY",
+              "pid": 3133,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 49,
+              "kind": "request-close",
+              "elapsedTenthMs": 49,
+              "outcome": "returned",
+              "eventsBefore": 48,
+              "bytesBefore": 26962,
+              "dropped": 14,
+              "openUnits": 0,
+              "openPhases": 0,
+              "compareBodies": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                0,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                1,
+                1,
+                0,
+                0
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "foreign-noop",
+            "pid": 3145,
+            "checks": [
+              "nested-foreign-noop-does-not-inherit-selected",
+              "restore-cannot-reenable-attribution"
+            ],
+            "records": 3,
+            "stdoutAttempts": 3,
+            "stdoutBytes": 1646,
+            "fileBytes": 1646,
+            "stdoutSha256": "b0d9a56bb2deeb3250fc7cb7881fb8229ba93a43a5de1b25d4dcdce145932113",
+            "fileSha256": "b0d9a56bb2deeb3250fc7cb7881fb8229ba93a43a5de1b25d4dcdce145932113",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-5SqY2x",
+              "pid": 3145,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 3,
+              "kind": "request-close",
+              "elapsedTenthMs": 3,
+              "outcome": "returned",
+              "eventsBefore": 2,
+              "bytesBefore": 974,
+              "dropped": 0,
+              "openUnits": 1,
+              "openPhases": 0,
+              "compareBodies": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                0,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                1,
+                1,
+                0,
+                0
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "get-store",
+            "pid": 3156,
+            "checks": [
+              "getstore-fault-disables-before-work",
+              "restore-cannot-reenable-attribution"
+            ],
+            "records": 3,
+            "stdoutAttempts": 3,
+            "stdoutBytes": 1646,
+            "fileBytes": 1646,
+            "stdoutSha256": "032da9ba3e21e5f7a6d71cc0510506275009d563525e2bd987fb863b4ff8ec41",
+            "fileSha256": "032da9ba3e21e5f7a6d71cc0510506275009d563525e2bd987fb863b4ff8ec41",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-j90X3t",
+              "pid": 3156,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 3,
+              "kind": "request-close",
+              "elapsedTenthMs": 3,
+              "outcome": "returned",
+              "eventsBefore": 2,
+              "bytesBefore": 974,
+              "dropped": 0,
+              "openUnits": 1,
+              "openPhases": 0,
+              "compareBodies": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                0,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                1,
+                1,
+                0,
+                0
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "output",
+            "pid": 3167,
+            "checks": [
+              "write-false-consumed-once-without-replay",
+              "writer-serializer-clock-faults-preserve-product",
+              "stdout-loss-not-promoted-to-complete-stream"
+            ],
+            "records": 4,
+            "stdoutAttempts": 5,
+            "stdoutBytes": 2051,
+            "fileBytes": 2479,
+            "stdoutSha256": "06b6b802dca9a8abc70c653486dcf455fd2968a2b87654b589271b5ca20b94ac",
+            "fileSha256": "2915956249e74b1b34945774ffc11c8abc7beac10c218a1097bd14f10c2777e2",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-9I4nOF",
+              "pid": 3167,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 5,
+              "kind": "request-close",
+              "elapsedTenthMs": 6,
+              "outcome": "rejected",
+              "eventsBefore": 4,
+              "bytesBefore": 1806,
+              "dropped": 0,
+              "openUnits": 0,
+              "openPhases": 0,
+              "compareBodies": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                0,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                1,
+                0,
+                0,
+                0,
+                1,
+                1
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "analysis-new",
+            "pid": 3178,
+            "checks": [
+              "six-hundred-works-survive-detail-capacity",
+              "global-checkpoints-do-not-consume-critical-pairs",
+              "concurrent-analysis-cannot-steal-first-owner-critical-slots",
+              "real-analysis-value-readback-replay-and-call-order",
+              "critical-returns-survive-overflow-and-counters-freeze"
+            ],
+            "records": 40,
+            "stdoutAttempts": 40,
+            "stdoutBytes": 24458,
+            "fileBytes": 24458,
+            "stdoutSha256": "b46f62893549643934c2165ebf4c22a9f441d1c1a504bc597972d7b25b412d91",
+            "fileSha256": "b46f62893549643934c2165ebf4c22a9f441d1c1a504bc597972d7b25b412d91",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-WSOb4s",
+              "pid": 3178,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 40,
+              "kind": "request-close",
+              "elapsedTenthMs": 42,
+              "outcome": "returned",
+              "eventsBefore": 39,
+              "bytesBefore": 23769,
+              "dropped": 602,
+              "openUnits": 0,
+              "openPhases": 0,
+              "compareBodies": [
+                132,
+                132,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                128,
+                128,
+                0,
+                2,
+                2,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                2,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                132,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "analysis-found",
+            "pid": 3192,
+            "checks": [
+              "six-hundred-works-survive-detail-capacity",
+              "global-checkpoints-do-not-consume-critical-pairs",
+              "first-owner-reuse-and-binding-skips-are-explicit",
+              "real-analysis-value-readback-replay-and-call-order",
+              "critical-returns-survive-overflow-and-counters-freeze"
+            ],
+            "records": 36,
+            "stdoutAttempts": 36,
+            "stdoutBytes": 21903,
+            "fileBytes": 21903,
+            "stdoutSha256": "0ff0ea651ed68be88b7b34dd36e7978f4182b69be5bf9b9b907befc9bfba28fc",
+            "fileSha256": "0ff0ea651ed68be88b7b34dd36e7978f4182b69be5bf9b9b907befc9bfba28fc",
+            "terminal": {
+              "schema": "sf-preview-causal-e14-event-v1",
+              "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+              "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+              "qualification": false,
+              "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+              "runId": "1",
+              "attempt": "1",
+              "nonce": "sf613-e14-event-lyO3oe",
+              "pid": 3192,
+              "parentPid": 3117,
+              "request": 1,
+              "sequence": 36,
+              "kind": "request-close",
+              "elapsedTenthMs": 38,
+              "outcome": "returned",
+              "eventsBefore": 35,
+              "bytesBefore": 21214,
+              "dropped": 594,
+              "openUnits": 0,
+              "openPhases": 0,
+              "compareBodies": [
+                130,
+                130,
+                0,
+                0,
+                0,
+                0
+              ],
+              "stages": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                128,
+                128,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                0,
+                0,
+                0,
+                0
+              ],
+              "lineage": [
+                130,
+                0,
+                0
+              ],
+              "saturated": false,
+              "faultsBefore": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "mode": "unavailable",
+            "pid": 3206,
+            "checks": [
+              "invalid-binding-latches-without-reselection",
+              "unavailable-keeps-value-and-undefined"
+            ],
+            "records": 0,
+            "stdoutAttempts": null,
+            "stdoutBytes": null,
+            "fileBytes": null,
+            "stdoutSha256": null,
+            "fileSha256": null,
+            "terminal": null,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          }
+        ]
+      }
+    },
+    "guards": {
+      "sourceLine": 827,
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "bootstrap": false,
+      "rules": 78,
+      "files": 866,
+      "errors": [],
+      "approved": [],
+      "touchesGuards": false,
+      "warnings": 40,
+      "warningCounts": {
+        "test-globalthis": 2,
+        "test-timeout-raised": 38
+      },
+      "rawReportLocation": "Main preserved log at sourceLine; no warnings suppressed or reclassified.",
+      "ancestry": {
+        "gate": "guard ancestry",
+        "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+        "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+        "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+        "command": "bun run check:guards --base origin/dev --json"
+      }
+    },
+    "types": [
+      {
+        "gate": "CLI package typecheck",
+        "exitCode": 0,
+        "durationMs": 29304
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "exitCode": 0,
+        "durationMs": 26755
+      }
+    ],
+    "runtime": {
+      "printed": "1.3.14+0d9b296af",
+      "fullRevisionNotPrinted": true
+    },
+    "omni": {
+      "line": 866,
+      "nonce": "868ffdfd853f3f7d513af6f4cea31dae",
+      "declared": 8,
+      "spawned": 14,
+      "delegated": 0,
+      "verdict": "pass"
+    }
+  },
+  "review": {
+    "rootChecks": [
+      [
+        "two originals preserved and closed",
+        true
+      ],
+      [
+        "run and two jobs success",
+        true
+      ],
+      [
+        "zero artifacts and branch absent",
+        true
+      ],
+      [
+        "eight actual identities",
+        true
+      ],
+      [
+        "14 actual commands and 28 flags false",
+        true
+      ],
+      [
+        "command 1 exact label argv cwd",
+        true
+      ],
+      [
+        "command 2 exact label argv cwd",
+        true
+      ],
+      [
+        "command 3 exact label argv cwd",
+        true
+      ],
+      [
+        "command 4 exact label argv cwd",
+        true
+      ],
+      [
+        "command 5 exact label argv cwd",
+        true
+      ],
+      [
+        "command 6 exact label argv cwd",
+        true
+      ],
+      [
+        "command 7 exact label argv cwd",
+        true
+      ],
+      [
+        "command 8 exact label argv cwd",
+        true
+      ],
+      [
+        "command 9 exact label argv cwd",
+        true
+      ],
+      [
+        "command 10 exact label argv cwd",
+        true
+      ],
+      [
+        "command 11 exact label argv cwd",
+        true
+      ],
+      [
+        "command 12 exact label argv cwd",
+        true
+      ],
+      [
+        "command 13 exact label argv cwd",
+        true
+      ],
+      [
+        "command 14 exact label argv cwd",
+        true
+      ],
+      [
+        "25 observed pins",
+        true
+      ],
+      [
+        "observed five process footers",
+        true
+      ],
+      [
+        "24 pass titles no fail or skip",
+        true
+      ],
+      [
+        "seven report emissions",
+        true
+      ],
+      [
+        "six inherited report bytes literal",
+        true
+      ],
+      [
+        "E14 modes and schema",
+        true
+      ],
+      [
+        "unique child PIDs and neutral request getters",
+        true
+      ],
+      [
+        "control mode flow exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode mechanism exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode foreign-noop exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode get-store exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode output exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode analysis-new exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode analysis-found exact labels and bounded count",
+        true
+      ],
+      [
+        "control mode unavailable exact labels and bounded count",
+        true
+      ],
+      [
+        "flow expected bodies and lineage",
+        true
+      ],
+      [
+        "two real analysis body counts",
+        true
+      ],
+      [
+        "controlled output fault remains visible",
+        true
+      ],
+      [
+        "unavailable no stream",
+        true
+      ],
+      [
+        "guard actual ancestry",
+        true
+      ],
+      [
+        "guard zero errors approvals",
+        true
+      ],
+      [
+        "actual Omni positive 8 14 0",
+        true
+      ],
+      [
+        "printed runtime revision prefix",
+        true
+      ]
+    ],
+    "peer": {
+      "reviewer": "/root/teams_product",
+      "status": "CLOSED_FOCAL_PASS_ONLY",
+      "receipt": {
+        "gitBlob": "6f31e1e333bf24e42664e50ae18806015397997f",
+        "bytes": 18136,
+        "sha256": "af70a7c9c69d992a0949061353caae0e436bdc727496327640c4eb5f0bad1447",
+        "lf": 605,
+        "endsWithLF": true
+      },
+      "checks": 54,
+      "findings": [],
+      "dataParityWithRoot": true
+    }
+  },
+  "cleanup": {
+    "observation": {
+      "gitBlob": "2de15f79b7252307dd006dfa966b842577632407",
+      "bytes": 651,
+      "sha256": "fb9261e1e4c576c346cf38088d03038d8fbfedd882a3b3a1ae018771ee75b62f",
+      "lf": 19,
+      "endsWithLF": true
+    },
+    "branchAbsentViaApi": true,
+    "artifactCount": 0
+  },
+  "limits": {
+    "qualification": "Actual scoped diagnostic focal only; neither clean product nor installed Analytics acceptance.",
+    "syntheticControls": true,
+    "bodyExitIsNotPromiseSettlement": true,
+    "unknownLateFilesystemFaultsRemainStatic": true,
+    "actualRuntimeIsPrintedRevisionPrefixOnly": true,
+    "originalAnalytics": "NOT_YET_EXECUTED_ON_E14",
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "final613Candidate": false,
+    "finalGoLiveCandidate": false,
+    "finalTarVerified": false,
+    "productionAuthorized": false,
+    "automaticRerunAuthorized": false
+  },
+  "at": {
+    "current_time": "2026-11-28 03:28:51 UTC"
+  }
+}

@@ -1,0 +1,15 @@
+diff --git a/apps/cli/test/fixture/sf613-preview-e14-observation.ts b/apps/cli/test/fixture/sf613-preview-e14-observation.ts
+--- a/apps/cli/test/fixture/sf613-preview-e14-observation.ts
++++ b/apps/cli/test/fixture/sf613-preview-e14-observation.ts
+@@ -299,7 +299,10 @@
+         assert.deepEqual(terminal.compareBodies, [9, 5, 3, 1, 1, 0])
+         assert.deepEqual(terminal.lineage, [4, 1, 4])
+         assert.deepEqual(terminal.faultsBefore, [0, 0, 0, 0, 0, 1])
+-        assert.equal(rows().at(-2)?.kind, "unit-close")
++        const closingPhase = rows().at(-2)!
++        assert.equal(closingPhase.kind, "phase-close")
++        assert.equal(closingPhase.point, "evaluations-recheck"); assert.equal(closingPhase.outcome, "rejected")
++        assert.equal(rows().filter((item) => item.kind === "unit-close" && item.unit === closingPhase.unit).length, 0)
+         const closedLines = lines.length
+         releaseLate()
+         assert.ok(latePromise)

@@ -1,0 +1,167 @@
+{
+  "schema": "sf613-e14-reader-object-receipt-v1",
+  "status": "OBJECT_CREATED_NO_REF_NO_RUN_NO_ZIP",
+  "repository": "gustavomhss/Orchestra-SF",
+  "createdAt": {
+    "current_time": "2026-11-28 04:37:11 UTC"
+  },
+  "commit": "64af705904c2ca5b61a6837560f005718ee122d3",
+  "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+  "parents": [
+    "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+  ],
+  "message": "ci(sucafina): receive E14 original event evidence",
+  "workflow": {
+    "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988",
+    "bytes": 107037,
+    "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+    "lf": 1359,
+    "endsWithLF": true
+  },
+  "python": {
+    "gitBlob": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+    "bytes": 89383,
+    "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+    "lf": 1304,
+    "endsWithLF": true
+  },
+  "treeAudit": {
+    "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "after": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "complete": true,
+    "pairs": [
+      {
+        "path": "",
+        "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "after": "9ffa31bcfc721c0000f562def2765f9d4a0f575a"
+      },
+      {
+        "path": ".github",
+        "before": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "after": "6ff301d0d720a2d09e69217161d944473bab7102"
+      },
+      {
+        "path": ".github/workflows",
+        "before": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+        "after": "f1b10f13ba25822e9cd9ffee10866f39658fa61c"
+      }
+    ],
+    "literalSiblings": 69,
+    "changes": [
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sf613-artifact-read.yml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+          "size": 107037,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eb5b6ee1388c2bd9536106f308d7888808133988"
+        }
+      }
+    ]
+  },
+  "ciRequestAbsent": true,
+  "peerCodeAck": {
+    "reviewer": "/root/teams_product",
+    "scope": "STATIC_CODE_R3_OBJECT_PREPARATION_ONLY",
+    "python": {
+      "gitBlob": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+      "bytes": 89383,
+      "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+      "lf": 1304,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "lf": 1359,
+      "endsWithLF": true
+    },
+    "findingsResolved": [
+      "gap consistency",
+      "observed unit/phase closure for coverage"
+    ],
+    "caps": {
+      "payload": 662528,
+      "base64": 883380,
+      "chunks": 40,
+      "envelopeUpperBound": 957108
+    },
+    "supportsAndObjectPending": true,
+    "zipRefRunAuthorized": false
+  },
+  "rootCorrections": [
+    {
+      "support": {
+        "gitBlob": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e",
+        "bytes": 5649,
+        "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+        "lf": 79,
+        "endsWithLF": true
+      },
+      "type": "python",
+      "from": "r1",
+      "to": "r2",
+      "anchors": 3,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e",
+        "bytes": 5649,
+        "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+        "lf": 79,
+        "endsWithLF": true
+      },
+      "type": "workflow",
+      "from": "r1",
+      "to": "r2",
+      "anchors": 4,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "5c53428976b97c2ef6597e9fb39b0d7b0562182d",
+        "bytes": 2819,
+        "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "type": "python",
+      "from": "r2",
+      "to": "r3",
+      "anchors": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "5c53428976b97c2ef6597e9fb39b0d7b0562182d",
+        "bytes": 2819,
+        "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "type": "workflow",
+      "from": "r2",
+      "to": "r3",
+      "anchors": 2,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  ],
+  "proposedBranch": "sf613-artifact-e14event",
+  "parentTriggerCount": 18,
+  "parentTriggersMatch": false,
+  "zipGets": 0,
+  "originalJobLogGets": 0,
+  "refCreated": false,
+  "runCreated": false,
+  "productionAuthorized": false
+}

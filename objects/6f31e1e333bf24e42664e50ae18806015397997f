@@ -1,0 +1,605 @@
+{
+  "schema": "sf613-e14-focal-independent-intake-v1",
+  "status": "CLOSED_FOCAL_PASS_ONLY",
+  "reviewer": "/root/teams_product",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewedAtUtc": "2026-11-28 03:27:39 UTC",
+  "authorization": "Parent /root authorized Git-copy-only independent intake and one compact JSON review blob. No original log or ZIP acquisition, repository execution, ref, tree, commit or run by this reviewer.",
+  "run": {
+    "id": 46102111383,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46102111383",
+    "head": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "branch": "ci-run-sf613e14f",
+    "status": "completed",
+    "conclusion": "success",
+    "mainJob": 140846639754,
+    "cleanupJob": 140847255435,
+    "mainConclusion": "success",
+    "cleanupConclusion": "success",
+    "artifactCount": 0
+  },
+  "binding": {
+    "cleanSource": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "cleanTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "source": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "focal": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "focalTree": "934f7bab75f8ee4638cf9042db94dd9b954e1fd3",
+    "boundWrapper": "27907f5bd4cb72866380222f1e1af96336bc1932",
+    "authority": "c21f65a3a47eb96d8367e5384213487fe12d444f",
+    "priorIndependentStaticAck": {
+      "gitBlob": "81f9f0ff64205a547bbd7b4bb6b0a4f93ee426d1",
+      "bytes": 19019,
+      "sha256": "618c45f4a36e6f7fd27106a33a946fe899ce44325f01aeaa4e76c794a508b8f5"
+    },
+    "workingPinsObserved": 25,
+    "workingPinParity": "All 25 observed path/SHA pairs match the previously independently audited source 23 and focal 2 control pins."
+  },
+  "inputs": [
+    {
+      "role": "main",
+      "bytes": 119608,
+      "sha256": "bbbdd91bce6d1723f73bff26fe2633a8bca5b6eb41a040d2177673a209c57366",
+      "gitBlob": "6d28907518a267cb2fee06b9956648eb05c4c38c",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "cleanup",
+      "bytes": 2281,
+      "sha256": "0cbb517d9a2483977607eda2fb5830875990b25837f0e8dfcd136293d83c7826",
+      "gitBlob": "9e02e244074c2ee0dfe39b6a56c8ef7ae88c1aa1",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "main-manifest",
+      "bytes": 1696,
+      "sha256": "ac152d863695147643b151aa63a878078f3cc0a9a947a8cccf08054e383ad213",
+      "gitBlob": "d628d1733859f72389b8c7f62e34bbdeccbdf763",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "cleanup-manifest",
+      "bytes": 1686,
+      "sha256": "b21ccfa6274c693c424bf5dd940214bb1754dc4849f31b35bc7afce26855d77f",
+      "gitBlob": "5d6631a5cfe0adfe20ab5b1bba61296dc5c76bd2",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "context",
+      "bytes": 10868,
+      "sha256": "b9f5ca68d200065496b39d78d4317c4853c2de00d695c0b13592a7ca1f391b21",
+      "gitBlob": "67ad87b40fd0c265e2812d1fc8556d77676c9c4e",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "report-union",
+      "bytes": 18727,
+      "sha256": "4cd63ad3cbe9a317c4a7d917db259cc7aca2f13a2377fb363d67d976656bf8dc",
+      "gitBlob": "978b8c5e39fa79758de49718200eb7838e61e3eb",
+      "actualGitBlobRead": true
+    },
+    {
+      "role": "cleanup-observation",
+      "bytes": 651,
+      "sha256": "fb9261e1e4c576c346cf38088d03038d8fbfedd882a3b3a1ae018771ee75b62f",
+      "gitBlob": "2de15f79b7252307dd006dfa966b842577632407",
+      "actualGitBlobRead": true
+    }
+  ],
+  "acquisition": {
+    "originalLogGetsByReviewer": 0,
+    "zipGetsByReviewer": 0,
+    "originalLogGetsByRoot": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "rootPreservedAndReadBackBeforeInterpretation": true,
+    "sourceOfRootAcquisitionCounts": "Authenticated raw manifests; context is explicitly the earlier ready-for-originals cut and retains originalGetsIssued 0/0.",
+    "main": {
+      "bytes": 119608,
+      "lf": 895,
+      "bomByteOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "bytes": 2281,
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    }
+  },
+  "actual": {
+    "groups": 8,
+    "commands": 14,
+    "commandExitCodesAllZero": true,
+    "stdoutStderrTruncationFlags": 28,
+    "truncationFlagsAllFalse": true,
+    "functional": {
+      "tests": 16,
+      "failures": 0,
+      "assertions": 2146,
+      "suites": [
+        {
+          "name": "cases-read-contract",
+          "tests": 7,
+          "passes": 7,
+          "failures": 0,
+          "assertions": 843,
+          "footerElapsed": "272.00ms"
+        },
+        {
+          "name": "c08-snapshot-projection",
+          "tests": 5,
+          "passes": 5,
+          "failures": 0,
+          "assertions": 757,
+          "footerElapsed": "623.00ms"
+        },
+        {
+          "name": "portfolio-selection-preferences-read",
+          "tests": 3,
+          "passes": 3,
+          "failures": 0,
+          "assertions": 503,
+          "footerElapsed": "220.00ms"
+        },
+        {
+          "name": "sf613-preview-e14-observation",
+          "tests": 1,
+          "passes": 1,
+          "failures": 0,
+          "assertions": 43,
+          "footerElapsed": "948.00ms"
+        }
+      ]
+    },
+    "outer": {
+      "tests": 8,
+      "passes": 8,
+      "failures": 0,
+      "assertions": 46,
+      "footerElapsed": "80.73s"
+    },
+    "reports": {
+      "count": 7,
+      "families": {
+        "SF_C14_SNAPSHOT_CONTROL": 2,
+        "SF_C15_SELECTION_CONTROL": 2,
+        "SF_C16_SELECTION_CONTROL": 1,
+        "SF_C19_PORTFOLIO_CASES": 1,
+        "SF_E14_OBSERVATION_CONTROL": 1
+      },
+      "C16Outcomes": 31,
+      "C17IdentityProjectionCases": 9,
+      "C19": {
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      },
+      "historicalSixLiteralParity": {
+        "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+        "bytes": 9251,
+        "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb"
+      },
+      "E14": {
+        "combinedLineBytesWithLF": 9476,
+        "childModes": 8,
+        "labelOccurrences": 33,
+        "synthetic": true,
+        "children": [
+          {
+            "mode": "flow",
+            "pid": 3118,
+            "labelCount": 8,
+            "records": 28,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              9,
+              5,
+              3,
+              1,
+              1,
+              0
+            ],
+            "lineage": [
+              4,
+              1,
+              4
+            ],
+            "openUnits": 0,
+            "openPhases": 0,
+            "dropped": 0,
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "mechanism",
+            "pid": 3133,
+            "labelCount": 6,
+            "records": 49,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              0,
+              0,
+              0
+            ],
+            "openUnits": 0,
+            "openPhases": 0,
+            "dropped": 14,
+            "faultsBefore": [
+              0,
+              0,
+              1,
+              1,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "foreign-noop",
+            "pid": 3145,
+            "labelCount": 2,
+            "records": 3,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              0,
+              0,
+              0
+            ],
+            "openUnits": 1,
+            "openPhases": 0,
+            "dropped": 0,
+            "faultsBefore": [
+              0,
+              0,
+              1,
+              1,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "get-store",
+            "pid": 3156,
+            "labelCount": 2,
+            "records": 3,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              0,
+              0,
+              0
+            ],
+            "openUnits": 1,
+            "openPhases": 0,
+            "dropped": 0,
+            "faultsBefore": [
+              0,
+              0,
+              1,
+              1,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "output",
+            "pid": 3167,
+            "labelCount": 3,
+            "records": 4,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "rejected",
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              0,
+              0,
+              0
+            ],
+            "openUnits": 0,
+            "openPhases": 0,
+            "dropped": 0,
+            "faultsBefore": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              1
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "analysis-new",
+            "pid": 3178,
+            "labelCount": 5,
+            "records": 40,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              132,
+              132,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              132,
+              0,
+              0
+            ],
+            "openUnits": 0,
+            "openPhases": 0,
+            "dropped": 602,
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "analysis-found",
+            "pid": 3192,
+            "labelCount": 5,
+            "records": 36,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalOutcome": "returned",
+            "compareBodies": [
+              130,
+              130,
+              0,
+              0,
+              0,
+              0
+            ],
+            "lineage": [
+              130,
+              0,
+              0
+            ],
+            "openUnits": 0,
+            "openPhases": 0,
+            "dropped": 594,
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          },
+          {
+            "mode": "unavailable",
+            "pid": 3206,
+            "labelCount": 2,
+            "records": 0,
+            "requestGets": 0,
+            "omniSpawns": 1,
+            "omniDelegations": 0,
+            "terminalPresent": false
+          }
+        ],
+        "outputFault": {
+          "stdoutRecords": 4,
+          "stdoutAttempts": 5,
+          "stdoutBytes": 2051,
+          "fileBytes": 2479,
+          "hashesDiffer": true
+        }
+      }
+    },
+    "typechecks": [
+      {
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 29304,
+        "script": "tsgo --noEmit"
+      },
+      {
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 26755,
+        "script": "tsgo --noEmit"
+      }
+    ],
+    "guardrails": {
+      "rules": 78,
+      "files": 866,
+      "warnings": 40,
+      "errors": 0,
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false,
+      "warningRules": {
+        "test-globalthis": 2,
+        "test-timeout-raised": 38
+      },
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "omni": {
+      "nonce": "868ffdfd853f3f7d513af6f4cea31dae",
+      "declared": 8,
+      "wrapperSpawns": 14,
+      "delegated": 0,
+      "childModeSpawns": 8,
+      "childModeDelegations": 0,
+      "childModesAreSeparatePopulation": true
+    },
+    "runtime": {
+      "setupVersion": "1.3.14+0d9b296af",
+      "testBanner": "bun test v1.3.14 (0d9b296a)",
+      "fullFortyCharacterRevisionObserved": false
+    },
+    "cleanup": {
+      "jobConclusion": "success",
+      "deleteCommandObserved": true,
+      "deleteUsesOrTrue": true,
+      "logAloneProvesBranchAbsence": false,
+      "branchAbsent": true,
+      "branchAbsenceObservedBy": "/root",
+      "observationGitBlob": "2de15f79b7252307dd006dfa966b842577632407",
+      "observationUtc": "2026-11-28 03:23:57 UTC",
+      "matchingRefsResult": [],
+      "reviewerDidNotRepeatRefLookup": true
+    },
+    "nonGuardWarnings": "Node deprecation warnings occur in setup/post steps; no new guard error or approval inferred."
+  },
+  "checks": {
+    "count": 54,
+    "passed": 54,
+    "failed": 0,
+    "ids": [
+      "main-byte-authentication",
+      "cleanup-byte-authentication",
+      "context-byte-authentication",
+      "main-preservation-manifest",
+      "main-log-framing",
+      "main-acquisition-binding",
+      "cleanup-preservation-manifest",
+      "cleanup-log-framing",
+      "cleanup-acquisition-binding",
+      "terminal-run-identity",
+      "terminal-job-identities",
+      "actual-head-parent-output",
+      "eight-group-identities",
+      "actual-working-pin-parity",
+      "command-results",
+      "output-truncation-flags",
+      "actual-command-selection",
+      "both-package-typechecks",
+      "actual-functional-footers",
+      "functional-derived-totals",
+      "actual-outer-footer",
+      "individual-pass-lines",
+      "actual-report-family-sequence",
+      "preserved-report-union",
+      "six-prior-reports-literal-parity",
+      "C14-observed-payloads",
+      "C15-observed-payloads",
+      "C16-C17-observed-payload",
+      "C19-observed-payload",
+      "E14-mode-schema-order",
+      "E14-observed-oracle-labels",
+      "E14-child-identities",
+      "E14-child-Omni-controls",
+      "E14-proxy-not-read",
+      "E14-synthetic-terminal-bindings",
+      "E14-flow-terminal",
+      "E14-mechanism-terminal",
+      "E14-neutral-fault-terminals",
+      "E14-output-loss-remains-visible",
+      "E14-analysis-new-terminal",
+      "E14-analysis-found-terminal",
+      "E14-unavailable-negative",
+      "E14-counter-shape-and-finite-domains",
+      "E14-reported-wire-bounds",
+      "E14-output-equality-controls",
+      "guards-complete-result",
+      "guard-warning-taxonomy",
+      "guard-live-base-binding",
+      "outer-Omni-and-nonce",
+      "runtime-observed-version",
+      "main-footer-complete",
+      "cleanup-branch-intent-and-terminal",
+      "root-branch-absence-record",
+      "zero-artifacts-terminal"
+    ]
+  },
+  "expectationHandling": "All actual test/assertion/footer counts above were parsed from this main. Static 7/5/3/1 declarations and 7 expected reports were used only for comparison, never as a substitute for runtime results.",
+  "limits": [
+    "This is a focal control result only. It neither qualifies original installed Analytics/UI completion nor demonstrates latency improvement, production authorization, release readiness or new area coverage.",
+    "E14 modes use controlled launcher, clock, ALS and ports. Real analysis/compare bodies are exercised under those controlled contexts; this does not certify real installed authority.",
+    "The aggregate report contains child-reported file/stream hashes and counters; this reviewer did not acquire their event files or ZIP. Report statements and passing assertions are the available dynamic evidence.",
+    "compareBodies measure body entry/return/throw, not settlement of an exterior Promise. await-returned precedes caller clone/guard; stage is distinct from compare parent/depth. A Unit has at most one active phase in the real caller contract.",
+    "Synthetic detail loss is explicit: analysis-new dropped 602, analysis-found 594, and output deliberately loses stdout bytes. Those are not installed observations or product failures.",
+    "saturated denotes a censored increment attempt after a slot is already at 65535, not equivalence to any slot reaching 65535. All reported synthetic terminals here have saturated false.",
+    "No terminal or missing counter means incomplete evidence, not zero work or a product hang. A terminal does not attest subsequent fsync/close. Partial physical write/fsync/close fault coverage remains static.",
+    "Focal wall times and typecheck durations are not an installed-preview benchmark. No E12/E13 CPU or elapsed-time attribution is transferred.",
+    "Branch absence is an authenticated root metadata observation, not an independent ref API request by this reviewer. Raw cleanup DELETE with || true alone is insufficient.",
+    "The context blob predates the original acquisitions; final raw manifests separately attest each single root acquisition and preservation."
+  ],
+  "effects": {
+    "gitBlobCreatesByReviewer": 1,
+    "productWrites": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0
+  },
+  "qualification": false
+}

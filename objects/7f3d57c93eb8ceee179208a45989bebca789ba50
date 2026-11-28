@@ -1,0 +1,531 @@
+{
+  "schema": "sf613-e14-reader-root-final-static-review-v1",
+  "status": "STATIC_PACKAGE_AND_OBJECT_ACCEPTED",
+  "at": {
+    "current_time": "2026-11-28 04:43:40 UTC"
+  },
+  "manifest": {
+    "gitBlob": "d283188d13f993843119cd5017014e69c9334201",
+    "bytes": 19946,
+    "sha256": "b95b4850c2ff84f582449106a19c8f12150022fa40722bcad7bf233da97756e2",
+    "lf": 558,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "78992ee565ace0f713cc530a85c73cba7b5892bb",
+    "bytes": 15875,
+    "sha256": "bb98c245adf762a643f141e3403764c1601cd84dbd38cfd648a870198647ff91",
+    "lf": 433,
+    "endsWithLF": true
+  },
+  "bindingPins": 10,
+  "locators": 12,
+  "boundsIndependent": {
+    "raw": 662528,
+    "b64": 883380,
+    "chunks": 40
+  },
+  "derivations": [
+    {
+      "support": {
+        "gitBlob": "7a8ca2321d07a2f79c3c0ded4e0719c6567862ef",
+        "bytes": 197460,
+        "sha256": "5ab09fc6df2d03a7814724eea362fbb2fa95459c2813d616ac2a1810648d78f6",
+        "lf": 595,
+        "endsWithLF": true
+      },
+      "base": {
+        "gitBlob": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+        "bytes": 98691,
+        "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+        "lf": 1649,
+        "endsWithLF": true
+      },
+      "target": {
+        "gitBlob": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+        "bytes": 89383,
+        "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+        "lf": 1304,
+        "endsWithLF": true
+      },
+      "anchors": 27,
+      "fragmentHashes": 54,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "support": {
+        "gitBlob": "e6342e1c1893ccba9fd42df3783539f4b38ea5cc",
+        "bytes": 239306,
+        "sha256": "26b17b5c19d9a6461b6d5208c4d853b92a09ac7984e21f222b36178fda43d5d5",
+        "lf": 151,
+        "endsWithLF": true
+      },
+      "base": {
+        "gitBlob": "13db57775b23b9603ea1018dc734ffd314942811",
+        "bytes": 120481,
+        "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+        "lf": 1704,
+        "endsWithLF": true
+      },
+      "target": {
+        "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988",
+        "bytes": 107037,
+        "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+        "lf": 1359,
+        "endsWithLF": true
+      },
+      "anchors": 5,
+      "fragmentHashes": 10,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "diff": {
+        "gitBlob": "81411e37cc1894520d8ee434d162377c3134a69f",
+        "bytes": 136659,
+        "sha256": "782cda87b8d889403480faeadeaf49a4b4a45e0e3d3d8599b9c21e5fd0513789",
+        "lf": 1847,
+        "endsWithLF": true
+      },
+      "path": "sf613-artifact-reader.py",
+      "hunks": 21,
+      "added": 625,
+      "removed": 970,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "diff": {
+        "gitBlob": "71556e7142fd568c3abd7e6bf2859ff5595c9e8c",
+        "bytes": 159912,
+        "sha256": "41e2183bfa1d0ebb6f22805660c035b8cebbfe470dbcb8e75bcfe8bb82bde871",
+        "lf": 1882,
+        "endsWithLF": true
+      },
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "hunks": 24,
+      "added": 629,
+      "removed": 974,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "diff": {
+        "gitBlob": "284701333f708580d65ff04c4840fa6cf3b235a3",
+        "bytes": 108477,
+        "sha256": "17847f38d89d73ab6aee692281ce3deb63fcc88bb0d219234da7ed2c21452b51",
+        "lf": 1362,
+        "endsWithLF": true
+      },
+      "path": ".github/workflows/sf613-artifact-read.yml",
+      "hunks": 1,
+      "added": 1359,
+      "removed": 0,
+      "forward": true,
+      "inverse": true
+    }
+  ],
+  "corrections": [
+    {
+      "support": {
+        "gitBlob": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e",
+        "bytes": 5649,
+        "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+        "lf": 79,
+        "endsWithLF": true
+      },
+      "type": "python",
+      "from": "r1",
+      "to": "r2",
+      "anchors": 3,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "7e81ee82cf5a2f27fd4489fd9a4efa1d3dbcd43e",
+        "bytes": 5649,
+        "sha256": "d55440470584123bbf0229f18e4ab5c1b062a8251b3e61272f604185d0d25995",
+        "lf": 79,
+        "endsWithLF": true
+      },
+      "type": "workflow",
+      "from": "r1",
+      "to": "r2",
+      "anchors": 4,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "5c53428976b97c2ef6597e9fb39b0d7b0562182d",
+        "bytes": 2819,
+        "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "type": "python",
+      "from": "r2",
+      "to": "r3",
+      "anchors": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "support": {
+        "gitBlob": "5c53428976b97c2ef6597e9fb39b0d7b0562182d",
+        "bytes": 2819,
+        "sha256": "53ac16e0577fb552b76e0c38a53bbe900db1d7c3fb9824d80f54e82722a0be58",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "type": "workflow",
+      "from": "r2",
+      "to": "r3",
+      "anchors": 2,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  ],
+  "findingsResolved": [
+    "gapped sequences cannot receive consistency acceptance",
+    "coverage requires all observed unit and phase closes"
+  ],
+  "treeAudit": {
+    "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "after": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "complete": true,
+    "pairs": [
+      {
+        "path": "",
+        "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "after": "9ffa31bcfc721c0000f562def2765f9d4a0f575a"
+      },
+      {
+        "path": ".github",
+        "before": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "after": "6ff301d0d720a2d09e69217161d944473bab7102"
+      },
+      {
+        "path": ".github/workflows",
+        "before": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+        "after": "f1b10f13ba25822e9cd9ffee10866f39658fa61c"
+      }
+    ],
+    "literalSiblings": 69,
+    "changes": [
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sf613-artifact-read.yml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+          "size": 107037,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eb5b6ee1388c2bd9536106f308d7888808133988"
+        }
+      }
+    ]
+  },
+  "parentWorkflowTriggers": [
+    {
+      "path": "app-build.yml",
+      "pin": {
+        "gitBlob": "f04834e614c0a8e6b052073a216e904a38c45c2e",
+        "bytes": 6695,
+        "sha256": "46f136f029dbdbe751257ef945ea3f2fceb6cc278a70fb4cfbefb463ca9ab479",
+        "lf": 152,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  workflow_dispatch:\n    inputs:\n      revision:\n        description: Full 40-character source revision\n        type: string\n        required: false\n        default: \"\"\n",
+      "triggerHead": "on:\n  workflow_dispatch:\n    inputs:\n      revision:\n        description: Full 40-character source revision\n        type: string\n        required: false\n        default: \"\"\n",
+      "hasPush": false,
+      "branches": []
+    },
+    {
+      "path": "az02-teams-proof.yml",
+      "pin": {
+        "gitBlob": "83dc11812a96c7b865a7abb539152efa94a55ac3",
+        "bytes": 7560,
+        "sha256": "d7a2cdadc4869eef1c8ed58996b22df8644a8cd293b05ce389fbdbb82890d7c7",
+        "lf": 133,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"teams-az02-ci\"]\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"teams-az02-ci\"]\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"teams-az02-ci\"]"
+      ]
+    },
+    {
+      "path": "azure-mvp.yml",
+      "pin": {
+        "gitBlob": "9bff3e607675d2e3812bac0859690953444a9eb6",
+        "bytes": 4540,
+        "sha256": "c478b6887226442d64681dd966a2740cab76b5af2d59a1570beacc63109b4976",
+        "lf": 131,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  workflow_dispatch:\n    inputs:\n      operation:\n        description: Validar, pré-visualizar ou aplicar a fundação\n        type: choice\n        default: validate\n        options:\n          - validate\n          - preview\n          - apply\n      vm_size:\n        description: Tamanho candidato da VM\n        type: choice\n        default: Standard_D2as_v5\n        options:\n          - Standard_D2as_v5\n          - Standard_D4as_v5\n      image_version:\n        description: Versão exata da imagem Ubuntu\n        type: string\n        default: \"\"\n      confirm:\n        description: Confirmação exigida apenas pelo apply\n        type: string\n        default: \"\"\n",
+      "triggerHead": "on:\n  workflow_dispatch:\n    inputs:\n      operation:\n        description: Validar, pré-visualizar ou aplicar a fundação\n        type: choice\n        default: validate\n        options:\n          - validate\n          - preview\n          - apply\n      vm_size:\n        description: Tamanho candidato da VM\n        type: choice",
+      "hasPush": false,
+      "branches": []
+    },
+    {
+      "path": "azure-qualification-inventory.yml",
+      "pin": {
+        "gitBlob": "7679b792e929e25b48b210ab6322152e7a360f14",
+        "bytes": 19862,
+        "sha256": "aa60f06c32550a68a1225ce4dfad2300f99f823dcdcb9f8f0014e4ef8191ec5f",
+        "lf": 289,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [dev]\n    paths: [.github/workflows/azure-qualification-inventory.yml]\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [dev]\n    paths: [.github/workflows/azure-qualification-inventory.yml]\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [dev]"
+      ]
+    },
+    {
+      "path": "g05-http-proof.yml",
+      "pin": {
+        "gitBlob": "5a31e9566658f8940ab9fc3f6d468a2b837a1ad4",
+        "bytes": 11254,
+        "sha256": "ddf3284aa7a31a8a6a8db8e772102404e113f1d19575d2136ca262457af5d009",
+        "lf": 192,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  workflow_dispatch:\n  push:\n    branches:\n      - http-team-proof\n      - g05-http-*\n",
+      "triggerHead": "on:\n  workflow_dispatch:\n  push:\n    branches:\n      - http-team-proof\n      - g05-http-*\n",
+      "hasPush": true,
+      "branches": [
+        "    branches:"
+      ]
+    },
+    {
+      "path": "g08-domain-bridge.yml",
+      "pin": {
+        "gitBlob": "7e98626073c1c7e1f8008fbb560282b96d465498",
+        "bytes": 7818,
+        "sha256": "eb1e92705fc3bc3cfd05b0467ad1be0fac93b79b24364c0bab205495cfe112d7",
+        "lf": 148,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"team-domain-bridge\"]\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"team-domain-bridge\"]\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"team-domain-bridge\"]"
+      ]
+    },
+    {
+      "path": "g08-installed-complete.yml",
+      "pin": {
+        "gitBlob": "6035b60476c4fce49b83ce7503ef03367ffc2d28",
+        "bytes": 4511,
+        "sha256": "a49d0a2cd2f5e1ff8b10ee50f25e99b10f5f67d408a0c6caa5451b839ddd48ba",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: \"One original installed group, or verify completed original producers\"\n        type: choice\n        options: [\"group\", \"aggregate\"]\n        required: true\n        default: \"group\"\n      kind:\n        description: \"Exactly one original group; ignored only for aggregate\"\n        type: choice\n        options: [\"TEAMS\", \"U15\", \"U39\", \"U40\", \"F04\", \"AZ02-preflight\", \"AZ02-actors\", \"AZ02-producer\", \"AZ02-after-revoke\", \"AZ02-logout\", \"AZ02-after-restart\"]\n        required: true\n        default: \"TEAMS\"\n      private_root:\n        description: \"Existing runner-owned private0700 root outside checkout, with the original approved plan\"\n        type: string\n        required: true\n      invocation_id:\n        description: \"Original32hex invocation nonce; group mode only\"\n        type: string\n        required: false\n",
+      "triggerHead": "on:\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: \"One original installed group, or verify completed original producers\"\n        type: choice\n        options: [\"group\", \"aggregate\"]\n        required: true\n        default: \"group\"\n      kind:\n        description: \"Exactly one original group; ignored only for aggregate\"\n        type: choice\n        options: [\"TEAMS\", \"U15\", \"U39\", \"U40\", \"F04\", \"AZ02-preflight\", \"AZ02-actors\", \"AZ02-producer\", \"AZ02-after-revoke\", \"AZ02-logout\", \"AZ02-after-restart\"]\n        required: true",
+      "hasPush": false,
+      "branches": []
+    },
+    {
+      "path": "g08-native-factory.yml",
+      "pin": {
+        "gitBlob": "f2db67aebd0d1be469f1418432241964a8a3fe63",
+        "bytes": 13723,
+        "sha256": "ca9ce4270016991b0b336554c0f653462418d07fe2038bc1346f53b9c4600bc1",
+        "lf": 215,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"team-factory-hooks\", \"budget-source-read\"]\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"team-factory-hooks\", \"budget-source-read\"]\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"team-factory-hooks\", \"budget-source-read\"]"
+      ]
+    },
+    {
+      "path": "g08-native-journeys.yml",
+      "pin": {
+        "gitBlob": "ee397d97a0c5f1bb12acb6220ad64e17143b7147",
+        "bytes": 9766,
+        "sha256": "38ceef93d69ca655a07e9501cfd2e4c2b682fd4218c12c756d4b81a88ef0d437",
+        "lf": 124,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"native-journeys\"]\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"native-journeys\"]\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"native-journeys\"]"
+      ]
+    },
+    {
+      "path": "g08-private-preflight.yml",
+      "pin": {
+        "gitBlob": "f0235d8f395a6b820a4ecbaaafc6521743045a84",
+        "bytes": 6096,
+        "sha256": "83509f448e7856c377eb689590497d3d87c7c92578d97d43510bf8ffa2cf54de",
+        "lf": 133,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"teams-qa-executor\", \"teams-landing-proof\", \"teams-admin-check\"]\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: \"Controls only, or the already reserved private installed QA host (current Teams subset only)\"\n        type: choice\n        options: [\"controls\", \"installed\"]\n        default: \"controls\"\n        required: true\n      private_root:\n        description: \"Existing runner-owned 0700 private directory, outside checkout; installed mode only\"\n        type: string\n        required: false\n      invocation_id:\n        description: \"32-hex nonce from the owner-prepared private plan; installed mode only\"\n        type: string\n        required: false\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"teams-qa-executor\", \"teams-landing-proof\", \"teams-admin-check\"]\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: \"Controls only, or the already reserved private installed QA host (current Teams subset only)\"\n        type: choice\n        options: [\"controls\", \"installed\"]\n        default: \"controls\"\n        required: true\n      private_root:\n        description: \"Existing runner-owned 0700 private directory, outside checkout; installed mode only\"\n        type: string",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"teams-qa-executor\", \"teams-landing-proof\", \"teams-admin-check\"]"
+      ]
+    },
+    {
+      "path": "g08-proof-provenance.yml",
+      "pin": {
+        "gitBlob": "431fdb9611df75d28f179fcd0069b1c65f91c4ad",
+        "bytes": 12149,
+        "sha256": "8dfcff4f3f0eb530ce7fabcaaddf3c27d5c911a17247420c994dad1a23600a30",
+        "lf": 194,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"g08-proof-source\"]\n    paths:\n      - \"script/sf-ci/g08-proof-provenance.mjs\"\n      - \"script/sf-ci/g08-proof-provenance.test.mjs\"\n      - \".github/workflows/g08-proof-provenance.yml\"\n  workflow_dispatch:\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"g08-proof-source\"]\n    paths:\n      - \"script/sf-ci/g08-proof-provenance.mjs\"\n      - \"script/sf-ci/g08-proof-provenance.test.mjs\"\n      - \".github/workflows/g08-proof-provenance.yml\"\n  workflow_dispatch:\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"g08-proof-source\"]"
+      ]
+    },
+    {
+      "path": "g08-restart-observer.yml",
+      "pin": {
+        "gitBlob": "57ddfaee15ef3f7232841d04fcf50132bcc645de",
+        "bytes": 5415,
+        "sha256": "937b0acfd312604fc803f8a1cc02f475617584639226da4a8fb5af7af515bedb",
+        "lf": 101,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"az02-host-restart\"]\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"az02-host-restart\"]\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"az02-host-restart\"]"
+      ]
+    },
+    {
+      "path": "g09-final.yml",
+      "pin": {
+        "gitBlob": "57f16a296355b8fb0bbab44a8cdd02678c238041",
+        "bytes": 69809,
+        "sha256": "105e678efbceb5f5e97977044b07476a3f4a23cbe6cc8a5795b25474c29c8f47",
+        "lf": 1229,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches:\n      # B is an immutable request commit; this new ref points exactly to candidate C.\n      # The historical g09-final-review ref and its original run remain untouched.\n      - release-build-*\n",
+      "triggerHead": "on:\n  push:\n    branches:\n      # B is an immutable request commit; this new ref points exactly to candidate C.\n      # The historical g09-final-review ref and its original run remain untouched.\n      - release-build-*\n",
+      "hasPush": true,
+      "branches": [
+        "    branches:"
+      ]
+    },
+    {
+      "path": "go-live-package.yml",
+      "pin": {
+        "gitBlob": "1840c75d34bff9f4d2f75a5e8f6ddd550d150735",
+        "bytes": 11823,
+        "sha256": "ea77e5aa074c68eb5e90c762a2d649ffe56613d067fca018941affafbc33813a",
+        "lf": 240,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [go-live-package, g07-qualify-*]\n  pull_request:\n    branches: [dev]\n    paths:\n      - .github/workflows/go-live-package.yml\n      - .github/workflows/g09-final.yml\n      - script/sf-ci/go-live-package*\n      - script/sf-ci/test_go_live_package_archive.py\n      - sf/azure/vm/install-factory-distribution.py\n  workflow_dispatch:\n    inputs:\n      request_revision:\n        description: Commit SHA containing the observed confirmations and producer artifact request\n        required: true\n        type: string\n",
+      "triggerHead": "on:\n  push:\n    branches: [go-live-package, g07-qualify-*]\n  pull_request:\n    branches: [dev]\n    paths:\n      - .github/workflows/go-live-package.yml\n      - .github/workflows/g09-final.yml\n      - script/sf-ci/go-live-package*\n      - script/sf-ci/test_go_live_package_archive.py\n      - sf/azure/vm/install-factory-distribution.py\n  workflow_dispatch:\n    inputs:\n      request_revision:",
+      "hasPush": true,
+      "branches": [
+        "    branches: [go-live-package, g07-qualify-*]",
+        "    branches: [dev]"
+      ]
+    },
+    {
+      "path": "go-live-recovery.yml",
+      "pin": {
+        "gitBlob": "c2e7460296b353f5dfe28366ef8c39c472ad1813",
+        "bytes": 2488,
+        "sha256": "da64c2b673cb8c34c5adeeee051eb4a38e023224388bfd0c889f6117c0bd0d55",
+        "lf": 64,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches:\n      - go-live-recovery\n",
+      "triggerHead": "on:\n  push:\n    branches:\n      - go-live-recovery\n",
+      "hasPush": true,
+      "branches": [
+        "    branches:"
+      ]
+    },
+    {
+      "path": "sf-cache-warm.yml",
+      "pin": {
+        "gitBlob": "45874f2f82d7ec45334876dc84fea205f2f37c64",
+        "bytes": 5229,
+        "sha256": "373db20ce1430ba4e3bef9f998c1fd950946aab52e377a858b283ee5b50a600a",
+        "lf": 129,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [dev]\n    paths:\n      - bun.lock\n      - package.json\n      - bunfig.toml\n      - .npmrc\n      - packages/*/package.json\n      - packages/*/*/package.json\n      - apps/*/package.json\n      - modules/*/package.json\n      - modules/*/*/package.json\n      - tooling/*/package.json\n      - native/*/*/package.json\n      - native/*/*/*/package.json\n      - packages/core/bunfig.toml\n      - packages/core/script/fix-node-pty.ts\n      - packages/core/vendor/*.tgz\n      - packages/core/vendor/*.tar.gz\n      - modules/sucafina/Sucafinav1/vendor/*.tgz\n      - script/ci-cache-inputs.ts\n      - script/sf-ci/cache-source.mjs\n      - .github/sf-cache-source.json\n      - patches/**\n      - native/omni/**\n      - packages/core/src/ripgrep/release.ts\n      - .github/actions/setup-bun/**\n      - .github/actions/omni-binaries/**\n      - .github/actions/ripgrep/**\n      - .github/workflows/sf-cache-warm.yml\n  workflow_dispatch:\n    inputs:\n      source_ref:\n        description: Reviewed source branch whose cache inputs should be warmed\n        required: true\n        type: choice\n        default: sf-join-four\n        options: [dev, sf-join-four, close-final-candidate]\n      source_sha:\n        description: Exact reviewed 40-character head SHA of the selected source branch\n        required: true\n        type: string\n",
+      "triggerHead": "on:\n  push:\n    branches: [dev]\n    paths:\n      - bun.lock\n      - package.json\n      - bunfig.toml\n      - .npmrc\n      - packages/*/package.json\n      - packages/*/*/package.json\n      - apps/*/package.json\n      - modules/*/package.json\n      - modules/*/*/package.json\n      - tooling/*/package.json",
+      "hasPush": true,
+      "branches": [
+        "    branches: [dev]"
+      ]
+    },
+    {
+      "path": "sf-operations-scanner.yml",
+      "pin": {
+        "gitBlob": "edac42a2a5afc4a8d677aee534bca7ba3319d192",
+        "bytes": 5815,
+        "sha256": "d422f387cab06fdfe411c01c4e7eaa1d92e431e2f9d119ad54e342d9e2621e63",
+        "lf": 128,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches: [\"tp-scan-*\"]\n",
+      "triggerHead": "on:\n  push:\n    branches: [\"tp-scan-*\"]\n",
+      "hasPush": true,
+      "branches": [
+        "    branches: [\"tp-scan-*\"]"
+      ]
+    },
+    {
+      "path": "test-ci.yml",
+      "pin": {
+        "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476,
+        "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+        "lf": 337,
+        "endsWithLF": true
+      },
+      "onSection": "on:\n  push:\n    branches:\n      - \"ci-run-*\"\n",
+      "triggerHead": "on:\n  push:\n    branches:\n      - \"ci-run-*\"\n",
+      "hasPush": true,
+      "branches": [
+        "    branches:",
+        "      - \"ci-run-*\""
+      ]
+    }
+  ],
+  "noProductQualification": true,
+  "noExecutionYet": true,
+  "peerAck": {
+    "gitBlob": "2451b08fffee6b365b1c6bcb62a5ae73a81c317d",
+    "bytes": 16216,
+    "sha256": "13be6be53abc00ff1debdbe75402d7d25cb6fb5387c80ef5e8c0e4ef7dceddf4",
+    "lf": 413,
+    "endsWithLF": true
+  },
+  "reviewedAt": {
+    "current_time": "2026-11-28 04:44:24 UTC"
+  }
+}

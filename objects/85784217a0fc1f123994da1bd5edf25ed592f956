@@ -1,0 +1,734 @@
+diff --git a/apps/cli/test/fixture/sf613-preview-e14-observation.ts b/apps/cli/test/fixture/sf613-preview-e14-observation.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/cli/test/fixture/sf613-preview-e14-observation.ts
+@@ -0,0 +1,700 @@
++import assert from "node:assert/strict"
++import { AsyncLocalStorage } from "node:async_hooks"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { closeSync, fsyncSync, mkdirSync, mkdtempSync, openSync, readFileSync, realpathSync, rmSync, statSync, writeSync } from "node:fs"
++import os from "node:os"
++import path from "node:path"
++import { fileURLToPath } from "node:url"
++import type { ScenarioComparison, ScenarioResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
++import type { StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
++import type { CriterionComparisonBinding } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts"
++
++export const e14Modes = ["flow", "mechanism", "foreign-noop", "get-store", "output", "analysis-new", "analysis-found", "unavailable"] as const
++export type E14Mode = typeof e14Modes[number]
++function record(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === "object" && !Array.isArray(value) }
++function sha256(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
++
++/** Process isolation is required by the production selection latch; there is no reset API. */
++export async function runSfE14Control(file: string, mode: E14Mode) {
++  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([
++    import("@orchestra/core/process"), import("@orchestra/core/effect/layer-node"),
++    import("@orchestra/core/test/fixture/omni-expect"), import("effect"), import("effect/unstable/process"),
++    import("@orchestra/core/omni"),
++  ])
++  expectSpawn(file)
++  const before = Omni.snapshot()
++  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {
++    const processes = yield* AppProcess.Service
++    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {
++      cwd: import.meta.dir, extendEnv: true, stdin: "ignore", stdout: "pipe", stderr: "pipe",
++      killSignal: "SIGTERM", forceKillAfter: "1 second",
++    }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })
++  }), LayerNode.compile(AppProcess.node))))
++  const after = Omni.snapshot()
++  const stdout = result.stdout.toString("utf8"), stderr = result.stderr.toString("utf8")
++  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)
++    throw new Error("E14 observer control did not complete: " + JSON.stringify({
++      mode, exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,
++      stderrTruncated: result.stderrTruncated, stdout, stderr,
++    }))
++  const receipt: unknown = JSON.parse(stdout)
++  if (!record(receipt) || receipt.schema !== "sf-preview-e14-control-child-v1" || receipt.mode !== mode ||
++    typeof receipt.pid !== "number" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0 ||
++    receipt.synthetic !== true || !Array.isArray(receipt.checks) || !receipt.checks.length ||
++    receipt.checks.some((item: unknown) => typeof item !== "string") || Buffer.byteLength(stdout, "utf8") > 16_384)
++    throw new Error("E14 observer control returned an invalid receipt")
++  return { pid: receipt.pid, report: receipt,
++    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }
++}
++
++async function child(mode: E14Mode) {
++  const property = Object.getOwnPropertyDescriptor, define = Object.defineProperty, remove = Reflect.deleteProperty
++  const apply = Reflect.apply, parse = JSON.parse, stringify = JSON.stringify
++  const savedRun = property(AsyncLocalStorage.prototype, "run"), savedGet = property(AsyncLocalStorage.prototype, "getStore")
++  const savedNow = property(performance, "now"), savedWrite = property(process.stdout, "write"), savedStringify = property(JSON, "stringify")
++  const originalWrite = process.stdout.write
++  assert.ok(savedRun && savedGet && savedStringify)
++  const nativeRun = savedRun.value, nativeGet = savedGet.value
++  assert.equal(typeof nativeRun, "function")
++  assert.equal(typeof nativeGet, "function")
++  const repository = realpathSync(fileURLToPath(new URL("../../../../", import.meta.url)))
++  const evidenceBase = path.join(repository, "test-ci-evidence")
++  mkdirSync(evidenceBase, { recursive: true })
++  const directory = mkdtempSync(path.join(evidenceBase, "sf613-e14-event-"))
++  const privateDirectory = mkdtempSync(path.join(os.tmpdir(), "sf613-e14-control-"))
++  const directoryKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_BINDING"
++  const oldDirectory = process.env[directoryKey], oldBinding = process.env[bindingKey]
++  const argv = [...process.argv], cwd = process.cwd()
++  const source = "7393cd010086f4a12d61ae9bb5db13534bd18aa0", sourceTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
++  const launcher = { schema: "sf-preview-e14-event-launch-v1", source, sourceTree, snapshot: "f".repeat(40),
++    runId: "1", attempt: "1", nonce: path.basename(directory), processRole: "native-cli", streamName: "preview-events.jsonl" }
++  const launcherRaw = stringify(launcher) + "\n", launcherPath = path.join(directory, "launcher.json")
++  const launcherFd = openSync(launcherPath, "wx", 0o600)
++  try { writeSync(launcherFd, launcherRaw, undefined, "utf8"); fsyncSync(launcherFd) } finally { closeSync(launcherFd) }
++  const binding = stringify({ ...launcher, launcherBytes: Buffer.byteLength(launcherRaw, "utf8"), launcherSha256: sha256(launcherRaw) })
++  const prefix = "SF_PREVIEW_E14_EVENT ", eventFile = path.join(directory, "preview-events.jsonl")
++  const lines: string[] = [], checks: string[] = []
++  let clock = 1_000, clockAction: (() => void) | undefined, invalidClock = false
++  let writeFalse = false, writeThrow = false, stdoutAttempts = 0, requestGets = 0
++  const outputError = new Error("synthetic-output")
++  const request = new Proxy(new Request("https://example.invalid/selected"), { get() { requestGets++; throw new Error("Request member read") } })
++  const foreign = new Proxy(new Request("https://example.invalid/foreign"), { get() { requestGets++; throw new Error("Foreign Request member read") } })
++  function rows() {
++    return lines.map((line) => {
++      assert.ok(line.startsWith(prefix) && line.endsWith("\n"))
++      assert.ok(Buffer.byteLength(line, "utf8") <= 1_024)
++      const value: unknown = parse(line.slice(prefix.length))
++      assert.ok(record(value))
++      return value
++    })
++  }
++  function one(kind: string) { const values = rows().filter((item) => item.kind === kind); assert.equal(values.length, 1); return values[0]! }
++  function restore(owner: object, key: string, descriptor: PropertyDescriptor | undefined) {
++    if (descriptor) define(owner, key, descriptor); else remove(owner, key)
++  }
++  function installRun(implementation: (this: unknown, token: unknown, callback: unknown) => unknown) {
++    define(AsyncLocalStorage.prototype, "run", { ...savedRun, value: implementation })
++  }
++  let finalReceipt: Record<string, unknown> | undefined
++  try {
++    process.chdir(privateDirectory)
++    process.argv.splice(1, process.argv.length - 1, path.join(repository, "apps/cli/src/index.ts"), "serve")
++    process.env[directoryKey] = directory
++    process.env[bindingKey] = mode === "unavailable" ? "{}" : binding
++    define(performance, "now", { configurable: true, value: () => {
++      const action = clockAction
++      clockAction = undefined
++      action?.()
++      clock += 0.1
++      return invalidClock ? Number.NaN : clock
++    } })
++    define(process.stdout, "write", { configurable: true, value: function (this: unknown, chunk: unknown, ...args: unknown[]) {
++      if (typeof chunk === "string" && chunk.startsWith(prefix)) {
++        stdoutAttempts++
++        if (writeThrow) throw outputError
++        lines.push(chunk)
++        return !writeFalse
++      }
++      return apply(originalWrite, this, [chunk, ...args])
++    } })
++    const observer = await import("../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts")
++    const handle = observer.startSfE14Observation(request)
++    if (mode === "unavailable") {
++      assert.equal(handle, undefined)
++      process.env[bindingKey] = binding
++      assert.equal(observer.startSfE14Observation(request), undefined)
++      let calls = 0
++      const value = {}
++      assert.equal(observer.runSfE14Observation(handle, request, () => { calls++; return value }), value)
++      let threw = false, caught: unknown = value
++      try { observer.runSfE14Observation(handle, request, () => { calls++; throw undefined }) } catch (error) { threw = true; caught = error }
++      assert.equal(threw, true); assert.equal(caught, undefined); assert.equal(calls, 2)
++      assert.equal(observer.enterSfE14Compare(), undefined)
++      observer.markSfE14Http(handle, request, "body-returned"); observer.finishSfE14Observation(handle, request, false)
++      assert.equal(lines.length, 0)
++      checks.push("invalid-binding-latches-without-reselection", "unavailable-keeps-value-and-undefined")
++    } else {
++      assert.ok(handle)
++      assert.equal(observer.startSfE14Observation(foreign), undefined)
++      assert.equal(observer.enterSfE14Compare(), undefined)
++      assert.equal(one("request-enter").maxEvents, 63)
++      assert.equal(one("request-enter").maxBytes, 64_512)
++      if (mode === "flow") {
++        writeFalse = true
++        observer.markSfE14Http(handle, request, "body-returned")
++        writeFalse = false
++        const value = {}, promise = Promise.resolve(value)
++        assert.equal(observer.runSfE14Observation(handle, request, () => promise), promise)
++        assert.equal(await promise, value)
++        let thenGets = 0
++        const thenable = { get then() { thenGets++; throw outputError } }
++        assert.equal(observer.runSfE14Observation(handle, request, () => thenable), thenable)
++        assert.equal(thenGets, 0)
++        let foreignCalls = 0
++        observer.runSfE14Observation(handle, request, () => {
++          const before = lines.length
++          assert.equal(observer.runSfE14Observation(handle, foreign, () => { foreignCalls++; return observer.enterSfE14Compare() }), undefined)
++          assert.equal(observer.runSfE14Observation({}, request, () => { foreignCalls++; return observer.enterSfE14Compare() }), undefined)
++          assert.equal(lines.length, before)
++        })
++        assert.equal(foreignCalls, 2)
++        checks.push("exact-promise-and-unassimilated-value", "foreign-and-wrong-handle-use-neutral-scope")
++
++        await observer.runSfE14Observation(handle, request, async () => {
++          const first = observer.enterSfE14Unit("production-assess"), second = observer.enterSfE14Unit("production-revalidation")
++          assert.ok(first && second)
++          let releaseFirst = () => {}, releaseSecond = () => {}
++          const firstGate = new Promise<void>((resolve) => { releaseFirst = resolve })
++          const secondGate = new Promise<void>((resolve) => { releaseSecond = resolve })
++          const firstValue = {}, secondValue = {}
++          const firstPromise = observer.runSfE14Phase(first, "production-analysis", async () => {
++            const compare = observer.enterSfE14Compare(); assert.ok(compare)
++            try {
++              return await observer.runSfE14Compare(compare, async () => {
++                const child = observer.enterSfE14Compare(); assert.ok(child)
++                assert.equal(observer.runSfE14Compare(child, () => firstValue), firstValue)
++                observer.finishSfE14Compare(child, false)
++                await firstGate
++                return firstValue
++              })
++            } finally { observer.finishSfE14Compare(compare, false) }
++          })
++          const secondPromise = observer.runSfE14Phase(second, "production-analysis-revalidate", async () => {
++            const compare = observer.enterSfE14Compare(); assert.ok(compare)
++            try { return await observer.runSfE14Compare(compare, async () => { await secondGate; return secondValue }) }
++            finally { observer.finishSfE14Compare(compare, false) }
++          })
++          const prefixRows = rows()
++          const firstPhase = prefixRows.find((item) => item.kind === "phase-enter" && item.point === "production-analysis")
++          const secondPhase = prefixRows.find((item) => item.kind === "phase-enter" && item.point === "production-analysis-revalidate")
++          assert.ok(firstPhase && secondPhase)
++          assert.equal(firstPhase.stage, 3); assert.equal(secondPhase.stage, 10)
++          assert.equal(prefixRows.filter((item) => item.kind === "unit-close").length, 0)
++          assert.equal(readFileSync(eventFile, "utf8"), lines.join(""))
++          const checkpoint = one("compare-body-checkpoint")
++          assert.equal(checkpoint.bodyExits, 1); assert.equal(checkpoint.stage, 3); assert.equal(checkpoint.depth, 1)
++          assert.ok(typeof checkpoint.parentCompare === "number" && checkpoint.parentCompare > 0)
++          releaseSecond()
++          assert.equal(observer.returnedSfE14Await(second, await secondPromise), secondValue)
++          observer.finishSfE14Unit(second, false)
++          releaseFirst()
++          assert.equal(observer.returnedSfE14Await(first, await firstPromise), firstValue)
++          observer.finishSfE14Unit(first, false)
++          const closed = rows().filter((item) => item.kind === "phase-close")
++          assert.deepEqual(closed.map((item) => [item.phase, item.stage]), [[secondPhase.phase, 10], [firstPhase.phase, 3]])
++          const last = closed.at(-1)!
++          assert.ok(Array.isArray(last.stages))
++          assert.deepEqual(last.stages.slice(9, 12), [2, 2, 0])
++          assert.deepEqual(last.stages.slice(30, 33), [1, 1, 0])
++        })
++        checks.push("entries-persist-before-units-return", "overlapping-stages-and-compare-parent-are-independent")
++
++        const { compareScenarios } = await import("../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts")
++        const { createPortfolioPort } = await import("../../../../modules/sucafina/Sucafinav1/product/portfolio/port.ts")
++        const opaqueContext = {}, earlyInput = { host: { revalidate: () => Promise.resolve(false) } }
++        await observer.runSfE14Observation(handle, request, async () => {
++          const early: unknown = await apply(compareScenarios, undefined, [earlyInput, { scenarioRefs: [], criteria: [] }, opaqueContext])
++          assert.deepEqual(early, { status: "needs-input", reason: "two-distinct-scenarios-required" })
++          const denied: unknown = await apply(compareScenarios, undefined, [earlyInput, { scenarioRefs: ["left", "right"], criteria: [] }, opaqueContext])
++          assert.deepEqual(denied, { status: "denied", reason: "invalid-binding" })
++          const order: string[] = []
++          const abruptHost = { get revalidate() { order.push("lookup"); return function (this: unknown, context: unknown) {
++            assert.equal(this, abruptHost); assert.equal(context, opaqueContext); order.push("call"); throw undefined
++          } } }
++          let threw = false, caught: unknown = opaqueContext
++          try { await apply(compareScenarios, undefined, [{ host: abruptHost }, { scenarioRefs: ["left", "right"], criteria: [] }, opaqueContext]) }
++          catch (error) { threw = true; caught = error }
++          assert.equal(threw, true); assert.equal(caught, undefined)
++          assert.deepEqual(order, ["lookup", "call"])
++          const rejection = {}
++          threw = false; caught = undefined
++          try { await apply(compareScenarios, undefined, [{ host: { revalidate: () => Promise.reject(rejection) } },
++            { scenarioRefs: ["left", "right"], criteria: [] }, opaqueContext]) }
++          catch (error) { threw = true; caught = error }
++          assert.equal(threw, true); assert.equal(caught, rejection)
++          const port = createPortfolioPort({ revalidate: () => Promise.resolve(false),
++            resolveCandidate: () => { throw outputError }, evaluate: () => { throw outputError },
++            sensitivity: () => { throw outputError }, revalidateEvaluation: () => { throw outputError } })
++          const portDenied: unknown = await apply(port.evaluate, port, [{ scope: { horizon: { start: "2026-01-01", end: "2026-01-02" }, currency: "USD" },
++            candidateRefs: [], operations: [], constraints: [], priorities: [], explorationLimit: 4 }, opaqueContext])
++          assert.deepEqual(portDenied, { status: "denied", reason: "invalid-binding" })
++          const { createPortfolioAnalysis } = await import("../../../../modules/sucafina/Sucafinav1/product/portfolio/analysis.ts")
++          for (const synchronous of [true, false]) {
++            const unexpected = () => { throw outputError }, lookup: string[] = []
++            const dependencies: Parameters<typeof createPortfolioAnalysis>[0] = {
++              planner: { compareScenarios: unexpected },
++              results: { write: unexpected, read: unexpected, readForCalculation: unexpected,
++                readHistoricalCalculation: unexpected, readHistoricalScenario: unexpected, readByRequest: unexpected },
++              bindings: { proofs: unexpected, read: unexpected, bind: unexpected },
++              persist: unexpected, select: unexpected, idempotencyKey: unexpected,
++            }
++            define(dependencies, "select", { configurable: true, get: () => {
++              lookup.push("lookup")
++              return function (this: unknown, incoming: unknown, context: unknown) {
++                assert.equal(this, dependencies); assert.deepEqual(incoming, { diagnostic: true }); assert.equal(context, opaqueContext)
++                lookup.push("call")
++                if (synchronous) throw undefined
++                return Promise.reject(undefined)
++              }
++            } })
++            const analysis = createPortfolioAnalysis(dependencies)
++            let failed = false, returned = false, caught: unknown = outputError
++            try { await apply(analysis.evaluate, analysis, [{ diagnostic: true }, opaqueContext]); returned = true }
++            catch (error) { failed = true; caught = error }
++            assert.equal(failed, true); assert.equal(returned, false); assert.equal(caught, undefined)
++            assert.deepEqual(lookup, ["lookup", "call"])
++          }
++        })
++        const outcomes = rows().filter((item) => item.kind === "phase-close").map((item) => item.outcome)
++        assert.ok(outcomes.includes("await-returned") && outcomes.includes("abrupt") && outcomes.includes("rejected"))
++        checks.push("real-callers-early-return-denial-and-exact-rejection", "lookup-receiver-arguments-once")
++
++        let releaseLate = () => {}, latePromise: Promise<void> | undefined
++        await observer.runSfE14Observation(handle, request, async () => {
++          const parent = observer.enterSfE14Unit("port")
++          const lateGate = new Promise<void>((resolve) => { releaseLate = resolve })
++          const combined = observer.runSfE14Phase(parent, "evaluations-recheck", () => {
++            const rejected = (async () => {
++              const compare = observer.enterSfE14Compare()
++              let failed = false
++              try { await observer.runSfE14Compare(compare, () => Promise.reject(undefined)) } catch (error) { failed = true; throw error }
++              finally { observer.finishSfE14Compare(compare, failed) }
++            })()
++            latePromise = (async () => {
++              const compare = observer.enterSfE14Compare()
++              await observer.runSfE14Compare(compare, () => lateGate)
++              observer.finishSfE14Compare(compare, false)
++            })()
++            return Promise.all([rejected, latePromise])
++          })
++          let threw = false, caught: unknown = outputError
++          try { await combined } catch (error) { threw = true; caught = error }
++          assert.equal(threw, true); assert.equal(caught, undefined)
++          clockAction = () => observer.finishSfE14Observation(handle, request, false)
++          observer.finishSfE14Unit(parent, true)
++        })
++        const terminal = one("request-close")
++        assert.equal(terminal.openUnits, 0); assert.equal(terminal.openPhases, 0)
++        assert.deepEqual(terminal.compareBodies, [9, 5, 3, 1, 1, 0])
++        assert.deepEqual(terminal.lineage, [4, 1, 4])
++        assert.deepEqual(terminal.faultsBefore, [0, 0, 0, 0, 0, 1])
++        const closingPhase = rows().at(-2)!
++        assert.equal(closingPhase.kind, "phase-close")
++        assert.equal(closingPhase.point, "evaluations-recheck"); assert.equal(closingPhase.outcome, "rejected")
++        assert.equal(rows().filter((item) => item.kind === "unit-close" && item.unit === closingPhase.unit).length, 0)
++        const closedLines = lines.length
++        releaseLate()
++        assert.ok(latePromise)
++        await latePromise
++        observer.markSfE14Http(handle, request, "body-returned"); observer.finishSfE14Observation(handle, request, true)
++        assert.equal(observer.runSfE14Observation(handle, request, () => observer.enterSfE14Compare()), undefined)
++        assert.equal(lines.length, closedLines)
++        checks.push("parent-rejection-does-not-close-sibling", "reentrant-close-serialized-and-late-ignored")
++      } else if (mode === "mechanism") {
++        observer.runSfE14Observation(handle, request, () => {
++          const abandoned = observer.enterSfE14Unit("production-assess"); assert.ok(abandoned)
++          const promised = Promise.resolve({})
++          assert.equal(observer.runSfE14Phase(abandoned, "production-analysis", () => promised), promised)
++          observer.finishSfE14Unit(abandoned, false)
++          assert.equal(rows().find((item) => item.kind === "phase-close")?.outcome, "abandoned")
++          for (let index = 0; index < 26; index++) {
++            const unit = observer.enterSfE14Unit("port"); assert.ok(unit)
++            observer.finishSfE14Unit(unit, false)
++          }
++          assert.equal(observer.enterSfE14Unit("port"), undefined)
++          const firstAnalysis = observer.enterSfE14Unit("analysis"); assert.ok(firstAnalysis)
++          observer.finishSfE14Unit(firstAnalysis, false)
++          assert.equal(observer.enterSfE14Unit("analysis"), undefined)
++        })
++        assert.equal(rows().filter((item) => item.kind === "unit-close").length, 28)
++        assert.equal(rows().filter((item) => item.kind === "unit-enter" && item.unitKind === "analysis").length, 1)
++        const admittedBeforeFault = rows().filter((item) => item.kind === "unit-enter").length
++        checks.push("first-analysis-entry-and-close-reserved-after-other-units", "untapped-phase-is-abandoned-not-rejected")
++        let calls = 0, delayed: unknown
++        const value = {}, mechanismValue = {}
++        installRun(function (token, callback) {
++          assert.ok(typeof callback === "function")
++          delayed = callback
++          apply(nativeRun, this, [token, callback])
++          apply(nativeRun, this, [token, callback])
++          return mechanismValue
++        })
++        assert.equal(observer.runSfE14Observation(handle, request, () => { calls++; return value }), value)
++        assert.ok(typeof delayed === "function")
++        apply(delayed, undefined, [])
++        assert.equal(calls, 1)
++        for (const thrown of [outputError, undefined]) {
++          let caught: unknown = value, didThrow = false
++          installRun(function (token, callback) {
++            try { apply(nativeRun, this, [token, callback]) } catch { /* The mechanism deliberately swallows product rejection. */ }
++            return mechanismValue
++          })
++          try { observer.runSfE14Observation(handle, request, () => { calls++; throw thrown }) } catch (error) { didThrow = true; caught = error }
++          assert.equal(didThrow, true); assert.equal(caught, thrown)
++        }
++        assert.equal(calls, 3)
++        let entries = 0
++        installRun(function () { throw outputError })
++        assert.equal(observer.runSfE14Observation(handle, request, () => { calls++; if (observer.enterSfE14Compare()) entries++; return value }), value)
++        assert.equal(calls, 4); assert.equal(entries, 0)
++        installRun(function () { return mechanismValue })
++        assert.equal(observer.runSfE14Observation(handle, request, () => { calls++; return undefined }), undefined)
++        assert.equal(calls, 5)
++        installRun(function (token, callback) { apply(nativeRun, this, [token, callback]); throw outputError })
++        const promise = Promise.resolve(value)
++        assert.equal(observer.runSfE14Observation(handle, request, () => { calls++; return promise }), promise)
++        assert.equal(await promise, value); assert.equal(calls, 6)
++        define(AsyncLocalStorage.prototype, "run", savedRun)
++        observer.finishSfE14Observation(handle, request, false)
++        assert.deepEqual(one("request-close").faultsBefore, [0, 0, 1, 1, 0, 0])
++        assert.equal(rows().filter((item) => item.kind === "unit-enter").length, admittedBeforeFault)
++        checks.push("duplicate-and-tardy-thunk-never-replay", "mechanism-result-and-swallowed-error-not-authoritative",
++          "before-noinvoke-after-faults-preserve-work", "fallback-disables-attribution")
++      } else if (mode === "foreign-noop" || mode === "get-store") {
++        let calls = 0
++        observer.runSfE14Observation(handle, request, () => {
++          const parent = observer.enterSfE14Unit("port"); assert.ok(parent)
++          if (mode === "foreign-noop") installRun(function (_token, callback) {
++            assert.ok(typeof callback === "function")
++            return apply(callback, undefined, [])
++          })
++          else define(AsyncLocalStorage.prototype, "getStore", { ...savedGet, value: () => { throw undefined } })
++          const value = {}
++          assert.equal(observer.runSfE14Observation(handle, mode === "foreign-noop" ? foreign : request, () => {
++            calls++
++            assert.equal(observer.enterSfE14Compare(), undefined)
++            return value
++          }), value)
++          define(AsyncLocalStorage.prototype, "run", savedRun)
++          define(AsyncLocalStorage.prototype, "getStore", savedGet)
++          assert.equal(observer.enterSfE14Compare(), undefined)
++          observer.finishSfE14Unit(parent, false)
++        })
++        observer.finishSfE14Observation(handle, request, false)
++        assert.equal(calls, 1)
++        const terminal = one("request-close")
++        assert.deepEqual(terminal.faultsBefore, [0, 0, 1, 1, 0, 0])
++        assert.equal(terminal.openUnits, 1)
++        assert.equal(rows().filter((item) => item.kind === "unit-enter").length, 1)
++        checks.push(mode === "foreign-noop" ? "nested-foreign-noop-does-not-inherit-selected" : "getstore-fault-disables-before-work",
++          "restore-cannot-reenable-attribution")
++      } else if (mode === "output") {
++        writeFalse = true
++        observer.markSfE14Http(handle, request, "body-returned")
++        writeFalse = false
++        const beforeThrow = stdoutAttempts
++        writeThrow = true
++        const value = {}
++        assert.equal(observer.runSfE14Observation(handle, request, () => { observer.markSfE14Http(handle, request, "admit-returned"); return value }), value)
++        writeThrow = false
++        assert.equal(stdoutAttempts, beforeThrow + 1)
++        define(JSON, "stringify", { configurable: true, writable: true, value: () => { throw undefined } })
++        let threw = false, caught: unknown = value
++        try { observer.runSfE14Observation(handle, request, () => { observer.markSfE14Http(handle, request, "case-callback-entered"); throw undefined }) }
++        catch (error) { threw = true; caught = error }
++        define(JSON, "stringify", savedStringify)
++        assert.equal(threw, true); assert.equal(caught, undefined)
++        invalidClock = true
++        observer.markSfE14Http(handle, request, "with-case-returned")
++        invalidClock = false
++        observer.finishSfE14Observation(handle, request, true)
++        const terminal = one("request-close")
++        assert.equal(terminal.outcome, "rejected")
++        assert.deepEqual(terminal.faultsBefore, [1, 0, 0, 0, 1, 1])
++        assert.equal(rows().find((item) => item.point === "with-case-returned")?.elapsedTenthMs, null)
++        const disk = readFileSync(eventFile, "utf8")
++        assert.ok(disk.includes('"point":"admit-returned"'))
++        assert.equal(lines.some((line) => line.includes('"point":"admit-returned"')), false)
++        assert.equal(disk.includes('"point":"case-callback-entered"'), false)
++        checks.push("write-false-consumed-once-without-replay", "writer-serializer-clock-faults-preserve-product",
++          "stdout-loss-not-promoted-to-complete-stream")
++      } else if (mode === "analysis-new" || mode === "analysis-found") {
++        const { createPortfolioAnalysis } = await import("../../../../modules/sucafina/Sucafinav1/product/portfolio/analysis.ts")
++        const { compareScenarios } = await import("../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts")
++        const { digestSfValue } = await import("../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts")
++        const opaqueContext = {}, value = {}, callsAfterCapacity = { count: 0 }
++        observer.runSfE14Observation(handle, request, () => {
++          const filler = observer.enterSfE14Unit("port"); assert.ok(filler)
++          for (let index = 0; index < 600; index++) {
++            assert.equal(observer.runSfE14Phase(filler, "combination-evaluate", () => { callsAfterCapacity.count++; return value }), value)
++            assert.equal(observer.returnedSfE14Await(filler, value), value)
++          }
++          observer.finishSfE14Unit(filler, false)
++        })
++        assert.equal(callsAfterCapacity.count, 600)
++        assert.equal(one("overflow").generalUsed, 17)
++
++        const horizon = { start: "2026-01-01", end: "2026-01-31" }, caseRef = { id: "case", incarnation: "incarnation", version: 1 }
++        const scenarioRequest = { baseRef: "source", operations: [], assumptions: [] }
++        const scenario: ScenarioResult = {
++          id: "scenario", version: 1, components: [], currency: "USD", horizon, sourceRefs: [],
++          unresolvedConditions: ["controlled-pending"], restrictions: [], comparisonStatus: "conditioned",
++          costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1,
++            currency: "USD", horizon, issues: [], evaluatedSourceRefs: [], coverageState: "pending",
++            entries: [], derivedMissingCategoryIds: ["training"] },
++          knownSubtotal: 80, total: null,
++        }
++        const comparison: ScenarioComparison = { baselineResultRef: "baseline", alternativeResultRef: "alternative",
++          costCoverageRefs: [], criterionResults: [{ criterionId: "cost", state: "unknown", reason: "controlled-criterion" }],
++          unresolvedConditions: ["controlled-pending"], comparisonStatus: "conditioned", knownDifference: -20, completeDifference: null }
++        const incoming: Parameters<ReturnType<typeof createPortfolioAnalysis>["evaluate"]>[0] = {
++          portfolio: { scope: { horizon, currency: "USD" }, candidateRefs: ["candidate"], operations: [],
++            constraints: ["cost"], priorities: [], explorationLimit: 4 },
++          candidates: [], scenario: scenarioRequest, result: scenario, costCoverageRefs: [],
++        }
++        const compareRequest = { scenarioRefs: ["baseline", "alternative"], criteria: ["cost"] }
++        const expectedAnalysis = { scenarioResultRef: "alternative", scenario, comparisonRef: "comparison", comparison }
++        const expected = { status: "ok", value: { analysis: expectedAnalysis,
++          constraints: [{ ref: "cost", state: "unknown", reason: "controlled-criterion" }] } }
++        const common = { schema: "sf-decision-result-v1" as const, caseRef, principalRef: "person",
++          accessRevision: "access", policyVersion: "policy", sourceRefs: [], createdAt: "2026-01-01T00:00:00Z" }
++        const alternative: StoredDecisionResult = { ...common, kind: "scenario", resultRef: "alternative", result: scenario,
++          requestDigest: digestSfValue(scenarioRequest), resultDigest: digestSfValue(scenario) }
++        const baselineScenario: ScenarioResult = { ...scenario, id: "baseline-scenario", knownSubtotal: 100 }
++        const baseline: StoredDecisionResult = { ...common, kind: "scenario", resultRef: "baseline", result: baselineScenario,
++          requestDigest: digestSfValue(scenarioRequest), resultDigest: digestSfValue(baselineScenario) }
++        const storedComparison: StoredDecisionResult = { ...common, kind: "comparison", resultRef: "comparison", result: comparison,
++          requestDigest: digestSfValue(compareRequest), resultDigest: digestSfValue(comparison) }
++        const rules = [{ criterionId: "cost", ruleRef: null, version: null, digest: null }]
++        const bindingValue: CriterionComparisonBinding = { schema: "sf-criterion-comparison-v1", caseRef, resultRef: "comparison",
++          resultDigest: storedComparison.resultDigest, request: compareRequest, requestDigest: storedComparison.requestDigest,
++          rules, principalRef: "person", accessRevision: "access", policyVersion: "policy", createdAt: common.createdAt,
++          bindingDigest: digestSfValue("controlled-binding") }
++        const selection = { caseRef, baselineRef: "baseline", alternativeRef: "alternative",
++          selectionDigest: digestSfValue("controlled-selection"), criteria: ["cost"] }
++        const key = "portfolio-comparison:controlled:" + storedComparison.requestDigest
++        let entered = () => {}, release = () => {}
++        const ready = new Promise<void>((resolve) => { entered = resolve })
++        const waiting = new Promise<void>((resolve) => { release = resolve })
++        // Real analysis logic and canonical digests; its declared dependencies are controlled.
++        // The opaque context is transported by identity and never claims installed authority.
++        function controlled(reuse: boolean, first: boolean) {
++          const order: string[] = []
++          const state = { selected: 0, comparisons: 0, bindingReads: 0, persisted: reuse, bound: reuse }
++          const unexpected = () => { throw new Error("Unexpected analysis dependency") }
++          const dependencies: Parameters<typeof createPortfolioAnalysis>[0] = {
++            planner: {
++              async compareScenarios(requested, context) {
++                assert.equal(this, dependencies.planner); assert.equal(context, opaqueContext)
++                assert.deepEqual(requested, compareRequest)
++                order.push("compare:" + ++state.comparisons)
++                const early: unknown = await apply(compareScenarios, undefined, [
++                  { host: { revalidate: unexpected } }, { scenarioRefs: [], criteria: [] }, context,
++                ])
++                assert.deepEqual(early, { status: "needs-input", reason: "two-distinct-scenarios-required" })
++                return { status: "ok", value: structuredClone(comparison) }
++              },
++            },
++            results: {
++              write: unexpected, readForCalculation: unexpected, readHistoricalCalculation: unexpected,
++              async read(requested, context) {
++                assert.equal(this, dependencies.results); assert.equal(context, opaqueContext)
++                assert.deepEqual(requested, { kind: "comparison", resultRef: "comparison" })
++                assert.equal(state.persisted, true)
++                order.push("read:comparison")
++                return { status: "ok", value: structuredClone(storedComparison) }
++              },
++              async readHistoricalScenario(requested, context) {
++                assert.equal(this, dependencies.results); assert.equal(context, opaqueContext)
++                assert.ok(requested.resultRef === "baseline" || requested.resultRef === "alternative")
++                order.push("historical:" + requested.resultRef)
++                return { status: "ok", value: structuredClone(requested.resultRef === "baseline" ? baseline : alternative) }
++              },
++              async readByRequest(requested, context) {
++                assert.equal(this, dependencies.results); assert.equal(context, opaqueContext)
++                assert.deepEqual(requested, { caseRef, kind: "comparison", idempotencyKey: key, requestDigest: storedComparison.requestDigest })
++                order.push("find")
++                return reuse ? { status: "ok", value: { state: "found", result: structuredClone(storedComparison) } }
++                  : { status: "ok", value: { state: "not-found" } }
++              },
++            },
++            bindings: {
++              async proofs(selected, criteria, context) {
++                assert.equal(this, dependencies.bindings); assert.equal(context, opaqueContext)
++                assert.deepEqual(selected, caseRef); assert.deepEqual(criteria, ["cost"])
++                order.push("proofs")
++                return { status: "ok", value: structuredClone(rules) }
++              },
++              async read(requested, context) {
++                assert.equal(this, dependencies.bindings); assert.equal(context, opaqueContext)
++                assert.deepEqual(requested, { caseRef, resultRef: "comparison" })
++                order.push("binding:" + ++state.bindingReads)
++                return state.bound ? { status: "ok", value: structuredClone(bindingValue) }
++                  : { status: "unavailable", reason: "controlled-binding-absent" }
++              },
++              async bind(requested, context) {
++                assert.equal(this, dependencies.bindings); assert.equal(context, opaqueContext)
++                assert.deepEqual(requested, { caseRef, resultRef: "comparison", request: compareRequest, expectedRules: rules })
++                assert.equal(state.bound, false)
++                order.push("bind"); state.bound = true
++                return { status: "ok", value: structuredClone(bindingValue) }
++              },
++            },
++            async persist(requested, operationKey, context) {
++              assert.equal(this, dependencies); assert.equal(context, opaqueContext); assert.equal(operationKey, key)
++              assert.deepEqual(requested, { kind: "comparison", request: compareRequest, result: comparison })
++              assert.equal(state.persisted, false)
++              order.push("persist"); state.persisted = true
++              return { status: "ok", value: { resultRef: "comparison" } }
++            },
++            async select(requested, context) {
++              assert.equal(this, dependencies); assert.equal(context, opaqueContext); assert.deepEqual(requested, incoming)
++              order.push("select:" + ++state.selected)
++              if (first && state.selected === 1) {
++                for (let index = 0; index < 128; index++) {
++                  const early: unknown = await apply(compareScenarios, undefined, [
++                    { host: { revalidate: unexpected } }, { scenarioRefs: [], criteria: [] }, context,
++                  ])
++                  assert.deepEqual(early, { status: "needs-input", reason: "two-distinct-scenarios-required" })
++                }
++                entered()
++                await waiting
++              }
++              return { status: "ok", value: structuredClone(selection) }
++            },
++            async idempotencyKey(digest, context) {
++              assert.equal(this, dependencies); assert.equal(context, opaqueContext)
++              assert.equal(digest, storedComparison.requestDigest)
++              order.push("key")
++              return "controlled"
++            },
++          }
++          return { analysis: createPortfolioAnalysis(dependencies), order, state }
++        }
++        const first = controlled(mode === "analysis-found", true)
++        const pending = observer.runSfE14Observation(handle, request, () => apply(first.analysis.evaluate, first.analysis, [incoming, opaqueContext]))
++        await ready
++        const firstUnit = rows().find((item) => item.kind === "unit-enter" && item.unitKind === "analysis")
++        const initial = rows().find((item) => item.kind === "phase-enter" && item.point === "analysis-select-initial")
++        assert.ok(firstUnit && initial)
++        assert.equal(initial.unit, firstUnit.unit); assert.equal(initial.phase, 1)
++        assert.equal(rows().filter((item) => item.kind === "phase-close" && item.phase === 1).length, 0)
++        assert.deepEqual(rows().filter((item) => item.kind === "compare-body-checkpoint").map((item) => item.bodyExits), [1, 8, 32, 128])
++        assert.ok(rows().filter((item) => item.kind === "compare-body-checkpoint").every((item) => item.stage === 4))
++        assert.equal(readFileSync(eventFile, "utf8"), lines.join(""))
++        const expectedOrder = (reuse: boolean) => ["select:1", "historical:alternative", "proofs", "compare:1", "key", "find",
++          ...(reuse ? [] : ["persist"]), "read:comparison", "binding:1", ...(reuse ? [] : ["bind"]), "binding:2", "select:2",
++          "read:comparison", "binding:3", "historical:baseline", "historical:alternative", "compare:2",
++          "read:comparison", "binding:4", "historical:baseline", "historical:alternative"]
++        try {
++          if (mode === "analysis-new") {
++            const second = controlled(true, false)
++            const secondValue: unknown = await observer.runSfE14Observation(handle, request, () =>
++              apply(second.analysis.evaluate, second.analysis, [incoming, opaqueContext]))
++            assert.deepEqual(secondValue, expected)
++            assert.deepEqual(second.order, expectedOrder(true))
++            assert.equal(second.state.selected, 2); assert.equal(second.state.comparisons, 2)
++            const critical = rows().filter((item) => item.kind === "phase-enter" && typeof item.phase === "number" && item.phase <= 5)
++            assert.deepEqual(critical.map((item) => [item.unit, item.phase]), [[firstUnit.unit, 1]])
++            assert.equal(rows().filter((item) => item.kind === "branch").length, 0)
++          }
++        } finally { release() }
++        const firstValue: unknown = await pending
++        assert.deepEqual(firstValue, expected)
++        assert.deepEqual(first.order, expectedOrder(mode === "analysis-found"))
++        assert.equal(first.state.selected, 2); assert.equal(first.state.comparisons, 2); assert.equal(first.state.bindingReads, 4)
++        const points = mode === "analysis-new"
++          ? ["analysis-select-initial", "analysis-persist", "analysis-bind", "analysis-select-final", "analysis-revalidate"]
++          : ["analysis-select-initial", "analysis-select-final", "analysis-revalidate"]
++        const criticalEntries = rows().filter((item) => item.kind === "phase-enter" && item.unit === firstUnit.unit)
++        const criticalCloses = rows().filter((item) => item.kind === "phase-close" && item.unit === firstUnit.unit)
++        assert.deepEqual(criticalEntries.map((item) => item.point), points)
++        assert.deepEqual(criticalCloses.map((item) => item.point), points)
++        assert.ok(criticalCloses.every((item) => item.outcome === "await-returned"))
++        assert.deepEqual(criticalEntries.map((item) => item.phase), mode === "analysis-new" ? [1, 4, 5, 2, 3] : [1, 2, 3])
++        const branches = rows().filter((item) => item.kind === "branch")
++        assert.deepEqual(branches.map((item) => [item.unit, item.point, item.branch]), mode === "analysis-new" ? [] : [
++          [firstUnit.unit, "analysis-persist", "reuse-result"], [firstUnit.unit, "analysis-bind", "binding-present"],
++        ])
++        observer.finishSfE14Observation(handle, request, false)
++        const terminal = one("request-close"), comparisons = mode === "analysis-new" ? 132 : 130
++        assert.deepEqual(terminal.compareBodies, [comparisons, comparisons, 0, 0, 0, 0])
++        assert.deepEqual(terminal.lineage, [comparisons, 0, 0])
++        assert.ok(Array.isArray(terminal.stages))
++        assert.deepEqual(terminal.stages.slice(12, 15), [128, 128, 0])
++        assert.deepEqual(terminal.stages.slice(15, 18), mode === "analysis-new" ? [2, 2, 0] : [1, 1, 0])
++        assert.deepEqual(terminal.stages.slice(27, 30), mode === "analysis-new" ? [2, 2, 0] : [1, 1, 0])
++        assert.equal(terminal.openUnits, 0); assert.equal(terminal.openPhases, 0)
++        assert.deepEqual(terminal.faultsBefore, [0, 0, 0, 0, 0, 0])
++        assert.ok(typeof terminal.dropped === "number" && terminal.dropped > 0)
++        const closed = stringify(terminal), count = lines.length
++        observer.runSfE14Observation(handle, request, () => {
++          const compare = observer.enterSfE14Compare()
++          assert.equal(compare, undefined)
++          observer.runSfE14Compare(compare, () => value); observer.finishSfE14Compare(compare, false)
++        })
++        assert.equal(lines.length, count); assert.equal(stringify(one("request-close")), closed)
++        checks.push("six-hundred-works-survive-detail-capacity", "global-checkpoints-do-not-consume-critical-pairs",
++          mode === "analysis-new" ? "concurrent-analysis-cannot-steal-first-owner-critical-slots" : "first-owner-reuse-and-binding-skips-are-explicit",
++          "real-analysis-value-readback-replay-and-call-order", "critical-returns-survive-overflow-and-counters-freeze")
++      }
++      const all = rows(), disk = readFileSync(eventFile, "utf8")
++      assert.equal(all.at(-1)?.kind, "request-close")
++      assert.equal(all.filter((item) => item.kind === "request-close").length, 1)
++      assert.ok(lines.length <= 63 && Buffer.byteLength(lines.join(""), "utf8") <= 64_512)
++      for (let index = 1; index < all.length; index++) {
++        const previous = all[index - 1]!.sequence, current = all[index]!.sequence
++        assert.ok(typeof previous === "number" && typeof current === "number" && current > previous)
++      }
++      if (mode !== "output") {
++        assert.equal(disk, lines.join(""))
++        assert.deepEqual(all.map((item) => item.sequence), all.map((_item, index) => index + 1))
++      }
++      assert.equal(statSync(eventFile).mode & 0o777, 0o600)
++      assert.ok(Buffer.byteLength(disk, "utf8") <= 64_512)
++      const terminal = one("request-close")
++      const closedCount = lines.length
++      observer.markSfE14Http(handle, request, "egress-passed"); observer.finishSfE14Observation(handle, request, false)
++      assert.equal(observer.startSfE14Observation(request), undefined)
++      assert.equal(lines.length, closedCount)
++      finalReceipt = { schema: "sf-preview-e14-control-child-v1", mode, pid: process.pid, synthetic: true, checks,
++        records: all.length, stdoutAttempts, stdoutBytes: Buffer.byteLength(lines.join(""), "utf8"), stdoutSha256: sha256(lines.join("")),
++        fileBytes: Buffer.byteLength(disk, "utf8"), fileSha256: sha256(disk), terminal }
++    }
++    assert.equal(requestGets, 0)
++    if (!finalReceipt) finalReceipt = { schema: "sf-preview-e14-control-child-v1", mode, pid: process.pid, synthetic: true, checks, records: 0, requestGets }
++    else finalReceipt.requestGets = requestGets
++  } finally {
++    restore(AsyncLocalStorage.prototype, "run", savedRun)
++    restore(AsyncLocalStorage.prototype, "getStore", savedGet)
++    restore(performance, "now", savedNow)
++    restore(process.stdout, "write", savedWrite)
++    define(JSON, "stringify", savedStringify)
++    process.argv.splice(0, process.argv.length, ...argv)
++    process.chdir(cwd)
++    if (oldDirectory === undefined) delete process.env[directoryKey]; else process.env[directoryKey] = oldDirectory
++    if (oldBinding === undefined) delete process.env[bindingKey]; else process.env[bindingKey] = oldBinding
++    rmSync(directory, { recursive: true, force: true })
++    rmSync(privateDirectory, { recursive: true, force: true })
++  }
++  assert.ok(finalReceipt)
++  return finalReceipt
++}
++
++if (import.meta.main) {
++  const mode = e14Modes.find((value) => value === process.argv[2])
++  assert.ok(mode)
++  const receipt = await child(mode)
++  process.stdout.write(JSON.stringify(receipt) + "\n")
++}
+diff --git a/apps/cli/test/sf613-preview-e14-observation.test.ts b/apps/cli/test/sf613-preview-e14-observation.test.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/cli/test/sf613-preview-e14-observation.test.ts
+@@ -0,0 +1,24 @@
++import { expect, test } from "bun:test"
++import { Buffer } from "node:buffer"
++import { e14Modes, runSfE14Control } from "./fixture/sf613-preview-e14-observation.ts"
++
++/** Synthetic mechanisms plus real analysis with controlled ports; no installed authority or latency claim. */
++test("E14 observation reserves the first analysis and preserves its real calls and values", async () => {
++  const reports = []
++  for (const mode of e14Modes) {
++    const result = await runSfE14Control(import.meta.path, mode)
++    expect(result.report.mode).toBe(mode)
++    expect(result.report.synthetic).toBe(true)
++    expect(result.report.requestGets).toBe(0)
++    expect(result.omniSpawns).toBe(1)
++    expect(result.omniDelegations).toBe(0)
++    reports.push(result)
++  }
++  expect(reports.length).toBe(8)
++  expect(new Set(reports.map((item) => item.pid)).size).toBe(8)
++  const line = "SF_E14_OBSERVATION_CONTROL " + JSON.stringify({
++    schema: "sf-preview-e14-control-v1", synthetic: true, childModes: [...e14Modes], reports,
++  }) + "\n"
++  expect(Buffer.byteLength(line, "utf8")).toBeLessThanOrEqual(16_384)
++  process.stdout.write(line)
++}, 35_000)

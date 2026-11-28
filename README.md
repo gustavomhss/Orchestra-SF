@@ -1,3 +1,58 @@
+# sf613-evidence — R7 proposed increment
+
+**Status: proposed blobs only; archive publication is pending.**
+
+This increment preserves the published R6 corpus and adds the closed E14 diagnostic source, controls, focal execution, original Analytics execution and bounded event reader. The clean product remains S19. C20 and its later work are outside this cut.
+
+## What the evidence establishes
+
+The E14 focal completed successfully with 16 functional cases and 2,146 assertions, eight outer cases and 46 assertions, 14 commands with zero exit codes, and 28 false truncation flags. This qualifies the diagnostic focal selection only.
+
+Original Analytics run **46103050850/1** remained negative: the first preview reached the unchanged 60-second response waiter at spec 72:32, and BI passed. UI42 has six partial captures; UI43 and UI44 were not reached. No performance improvement or newly accepted product area follows from this archive.
+
+The bounded reader, run **46108929460/1**, completed transport of six exports in 11 chunks, totaling 156,394 payload bytes. Its original event file, runtime event export and preserved main-log union are byte-identical: **21 records / 11,961 B**, sequence 1–21, with no partial tail. The last received event is the entry to `analysis-persist` at 349739 tenths-ms of the native relative clock. No Request close or overflow was received. Both pending-close conditions remain; complete transport and consistent bytes do not establish complete Request coverage or the state of persistence at the browser timeout.
+
+The reader inspected four exact selected ZIP paths and left 146 other entries at metadata only. All four selected CRCs were verified by the reviewed reader; root and peer independently recomputed CRCs for the two exported originals. The raw runtime and selection reports were not exported to the reviewers. The audit ZIP remains metadata only. The reader branch is retained at its reviewed head; this archive does not claim deletion.
+
+## Closed receipts
+
+| Scope | Current actual blob | Meaning |
+|---|---|---|
+| Source | [137739c7](objects/137739c767d7951c517fee96bb1081ccec0e5a93) | Reviewed diagnostic source, separate from product lineage |
+| Controls and focal wrapper | [a2e64e7a](objects/a2e64e7a5afa4844662a68bd864fc9e0aedebb05) | Static package; historical template bindings remain literal |
+| Focal final | [7080a6a7](objects/7080a6a7dd0780c56ecaaf2883adb7049cd88ed9) | Closed focal PASS only |
+| Original Analytics final | [2a15d6b3](objects/2a15d6b33dba361af8f4f1b30084cacc61521788) | Closed first-preview timeout and BI PASS |
+| Reader R3 package | [d283188d](objects/d283188d13f993843119cd5017014e69c9334201) | Reviewed bounded reader |
+| Reader final | [08aa33dd](objects/08aa33dd56b067e01cf043cece9855b4b8446721) | Transport PASS and consistent prefix only |
+| Independent reader review | [5673430e](objects/5673430ea8a4f70880e9838b708919c2693c2075) | 80 positive checks and explicit observation limits |
+| Finite R7 input catalog | [85f7f805](objects/85f7f805e9d4fd0f785dbb3ed55281e1709728ec) | 135 incoming blobs, 141 memberships and 15 streams; excludes its own future self-reference |
+
+## Exact preservation and addition
+
+R6 is the immutable base `1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5`, tree `768afcf3f8722bf0e3a33f2b21ea803917b18dc4`. Its 607 object records, 683 ordered membership prefixes, 40 groups, 54 streams and 199 part references remain literal. The entire R6 index and README are retained as actual objects.
+
+The finite input catalog contains 119 new bodies (9,625,559 B) and 16 reused R6 bodies. Every new body was fetched from Git and checked for Git SHA, UTF-8 byte count, SHA256 and LF count. Reused metadata matches R6; all 607 entries of the actual R6 objects tree were checked without reacquiring their original streams. Fifteen new streams and 32 part references were recomposed without separators or BOM/LF normalization.
+
+Including the actual catalog, the proposed corpus has **727 objects / 73,074,593 B / 825 memberships / 47 groups / 69 streams / 231 part references**. Its own tree contains only `README.md`, `index.json` and `objects/<Git SHA>`: 729 files, with a planned delta of **120 additions and two modified documents**. No executable repository or workflow layout is introduced.
+
+The six reader export roles have only five unique bodies. In particular, the original event file, derived runtime event stream and main-log event union use the same `775e26c6e30fb481a480f2425b5e42fa9eab83f8` object, with separate memberships and stream meanings.
+
+## Retention and publication boundary
+
+Proposed ordered parents:
+
+1. Published R6: `1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5`.
+2. Executed E14 focal D: `8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4`, whose sole parent is diagnostic S `38255d2d11cfdff4214803b4606dd3fd7e83869f`; Analytics ran directly on that S.
+3. Executed reader D: `64af705904c2ca5b61a6837560f005718ee122d3`, whose sole parent is clean S19.
+
+Root must independently review the complete proposal, audit the actual tree and parents, and freshly check the expected R6 branch lease before a nonforce publication. This author creates only proposal blobs. No final C613, UI6, D28 execution, release, tar, production or reservation acceptance is implied. Historical qualification remains 12/15, with zero newly accepted areas.
+
+## Historical R6 README — literal retained content
+
+Everything between the following historical-content heading and the R7 appendix is the complete, unchanged R6 README. Its references to then-current states remain historical; the closed E14 receipts above govern this increment.
+
+---
+
 # Evidências do Orchestra-SF — arquivo do #613
 
 Este sexto incremento documental preserva o R5 publicado e acrescenta C19, seu focal fechado, o Analytics original negativo, o pacote D28 estático e os recibos operacionais no alcance registrado. A proposta contém somente este README, `index.json` e blobs em `objects/`. A raiz ainda precisa revisar e publicar a árvore documental. Não há candidato final C613, nova qualificação de área, aceite de Release ou autorização de produção.
@@ -367,3 +422,22 @@ Esta ref deverá ser mantida enquanto as evidências forem necessárias. Atualiz
 </details>
 
 </details>
+
+---
+
+## R7 appendix — bounded coverage and superseded inputs
+
+The five new complete original-log streams are focal main/cleanup, Analytics main/cleanup, and reader main. The other additions are four current derived unions and six reader exports. Analytics main uses 17 real Git parts and reader main uses two. Their concatenated Git hashes are **calculated only** and are not object entries:
+
+- Analytics whole: `cf0ce74a5c480b10d494e3dcbe3bb71239778c91` (4,883,386 B).
+- Reader whole: `b6f0be9e13bf357be427804fa5dc218e677c7600` (309,793 B).
+
+Reader R1/R2 Python and workflow blobs are retained as **superseded, unexecuted proposals**, alongside the exact corrections leading to R3. R1 did not require contiguous sequences for consistency; R2 still needed the observed unit/phase-close condition for complete coverage. The executed reader is R3 only.
+
+The helper's first-analysis ownership draft and the earlier control oracle are also retained with superseded status. The two real partial-extraction objects (`216b344f…` diagnostics-only and `8b137891…` empty-context placeholder) are historical inputs, never the accepted marker or context streams. Corrected unions and their final receipts are explicit.
+
+No calculated slice, synthetic envelope/report model, unexported raw report hash, original ZIP, audit ZIP, screenshot, trace, profiler or nested ZIP body is promoted to an archive object. Checkpoint `c03c7a01…` and C20 are excluded. The ordered earlier checkpoints remain historical and cannot authorize another acquisition.
+
+Native monotonic intervals, launcher wall time, Playwright time and Actions time remain separate. Phase intervals are inclusive; no sum is claimed as exclusive cost. Compare counters describe body exits, not Promise settlement. A missing close is an unobserved boundary, not proof of a lock, SQL delay, unfinished persistence at 60 seconds, or a safe next product change.
+
+The JSON derivation supplied separately records every index operation, exact pre/post values and array lengths, plus this README's literal prefix/base/suffix composition. Forward application reproduces the proposed bytes; inverse application reproduces both R6 documents exactly. The current derivation, manifest and documents remain proposal artifacts outside their own self-referential object list.

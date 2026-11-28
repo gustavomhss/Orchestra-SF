@@ -1,0 +1,1351 @@
+name: SF613 original Analytics artifact receipt
+
+on:
+  push:
+    branches: [sf613-artifact-e14event]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sf613-artifact-e14event-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  original-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Verify original immutable artifact without checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SF613_ARTIFACT_READER_SHA256: 4a586565fb7b35a3627603e2da89dd2364c9cc6baddfde75c9cfa072be822074
+          SF613_ARTIFACT_READER_SOURCE: |
+            #!/usr/bin/env python3
+            """Receipt of one immutable Analytics artifact. Never imports or executes repository code."""
+            import base64
+            import binascii
+            import hashlib
+            import io
+            import json
+            import os
+            import pathlib
+            import re
+            import stat
+            import sys
+            import time
+            import urllib.error
+            import urllib.parse
+            import urllib.request
+            import zipfile
+            import zlib
+            
+            REPO = "gustavomhss/Orchestra-SF"
+            BRANCH = "sf613-artifact-e14event"
+            WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+            SOURCE = "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+            SOURCE_TREE = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+            SNAPSHOT = "38255d2d11cfdff4214803b4606dd3fd7e83869f"
+            SNAPSHOT_TREE = "7a63ef33cec01383bee1aa7c8ab37b188c957f3b"
+            ORIGINAL_RUN = 46103050850
+            ORIGINAL_ATTEMPT = 1
+            MAIN_JOB = 140849610421
+            CLEANUP_JOB = 140852594308
+            ARTIFACT_ID = 15246707437
+            ARTIFACT_NAME = "playwright-ubuntu-24.04-1"
+            ARTIFACT_BYTES = 45863814
+            ARTIFACT_SHA = "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936"
+            REQUEST_BLOB = "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+            REQUEST_SHA = "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e"
+            SOURCE_SELECTION_PINS = [
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+                    "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+                    "bytes": 56661,
+                    "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+                },
+                {
+                    "path": "packages/app-shell/e2e/playwright.production.config.ts",
+                    "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+                    "bytes": 4384,
+                    "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+                }
+            ]
+            # Only API/main facts are bound. ZIP members, runtime membership and event closure remain verification targets.
+            E14_BINDINGS_COMPLETE = True
+            ORIGINAL_CONCLUSION = "failure"
+            MAIN_CONCLUSION = "failure"
+            CLEANUP_CONCLUSION = "success"
+            TEST_STEP_CONCLUSION = "failure"
+            EXPECTED_CASE_STATUSES = [["failed"], ["passed"]]
+            EXPECTED_FIRST_WAITER_FAILURE = True
+            E14 = {
+                "schema": "sf-preview-causal-e14-event-v1",
+                "nonce": "sf613-e14-event-QBamrL", "pid": 3974, "parentPid": 3924,
+                "mainBlob": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+                "mainBytes": 11961, "mainSha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+                "mainLines": 21, "lineCap": 1024, "streamRows": 63, "streamBytes": 64512,
+                "rootReceipt": "2a15d6b33dba361af8f4f1b30084cacc61521788",
+                "peerReceipt": "0f6fc8a20444b78ac12faee79b384eebb5c8e757",
+            }
+            MAIN_PREFIX_B64 = "U0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjoxLCJraW5kIjoicmVxdWVzdC1lbnRlciIsImVsYXBzZWRUZW50aE1zIjoxMSwibWF4RXZlbnRzIjo2MywibWF4Qnl0ZXMiOjY0NTEyLCJtYXhMaW5lQnl0ZXMiOjEwMjQsImRldGFpbFNsb3RzIjozMiwidW5pdENsb3NlU2xvdHMiOjI4LCJhY3RpdmVDb21wYXJlU2xvdHMiOjY0fQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjIsImtpbmQiOiJodHRwLWJvdW5kYXJ5IiwiZWxhcHNlZFRlbnRoTXMiOjI3LCJwb2ludCI6ImJvZHktcmV0dXJuZWQifQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjMsImtpbmQiOiJodHRwLWJvdW5kYXJ5IiwiZWxhcHNlZFRlbnRoTXMiOjgzLCJwb2ludCI6ImFkbWl0LXJldHVybmVkIn0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjo0LCJraW5kIjoiaHR0cC1ib3VuZGFyeSIsImVsYXBzZWRUZW50aE1zIjoyNzM2LCJwb2ludCI6ImNhc2UtY2FsbGJhY2stZW50ZXJlZCJ9ClNGX1BSRVZJRVdfRTE0X0VWRU5UIHsic2NoZW1hIjoic2YtcHJldmlldy1jYXVzYWwtZTE0LWV2ZW50LXYxIiwic291cmNlIjoiNzM5M2NkMDEwMDg2ZjRhMTJkNjFhZTliYjVkYjEzNTM0YmQxOGFhMCIsInNvdXJjZVRyZWUiOiIzMTk1NGNmZTdkZjA3NDU1ZDhiMTM3ZjZmNGYxZTRkOTRhMzE2ZmMzIiwicXVhbGlmaWNhdGlvbiI6ZmFsc2UsInNuYXBzaG90IjoiMzgyNTVkMmQxMWNmZGZmNDIxNDgwM2I0NjA2ZGQzZmQ3ZTgzODY5ZiIsInJ1bklkIjoiNDYxMDMwNTA4NTAiLCJhdHRlbXB0IjoiMSIsIm5vbmNlIjoic2Y2MTMtZTE0LWV2ZW50LVFCYW1yTCIsInBpZCI6Mzk3NCwicGFyZW50UGlkIjozOTI0LCJyZXF1ZXN0IjoxLCJzZXF1ZW5jZSI6NSwia2luZCI6InVuaXQtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6NTY4MSwidW5pdCI6MSwidW5pdEtpbmQiOiJwb3J0IiwicGFyZW50VW5pdCI6MCwicGFyZW50UGhhc2UiOjB9ClNGX1BSRVZJRVdfRTE0X0VWRU5UIHsic2NoZW1hIjoic2YtcHJldmlldy1jYXVzYWwtZTE0LWV2ZW50LXYxIiwic291cmNlIjoiNzM5M2NkMDEwMDg2ZjRhMTJkNjFhZTliYjVkYjEzNTM0YmQxOGFhMCIsInNvdXJjZVRyZWUiOiIzMTk1NGNmZTdkZjA3NDU1ZDhiMTM3ZjZmNGYxZTRkOTRhMzE2ZmMzIiwicXVhbGlmaWNhdGlvbiI6ZmFsc2UsInNuYXBzaG90IjoiMzgyNTVkMmQxMWNmZGZmNDIxNDgwM2I0NjA2ZGQzZmQ3ZTgzODY5ZiIsInJ1bklkIjoiNDYxMDMwNTA4NTAiLCJhdHRlbXB0IjoiMSIsIm5vbmNlIjoic2Y2MTMtZTE0LWV2ZW50LVFCYW1yTCIsInBpZCI6Mzk3NCwicGFyZW50UGlkIjozOTI0LCJyZXF1ZXN0IjoxLCJzZXF1ZW5jZSI6Niwia2luZCI6InBoYXNlLWVudGVyIiwiZWxhcHNlZFRlbnRoTXMiOjU2ODUsInVuaXQiOjEsInBoYXNlIjo2LCJwb2ludCI6InBvcnQtYXV0aG9yaXR5LWluaXRpYWwiLCJzdGFnZSI6MSwiY29tcGFyZUJvZGllcyI6WzAsMCwwLDAsMCwwXSwic3RhZ2VzIjpbMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbMCwwLDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjcsImtpbmQiOiJwaGFzZS1jbG9zZSIsImVsYXBzZWRUZW50aE1zIjo1Njk5LCJ1bml0IjoxLCJwaGFzZSI6NiwicG9pbnQiOiJwb3J0LWF1dGhvcml0eS1pbml0aWFsIiwic3RhZ2UiOjEsIm91dGNvbWUiOiJhd2FpdC1yZXR1cm5lZCIsImNvbXBhcmVCb2RpZXMiOlswLDAsMCwwLDAsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwXSwibGluZWFnZSI6WzAsMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjo4LCJraW5kIjoicGhhc2UtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6NTcwMCwidW5pdCI6MSwicGhhc2UiOjcsInBvaW50IjoiY2FuZGlkYXRlcy1pbml0aWFsIiwic3RhZ2UiOjEsImNvbXBhcmVCb2RpZXMiOlswLDAsMCwwLDAsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwXSwibGluZWFnZSI6WzAsMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjo5LCJraW5kIjoicGhhc2UtY2xvc2UiLCJlbGFwc2VkVGVudGhNcyI6ODEyNCwidW5pdCI6MSwicGhhc2UiOjcsInBvaW50IjoiY2FuZGlkYXRlcy1pbml0aWFsIiwic3RhZ2UiOjEsIm91dGNvbWUiOiJhd2FpdC1yZXR1cm5lZCIsImNvbXBhcmVCb2RpZXMiOlswLDAsMCwwLDAsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwXSwibGluZWFnZSI6WzAsMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjoxMCwia2luZCI6InVuaXQtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6ODEyOSwidW5pdCI6MiwidW5pdEtpbmQiOiJjb21iaW5hdGlvbiIsInBhcmVudFVuaXQiOjAsInBhcmVudFBoYXNlIjowfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjExLCJraW5kIjoicGhhc2UtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6ODEzMCwidW5pdCI6MiwicGhhc2UiOjgsInBvaW50IjoiY29tYmluYXRpb24tZXZhbHVhdGUiLCJzdGFnZSI6MiwiY29tcGFyZUJvZGllcyI6WzAsMCwwLDAsMCwwXSwic3RhZ2VzIjpbMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbMCwwLDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjEyLCJraW5kIjoidW5pdC1lbnRlciIsImVsYXBzZWRUZW50aE1zIjoxNjY2MywidW5pdCI6MywidW5pdEtpbmQiOiJwcm9kdWN0aW9uLWFzc2VzcyIsInBhcmVudFVuaXQiOjIsInBhcmVudFBoYXNlIjo4fQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjEzLCJraW5kIjoicGhhc2UtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6MTg4MjQsInVuaXQiOjMsInBoYXNlIjo5LCJwb2ludCI6InByb2R1Y3Rpb24tYW5hbHlzaXMiLCJzdGFnZSI6MywiY29tcGFyZUJvZGllcyI6WzAsMCwwLDAsMCwwXSwic3RhZ2VzIjpbMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbMCwwLDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjE0LCJraW5kIjoidW5pdC1lbnRlciIsImVsYXBzZWRUZW50aE1zIjoxODgzNSwidW5pdCI6NCwidW5pdEtpbmQiOiJhbmFseXNpcyIsInBhcmVudFVuaXQiOjMsInBhcmVudFBoYXNlIjo5fQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjE1LCJraW5kIjoicGhhc2UtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6MTg4MzksInVuaXQiOjQsInBoYXNlIjoxLCJwb2ludCI6ImFuYWx5c2lzLXNlbGVjdC1pbml0aWFsIiwic3RhZ2UiOjQsImNvbXBhcmVCb2RpZXMiOlswLDAsMCwwLDAsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwXSwibGluZWFnZSI6WzAsMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjoxNiwia2luZCI6ImNvbXBhcmUtYm9keS1jaGVja3BvaW50IiwiZWxhcHNlZFRlbnRoTXMiOjcyNjQwLCJib2R5RXhpdHMiOjEsImNvbXBhcmUiOjIsInBhcmVudENvbXBhcmUiOjEsImRlcHRoIjoxLCJzdGFnZSI6NCwiY29tcGFyZUJvZGllcyI6WzIsMSwwLDEsMSwwXSwic3RhZ2VzIjpbMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMiwxLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbMSwxLDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjE3LCJraW5kIjoiY29tcGFyZS1ib2R5LWNoZWNrcG9pbnQiLCJlbGFwc2VkVGVudGhNcyI6MjI0ODcyLCJib2R5RXhpdHMiOjgsImNvbXBhcmUiOjksInBhcmVudENvbXBhcmUiOjcsImRlcHRoIjoxLCJzdGFnZSI6NCwiY29tcGFyZUJvZGllcyI6WzksOCwwLDEsMSwwXSwic3RhZ2VzIjpbMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsOSw4LDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbMyw2LDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjE4LCJraW5kIjoicGhhc2UtY2xvc2UiLCJlbGFwc2VkVGVudGhNcyI6MzA4NDQyLCJ1bml0Ijo0LCJwaGFzZSI6MSwicG9pbnQiOiJhbmFseXNpcy1zZWxlY3QtaW5pdGlhbCIsInN0YWdlIjo0LCJvdXRjb21lIjoiYXdhaXQtcmV0dXJuZWQiLCJjb21wYXJlQm9kaWVzIjpbMTIsMTIsMCwwLDEsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDEyLDEyLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbNCw4LDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjE5LCJraW5kIjoicGhhc2UtZW50ZXIiLCJlbGFwc2VkVGVudGhNcyI6MzEwNzE5LCJ1bml0Ijo0LCJwaGFzZSI6MTAsInBvaW50IjoiYW5hbHlzaXMtY29tcGFyZSIsInN0YWdlIjo1LCJjb21wYXJlQm9kaWVzIjpbMTIsMTIsMCwwLDEsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDEyLDEyLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbNCw4LDBdLCJzYXR1cmF0ZWQiOmZhbHNlfQpTRl9QUkVWSUVXX0UxNF9FVkVOVCB7InNjaGVtYSI6InNmLXByZXZpZXctY2F1c2FsLWUxNC1ldmVudC12MSIsInNvdXJjZSI6IjczOTNjZDAxMDA4NmY0YTEyZDYxYWU5YmI1ZGIxMzUzNGJkMThhYTAiLCJzb3VyY2VUcmVlIjoiMzE5NTRjZmU3ZGYwNzQ1NWQ4YjEzN2Y2ZjRmMWU0ZDk0YTMxNmZjMyIsInF1YWxpZmljYXRpb24iOmZhbHNlLCJzbmFwc2hvdCI6IjM4MjU1ZDJkMTFjZmRmZjQyMTQ4MDNiNDYwNmRkM2ZkN2U4Mzg2OWYiLCJydW5JZCI6IjQ2MTAzMDUwODUwIiwiYXR0ZW1wdCI6IjEiLCJub25jZSI6InNmNjEzLWUxNC1ldmVudC1RQmFtckwiLCJwaWQiOjM5NzQsInBhcmVudFBpZCI6MzkyNCwicmVxdWVzdCI6MSwic2VxdWVuY2UiOjIwLCJraW5kIjoicGhhc2UtY2xvc2UiLCJlbGFwc2VkVGVudGhNcyI6MzQ5NTIzLCJ1bml0Ijo0LCJwaGFzZSI6MTAsInBvaW50IjoiYW5hbHlzaXMtY29tcGFyZSIsInN0YWdlIjo1LCJvdXRjb21lIjoiYXdhaXQtcmV0dXJuZWQiLCJjb21wYXJlQm9kaWVzIjpbMTUsMTUsMCwwLDEsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDEyLDEyLDAsMywzLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbNSwxMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0KU0ZfUFJFVklFV19FMTRfRVZFTlQgeyJzY2hlbWEiOiJzZi1wcmV2aWV3LWNhdXNhbC1lMTQtZXZlbnQtdjEiLCJzb3VyY2UiOiI3MzkzY2QwMTAwODZmNGExMmQ2MWFlOWJiNWRiMTM1MzRiZDE4YWEwIiwic291cmNlVHJlZSI6IjMxOTU0Y2ZlN2RmMDc0NTVkOGIxMzdmNmY0ZjFlNGQ5NGEzMTZmYzMiLCJxdWFsaWZpY2F0aW9uIjpmYWxzZSwic25hcHNob3QiOiIzODI1NWQyZDExY2ZkZmY0MjE0ODAzYjQ2MDZkZDNmZDdlODM4NjlmIiwicnVuSWQiOiI0NjEwMzA1MDg1MCIsImF0dGVtcHQiOiIxIiwibm9uY2UiOiJzZjYxMy1lMTQtZXZlbnQtUUJhbXJMIiwicGlkIjozOTc0LCJwYXJlbnRQaWQiOjM5MjQsInJlcXVlc3QiOjEsInNlcXVlbmNlIjoyMSwia2luZCI6InBoYXNlLWVudGVyIiwiZWxhcHNlZFRlbnRoTXMiOjM0OTczOSwidW5pdCI6NCwicGhhc2UiOjQsInBvaW50IjoiYW5hbHlzaXMtcGVyc2lzdCIsInN0YWdlIjo2LCJjb21wYXJlQm9kaWVzIjpbMTUsMTUsMCwwLDEsMF0sInN0YWdlcyI6WzAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDEyLDEyLDAsMywzLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDAsMCwwLDBdLCJsaW5lYWdlIjpbNSwxMCwwXSwic2F0dXJhdGVkIjpmYWxzZX0K"
+            EVENT_PREFIX = b"SF_PREVIEW_E14_EVENT "
+            CORE_CAP = {"events": 63 * 1024, "launcher": 8 * 1024, "runtimeEvents": 64 * 1024,
+                        "summary": 128 * 1024, "inventory": 256 * 1024, "receipt": 128 * 1024}
+            SELECTED_PATHS = {
+                "events": ("test-ci-evidence/sf613-e14-event-QBamrL/preview-events.jsonl", 63 * 1024),
+                "launcher": ("test-ci-evidence/sf613-e14-event-QBamrL/launcher.json", 8 * 1024),
+                "runtime": ("test-ci-evidence/playwright-runtime.json", 32 * 1024 * 1024),
+                "selection": ("test-ci-evidence/playwright-selection.json", 32 * 1024 * 1024),
+            }
+            TITLES = [
+                "wave five analytics: native scenarios, recorded results and sensitivity",
+                "wave five analytics: question catalog and original contextual BI",
+            ]
+            CAP = {
+                "apiBytes": 16 * 1024 * 1024, "entries": 20000, "archives": 1,
+                "entryBytes": 128 * 1024 * 1024, "expandedBytes": 1024 * 1024 * 1024,
+                "selectedExpandedBytes": 67181568, "jsonBytes": 32 * 1024 * 1024,
+                "diagnosticIssues": 256, "logBytes": 7 * 1024 * 1024,
+                "mainLogReviewCapBytes": 8 * 1024 * 1024, "chunkBytes": 24 * 1024,
+            }
+            ROOT = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf613-artifact-read"
+            ROOT.mkdir(mode=0o700, exist_ok=False)
+            (ROOT / "api").mkdir(mode=0o700)
+            (ROOT / "derived").mkdir(mode=0o700)
+            (ROOT / "originals").mkdir(mode=0o700)
+            os.umask(0o077)
+            RECEIPT = {
+                "schema": 1, "kind": "original-artifact-receipt", "qualification": False,
+                "status": "STARTED", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                "originalRun": ORIGINAL_RUN, "originalAttempt": ORIGINAL_ATTEMPT,
+                "artifactId": ARTIFACT_ID, "caps": CAP, "checks": [],
+                "pending": [], "failures": [], "parsers": {}, "logExports": [],
+                "evidenceIssues": [],
+            }
+            FILES = []
+            ARCHIVES = []
+            TOTAL_EXPANDED = 0
+            TOTAL_ENTRIES = 0
+            LOG_BYTES = 0
+            API_COUNT = 0
+            CORE_LINES_WRITTEN = 0
+            
+            class ReceiptFailure(Exception):
+                def __init__(self, code):
+                    self.code = code
+                    super().__init__(code)
+            
+            def need(value, code):
+                if not value:
+                    raise ReceiptFailure(code)
+            
+            def digest(data):
+                return hashlib.sha256(data).hexdigest()
+            
+            def canonical(value):
+                return (json.dumps(value, ensure_ascii=True, sort_keys=True, indent=2) + "\n").encode("ascii")
+            
+            def write_bytes(path, data):
+                path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                with open(path, "xb") as handle:
+                    handle.write(data)
+            
+            def save_json(relative, value):
+                data = canonical(value)
+                write_bytes(ROOT / relative, data)
+                return {"path": relative, "bytes": len(data), "sha256": digest(data)}
+            
+            def checked(code):
+                RECEIPT["checks"].append(code)
+            
+            def pending(code, detail=None):
+                item = {"code": code}
+                if detail is not None:
+                    item["detail"] = detail
+                RECEIPT["pending"].append(item)
+            
+            def wire_line(prefix, value):
+                raw = (prefix + " " + json.dumps(value, ensure_ascii=True, separators=(",", ":")) + "\n").encode("ascii")
+                need(len(raw) <= 32768, "LOG_LINE_EXCEEDS_32_KIB")
+                return raw
+            
+            def write_wire(raw):
+                global LOG_BYTES
+                need(isinstance(raw, bytes) and len(raw) <= 32768
+                     and LOG_BYTES + len(raw) <= CAP["logBytes"], "LOG_PREFLIGHT_BUDGET_CHANGED")
+                written = sys.stdout.buffer.write(raw)
+                need(written == len(raw), "LOG_SHORT_WRITE")
+                sys.stdout.buffer.flush()
+                LOG_BYTES += len(raw)
+            
+            class NoRedirect(urllib.request.HTTPRedirectHandler):
+                def redirect_request(self, req, fp, code, msg, headers, newurl):
+                    return None
+            
+            NO_REDIRECT = urllib.request.build_opener(NoRedirect())
+            TOKEN = os.environ.get("GH_TOKEN", "")
+            
+            def bounded_read(handle, limit):
+                chunks = []
+                count = 0
+                while True:
+                    block = handle.read(min(1024 * 1024, limit + 1 - count))
+                    if not block:
+                        break
+                    count += len(block)
+                    need(count <= limit, "HTTP_BODY_CAP")
+                    chunks.append(block)
+                return b"".join(chunks)
+            
+            def api(route, label):
+                global API_COUNT
+                need(route.startswith("/") and "\n" not in route, "API_ROUTE_INVALID")
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + route,
+                    headers={"Authorization": "Bearer " + TOKEN,
+                             "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28",
+                             "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    with NO_REDIRECT.open(request, timeout=45) as response:
+                        need(response.status == 200, "API_STATUS")
+                        raw = bounded_read(response, CAP["apiBytes"])
+                except urllib.error.HTTPError as error:
+                    raise ReceiptFailure("API_HTTP_" + str(error.code)) from None
+                except (urllib.error.URLError, TimeoutError):
+                    raise ReceiptFailure("API_TRANSPORT") from None
+                API_COUNT += 1
+                write_bytes(ROOT / "api" / (label + ".json"), raw)
+                try:
+                    return json.loads(raw)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("API_JSON_INVALID") from None
+            
+            def pages(route, key, prefix):
+                all_rows = []
+                total = None
+                for number in range(1, 21):
+                    separator = "&" if "?" in route else "?"
+                    data = api(route + separator + "per_page=100&page=" + str(number), prefix + "-" + str(number))
+                    need(isinstance(data, dict) and isinstance(data.get(key), list), "API_COLLECTION_SHAPE")
+                    if total is None:
+                        total = data.get("total_count")
+                        need(isinstance(total, int) and 0 <= total <= 2000, "API_COLLECTION_TOTAL")
+                    need(data.get("total_count") == total, "API_COLLECTION_CHANGED")
+                    all_rows.extend(data[key])
+                    if len(all_rows) >= total:
+                        need(len(all_rows) == total, "API_COLLECTION_COUNT")
+                        return all_rows
+                    need(len(data[key]) == 100, "API_COLLECTION_INCOMPLETE")
+                raise ReceiptFailure("API_COLLECTION_PAGE_CAP")
+            
+            def check_original_and_reader():
+                need(E14_BINDINGS_COMPLETE is True, "E14_INTAKE_BINDINGS_UNBOUND")
+                need(bool(TOKEN), "GITHUB_TOKEN_REQUIRED")
+                driver = os.environ.get("GITHUB_SHA", "")
+                run_id = os.environ.get("GITHUB_RUN_ID", "")
+                attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "")
+                need(os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "Linux",
+                     "HOSTED_LINUX_REQUIRED")
+                need(os.environ.get("GITHUB_REPOSITORY") == REPO and os.environ.get("GITHUB_EVENT_NAME") == "push",
+                     "READER_EVENT_REQUIRED")
+                need(os.environ.get("GITHUB_REF") == "refs/heads/" + BRANCH, "READER_REF_REQUIRED")
+                need(re.fullmatch(r"[a-f0-9]{40}", driver) is not None and driver != SOURCE,
+                     "READER_DRIVER_SHA_REQUIRED")
+                need(run_id.isdecimal() and attempt == "1", "READER_FIRST_ATTEMPT_REQUIRED")
+                event_raw = pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes()
+                need(len(event_raw) <= CAP["apiBytes"], "EVENT_CAP")
+                event = json.loads(event_raw)
+                need(event.get("after") == driver and event.get("ref") == "refs/heads/" + BRANCH
+                     and event.get("repository", {}).get("full_name") == REPO, "READER_EVENT_BINDING")
+                write_bytes(ROOT / "api" / "reader-event.json", event_raw)
+                current_run = api("/actions/runs/" + run_id + "/attempts/1", "reader-run")
+                need(current_run.get("head_sha") == driver and current_run.get("event") == "push"
+                     and current_run.get("run_attempt") == 1 and current_run.get("head_branch") == BRANCH
+                     and current_run.get("repository", {}).get("full_name") == REPO,
+                     "READER_API_BINDING")
+                need(str(current_run.get("path", "")).split("@")[0] == WORKFLOW, "READER_WORKFLOW_PATH")
+                current_commit = api("/git/commits/" + driver, "reader-commit")
+                need([p.get("sha") for p in current_commit.get("parents", [])] == [SOURCE],
+                     "READER_SOLE_PARENT")
+                source_commit = api("/git/commits/" + SOURCE, "source-commit")
+                need(source_commit.get("tree", {}).get("sha") == SOURCE_TREE, "SOURCE_TREE")
+                delta = api("/compare/" + SOURCE + "..." + driver, "reader-delta")
+                need(delta.get("ahead_by") == 1 and delta.get("behind_by") == 0
+                     and delta.get("total_commits") == 1, "READER_COMMIT_DELTA")
+                changes = delta.get("files")
+                need(isinstance(changes, list) and len(changes) == 1
+                     and changes[0].get("filename") == WORKFLOW and changes[0].get("status") == "added",
+                     "READER_EXACT_ONE_WORKFLOW_ADDITION")
+                ref = api("/git/ref/heads/" + BRANCH, "reader-ref")
+                need(ref.get("object", {}).get("sha") == driver, "READER_REF_DRIFT")
+                RECEIPT["reader"] = {
+                    "driver": driver, "driverTree": current_commit["tree"]["sha"],
+                    "run": int(run_id), "attempt": 1, "event": "push", "branch": BRANCH,
+                    "workflow": WORKFLOW, "workflowBlob": changes[0]["sha"],
+                    "soleParent": SOURCE, "noCheckout": True, "repositoryCodeExecuted": False,
+                }
+                snapshot = api("/git/commits/" + SNAPSHOT, "original-snapshot-commit")
+                need(snapshot.get("tree", {}).get("sha") == SNAPSHOT_TREE
+                     and [p.get("sha") for p in snapshot.get("parents", [])] == [SOURCE],
+                     "ORIGINAL_SNAPSHOT_BINDING")
+                original_delta = api("/compare/" + SOURCE + "..." + SNAPSHOT, "original-snapshot-delta")
+                original_changes = original_delta.get("files", [])
+                need(original_delta.get("ahead_by") == 1 and original_delta.get("behind_by") == 0
+                     and original_delta.get("total_commits") == 1 and len(original_changes) == 9
+                     and {(item.get("filename"), item.get("status"), item.get("sha")) for item in original_changes} == {
+                          ("modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts", "added", "7ab9f42564bef7d023f2588aed86cd2db3f6ba10"),
+                          ("apps/cli/src/sucafina-product/portfolio-http.ts", "modified", "d5cb9fff2fc1a725250f9710449f9d13f3a942c7"),
+                          ("modules/sucafina/Sucafinav1/product/portfolio/port.ts", "modified", "094f788a27d01b91d6601333a4e8f99ac40db556"),
+                          ("modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts", "modified", "03859dbbf10fd6ca551f987736e445d2ff8b3431"),
+                          ("modules/sucafina/Sucafinav1/product/portfolio/analysis.ts", "modified", "4b1d4578d558456772ab04e05e33d13231ca7502"),
+                          ("modules/sucafina/Sucafinav1/product/portfolio/production.ts", "modified", "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6"),
+                          ("apps/cli/test/fixture/sucafina-native-installation.ts", "modified", "4dce572e3fdace2042ae3c9a1102606b300f6d8d"),
+                          ("packages/app-shell/e2e/sucafina/design-support/installation.ts", "modified", "a9fb4f79968e3c753424f01534b1f7b5e61895fe"),
+                          (".ci-run.json", "added", "eda49a023c07599de00f5af9642ee92b9d9adf3b"),
+                      }, "ORIGINAL_EXACT_E14_NINE_OVERLAYS")
+                original_run = api("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1", "original-run")
+                need(original_run.get("id") == ORIGINAL_RUN and original_run.get("run_attempt") == 1
+                     and original_run.get("head_sha") == SNAPSHOT and original_run.get("event") == "push"
+                     and original_run.get("status") == "completed" and original_run.get("conclusion") == ORIGINAL_CONCLUSION
+                     and original_run.get("repository", {}).get("full_name") == REPO,
+                     "ORIGINAL_RUN_BINDING")
+                jobs = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1/jobs", "jobs", "original-jobs")
+                need(len(jobs) == 2 and {j.get("id") for j in jobs} == {MAIN_JOB, CLEANUP_JOB},
+                     "ORIGINAL_JOB_SET")
+                for job in jobs:
+                    expected = MAIN_CONCLUSION if job["id"] == MAIN_JOB else CLEANUP_CONCLUSION
+                    need(job.get("status") == "completed" and job.get("conclusion") == expected,
+                         "ORIGINAL_JOB_TERMINAL")
+                main = next(j for j in jobs if j["id"] == MAIN_JOB)
+                need(any(step.get("name") == "Run tests" and step.get("conclusion") == TEST_STEP_CONCLUSION
+                         for step in main.get("steps", [])), "ORIGINAL_TEST_STEP")
+                artifact = api("/actions/artifacts/" + str(ARTIFACT_ID), "original-artifact")
+                listed = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/artifacts", "artifacts", "original-artifacts")
+                matches = [a for a in listed if a.get("id") == ARTIFACT_ID]
+                need(len(matches) == 1, "ARTIFACT_RUN_MEMBERSHIP")
+                for data in [artifact, matches[0]]:
+                    need(data.get("id") == ARTIFACT_ID and data.get("name") == ARTIFACT_NAME
+                         and data.get("size_in_bytes") == ARTIFACT_BYTES
+                         and data.get("digest") == "sha256:" + ARTIFACT_SHA
+                         and data.get("expired") is False, "ARTIFACT_METADATA_BINDING")
+                    binding = data.get("workflow_run", {})
+                    need(binding.get("id") == ORIGINAL_RUN and binding.get("head_sha") == SNAPSHOT,
+                         "ARTIFACT_WORKFLOW_BINDING")
+                request_blob = api("/git/blobs/" + REQUEST_BLOB, "original-request-blob")
+                need(request_blob.get("sha") == REQUEST_BLOB and request_blob.get("encoding") == "base64",
+                     "ORIGINAL_REQUEST_BLOB")
+                raw = base64.b64decode("".join(request_blob["content"].split()), validate=True)
+                need(len(raw) == 295 and digest(raw) == REQUEST_SHA, "ORIGINAL_REQUEST_BYTES")
+                request = json.loads(raw)
+                need(request.get("runner") == "playwright"
+                     and request.get("args") == ["e2e/sucafina/design-wave-five-analytics.spec.ts"]
+                     and request.get("config") == "e2e/playwright.production.config.ts",
+                     "ORIGINAL_REQUEST_SELECTION")
+                write_bytes(ROOT / "originals" / "source-request.json", raw)
+                RECEIPT["originalJobs"] = [
+                    {"id": j["id"], "status": j["status"], "conclusion": j["conclusion"],
+                     "startedAt": j.get("started_at"), "completedAt": j.get("completed_at")} for j in jobs
+                ]
+                RECEIPT["artifact"] = {"id": ARTIFACT_ID, "name": ARTIFACT_NAME, "bytes": ARTIFACT_BYTES,
+                                       "sha256": ARTIFACT_SHA, "expired": False}
+                source_pins = []
+                for index, pin in enumerate(SOURCE_SELECTION_PINS):
+                    path = pin["path"]
+                    item = api("/contents/" + path + "?ref=" + SOURCE, "source-selection-" + str(index))
+                    need(item.get("type") == "file" and item.get("path") == path
+                         and item.get("sha") == pin["gitBlob"] and item.get("encoding") == "base64",
+                         "SOURCE_SELECTION_FILE_BINDING")
+                    raw = base64.b64decode("".join(item["content"].split()), validate=True)
+                    need(len(raw) == pin["bytes"] and digest(raw) == pin["sha256"]
+                         and hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest() == pin["gitBlob"],
+                         "SOURCE_SELECTION_BYTES")
+                    source_pins.append(dict(pin))
+                RECEIPT["sourceSelectionPins"] = source_pins
+                checked("source_spec_and_config_pins")
+                checked("reader_and_original_api_git_bindings")
+            
+            def storage_url_allowed(url):
+                value = urllib.parse.urlsplit(url)
+                host = (value.hostname or "").lower()
+                suffixes = (".blob.core.windows.net", ".githubusercontent.com", ".amazonaws.com")
+                return (value.scheme == "https" and not value.username and not value.password
+                        and value.port in (None, 443) and any(host.endswith(suffix) for suffix in suffixes))
+            
+            def download_original():
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + "/actions/artifacts/" + str(ARTIFACT_ID) + "/zip",
+                    headers={"Authorization": "Bearer " + TOKEN, "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    response = NO_REDIRECT.open(request, timeout=45)
+                except urllib.error.HTTPError as error:
+                    need(error.code == 302, "ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                    location = error.headers.get("Location", "")
+                    error.close()
+                else:
+                    response.close()
+                    raise ReceiptFailure("ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                need(storage_url_allowed(location), "ARTIFACT_STORAGE_ORIGIN")
+                # A separate request/opener receives no GitHub Authorization, cookie or referer.
+                for redirect_count in range(4):
+                    unsigned = urllib.request.Request(location, headers={"User-Agent": "sf613-original-artifact-reader"})
+                    try:
+                        response = NO_REDIRECT.open(unsigned, timeout=120)
+                    except urllib.error.HTTPError as error:
+                        need(error.code in (301, 302, 303, 307, 308) and redirect_count < 3,
+                             "ARTIFACT_STORAGE_HTTP")
+                        location = urllib.parse.urljoin(location, error.headers.get("Location", ""))
+                        error.close()
+                        need(storage_url_allowed(location), "ARTIFACT_STORAGE_REDIRECT_ORIGIN")
+                        continue
+                    except (urllib.error.URLError, TimeoutError):
+                        raise ReceiptFailure("ARTIFACT_STORAGE_TRANSPORT") from None
+                    with response:
+                        need(response.status == 200, "ARTIFACT_STORAGE_STATUS")
+                        hasher = hashlib.sha256()
+                        size = 0
+                        with open(ROOT / "original.zip", "xb") as output:
+                            while True:
+                                block = response.read(1024 * 1024)
+                                if not block:
+                                    break
+                                size += len(block)
+                                need(size <= ARTIFACT_BYTES, "ARTIFACT_TOO_LARGE")
+                                output.write(block)
+                                hasher.update(block)
+                        need(size == ARTIFACT_BYTES and hasher.hexdigest() == ARTIFACT_SHA,
+                             "ARTIFACT_BYTES_OR_SHA256")
+                        RECEIPT["artifact"]["verifiedBytes"] = size
+                        RECEIPT["artifact"]["verifiedSha256"] = hasher.hexdigest()
+                        RECEIPT["artifact"]["downloadCount"] = 1
+                        checked("original_zip_bytes_and_sha256")
+                        return
+                raise ReceiptFailure("ARTIFACT_REDIRECT_CAP")
+            
+            # Phase 2: read archive bytes only; never use extractall, shell, imports or executable entries.
+            def path_parts(name, directory):
+                need(isinstance(name, str) and name and "\x00" not in name and "\\" not in name
+                     and not name.startswith("/") and not re.match(r"^[A-Za-z]:", name),
+                     "ZIP_PATH_INVALID")
+                pieces = name.rstrip("/").split("/") if directory else name.split("/")
+                need(bool(pieces) and all(part not in ("", ".", "..") for part in pieces),
+                     "ZIP_PATH_TRAVERSAL")
+                need(all(len(part.encode("utf-8")) <= 255 for part in pieces), "ZIP_COMPONENT_CAP")
+                need(len(name.encode("utf-8")) <= 4096, "ZIP_PATH_CAP")
+                return pieces
+            
+            def inspect_zip(source_file):
+                global TOTAL_EXPANDED, TOTAL_ENTRIES
+                need(not ARCHIVES and not FILES, "SINGLE_ZIP_ONLY")
+                source_hasher = hashlib.sha256()
+                source_size = 0
+                with open(source_file, "rb") as original_zip:
+                    while True:
+                        block = original_zip.read(1024 * 1024)
+                        if not block:
+                            break
+                        source_hasher.update(block)
+                        source_size += len(block)
+                need(source_size == ARTIFACT_BYTES and source_hasher.hexdigest() == ARTIFACT_SHA,
+                     "PRESERVED_ZIP_CHANGED_BEFORE_OPEN")
+                archive = {"index": 0, "label": "original-artifact", "depth": 0,
+                           "sourcePath": str(pathlib.Path(source_file).relative_to(ROOT)),
+                           "sourceBytes": source_size, "sourceSha256": source_hasher.hexdigest(),
+                           "entries": 0, "crcVerified": 0, "expandedBytes": 0,
+                           "declaredExpandedBytes": 0, "status": "STARTED",
+                           "unselectedContentsRead": False, "nestedArchivesOpened": 0}
+                ARCHIVES.append(archive)
+                output_root = ROOT / "originals" / "archive-000"
+                output_root.mkdir(mode=0o700)
+                by_path = {path: (key, cap) for key, (path, cap) in SELECTED_PATHS.items()}
+                need(len(by_path) == 4, "EXACT_FOUR_SELECTED_PATHS")
+                with zipfile.ZipFile(source_file, "r") as source:
+                    entries = source.infolist()
+                    need(len(entries) <= CAP["entries"], "ZIP_ENTRY_COUNT_CAP")
+                    seen = set()
+                    selected = []
+                    # This pass reads central-directory metadata only, including for directories.
+                    for entry in entries:
+                        name = entry.filename
+                        need(entry.orig_filename == name, "ZIP_RAW_PATH_ALTERED")
+                        directory = entry.is_dir()
+                        pieces = path_parts(name, directory)
+                        normalized = "/".join(pieces)
+                        need(normalized not in seen, "ZIP_DUPLICATE_PATH")
+                        seen.add(normalized)
+                        kind = stat.S_IFMT(entry.external_attr >> 16)
+                        need(kind in (0, stat.S_IFDIR if directory else stat.S_IFREG),
+                             "ZIP_SPECIAL_FILE_OR_SYMLINK")
+                        need((entry.flag_bits & 1) == 0, "ZIP_ENCRYPTED_ENTRY")
+                        need(entry.compress_type in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED),
+                             "ZIP_COMPRESSION_UNSUPPORTED")
+                        need(0 <= entry.file_size <= CAP["entryBytes"]
+                             and 0 <= entry.compress_size <= ARTIFACT_BYTES, "ZIP_ENTRY_SIZE_CAP")
+                        archive["declaredExpandedBytes"] += entry.file_size
+                        need(archive["declaredExpandedBytes"] <= CAP["expandedBytes"], "ZIP_DECLARED_EXPANSION_CAP")
+                        if directory:
+                            need(entry.file_size == 0 and entry.CRC == 0, "ZIP_DIRECTORY_METADATA_PAYLOAD")
+                        item = {"id": len(FILES), "archive": 0, "path": name, "directory": directory,
+                                "compressedBytes": entry.compress_size, "declaredBytes": entry.file_size,
+                                "expectedCrc32": format(entry.CRC, "08x"), "selected": name in by_path,
+                                "contentStatus": "METADATA_ONLY_NOT_OPENED", "crcVerified": False}
+                        FILES.append(item)
+                        if name in by_path:
+                            key, cap = by_path[name]
+                            need(not directory and entry.file_size <= cap, "SELECTED_ENTRY_CAP_" + key)
+                            selected.append((entry, item, key, cap))
+                        TOTAL_ENTRIES += 1
+                    archive["entries"] = TOTAL_ENTRIES
+                    # No source.open exists outside this exact four-path allowlist.
+                    for entry, item, key, cap in selected:
+                        need(entry.filename == SELECTED_PATHS[key][0], "SELECTED_PATH_CHANGED")
+                        destination = output_root / (key + ".original")
+                        hasher = hashlib.sha256()
+                        crc = 0
+                        size = 0
+                        with source.open(entry, "r") as original, open(destination, "xb") as target:
+                            while True:
+                                block = original.read(min(1024 * 1024, cap + 1 - size))
+                                if not block:
+                                    break
+                                size += len(block)
+                                TOTAL_EXPANDED += len(block)
+                                need(size <= entry.file_size and size <= cap
+                                     and TOTAL_EXPANDED <= CAP["selectedExpandedBytes"], "SELECTED_ACTUAL_EXPANSION_CAP")
+                                need(target.write(block) == len(block), "SELECTED_FILE_SHORT_WRITE")
+                                hasher.update(block)
+                                crc = zlib.crc32(block, crc)
+                        need(size == entry.file_size and (crc & 0xffffffff) == entry.CRC, "SELECTED_CRC_OR_SIZE")
+                        item.update({"bytes": size, "sha256": hasher.hexdigest(),
+                                     "storedPath": str(destination.relative_to(ROOT)),
+                                     "crc32": format(crc & 0xffffffff, "08x"), "crcVerified": True,
+                                     "contentStatus": "SELECTED_CRC_VERIFIED", "selectionKey": key})
+                        archive["crcVerified"] += 1
+                        archive["expandedBytes"] += size
+                archive["status"] = "SELECTED_CONTENTS_VERIFIED_REMAINDER_METADATA_ONLY"
+                checked("zip_metadata_and_exact_selected_contents")
+                return 0
+            
+            def read_file(item, limit):
+                need(not item["directory"] and item["bytes"] <= limit, "PARSER_INPUT_CAP")
+                data = (ROOT / item["storedPath"]).read_bytes()
+                need(len(data) == item["bytes"] and digest(data) == item["sha256"], "EXTRACTED_FILE_CHANGED")
+                return data
+            
+            def evidence_issue(code, origin, contradiction=False, line=None):
+                need(len(RECEIPT["evidenceIssues"]) < CAP["diagnosticIssues"], "EVIDENCE_ISSUE_CAP")
+                item = {"code": code, "origin": origin, "contradiction": contradiction}
+                if line is not None:
+                    item["line"] = line
+                RECEIPT["evidenceIssues"].append(item)
+                return item
+            
+            def unique_object(pairs):
+                result = {}
+                for key, value in pairs:
+                    need(key not in result, "JSON_DUPLICATE_KEY")
+                    result[key] = value
+                return result
+            
+            def reject_constant(value):
+                raise ReceiptFailure("JSON_NONFINITE_LITERAL")
+            
+            def selected_inputs():
+                rows = {}
+                raw = {}
+                for key, (path, cap) in SELECTED_PATHS.items():
+                    found = [item for item in FILES if item["path"] == path]
+                    need(len(found) <= 1, "SELECTED_INPUT_AMBIGUOUS")
+                    if not found:
+                        rows[key] = {"path": path, "presence": "ABSENT"}
+                        pending("SELECTED_FILE_ABSENT", key)
+                        continue
+                    item = found[0]
+                    need(item.get("crcVerified") is True and item.get("selectionKey") == key,
+                         "SELECTED_CONTENT_NOT_VERIFIED")
+                    data = read_file(item, cap)
+                    raw[key] = data
+                    rows[key] = {"path": path, "presence": "PRESENT", "file": item["id"],
+                                 "bytes": len(data), "sha256": digest(data), "empty": len(data) == 0}
+                RECEIPT["parsers"]["selectedInputs"] = rows
+                return raw
+            
+            def selected_json(raw, key):
+                if key not in raw:
+                    return None
+                try:
+                    value = json.loads(raw[key], object_pairs_hook=unique_object, parse_constant=reject_constant)
+                    need(isinstance(value, dict), "JSON_ROOT_NOT_OBJECT")
+                    return value
+                except ReceiptFailure as error:
+                    evidence_issue(error.code, key)
+                except (ValueError, UnicodeError, RecursionError):
+                    evidence_issue("SELECTED_JSON_INVALID", key)
+                pending("SELECTED_JSON_UNUSABLE", key)
+                return None
+            
+            def tests_from_report(report):
+                tests = []
+                visited = 0
+                def visit(suite, trail, depth):
+                    nonlocal visited
+                    visited += 1
+                    need(visited <= 10000 and depth <= 32 and isinstance(suite, dict), "REPORT_SUITE_CAP")
+                    for spec in suite.get("specs", []):
+                        need(isinstance(spec, dict), "REPORT_SPEC_SHAPE")
+                        for test in spec.get("tests", []):
+                            need(isinstance(test, dict), "REPORT_TEST_SHAPE")
+                            tests.append((spec, test, trail))
+                    for child in suite.get("suites", []):
+                        visit(child, trail + [suite.get("title", "")], depth + 1)
+                need(isinstance(report, dict) and isinstance(report.get("suites"), list), "REPORT_ROOT_SHAPE")
+                for suite in report["suites"]:
+                    visit(suite, [], 0)
+                return tests
+            
+            def report_configuration(report, tests, label):
+                config = report.get("config", {})
+                need(isinstance(config, dict) and config.get("workers") == 1, label + "_WORKERS")
+                projects = config.get("projects")
+                need(isinstance(projects, list) and bool(projects), label + "_PROJECTS")
+                selected = {test.get("projectId") or test.get("projectName") for _, test, _ in tests}
+                checked_projects = []
+                for project in projects:
+                    if project.get("id") in selected or project.get("name") in selected or len(projects) == 1:
+                        need(project.get("retries") == 0 and project.get("repeatEach") == 1,
+                             label + "_RETRY_REPEAT")
+                        need(project.get("id") in (None, "chromium") and project.get("name") == "chromium",
+                             label + "_CHROMIUM_PROJECT")
+                        checked_projects.append({"id": project.get("id"), "name": project.get("name"),
+                                                 "retries": 0, "repeatEach": 1})
+                need(bool(checked_projects), label + "_SELECTED_PROJECT")
+                return {"workers": 1, "projects": checked_projects}
+            
+            def error_summary(errors):
+                out = []
+                for error in errors:
+                    if not isinstance(error, dict):
+                        continue
+                    message = str(error.get("message", ""))
+                    stack = str(error.get("stack", ""))
+                    combined = message + "\n" + stack
+                    position = re.search(r"design-wave-five-analytics\.spec\.ts:(\d+):(\d+)", combined)
+                    out.append({
+                        "timeout60000": bool(re.search(r"Timeout\s+60000ms|60000\s*ms", combined)),
+                        "waitForResponse": "waitForResponse" in combined,
+                        "source": {"file": "design-wave-five-analytics.spec.ts",
+                                   "line": int(position.group(1)), "column": int(position.group(2))} if position else None,
+                        "messageBytes": len(message.encode("utf-8")), "messageSha256": digest(message.encode("utf-8")),
+                        "stackBytes": len(stack.encode("utf-8")), "stackSha256": digest(stack.encode("utf-8")),
+                    })
+                return out
+            
+            def marker_stream(results, case_ordinal):
+                streams = []
+                csi_prefix = re.compile(rb"^(?:\x1b\[[0-?]*[ -/]*[@-~])*")
+                for result_ordinal, result in enumerate(results, 1):
+                    for field in ("stdout", "stderr"):
+                        chunks = []
+                        size = 0
+                        original_chunks = result.get(field, [])
+                        need(isinstance(original_chunks, list) and len(original_chunks) <= 100000,
+                             "RUNTIME_STDIO_CHUNK_COUNT")
+                        for chunk in original_chunks:
+                            need(isinstance(chunk, dict), "RUNTIME_STDIO_CHUNK_SHAPE")
+                            if isinstance(chunk.get("text"), str) and "buffer" not in chunk:
+                                raw = chunk["text"].encode("utf-8")
+                            elif isinstance(chunk.get("buffer"), str) and "text" not in chunk:
+                                encoded = chunk["buffer"]
+                                need(len(encoded) <= (CAP["jsonBytes"] * 4 // 3 + 4), "RUNTIME_STDIO_BASE64_CAP")
+                                raw = base64.b64decode(encoded, validate=True)
+                            else:
+                                raise ReceiptFailure("RUNTIME_STDIO_CHUNK_ENCODING")
+                            size += len(raw)
+                            need(size <= CAP["jsonBytes"], "RUNTIME_STDIO_STREAM_CAP")
+                            chunks.append(raw)
+                        stream_raw = b"".join(chunks)
+                        # Decode only after concatenating this case/result/stream, never across streams.
+                        stream_raw.decode("utf-8", errors="strict")
+                        records = []
+                        parts = stream_raw.split(b"\n")
+                        for index, part in enumerate(parts):
+                            complete = index < len(parts) - 1
+                            if not part and not complete:
+                                continue
+                            match = csi_prefix.match(part)
+                            body = part[match.end():]
+                            if body.startswith(EVENT_PREFIX):
+                                # Preserve CR, Unicode separators and a non-LF tail; only initial ANSI CSI is removed.
+                                records.append(body + (b"\n" if complete else b""))
+                        marker_raw = b"".join(records)
+                        need(len(records) <= 64 and len(marker_raw) <= CORE_CAP["runtimeEvents"],
+                             "RUNTIME_E14_EVENTS_CAP")
+                        marker_path = ("derived/runtime-case-" + str(case_ordinal) + "-result-"
+                                       + str(result_ordinal) + "-" + field + "-e14-events.log")
+                        write_bytes(ROOT / marker_path, marker_raw)
+                        metadata = {"case": case_ordinal, "result": result_ordinal, "stream": field,
+                                    "bytes": len(stream_raw), "sha256": digest(stream_raw),
+                                    "markerBytes": len(marker_raw), "markerSha256": digest(marker_raw),
+                                    "markerPath": marker_path, "markerRecordsIncludingTail": len(records)}
+                        streams.append({"metadata": metadata, "raw": marker_raw})
+                return streams
+            
+            def parse_runtime_and_selection(raw):
+                selection = selected_json(raw, "selection")
+                runtime = selected_json(raw, "runtime")
+                if selection is None or runtime is None:
+                    RECEIPT["parsers"]["selectionRuntime"] = {"status": "UNAVAILABLE_OR_INVALID"}
+                    return []
+                selected = tests_from_report(selection)
+                executed = tests_from_report(runtime)
+                need(len(selected) == 2 and len(executed) == 2, "ORIGINAL_TWO_TESTS")
+                need([spec.get("title") for spec, _, _ in selected] == TITLES
+                     and [spec.get("title") for spec, _, _ in executed] == TITLES,
+                     "ORIGINAL_TEST_TITLES_AND_ORDER")
+                selection_config = report_configuration(selection, selected, "SELECTION")
+                runtime_config = report_configuration(runtime, executed, "RUNTIME")
+                cases = []
+                streams = []
+                for index, (spec, test, _) in enumerate(executed):
+                    results = test.get("results")
+                    need(isinstance(results, list) and len(results) == 1 and isinstance(results[0], dict),
+                         "ORIGINAL_SINGLE_RESULT")
+                    result = results[0]
+                    need(result.get("retry", 0) == 0 and test.get("expectedStatus", "passed") == "passed",
+                         "ORIGINAL_RESULT_ATTEMPT")
+                    worker_index = result.get("workerIndex")
+                    parallel_index = result.get("parallelIndex")
+                    need(type(worker_index) is int and worker_index >= 0
+                         and type(parallel_index) is int and parallel_index == 0,
+                         "ORIGINAL_SINGLE_PARALLEL_WORKER")
+                    status = result.get("status")
+                    need(status in EXPECTED_CASE_STATUSES[index], "ORIGINAL_RESULT_VERDICT")
+                    errors = result.get("errors", [])
+                    if not errors and isinstance(result.get("error"), dict):
+                        errors = [result["error"]]
+                    need(isinstance(errors, list) and len(errors) <= 32, "RUNTIME_ERROR_COUNT_CAP")
+                    duration = result.get("duration")
+                    started = result.get("startTime")
+                    need(type(duration) in (int, float) and 0 <= duration <= 999999999
+                         and isinstance(started, str) and re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,9})?Z", started) is not None,
+                         "RUNTIME_CLOCK_FIELD_SHAPE")
+                    captured = marker_stream(results, index + 1)
+                    streams.extend(captured)
+                    cases.append({
+                        "title": TITLES[index], "status": status, "retry": 0,
+                        "workerIndex": worker_index, "parallelIndex": parallel_index,
+                        "stdioStreams": [item["metadata"] for item in captured],
+                        "durationMs": duration, "startTime": started,
+                        "errors": error_summary(errors),
+                        "attachmentCount": len(result.get("attachments", [])),
+                    })
+                first = cases[0]["errors"]
+                need(any(error["timeout60000"] and error["waitForResponse"]
+                          and error["source"] == {"file": "design-wave-five-analytics.spec.ts", "line": 72, "column": 32}
+                          for error in first), "ORIGINAL_UI42_FAILURE_LOCATION")
+                need(sum(len(item["raw"]) for item in streams) <= CORE_CAP["runtimeEvents"]
+                     and sum(item["metadata"]["markerRecordsIncludingTail"] for item in streams) <= 64,
+                     "RUNTIME_E14_COMBINED_CAP")
+                RECEIPT["parsers"]["selectionRuntime"] = {
+                    "status": "VALIDATED", "selection": RECEIPT["parsers"]["selectedInputs"]["selection"],
+                    "runtime": RECEIPT["parsers"]["selectedInputs"]["runtime"],
+                    "tests": 2, "titles": TITLES, "selectionConfig": selection_config,
+                    "runtimeConfig": runtime_config, "cases": cases,
+                    "order": "Case/result order, stdout then stderr; this is not temporal interleaving.",
+                    "originalJsonExport": "Raw selected reports are preserved locally; arbitrary report strings are not emitted.",
+                }
+                checked("original_selection_runtime_verdict_and_stream_boundaries")
+                return streams
+            
+            def e14_integer(value, low=0, high=65535):
+                return type(value) is int and low <= value <= high
+            
+            def validate_e14_event(row):
+                need(isinstance(row, dict), "E14_EVENT_OBJECT")
+                expected = {"schema": E14["schema"], "source": SOURCE, "sourceTree": SOURCE_TREE,
+                            "snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1",
+                            "nonce": E14["nonce"]}
+                need(all(row.get(key) == value for key, value in expected.items())
+                     and row.get("qualification") is False
+                     and type(row.get("pid")) is int and row["pid"] == E14["pid"]
+                     and type(row.get("parentPid")) is int and row["parentPid"] == E14["parentPid"]
+                     and type(row.get("request")) is int and row["request"] == 1, "E14_EVENT_IDENTITY")
+                common = set(expected) | {"qualification", "pid", "parentPid", "request", "sequence", "kind", "elapsedTenthMs"}
+                need(e14_integer(row.get("sequence"), 1, 63), "E14_SEQUENCE_RANGE")
+                elapsed = row.get("elapsedTenthMs")
+                need(elapsed is None or e14_integer(elapsed, 0, 999999999), "E14_MONOTONIC_FIELD")
+                counter_keys = {"compareBodies", "stages", "lineage", "saturated"}
+                payloads = {
+                    "request-enter": {"maxEvents", "maxBytes", "maxLineBytes", "detailSlots", "unitCloseSlots", "activeCompareSlots"},
+                    "http-boundary": {"point"},
+                    "unit-enter": {"unit", "unitKind", "parentUnit", "parentPhase"},
+                    "phase-enter": {"unit", "phase", "point", "stage"} | counter_keys,
+                    "phase-close": {"unit", "phase", "point", "stage", "outcome"} | counter_keys,
+                    "branch": {"unit", "point", "branch"} | counter_keys,
+                    "unit-close": {"unit", "unitKind", "entryReserved", "outcome"} | counter_keys,
+                    "compare-body-checkpoint": {"bodyExits", "compare", "parentCompare", "depth", "stage"} | counter_keys,
+                    "overflow": {"reason", "generalUsed", "unitsAdmitted", "dropped"},
+                    "request-close": {"outcome", "eventsBefore", "bytesBefore", "dropped", "openUnits", "openPhases", "faultsBefore"} | counter_keys,
+                }
+                kind = row.get("kind")
+                need(isinstance(kind, str) and kind in payloads and set(row) == common | payloads[kind],
+                     "E14_EVENT_VOCABULARY")
+                if "compareBodies" in row:
+                    for key, length in (("compareBodies", 6), ("stages", 33), ("lineage", 3)):
+                        values = row[key]
+                        need(isinstance(values, list) and len(values) == length
+                             and all(e14_integer(value) for value in values), "E14_COUNTER_VECTOR")
+                    need(row["compareBodies"][3] <= 64 and row["compareBodies"][4] <= 63
+                         and type(row["saturated"]) is bool, "E14_COUNTER_LIMITS")
+                if "unit" in row:
+                    need(e14_integer(row["unit"], 1, 28), "E14_UNIT_RANGE")
+                if "parentUnit" in row:
+                    need(e14_integer(row["parentUnit"], 0, 28), "E14_PARENT_UNIT_RANGE")
+                if "parentPhase" in row:
+                    need(e14_integer(row["parentPhase"]), "E14_PARENT_PHASE_RANGE")
+                if "phase" in row:
+                    need(e14_integer(row["phase"], 1), "E14_PHASE_RANGE")
+                if "stage" in row:
+                    need(e14_integer(row["stage"], 0, 10), "E14_STAGE_RANGE")
+                if "unitKind" in row:
+                    need(row["unitKind"] in ("port", "combination", "analysis", "analysis-revalidation",
+                                            "production-assess", "production-revalidation"), "E14_UNIT_KIND")
+                if kind == "request-enter":
+                    need({key: row[key] for key in payloads[kind]} == {
+                        "maxEvents": 63, "maxBytes": 64512, "maxLineBytes": 1024,
+                        "detailSlots": 32, "unitCloseSlots": 28, "activeCompareSlots": 64,
+                    } and all(type(row[key]) is int for key in payloads[kind]), "E14_DECLARED_LIMITS")
+                if kind == "http-boundary":
+                    need(row["point"] in ("body-returned", "admit-returned", "case-callback-entered",
+                                          "with-case-returned", "egress-passed"), "E14_HTTP_POINT")
+                stages = {
+                    "port-authority-initial": 1, "candidates-initial": 1, "combination-evaluate": 2,
+                    "port-authority-final": 1, "evaluations-recheck": 1, "candidates-final": 1,
+                    "analysis-select-initial": 4, "analysis-compare": 5, "analysis-persist": 6,
+                    "analysis-bind": 7, "analysis-select-final": 8, "analysis-revalidate": 9,
+                    "production-analysis": 3, "production-analysis-revalidate": 10,
+                }
+                if kind in ("phase-enter", "phase-close"):
+                    need(row["point"] in stages and row["stage"] == stages[row["point"]], "E14_PHASE_STAGE")
+                    if row["phase"] <= 5:
+                        need(row["point"] == ("analysis-select-initial", "analysis-select-final", "analysis-revalidate",
+                                              "analysis-persist", "analysis-bind")[row["phase"] - 1], "E14_CRITICAL_PHASE_ID")
+                if kind == "phase-close":
+                    need(row["outcome"] in ("await-returned", "rejected", "abrupt", "abandoned"), "E14_PHASE_OUTCOME")
+                if kind == "branch":
+                    need((row["point"], row["branch"]) in (("analysis-persist", "reuse-result"),
+                                                         ("analysis-bind", "binding-present")), "E14_BRANCH")
+                if kind == "unit-close":
+                    need(type(row["entryReserved"]) is bool and row["outcome"] in ("body-returned", "body-threw"),
+                         "E14_UNIT_OUTCOME")
+                if kind == "compare-body-checkpoint":
+                    need(type(row["bodyExits"]) is int and row["bodyExits"] in (1, 8, 32, 128)
+                         and e14_integer(row["compare"], 1) and e14_integer(row["parentCompare"])
+                         and e14_integer(row["depth"], 0, 63), "E14_COMPARE_CHECKPOINT")
+                if kind == "overflow":
+                    need(row["reason"] in ("detail", "unit", "compare", "phase")
+                         and e14_integer(row["generalUsed"], 0, 17) and e14_integer(row["unitsAdmitted"], 0, 28)
+                         and e14_integer(row["dropped"], 1), "E14_OVERFLOW")
+                if kind == "request-close":
+                    need(row["outcome"] in ("returned", "rejected")
+                         and e14_integer(row["eventsBefore"], 0, 62) and e14_integer(row["bytesBefore"], 0, 64512)
+                         and e14_integer(row["dropped"]) and e14_integer(row["openUnits"], 0, 28)
+                         and e14_integer(row["openPhases"], 0, 28), "E14_REQUEST_CLOSE")
+                    need(isinstance(row["faultsBefore"], list) and len(row["faultsBefore"]) == 6
+                         and all(e14_integer(value, 0, 1) for value in row["faultsBefore"]), "E14_FAULT_FLAGS")
+                return row
+            
+            def parse_event_stream(raw, origin):
+                need(isinstance(raw, bytes) and len(raw) <= CORE_CAP["runtimeEvents"], "E14_PARSER_INPUT_CAP")
+                parts = raw.split(b"\n")
+                tail = parts.pop()
+                result = {"origin": origin, "bytes": len(raw), "sha256": digest(raw),
+                          "completeLines": len(parts), "tailBytes": len(tail),
+                          "tailSha256": digest(tail) if tail else None, "records": [], "issues": [],
+                          "sequenceContiguousFromOne": False, "requestBoundaryObserved": False}
+                if len(raw) > E14["streamBytes"]:
+                    result["issues"].append(evidence_issue("E14_STREAM_BYTES", origin))
+                if len(parts) + (1 if tail else 0) > E14["streamRows"]:
+                    result["issues"].append(evidence_issue("E14_STREAM_RECORD_CAP", origin))
+                unparsed = b"".join(part + b"\n" for part in parts[E14["streamRows"]:])
+                result["unparsedCompleteSuffixBytes"] = len(unparsed)
+                result["unparsedCompleteSuffixSha256"] = digest(unparsed) if unparsed else None
+                rows = []
+                line_by_sequence = {}
+                before_bytes = 0
+                last_time = None
+                terminal = None
+                unit_entries = {}
+                unit_closes = set()
+                phase_entries = {}
+                phase_closes = set()
+                lifetimes = []
+                for index, part in enumerate(parts[:E14["streamRows"]], 1):
+                    line = part + b"\n"
+                    try:
+                        need(len(line) <= E14["lineCap"] and re.fullmatch(rb"[\x20-\x7e]*\n", line) is not None,
+                             "E14_LINE_ENCODING_OR_CAP")
+                        need(line.startswith(EVENT_PREFIX), "E14_LINE_PREFIX")
+                        row = json.loads(part[len(EVENT_PREFIX):].decode("ascii"),
+                                         object_pairs_hook=unique_object, parse_constant=reject_constant)
+                        validate_e14_event(row)
+                        sequence = row["sequence"]
+                        need(sequence not in line_by_sequence, "E14_DUPLICATE_SEQUENCE")
+                        need(not rows or sequence > rows[-1]["sequence"], "E14_SEQUENCE_ORDER")
+                        need(terminal is None, "E14_RECORD_AFTER_TERMINAL")
+                        elapsed = row["elapsedTenthMs"]
+                        need(elapsed is None or last_time is None or elapsed >= last_time, "E14_CLOCK_REGRESSION")
+                        if elapsed is not None:
+                            last_time = elapsed
+                        if row["kind"] == "request-enter":
+                            need(sequence == 1 and not rows, "E14_REQUEST_ENTER_POSITION")
+                        if row["kind"] == "unit-enter":
+                            need(row["unit"] not in unit_entries, "E14_DUPLICATE_UNIT_ENTRY")
+                            unit_entries[row["unit"]] = row
+                        if row["kind"] == "unit-close":
+                            need(row["unit"] not in unit_closes, "E14_DUPLICATE_UNIT_CLOSE")
+                            entry = unit_entries.get(row["unit"])
+                            need(entry is None or entry["unitKind"] == row["unitKind"], "E14_UNIT_IDENTITY_DRIFT")
+                            unit_closes.add(row["unit"])
+                        if row["kind"] == "phase-enter":
+                            need(row["phase"] not in phase_entries, "E14_DUPLICATE_PHASE_ENTRY")
+                            phase_entries[row["phase"]] = row
+                        if row["kind"] == "phase-close":
+                            need(row["phase"] not in phase_closes, "E14_DUPLICATE_PHASE_CLOSE")
+                            entry = phase_entries.get(row["phase"])
+                            need(entry is None or all(entry[key] == row[key] for key in ("unit", "point", "stage")),
+                                 "E14_PHASE_IDENTITY_DRIFT")
+                            phase_closes.add(row["phase"])
+                            lifetimes.append({"unit": row["unit"], "phase": row["phase"], "point": row["point"],
+                                              "enterSequence": entry["sequence"] if entry else None, "closeSequence": sequence,
+                                              "outcome": row["outcome"], "enteredTenthMs": entry["elapsedTenthMs"] if entry else None,
+                                              "closedTenthMs": elapsed,
+                                              "inclusiveSpanTenthMs": elapsed - entry["elapsedTenthMs"]
+                                              if entry and elapsed is not None and entry["elapsedTenthMs"] is not None else None})
+                        if row["kind"] == "request-close":
+                            need(row["eventsBefore"] == sequence - 1, "E14_TERMINAL_SEQUENCE_COUNT")
+                            if not result["issues"] and [r["sequence"] for r in rows] == list(range(1, sequence)):
+                                need(row["bytesBefore"] == before_bytes, "E14_TERMINAL_PREFIX_BYTES")
+                            terminal = row
+                        rows.append(row)
+                        line_by_sequence[sequence] = line
+                    except ReceiptFailure as error:
+                        item = evidence_issue(error.code, origin, error.code in (
+                            "E14_EVENT_IDENTITY", "E14_DUPLICATE_SEQUENCE", "E14_SEQUENCE_ORDER", "E14_RECORD_AFTER_TERMINAL",
+                            "E14_CLOCK_REGRESSION", "E14_REQUEST_ENTER_POSITION", "E14_DUPLICATE_UNIT_ENTRY",
+                            "E14_DUPLICATE_UNIT_CLOSE", "E14_UNIT_IDENTITY_DRIFT", "E14_DUPLICATE_PHASE_ENTRY",
+                            "E14_DUPLICATE_PHASE_CLOSE", "E14_PHASE_IDENTITY_DRIFT", "E14_TERMINAL_SEQUENCE_COUNT",
+                            "E14_TERMINAL_PREFIX_BYTES"), index)
+                        result["issues"].append(item)
+                    except (ValueError, UnicodeError, RecursionError, TypeError, KeyError):
+                        result["issues"].append(evidence_issue("E14_RECORD_JSON_INVALID", origin, False, index))
+                    before_bytes += len(line)
+                if tail:
+                    result["issues"].append(evidence_issue("E14_NON_LF_TAIL", origin, False, len(parts) + 1))
+                sequences = [row["sequence"] for row in rows]
+                contiguous = bool(rows) and not result["issues"] and sequences == list(range(1, len(rows) + 1))
+                starts = bool(rows) and rows[0]["kind"] == "request-enter" and rows[0]["sequence"] == 1
+                result.update({
+                    "validRecords": len(rows), "sequenceContiguousFromOne": contiguous and starts,
+                    "sequences": sequences, "kindCounts": {kind: sum(row["kind"] == kind for row in rows)
+                        for kind in sorted({row["kind"] for row in rows})},
+                    "lastObserved": rows[-1] if rows else None,
+                    "requestClose": terminal,
+                    "requestBoundaryObserved": bool(terminal) and contiguous and starts,
+                    "phaseLifetimes": lifetimes,
+                    "phasesWithoutObservedClose": [{"unit": row["unit"], "phase": row["phase"], "point": row["point"],
+                        "enterSequence": row["sequence"], "enteredTenthMs": row["elapsedTenthMs"],
+                        "meaning": "No close in this received stream; not a claim about timeout or final server state."}
+                        for key, row in phase_entries.items() if key not in phase_closes],
+                    "unitsWithoutObservedClose": sorted(key for key in unit_entries if key not in unit_closes),
+                    "formatValid": not result["issues"],
+                    "coverageComplete": bool(terminal) and contiguous and starts and terminal["dropped"] == 0
+                        and terminal["openUnits"] == 0 and terminal["openPhases"] == 0
+                        and terminal["compareBodies"][3] == 0 and terminal["compareBodies"][5] == 0
+                        and not any(terminal["faultsBefore"]) and not terminal["saturated"]
+                        and not any(row["kind"] == "overflow" for row in rows),
+                })
+                result.pop("records")
+                return {"summary": result, "raw": raw, "rows": rows, "bySequence": line_by_sequence}
+            
+            def compare_event_streams(left, right, label):
+                if left is None or right is None:
+                    return {"pair": label, "relation": "UNAVAILABLE", "consistencyProven": False}
+                a, b = left["raw"], right["raw"]
+                common_prefix = 0
+                for first, second in zip(a, b):
+                    if first != second:
+                        break
+                    common_prefix += 1
+                if a == b:
+                    relation = "IDENTICAL_BYTES"
+                elif b.startswith(a):
+                    relation = "RIGHT_EXTENDS_COMPLETE_PREFIX" if a.endswith(b"\n") else "RIGHT_EXTENDS_PARTIAL_PREFIX"
+                elif a.startswith(b):
+                    relation = "LEFT_EXTENDS_COMPLETE_PREFIX" if b.endswith(b"\n") else "LEFT_EXTENDS_PARTIAL_PREFIX"
+                else:
+                    relation = "NONPREFIX"
+                shared = sorted(set(left["bySequence"]) & set(right["bySequence"]))
+                conflicts = [seq for seq in shared if left["bySequence"][seq] != right["bySequence"][seq]]
+                if conflicts:
+                    evidence_issue("E14_SHARED_SEQUENCE_BYTES_DIFFER", label, True)
+                return {"pair": label, "relation": relation, "leftBytes": len(a), "rightBytes": len(b),
+                        "commonPrefixBytes": common_prefix, "sharedSequences": shared, "conflictingSequences": conflicts,
+                        "onlyLeftSequences": sorted(set(left["bySequence"]) - set(right["bySequence"])),
+                        "onlyRightSequences": sorted(set(right["bySequence"]) - set(left["bySequence"])),
+                        "consistencyProven": bool(shared) and not conflicts and left["summary"]["formatValid"] and right["summary"]["formatValid"],
+                        "meaning": "Literal bytes and shared sequences only; no unobserved record or inter-stream chronology is inferred."}
+            
+            def preflight_main_prefix():
+                raw = base64.b64decode(MAIN_PREFIX_B64, validate=True)
+                need(len(raw) == E14["mainBytes"] and digest(raw) == E14["mainSha256"]
+                     and hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest() == E14["mainBlob"],
+                     "BOUND_MAIN_PREFIX_BYTES")
+                before = len(RECEIPT["evidenceIssues"])
+                parsed = parse_event_stream(raw, "preserved-main-prefix")
+                need(len(RECEIPT["evidenceIssues"]) == before and parsed["summary"]["sequenceContiguousFromOne"]
+                     and len(parsed["rows"]) == E14["mainLines"] and parsed["summary"]["tailBytes"] == 0
+                     and parsed["rows"][-1]["kind"] == "phase-enter"
+                     and parsed["rows"][-1]["point"] == "analysis-persist"
+                     and parsed["summary"]["requestClose"] is None
+                     and not any(row["kind"] == "overflow" for row in parsed["rows"]), "BOUND_MAIN_PREFIX_SCHEMA")
+                RECEIPT["parsers"]["boundMainPrefix"] = {"blob": E14["mainBlob"], **parsed["summary"],
+                    "preflight": "Validated by the same E14 parser before any artifact acquisition; no original file is fabricated."}
+                checked("embedded_main_prefix_validated_before_download")
+                return parsed
+            
+            def parse_launcher(raw):
+                if "launcher" not in raw:
+                    return {"status": "ABSENT"}
+                value = selected_json(raw, "launcher")
+                if value is None:
+                    return {"status": "INVALID"}
+                fixed = {
+                    "schema": "sf-preview-e14-event-launch-v1", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                    "snapshot": SNAPSHOT, "runId": str(ORIGINAL_RUN), "attempt": "1", "nonce": E14["nonce"],
+                    "qualification": False, "state": "prepared", "processRole": "native-cli",
+                    "entry": "apps/cli/src/index.ts", "command": "serve", "streamName": "preview-events.jsonl",
+                    "relativeDirectory": "test-ci-evidence/" + E14["nonce"],
+                    "childGraceMs": 2000, "adapterGraceMs": 10000,
+                    "limits": "Preparation is not proof of Request selection, phase completion, event transport or successful fsync.",
+                }
+                need(set(value) == set(fixed) | {"createdUtcMs"} and all(value.get(key) == wanted for key, wanted in fixed.items())
+                     and value["qualification"] is False and type(value["childGraceMs"]) is int
+                     and type(value["adapterGraceMs"]) is int
+                     and e14_integer(value["createdUtcMs"], 0, 9007199254740991), "E14_LAUNCHER_IDENTITY")
+                return {"status": "VALIDATED", "fields": value,
+                        "bytes": len(raw["launcher"]), "sha256": digest(raw["launcher"]),
+                        "meaning": "Prepared metadata matches this capture tuple. It does not prove stream completion or successful later fsync."}
+            
+            def analyze_e14_inputs(raw, main):
+                runtime_streams = []
+                try:
+                    runtime_streams = parse_runtime_and_selection(raw)
+                except ReceiptFailure as error:
+                    evidence_issue(error.code, "selection-runtime", True)
+                    RECEIPT["parsers"]["selectionRuntime"] = {"status": "INVALID", "code": error.code}
+                except (ValueError, UnicodeError, RecursionError, TypeError, KeyError, AttributeError, binascii.Error):
+                    evidence_issue("SELECTION_RUNTIME_PARSE_INVALID", "selection-runtime")
+                    RECEIPT["parsers"]["selectionRuntime"] = {"status": "INVALID"}
+                try:
+                    launcher = parse_launcher(raw)
+                except ReceiptFailure as error:
+                    evidence_issue(error.code, "launcher", True)
+                    launcher = {"status": "INVALID", "code": error.code}
+                except (ValueError, UnicodeError, RecursionError, TypeError, KeyError):
+                    evidence_issue("E14_LAUNCHER_PARSE_INVALID", "launcher")
+                    launcher = {"status": "INVALID"}
+                file_events = parse_event_stream(raw["events"], "artifact-file") if "events" in raw else None
+                parsed_runtime = []
+                for stream in runtime_streams:
+                    if not stream["raw"]:
+                        continue
+                    meta = stream["metadata"]
+                    parsed = parse_event_stream(stream["raw"], "runtime-case-" + str(meta["case"]) + "-result-"
+                                                + str(meta["result"]) + "-" + meta["stream"])
+                    parsed_runtime.append({"metadata": meta, "parsed": parsed})
+                target = [item for item in parsed_runtime
+                          if (item["metadata"]["case"], item["metadata"]["result"], item["metadata"]["stream"]) == (1, 1, "stdout")]
+                if len(parsed_runtime) != 1 or len(target) != 1:
+                    if parsed_runtime:
+                        evidence_issue("E14_RUNTIME_REQUEST_MEMBERSHIP", "runtime", True)
+                    else:
+                        pending("E14_RUNTIME_EVENTS_ABSENT")
+                runtime = target[0]["parsed"] if len(target) == 1 else None
+                pairs = [
+                    compare_event_streams(main, file_events, "main-to-file"),
+                    compare_event_streams(main, runtime, "main-to-runtime"),
+                    compare_event_streams(runtime, file_events, "runtime-to-file"),
+                ]
+                if file_events is None or not file_events["summary"]["requestBoundaryObserved"]:
+                    pending("E14_FILE_HAS_NO_VALIDATED_REQUEST_CLOSE")
+                if runtime is None or not runtime["summary"]["requestBoundaryObserved"]:
+                    pending("E14_RUNTIME_HAS_NO_VALIDATED_REQUEST_CLOSE")
+                result = {
+                    "launcher": launcher,
+                    "file": file_events["summary"] if file_events else {"presence": "ABSENT"},
+                    "runtimeStreams": [{"membership": item["metadata"], **item["parsed"]["summary"]} for item in parsed_runtime],
+                    "comparisons": pairs,
+                    "fileRequestBoundaryObserved": bool(file_events and file_events["summary"]["requestBoundaryObserved"]),
+                    "runtimeRequestBoundaryObserved": bool(runtime and runtime["summary"]["requestBoundaryObserved"]),
+                    "mainRequestBoundaryObserved": main["summary"]["requestBoundaryObserved"],
+                    "fileCoverageComplete": bool(file_events and file_events["summary"]["coverageComplete"]),
+                    "evidenceConsistencyAccepted": not RECEIPT["evidenceIssues"] and launcher["status"] == "VALIDATED"
+                        and file_events is not None and runtime is not None
+                        and all(pair["consistencyProven"] for pair in pairs),
+                    "meaning": "Missing closure stays a received prefix. Counter body exits are not Promise settlement; intervals are inclusive and never summed.",
+                }
+                RECEIPT["parsers"]["e14"] = result
+                runtime_raw = b"".join(item["raw"] for item in runtime_streams)
+                need(len(runtime_raw) <= CORE_CAP["runtimeEvents"], "RUNTIME_EVENT_EXPORT_CAP")
+                return runtime_raw
+            
+            def ensure_inventory():
+                if "inventory" not in RECEIPT:
+                    inventory = {"schema": 1, "archives": ARCHIVES, "files": FILES,
+                                 "selection": SELECTED_PATHS,
+                                 "limit": "Unselected entries are central-directory metadata only; their local headers, bytes and CRCs were not read or verified. No nested archive was opened."}
+                    raw = canonical(inventory)
+                    need(len(raw) <= CORE_CAP["inventory"], "INVENTORY_EXPORT_CAP")
+                    RECEIPT["inventory"] = save_json("derived/inventory.json", inventory)
+                return RECEIPT["inventory"]
+            
+            def prepare_core_export(key, name, raw, mime, original, original_file=None):
+                need(key in CORE_CAP and isinstance(raw, bytes) and len(raw) <= CORE_CAP[key],
+                     "CORE_RAW_CAP_" + key)
+                if original:
+                    need(key in ("events", "launcher") and type(original_file) is int
+                         and 0 <= original_file < len(FILES), "CORE_ORIGINAL_INVENTORY_BINDING")
+                    item = FILES[original_file]
+                    need(not item["directory"] and item["id"] == original_file
+                         and item["bytes"] == len(raw) and item["sha256"] == digest(raw),
+                         "CORE_ORIGINAL_INVENTORY_BYTES")
+                else:
+                    need(original_file is None and len(raw) > 0, "CORE_DERIVED_NONEMPTY")
+                encoded = base64.b64encode(raw).decode("ascii")
+                pieces = ([encoded[i:i + CAP["chunkBytes"]] for i in range(0, len(encoded), CAP["chunkBytes"])]
+                          if encoded else [""])
+                metadata = {"name": name, "bytes": len(raw), "sha256": digest(raw), "mime": mime,
+                            "original": original, "encoding": "base64", "chunks": len(pieces)}
+                if original:
+                    metadata["file"] = original_file
+                lines = []
+                for index, piece in enumerate(pieces, 1):
+                    envelope = {"schema": 1, **metadata, "index": index}
+                    # Bound all metadata plus empty data and transport prefix/LF, not just one field.
+                    need(len(wire_line("SF613_ARTIFACT_BYTES", {**envelope, "data": ""})) <= 1024,
+                         "CORE_CHUNK_METADATA_CAP")
+                    need((0 < len(piece) <= CAP["chunkBytes"]) or
+                         (len(raw) == 0 and original and len(pieces) == 1 and index == 1 and piece == ""),
+                         "CORE_BASE64_CHUNK_CAP")
+                    lines.append(wire_line("SF613_ARTIFACT_BYTES", {**envelope, "data": piece}))
+                return {"key": key, "metadata": metadata, "lines": lines}
+            
+            def finalize_core(selected_raw, runtime_raw):
+                global CORE_LINES_WRITTEN
+                need(set(selected_raw).issubset(SELECTED_PATHS), "E14_CORE_SELECTION_INVALID")
+                observed = RECEIPT["parsers"]["e14"]
+                inventory = ensure_inventory()
+                inventory_raw = (ROOT / inventory["path"]).read_bytes()
+                need(len(inventory_raw) == inventory["bytes"] and digest(inventory_raw) == inventory["sha256"],
+                     "INVENTORY_BYTES_CHANGED")
+                RECEIPT["apiReads"] = API_COUNT
+                RECEIPT["archiveSummary"] = {
+                    "archives": len(ARCHIVES), "entries": TOTAL_ENTRIES,
+                    "selectedCrcVerified": sum(1 for row in FILES if row.get("crcVerified")),
+                    "selectedExpandedBytes": TOTAL_EXPANDED,
+                    "unselectedEntriesMetadataOnly": sum(1 for row in FILES if not row["selected"]),
+                    "unselectedContentsVerified": False, "nestedArchivesOpened": 0,
+                    "selectedFiles": RECEIPT["parsers"]["selectedInputs"],
+                }
+                need(not RECEIPT["failures"] and all(row.get("crcVerified") is True for row in FILES if row["selected"]),
+                     "CORE_REQUIRED_ACQUISITION_FAILURE")
+                RECEIPT["status"] = ("RECEIVED_WITH_EVIDENCE_ISSUES" if RECEIPT["evidenceIssues"]
+                                     else "RECEIVED_WITH_PENDING_OBSERVATION" if RECEIPT["pending"]
+                                     else "RECEIVED_E14_EVIDENCE")
+                summary = canonical({
+                    "schema": 1, "kind": "e14-original-event-summary", "qualification": False,
+                    "source": SOURCE, "sourceTree": SOURCE_TREE, "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                    "run": ORIGINAL_RUN, "attempt": ORIGINAL_ATTEMPT, "artifact": RECEIPT["artifact"],
+                    "boundMainPrefix": RECEIPT["parsers"]["boundMainPrefix"],
+                    "selectionRuntime": RECEIPT["parsers"]["selectionRuntime"], "e14": observed,
+                    "pending": RECEIPT["pending"], "evidenceIssues": RECEIPT["evidenceIssues"],
+                    "archiveSummary": RECEIPT["archiveSummary"], "limits": RECEIPT["limits"],
+                })
+                write_bytes(ROOT / "derived" / "safe-summary.json", summary)
+                first_payloads = []
+                for key, export_name in (("events", "original-preview-events.jsonl"), ("launcher", "original-e14-launcher.json")):
+                    if key in selected_raw:
+                        item = RECEIPT["parsers"]["selectedInputs"][key]
+                        first_payloads.append((key, export_name, selected_raw[key], "application/octet-stream", True, item["file"]))
+                if runtime_raw:
+                    first_payloads.append(("runtimeEvents", "runtime-e14-events.log", runtime_raw, "application/octet-stream", False, None))
+                first_payloads.extend([
+                    ("summary", "safe-summary.json", summary, "application/json", False, None),
+                    ("inventory", "inventory.json", inventory_raw, "application/json", False, None),
+                ])
+                prepared = [prepare_core_export(*item) for item in first_payloads]
+                RECEIPT["coreEmission"] = {
+                    "state": "PLANNED_REQUIRES_SUCCESS_TERMINAL",
+                    "order": [item["metadata"]["name"] for item in prepared] + ["receipt.json"],
+                    "payloadsBeforeReceipt": [item["metadata"] for item in prepared],
+                    "absentFilesHaveNoExport": True,
+                    "emptyRuntimeDerivedHasNoExport": True,
+                    "zeroBytes": "One empty base64 chunk only for an actual original inventory file with bytes0 and its SHA256.",
+                    "rawCaps": CORE_CAP, "maximumPayloadBytes": 662528, "beforeBytes": LOG_BYTES,
+                    "exactPreflight": "All immutable payloads and terminal are encoded and jointly checked after this receipt is frozen, before the first core chunk.",
+                    "completion": "Complete hash-verified exports, SF613_ARTIFACT_RECEIPT terminal and successful job attest byte transport only. Evidence issues or pending observation are not an ACK of consistency, Request closure, fsync or product success.",
+                    "selfReference": "This receipt has no own hash. Its exact bytes/hash are attested by the terminal.",
+                }
+                RECEIPT["readerExitCodePlanned"] = 0
+                receipt_raw = canonical(RECEIPT)
+                prepared.append(prepare_core_export("receipt", "receipt.json", receipt_raw, "application/json", False))
+                expected_keys = ([key for key in ("events", "launcher") if key in selected_raw]
+                                 + (["runtimeEvents"] if runtime_raw else []) + ["summary", "inventory", "receipt"])
+                need([item["key"] for item in prepared] == expected_keys and 3 <= len(prepared) <= 6,
+                     "CORE_EXACT_PRESENT_EXPORTS")
+                core_lines = tuple(line for item in prepared for line in item["lines"])
+                core_bytes = sum(len(line) for line in core_lines)
+                before_bytes = LOG_BYTES
+                payload_bytes = sum(item["metadata"]["bytes"] for item in prepared)
+                need(payload_bytes <= 662528 and sum(CORE_CAP.values()) == 662528, "CORE_TOTAL_PAYLOAD_CAP")
+                final = {
+                    "schema": 1, "kind": "e14-core-terminal", "qualification": False,
+                    "status": RECEIPT["status"], "coreBytesComplete": True, "receiptBase64Complete": True,
+                    "fileRequestBoundaryObserved": observed["fileRequestBoundaryObserved"],
+                    "runtimeRequestBoundaryObserved": observed["runtimeRequestBoundaryObserved"],
+                    "fileCoverageComplete": observed["fileCoverageComplete"],
+                    "evidenceConsistencyAccepted": observed["evidenceConsistencyAccepted"],
+                    "coreFiles": len(prepared), "coreChunks": len(core_lines), "corePayloadBytes": payload_bytes,
+                    "coreLogBytes": core_bytes, "logBytesBeforeCore": before_bytes,
+                    "logBytesBeforeTerminal": before_bytes + core_bytes,
+                    "emitterCapBytes": CAP["logBytes"], "mainLogReviewCapBytes": CAP["mainLogReviewCapBytes"],
+                    "receiptBytes": len(receipt_raw), "receiptSha256": digest(receipt_raw),
+                    "exports": [item["metadata"] for item in prepared],
+                    "entries": TOTAL_ENTRIES, "selectedCrcVerified": RECEIPT["archiveSummary"]["selectedCrcVerified"],
+                    "selectedExpandedBytes": TOTAL_EXPANDED, "unselectedContentsVerified": False,
+                    "pending": len(RECEIPT["pending"]), "evidenceIssues": len(RECEIPT["evidenceIssues"]),
+                    "failures": [], "readerExitCode": 0,
+                }
+                terminal_raw = wire_line("SF613_ARTIFACT_RECEIPT", final)
+                total_bytes = before_bytes + core_bytes + len(terminal_raw)
+                need(total_bytes <= CAP["logBytes"], "CORE_JOINT_LOG_BUDGET")
+                plan = {"schema": 1, "coreFiles": len(prepared), "coreChunks": len(core_lines),
+                        "beforeBytes": before_bytes, "coreLogBytes": core_bytes,
+                        "terminalBytes": len(terminal_raw), "totalEmitterBytes": total_bytes,
+                        "capBytes": CAP["logBytes"], "mainLogReviewCapBytes": CAP["mainLogReviewCapBytes"],
+                        "terminalSha256": digest(terminal_raw), "exports": final["exports"]}
+                write_bytes(ROOT / "receipt.json", receipt_raw)
+                save_json("derived/core-emission-plan.json", plan)
+                for raw in core_lines:
+                    write_wire(raw)
+                    CORE_LINES_WRITTEN += 1
+                need(LOG_BYTES == before_bytes + core_bytes and CORE_LINES_WRITTEN == len(core_lines),
+                     "CORE_EMITTED_COUNT_MISMATCH")
+                write_wire(terminal_raw)
+                need(LOG_BYTES == total_bytes, "CORE_FINAL_EMITTED_BYTES_MISMATCH")
+            
+            def report_failure(code, error_type=None):
+                # No exception text/traceback: it could contain a signed URL. Never emit a success terminal here.
+                failure = {"code": code}
+                if error_type is not None:
+                    failure["type"] = error_type
+                RECEIPT["status"] = "RECEIPT_FAILED"
+                RECEIPT["failures"].append(failure)
+                RECEIPT["readerExitCode"] = 1
+                RECEIPT["apiReads"] = API_COUNT
+                receipt_meta = None
+                try:
+                    failure_raw = canonical(RECEIPT)
+                    if len(failure_raw) <= CORE_CAP["receipt"]:
+                        write_bytes(ROOT / "failure-receipt.json", failure_raw)
+                        receipt_meta = {"bytes": len(failure_raw), "sha256": digest(failure_raw)}
+                except Exception:
+                    pass
+                terminal = {
+                    "schema": 1, "kind": "e14-core-terminal", "qualification": False, "status": "RECEIPT_FAILED",
+                    "coreBytesComplete": False, "receiptBase64Complete": False, "readerExitCode": 1,
+                    "coreChunksWritten": CORE_LINES_WRITTEN, "logBytesBeforeTerminal": LOG_BYTES,
+                    "failures": [failure], "failureReceipt": receipt_meta,
+                    "limit": "No complete transport is accepted without every listed present payload, success terminal and successful job; Request observation and evidence consistency are separate.",
+                }
+                try:
+                    write_wire(wire_line("SF613_ARTIFACT_RECEIPT", terminal))
+                except Exception:
+                    # A broken stdout may prevent even a failure terminal; process exit remains nonzero.
+                    pass
+            
+            def main():
+                need(E14_BINDINGS_COMPLETE is True, "E14_INTAKE_BINDINGS_UNBOUND")
+                # The known current 21 records exercise the exact file/runtime validator before the sole ZIP acquisition.
+                main_prefix = preflight_main_prefix()
+                check_original_and_reader()
+                download_original()
+                inspect_zip(ROOT / "original.zip")
+                raw = selected_inputs()
+                runtime_raw = analyze_e14_inputs(raw, main_prefix)
+                RECEIPT["limits"] = [
+                    "One acquisition of the bound original artifact; no retry or resume, no old artifact/log reacquisition and no audit ZIP acquisition.",
+                    "The signed storage request receives no GitHub token, cookie or referer; at most three redirect hops occur before one response body.",
+                    "The complete compressed original is preserved and checked by exact bytes/SHA256 before ZipFile is opened.",
+                    "Only four exact top-level paths are opened. Other entries are central-directory metadata only; no screenshots, traces, profiler, HTML or nested ZIP is read.",
+                    "Selected entry size and CRC are verified; this is not all-entry CRC verification. Missing selected files have no fabricated original export.",
+                    "Original event/launcher bytes remain exact, including zero bytes, malformed JSON or a non-LF tail. Only complete LF records enter schema validation.",
+                    "Runtime stdout/stderr are concatenated within one case/result/stream before strict UTF-8 decoding. Only initial ANSI CSI is removed from event records; CR and non-LF tails are retained.",
+                    "Main/file/runtime comparisons classify byte prefixes and shared-sequence differences. Unequal transport streams are evidence, not repaired or forced equal.",
+                    "A success reader job/terminal attests bounded byte transport only. evidenceConsistencyAccepted is false for invalid or contradictory evidence; product qualification is always false.",
+                    "A received Request close is separate from complete coverage and cannot attest to the later fsync/close. No missing close proves that a phase was still open at the 60-second timeout.",
+                    "Compare counters describe synchronous body exits, not Promise settlement. The 11 stage triples and lineage axis retain their producer semantics; no inferred conservation is imposed.",
+                    "Native monotonic tenths-ms, launcher wall clock, Playwright timestamps and Actions clocks are not unified. Inclusive/nested/concurrent spans are never summed as exclusive cost.",
+                    "The six raw export caps sum exactly662528B. All base64 chunks and terminal are preflighted jointly under7MiB; the root receiver verifies the whole main under8MiB.",
+                    "No credential, signed URL, request/response body or raw error message is emitted. Raw selected reports remain preserved but are not exported as arbitrary text.",
+                ]
+                finalize_core(raw, runtime_raw)
+            
+            exit_code = 0
+            try:
+                main()
+            except ReceiptFailure as error:
+                exit_code = 1
+                report_failure(error.code)
+            except Exception as error:
+                exit_code = 1
+                report_failure("UNEXPECTED_READER_ERROR", type(error).__name__)
+            sys.exit(exit_code)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import os
+          import pathlib
+          
+          raw = os.environ.pop("SF613_ARTIFACT_READER_SOURCE").encode("utf-8")
+          expected = os.environ.pop("SF613_ARTIFACT_READER_SHA256")
+          if hashlib.sha256(raw).hexdigest() != expected:
+              raise RuntimeError("READER_SOURCE_SHA256_MISMATCH")
+          target = pathlib.Path(os.environ["RUNNER_TEMP"]).resolve() / "sf613-artifact-reader.py"
+          workspace = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+          if target == workspace or workspace in target.parents:
+              raise RuntimeError("READER_SOURCE_MUST_BE_OUTSIDE_WORKSPACE")
+          with target.open("xb") as handle:
+              handle.write(raw)
+          exec(compile(raw, str(target), "exec"),
+               {"__name__": "__main__", "__file__": str(target)})
+          PY
+
+      - name: Preserve original bytes and receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, same pin as original producer
+        with:
+          name: sf613-analytics-original-46103050850-receipt-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf613-artifact-read
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

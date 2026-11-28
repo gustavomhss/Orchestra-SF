@@ -1,0 +1,338 @@
+{
+  "schema": "sf613-e14-focal-execution-authority-v1",
+  "status": "AUTHORIZED_ONE_FOCAL_RUN_PENDING_ACTIVATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "branch": "ci-run-sf613e14f",
+  "source": {
+    "sha": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "parent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "delta": "2A7M",
+    "objectReceipt": {
+      "gitBlob": "98bf24ec513b66c14ca7d5173a75d19b8c29ca29",
+      "bytes": 3663,
+      "sha256": "8d997c302a7ce754df7cc8cb7b4bb05bc6955e9a3da5b87715c07691d84f3c36",
+      "lf": 115,
+      "endsWithLF": true
+    },
+    "review": {
+      "gitBlob": "21d3f3f249f4416931e90e437d70a7ee00ebb9e3",
+      "bytes": 22485,
+      "sha256": "3cdddaa78c26ecae31ff1410df55a49aa07013ff4b635524b6ae6a575ed96376",
+      "lf": 651,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "137739c767d7951c517fee96bb1081ccec0e5a93",
+      "bytes": 29629,
+      "sha256": "957ad9b8a47996d9f14d1717f7bd4d0ab3ffb177f504d5e36b7e34035d7c9139",
+      "lf": 706,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "sha": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+    "tree": "934f7bab75f8ee4638cf9042db94dd9b954e1fd3",
+    "parent": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "delta": "3A1M",
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "type": "blob",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "sha": "27907f5bd4cb72866380222f1e1af96336bc1932",
+        "type": "blob",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sf613-preview-e14-observation.test.ts",
+        "sha": "2e6cc75ca3a99ee2a38ad2924240d87fa25b3066",
+        "type": "blob",
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/fixture/sf613-preview-e14-observation.ts",
+        "sha": "542861d14c872c679ab1f41a9ed88d26a8085426",
+        "type": "blob",
+        "mode": "100644"
+      }
+    ],
+    "objectReceipt": {
+      "gitBlob": "9133dbb9320e9c8a52f12eadb571349a3f808ce4",
+      "bytes": 4420,
+      "sha256": "7f52a206efb50c9c0f7ca22294f7b676b97f73815bf5716a508756c6d5dc3a66",
+      "lf": 135,
+      "endsWithLF": true
+    }
+  },
+  "package": {
+    "manifest": {
+      "gitBlob": "a2e64e7a5afa4844662a68bd864fc9e0aedebb05",
+      "bytes": 30531,
+      "sha256": "fa154b373e436296e382ec19cedd6e3ea455cc0665267f58012190ee40ab1bbf",
+      "lf": 757,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "a61cf65a294b58b944dd68df45e8ef19f664cc96",
+      "bytes": 63851,
+      "sha256": "b2ebedf86a9a220dc3f541463d7c8300c92e314ef75de74cd61966c05a8c5341",
+      "lf": 2128,
+      "endsWithLF": true
+    },
+    "template": {
+      "gitBlob": "8e7b0297074136a2998b132b2c9e20e01702cf0b",
+      "bytes": 14017,
+      "sha256": "0d72b93c213e0356c1a70cb41d07400d7eae4c0dc712714e1b996c2d7600e090",
+      "lf": 205,
+      "endsWithLF": true
+    },
+    "bound": {
+      "gitBlob": "27907f5bd4cb72866380222f1e1af96336bc1932",
+      "bytes": 14063,
+      "sha256": "6b7adb12d7545b8487929cc34c7495dceefb893d1c424e835223c02631b813f2",
+      "lf": 205,
+      "endsWithLF": true
+    },
+    "binding": {
+      "gitBlob": "6373a82d9a4fba239a6b4fbdd336e919e88c1892",
+      "bytes": 10820,
+      "sha256": "346904d265142d75edf170f0965c7bcccfe4fe779fd13d230c20c3d1c1b9c334",
+      "lf": 355,
+      "endsWithLF": true
+    },
+    "controlFixture": {
+      "gitBlob": "542861d14c872c679ab1f41a9ed88d26a8085426",
+      "bytes": 47926,
+      "sha256": "dfa4e394dd5ab038b1c0248bf3e12956d13aed0641a19351784ee6838296cc79",
+      "lf": 700,
+      "endsWithLF": true
+    },
+    "controlTest": {
+      "gitBlob": "2e6cc75ca3a99ee2a38ad2924240d87fa25b3066",
+      "bytes": 1123,
+      "sha256": "2e2d6a3163083d7db8129ace2354b3c92c0e79552b2c1fc36f30777751f7fc10",
+      "lf": 24,
+      "endsWithLF": true
+    }
+  },
+  "review": {
+    "rootManifestChecks": {
+      "checkedPins": [
+        "sourcePackage.manifest",
+        "sourcePackage.bounds",
+        "sourcePackage.derivation",
+        "sourcePackage.fullDiff",
+        "sourcePackage.helper",
+        "supports.controlDerivation",
+        "supports.controlFullAdditionsDiff",
+        "supports.controlHistoricalReuseDiff",
+        "supports.controlR1ToR2Diff",
+        "supports.wrapperDerivation",
+        "supports.wrapperCarrierDiff",
+        "supports.focalFullOverlayDiff",
+        "supports.bounds",
+        "artifact 0",
+        "artifact 1",
+        "artifact 2",
+        "artifact 3"
+      ],
+      "sourceObjects": true,
+      "fullTextRead": true,
+      "peerFinalManifestAck": true,
+      "at": {
+        "current_time": "2026-11-28 03:14:03 UTC"
+      }
+    },
+    "rootDerivationChecks": {
+      "checks": [
+        {
+          "path": "apps/cli/test/fixture/sf613-preview-e14-observation.ts",
+          "anchors": 10,
+          "fullAddAndReuseForwardInverse": true
+        },
+        {
+          "path": "apps/cli/test/sf613-preview-e14-observation.test.ts",
+          "anchors": 2,
+          "fullAddAndReuseForwardInverse": true
+        }
+      ],
+      "controlAddition": {
+        "files": 2,
+        "hunks": 2,
+        "added": 724,
+        "removed": 0
+      },
+      "controlReuse": {
+        "files": 2,
+        "hunks": 12,
+        "added": 391,
+        "removed": 133
+      },
+      "controlCorrection": {
+        "files": 1,
+        "hunks": 1,
+        "added": 4,
+        "removed": 1
+      },
+      "runnerLiteral": true,
+      "wrapperOperations": 11,
+      "wrapperNonemptySubstitutions": 10,
+      "wrapperExplicitEofAppend": 1,
+      "wrapperHunkAnchors": 6,
+      "wrapperReuse": {
+        "files": 1,
+        "hunks": 6,
+        "added": 43,
+        "removed": 20
+      },
+      "focalOverlay": {
+        "files": 4,
+        "hunks": 4,
+        "added": 930,
+        "removed": 1
+      },
+      "allForwardInverse": true,
+      "repositoryCodeExecuted": false,
+      "checkerNote": "Generic nonempty-anchor checker rejected the explicit append operation; applied its declared EOF semantics and independently verified six nonempty hunk anchors and full diff. No artifact changed."
+    },
+    "rootBoundsChecks": {
+      "sourceAllTenModels": true,
+      "sourceConservativeMaximum": 889,
+      "controlTerminal": {
+        "gitBlob": "89a877d0e370c7d4c15d6233e1daa882aad56317",
+        "bytes": 883,
+        "sha256": "b566b7325d19c5bcddb85075b4ec6e8068a50c5b525d54e1f7748704e00822cb",
+        "lf": 1,
+        "endsWithLF": true
+      },
+      "parentReport": {
+        "gitBlob": "b340a8be4649c54fcab9e1d652474f087c34a4c7",
+        "bytes": 11015,
+        "sha256": "3f815cb1c7da7d0bdf1e2b3cf551d841c0347497f80aa2e1191a59b41f8e71b4",
+        "lf": 1,
+        "endsWithLF": true
+      },
+      "nestedCapsNotAdded": true,
+      "parentCaps": 2190000,
+      "commandCaps": 1590000,
+      "staticOnly": true
+    },
+    "peer": {
+      "receipt": {
+        "gitBlob": "81f9f0ff64205a547bbd7b4bb6b0a4f93ee426d1",
+        "bytes": 19019,
+        "sha256": "618c45f4a36e6f7fd27106a33a946fe899ce44325f01aeaa4e76c794a508b8f5",
+        "lf": 461,
+        "endsWithLF": true
+      },
+      "reviewer": "/root/teams_product",
+      "status": "ACK_STATIC_SOURCE_CONTROL_WRAPPER_BINDING_AND_OBJECTS_NO_RUNTIME",
+      "checkGroups": 22,
+      "findings": []
+    }
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 03:15:28 UTC"
+    },
+    "branchAbsent": true,
+    "existingSnapshotRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "1194fcbf1c363bc8ee2ccd2aae9861b56cd41ed5"
+    },
+    "sourcePinChecks": 23,
+    "workingPinChecks": 25,
+    "workflowPins": [
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "mode": "100644"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "sha": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "mode": "100644"
+      }
+    ],
+    "actualSourceAndFocalAudits": true
+  },
+  "scope": {
+    "groups": 8,
+    "commands": 14,
+    "truncationFlagsRequiredFalse": 28,
+    "workingPins": 25,
+    "wholeTestFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "apps/cli/test/sf613-preview-e14-observation.test.ts"
+    ],
+    "staticDeclarationSites": 16,
+    "expectedReportFamilies": 7,
+    "actualFunctionalTests": null,
+    "actualAssertions": null,
+    "actualReports": null,
+    "types": [
+      "CLI",
+      "Sucafina"
+    ],
+    "guards": "origin/dev actual merge base; errors=[]; approved=[]; bootstrap=false"
+  },
+  "budgets": {
+    "bounds": {
+      "gitBlob": "a61cf65a294b58b944dd68df45e8ef19f664cc96",
+      "bytes": 63851,
+      "sha256": "b2ebedf86a9a220dc3f541463d7c8300c92e314ef75de74cd61966c05a8c5341",
+      "lf": 2128,
+      "endsWithLF": true
+    },
+    "parentsSumMs": 2190000,
+    "commandsSumMs": 1590000,
+    "workflowJobMs": 2700000,
+    "nominalSharedOverheadMs": 510000,
+    "control": {
+      "childModes": 8,
+      "childProcessMs": 3000,
+      "childTotalMs": 24000,
+      "bunTestMs": 35000,
+      "commandMs": 60000,
+      "parentMs": 90000,
+      "childStreamBytes": 65536,
+      "parentReportBytes": 16384
+    },
+    "nestedCapsAreNotAdded": true,
+    "noOverheadGuarantee": true
+  },
+  "intake": {
+    "operator": "/root",
+    "onlyThisSnapshot": true,
+    "expectedJobs": "main and cleanup",
+    "waitUntilBothTerminal": true,
+    "originalLogGetsPerJob": 1,
+    "preserveActualGitPartsAndLiteralReadbackBeforeParsing": true,
+    "oldClosedLogsNeverReacquired": true,
+    "zipGets": 0,
+    "artifactMetadataOnly": true,
+    "reviewersUsePreservedGitCopies": true
+  },
+  "notAuthorized": {
+    "automaticRerun": true,
+    "analyticsRun": true,
+    "publicProductRefUpdate": true,
+    "devMerge": true,
+    "finalQualification": true,
+    "releaseTar": true,
+    "production": true
+  },
+  "at": "2026-11-28 03:17:06 UTC"
+}

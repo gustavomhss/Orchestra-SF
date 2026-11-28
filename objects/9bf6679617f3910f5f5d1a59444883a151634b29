@@ -1,0 +1,315 @@
+{
+  "schema": "sf613-r6-archive-root-review-v1",
+  "status": "APPROVED_DOCUMENTARY_PUBLICATION_AFTER_CONCRETE_OBJECT_AUDIT",
+  "at": "2026-11-28 02:28:23 UTC",
+  "reviewer": "/root",
+  "author": "/root/close_pr613",
+  "repository": "gustavomhss/Orchestra-SF",
+  "purpose": "Durably preserve the complete R5 archive plus C19 source/focal/original Analytics, D28 static qualification package and bounded operational observations. Documentary archive only.",
+  "package": {
+    "catalog": {
+      "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+      "bytes": 84274,
+      "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+      "lf": 2778,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+      "bytes": 858704,
+      "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+      "lf": 25416,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5",
+      "bytes": 44360,
+      "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "09f7fbe3fa61a3d23e566fea7b974d5d5b27f1e4",
+      "bytes": 188635,
+      "sha256": "497f62867d66c1c1aa41c34c4964c8da746065d255f3e8c78bda7c223123e447",
+      "lf": 4916,
+      "endsWithLF": true
+    }
+  },
+  "base": {
+    "commit": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+    "objectsTree": "2684a14e7d2ea7c0ed1b4bc9b76aa6592fb6350e"
+  },
+  "calculatedArchive": {
+    "objectsTree": "4c417fe3f2a274a7c9c6d8a0897bbc811a15219c",
+    "rootTree": "768afcf3f8722bf0e3a33f2b21ea803917b18dc4",
+    "actuallyCreated": false,
+    "ownTree": true,
+    "ownFiles": 609,
+    "ownBytes": 64221275,
+    "objects": 607,
+    "objectBytes": 63318211,
+    "newObjects": 72,
+    "newObjectBytes": 6666802,
+    "oldMemberships": 584,
+    "newMemberships": 99,
+    "streams": 54,
+    "additionalPartReferences": 22,
+    "memberships": 683,
+    "groups": 40,
+    "partReferences": 199,
+    "delta": {
+      "addedObjectFiles": 72,
+      "modifiedRootFiles": 2,
+      "removed": 0
+    }
+  },
+  "rootVerification": {
+    "catalogChecks": 11,
+    "priorMetadataChecks": 21,
+    "newBodiesRehashed": 71,
+    "old535BodiesRefetched": false,
+    "bodySource": "Previously literal-readback authenticated Git buffers retained by this root; SHA1/Git header, UTF8 bytes, SHA256, LF and terminal LF recalculated against catalog.",
+    "structuralChecks": 1807,
+    "allStoredChecksPass": true,
+    "derivation": {
+      "operations": 113,
+      "replacements": 64,
+      "fieldAdditions": 22,
+      "arrayAppends": 27,
+      "fieldHashesAuthenticated": true,
+      "orderedOperations": true,
+      "indexForwardLiteral": true,
+      "indexInverseLiteral": true,
+      "readmeForwardLiteral": true,
+      "readmeInverseLiteral": true,
+      "prefixBytes": 11129,
+      "priorReadmeBytes": 33219,
+      "suffixBytes": 12
+    },
+    "streams": [
+      {
+        "id": "C19-focal-main",
+        "partReferences": 1,
+        "pass": true,
+        "bytes": 105958,
+        "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de",
+        "lf": 880,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeActual": true
+      },
+      {
+        "id": "C19-focal-cleanup",
+        "partReferences": 1,
+        "pass": true,
+        "bytes": 2281,
+        "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0",
+        "lf": 39,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeActual": true
+      },
+      {
+        "id": "C19-focal-reports",
+        "partReferences": 1,
+        "pass": true,
+        "bytes": 9251,
+        "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+        "lf": 6,
+        "bomByteOffsets": [],
+        "wholeActual": true
+      },
+      {
+        "id": "C19-analytics-main",
+        "partReferences": 17,
+        "pass": true,
+        "bytes": 4866399,
+        "sha256": "23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a",
+        "lf": 1976,
+        "bomByteOffsets": [
+          0,
+          2104899,
+          4224262
+        ],
+        "wholeActual": false
+      },
+      {
+        "id": "C19-analytics-cleanup",
+        "partReferences": 1,
+        "pass": true,
+        "bytes": 2281,
+        "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+        "lf": 39,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeActual": true
+      },
+      {
+        "id": "C19-analytics-markers",
+        "partReferences": 1,
+        "pass": true,
+        "bytes": 34316,
+        "sha256": "fc2f119f794a473199abbf33dcc4ec5b446a478e258ba4d272ad9ad7686b8cab",
+        "lf": 97,
+        "bomByteOffsets": [],
+        "wholeActual": true
+      }
+    ],
+    "reviewNote": "Catalog streams gain only an exact inputCatalog backlink in the archive index; their other fields are literal. A preliminary whole-object equality expectation was corrected after identifying this intended metadata addition; no source/archive bytes were changed."
+  },
+  "retention": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+      "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+      "role": "previous published evidence archive R5"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "86e365fe047f86597751c7e8222011dca4b0a0af",
+      "tree": "e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2",
+      "role": "executed C19 focal",
+      "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+      "tree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+      "role": "executed original C19 Analytics",
+      "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    }
+  ],
+  "preflight": {
+    "at": "2026-11-28 02:27:07 UTC",
+    "refs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "7685a790349b7a3b9c3e68cfe56b96fd4963b762"
+    },
+    "retentionParentsActualGitRead": true,
+    "expectedRef": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+    "force": false
+  },
+  "independentCatalog": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_INPUT_CATALOG_ONLY",
+    "checks": 20,
+    "catalog": {
+      "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+      "bytes": 84274,
+      "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+      "lf": 2778,
+      "endsWithLF": true
+    },
+    "independentlyExpected": {
+      "objects": 607,
+      "objectBytes": 63318211,
+      "memberships": 683
+    },
+    "prior535BodiesRefetched": false,
+    "preserved17CurrentPartsRecomposed": true,
+    "exclusionsVerified": true,
+    "finalPackageStillPending": true,
+    "originalGets": 0,
+    "zipGets": 0,
+    "at": "2026-11-28 02:20:49 UTC"
+  },
+  "independentFinal": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_COMPLETE_DOCUMENTARY_PROPOSAL_NO_FINDINGS",
+    "checks": {
+      "catalog": 20,
+      "preservationAndMapping": 21,
+      "bindingsAndLimits": 24,
+      "total": 65
+    },
+    "completeIndexDerivationForwardAndInverse": true,
+    "operations": 113,
+    "readmeForwardAndInverse": true,
+    "package": {
+      "catalog": {
+        "gitBlob": "5a51ed2d66b8f442559ef973a07ffa54064d31fc",
+        "bytes": 84274,
+        "sha256": "ce002cfe8c5f05ce1b302f4ee169b8d085c622ac98eb8bc69196628af7368b09",
+        "lf": 2778,
+        "endsWithLF": true
+      },
+      "index": {
+        "gitBlob": "22a2019624df1fa5081fceb4e001630398920e77",
+        "bytes": 858704,
+        "sha256": "bc5452e0710d863e652a0005b353101dfd833a73366e073e5176508046e0ca4f",
+        "lf": 25416,
+        "endsWithLF": true
+      },
+      "readme": {
+        "gitBlob": "6209b3ae82d299dfbd31779f0e2637734e7582e5",
+        "bytes": 44360,
+        "sha256": "24514f83ebc720e9061006e59b20600b098a9f6cd30814e16c85d9a2a03f3b9d",
+        "lf": 369,
+        "endsWithLF": true
+      },
+      "manifest": {
+        "gitBlob": "09f7fbe3fa61a3d23e566fea7b974d5d5b27f1e4",
+        "bytes": 188635,
+        "sha256": "497f62867d66c1c1aa41c34c4964c8da746065d255f3e8c78bda7c223123e447",
+        "lf": 4916,
+        "endsWithLF": true
+      }
+    },
+    "preserved": {
+      "objects": 535,
+      "memberships": 584,
+      "groups": 35,
+      "streams": 48,
+      "partReferences": 177
+    },
+    "result": {
+      "objects": 607,
+      "objectBytes": 63318211,
+      "memberships": 683,
+      "groups": 40,
+      "streams": 54,
+      "partReferences": 199,
+      "ownFiles": 609,
+      "ownBytes": 64221275
+    },
+    "orderedParents": [
+      "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+      "86e365fe047f86597751c7e8222011dca4b0a0af",
+      "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b"
+    ],
+    "qualification": false,
+    "originalGets": 0,
+    "zipGets": 0,
+    "objectsCreated": 0,
+    "at": "2026-11-28 02:28:58 UTC"
+  },
+  "meaning": {
+    "C19Focal": "FOCAL_PASS_ONLY_15_TESTS_2103_ASSERTIONS",
+    "C19Analytics": "CLOSED_NEGATIVE_FIRST_PREVIEW_TIMEOUT_BI_PASS",
+    "areas": "12_OF15_HISTORICAL_ZERO_NEW",
+    "D28": "STATIC_ONLY_FOUR_BINDINGS_UNBOUND",
+    "finalC613": null,
+    "finalTar": null,
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "All prior535 objects retain exact metadata and old ordered584 memberships. Old35 groups,48 streams and177 part references remain intact; reused objects only append memberships.",
+    "Main Analytics whole hash d5dacd1e is calculated only; real17parts are retained. UI6 calculated request, rejected access draft and E14 objects are not archive object entries.",
+    "The operational cut preserves prior host authorization and records unconfirmed reservations/route at the observed cut; it does not claim global VM outage.",
+    "Current root, index, README and package manifest do not claim to be final product source, current production tar, qualification of G08/G10 or approval to cut over.",
+    "The publication step must verify actual tree hashes, parent order, expected ref and post-update refs. No original Actions log or ZIP acquisition or repository execution is requested."
+  ],
+  "finalizedAt": "2026-11-28 02:28:58 UTC"
+}

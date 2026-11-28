@@ -1,0 +1,135 @@
+{
+  "schema": "sf613-e14-focal-object-receipt-v1",
+  "status": "IMMUTABLE_FOCAL_OBJECT_VERIFIED_NO_ACTIVATION",
+  "commit": "8c4ec5ef2aec5b76ada0730d9ac4a94eb37b43d4",
+  "tree": "934f7bab75f8ee4638cf9042db94dd9b954e1fd3",
+  "soleParent": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+  "sourceTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+  "cleanParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+  "manifest": {
+    "gitBlob": "a2e64e7a5afa4844662a68bd864fc9e0aedebb05",
+    "bytes": 30531,
+    "sha256": "fa154b373e436296e382ec19cedd6e3ea455cc0665267f58012190ee40ab1bbf",
+    "lf": 757,
+    "endsWithLF": true
+  },
+  "sourceBinding": {
+    "gitBlob": "6373a82d9a4fba239a6b4fbdd336e919e88c1892",
+    "bytes": 10820,
+    "sha256": "346904d265142d75edf170f0965c7bcccfe4fe779fd13d230c20c3d1c1b9c334",
+    "lf": 355,
+    "endsWithLF": true
+  },
+  "sourceObjectReceipt": {
+    "gitBlob": "98bf24ec513b66c14ca7d5173a75d19b8c29ca29",
+    "bytes": 3663,
+    "sha256": "8d997c302a7ce754df7cc8cb7b4bb05bc6955e9a3da5b87715c07691d84f3c36",
+    "lf": 115,
+    "endsWithLF": true
+  },
+  "wrapper": {
+    "gitBlob": "27907f5bd4cb72866380222f1e1af96336bc1932",
+    "bytes": 14063,
+    "sha256": "6b7adb12d7545b8487929cc34c7495dceefb893d1c424e835223c02631b813f2",
+    "lf": 205,
+    "endsWithLF": true
+  },
+  "audit": {
+    "complete": true,
+    "pairs": 5,
+    "literalSiblings": 149,
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "kind": "M",
+        "before": {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "size": 295,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+        },
+        "after": {
+          "path": ".ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+          "size": 247,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4a7b64a8392138f1b79d386557e48ac4453617f5"
+        }
+      },
+      {
+        "path": "apps/cli/test/fixture/sf613-preview-e14-observation.ts",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sf613-preview-e14-observation.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "542861d14c872c679ab1f41a9ed88d26a8085426",
+          "size": 47926,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/542861d14c872c679ab1f41a9ed88d26a8085426"
+        }
+      },
+      {
+        "path": "apps/cli/test/sf613-preview-e14-observation.test.ts",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sf613-preview-e14-observation.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "2e6cc75ca3a99ee2a38ad2924240d87fa25b3066",
+          "size": 1123,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/2e6cc75ca3a99ee2a38ad2924240d87fa25b3066"
+        }
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "kind": "A",
+        "before": null,
+        "after": {
+          "path": "sucafina-proof-verification.test.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "27907f5bd4cb72866380222f1e1af96336bc1932",
+          "size": 14063,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/27907f5bd4cb72866380222f1e1af96336bc1932"
+        }
+      }
+    ]
+  },
+  "rootManifestChecks": {
+    "checkedPins": [
+      "sourcePackage.manifest",
+      "sourcePackage.bounds",
+      "sourcePackage.derivation",
+      "sourcePackage.fullDiff",
+      "sourcePackage.helper",
+      "supports.controlDerivation",
+      "supports.controlFullAdditionsDiff",
+      "supports.controlHistoricalReuseDiff",
+      "supports.controlR1ToR2Diff",
+      "supports.wrapperDerivation",
+      "supports.wrapperCarrierDiff",
+      "supports.focalFullOverlayDiff",
+      "supports.bounds",
+      "artifact 0",
+      "artifact 1",
+      "artifact 2",
+      "artifact 3"
+    ],
+    "sourceObjects": true,
+    "fullTextRead": true,
+    "peerFinalManifestAck": true,
+    "at": {
+      "current_time": "2026-11-28 03:14:03 UTC"
+    }
+  },
+  "activation": false,
+  "run": false,
+  "at": {
+    "current_time": "2026-11-28 03:14:18 UTC"
+  }
+}

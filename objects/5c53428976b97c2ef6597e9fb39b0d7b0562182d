@@ -1,0 +1,61 @@
+{
+  "schema": "sf613-e14-reader-r2-r3-correction-v1",
+  "status": "STATIC_PROPOSAL_NO_EXECUTION",
+  "reason": "Reported zero open counters do not replace the close of observed entries. A reentrant Request terminal may suppress a unit-close after detach.",
+  "python": {
+    "preimage": {
+      "gitSha": "e13c6ae230881651f2a1ee46ff731fef2f7c2a7d",
+      "bytes": 89285,
+      "sha256": "77c50d921285d21456f5e452ee8c1530adca2927a5521f694f2600d22588591c",
+      "lf": 1303
+    },
+    "postimage": {
+      "gitSha": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+      "bytes": 89383,
+      "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+      "lf": 1304
+    },
+    "operations": [
+      {
+        "label": "Coverage needs explicit closes for every observed unit and phase entry",
+        "before": "            and not any(terminal[\"faultsBefore\"]) and not terminal[\"saturated\"]\n            and not any(row[\"kind\"] == \"overflow\" for row in rows),\n",
+        "after": "            and not any(terminal[\"faultsBefore\"]) and not terminal[\"saturated\"]\n            and not (set(unit_entries) - unit_closes) and not (set(phase_entries) - phase_closes)\n            and not any(row[\"kind\"] == \"overflow\" for row in rows),\n"
+      }
+    ]
+  },
+  "yaml": {
+    "preimage": {
+      "gitSha": "6dfe4c09dcbd3ea95d8a55a433d2946b9b2dc798",
+      "bytes": 106927,
+      "sha256": "76201a005efb4976a1e13c0de98f99d88e72f9d407cc237a430ebeaf2c80e92f",
+      "lf": 1358
+    },
+    "postimage": {
+      "gitSha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "lf": 1359
+    },
+    "operations": [
+      {
+        "label": "Bootstrap Python R3 digest",
+        "before": "77c50d921285d21456f5e452ee8c1530adca2927a5521f694f2600d22588591c",
+        "after": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb"
+      },
+      {
+        "label": "Embedded coverage requirement",
+        "before": "                        and not any(terminal[\"faultsBefore\"]) and not terminal[\"saturated\"]\n                        and not any(row[\"kind\"] == \"overflow\" for row in rows),\n",
+        "after": "                        and not any(terminal[\"faultsBefore\"]) and not terminal[\"saturated\"]\n                        and not (set(unit_entries) - unit_closes) and not (set(phase_entries) - phase_closes)\n                        and not any(row[\"kind\"] == \"overflow\" for row in rows),\n"
+      }
+    ]
+  },
+  "limits": [
+    "RequestBoundaryObserved is unchanged.",
+    "No missing close is fabricated or interpreted as current server state.",
+    "Original ZIP remains unacquired."
+  ],
+  "verification": {
+    "forwardExact": true,
+    "inverseExact": true
+  }
+}

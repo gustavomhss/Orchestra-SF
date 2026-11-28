@@ -1,0 +1,140 @@
+{
+  "schema": "sf613-e14-reader-single-activation-authority-v1",
+  "status": "AUTHORIZED_ONCE_PENDING_ACTIVATION",
+  "at": {
+    "current_time": "2026-11-28 04:44:25 UTC"
+  },
+  "operator": "/root",
+  "basis": "User mandate to finish #613 using GitHub and authorized Linux Actions; diagnostics and CI only; explicit production cutover approval absent.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf613-artifact-e14event",
+  "commit": "64af705904c2ca5b61a6837560f005718ee122d3",
+  "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+  "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+  "workflow": {
+    "gitBlob": "eb5b6ee1388c2bd9536106f308d7888808133988",
+    "bytes": 107037,
+    "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+    "lf": 1359,
+    "endsWithLF": true
+  },
+  "python": {
+    "gitBlob": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+    "bytes": 89383,
+    "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+    "lf": 1304,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "d283188d13f993843119cd5017014e69c9334201",
+    "bytes": 19946,
+    "sha256": "b95b4850c2ff84f582449106a19c8f12150022fa40722bcad7bf233da97756e2",
+    "lf": 558,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "78992ee565ace0f713cc530a85c73cba7b5892bb",
+    "bytes": 15875,
+    "sha256": "bb98c245adf762a643f141e3403764c1601cd84dbd38cfd648a870198647ff91",
+    "lf": 433,
+    "endsWithLF": true
+  },
+  "rootReview": {
+    "gitBlob": "7f3d57c93eb8ceee179208a45989bebca789ba50",
+    "bytes": 24138,
+    "sha256": "73702622a69da3ade428c86b449c04141b7ab50674dc10ae2eac1b679e1aba31",
+    "lf": 531,
+    "endsWithLF": true
+  },
+  "peerReview": {
+    "gitBlob": "2451b08fffee6b365b1c6bcb62a5ae73a81c317d",
+    "bytes": 16216,
+    "sha256": "13be6be53abc00ff1debdbe75402d7d25cb6fb5387c80ef5e8c0e4ef7dceddf4",
+    "lf": 413,
+    "endsWithLF": true
+  },
+  "objectReceipt": {
+    "gitBlob": "b7235555932265cbdeac136f37111036c19b8281",
+    "bytes": 4865,
+    "sha256": "026e55e9f99129518496f42c49fc7794f2a7572e823463f6d18bf4bb40864f73",
+    "lf": 167,
+    "endsWithLF": true
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-28 04:43:40 UTC"
+    },
+    "matchingRefs": [],
+    "totalRuns": 0,
+    "artifact": {
+      "id": 15246707437,
+      "node_id": "MDg6QXJ0aWZhY3QxNTI0NjcwNzQzNw==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 45863814,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15246707437",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15246707437/zip",
+      "expired": false,
+      "digest": "sha256:e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+      "created_at": "2026-11-28T03:40:56Z",
+      "updated_at": "2026-11-28T03:40:56Z",
+      "expires_at": "2026-12-05T03:40:54Z",
+      "workflow_run": {
+        "id": 46103050850,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613e14a",
+        "head_sha": "38255d2d11cfdff4214803b4606dd3fd7e83869f"
+      }
+    },
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+  },
+  "authorized": {
+    "newRefCreates": 1,
+    "workflowRuns": 1,
+    "runAttempt": 1,
+    "originalArtifactEndpointRequests": 1,
+    "originalArtifactBodies": 1,
+    "archiveId": 15246707437,
+    "archiveBytes": 45863814,
+    "archiveSha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+    "newReaderJobOriginalAcquisitions": 1,
+    "jobReceiver": "/root after terminal identity; full decoded text preservation before parsing",
+    "fourExactSelectedContents": [
+      {
+        "key": "events",
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/preview-events.jsonl",
+        "maximumBytes": 64512
+      },
+      {
+        "key": "launcher",
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/launcher.json",
+        "maximumBytes": 8192
+      },
+      {
+        "key": "runtime",
+        "path": "test-ci-evidence/playwright-runtime.json",
+        "maximumBytes": 33554432
+      },
+      {
+        "key": "selection",
+        "path": "test-ci-evidence/playwright-selection.json",
+        "maximumBytes": 33554432
+      }
+    ]
+  },
+  "forbidden": {
+    "rerun": true,
+    "retryOrResume": true,
+    "oldOriginalLogOrZipAcquisition": true,
+    "auditZipAcquisition": true,
+    "repositoryCodeImportOrExecutionByReader": true,
+    "additionalSelectedContents": true,
+    "productionCutover": true
+  },
+  "outputMeaning": "Byte transport and evidence consistency/coverage classifications only. No product qualification.",
+  "branchCleanup": "After terminal receipt, root may delete this exact disposable branch after expected head verification.",
+  "remainingClaims": {
+    "uiNewAreas": 0,
+    "productionApproved": false
+  }
+}

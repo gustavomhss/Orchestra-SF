@@ -1,0 +1,99 @@
+{
+  "schema": "sf613-e14-reader-activation-and-terminal-context-v1",
+  "status": "TERMINAL_READY_FOR_SINGLE_ORIGINAL",
+  "at": {
+    "current_time": "2026-11-28 04:45:42 UTC"
+  },
+  "authority": {
+    "gitBlob": "afda4ac5080ca79564b9ed30eaa354f6a6a5bb4b",
+    "bytes": 4898,
+    "sha256": "de7fe2da5cecd8d849f8275ea7a94581a175cd828bee401781970ccffb5f713a",
+    "lf": 140,
+    "endsWithLF": true
+  },
+  "rootReview": {
+    "gitBlob": "7f3d57c93eb8ceee179208a45989bebca789ba50",
+    "bytes": 24138,
+    "sha256": "73702622a69da3ade428c86b449c04141b7ab50674dc10ae2eac1b679e1aba31",
+    "lf": 531,
+    "endsWithLF": true
+  },
+  "peerReview": {
+    "gitBlob": "2451b08fffee6b365b1c6bcb62a5ae73a81c317d",
+    "bytes": 16216,
+    "sha256": "13be6be53abc00ff1debdbe75402d7d25cb6fb5387c80ef5e8c0e4ef7dceddf4",
+    "lf": 413,
+    "endsWithLF": true
+  },
+  "ref": {
+    "ref": "refs/heads/sf613-artifact-e14event",
+    "node_id": "REF_kwDOVsSYptoAInJlZnMvaGVhZHMvc2Y2MTMtYXJ0aWZhY3QtZTE0ZXZlbnQ",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-artifact-e14event",
+    "object": {
+      "sha": "64af705904c2ca5b61a6837560f005718ee122d3",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/64af705904c2ca5b61a6837560f005718ee122d3"
+    }
+  },
+  "run": {
+    "id": 46108929460,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46108929460",
+    "attempt": 1,
+    "head": "64af705904c2ca5b61a6837560f005718ee122d3",
+    "tree": "9ffa31bcfc721c0000f562def2765f9d4a0f575a",
+    "branch": "sf613-artifact-e14event",
+    "event": "push",
+    "path": ".github/workflows/sf613-artifact-read.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "created": "2026-11-28T04:44:28Z",
+    "updated": "2026-11-28T04:44:50Z",
+    "started": "2026-11-28T04:44:28Z"
+  },
+  "job": {
+    "id": 140867878284,
+    "name": "original-artifact",
+    "status": "completed",
+    "conclusion": "success",
+    "started": "2026-11-28T04:44:30Z",
+    "completed": "2026-11-28T04:44:50Z",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-28T04:44:31Z",
+        "completed_at": "2026-11-28T04:44:33Z"
+      },
+      {
+        "name": "Verify original immutable artifact without checkout",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-28T04:44:33Z",
+        "completed_at": "2026-11-28T04:44:44Z"
+      },
+      {
+        "name": "Preserve original bytes and receipt",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-28T04:44:44Z",
+        "completed_at": "2026-11-28T04:44:48Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-28T04:44:48Z",
+        "completed_at": "2026-11-28T04:44:48Z"
+      }
+    ]
+  },
+  "artifacts": "Audit metadata may be read; audit ZIP acquisition forbidden",
+  "originalGetsAtContext": 0,
+  "productQualification": false,
+  "productionAuthorized": false
+}

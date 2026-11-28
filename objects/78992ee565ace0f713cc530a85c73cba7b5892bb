@@ -1,0 +1,433 @@
+{
+  "schema": "sf613-e14-reader-bounds-v1",
+  "status": "PROPOSED_STATIC_BOUNDS_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "code": {
+    "python": {
+      "gitSha": "6b4422b6437f0bcaa355d47dec7c99e90a2c7416",
+      "bytes": 89383,
+      "sha256": "2a066de15f19591c286ebe9f8be70649b488e1f76c6ee378eebf7a66b33aedfb",
+      "lf": 1304
+    },
+    "workflow": {
+      "gitSha": "eb5b6ee1388c2bd9536106f308d7888808133988",
+      "bytes": 107037,
+      "sha256": "487e79c53c0dd6e480123275ab7aa891c1dfa2a3eba0b8f1d1ecd0ee23ade29b",
+      "lf": 1359
+    }
+  },
+  "authority": {
+    "allowed": "Create/readback proposed blobs and own JavaScript data derivations only",
+    "notPerformed": [
+      "ZIP/log acquisition",
+      "reader or repository execution",
+      "workflow run",
+      "tree or commit creation",
+      "ref mutation",
+      "audit ZIP acquisition"
+    ],
+    "operator": "root alone after independent review and separate concrete authority"
+  },
+  "immutableTarget": {
+    "run": 46103050850,
+    "attempt": 1,
+    "mainJob": 140849610421,
+    "mainConclusion": "failure",
+    "cleanupJob": 140852594308,
+    "cleanupConclusion": "success",
+    "snapshot": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "snapshotTree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "cleanSource": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "cleanTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "artifact": {
+      "id": 15246707437,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45863814,
+      "sha256": "e168cfce09dba8770f996ade13fdc997ac40ba7341a1b0eee3cafef77a96a936",
+      "acquired": false
+    }
+  },
+  "inputBounds": {
+    "api": {
+      "perResponseBytes": 16777216,
+      "requestTimeoutSeconds": 45,
+      "pagesPerCollection": 20,
+      "rowsPerPage": 100,
+      "maxCollectionRows": 2000,
+      "authorizedOrigin": "https://api.github.com",
+      "bearerOnlyOnApi": true
+    },
+    "artifact": {
+      "acquisitions": 1,
+      "retries": 0,
+      "resume": false,
+      "apiZipEndpointRequests": 1,
+      "signedStorageRedirectsMaximum": 3,
+      "storageRequestTimeoutSeconds": 120,
+      "streamBlockBytes": 1048576,
+      "capAndDigestBeforeZipOpen": true,
+      "preservedZipRecheckedBeforeZipFile": true,
+      "signedStorageHasNoTokenCookieOrReferer": true,
+      "storageHostSuffixes": [
+        ".blob.core.windows.net",
+        ".githubusercontent.com",
+        ".amazonaws.com"
+      ],
+      "entireOriginalPreservedBeforeParse": true
+    },
+    "zip": {
+      "archives": 1,
+      "entries": 20000,
+      "pathUtf8Bytes": 4096,
+      "componentUtf8Bytes": 255,
+      "entryDeclaredBytes": 134217728,
+      "declaredExpandedBytes": 1073741824,
+      "allowedCompression": [
+        "stored",
+        "deflated"
+      ],
+      "encryptedAllowed": false,
+      "specialFilesAllowed": false,
+      "duplicateNormalizedPathsAllowed": false,
+      "unselectedContentOpens": 0,
+      "nestedArchiveOpens": 0,
+      "selectedCrcOnly": true,
+      "allEntriesCrcVerified": false
+    },
+    "selected": [
+      {
+        "key": "events",
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/preview-events.jsonl",
+        "maximumBytes": 64512
+      },
+      {
+        "key": "launcher",
+        "path": "test-ci-evidence/sf613-e14-event-QBamrL/launcher.json",
+        "maximumBytes": 8192
+      },
+      {
+        "key": "runtime",
+        "path": "test-ci-evidence/playwright-runtime.json",
+        "maximumBytes": 33554432
+      },
+      {
+        "key": "selection",
+        "path": "test-ci-evidence/playwright-selection.json",
+        "maximumBytes": 33554432
+      }
+    ],
+    "selectedMaximumExpandedBytes": 67181568,
+    "selectedFormula": "64512 + 8192 + 33554432 + 33554432 = 67181568",
+    "parser": {
+      "reportSuiteVisits": 10000,
+      "reportDepth": 32,
+      "tests": 2,
+      "resultsPerTest": 1,
+      "retry": 0,
+      "parallelIndex": 0,
+      "workers": 1,
+      "repeatEach": 1,
+      "stdioChunksPerStream": 100000,
+      "stdioConcatenationBytesPerStream": 33554432,
+      "errorsPerCase": 32,
+      "evidenceIssues": 256,
+      "E14CompleteRecordsParsedPerStream": 63,
+      "E14LineBytes": 1024,
+      "E14NativeStreamBytes": 64512,
+      "E14RuntimeCombinedExportBytes": 65536,
+      "E14RuntimeCombinedRecordsIncludingTails": 64,
+      "mode": "Concatenate bytes per case/result/stream before strict UTF-8. Split only literal LF; remove only initial ANSI CSI; do not add LF or strip CR/Unicode separators."
+    },
+    "outputCapFailure": "Declared/runtime caps are enforced. A cap failure is a bounded failed receipt, never retry or permission to inspect another path."
+  },
+  "producerVersusReader": {
+    "selectedNativeStream": {
+      "rows": 63,
+      "bytes": 64512,
+      "lineBytes": 1024
+    },
+    "originalTwoJourneyAggregate": {
+      "eventsOrDisabledRows": 64,
+      "eventsOrDisabledBytes": 65536,
+      "launcherJsonPreparationFilesExcluded": true
+    },
+    "unusedBiDirectory": "A prepared BI launcher without events is permissible metadata. The reader never searches it for a replacement Request or opens its contents.",
+    "selectedRequest": {
+      "nonce": "sf613-e14-event-QBamrL",
+      "pid": 3974,
+      "parentPid": 3924,
+      "request": 1
+    },
+    "selectedFileCrcMeaning": "Only extracted allowlisted members have local-header/content/CRC checks; all other entries remain central-directory metadata only."
+  },
+  "boundMainPrefix": {
+    "locator": {
+      "gitSha": "775e26c6e30fb481a480f2425b5e42fa9eab83f8",
+      "bytes": 11961,
+      "sha256": "bedef5eef9108f90f98ec25a3902dd5166e4db9f8fcb19644f935fe3757d4307",
+      "lf": 21
+    },
+    "records": 21,
+    "maxActualLineBytes": 654,
+    "sequence": [
+      1,
+      21
+    ],
+    "terminalReceived": false,
+    "overflowReceived": false,
+    "embeddedBase64Bytes": 15948,
+    "validatesBeforeDownload": true,
+    "sameFunctions": [
+      "validate_e14_event",
+      "parse_event_stream"
+    ],
+    "lastKind": "phase-enter",
+    "lastPoint": "analysis-persist",
+    "lastElapsedTenthMs": 349739,
+    "caution": "This prefix is current received evidence, not a synthetic positive file or proof of what remained pending at the timeout."
+  },
+  "exportBounds": {
+    "formula": "64512 + 8192 + 65536 + 131072 + 262144 + 131072 = 662528",
+    "rows": [
+      {
+        "key": "events",
+        "name": "original-preview-events.jsonl",
+        "bytes": 64512,
+        "mime": "application/octet-stream",
+        "original": true,
+        "base64Bytes": 86016,
+        "chunks": 4,
+        "maximumIndexEmptyFrameBytes": 277,
+        "emptyFrameHash": "018b18e3984bfec6b8c6ef50ebebb54a953317b4d1736a3480c104e524ae096c",
+        "modeledMetadata": {
+          "name": "original-preview-events.jsonl",
+          "bytes": 64512,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/octet-stream",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 4,
+          "file": 19999
+        }
+      },
+      {
+        "key": "launcher",
+        "name": "original-e14-launcher.json",
+        "bytes": 8192,
+        "mime": "application/octet-stream",
+        "original": true,
+        "base64Bytes": 10924,
+        "chunks": 1,
+        "maximumIndexEmptyFrameBytes": 273,
+        "emptyFrameHash": "3600e583ca13b8e2d12e8b4b838a39c53202a0e796b814f7f5f1ba7dfb3c07dc",
+        "modeledMetadata": {
+          "name": "original-e14-launcher.json",
+          "bytes": 8192,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/octet-stream",
+          "original": true,
+          "encoding": "base64",
+          "chunks": 1,
+          "file": 19999
+        }
+      },
+      {
+        "key": "runtimeEvents",
+        "name": "runtime-e14-events.log",
+        "bytes": 65536,
+        "mime": "application/octet-stream",
+        "original": false,
+        "base64Bytes": 87384,
+        "chunks": 4,
+        "maximumIndexEmptyFrameBytes": 258,
+        "emptyFrameHash": "814425708a475bd72597b3863f4b24c5f1d10499856a0e03ea829bc04f53a390",
+        "modeledMetadata": {
+          "name": "runtime-e14-events.log",
+          "bytes": 65536,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/octet-stream",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 4
+        }
+      },
+      {
+        "key": "summary",
+        "name": "safe-summary.json",
+        "bytes": 131072,
+        "mime": "application/json",
+        "original": false,
+        "base64Bytes": 174764,
+        "chunks": 8,
+        "maximumIndexEmptyFrameBytes": 246,
+        "emptyFrameHash": "3540a37342a6cbc352ebd881b6bf2711b8f39896a4daede9dc0bcbd60e79917e",
+        "modeledMetadata": {
+          "name": "safe-summary.json",
+          "bytes": 131072,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 8
+        }
+      },
+      {
+        "key": "inventory",
+        "name": "inventory.json",
+        "bytes": 262144,
+        "mime": "application/json",
+        "original": false,
+        "base64Bytes": 349528,
+        "chunks": 15,
+        "maximumIndexEmptyFrameBytes": 245,
+        "emptyFrameHash": "f149a7b3a32c17acea60b395b2c34ab1a59548d5ff778b13eeeb2eb516950bb8",
+        "modeledMetadata": {
+          "name": "inventory.json",
+          "bytes": 262144,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 15
+        }
+      },
+      {
+        "key": "receipt",
+        "name": "receipt.json",
+        "bytes": 131072,
+        "mime": "application/json",
+        "original": false,
+        "base64Bytes": 174764,
+        "chunks": 8,
+        "maximumIndexEmptyFrameBytes": 241,
+        "emptyFrameHash": "48015d2426cd59b4bad9296f9052cfd20f327020a08c3d6710befb502f0c8eb6",
+        "modeledMetadata": {
+          "name": "receipt.json",
+          "bytes": 131072,
+          "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "mime": "application/json",
+          "original": false,
+          "encoding": "base64",
+          "chunks": 8
+        }
+      }
+    ],
+    "maximumRawPayloadBytes": 662528,
+    "base64Formula": "86016 + 10924 + 87384 + 174764 + 349528 + 174764 = 883380",
+    "maximumBase64Bytes": 883380,
+    "maximumChunks": 40,
+    "chunkDataCharacters": 24576,
+    "perChunkEmptyEnvelopeIncludingPrefixLfCap": 1024,
+    "conservativeMetadataBytes": 40960,
+    "terminalLineCap": 32768,
+    "logBytesBeforeCoreInSuccessPath": 0,
+    "maximumSuccessfulEmitterBytes": 957108,
+    "maximumSuccessfulEmitterFormula": "883380 + 40 * 1024 + 32768 = 957108",
+    "emitterCapBytes": 7340032,
+    "wholeMainReceiverCapBytes": 8388608,
+    "maximumSuccessLines": 41,
+    "emitterMarginBytes": 6382924,
+    "minimumExportCount": 3,
+    "maximumExportCount": 6,
+    "missingOriginal": "No fabricated zero-byte original export. An actual empty original gets exactly one empty base64 chunk with actual inventory binding.",
+    "emptyRuntimeDerived": "No export for empty derived runtime union; absence is explicit in parser state.",
+    "reportRawExport": false,
+    "reportRawPreserved": true,
+    "modelNature": "Own JavaScript data model and arithmetic, not execution of the Python reader, repository or a hypothetical acquisition. Per-file base64 padding is counted independently."
+  },
+  "evidenceStates": {
+    "bytesTransport": "Only every listed payload/chunk/hash plus success terminal and successful job establish complete bounded transport.",
+    "consistency": "Requires validated launcher/runtime membership, format validity and contiguous sequences from1 in main/file/runtime, and no different bytes for a shared sequence. Unequal compatible prefixes are classified, not forced equal.",
+    "gaps": "A literal [1,3] subsequence carries missingSequencesInObservedRange=[2], sequenceState=GAPPED and cannot receive consistency acceptance.",
+    "tail": "20 LF records plus an unclosed21st record remains20complete + literal tail; no LF is fabricated and no format/consistency ACK is granted.",
+    "coverage": "RequestBoundaryObserved is separate. coverageComplete additionally requires zero reported open/drop/untracked/fault counters, no saturation/overflow and explicit closes for every observed unit/phase entry.",
+    "reentrant": "A valid Request terminal can coexist with a suppressed observed unit-close; RequestBoundaryObserved may be true while coverageComplete remainsfalse.",
+    "nonLfOrMalformed": "Original bytes still export exactly if within selected caps. Parse/presence/contradiction state does not erase or repair them.",
+    "missingClose": "No observed terminal means prefix only, not phase still open at60s, lock/starvation, database duration or product failure cause.",
+    "counters": "Compare body exits are not Promise settlement. Stage and lineage axes remain separate; no conservation, timing exclusivity or sample-derived gain.",
+    "clocks": "Native monotonic tenths-ms, launcher createdUtcMs, Playwright start/duration and Actions times stay separate."
+  },
+  "lifecycle": {
+    "workflow": ".github/workflows/sf613-artifact-read.yml",
+    "branch": "sf613-artifact-e14event",
+    "trigger": "push to this single exact branch",
+    "notCiRunBranch": true,
+    "workflowTimeoutMinutes": 20,
+    "attempt": 1,
+    "concurrencyCancelInProgress": false,
+    "permissions": {
+      "contents": "read",
+      "actions": "read"
+    },
+    "checkout": false,
+    "subprocesses": false,
+    "repositoryImportsOrExecution": false,
+    "bootstrap": "Literal reviewed SHA256-checked embedded Python; exclusive script outside workspace; exec in same Python process.",
+    "upload": {
+      "always": true,
+      "action": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "days": 7,
+      "includeHiddenFiles": true,
+      "auditArchiveAcquired": false
+    },
+    "originalLogAcquisitions": 0,
+    "omniClaim": false,
+    "failures": "Bounded error codes/type only; never error text/traceback or signed location; a reporting failure never retries acquisition."
+  },
+  "lineLocators": [
+    {
+      "pattern": "def check_original_and_reader",
+      "line": 222
+    },
+    {
+      "pattern": "def download_original",
+      "line": 355
+    },
+    {
+      "pattern": "def inspect_zip",
+      "line": 419
+    },
+    {
+      "pattern": "with source.open",
+      "line": 488
+    },
+    {
+      "pattern": "def marker_stream",
+      "line": 625
+    },
+    {
+      "pattern": "def validate_e14_event",
+      "line": 745
+    },
+    {
+      "pattern": "def parse_event_stream",
+      "line": 840
+    },
+    {
+      "pattern": "def preflight_main_prefix",
+      "line": 989
+    },
+    {
+      "pattern": "def finalize_core",
+      "line": 1134
+    },
+    {
+      "pattern": "def main():",
+      "line": 1268
+    },
+    {
+      "pattern": "main_prefix = preflight_main_prefix()",
+      "line": 1271
+    },
+    {
+      "pattern": "    download_original()",
+      "line": 1273
+    }
+  ],
+  "limitations": [
+    "No new test/probe/run was performed.",
+    "Static review and data models do not establish ZIP membership, CRC, file completion, runtime correlation or successful CI.",
+    "The artifact size/digest and current main prefix are immutable intake targets, not evidence that any inner file has already been read.",
+    "Partial file writes/fsync/close can leave shorter bytes than stdout; stdout failures can leave the file longer. Their outcomes are classified from received data only."
+  ]
+}

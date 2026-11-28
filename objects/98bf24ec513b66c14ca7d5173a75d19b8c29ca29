@@ -1,0 +1,115 @@
+{
+  "schema": "sf613-e14-source-object-receipt-v1",
+  "status": "IMMUTABLE_DIAGNOSTIC_SOURCE_CREATED_NOT_ACTIVATED",
+  "source": {
+    "commit": "38255d2d11cfdff4214803b4606dd3fd7e83869f",
+    "tree": "7a63ef33cec01383bee1aa7c8ab37b188c957f3b",
+    "parents": [
+      "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+    ]
+  },
+  "cleanParent": {
+    "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+  },
+  "review": {
+    "gitBlob": "21d3f3f249f4416931e90e437d70a7ee00ebb9e3",
+    "bytes": 22485,
+    "sha256": "3cdddaa78c26ecae31ff1410df55a49aa07013ff4b635524b6ae6a575ed96376",
+    "lf": 651,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "gitBlob": "f0bdf33365f1d6626766e670f338430009ca3b7f",
+    "bytes": 161752,
+    "sha256": "2e89b74055c5af78f3e0a30240a8d377c6222e4c6472b0644e0cf2f52daca2f6",
+    "lf": 922,
+    "endsWithLF": true
+  },
+  "diff": {
+    "gitBlob": "ba97e0d4b6c90bfc0f90793ca2bb2ce3ead79d8c",
+    "bytes": 122225,
+    "sha256": "002ef0a3fabd6d7de949a11c1df47056ca4dd43823a2c7fb4bf600612afb04c3",
+    "lf": 1278,
+    "endsWithLF": true
+  },
+  "tree": {
+    "binaryCalculationMatched": true,
+    "complete": true,
+    "pairs": 19,
+    "literalSiblings": 612,
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "kind": "A",
+        "before": null,
+        "after": "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "kind": "M",
+        "before": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "after": "d5cb9fff2fc1a725250f9710449f9d13f3a942c7"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "kind": "M",
+        "before": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "after": "4dce572e3fdace2042ae3c9a1102606b300f6d8d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "kind": "M",
+        "before": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "after": "03859dbbf10fd6ca551f987736e445d2ff8b3431"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "kind": "M",
+        "before": "47c4388c34c21c7294b0ffc34e4adcbe65b138de",
+        "after": "4b1d4578d558456772ab04e05e33d13231ca7502"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "kind": "M",
+        "before": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "after": "094f788a27d01b91d6601333a4e8f99ac40db556"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "kind": "M",
+        "before": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+        "after": "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts",
+        "kind": "A",
+        "before": null,
+        "after": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "kind": "M",
+        "before": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "after": "a9fb4f79968e3c753424f01534b1f7b5e61895fe"
+      }
+    ]
+  },
+  "codeObjectCreation": {
+    "treesCreatedViaOneRootRequest": true,
+    "commitReadback": true,
+    "sourceSoleParentVerified": true
+  },
+  "effects": {
+    "branches": 0,
+    "runs": 0,
+    "merges": 0,
+    "productionCutover": false,
+    "originalLogGets": 0,
+    "zipGets": 0
+  },
+  "qualification": false,
+  "at": {
+    "current_time": "2026-11-28 03:02:43 UTC"
+  }
+}
