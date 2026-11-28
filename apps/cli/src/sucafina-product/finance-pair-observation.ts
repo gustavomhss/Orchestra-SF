@@ -1,3 +1,4 @@
+import { markSfE16Finance } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -42,6 +43,7 @@ export function createSfFinancePairObservation(input: {
 
   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const e16Finance = markSfE16Finance("entered")
     try {
       if (!root.allows(call)) return unavailable()
       const host = input.host, persistence = host.persistence
@@ -49,9 +51,9 @@ export function createSfFinancePairObservation(input: {
       if (call.kind !== "ui" || !parsed.ok || (parsed.value.criteria.length > 0 && !input.criteria) || parsed.value.scenarioRefs.length !== 2 ||
         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
         digestSfValue(parsed.value) !== digestSfValue(incoming) ||
-        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
+        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return (markSfE16Finance("fallback-before-root", e16Finance), await work())
       const selection = input.selectedScope(call)
-      if (!selection) return await work()
+      if (!selection) return (markSfE16Finance("fallback-no-selection", e16Finance), await work())
       const request = host.requestFor(call)
       if (!request || request.signal.aborted || !selection.current()) return unavailable()
 
@@ -130,16 +132,16 @@ export function createSfFinancePairObservation(input: {
         rulesDigest = digestSfValue(rules)
         return true
       }, current)
-      if (!prepared) return unavailable()
+      if (!prepared) return (markSfE16Finance("prepare-refused", e16Finance), unavailable())
       // Missing rules retain the original comparator's unknown outcome. This
       // branch runs before any comparison and opens no owned read root.
-      if (unsupportedCriteria) return prepared.run(work)
+      if (unsupportedCriteria) return (markSfE16Finance("unsupported-criteria", e16Finance), prepared.run(work))
       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
         kind: "observed"; witness: string; result: PortResult<Value>
       }>> => {
         const before = await witness()
-        if (!before) return unavailable()
-        if (before.kind === "unsupported") return { status: "ok", value: unsupported }
+        if (!before) return (markSfE16Finance("witness-refused", e16Finance), unavailable())
+        if (before.kind === "unsupported") return (markSfE16Finance("witness-unsupported", e16Finance), { status: "ok", value: unsupported })
         // A hit reuses a completed terminal fact with its original timestamp.
         // The owner and bytes remain current; authorization is observed anew.
         const authorizeRecords = async () => {
@@ -151,15 +153,16 @@ export function createSfFinancePairObservation(input: {
             await host.revalidate(call) && current()
         }
         const result = observeRecords && before.records
-          ? await observeRecords(before.records.refs, call, root.proof(call), authorizeRecords, current, work)
-          : await work()
+          ? await (markSfE16Finance("owned-records", e16Finance), observeRecords(before.records.refs, call, root.proof(call), authorizeRecords, current, work))
+          : await (markSfE16Finance("owned-direct", e16Finance), work())
+        markSfE16Finance("observation-returned", e16Finance)
         const after = await witness()
         return after?.kind === "current" && after.digest === before.digest
           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } }
           : unavailable()
       })
       if (grouped.status !== "ok") return grouped
-      if (grouped.value.kind === "unsupported") return current() ? await work() : unavailable()
+      if (grouped.value.kind === "unsupported") return current() ? (markSfE16Finance("outside-root", e16Finance), await work()) : unavailable()
       // The first root is closed. Never replay the work when a source or reader has changed.
       const egress = await root.prepare(call, async () => true, current)
       if (!egress) return unavailable()
@@ -169,6 +172,7 @@ export function createSfFinancePairObservation(input: {
       const closed = await environment()
       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
     } catch { return unavailable() }
+    finally { markSfE16Finance("returned", e16Finance) }
   }
 }
 

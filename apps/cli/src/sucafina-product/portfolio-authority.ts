@@ -1,3 +1,4 @@
+import { enterSfE16Route, runSfE16Route, prepareSfE16Verifier, runSfE16Verifier, returnedSfE16Verifier } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -147,7 +148,11 @@ export function createSfPortfolioAuthority(input: {
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
     } } }, request, call)) : business.planner.compareScenarios }
   const originalCompare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
-  const compareCanonical: typeof originalCompare = (request, call) => observation.alternatives(request, call, () => originalCompare(request, call))
+  const compareCanonical: typeof originalCompare = (request, call) => {
+    const e16Canonical = enterSfE16Route("canonical")
+    return runSfE16Route(e16Canonical, "preparation", () => observation.alternatives(request, call,
+      () => runSfE16Route(e16Canonical, "comparator", () => originalCompare(request, call))))
+  }
   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios, rules })
   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
@@ -168,7 +173,11 @@ export function createSfPortfolioAuthority(input: {
     // Parallel criteria retain their original route; shared terminal reads are not coalesced.
     observeCriteria: (request, call, work) => request.criteria.length === 1
       ? observation.scenarios(request, call, work) : work(),
-    verifyBinding: async (binding, result, call) => await fresh(result.sourceRefs, call) && await (input.proof()?.verifyComparison(binding, result, call) ?? Promise.resolve(false)),
+    verifyBinding: async (binding, result, call) => {
+      const e16Verifier = prepareSfE16Verifier(binding, call)
+      return await fresh(result.sourceRefs, call) && returnedSfE16Verifier(e16Verifier,
+        await runSfE16Verifier(e16Verifier, () => (input.proof()?.verifyComparison(binding, result, call) ?? Promise.resolve(false))))
+    },
     verifySnapshot: (snapshot, binding, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
   const portfolioBindings = createPortfolioResultBindings({ ...common, results: business.results, selection,

@@ -1,3 +1,4 @@
+import { currentSfE16Route, runSfE16Route, returnedSfE16Route } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { types } from "node:util"
 import { canonicalSfValue, digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
@@ -303,7 +304,8 @@ export function createSfDecisionResultStore(input: {
     const id = input.createId()
     if (!id.trim()) return { status: "unavailable", reason: "result-identity-unavailable" }
     const stored = { schema: "sf-decision-result-v1" as const, resultRef: `decision-result:${encodeURIComponent(id)}`, caseRef: request.caseRef, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, requestDigest: request.requestDigest, resultDigest: digestSfValue(request.result), sourceRefs: request.sourceRefs, createdAt: input.now(), kind: request.kind, result: request.result } as StoredDecisionResult
-    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `decision-result:${request.idempotencyKey}`, commandDigest: digestSfValue({ kind: request.kind, result: request.result, caseRef: request.caseRef, requestDigest: request.requestDigest, sourceRefs: request.sourceRefs }) }, async (state, authority) => {
+    const e16Transaction = currentSfE16Route()
+    const saved = returnedSfE16Route(e16Transaction, "state-transaction-returned", await runSfE16Route(e16Transaction, "state-transaction", () => input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `decision-result:${request.idempotencyKey}`, commandDigest: digestSfValue({ kind: request.kind, result: request.result, caseRef: request.caseRef, requestDigest: request.requestDigest, sourceRefs: request.sourceRefs }) }, async (state, authority) => {
       if (!sameAuthority(authority, context) || !allowedCase(state.cases[request.caseRef.id], request.caseRef, context)) return { commit: false, value: null }
       const results = state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }
       results.decisionResults ??= {}
@@ -313,7 +315,7 @@ export function createSfDecisionResultStore(input: {
       // that immutable envelope without serializing a second copy on every read.
       const receipt: StoredResultReceipt = { schema: "sf-decision-result-receipt-v1", resultRef: stored.resultRef, kind: stored.kind, caseRef: structuredClone(stored.caseRef), requestDigest: stored.requestDigest, storedDigest: digestSfValue(stored) }
       return { commit: true, value: receipt }
-    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))))
     if (saved.status !== "ok") return { status: saved.status === "preview" ? "conflict" : saved.status, reason: "result-write-unavailable" }
     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
     // The provider may replay an older full receipt after a real restart.

@@ -1,3 +1,4 @@
+import { enterSfE16Verifier } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
 import type { DecisionCasePort, DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
@@ -111,6 +112,7 @@ export function createPortfolioProofVerifier(input: {
     return current.status === "ok" && digestSfValue(current.value) === stored.resultDigest && await capture(binding, context, initialFence, stage)
   }
   const verifyComparison = async (incomingBinding: CriterionComparisonBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
+    enterSfE16Verifier(incomingBinding, context)
     let fenceKey: string | undefined
     let attempt: symbol | undefined
     let published = false

@@ -1,3 +1,4 @@
+import { currentSfE16Route, linkSfE16Work, tapSfE16ProviderSelection } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { types } from "node:util"
 import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import type { AssetPersistence } from "../../runtime/assets.ts"
@@ -535,7 +536,7 @@ export function createSfProductState(input: {
     })
     selectionApply(selectionSet, productSnapshotSelections, [work, (transaction: object) =>
       isSfProductSnapshotRead(work, transaction) ? productReadSelection(namespace, read) : undefined])
-    return work
+    return linkSfE16Work(currentSfE16Route(), "provider-read", work, read)
   }
   const port: SfProductStatePort = {
     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
@@ -579,7 +580,7 @@ export function createSfProductState(input: {
         // Recheck the actual precedence after admission, then keep the existing
         // fresh selected clone and callback at this original observation point.
         if (projection?.selection) {
-          if (!selectionCurrent() || (projection.selection === "cases"
+          if (!selectionCurrent() || (tapSfE16ProviderSelection(read, projection.selection) === "cases"
             ? readiness || resultSelection || scenarioSelection ||
               (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)
             : projection.selection === "case-identities"
@@ -792,7 +793,7 @@ export function createSfProductState(input: {
           return result
         })
       }
-      return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
+      return input.persistence.transaction("dashboard", linkSfE16Work(currentSfE16Route(), "provider-write", (snapshot: Snapshot) => run(snapshot, snapshot)), { signal: request.signal })
     },
   }
   if (artifactFence() && artifacts) {

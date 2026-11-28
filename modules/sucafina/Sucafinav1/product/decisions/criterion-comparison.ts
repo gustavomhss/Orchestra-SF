@@ -1,3 +1,4 @@
+import { enterSfE16BindingMethod, runSfE16BindingMethod, runSfE16BindingRead, prepareSfE16Validation, runSfE16Validation, enterSfE16Validation, returnedSfE16Validation, currentSfE16Validation, markSfE16Validation, returnedSfE16ValidationPoint } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
@@ -39,16 +40,19 @@ export function createCriterionComparisonBindings(input: {
     return { status: "ok", value: resolved.map((item) => item.value.status === "ok" ? { criterionId: item.criterionId, ruleRef: item.value.value.ruleRef, version: item.value.value.version, digest: digestSfValue(item.value.value) } : { criterionId: item.criterionId, ruleRef: null, version: null, digest: null }) }
   }
   const observeChecks = async (binding: CriterionComparisonBinding, context: TrustedDomainContext, observe: ObserveCriteria) => {
+    const e16Validation = currentSfE16Validation(binding, context)
     const registry = input.rules, evaluate = registry.evaluate, identity = digestSfValue(binding)
     const current = () => input.observeCriteria === observe && input.rules === registry &&
       registry.evaluate === evaluate && digestSfValue(binding) === identity
     let invocations = 0, open = true, threw = false
     let failure: unknown, checks: CriteriaChecks | undefined
     try {
+      markSfE16Validation(e16Validation, "observer-enter")
       const accepted = await observe(binding.request, context, async () => {
         if (!open || ++invocations !== 1 || !current()) return { status: "unavailable", reason: "comparison-criteria-observation-changed" }
         try {
-          const evaluated = await Promise.all(binding.request.criteria.map((criterionId) => input.rules.evaluate({ caseRef: binding.caseRef, criterionId, baselineRef: binding.request.scenarioRefs[0], scenarioRef: binding.request.scenarioRefs[1]! }, context)))
+          markSfE16Validation(e16Validation, "work-enter")
+          const evaluated = returnedSfE16ValidationPoint(e16Validation, "criteria-await-returned", await Promise.all(binding.request.criteria.map((criterionId) => input.rules.evaluate({ caseRef: binding.caseRef, criterionId, baselineRef: binding.request.scenarioRefs[0], scenarioRef: binding.request.scenarioRefs[1]! }, context))))
           if (!open || !current()) return { status: "unavailable", reason: "comparison-criteria-observation-changed" }
           // Only a Boolean escapes to the observer; it cannot supply or replace the checks.
           checks = evaluated
@@ -56,6 +60,7 @@ export function createCriterionComparisonBindings(input: {
         } catch (error) { threw = true; failure = error; throw error }
       })
       open = false
+      returnedSfE16ValidationPoint(e16Validation, "observer-await-returned", accepted)
       if (threw) throw failure
       if (accepted.status !== "ok" || accepted.value !== true || invocations !== 1 || checks === undefined || !current()) return undefined
       return checks
@@ -63,6 +68,7 @@ export function createCriterionComparisonBindings(input: {
     finally { open = false }
   }
   const validate = async (binding: CriterionComparisonBinding, context: TrustedDomainContext) => {
+    enterSfE16Validation(validate, binding, context)
     const stored = await input.results.read({ resultRef: binding.resultRef, kind: "comparison" }, context)
     const rules = await proofs(binding.caseRef, binding.request.criteria, context)
     if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultDigest !== binding.resultDigest || stored.value.requestDigest !== binding.requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(binding.caseRef) || rules.status !== "ok" || digestSfValue(rules.value) !== digestSfValue(binding.rules) || stored.value.result.baselineResultRef !== binding.request.scenarioRefs[0] || stored.value.result.alternativeResultRef !== binding.request.scenarioRefs[1] || !await input.verifyBinding(binding, stored.value, context)) return undefined
@@ -74,51 +80,60 @@ export function createCriterionComparisonBindings(input: {
     if (comparison.criterionResults.length !== checks.length || checks.some((check, index) => { if (check.status !== "ok") return true; const evaluated = check.value; return comparison.criterionResults.filter((item) => item.criterionId === binding.request.criteria[index] && item.state === evaluated.state && item.reason === evaluated.reason).length !== 1 })) return undefined
     return stored.value
   }
-  const read = async (request: { caseRef: CaseRef; resultRef: string }, context: TrustedDomainContext): Promise<PortResult<CriterionComparisonBinding>> => {
-    try {
-      const source = input.host.requestFor(context)
-      if (!source || !request.resultRef.trim() || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
-      const readBinding = () => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[comparisonBindingKey(request.resultRef)] : undefined))
-      const current = await readBinding()
-      if (current.status !== "ok" || !isComparisonBinding(current.value)) return { status: "unavailable", reason: "comparison-binding-unavailable" }
-      const binding = current.value
-      if (binding.resultRef !== request.resultRef || digestSfValue(binding.caseRef) !== digestSfValue(request.caseRef) || binding.bindingDigest !== comparisonBindingDigest(binding) || binding.requestDigest !== digestSfValue(binding.request) || !decodeSfOperationInput("sf_scenario_compare", binding.request).ok) return { status: "unavailable", reason: "comparison-binding-invalid" }
-      const first = await validate(binding, context)
-      if (!first) return { status: "stale", reason: "comparison-rule-or-source-changed" }
-      const again = await readBinding()
-      const second = await validate(binding, context)
-      if (again.status !== "ok" || !isComparisonBinding(again.value) || digestSfValue(again.value) !== digestSfValue(binding) || !second || digestSfValue(second) !== digestSfValue(first) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "comparison-rule-or-source-changed" }
-      return { status: "ok", value: structuredClone(binding) }
-    } catch { return { status: "unavailable", reason: "comparison-binding-unavailable" } }
+  const read = (request: { caseRef: CaseRef; resultRef: string }, context: TrustedDomainContext): Promise<PortResult<CriterionComparisonBinding>> => {
+    const e16Read = enterSfE16BindingMethod("read", validate, context)
+    return runSfE16BindingMethod(e16Read, async (): Promise<PortResult<CriterionComparisonBinding>> => {
+      try {
+        const source = input.host.requestFor(context)
+        if (!source || !request.resultRef.trim() || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
+        const readBinding = () => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[comparisonBindingKey(request.resultRef)] : undefined))
+        const current = await readBinding()
+        if (current.status !== "ok" || !isComparisonBinding(current.value)) return { status: "unavailable", reason: "comparison-binding-unavailable" }
+        const binding = current.value
+        if (binding.resultRef !== request.resultRef || digestSfValue(binding.caseRef) !== digestSfValue(request.caseRef) || binding.bindingDigest !== comparisonBindingDigest(binding) || binding.requestDigest !== digestSfValue(binding.request) || !decodeSfOperationInput("sf_scenario_compare", binding.request).ok) return { status: "unavailable", reason: "comparison-binding-invalid" }
+        const e16Initial = prepareSfE16Validation(e16Read, "read-initial", binding)
+        const first = returnedSfE16Validation(e16Initial, await runSfE16Validation(e16Initial, () => validate(binding, context)))
+        if (!first) return { status: "stale", reason: "comparison-rule-or-source-changed" }
+        const again = await readBinding()
+        const e16Final = prepareSfE16Validation(e16Read, "read-final", binding)
+        const second = returnedSfE16Validation(e16Final, await runSfE16Validation(e16Final, () => validate(binding, context)))
+        if (again.status !== "ok" || !isComparisonBinding(again.value) || digestSfValue(again.value) !== digestSfValue(binding) || !second || digestSfValue(second) !== digestSfValue(first) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "comparison-rule-or-source-changed" }
+        return { status: "ok", value: structuredClone(binding) }
+      } catch { return { status: "unavailable", reason: "comparison-binding-unavailable" } }
+    })
   }
-  const bind = async (incoming: { caseRef: CaseRef; resultRef: string; request: ScenarioCompareRequest; expectedRules: readonly ComparisonRuleProof[] }, context: TrustedDomainContext): Promise<PortResult<CriterionComparisonBinding>> => {
-    try {
-      const request = structuredClone(incoming)
-      const source = input.host.requestFor(context)
-      const operation = input.operationIdentity(context)
-      if (!source || !operation || !request.resultRef.trim() || !decodeSfOperationInput("sf_scenario_compare", request.request).ok || request.request.scenarioRefs.length !== 2 || new Set(request.request.criteria).size !== request.request.criteria.length || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
-      const currentRules = await proofs(request.caseRef, request.request.criteria, context)
-      const result = await input.results.read({ resultRef: request.resultRef, kind: "comparison" }, context)
-      if (currentRules.status !== "ok" || result.status !== "ok" || result.value.kind !== "comparison" || digestSfValue(currentRules.value) !== digestSfValue(request.expectedRules) || result.value.requestDigest !== digestSfValue(request.request) || digestSfValue(result.value.caseRef) !== digestSfValue(request.caseRef)) return { status: "conflict", reason: "comparison-binding-mismatch" }
-      const stored = result.value
-      const cases = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
-      const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
-      if (cases.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(cases.value, request.caseRef, context) || !await input.authorizeCase(cases.value!, context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
-      const value = { schema: "sf-criterion-comparison-v1" as const, caseRef: request.caseRef, resultRef: request.resultRef, resultDigest: stored.resultDigest, request: request.request, requestDigest: stored.requestDigest, rules: currentRules.value, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, createdAt: input.now(), bindingDigest: "" }
-      const binding: CriterionComparisonBinding = { ...value, bindingDigest: comparisonBindingDigest(value) }
-      if (!Number.isFinite(Date.parse(binding.createdAt)) || !await validate(binding, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-unavailable" }
-      const work = async (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
-        if (!sameAuthority(authority, context) || !allowed(state.cases[request.caseRef.id], request.caseRef, context) || !state.decisionResults?.[request.resultRef] || digestSfValue(state.decisionResults[request.resultRef]) !== digestSfValue(stored) || !binding.rules.every((proof) => { const current = state.preferences[criterionRuleKey(request.caseRef, proof.criterionId)]; return proof.ruleRef === null ? current === undefined : !!current && digestSfValue(current) === proof.digest }) || !input.verifySnapshot(snapshot, binding, context)) return { commit: false, value: null }
-        const key = comparisonBindingKey(request.resultRef)
-        if (state.preferences[key] !== undefined) return { commit: false, value: null }
-        state.preferences[key] = binding
-        return { commit: true, value: binding }
-      }
-      input.proposalCoverageWrites.add(work)
-      const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `criterion-comparison:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))
-      if (saved.status !== "ok" || !saved.value) return { status: saved.status === "preview" || saved.status === "conflict" ? "conflict" : "unavailable", reason: "comparison-binding-unavailable" }
-      return read({ caseRef: request.caseRef, resultRef: request.resultRef }, context)
-    } catch { return { status: "unavailable", reason: "comparison-binding-unavailable" } }
+  const bind = (incoming: { caseRef: CaseRef; resultRef: string; request: ScenarioCompareRequest; expectedRules: readonly ComparisonRuleProof[] }, context: TrustedDomainContext): Promise<PortResult<CriterionComparisonBinding>> => {
+    const e16Bind = enterSfE16BindingMethod("bind", validate, context)
+    return runSfE16BindingMethod(e16Bind, async (): Promise<PortResult<CriterionComparisonBinding>> => {
+      try {
+        const request = structuredClone(incoming)
+        const source = input.host.requestFor(context)
+        const operation = input.operationIdentity(context)
+        if (!source || !operation || !request.resultRef.trim() || !decodeSfOperationInput("sf_scenario_compare", request.request).ok || request.request.scenarioRefs.length !== 2 || new Set(request.request.criteria).size !== request.request.criteria.length || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
+        const currentRules = await proofs(request.caseRef, request.request.criteria, context)
+        const result = await input.results.read({ resultRef: request.resultRef, kind: "comparison" }, context)
+        if (currentRules.status !== "ok" || result.status !== "ok" || result.value.kind !== "comparison" || digestSfValue(currentRules.value) !== digestSfValue(request.expectedRules) || result.value.requestDigest !== digestSfValue(request.request) || digestSfValue(result.value.caseRef) !== digestSfValue(request.caseRef)) return { status: "conflict", reason: "comparison-binding-mismatch" }
+        const stored = result.value
+        const cases = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+        const preferences = await input.state.read(source, "preferences", (_state, authority) => sameAuthority(authority, context))
+        if (cases.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(cases.value, request.caseRef, context) || !await input.authorizeCase(cases.value!, context)) return { status: "denied", reason: "comparison-binding-access-unavailable" }
+        const value = { schema: "sf-criterion-comparison-v1" as const, caseRef: request.caseRef, resultRef: request.resultRef, resultDigest: stored.resultDigest, request: request.request, requestDigest: stored.requestDigest, rules: currentRules.value, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, createdAt: input.now(), bindingDigest: "" }
+        const binding: CriterionComparisonBinding = { ...value, bindingDigest: comparisonBindingDigest(value) }
+        const e16Prewrite = prepareSfE16Validation(e16Bind, "bind-prewrite", binding)
+        if (!Number.isFinite(Date.parse(binding.createdAt)) || !returnedSfE16Validation(e16Prewrite, await runSfE16Validation(e16Prewrite, () => validate(binding, context))) || !await input.host.revalidate(context)) return { status: "denied", reason: "comparison-binding-unavailable" }
+        const work = async (state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
+          if (!sameAuthority(authority, context) || !allowed(state.cases[request.caseRef.id], request.caseRef, context) || !state.decisionResults?.[request.resultRef] || digestSfValue(state.decisionResults[request.resultRef]) !== digestSfValue(stored) || !binding.rules.every((proof) => { const current = state.preferences[criterionRuleKey(request.caseRef, proof.criterionId)]; return proof.ruleRef === null ? current === undefined : !!current && digestSfValue(current) === proof.digest }) || !input.verifySnapshot(snapshot, binding, context)) return { commit: false, value: null }
+          const key = comparisonBindingKey(request.resultRef)
+          if (state.preferences[key] !== undefined) return { commit: false, value: null }
+          state.preferences[key] = binding
+          return { commit: true, value: binding }
+        }
+        input.proposalCoverageWrites.add(work)
+        const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "planner", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `criterion-comparison:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))
+        if (saved.status !== "ok" || !saved.value) return { status: saved.status === "preview" || saved.status === "conflict" ? "conflict" : "unavailable", reason: "comparison-binding-unavailable" }
+        return runSfE16BindingRead(e16Bind, () => read({ caseRef: request.caseRef, resultRef: request.resultRef }, context))
+      } catch { return { status: "unavailable", reason: "comparison-binding-unavailable" } }
+    })
   }
   return { bind, read, proofs }
 }

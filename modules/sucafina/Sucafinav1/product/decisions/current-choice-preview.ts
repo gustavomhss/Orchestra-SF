@@ -1,3 +1,4 @@
+import { enterSfE16Layer, linkSfE16Work, markSfE16Route } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, isLocalSnapshotAuthorityReader, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
@@ -395,9 +396,14 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
       work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>,
       options?: TransactionOptions,
     ) => {
+      const e16Choice = enterSfE16Layer("choice", work)
       const scope = scopes.getStore()
-      if (!scope && !input.authorizeCommit) return directTransactions.run(true, () => input.persistence.transaction(surface, work, options))
-      const run = () => input.persistence.transaction(surface, async (snapshot, blobs) => {
+      if (!scope && !input.authorizeCommit) {
+        markSfE16Route(e16Choice, "choice-forward", "direct")
+        return directTransactions.run(true, () => input.persistence.transaction(surface, work, options))
+      }
+      markSfE16Route(e16Choice, "choice-forward", "wrapped")
+      const run = () => input.persistence.transaction(surface, linkSfE16Work(e16Choice, "choice-wrapped", async (snapshot: Snapshot, blobs: BlobTransaction) => {
         if (scope && !currentScope(scope)) throw denied()
         const result = await work(snapshot, blobs)
         if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
@@ -407,7 +413,7 @@ export function createCurrentChoiceFence<P extends CurrentChoicePersistence>(inp
         const authorized = await authorizeSnapshot(scope)
         if (!publication(scope, authorized)) throw denied()
         return result
-      }, options)
+      }), options)
       return directTransactions.run(false, () => scope ? track(scope, run) : run())
     },
     ...(input.persistence.transactionAll ? {

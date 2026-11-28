@@ -1,3 +1,4 @@
+import { enterSfE16Layer, linkSfE16Work, markSfE16Route, returnedSfE16Route, tapSfE16Gate } from "../../runtime/preview-progress-e16-diagnostic.ts"
 import { types } from "node:util"
 import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
 import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
@@ -670,6 +671,7 @@ export function createSfSourcePersistence(input: {
       })
     },
     transaction: (surface, work, options) => {
+      const e16Source = enterSfE16Layer("source", work)
       const checking = readCheckScope()
       const driver = input.persistence
       const method = !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
@@ -685,17 +687,19 @@ export function createSfSourcePersistence(input: {
           (isLocalSnapshotAuthorityReader(driver, readAuthority) || isCurrentChoiceSnapshotAuthorityReader(driver, readAuthority))
       }
       const productRead = <T>(execute: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>) => {
+        linkSfE16Work(e16Source, "source-work", execute)
         // This runs in the original work-argument position, after the method
         // lookup. No selector or business authorization runs to choose a view.
-        if (!productCurrent()) return execute
-        if (options && (types.isProxy(options) || Object.getPrototypeOf(options) !== Object.prototype)) return execute
+        if (!productCurrent()) { markSfE16Route(e16Source, "source-selection", "product-refused"); return execute }
+        if (options && (types.isProxy(options) || Object.getPrototypeOf(options) !== Object.prototype)) { markSfE16Route(e16Source, "source-selection", "options-refused"); return execute }
         const fields = options ? Object.getOwnPropertyDescriptors(options) : {}
         if (Object.values(fields).some((field) => !Object.hasOwn(field, "value") || !field.enumerable) ||
-          Object.hasOwn(fields, "dashboardProductRead")) return execute
+          Object.hasOwn(fields, "dashboardProductRead")) { markSfE16Route(e16Source, "source-selection", "options-refused"); return execute }
         const root = readAuthority?.([])
-        if (!root?.current()) return execute
+        if (!tapSfE16Gate(e16Source, "source-root-current", root?.current())) { markSfE16Route(e16Source, "source-selection", root === undefined ? "root-absent" : "root-refused"); return execute }
         const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
-        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
+        markSfE16Route(e16Source, "source-selection", selection)
+        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root!.identity, work: execute, ...(selection ? { selection } : {}) }) }
         return execute
       }
       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
@@ -745,16 +749,25 @@ export function createSfSourcePersistence(input: {
         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
         const guarded = guard(surface, snapshot, sealedPreimage)
         try {
-          const result = await work(snapshot, blobs)
+          markSfE16Route(e16Source, "source-work-enter")
+          const result = returnedSfE16Route(e16Source, "source-work-returned", await work(snapshot, blobs))
           if (result.commit && sealed) {
             if (checking && admitSourceChecks(checking)) checking.failed = true
           } else {
             checkReadCommit(checking, result.commit)
           }
-          if (result.commit) guarded.finish()
+          if (result.commit) {
+            markSfE16Route(e16Source, "source-finish-enter")
+            guarded.finish()
+            markSfE16Route(e16Source, "source-finish-returned")
+          }
           if (projection && !result.commit) requireProduct()
           return result
-        } finally { guarded.dispose() }
+        } finally {
+          markSfE16Route(e16Source, "source-dispose-enter")
+          guarded.dispose()
+          markSfE16Route(e16Source, "source-dispose-returned")
+        }
       }), forwarded.options)
     },
     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {

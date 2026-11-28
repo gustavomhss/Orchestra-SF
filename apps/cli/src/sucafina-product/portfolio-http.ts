@@ -1,3 +1,4 @@
+import { startSfE16Observation, markSfE16Http, runSfE16Observation, finishSfE16Observation } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -43,41 +44,51 @@ export function createSfPortfolioHttp(input: {
     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
     const mode = selected as Mode
-    const payload = await boundedJson(request)
-    if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
-    const admitted = await input.authority.human.admit(request, actions[mode], payload)
-    if (admitted.status !== "ok") return reply(admitted)
+    const e14Handle = mode === "decision-portfolio-preview" ? startSfE16Observation(request) : undefined
+    let e16Rejected = false
     try {
-      const call = admitted.value
-      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
-      const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
-      const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
-        if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
-        if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
-        if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
-        if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
-        if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
-        if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
-        const product = input.product
-        if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
-        if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
-        if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
-        if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
-        if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
-        if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
-        if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
-        if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
-        if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
-        if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
-        return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
-      })
-      if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
-      if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
-        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
-        return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
-      return reply(result)
-    } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
-    finally { input.authority.human.finish(admitted.value) }
+      const payload = await boundedJson(request)
+      markSfE16Http(e14Handle, request, "body-returned")
+      if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+      const admitted = await input.authority.human.admit(request, actions[mode], payload)
+      markSfE16Http(e14Handle, request, "admit-returned")
+      if (admitted.status !== "ok") return reply(admitted)
+      try {
+        const call = admitted.value
+        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+        const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+        const result = await runSfE16Observation(e14Handle, request, () => input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+          markSfE16Http(e14Handle, request, "case-callback-entered")
+          if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+          if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
+          if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
+          if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
+          if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
+          if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
+          const product = input.product
+          if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
+          if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
+          if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
+          if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
+          if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
+          if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
+          if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
+          if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
+          if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
+          if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
+          return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
+        }))
+        markSfE16Http(e14Handle, request, "with-case-returned")
+        if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
+        if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+          binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
+          return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
+        markSfE16Http(e14Handle, request, "egress-passed")
+        return reply(result)
+      } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+      finally { input.authority.human.finish(admitted.value) }
+    } catch (e16Error) { e16Rejected = true; throw e16Error }
+    finally { finishSfE16Observation(e14Handle, request, e16Rejected) }
   }
 }
 
