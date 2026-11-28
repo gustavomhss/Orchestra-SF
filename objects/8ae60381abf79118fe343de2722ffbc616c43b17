@@ -1,0 +1,133 @@
+{
+  "schema": "sf613-e16-helper-r1-r2-amendment-v1",
+  "status": "STATIC_PROPOSED_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+  "preimage": {
+    "bytes": 66791,
+    "sha256": "cf71d896947c9b91e57dee67870746397e1f58be31b8a4ecc55858c40244fd05",
+    "gitBlob": "c09a646b4c301dbddf7c06a488e7db9ab6ce0724",
+    "lf": 1187
+  },
+  "postimage": {
+    "bytes": 67552,
+    "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+    "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+    "lf": 1203
+  },
+  "operations": [
+    {
+      "label": "method-run-latch-own-slot",
+      "before": "  prewrite: Validation | undefined; initial: Validation | undefined; final: Validation | undefined;\n  closed: boolean; next: BindingMethod | undefined;\n}",
+      "after": "  prewrite: Validation | undefined; initial: Validation | undefined; final: Validation | undefined;\n  started: boolean; closed: boolean; next: BindingMethod | undefined;\n}",
+      "mode": "unique",
+      "occurrences": 1,
+      "pre": {
+        "bytes": 66791,
+        "sha256": "cf71d896947c9b91e57dee67870746397e1f58be31b8a4ecc55858c40244fd05",
+        "gitBlob": "c09a646b4c301dbddf7c06a488e7db9ab6ce0724"
+      },
+      "post": {
+        "bytes": 66809,
+        "sha256": "2baf5d348dde4e7fa1c3b18b1490d802caab83f019fdcc6ed5aeaa90a9e711f2",
+        "gitBlob": "b4d10e6c9bcb69dd270a4969c609e94bb6189b09"
+      }
+    },
+    {
+      "label": "method-run-latch-initialize",
+      "before": "      prewrite: undefined, initial: undefined, final: undefined, closed: false, next: state.methods }",
+      "after": "      prewrite: undefined, initial: undefined, final: undefined, started: false, closed: false, next: state.methods }",
+      "mode": "unique",
+      "occurrences": 1,
+      "pre": {
+        "bytes": 66809,
+        "sha256": "2baf5d348dde4e7fa1c3b18b1490d802caab83f019fdcc6ed5aeaa90a9e711f2",
+        "gitBlob": "b4d10e6c9bcb69dd270a4969c609e94bb6189b09"
+      },
+      "post": {
+        "bytes": 66825,
+        "sha256": "36162bbbfcb06dba3324cb9280b18e5e5faeb8bff0bd2ed7449c24a7737597d2",
+        "gitBlob": "0e2cbff9056ebfc4a351e8cc4fd9fd9ce71ae591"
+      }
+    },
+    {
+      "label": "whole-method-synchronous-scope",
+      "before": "export function runSfE16BindingRead<T>(handle: unknown, work: () => T): T {",
+      "after": "export function runSfE16BindingMethod<T>(handle: unknown, work: () => T): T {\n  let scope: Scope | undefined, frame: Frame | undefined\n  try {\n    const birth = currentScope()\n    scope = unselectedBindingScope(birth)\n    const method = bindingMethodFor(handle)\n    if (birth && method && !method.started) {\n      method.started = true\n      frame = method.frame\n      // Reuse the admitted call/read scope. Refused entire methods run neutrally,\n      // including their preparatory callbacks before any validation is attempted.\n      scope = birth\n    }\n  } catch { /* Diagnostic failure cannot replace or replay this original body. */ }\n  return runOnce(frame ?? selected, scope, work)\n}\nexport function runSfE16BindingRead<T>(handle: unknown, work: () => T): T {",
+      "mode": "unique",
+      "occurrences": 1,
+      "pre": {
+        "bytes": 66825,
+        "sha256": "36162bbbfcb06dba3324cb9280b18e5e5faeb8bff0bd2ed7449c24a7737597d2",
+        "gitBlob": "0e2cbff9056ebfc4a351e8cc4fd9fd9ce71ae591"
+      },
+      "post": {
+        "bytes": 67515,
+        "sha256": "1fecba887dcbde066401dbd497751a4d6ac1891286eb8e5a8c65431676f0b4e5",
+        "gitBlob": "1ea198e379ec6c6b40ba52c37f89b62a585618ca"
+      }
+    },
+    {
+      "label": "internal-read-requires-started-method",
+      "before": "    if (birth && method?.kind === \"bind\" && method.call.phase === \"persist-bind\" &&",
+      "after": "    if (birth && method?.kind === \"bind\" && method.started && method.call.phase === \"persist-bind\" &&",
+      "mode": "unique",
+      "occurrences": 1,
+      "pre": {
+        "bytes": 67515,
+        "sha256": "1fecba887dcbde066401dbd497751a4d6ac1891286eb8e5a8c65431676f0b4e5",
+        "gitBlob": "1ea198e379ec6c6b40ba52c37f89b62a585618ca"
+      },
+      "post": {
+        "bytes": 67533,
+        "sha256": "78a7b5e48a24b09aad86b15965faf12586b5403dec762690ce1eeed891a00371",
+        "gitBlob": "fcb7d9dd57c5647b7870ef98d54fdacb7fffa80b"
+      }
+    },
+    {
+      "label": "validation-requires-started-method",
+      "before": "    if (!method || method.frame.validationState.disabled) return undefined",
+      "after": "    if (!method || !method.started || method.frame.validationState.disabled) return undefined",
+      "mode": "unique",
+      "occurrences": 1,
+      "pre": {
+        "bytes": 67533,
+        "sha256": "78a7b5e48a24b09aad86b15965faf12586b5403dec762690ce1eeed891a00371",
+        "gitBlob": "fcb7d9dd57c5647b7870ef98d54fdacb7fffa80b"
+      },
+      "post": {
+        "bytes": 67552,
+        "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5"
+      }
+    }
+  ],
+  "findingsResolved": [
+    "A rejected binding method must run its entire original body in the neutral ALS scope, including callbacks before validation.",
+    "A method admission is consumed by one run only; a refused invocation cannot operate or close an ancestral method."
+  ],
+  "proof": {
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "newScopesForMethod": 0,
+    "originalRunOnceLiteral": true,
+    "newAwaitOperators": 0,
+    "newThenCalls": 0,
+    "newFinallyCalls": 0,
+    "metadataSlotsOwn": true
+  },
+  "callerContract": {
+    "publicSurface": "A synchronous diagnostic wrapper returns the single original async-body Promise through runOnce.",
+    "preserved": "Original try/catch body order, awaited expressions, callback receivers and return-read adoption; typed return explicitly retained.",
+    "notClaimed": [
+      "AsyncFunction identity",
+      "name/toString identity",
+      "runtime acceptance",
+      "product qualification",
+      "performance"
+    ]
+  },
+  "superseded": [
+    "c09a646b4c301dbddf7c06a488e7db9ab6ce0724"
+  ]
+}

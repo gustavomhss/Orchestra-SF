@@ -1,0 +1,4182 @@
+{
+  "schema": "sf613-e16a-original-analytics-evidence-extraction-v1",
+  "at": {
+    "current_time": "2026-11-28 16:55:22 UTC"
+  },
+  "sourceAndSnapshot": {
+    "sha": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "sameObject": true
+  },
+  "run": {
+    "id": 46165435477,
+    "attempt": 1,
+    "conclusion": "failure",
+    "main": {
+      "id": 141041831215,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 141044316560,
+      "conclusion": "success"
+    }
+  },
+  "inputs": {
+    "closure": {
+      "gitBlob": "d615a75b08f36d211c135f5b70e830b67bcb2de2",
+      "bytes": 4966,
+      "sha256": "3ed7601243d44cf72d0c97dfa38a5f220c858d86868af30511ece22eecedff24",
+      "lf": 153,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "fa2c6d4de11a18fba9cdcd9a3247c17ab00df509",
+      "bytes": 5523,
+      "sha256": "c1bd59a9ca884802a2e70ef2ea3580f91f1af814f8f529c29683b5f16d4371ec",
+      "lf": 192,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "2c393c5a76e54009c8be0140701ded22c1ae18cd",
+      "bytes": 1683,
+      "sha256": "9f8c58382774ba210ab68c346cb32122a41827a5c42f90484f18db06e5a177a9",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "terminalMetadata": {
+      "gitBlob": "5d10f28f24e05ddb88d433834edcbc27a11016f2",
+      "bytes": 27544,
+      "sha256": "82b7cf04649449c06c2ff5069549ef6febe26f6df9aea243c19aa030c7175f5d",
+      "lf": 600,
+      "endsWithLF": true
+    }
+  },
+  "originalsClosed": true,
+  "originalGets": {
+    "main": 1,
+    "cleanup": 1
+  },
+  "zipGets": 0,
+  "derivation": {
+    "onlyPreservedDecodedMainAndCleanup": true,
+    "analysisCopyOnlyNormalization": "Strip ANSI CSI and leading BOM from log-body copies; originals unchanged. Parse exact SF marker JSON payloads without global unescaping.",
+    "eventOccurrences": [
+      {
+        "line": 1233,
+        "sequence": 1
+      },
+      {
+        "line": 1236,
+        "sequence": 2
+      },
+      {
+        "line": 1239,
+        "sequence": 3
+      },
+      {
+        "line": 1242,
+        "sequence": 4
+      },
+      {
+        "line": 1245,
+        "sequence": 5
+      },
+      {
+        "line": 1246,
+        "sequence": 6
+      },
+      {
+        "line": 1249,
+        "sequence": 7
+      },
+      {
+        "line": 1250,
+        "sequence": 8
+      },
+      {
+        "line": 1253,
+        "sequence": 9
+      },
+      {
+        "line": 1256,
+        "sequence": 10
+      },
+      {
+        "line": 1257,
+        "sequence": 11
+      },
+      {
+        "line": 1260,
+        "sequence": 12
+      },
+      {
+        "line": 1263,
+        "sequence": 13
+      },
+      {
+        "line": 1266,
+        "sequence": 14
+      },
+      {
+        "line": 1269,
+        "sequence": 15
+      },
+      {
+        "line": 1272,
+        "sequence": 16
+      },
+      {
+        "line": 1275,
+        "sequence": 17
+      },
+      {
+        "line": 1278,
+        "sequence": 18
+      },
+      {
+        "line": 1281,
+        "sequence": 19
+      },
+      {
+        "line": 1282,
+        "sequence": 20
+      },
+      {
+        "line": 1285,
+        "sequence": 21
+      },
+      {
+        "line": 1288,
+        "sequence": 22
+      },
+      {
+        "line": 1291,
+        "sequence": 23
+      },
+      {
+        "line": 1294,
+        "sequence": 24
+      },
+      {
+        "line": 1297,
+        "sequence": 25
+      },
+      {
+        "line": 1300,
+        "sequence": 26
+      },
+      {
+        "line": 1303,
+        "sequence": 27
+      },
+      {
+        "line": 1306,
+        "sequence": 28
+      },
+      {
+        "line": 1309,
+        "sequence": 29
+      },
+      {
+        "line": 1312,
+        "sequence": 30
+      },
+      {
+        "line": 1315,
+        "sequence": 31
+      },
+      {
+        "line": 1316,
+        "sequence": 32
+      },
+      {
+        "line": 1317,
+        "sequence": 33
+      },
+      {
+        "line": 1320,
+        "sequence": 34
+      },
+      {
+        "line": 1323,
+        "sequence": 35
+      },
+      {
+        "line": 1324,
+        "sequence": 36
+      },
+      {
+        "line": 1325,
+        "sequence": 37
+      },
+      {
+        "line": 1326,
+        "sequence": 38
+      },
+      {
+        "line": 1327,
+        "sequence": 39
+      },
+      {
+        "line": 1328,
+        "sequence": 40
+      },
+      {
+        "line": 1331,
+        "sequence": 41
+      },
+      {
+        "line": 1334,
+        "sequence": 42
+      },
+      {
+        "line": 1337,
+        "sequence": 43
+      },
+      {
+        "line": 1338,
+        "sequence": 44
+      },
+      {
+        "line": 1341,
+        "sequence": 45
+      },
+      {
+        "line": 1342,
+        "sequence": 46
+      },
+      {
+        "line": 1345,
+        "sequence": 47
+      },
+      {
+        "line": 1346,
+        "sequence": 48
+      },
+      {
+        "line": 1347,
+        "sequence": 49
+      },
+      {
+        "line": 1350,
+        "sequence": 50
+      },
+      {
+        "line": 1353,
+        "sequence": 51
+      },
+      {
+        "line": 1356,
+        "sequence": 52
+      },
+      {
+        "line": 1359,
+        "sequence": 53
+      },
+      {
+        "line": 1362,
+        "sequence": 54
+      },
+      {
+        "line": 1365,
+        "sequence": 55
+      },
+      {
+        "line": 1368,
+        "sequence": 56
+      },
+      {
+        "line": 1371,
+        "sequence": 57
+      },
+      {
+        "line": 1374,
+        "sequence": 58
+      },
+      {
+        "line": 1375,
+        "sequence": 59
+      },
+      {
+        "line": 1378,
+        "sequence": 60
+      },
+      {
+        "line": 1381,
+        "sequence": 61
+      },
+      {
+        "line": 1384,
+        "sequence": 62
+      },
+      {
+        "line": 1387,
+        "sequence": 63
+      },
+      {
+        "line": 1390,
+        "sequence": 64
+      },
+      {
+        "line": 1393,
+        "sequence": 65
+      },
+      {
+        "line": 1396,
+        "sequence": 66
+      },
+      {
+        "line": 1399,
+        "sequence": 67
+      },
+      {
+        "line": 1402,
+        "sequence": 68
+      },
+      {
+        "line": 1405,
+        "sequence": 69
+      },
+      {
+        "line": 1408,
+        "sequence": 70
+      },
+      {
+        "line": 1409,
+        "sequence": 71
+      },
+      {
+        "line": 1412,
+        "sequence": 72
+      },
+      {
+        "line": 1415,
+        "sequence": 73
+      },
+      {
+        "line": 1418,
+        "sequence": 74
+      },
+      {
+        "line": 1419,
+        "sequence": 75
+      },
+      {
+        "line": 1422,
+        "sequence": 76
+      },
+      {
+        "line": 1425,
+        "sequence": 77
+      },
+      {
+        "line": 1428,
+        "sequence": 78
+      },
+      {
+        "line": 1429,
+        "sequence": 79
+      },
+      {
+        "line": 1432,
+        "sequence": 80
+      },
+      {
+        "line": 1435,
+        "sequence": 81
+      },
+      {
+        "line": 1438,
+        "sequence": 82
+      },
+      {
+        "line": 1441,
+        "sequence": 83
+      },
+      {
+        "line": 1444,
+        "sequence": 84
+      },
+      {
+        "line": 1445,
+        "sequence": 85
+      },
+      {
+        "line": 1448,
+        "sequence": 86
+      },
+      {
+        "line": 1451,
+        "sequence": 87
+      },
+      {
+        "line": 1454,
+        "sequence": 88
+      },
+      {
+        "line": 1457,
+        "sequence": 89
+      },
+      {
+        "line": 1460,
+        "sequence": 90
+      },
+      {
+        "line": 1463,
+        "sequence": 91
+      },
+      {
+        "line": 1466,
+        "sequence": 92
+      },
+      {
+        "line": 1469,
+        "sequence": 93
+      },
+      {
+        "line": 1472,
+        "sequence": 94
+      },
+      {
+        "line": 1473,
+        "sequence": 95
+      },
+      {
+        "line": 1476,
+        "sequence": 96
+      },
+      {
+        "line": 1479,
+        "sequence": 97
+      },
+      {
+        "line": 1482,
+        "sequence": 98
+      },
+      {
+        "line": 1485,
+        "sequence": 99
+      },
+      {
+        "line": 1488,
+        "sequence": 100
+      },
+      {
+        "line": 1491,
+        "sequence": 101
+      },
+      {
+        "line": 1498,
+        "sequence": 102
+      },
+      {
+        "line": 1501,
+        "sequence": 103
+      },
+      {
+        "line": 1502,
+        "sequence": 104
+      },
+      {
+        "line": 1505,
+        "sequence": 105
+      },
+      {
+        "line": 1508,
+        "sequence": 106
+      },
+      {
+        "line": 1511,
+        "sequence": 107
+      }
+    ],
+    "eventUnion": {
+      "gitBlob": "b50584894baa261df2d5da44cba3d35b160fabf9",
+      "bytes": 58181,
+      "sha256": "fc739b04b399e87d766e4031ba19c5b9b35971d2829313d52e9c9cfb2a544b43",
+      "lf": 107,
+      "endsWithLF": true
+    },
+    "eventIdentity": {
+      "tuples": [
+        "[\"c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba\",\"46165435477\",\"1\",\"sf613-e16-event-D9Cx8l\",3724,3680,1]"
+      ],
+      "duplicates": [],
+      "divergent": [],
+      "sequences": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107
+      ],
+      "exactPrefixes": 107,
+      "schemaTokens": 107
+    },
+    "jsonMarkerFailures": [],
+    "plainStageMarkers": 92,
+    "events": 107,
+    "phases": [
+      {
+        "unit": 1,
+        "phase": 6,
+        "point": "port-authority-initial",
+        "entry": {
+          "line": 1246,
+          "sequence": 6,
+          "tenthMs": 4925
+        },
+        "exit": {
+          "line": 1249,
+          "sequence": 7,
+          "tenthMs": 4936,
+          "outcome": "await-returned"
+        },
+        "durationMs": 1.1,
+        "complete": true
+      },
+      {
+        "unit": 1,
+        "phase": 7,
+        "point": "candidates-initial",
+        "entry": {
+          "line": 1250,
+          "sequence": 8,
+          "tenthMs": 4937
+        },
+        "exit": {
+          "line": 1253,
+          "sequence": 9,
+          "tenthMs": 6987,
+          "outcome": "await-returned"
+        },
+        "durationMs": 205,
+        "complete": true
+      },
+      {
+        "unit": 2,
+        "phase": 8,
+        "point": "combination-evaluate",
+        "entry": {
+          "line": 1257,
+          "sequence": 11,
+          "tenthMs": 6991
+        },
+        "exit": null,
+        "durationMs": null,
+        "complete": false
+      },
+      {
+        "unit": 3,
+        "phase": 9,
+        "point": "production-analysis",
+        "entry": {
+          "line": 1263,
+          "sequence": 13,
+          "tenthMs": 16060
+        },
+        "exit": null,
+        "durationMs": null,
+        "complete": false
+      },
+      {
+        "unit": 4,
+        "phase": 1,
+        "point": "analysis-select-initial",
+        "entry": {
+          "line": 1269,
+          "sequence": 15,
+          "tenthMs": 16073
+        },
+        "exit": {
+          "line": 1297,
+          "sequence": 25,
+          "tenthMs": 240483,
+          "outcome": "await-returned"
+        },
+        "durationMs": 22441,
+        "complete": true
+      },
+      {
+        "unit": 4,
+        "phase": 10,
+        "point": "analysis-compare",
+        "entry": {
+          "line": 1300,
+          "sequence": 26,
+          "tenthMs": 242587
+        },
+        "exit": {
+          "line": 1303,
+          "sequence": 27,
+          "tenthMs": 272863,
+          "outcome": "await-returned"
+        },
+        "durationMs": 3027.6,
+        "complete": true
+      },
+      {
+        "unit": 4,
+        "phase": 4,
+        "point": "analysis-persist",
+        "entry": {
+          "line": 1306,
+          "sequence": 28,
+          "tenthMs": 273030
+        },
+        "exit": {
+          "line": 1508,
+          "sequence": 106,
+          "tenthMs": 603438,
+          "outcome": "await-returned"
+        },
+        "durationMs": 33040.8,
+        "complete": true
+      }
+    ],
+    "validationSlots": [
+      {
+        "validation": 1,
+        "bindingPhase": "persist-bind",
+        "validationSite": "bind-prewrite",
+        "complete": true,
+        "points": {
+          "validate-enter": {
+            "line": 1378,
+            "sequence": 60,
+            "tenthMs": 324833
+          },
+          "verify-comparison-enter": {
+            "line": 1381,
+            "sequence": 61,
+            "tenthMs": 327255
+          },
+          "verify-await-returned": {
+            "line": 1384,
+            "sequence": 62,
+            "tenthMs": 362150
+          },
+          "observer-enter": {
+            "line": 1387,
+            "sequence": 63,
+            "tenthMs": 362154
+          },
+          "work-enter": {
+            "line": 1390,
+            "sequence": 64,
+            "tenthMs": 364405
+          },
+          "criteria-await-returned": {
+            "line": 1393,
+            "sequence": 65,
+            "tenthMs": 372002
+          },
+          "observer-await-returned": {
+            "line": 1396,
+            "sequence": 66,
+            "tenthMs": 374329
+          },
+          "validate-await-returned": {
+            "line": 1399,
+            "sequence": 67,
+            "tenthMs": 374333
+          }
+        },
+        "total": {
+          "start": {
+            "line": 1378,
+            "sequence": 60,
+            "tenthMs": 324833
+          },
+          "end": {
+            "line": 1399,
+            "sequence": 67,
+            "tenthMs": 374333
+          },
+          "durationMs": 4950
+        },
+        "preparation": {
+          "start": {
+            "line": 1378,
+            "sequence": 60,
+            "tenthMs": 324833
+          },
+          "end": {
+            "line": 1381,
+            "sequence": 61,
+            "tenthMs": 327255
+          },
+          "durationMs": 242.2
+        },
+        "verifierIntegral": {
+          "start": {
+            "line": 1381,
+            "sequence": 61,
+            "tenthMs": 327255
+          },
+          "end": {
+            "line": 1384,
+            "sequence": 62,
+            "tenthMs": 362150
+          },
+          "durationMs": 3489.5
+        },
+        "preObserverGap": {
+          "start": {
+            "line": 1384,
+            "sequence": 62,
+            "tenthMs": 362150
+          },
+          "end": {
+            "line": 1387,
+            "sequence": 63,
+            "tenthMs": 362154
+          },
+          "durationMs": 0.4
+        },
+        "observerBeforeWork": {
+          "start": {
+            "line": 1387,
+            "sequence": 63,
+            "tenthMs": 362154
+          },
+          "end": {
+            "line": 1390,
+            "sequence": 64,
+            "tenthMs": 364405
+          },
+          "durationMs": 225.1
+        },
+        "criteria": {
+          "start": {
+            "line": 1390,
+            "sequence": 64,
+            "tenthMs": 364405
+          },
+          "end": {
+            "line": 1393,
+            "sequence": 65,
+            "tenthMs": 372002
+          },
+          "durationMs": 759.7
+        },
+        "observerAfterWork": {
+          "start": {
+            "line": 1393,
+            "sequence": 65,
+            "tenthMs": 372002
+          },
+          "end": {
+            "line": 1396,
+            "sequence": 66,
+            "tenthMs": 374329
+          },
+          "durationMs": 232.7
+        },
+        "postObserverGap": {
+          "start": {
+            "line": 1396,
+            "sequence": 66,
+            "tenthMs": 374329
+          },
+          "end": {
+            "line": 1399,
+            "sequence": 67,
+            "tenthMs": 374333
+          },
+          "durationMs": 0.4
+        }
+      },
+      {
+        "validation": 2,
+        "bindingPhase": "persist-bind",
+        "validationSite": "read-initial",
+        "complete": true,
+        "points": {
+          "validate-enter": {
+            "line": 1402,
+            "sequence": 68,
+            "tenthMs": 375413
+          },
+          "verify-comparison-enter": {
+            "line": 1405,
+            "sequence": 69,
+            "tenthMs": 377853
+          },
+          "verify-await-returned": {
+            "line": 1408,
+            "sequence": 70,
+            "tenthMs": 413114
+          },
+          "observer-enter": {
+            "line": 1409,
+            "sequence": 71,
+            "tenthMs": 413114
+          },
+          "work-enter": {
+            "line": 1412,
+            "sequence": 72,
+            "tenthMs": 415407
+          },
+          "criteria-await-returned": {
+            "line": 1415,
+            "sequence": 73,
+            "tenthMs": 423031
+          },
+          "observer-await-returned": {
+            "line": 1418,
+            "sequence": 74,
+            "tenthMs": 425365
+          },
+          "validate-await-returned": {
+            "line": 1419,
+            "sequence": 75,
+            "tenthMs": 425366
+          }
+        },
+        "total": {
+          "start": {
+            "line": 1402,
+            "sequence": 68,
+            "tenthMs": 375413
+          },
+          "end": {
+            "line": 1419,
+            "sequence": 75,
+            "tenthMs": 425366
+          },
+          "durationMs": 4995.3
+        },
+        "preparation": {
+          "start": {
+            "line": 1402,
+            "sequence": 68,
+            "tenthMs": 375413
+          },
+          "end": {
+            "line": 1405,
+            "sequence": 69,
+            "tenthMs": 377853
+          },
+          "durationMs": 244
+        },
+        "verifierIntegral": {
+          "start": {
+            "line": 1405,
+            "sequence": 69,
+            "tenthMs": 377853
+          },
+          "end": {
+            "line": 1408,
+            "sequence": 70,
+            "tenthMs": 413114
+          },
+          "durationMs": 3526.1
+        },
+        "preObserverGap": {
+          "start": {
+            "line": 1408,
+            "sequence": 70,
+            "tenthMs": 413114
+          },
+          "end": {
+            "line": 1409,
+            "sequence": 71,
+            "tenthMs": 413114
+          },
+          "durationMs": 0
+        },
+        "observerBeforeWork": {
+          "start": {
+            "line": 1409,
+            "sequence": 71,
+            "tenthMs": 413114
+          },
+          "end": {
+            "line": 1412,
+            "sequence": 72,
+            "tenthMs": 415407
+          },
+          "durationMs": 229.3
+        },
+        "criteria": {
+          "start": {
+            "line": 1412,
+            "sequence": 72,
+            "tenthMs": 415407
+          },
+          "end": {
+            "line": 1415,
+            "sequence": 73,
+            "tenthMs": 423031
+          },
+          "durationMs": 762.4
+        },
+        "observerAfterWork": {
+          "start": {
+            "line": 1415,
+            "sequence": 73,
+            "tenthMs": 423031
+          },
+          "end": {
+            "line": 1418,
+            "sequence": 74,
+            "tenthMs": 425365
+          },
+          "durationMs": 233.4
+        },
+        "postObserverGap": {
+          "start": {
+            "line": 1418,
+            "sequence": 74,
+            "tenthMs": 425365
+          },
+          "end": {
+            "line": 1419,
+            "sequence": 75,
+            "tenthMs": 425366
+          },
+          "durationMs": 0.1
+        }
+      },
+      {
+        "validation": 3,
+        "bindingPhase": "persist-bind",
+        "validationSite": "read-final",
+        "complete": true,
+        "points": {
+          "validate-enter": {
+            "line": 1422,
+            "sequence": 76,
+            "tenthMs": 425397
+          },
+          "verify-comparison-enter": {
+            "line": 1425,
+            "sequence": 77,
+            "tenthMs": 427864
+          },
+          "verify-await-returned": {
+            "line": 1428,
+            "sequence": 78,
+            "tenthMs": 458453
+          },
+          "observer-enter": {
+            "line": 1429,
+            "sequence": 79,
+            "tenthMs": 458454
+          },
+          "work-enter": {
+            "line": 1432,
+            "sequence": 80,
+            "tenthMs": 460525
+          },
+          "criteria-await-returned": {
+            "line": 1435,
+            "sequence": 81,
+            "tenthMs": 468910
+          },
+          "observer-await-returned": {
+            "line": 1438,
+            "sequence": 82,
+            "tenthMs": 471158
+          },
+          "validate-await-returned": {
+            "line": 1441,
+            "sequence": 83,
+            "tenthMs": 471159
+          }
+        },
+        "total": {
+          "start": {
+            "line": 1422,
+            "sequence": 76,
+            "tenthMs": 425397
+          },
+          "end": {
+            "line": 1441,
+            "sequence": 83,
+            "tenthMs": 471159
+          },
+          "durationMs": 4576.2
+        },
+        "preparation": {
+          "start": {
+            "line": 1422,
+            "sequence": 76,
+            "tenthMs": 425397
+          },
+          "end": {
+            "line": 1425,
+            "sequence": 77,
+            "tenthMs": 427864
+          },
+          "durationMs": 246.7
+        },
+        "verifierIntegral": {
+          "start": {
+            "line": 1425,
+            "sequence": 77,
+            "tenthMs": 427864
+          },
+          "end": {
+            "line": 1428,
+            "sequence": 78,
+            "tenthMs": 458453
+          },
+          "durationMs": 3058.9
+        },
+        "preObserverGap": {
+          "start": {
+            "line": 1428,
+            "sequence": 78,
+            "tenthMs": 458453
+          },
+          "end": {
+            "line": 1429,
+            "sequence": 79,
+            "tenthMs": 458454
+          },
+          "durationMs": 0.1
+        },
+        "observerBeforeWork": {
+          "start": {
+            "line": 1429,
+            "sequence": 79,
+            "tenthMs": 458454
+          },
+          "end": {
+            "line": 1432,
+            "sequence": 80,
+            "tenthMs": 460525
+          },
+          "durationMs": 207.1
+        },
+        "criteria": {
+          "start": {
+            "line": 1432,
+            "sequence": 80,
+            "tenthMs": 460525
+          },
+          "end": {
+            "line": 1435,
+            "sequence": 81,
+            "tenthMs": 468910
+          },
+          "durationMs": 838.5
+        },
+        "observerAfterWork": {
+          "start": {
+            "line": 1435,
+            "sequence": 81,
+            "tenthMs": 468910
+          },
+          "end": {
+            "line": 1438,
+            "sequence": 82,
+            "tenthMs": 471158
+          },
+          "durationMs": 224.8
+        },
+        "postObserverGap": {
+          "start": {
+            "line": 1438,
+            "sequence": 82,
+            "tenthMs": 471158
+          },
+          "end": {
+            "line": 1441,
+            "sequence": 83,
+            "tenthMs": 471159
+          },
+          "durationMs": 0.1
+        }
+      },
+      {
+        "validation": 4,
+        "bindingPhase": "persist-read",
+        "validationSite": "read-initial",
+        "complete": true,
+        "points": {
+          "validate-enter": {
+            "line": 1454,
+            "sequence": 88,
+            "tenthMs": 514307
+          },
+          "verify-comparison-enter": {
+            "line": 1457,
+            "sequence": 89,
+            "tenthMs": 516759
+          },
+          "verify-await-returned": {
+            "line": 1460,
+            "sequence": 90,
+            "tenthMs": 546746
+          },
+          "observer-enter": {
+            "line": 1463,
+            "sequence": 91,
+            "tenthMs": 546748
+          },
+          "work-enter": {
+            "line": 1466,
+            "sequence": 92,
+            "tenthMs": 548900
+          },
+          "criteria-await-returned": {
+            "line": 1469,
+            "sequence": 93,
+            "tenthMs": 556489
+          },
+          "observer-await-returned": {
+            "line": 1472,
+            "sequence": 94,
+            "tenthMs": 558527
+          },
+          "validate-await-returned": {
+            "line": 1473,
+            "sequence": 95,
+            "tenthMs": 558529
+          }
+        },
+        "total": {
+          "start": {
+            "line": 1454,
+            "sequence": 88,
+            "tenthMs": 514307
+          },
+          "end": {
+            "line": 1473,
+            "sequence": 95,
+            "tenthMs": 558529
+          },
+          "durationMs": 4422.2
+        },
+        "preparation": {
+          "start": {
+            "line": 1454,
+            "sequence": 88,
+            "tenthMs": 514307
+          },
+          "end": {
+            "line": 1457,
+            "sequence": 89,
+            "tenthMs": 516759
+          },
+          "durationMs": 245.2
+        },
+        "verifierIntegral": {
+          "start": {
+            "line": 1457,
+            "sequence": 89,
+            "tenthMs": 516759
+          },
+          "end": {
+            "line": 1460,
+            "sequence": 90,
+            "tenthMs": 546746
+          },
+          "durationMs": 2998.7
+        },
+        "preObserverGap": {
+          "start": {
+            "line": 1460,
+            "sequence": 90,
+            "tenthMs": 546746
+          },
+          "end": {
+            "line": 1463,
+            "sequence": 91,
+            "tenthMs": 546748
+          },
+          "durationMs": 0.2
+        },
+        "observerBeforeWork": {
+          "start": {
+            "line": 1463,
+            "sequence": 91,
+            "tenthMs": 546748
+          },
+          "end": {
+            "line": 1466,
+            "sequence": 92,
+            "tenthMs": 548900
+          },
+          "durationMs": 215.2
+        },
+        "criteria": {
+          "start": {
+            "line": 1466,
+            "sequence": 92,
+            "tenthMs": 548900
+          },
+          "end": {
+            "line": 1469,
+            "sequence": 93,
+            "tenthMs": 556489
+          },
+          "durationMs": 758.9
+        },
+        "observerAfterWork": {
+          "start": {
+            "line": 1469,
+            "sequence": 93,
+            "tenthMs": 556489
+          },
+          "end": {
+            "line": 1472,
+            "sequence": 94,
+            "tenthMs": 558527
+          },
+          "durationMs": 203.8
+        },
+        "postObserverGap": {
+          "start": {
+            "line": 1472,
+            "sequence": 94,
+            "tenthMs": 558527
+          },
+          "end": {
+            "line": 1473,
+            "sequence": 95,
+            "tenthMs": 558529
+          },
+          "durationMs": 0.2
+        }
+      },
+      {
+        "validation": 5,
+        "bindingPhase": "persist-read",
+        "validationSite": "read-final",
+        "complete": true,
+        "points": {
+          "validate-enter": {
+            "line": 1476,
+            "sequence": 96,
+            "tenthMs": 558558
+          },
+          "verify-comparison-enter": {
+            "line": 1479,
+            "sequence": 97,
+            "tenthMs": 561157
+          },
+          "verify-await-returned": {
+            "line": 1482,
+            "sequence": 98,
+            "tenthMs": 591066
+          },
+          "observer-enter": {
+            "line": 1485,
+            "sequence": 99,
+            "tenthMs": 591067
+          },
+          "work-enter": {
+            "line": 1488,
+            "sequence": 100,
+            "tenthMs": 593109
+          },
+          "criteria-await-returned": {
+            "line": 1491,
+            "sequence": 101,
+            "tenthMs": 601263
+          },
+          "observer-await-returned": {
+            "line": 1498,
+            "sequence": 102,
+            "tenthMs": 603423
+          },
+          "validate-await-returned": {
+            "line": 1501,
+            "sequence": 103,
+            "tenthMs": 603424
+          }
+        },
+        "total": {
+          "start": {
+            "line": 1476,
+            "sequence": 96,
+            "tenthMs": 558558
+          },
+          "end": {
+            "line": 1501,
+            "sequence": 103,
+            "tenthMs": 603424
+          },
+          "durationMs": 4486.6
+        },
+        "preparation": {
+          "start": {
+            "line": 1476,
+            "sequence": 96,
+            "tenthMs": 558558
+          },
+          "end": {
+            "line": 1479,
+            "sequence": 97,
+            "tenthMs": 561157
+          },
+          "durationMs": 259.9
+        },
+        "verifierIntegral": {
+          "start": {
+            "line": 1479,
+            "sequence": 97,
+            "tenthMs": 561157
+          },
+          "end": {
+            "line": 1482,
+            "sequence": 98,
+            "tenthMs": 591066
+          },
+          "durationMs": 2990.9
+        },
+        "preObserverGap": {
+          "start": {
+            "line": 1482,
+            "sequence": 98,
+            "tenthMs": 591066
+          },
+          "end": {
+            "line": 1485,
+            "sequence": 99,
+            "tenthMs": 591067
+          },
+          "durationMs": 0.1
+        },
+        "observerBeforeWork": {
+          "start": {
+            "line": 1485,
+            "sequence": 99,
+            "tenthMs": 591067
+          },
+          "end": {
+            "line": 1488,
+            "sequence": 100,
+            "tenthMs": 593109
+          },
+          "durationMs": 204.2
+        },
+        "criteria": {
+          "start": {
+            "line": 1488,
+            "sequence": 100,
+            "tenthMs": 593109
+          },
+          "end": {
+            "line": 1491,
+            "sequence": 101,
+            "tenthMs": 601263
+          },
+          "durationMs": 815.4
+        },
+        "observerAfterWork": {
+          "start": {
+            "line": 1491,
+            "sequence": 101,
+            "tenthMs": 601263
+          },
+          "end": {
+            "line": 1498,
+            "sequence": 102,
+            "tenthMs": 603423
+          },
+          "durationMs": 216
+        },
+        "postObserverGap": {
+          "start": {
+            "line": 1498,
+            "sequence": 102,
+            "tenthMs": 603423
+          },
+          "end": {
+            "line": 1501,
+            "sequence": 103,
+            "tenthMs": 603424
+          },
+          "durationMs": 0.1
+        }
+      }
+    ],
+    "summedValidationIntervals": {
+      "totalMs": 23430.3,
+      "preparationMs": 1238,
+      "verifierIntegralMs": 16064.1,
+      "preObserverGapMs": 0.8,
+      "observerBeforeWorkMs": 1080.9,
+      "criteriaMs": 3934.9,
+      "observerAfterWorkMs": 1110.7,
+      "postObserverGapMs": 0.9
+    },
+    "eventPrefixBytes": 60428,
+    "maximumEventLineBytes": 654,
+    "terminalObserved": false,
+    "analysisBindingObserved": [
+      {
+        "line": 1511,
+        "prefix": "SF_PREVIEW_E16_EVENT",
+        "value": {
+          "schema": "sf-preview-causal-e16-event-v1",
+          "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+          "sourceTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+          "qualification": false,
+          "snapshot": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+          "runId": "46165435477",
+          "attempt": "1",
+          "nonce": "sf613-e16-event-D9Cx8l",
+          "pid": 3724,
+          "parentPid": 3680,
+          "request": 1,
+          "sequence": 107,
+          "kind": "analysis-binding",
+          "elapsedTenthMs": 604518,
+          "unit": 4,
+          "point": "initial",
+          "boundary": "enter"
+        }
+      }
+    ],
+    "otherMarkers": [
+      {
+        "line": 1111,
+        "prefix": "SF_DESIGN_DISCOVERY",
+        "value": {
+          "selector": "native-workspace",
+          "count": 1,
+          "installations": [
+            {
+              "installationId": "e1b4b58d-8758-41ac-8dd0-4470bf075046",
+              "projectId": "global",
+              "hostId": "0dc4189e-a698-43a3-81f3-5f6e8dbf39af"
+            }
+          ]
+        }
+      },
+      {
+        "line": 1113,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-controls",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1115,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-controls",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1117,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "parameter-source-read",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1119,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-promote-parameter",
+          "http": 200,
+          "status": "ok",
+          "parameterPeriod": {
+            "start": "2026-02-01",
+            "end": "2026-02-28"
+          },
+          "parameterUnit": "USD"
+        }
+      },
+      {
+        "line": 1121,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-controls",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1123,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "sensitivity-controls-units-read",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1125,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-criteria",
+          "phase": "source-request",
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1127,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-criteria",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 993
+        }
+      },
+      {
+        "line": 1129,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "sensitivity-controls-units-read",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1131,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "sensitivity-rule-fixture-registered-readback",
+          "status": "ok",
+          "caseVersion": 6,
+          "criterionId": "de51233d-f7c8-43b5-8543-4670032f755c",
+          "ruleRef": "criterion-rule:7aa53bfe6dd68ea3fb0e5f301dca0f841e94af072296d67f7b12a82f3b208fb9",
+          "previousVersion": 1,
+          "ruleVersion": 2,
+          "baselineRef": "decision-result:b68234f9ce29c9f2e5889a07010f39b16f5abeb290477a72553e62b4ee3dc105",
+          "scenarioRef": "decision-result:c490be570196008e6095bd1b914d74a266f20b426d0d5b715057e513bd2cdc21",
+          "parameterRef": "b5a2267f-3462-46de-8a15-bc9e035a6378:2",
+          "parameterUnit": "USD",
+          "resultUnit": "USD",
+          "engineVersion": "planner-runtime-v1",
+          "sourceReferences": [
+            {
+              "refId": "planner-version:d784787a-7581-45f6-ab15-2b81e37fcd32:3d210db0-b6ce-472a-b142-f70e0cf3cd77:1",
+              "refDigest": "dbb7ebdb48888f137d95d98673ac957087c13745a208bcba9f0a26665ef6f014"
+            },
+            {
+              "refId": "planner-version:29315287-f1ac-4039-82da-117186881b80:d890ba8a-300f-433a-a5b5-172541780051:1",
+              "refDigest": "2836dac6a96ed312c11ae77c7a26c299436af1b2e87339eb1d31b9ecb5a56808"
+            }
+          ],
+          "originalCaseUnchanged": true,
+          "originalUnitsReadbackMatched": true,
+          "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+        }
+      },
+      {
+        "line": 1133,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-compare",
+          "phase": "source-request",
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1135,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-compare",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 35881
+        }
+      },
+      {
+        "line": 1137,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "portfolio-selection-fixture-basis",
+          "initialVersion": 0,
+          "basis": "new-isolated-fixture-with-no-prior-registration",
+          "caseVersion": 6,
+          "criteriaCount": 1
+        }
+      },
+      {
+        "line": 1139,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-select-portfolio",
+          "phase": "source-request",
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1141,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-select-portfolio",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 20865
+        }
+      },
+      {
+        "line": 1143,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-controls",
+          "http": 200,
+          "status": "ok"
+        }
+      },
+      {
+        "line": 1145,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-compare",
+          "phase": "source-request",
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1147,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-compare",
+          "http": 200,
+          "status": "ok",
+          "elapsedMs": 33899
+        }
+      },
+      {
+        "line": 1149,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "portfolio-selection-registered-readback",
+          "status": "ok",
+          "selectionVersion": 1,
+          "caseVersion": 6,
+          "originalAlternativePairMatched": true,
+          "originalCriteriaMatched": true,
+          "currentComparisonUnchanged": true,
+          "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+        }
+      },
+      {
+        "line": 1151,
+        "prefix": "SF_OWNER_ADMISSION_READS",
+        "value": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 4231.281783999992
+            },
+            {
+              "status": 200,
+              "elapsedMs": 6113.111696999986
+            }
+          ]
+        }
+      },
+      {
+        "line": 1153,
+        "prefix": "SF_ANALYTICS_CONTEXT",
+        "value": {
+          "stage": "UI42-list",
+          "http": 200,
+          "status": "ok",
+          "acquisition": "authenticated-original-readback",
+          "ownerBinding": "exact",
+          "resources": [
+            {
+              "family": "decisions",
+              "resource": "case-intent",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "decisions",
+              "resource": "assumptions",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "campaign",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "results",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "sensitivity",
+              "state": "ready",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-sensitivity-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-units",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "line": 1165,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-list-dark-desktop-test-data",
+          "width": 1440,
+          "surface": "UI42",
+          "stage": "list"
+        }
+      },
+      {
+        "line": 1177,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-list-light-desktop-test-data",
+          "width": 1440,
+          "surface": "UI42",
+          "stage": "list"
+        }
+      },
+      {
+        "line": 1183,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-list-dark-390-test-data",
+          "width": 390,
+          "surface": "UI42",
+          "stage": "list"
+        }
+      },
+      {
+        "line": 1189,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-list-light-320-test-data",
+          "width": 320,
+          "surface": "UI42",
+          "stage": "list"
+        }
+      },
+      {
+        "line": 1191,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 1,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1193,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 282,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      },
+      {
+        "line": 1195,
+        "prefix": "SF_ANALYTICS_CONTEXT",
+        "value": {
+          "stage": "UI42-empty-case",
+          "http": 200,
+          "status": "ok",
+          "acquisition": "authenticated-original-readback",
+          "ownerBinding": "exact",
+          "resources": [
+            {
+              "family": "decisions",
+              "resource": "case-intent",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "decisions",
+              "resource": "assumptions",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "campaign",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "results",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "sensitivity",
+              "state": "ready",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-sensitivity-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-units",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "line": 1209,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-empty-authorized-case-test-data",
+          "width": 1440,
+          "surface": "UI42",
+          "stage": "configure"
+        }
+      },
+      {
+        "line": 1211,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 2,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1213,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 521,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      },
+      {
+        "line": 1229,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI42-configure-focused-candidate-test-data",
+          "width": 1440,
+          "surface": "UI42",
+          "stage": "configure"
+        }
+      },
+      {
+        "line": 1231,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "decision-portfolio-preview",
+          "phase": "native-request",
+          "sequence": 3,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      },
+      {
+        "line": 1494,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "line": 1496,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:42629⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.de51233d-f7c8-43b5-8543-4670032f755c · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      },
+      {
+        "line": 1528,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "line": 1672,
+        "prefix": "SF_DESIGN_DISCOVERY",
+        "value": {
+          "selector": "native-workspace",
+          "count": 1,
+          "installations": [
+            {
+              "installationId": "3a57824c-0e46-44e7-8492-bacbe76e3d23",
+              "projectId": "global",
+              "hostId": "b1f6efca-5b2a-44e1-ac70-36bb7bcff36b"
+            }
+          ]
+        }
+      },
+      {
+        "line": 1674,
+        "prefix": "SF_OWNER_ADMISSION_READS",
+        "value": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 4392.430017000006
+            },
+            {
+              "status": 200,
+              "elapsedMs": 6152.082127999995
+            }
+          ]
+        }
+      },
+      {
+        "line": 1688,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-question-catalog-dark-desktop-test-data",
+          "width": 1440,
+          "surface": "UI45",
+          "stage": "catalog"
+        }
+      },
+      {
+        "line": 1702,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-question-catalog-light-desktop-test-data",
+          "width": 1440,
+          "surface": "UI45",
+          "stage": "catalog"
+        }
+      },
+      {
+        "line": 1708,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-question-catalog-dark-390-test-data",
+          "width": 390,
+          "surface": "UI45",
+          "stage": "catalog"
+        }
+      },
+      {
+        "line": 1714,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-question-catalog-light-320-test-data",
+          "width": 320,
+          "surface": "UI45",
+          "stage": "catalog"
+        }
+      },
+      {
+        "line": 1726,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-authorized-financial-context-test-data",
+          "width": 1440,
+          "surface": "UI45",
+          "stage": "context"
+        }
+      },
+      {
+        "line": 1740,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI45-financial-source-values-test-data",
+          "width": 1440,
+          "surface": "UI45",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1742,
+        "prefix": "SF_OWNER_ADMISSION_READS",
+        "value": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2231.524298000004
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3913.5285009999934
+            }
+          ]
+        }
+      },
+      {
+        "line": 1744,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-binding-readback",
+          "view": "BI01",
+          "selectedValueId": "budget:2026-01:effective",
+          "referenceId": "sf-source:494baa4f-a41c-4b4b-83fa-764f819c1bc3:1",
+          "valueBindingCount": 48,
+          "distinctReferenceDigests": 1,
+          "bindings": [
+            {
+              "valueId": "budget:2026-01:basis",
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-01-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-01:effective",
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-01-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-01:actual",
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-01-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-01:forecast",
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-01-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-02:basis",
+              "period": {
+                "start": "2026-02-01",
+                "end": "2026-02-28"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-02:effective",
+              "period": {
+                "start": "2026-02-01",
+                "end": "2026-02-28"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-02:actual",
+              "period": {
+                "start": "2026-02-01",
+                "end": "2026-02-28"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-02:forecast",
+              "period": {
+                "start": "2026-02-01",
+                "end": "2026-02-28"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-03:basis",
+              "period": {
+                "start": "2026-03-01",
+                "end": "2026-03-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-03:effective",
+              "period": {
+                "start": "2026-03-01",
+                "end": "2026-03-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-03:actual",
+              "period": {
+                "start": "2026-03-01",
+                "end": "2026-03-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-03:forecast",
+              "period": {
+                "start": "2026-03-01",
+                "end": "2026-03-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-04:basis",
+              "period": {
+                "start": "2026-04-01",
+                "end": "2026-04-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-04:effective",
+              "period": {
+                "start": "2026-04-01",
+                "end": "2026-04-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-04:actual",
+              "period": {
+                "start": "2026-04-01",
+                "end": "2026-04-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-04:forecast",
+              "period": {
+                "start": "2026-04-01",
+                "end": "2026-04-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-05:basis",
+              "period": {
+                "start": "2026-05-01",
+                "end": "2026-05-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-05:effective",
+              "period": {
+                "start": "2026-05-01",
+                "end": "2026-05-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-05:actual",
+              "period": {
+                "start": "2026-05-01",
+                "end": "2026-05-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-05:forecast",
+              "period": {
+                "start": "2026-05-01",
+                "end": "2026-05-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-06:basis",
+              "period": {
+                "start": "2026-06-01",
+                "end": "2026-06-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-06:effective",
+              "period": {
+                "start": "2026-06-01",
+                "end": "2026-06-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-06:actual",
+              "period": {
+                "start": "2026-06-01",
+                "end": "2026-06-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-06:forecast",
+              "period": {
+                "start": "2026-06-01",
+                "end": "2026-06-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-07:basis",
+              "period": {
+                "start": "2026-07-01",
+                "end": "2026-07-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-07:effective",
+              "period": {
+                "start": "2026-07-01",
+                "end": "2026-07-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-07:actual",
+              "period": {
+                "start": "2026-07-01",
+                "end": "2026-07-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-07:forecast",
+              "period": {
+                "start": "2026-07-01",
+                "end": "2026-07-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-08:basis",
+              "period": {
+                "start": "2026-08-01",
+                "end": "2026-08-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-08:effective",
+              "period": {
+                "start": "2026-08-01",
+                "end": "2026-08-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-08:actual",
+              "period": {
+                "start": "2026-08-01",
+                "end": "2026-08-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-08:forecast",
+              "period": {
+                "start": "2026-08-01",
+                "end": "2026-08-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-09:basis",
+              "period": {
+                "start": "2026-09-01",
+                "end": "2026-09-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-09:effective",
+              "period": {
+                "start": "2026-09-01",
+                "end": "2026-09-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-09:actual",
+              "period": {
+                "start": "2026-09-01",
+                "end": "2026-09-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-09:forecast",
+              "period": {
+                "start": "2026-09-01",
+                "end": "2026-09-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-10:basis",
+              "period": {
+                "start": "2026-10-01",
+                "end": "2026-10-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-10:effective",
+              "period": {
+                "start": "2026-10-01",
+                "end": "2026-10-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-10:actual",
+              "period": {
+                "start": "2026-10-01",
+                "end": "2026-10-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-10:forecast",
+              "period": {
+                "start": "2026-10-01",
+                "end": "2026-10-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-11:basis",
+              "period": {
+                "start": "2026-11-01",
+                "end": "2026-11-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-11:effective",
+              "period": {
+                "start": "2026-11-01",
+                "end": "2026-11-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-11:actual",
+              "period": {
+                "start": "2026-11-01",
+                "end": "2026-11-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-11:forecast",
+              "period": {
+                "start": "2026-11-01",
+                "end": "2026-11-30"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-12:basis",
+              "period": {
+                "start": "2026-12-01",
+                "end": "2026-12-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-12:effective",
+              "period": {
+                "start": "2026-12-01",
+                "end": "2026-12-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-12:actual",
+              "period": {
+                "start": "2026-12-01",
+                "end": "2026-12-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            },
+            {
+              "valueId": "budget:2026-12:forecast",
+              "period": {
+                "start": "2026-12-01",
+                "end": "2026-12-31"
+              },
+              "sourceKeys": [
+                "evidenceLevel",
+                "installationId",
+                "kind",
+                "projectId",
+                "refDigest",
+                "refId",
+                "schema",
+                "target"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "line": 1746,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-original-scalar-dom",
+          "locale": "en-US",
+          "observations": []
+        }
+      },
+      {
+        "line": 1748,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-data-readback",
+          "view": "BI01",
+          "http": 200,
+          "rows": 36,
+          "numericValues": 14,
+          "missing": 22
+        }
+      },
+      {
+        "line": 1762,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-selected-context-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1778,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-dark-desktop-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1794,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-light-desktop-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1802,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-dark-390-test-data",
+          "width": 390,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1808,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+          "width": 390,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1814,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-light-320-test-data",
+          "width": 320,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1820,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+          "width": 320,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1838,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-source-table-dark-desktop-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1856,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-source-table-light-desktop-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1862,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-source-table-dark-390-test-data",
+          "width": 390,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1868,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-financial-source-table-light-320-test-data",
+          "width": 320,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1870,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:effective",
+          "http": 200,
+          "acquisition": "native-response"
+        }
+      },
+      {
+        "line": 1872,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-original-destinations",
+          "selectedValueId": "budget:2026-01:effective",
+          "installedOrigin": "http://127.0.0.1:40005",
+          "installedMount": "/sucafina",
+          "links": [
+            {
+              "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+              "url": "http://127.0.0.1:40005/orchestra/sf-dashboard/budget?year=2026"
+            }
+          ]
+        }
+      },
+      {
+        "line": 1890,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-resolved-original-source-1-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1892,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:actual",
+          "http": 200,
+          "acquisition": "native-response"
+        }
+      },
+      {
+        "line": 1894,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-original-destinations",
+          "selectedValueId": "budget:2026-01:actual",
+          "installedOrigin": "http://127.0.0.1:40005",
+          "installedMount": "/sucafina",
+          "links": [
+            {
+              "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+              "url": "http://127.0.0.1:40005/orchestra/sf-dashboard/budget?year=2026"
+            }
+          ]
+        }
+      },
+      {
+        "line": 1912,
+        "prefix": "SF_ANALYTICS_CAPTURE",
+        "value": {
+          "name": "UI46-resolved-original-source-2-test-data",
+          "width": 1440,
+          "surface": "UI46",
+          "stage": "result"
+        }
+      },
+      {
+        "line": 1914,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-source-identity-regression",
+          "selectedValues": [
+            "budget:2026-01:effective",
+            "budget:2026-01:actual"
+          ],
+          "samePublishedReference": true,
+          "exactValueAndDigestQueries": 2,
+          "originalProjectionRetained": true
+        }
+      },
+      {
+        "line": 1916,
+        "prefix": "SF_OWNER_ADMISSION_READS",
+        "value": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2272.2308239999984
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3996.5750100000005
+            }
+          ]
+        }
+      },
+      {
+        "line": 1918,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "native-request-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "sameNativeRequest": false,
+          "bodyObserved": false,
+          "http": null,
+          "teardownPhase": "observing",
+          "errorText": "net::ERR_ABORTED"
+        }
+      },
+      {
+        "line": 1920,
+        "prefix": "SF_ANALYTICS_SOURCE",
+        "value": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "network-loading-failed",
+          "acquisitionFailure": true,
+          "errorClass": "Error",
+          "networkLoadingFailed": true,
+          "errorText": "net::ERR_ABORTED",
+          "canceled": true
+        }
+      },
+      {
+        "line": 1922,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "line": 1924,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:40005⁩ · Analysis detailsAnalysis detailsCurrent operations and observed datesWhich approvals have waited longest?Analysis viewChoose an authorized viewHow do budget, actuals and outlook evolve?Which components explain the difference?What contributes to the variance?How are capacity and costs distributed?Where are open requests?Which approvals have waited longest?What was opened and completed?Which milestones are planned or completed?Which components support the alternative?Which date changes cost or feasibility?Which variable changes the condition?Start dateEnd dateChoose contextAuthorized selectionsSelectionUse an authorized selectionPedidos autorizados · 2026-01-01 – 2026-12-31 · 7 registrosRelated source pagesAbrir pedidos e suas aprovações — procurement: RequestsView dataOperational analysisWhich approvals have waited longest?PeriodJan 1, 2026 – Dec 31, 2026CurrencyUSDProjection / engine version1 / procurement-v1Partial coveragePartial coverage; missing items remain visibleUnknown age or dates are not converted to zero.Idade comprovada na etapadaysIdade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00128359 daysJan 1, 2026 – Dec 31, 20260.00128359Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00128359 daysJan 1, 2026 – Dec 31, 20260.00128359Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026 · 0.00128359 daysJan 1, 2026 – Dec 31, 20260.00128359Jan 1, 2026 – Dec 31, 20260.00128359daysJan 1, 2026 – Dec 31, 20260.00128359daysJan 1, 2026 – Dec 31, 20260.00128359daysOpen original sourceOpen original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Open original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Open original source: Idade comprovada na etapa · Jan 1, 2026 – Dec 31, 2026Source limitationsPedidos sem idade comprovada permanecem na tabela como indisponíveis.Authorized operational measuresMeasureValueUnitPeriodEvidenceSource referenceShow detailsIdade comprovada na etapa0.00128359daysJan 1, 2026 – Dec 31, 2026Confirmed0351755e-67d1-4291-8e68-9855fdd16fa2Show detailsIdade comprovada na etapa0.00128359daysJan 1, 2026 – Dec 31, 2026Confirmed81c94881-9aa6-4672-b526-350858ee7cccShow detailsIdade comprovada na etapa0.00128359daysJan 1, 2026 – Dec 31, 2026Confirmed17dc4cdc-0e0a-4964-8892-678cf4fdd66eShow detailsThe source links are loading or unavailable."
+          }
+        }
+      },
+      {
+        "line": 1938,
+        "prefix": "SF_DESIGN_DIAGNOSTICS",
+        "value": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ],
+    "captureCounts": {
+      "UI42": 6,
+      "UI45": 6,
+      "UI46": 13,
+      "UI43": 0,
+      "UI44": 0
+    },
+    "previewImages": [
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-list-dark-desktop-test-data",
+        "firstLine": 1155,
+        "lastLine": 1163,
+        "parts": 5,
+        "rows": [
+          1155,
+          1157,
+          1159,
+          1161,
+          1163
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 81030,
+        "sha256": "61067b99208dff4c596c8cbb3e9ec0991198c93bb1bdd1a2c33c9ceaba02f1b1",
+        "calculatedGitBlob": "b22e3b82699bc02a95597302a2b71405beea36db",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-list-light-desktop-test-data",
+        "firstLine": 1167,
+        "lastLine": 1175,
+        "parts": 5,
+        "rows": [
+          1167,
+          1169,
+          1171,
+          1173,
+          1175
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 86154,
+        "sha256": "d3a043e0eb5154c58f618e64d4bf268ddbdd585b7a8a60a0b5c6157f52d13d1d",
+        "calculatedGitBlob": "ec598378cb88d98eac443436bb51e445f90a335d",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-list-dark-390-test-data",
+        "firstLine": 1179,
+        "lastLine": 1181,
+        "parts": 2,
+        "rows": [
+          1179,
+          1181
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 28670,
+        "sha256": "f3518abdb2246ec16f5d16659f04b691751d25c4b7ae5484b4b8fd1ed341917b",
+        "calculatedGitBlob": "b017ed086fdf2abd1660ce645f2161a5fd431738",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-list-light-320-test-data",
+        "firstLine": 1185,
+        "lastLine": 1187,
+        "parts": 2,
+        "rows": [
+          1185,
+          1187
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 28088,
+        "sha256": "3b82dbe3e95f4dcd49c09281371a796a4862a85fc2a6816598799073881333ea",
+        "calculatedGitBlob": "de0e0ee41cdac627ebf5906cca613574bc0f42cc",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-empty-authorized-case-test-data",
+        "firstLine": 1197,
+        "lastLine": 1207,
+        "parts": 6,
+        "rows": [
+          1197,
+          1199,
+          1201,
+          1203,
+          1205,
+          1207
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 99756,
+        "sha256": "2b07af80fb07eef243b3ce7fdb3a74193ba0373b0bc7db344be584c0c5abb9a0",
+        "calculatedGitBlob": "20144267206a9a9d7a9cc38c44b1ec9eabd037fd",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "UI42-configure-focused-candidate-test-data",
+        "firstLine": 1215,
+        "lastLine": 1227,
+        "parts": 7,
+        "rows": [
+          1215,
+          1217,
+          1219,
+          1221,
+          1223,
+          1225,
+          1227
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 109265,
+        "sha256": "9d3825b49cb83161efe3545b6366fb4205cdbbad90bb964530a4de415c121b18",
+        "calculatedGitBlob": "72ebedd0b0e9731df9c1f4fb3d5c4f76c19bc3cb",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "portfolio-sensitivity",
+        "name": "FAILED-native-wave-three-test-data",
+        "firstLine": 1514,
+        "lastLine": 1526,
+        "parts": 7,
+        "rows": [
+          1514,
+          1516,
+          1518,
+          1520,
+          1522,
+          1524,
+          1526
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 110687,
+        "sha256": "7b72d29a87c6d920412607d366aa676102af00452b73a205ad8a981036183d8d",
+        "calculatedGitBlob": "246cd310670ab71b4e95662bdf43bd9cc9d4504b",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "firstLine": 1676,
+        "lastLine": 1686,
+        "parts": 6,
+        "rows": [
+          1676,
+          1678,
+          1680,
+          1682,
+          1684,
+          1686
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 99982,
+        "sha256": "9a808a7f380970918b33c5fbc9382a26422a5401a6f745c943079d5f9f5de3db",
+        "calculatedGitBlob": "841a86367dd285b923766857789753520e706f26",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "firstLine": 1690,
+        "lastLine": 1700,
+        "parts": 6,
+        "rows": [
+          1690,
+          1692,
+          1694,
+          1696,
+          1698,
+          1700
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 105193,
+        "sha256": "4ca571120e32027889b15be7c5d59b86075ceb3709c3decb921d7e5280f569fe",
+        "calculatedGitBlob": "3036a3f141cd817d139ca3fbbd0f201f7c12f109",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "firstLine": 1704,
+        "lastLine": 1706,
+        "parts": 2,
+        "rows": [
+          1704,
+          1706
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 34210,
+        "sha256": "30330074c80af1108d183a18b8500c29a87f0616277ab79364207349e721f1c2",
+        "calculatedGitBlob": "45c5254eaf347ead1eca20d772a7a578b74354cc",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-question-catalog-light-320-test-data",
+        "firstLine": 1710,
+        "lastLine": 1712,
+        "parts": 2,
+        "rows": [
+          1710,
+          1712
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 28159,
+        "sha256": "4acafa526ceb9cb48334ca46dc24359659b5ea197cae8196f1a4570bc2b4fd42",
+        "calculatedGitBlob": "c11694b37366cc6398963c4f75253b8d88df292f",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-authorized-financial-context-test-data",
+        "firstLine": 1716,
+        "lastLine": 1724,
+        "parts": 5,
+        "rows": [
+          1716,
+          1718,
+          1720,
+          1722,
+          1724
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 88101,
+        "sha256": "8cb9f417bf6b9c9fe2e31e5b9a35452b166cda8ef14aa7a50845204a8392616c",
+        "calculatedGitBlob": "e389bccb97c515b9b100142b8d2e490b62b289ca",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI45-financial-source-values-test-data",
+        "firstLine": 1728,
+        "lastLine": 1738,
+        "parts": 6,
+        "rows": [
+          1728,
+          1730,
+          1732,
+          1734,
+          1736,
+          1738
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 104760,
+        "sha256": "276d6d39f13948243ef0c7a02a00285babe2a20c2f200f17362a20d315ed6821",
+        "calculatedGitBlob": "4e248860d60b179a7f702b0919da6eefcd4af646",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-selected-context-test-data",
+        "firstLine": 1750,
+        "lastLine": 1760,
+        "parts": 6,
+        "rows": [
+          1750,
+          1752,
+          1754,
+          1756,
+          1758,
+          1760
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 105185,
+        "sha256": "8c10448996b2d38e1d3e319207c5fe763f3bac604fc6af99fac6aef122a729c5",
+        "calculatedGitBlob": "91fa7fcb318f588301fcc42565cb3d4407046d0b",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "firstLine": 1764,
+        "lastLine": 1776,
+        "parts": 7,
+        "rows": [
+          1764,
+          1766,
+          1768,
+          1770,
+          1772,
+          1774,
+          1776
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 108692,
+        "sha256": "cb0c51648eb7aa6e7e25831a73341f3e928cefb2ee5d735280ad41a8587e2091",
+        "calculatedGitBlob": "8dd61c78dbdcba546f6ce8b7e5ccc69905aa7130",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "firstLine": 1780,
+        "lastLine": 1792,
+        "parts": 7,
+        "rows": [
+          1780,
+          1782,
+          1784,
+          1786,
+          1788,
+          1790,
+          1792
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 114109,
+        "sha256": "d08ad3c0ba05809c328571bbef8ec16404c9389a28b93b7f317d65cf6902617e",
+        "calculatedGitBlob": "e2f086726cc40c8ca9b475b5ed97a035171e57e4",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "firstLine": 1796,
+        "lastLine": 1800,
+        "parts": 3,
+        "rows": [
+          1796,
+          1798,
+          1800
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 37165,
+        "sha256": "f76798a99a78fa0a7f29722a5cb1b90ab60535135a23eed471b7bea1fa81def9",
+        "calculatedGitBlob": "3144c20cbf2b965b905a57d8e4368ace08152442",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "firstLine": 1804,
+        "lastLine": 1806,
+        "parts": 2,
+        "rows": [
+          1804,
+          1806
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 34982,
+        "sha256": "56b23f90001f5ab2c22f1071cdb910de8293b5b5557c01558f07767b9833f326",
+        "calculatedGitBlob": "76d8981b804ffc7fa977184ffb53f48f20de4dd3",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "firstLine": 1810,
+        "lastLine": 1812,
+        "parts": 2,
+        "rows": [
+          1810,
+          1812
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 31062,
+        "sha256": "33503aab1fab5f190f3d2ee1c97edeed337ff6517e7fdde0e5711aea3dd24c2d",
+        "calculatedGitBlob": "a0af1a28df2f5332ae83afa822ebd295e9e5bf50",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "firstLine": 1816,
+        "lastLine": 1818,
+        "parts": 2,
+        "rows": [
+          1816,
+          1818
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 30371,
+        "sha256": "78639ab4444e0d9c68ab737d096e9e5046307a8edbb2c2bc2a30f5e31bf95bce",
+        "calculatedGitBlob": "4011c520d17a46ac66671b80fa1a683659886bbd",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "firstLine": 1822,
+        "lastLine": 1836,
+        "parts": 8,
+        "rows": [
+          1822,
+          1824,
+          1826,
+          1828,
+          1830,
+          1832,
+          1834,
+          1836
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 131455,
+        "sha256": "b3da6e91f5943b3367437e1753ad1fb8804ac50fa7ee9e16d24eb40a58d0cbbf",
+        "calculatedGitBlob": "a7e1c5427548f15c6f796d473d872788251270d0",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "firstLine": 1840,
+        "lastLine": 1854,
+        "parts": 8,
+        "rows": [
+          1840,
+          1842,
+          1844,
+          1846,
+          1848,
+          1850,
+          1852,
+          1854
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 135036,
+        "sha256": "df45361450c0e073b9fe0218ff9d3eaad8a44df27db9ad7e41d50b66ae7240e6",
+        "calculatedGitBlob": "bdcba1bbf2afa301ef6a0226b08d63403ef154e9",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "firstLine": 1858,
+        "lastLine": 1860,
+        "parts": 2,
+        "rows": [
+          1858,
+          1860
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 34436,
+        "sha256": "01178134efbe3ff5d6e20f29d261a16ee436b4db8a6f9b42337f18195a917abc",
+        "calculatedGitBlob": "325cfcd7dbd7dff19e750cc518cd5d4247d08de6",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "firstLine": 1864,
+        "lastLine": 1866,
+        "parts": 2,
+        "rows": [
+          1864,
+          1866
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 28335,
+        "sha256": "07914cf25fd161bb5073e36850daab53b89ba65ad1941ee9cc48b43956f45002",
+        "calculatedGitBlob": "99c7af27c6910e286a012f029ea281a23a6f7a36",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-resolved-original-source-1-test-data",
+        "firstLine": 1874,
+        "lastLine": 1888,
+        "parts": 8,
+        "rows": [
+          1874,
+          1876,
+          1878,
+          1880,
+          1882,
+          1884,
+          1886,
+          1888
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 137149,
+        "sha256": "7e0a881c7710378b3b80588260e604cc0811aae486698c1dac93d19f6fa05460",
+        "calculatedGitBlob": "a78e2759406d2e1e9aa841494f7aa3b6ba6d88f9",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "UI46-resolved-original-source-2-test-data",
+        "firstLine": 1896,
+        "lastLine": 1910,
+        "parts": 8,
+        "rows": [
+          1896,
+          1898,
+          1900,
+          1902,
+          1904,
+          1906,
+          1908,
+          1910
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 137149,
+        "sha256": "7e0a881c7710378b3b80588260e604cc0811aae486698c1dac93d19f6fa05460",
+        "calculatedGitBlob": "a78e2759406d2e1e9aa841494f7aa3b6ba6d88f9",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      },
+      {
+        "journey": "contextual-bi",
+        "name": "FAILED-native-wave-three-test-data",
+        "firstLine": 1926,
+        "lastLine": 1936,
+        "parts": 6,
+        "rows": [
+          1926,
+          1928,
+          1930,
+          1932,
+          1934,
+          1936
+        ],
+        "complete": true,
+        "isDataURL": false,
+        "bytes": 105754,
+        "sha256": "de66bbf294df64824b07f1bdce2a7433f1bb46c37d9ee4a24377572896d323ac",
+        "calculatedGitBlob": "c06086e169252cb4ee040eeafa00828869327fca",
+        "blobCreated": false,
+        "jpegSoi": true,
+        "jpegEoi": true,
+        "qualification": false
+      }
+    ],
+    "previewsAreDiagnosticJpegOnly": true,
+    "pngOrZipBytesAcquired": false
+  },
+  "outcome": {
+    "cases": 2,
+    "passed": 0,
+    "failed": 2,
+    "portfolio": {
+      "error": "TimeoutError: page.waitForResponse: Timeout60000ms exceeded",
+      "specLine": 72,
+      "originalPreviewResponseObserved": false,
+      "lastEventSequence": 107,
+      "lastEvent": "analysis-binding initial enter",
+      "lastEventMs": 60451.8,
+      "firstPersistencePhaseClosedMs": 60343.8,
+      "requestClosureAbsent": true
+    },
+    "bi": {
+      "error": "page.waitForResponse: Original BI request failed",
+      "specLine": 611,
+      "view": "BI06",
+      "requestFailedLine": 1918,
+      "networkLoadingFailedLine": 1920,
+      "errorText": "net::ERR_ABORTED",
+      "canceled": true,
+      "sameNativeRequest": false,
+      "bodyObserved": false,
+      "http": null,
+      "teardownPhase": "observing",
+      "failureDiagnosticLaterLine": 1922,
+      "pageClosedLaterLine": 1938,
+      "renderedOperationalDomLine": 1924,
+      "cause": "Not established by the preserved log; rendered DOM does not recover the failed acquisition"
+    }
+  },
+  "interpretation": {
+    "identity": "Wire source/sourceTree identify cleanR7 baseline; actualsnapshot is c53f203…T6b8fb4e…; do not conflate baseline with executed source.",
+    "clock": "elapsedTenthMs/10, same identity tuple only; intervals inclusive, no exclusiveCPU inference",
+    "slots": "5 validation slots are first persistence only;3 bind+2 explicit read; all8boundarypoints observed. No invented generation field.",
+    "success": "Await-returned is not result success; no preview HTTPresponse/requestclose observed.",
+    "firstPersistence": "Completed observed first persistence does not establish completion of preview; initial external binding-read entry is last event.",
+    "caps": "107 complete rows form partial prefix below191event/195584Bcap; no terminal means absence of laterfault or overflow cannot be certified.",
+    "comparisons": "Counters at final phaseclose are prefix counters, not totalrequest. No cachehit/miss or physicalFinanceadmission inferred.",
+    "bi": "Separate installed origin and later test; no common cause established. No priorBIpass transferred.",
+    "transaction": "C08 transaction63.3ms,materialize2.3ms,commit1.0ms in this observedroute; does not support store/queue as dominantcause."
+  },
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "UI42": false,
+    "UI43": false,
+    "UI44": false,
+    "ui6": false,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false
+  }
+}

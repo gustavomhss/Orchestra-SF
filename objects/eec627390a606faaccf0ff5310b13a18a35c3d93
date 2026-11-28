@@ -1,0 +1,175 @@
+{
+  "schema": "sf613-e16r2-focal-final-positive-receipt-v1",
+  "status": "CLOSED_ACCEPTED_DIAGNOSTIC_FOCAL_FOR_EXACT_SOURCE_AND_SNAPSHOT",
+  "at": {
+    "current_time": "2026-11-28 16:27:59 UTC"
+  },
+  "source": {
+    "sha": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7"
+  },
+  "snapshot": {
+    "sha": "a589b0f3c681837266a8e1b035afcd6e5c46f565",
+    "tree": "337c2030c3c38a4ab707bb0c0f0d94e2098311c5"
+  },
+  "run": {
+    "id": 46163799111,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46163799111",
+    "main": {
+      "id": 141036746242,
+      "conclusion": "success"
+    },
+    "cleanup": {
+      "id": 141038533976,
+      "conclusion": "success"
+    },
+    "conclusion": "success"
+  },
+  "terminalMetadata": {
+    "gitBlob": "9bf6b11d196af01c36b38195cf1b7d1ea3cd4f9f",
+    "bytes": 26208,
+    "sha256": "534e2ff4f0428d354d2c60adb3cdf5bd74c45661c18ae8bad1fe8686661c0680",
+    "lf": 567,
+    "endsWithLF": true
+  },
+  "closure": {
+    "gitBlob": "cee91a93d82b379e54d4d9bbe45eefc521666139",
+    "bytes": 1846,
+    "sha256": "cbeeff1ee8b1c5bd66ec110b598ea63413ae9e2e8591bfec84d0e8a33c4fef30",
+    "lf": 63,
+    "endsWithLF": true
+  },
+  "closedAt": {
+    "current_time": "2026-11-28 16:19:27 UTC"
+  },
+  "copies": {
+    "main": {
+      "gitBlob": "0b31bd4dff8e6e96dc224fc6d4ced8148a367b02",
+      "bytes": 140723,
+      "sha256": "b58b81bf8bfadadf7590677f26e60c26652f3873e88d32d405f3b44d1440b014",
+      "lf": 1011,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "d430f26a55d6dcdc35c1d2ad265b0576694a65d9",
+      "bytes": 1701,
+      "sha256": "cae705a79752bdd846f23bf77ff7833ce1b4ab18721eb7cc7303e16aa0a39eb4",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "34953da2aaae6ac4ef141779d80846316a07357d",
+      "bytes": 2282,
+      "sha256": "feb78fa853f057c1412629f9815d57258420f32d4f2166eb0d15a882b44c0b6e",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "504d7cff09e247cf77ee0bb744867423d68c5b3b",
+      "bytes": 1688,
+      "sha256": "e1a07c4382a12a0ebf43bedf08a9f34870737b23771a219fa29211a4bcdb7f74",
+      "lf": 60,
+      "endsWithLF": true
+    }
+  },
+  "extraction": {
+    "gitBlob": "27cda07c680d73c0a17ab0bba08de25edc0d52e9",
+    "bytes": 175208,
+    "sha256": "473f4b6a4ac70d616f2a6592d92496f232f20891d206e40fcb9066a52ef05529",
+    "lf": 3407,
+    "endsWithLF": true
+  },
+  "rootIntake": {
+    "gitBlob": "3966516e54a84e2b69e3119a7f5537196d62a9af",
+    "bytes": 11499,
+    "sha256": "dd05b66642a6e75d0f1c6027e0290a8ce1459d0e54ca5e9ecfe53e886a777474",
+    "lf": 447,
+    "endsWithLF": true
+  },
+  "independentIntake": {
+    "gitBlob": "ae81b3cdce23316e10baa429558c070b518af60f",
+    "bytes": 16541,
+    "sha256": "06d97a5b02b2042dd055d8c704a659ddf6ca2fb0515fa725150e4f25f9def936",
+    "lf": 519,
+    "endsWithLF": true
+  },
+  "evidenceDiscrepancies": [],
+  "result": {
+    "commandsZero": 17,
+    "captureFlagsFalse": 34,
+    "typechecksPassed": 2,
+    "workingPins": 40,
+    "hostPreambles": 11,
+    "functional": {
+      "processes": 7,
+      "passed": 23,
+      "failed": 0,
+      "assertions": 2747
+    },
+    "outer": {
+      "passed": 11,
+      "failed": 0,
+      "assertions": 67
+    },
+    "controlReports": 12,
+    "E16": {
+      "bytes": 8688,
+      "childModes": 10,
+      "distinctPids": 10,
+      "labelEntries": 64,
+      "uniqueLabels": 56
+    },
+    "guards": {
+      "rules": 78,
+      "files": 871,
+      "inheritedFindings": 40,
+      "errors": 0,
+      "bypasses": 0
+    },
+    "outerOmni": {
+      "spawns": 17,
+      "delegations": 0
+    },
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "zipGets": 0,
+    "artifacts": 0,
+    "cleanupBranchAbsent": true
+  },
+  "interpretation": {
+    "focalAccepted": true,
+    "scope": "The selected diagnostic focal only, on S c53/T6b8 executed through D a589/T337. The original installation journeys have not run on S yet.",
+    "priorNegative": {
+      "gitBlob": "be7c07deec5ab262799240ce50ed7b1596bc2bfb",
+      "bytes": 7115,
+      "sha256": "c86f3eeddc4415be1737221b8810b6f1525b356563a2935829297f000fcc49f6",
+      "lf": 194,
+      "endsWithLF": true
+    },
+    "noPassTransferFromNegative": true,
+    "AnalyticsMayBeConsideredUnderSeparateAuthority": true,
+    "sourceAndEventBaselineDistinct": true,
+    "oldOriginalsStayClosed": true
+  },
+  "limits": [
+    "Applies only to S c53f203/T6b8fb4 and D a589b0/T337c20 on run 46163799111 attempt 1.",
+    "The actual instrumented source differs from the diagnostic event baseline ad3/T11bf.",
+    "The 17 carrier AppProcess commands, outer Omni result and ten synthetic child wrappers are distinct populations.",
+    "The 191-row/191KiB bounds apply to diagnostic streams, not to the entire 140723-byte Actions main log.",
+    "Positive focal controls do not prove installed UI journeys, production performance, a release candidate or production readiness.",
+    "No source, tree, commit, ref or run was modified. The sole write is this independent review blob plus literal readback."
+  ],
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "installedAnalytics": false,
+    "UI42_UI44": false,
+    "finalC613": null,
+    "tar": null,
+    "productionAuthorized": false
+  }
+}

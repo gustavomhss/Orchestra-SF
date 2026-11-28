@@ -1,0 +1,45 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+index 118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364..0d2b9c037acae759058b5f070f04b5f64525bfd6 100644
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -14,6 +14,9 @@
+ const source = "__SF613_SOURCE_SHA__"
+ const sourceTree = "__SF613_SOURCE_TREE__"
+ const sourceBase = "ad3a4a7527baf1e092e87b5478626b2f0a3be57c"
++const sourceBaseTree = "11bf210f469be26630c39db586bcfcce87e0de1b"
++const sourceParent = "bb5e7df013ef3404df67cd101ae3ff5c5983779b"
++const sourceParentTree = "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+ const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+ const checks = testEffect(LayerNode.compile(AppProcess.node))
+ 
+@@ -61,7 +64,8 @@
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+   process.stdout.write(JSON.stringify({ e16ObservationManifest: {
+-    source, sourceTree, sourceBase, qualification: false, diagnosticOnly: true, workingTreePins: 40,
++    source, sourceTree, sourceBase, sourceBaseTree, sourceParent, sourceParentTree,
++    immediateSourceDelta: { modified: 1, added: 0, paths: 1 }, qualification: false, diagnosticOnly: true, workingTreePins: 40,
+     instrumentedSourcePaths: 18, addedSourcePaths: 2, sourceDeltaPaths: 20, deltaBase: sourceBase,
+     sourceAnalyticsRequest: "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+     snapshotRequest: "4a7b64a8392138f1b79d386557e48ac4453617f5", snapshotDelta: { added: 3, modified: 1 },
+@@ -92,7 +96,7 @@
+   const candidate = yield* runCommand("source identity", "git", [
+     "show", "-s", "--format=%H%n%T%n%P", "HEAD^",
+   ], repository, 30_000)
+-  expect(candidate.trim().split("\n")).toEqual([source, sourceTree, sourceBase])
++  expect(candidate.trim().split("\n")).toEqual([source, sourceTree, sourceParent])
+   const sourceFiles = [
+     ["modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","5376c4f7d7cc3c70e7474e5c962fc91a84f8b4c5"],
+     ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","19e9f55cb0212dd820db3dba0e4082d6fe6acf99"],
+@@ -130,9 +134,9 @@
+     ["modules/sucafina/Sucafinav1/product/decisions/result-store.ts","9c56de1b2d3acb74745acc327390ac26bf23dcb9"],
+     ["modules/sucafina/Sucafinav1/product/planner/persistence.ts","8217a4f4def802c890c915163775b272655203fb"],
+     ["modules/sucafina/Sucafinav1/product/portfolio/verification.ts","7a864749f19bd1a3f68ee750ae83bd6622380151"],
+-    ["modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts","cb7eaf748d2e89fa2a274f7714bf8d031e963fb5"],
++    ["modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts","289523ca2b7f588337473f218476e242776d721d"],
+     ["apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts","b6cd3cb2e37a5b312b73525cc10c3db523992b1f"],
+-    ["apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts","fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e"],
++    ["apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts","6185635810d712e4be7dfe109422d2d65103a1a0"],
+     [".ci-run.json","4a7b64a8392138f1b79d386557e48ac4453617f5"],
+   ] as const
+   const observed: { path: string; sha: string }[] = []

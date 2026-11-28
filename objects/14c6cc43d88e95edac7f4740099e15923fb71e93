@@ -1,0 +1,221 @@
+{
+  "schema": "sf613-e16a-original-analytics-final-receipt-v1",
+  "status": "CLOSED_RECEIVED_NEGATIVE_BOTH_JOURNEYS_FAILED_NO_NEW_QUALIFICATION",
+  "at": {
+    "current_time": "2026-11-28 16:59:27 UTC"
+  },
+  "sourceAndSnapshot": {
+    "sha": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "sameObject": true
+  },
+  "run": {
+    "id": 46165435477,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46165435477",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 141041831215,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "completedAt": "2026-11-28T16:38:42Z"
+      },
+      {
+        "id": 141044316560,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "completedAt": "2026-11-28T16:38:48Z"
+      }
+    ]
+  },
+  "inputs": {
+    "rootIntake": {
+      "gitBlob": "317fb2d136d8b0c651244e2dd741f5b52a92765b",
+      "bytes": 8974,
+      "sha256": "777bd0c09b6ce45e04afaa1f4f0267bf4711a4572d30db3addd91cc25c0a641b",
+      "lf": 306,
+      "endsWithLF": true
+    },
+    "independentIntake": {
+      "gitBlob": "db0f68569ed94114f2c86002004228f89fec0ad9",
+      "bytes": 22651,
+      "sha256": "1257a2efba17ade2f1e98a54692fe171d606d20f0b6890d6536817cfc5516779",
+      "lf": 664,
+      "endsWithLF": true
+    },
+    "closure": {
+      "gitBlob": "d615a75b08f36d211c135f5b70e830b67bcb2de2",
+      "bytes": 4966,
+      "sha256": "3ed7601243d44cf72d0c97dfa38a5f220c858d86868af30511ece22eecedff24",
+      "lf": 153,
+      "endsWithLF": true
+    },
+    "terminalMetadata": {
+      "gitBlob": "5d10f28f24e05ddb88d433834edcbc27a11016f2",
+      "bytes": 27544,
+      "sha256": "82b7cf04649449c06c2ff5069549ef6febe26f6df9aea243c19aa030c7175f5d",
+      "lf": 600,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "fa2c6d4de11a18fba9cdcd9a3247c17ab00df509",
+      "bytes": 5523,
+      "sha256": "c1bd59a9ca884802a2e70ef2ea3580f91f1af814f8f529c29683b5f16d4371ec",
+      "lf": 192,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "2c393c5a76e54009c8be0140701ded22c1ae18cd",
+      "bytes": 1683,
+      "sha256": "9f8c58382774ba210ab68c346cb32122a41827a5c42f90484f18db06e5a177a9",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "eventUnion": {
+      "gitBlob": "b50584894baa261df2d5da44cba3d35b160fabf9",
+      "bytes": 58181,
+      "sha256": "fc739b04b399e87d766e4031ba19c5b9b35971d2829313d52e9c9cfb2a544b43",
+      "lf": 107,
+      "endsWithLF": true
+    },
+    "evidenceExtraction": {
+      "gitBlob": "831e0cb426d931c2fdf5f7760bea353459bedf32",
+      "bytes": 111529,
+      "sha256": "97125d1e16ec711ecd0f18fae0f54f1d3aecea9e80499447074309629d3a13c7",
+      "lf": 4182,
+      "endsWithLF": true
+    },
+    "acceptedDiagnosticFocal": {
+      "gitBlob": "eec627390a606faaccf0ff5310b13a18a35c3d93",
+      "bytes": 5353,
+      "sha256": "09a582f0172a064aac53cc4f56a2ccf7233bc7fdf745df9d2663bdd2d2156f28",
+      "lf": 175,
+      "endsWithLF": true
+    }
+  },
+  "agreement": {
+    "materialReceptionDiscrepancies": 0,
+    "rootChecks": 16,
+    "independentChecks": 135,
+    "rootComparisonChecks": 10,
+    "checksAreEvidenceVerificationNotProductPasses": true
+  },
+  "originals": {
+    "permanentlyClosed": true,
+    "closedAt": {
+      "current_time": "2026-11-28 16:43:38 UTC"
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "mainActualParts": 11,
+    "mainBytes": 3158165,
+    "mainSha256": "8ea467a007cb3883c472c62940dae09c22fc9bb8d375a9fd63110ea35eaa1f85",
+    "mainWholeCalculatedNotFetchable": "1017bc4ca27f71c6129c836d08dcf66112368437",
+    "cleanupActual": {
+      "gitBlob": "f24f654ea1febc692e88a911407d1948ac9615e4",
+      "bytes": 2288,
+      "sha256": "13cabe6fae674d39f0e0df130390278fd9e12385c7d075349d4ef6918f8de82b",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "bothOriginalBomsPreserved": true
+  },
+  "outcome": {
+    "cases": 2,
+    "passed": 0,
+    "failed": 2,
+    "portfolio": {
+      "error": "TimeoutError: page.waitForResponse: Timeout60000ms exceeded",
+      "specLine": 72,
+      "originalPreviewResponseObserved": false,
+      "lastEventSequence": 107,
+      "lastEvent": "analysis-binding initial enter",
+      "lastEventMs": 60451.8,
+      "firstPersistencePhaseClosedMs": 60343.8,
+      "requestClosureAbsent": true
+    },
+    "bi": {
+      "error": "page.waitForResponse: Original BI request failed",
+      "specLine": 611,
+      "view": "BI06",
+      "requestFailedLine": 1918,
+      "networkLoadingFailedLine": 1920,
+      "errorText": "net::ERR_ABORTED",
+      "canceled": true,
+      "sameNativeRequest": false,
+      "bodyObserved": false,
+      "http": null,
+      "teardownPhase": "observing",
+      "failureDiagnosticLaterLine": 1922,
+      "pageClosedLaterLine": 1938,
+      "renderedOperationalDomLine": 1924,
+      "cause": "Not established by the preserved log; rendered DOM does not recover the failed acquisition"
+    }
+  },
+  "diagnosticTrace": {
+    "events": 107,
+    "oneIdentityTuple": true,
+    "sequenceContiguous": true,
+    "noDuplicateOrDivergence": true,
+    "fiveFirstPersistenceValidationSlotsAllEightPoints": true,
+    "firstPersistencePhaseCloseMs": 60343.8,
+    "nextBindingReadEntryMs": 60451.8,
+    "nextReadReturnObserved": false,
+    "requestCloseObserved": false,
+    "intervalsInclusive": true,
+    "exclusiveCauseEstablished": false,
+    "physicalFinanceAdmissionInferred": false,
+    "performanceImprovementEstablished": false
+  },
+  "images": {
+    "captureMarkers": 25,
+    "byArea": {
+      "UI42": 6,
+      "UI45": 6,
+      "UI46": 13
+    },
+    "diagnosticJpegImages": 27,
+    "chunks": 132,
+    "decodedJpegBytes": 2174935,
+    "verifiedContainerOnly": true,
+    "pngVisualQualification": false,
+    "zipDownloads": 0
+  },
+  "artifact": {
+    "id": 15271693277,
+    "name": "playwright-ubuntu-24.04-1",
+    "sizeBytes": 30512295,
+    "digest": "sha256:34fd07642643e577f18a834e4c86b1c8bdb2cd497d4b2b4269c9e2bfcfd3fe8c",
+    "expiresAt": "2026-12-05T16:38:39Z",
+    "metadataOnly": true,
+    "downloaded": false
+  },
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "UI42": false,
+    "UI43": false,
+    "UI44": false,
+    "ui6": false,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false
+  },
+  "decision": {
+    "acceptAsFaithfulDiagnosticReceipt": true,
+    "acceptAsProductQualification": false,
+    "acceptOriginalAnalytics": false,
+    "mergeApproved": false,
+    "productionApproved": false,
+    "oldBIPassTransferred": false,
+    "priorCorrectedFocalReceiptPreserved": true,
+    "rerunThisSource": false,
+    "next": "Bounded clean-source composition check and independent BI acquisition diagnosis; review actual changes before one new activation."
+  }
+}

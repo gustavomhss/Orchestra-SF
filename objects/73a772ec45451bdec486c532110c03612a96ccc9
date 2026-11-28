@@ -1,0 +1,711 @@
+{
+  "schema": "sf613-e16-focal-bounds-v1",
+  "status": "STATIC_UNBOUND_DIAGNOSTIC_PROPOSAL",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseCarrier": {
+    "bytes": 15595,
+    "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+    "gitBlob": "2705049e8e729678e24054ac2dacf4c844e8ba71"
+  },
+  "template": {
+    "bytes": 18300,
+    "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+    "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+    "lf": 247
+  },
+  "derivation": {
+    "bytes": 30149,
+    "sha256": "9ec9374ff08192b24908c40f06c811d8568d293e25a3138ed203f13a25bb04ec",
+    "gitBlob": "da165a7dbf13ff16ee9f99a11b861777c3af6df7"
+  },
+  "retargetPatch": {
+    "bytes": 14519,
+    "sha256": "af3cb7b8b0456136353cb49097b7362ebdb506bdf06c3f66ae8d4a2c256ae18f",
+    "gitBlob": "aca910aba88694c02d305a9b9e7f6426fa82dfc5"
+  },
+  "fullSnapshotPatch": {
+    "bytes": 108114,
+    "sha256": "493fb6df9d649ad998efa2258d783326806f45879cd1a0198288fece0635022a",
+    "gitBlob": "6f9981aa08e68e4847561b7df256009670d94bf9"
+  },
+  "baseSource": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+  },
+  "source": null,
+  "sourceTree": null,
+  "snapshot": null,
+  "snapshotTree": null,
+  "run": null,
+  "bindings": {
+    "count": 2,
+    "items": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "bytes": 20,
+        "occurrences": 1,
+        "futureValue": "actual E16 source commit, 40 hex bytes"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "bytes": 21,
+        "occurrences": 1,
+        "futureValue": "actual E16 source tree, 40 hex bytes"
+      }
+    ],
+    "boundWidthModel": {
+      "status": "CALCULATED_WIDTH_ONLY_NOT_OBJECT",
+      "templateBytes": 18300,
+      "futureBoundBytes": 18339,
+      "deltaBytes": 39,
+      "deltaLf": 0
+    },
+    "authority": "Root alone creates immutable source/snapshot and later binds these two values. This template grants no execution authority."
+  },
+  "sourceScope": {
+    "modifiedPaths": 18,
+    "addedPaths": 2,
+    "totalPaths": 20,
+    "deltaBase": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "diagnosticOnly": true,
+    "qualification": false,
+    "unchangedC22Test": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "notCleanProductCandidate": "The instrumented E16 source is diagnostic; the previous clean C22 delta counts are not reused as source counts."
+  },
+  "snapshotScope": {
+    "modified": 1,
+    "added": 3,
+    "totalPaths": 4,
+    "files": [
+      {
+        "kind": "M",
+        "path": ".ci-run.json",
+        "preimage": {
+          "bytes": 295,
+          "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+          "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "lf": 0
+        },
+        "postimage": {
+          "bytes": 247,
+          "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+          "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+          "lf": 0
+        }
+      },
+      {
+        "kind": "A",
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "postimage": {
+          "bytes": 18300,
+          "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+          "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+          "lf": 247
+        }
+      },
+      {
+        "kind": "A",
+        "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "postimage": {
+          "bytes": 1172,
+          "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+          "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+          "lf": 24
+        }
+      },
+      {
+        "kind": "A",
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "postimage": {
+          "bytes": 85250,
+          "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+          "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+          "lf": 1320
+        }
+      }
+    ],
+    "patch": {
+      "files": 4,
+      "hunks": 4,
+      "added": 1592,
+      "removed": 1,
+      "deltaBytes": 104674,
+      "deltaLf": 1591
+    },
+    "requestsNoFinalLf": true,
+    "reason": "Source already includes the 295-byte original Analytics request; focal changes it to the original 247-byte focal CLI request and adds only driver/test/fixture. It is 3A1M, not 2A."
+  },
+  "preservation": {
+    "engineLiteral": true,
+    "groupsG2ToG10Literal": true,
+    "oldCommands": 16,
+    "oldCommandPreservation": {
+      "argv": "Literal except G1 fetch depth2-to-depth3 and parent format %H%n%T-to-%H%n%T%n%P.",
+      "cwdLiteral": true,
+      "deadlinesLiteral": true
+    },
+    "newCommands": 1,
+    "originalProductControls": "All five C22 declarations and all three C22 reports remain selected whole-file with 450000/510000 caps. No filter, retry or inner timeout flag is added.",
+    "changes": "G1 source/tree ancestry, pin population and diagnostic metadata are updated; one G11 whole-file command is appended.",
+    "operations": 17,
+    "retarget": {
+      "hunks": 5,
+      "added": 51,
+      "removed": 24
+    },
+    "forwardInverseLiteral": true
+  },
+  "pins": {
+    "total": 40,
+    "basePopulation": 25,
+    "basePinsPreservedLiteral": 18,
+    "basePinsUpdatedToSourcePostimages": 7,
+    "newRelevantPins": 15,
+    "items": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "gitBlob": "5376c4f7d7cc3c70e7474e5c962fc91a84f8b4c5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "gitBlob": "19e9f55cb0212dd820db3dba0e4082d6fe6acf99"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "gitBlob": "99a3260be512b9bb30857d64c46c2253aa073fb7"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "gitBlob": "fcf171be7d294ecb791b331bb4fd4cfd608b96e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "gitBlob": "309de3c2ea9585bd434df182bd7906ae55c45e5d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+        "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "gitBlob": "80ee1ca05926a49ce8ac4eaf860f0527bc6dfedf"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "gitBlob": "8f6e932d35567b02e4c5d29bae3de358f1c9d1aa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+        "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "gitBlob": "6c34520bf11aa42c0d42244a830bf00433894757"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+        "gitBlob": "120f4169cec2e5e82a961399230476a83a5425b7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "gitBlob": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "gitBlob": "8e0f0a10f0be0e848e31218baf12186ccd2c6e30"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "gitBlob": "fe6f34268cd74cc3bacc0a453de1cd33a754e5cf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "gitBlob": "d93e705a3381d2e51e48c9c72ff822b498136e55"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "gitBlob": "c330953f8fff45f5307ac5f687d19d91eeba8d85"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "gitBlob": "dce03bb345ca388a625592450c77374342b76217"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "gitBlob": "e585997d630819f8faa70ab98bb9a734b4676dab"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "gitBlob": "e89139c2153f6d312b7f7813a7b5056746af7362"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "gitBlob": "ea75454c09819f195a1cb9107b75a375e6b701dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "gitBlob": "9c56de1b2d3acb74745acc327390ac26bf23dcb9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+        "gitBlob": "8217a4f4def802c890c915163775b272655203fb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "gitBlob": "7a864749f19bd1a3f68ee750ae83bd6622380151"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5"
+      },
+      {
+        "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e"
+      },
+      {
+        "path": ".ci-run.json",
+        "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5"
+      }
+    ],
+    "union": "All 18 modified source paths plus helper are represented. Original source Analytics request is metadata; the working-tree request pin correctly uses the focal request. The two controls are D-only additions."
+  },
+  "configuredPopulation": {
+    "groups": 11,
+    "commands": 17,
+    "stdoutStderrTruncationFields": 34,
+    "functionalProcesses": 7,
+    "staticDeclarations": 23,
+    "expectedReportEmissions": 12,
+    "outerExpectedOmni": {
+      "groups": 11,
+      "spawns": 17,
+      "delegations": 0
+    },
+    "internalE16Children": 10,
+    "staticDeclarationSites": {
+      "casesContract": 7,
+      "projection": 5,
+      "portfolioSelection": 3,
+      "scenarioLookup": 1,
+      "nativeScenarioSelection": 1,
+      "criterionChecks": 5,
+      "e16Observation": 1
+    },
+    "reports": {
+      "inheritedEmissions": 11,
+      "newE16Emissions": 1,
+      "totalExpected": 12,
+      "C22EmissionsRetained": 3,
+      "distinctFamiliesNotEquatedToEmissions": true
+    },
+    "actual": {
+      "functionalPass": null,
+      "functionalFail": null,
+      "assertions": null,
+      "outerPass": null,
+      "outerFail": null,
+      "reportCount": null,
+      "omni": null
+    },
+    "caution": "The ten child processes and their private Omni assertions are separate from the carrier's 17 AppProcess commands. Static declarations and expected report emissions are not observed test/assertion totals."
+  },
+  "commands": [
+    {
+      "group": 1,
+      "label": "fetch source parent",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "--depth=3",
+        "origin",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "capMs": 60000
+    },
+    {
+      "group": 1,
+      "label": "snapshot identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "capMs": 30000
+    },
+    {
+      "group": 1,
+      "label": "source identity",
+      "executable": "git",
+      "args": [
+        "show",
+        "-s",
+        "--format=%H%n%T%n%P",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "capMs": 30000
+    },
+    {
+      "group": 2,
+      "label": "complete cases read-set contract whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/cases-read-contract.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 120000
+    },
+    {
+      "group": 3,
+      "label": "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 300000
+    },
+    {
+      "group": 4,
+      "label": "CLI package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "capMs": 240000
+    },
+    {
+      "group": 5,
+      "label": "Sucafina package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 240000
+    },
+    {
+      "group": 6,
+      "label": "inspect history completeness",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "capMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "fetch current dev and source ancestry",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "conditional --unshallow iff actual previous output is true",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "capMs": 120000
+    },
+    {
+      "group": 6,
+      "label": "current dev identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "capMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "actual guard merge base",
+      "executable": "git",
+      "args": [
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "capMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "canonical guardrails",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "capMs": 180000
+    },
+    {
+      "group": 7,
+      "label": "Portfolio selection cases and preferences whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 120000
+    },
+    {
+      "group": 8,
+      "label": "Scenario lookup complete candidates whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 45000
+    },
+    {
+      "group": 9,
+      "label": "Native scenario candidates selection whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 45000
+    },
+    {
+      "group": 10,
+      "label": "Comparison criterion observation whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "capMs": 450000
+    },
+    {
+      "group": 11,
+      "label": "E16 binding observation controls whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/sucafina-preview-route-e16-diagnostic.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "capMs": 60000
+    }
+  ],
+  "parents": [
+    {
+      "group": 1,
+      "capMs": 180000
+    },
+    {
+      "group": 2,
+      "capMs": 180000
+    },
+    {
+      "group": 3,
+      "capMs": 360000
+    },
+    {
+      "group": 4,
+      "capMs": 300000
+    },
+    {
+      "group": 5,
+      "capMs": 300000
+    },
+    {
+      "group": 6,
+      "capMs": 600000
+    },
+    {
+      "group": 7,
+      "capMs": 180000
+    },
+    {
+      "group": 8,
+      "capMs": 60000
+    },
+    {
+      "group": 9,
+      "capMs": 60000
+    },
+    {
+      "group": 10,
+      "capMs": 510000
+    },
+    {
+      "group": 11,
+      "capMs": 90000
+    }
+  ],
+  "budget": {
+    "commandsSumMs": 2130000,
+    "commandsSum": "35m30s",
+    "parentsSumMs": 2820000,
+    "parentsSum": "47m",
+    "jobMs": 2700000,
+    "job": "45m",
+    "configuredParentExcessMs": 120000,
+    "configuredParentExcess": "2m",
+    "nominalSpareAfterParentsMs": -120000,
+    "statement": "Configured parent ceilings exceed the job ceiling by two minutes. This is explicitly disclosed; there is no promise that a run using all ceilings completes. Command and parent ceilings nest and must not be added together.",
+    "inheritedG10": {
+      "cooperativeMs": [
+        12000,
+        12000,
+        50000,
+        50000,
+        240000
+      ],
+      "bunMs": [
+        15000,
+        15000,
+        60000,
+        60000,
+        270000
+      ],
+      "nominalCooperativeSumMs": 364000,
+      "nominalBunSumMs": 420000,
+      "commandMs": 450000,
+      "parentMs": 510000
+    },
+    "newG11": {
+      "childModes": 10,
+      "childMs": 3000,
+      "childKillGraceMs": 1000,
+      "childStreamCapBytesEach": 65536,
+      "parentBunMs": 45000,
+      "commandMs": 60000,
+      "parentMs": 90000
+    },
+    "unchangedAnalyticsWaiterSeconds": [
+      60,
+      120
+    ],
+    "unchangedProductFenceSeconds": 30,
+    "overhead": "Setup, acquisition/readiness, scheduler delay, output, finalization and cleanup also use the job budget. No installed latency bound or favorable completion inference follows."
+  },
+  "engineOutputBounds": {
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "emittedTruncationFieldsPerCommand": 2,
+    "totalConfiguredTruncationFields": 34,
+    "arithmeticStreamCaptureSumBytes": 35651584,
+    "statement": "The sum is only a finite per-command capture arithmetic. It is not a bound on the Actions main log, wrapper overhead or separate descendants. Truncation flags differ from process timeout/kill.",
+    "forceKillGraceMs": 5000,
+    "environment": "GUARDRAIL_APPROVED is cleared while inherited environment is retained.",
+    "acceptance": "Each command prints identity/argv/cwd/exit/duration/truncation fields; truncation throws before exit acceptance. Existing runCommand requires zero exit."
+  },
+  "reportAcceptance": {
+    "E16": {
+      "prefix": "SF_E16_ROUTE_CONTROL ",
+      "carrierCheck": "prefix present after successful whole-file exit and no captured stream truncation",
+      "parentCapBytes": 16384,
+      "modelBytes": 9180,
+      "modelStatus": "pure-data model in control bounds, not runtime receipt",
+      "pids": "dynamic positive safe integers; ten distinct PIDs required by the parent"
+    },
+    "C22": {
+      "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION ",
+      "literalCarrierRequirement": "exactly three lines after successful exit",
+      "scenarios": "single/multiple/unsupported remain the unchanged R7 controls"
+    },
+    "limits": "No single report line, diagnostic progress marker or prefix substitutes for child assertions, whole-file status, types, guards, footer/Omni evidence or later original Analytics/UI acceptance."
+  },
+  "ancestryAndGuards": {
+    "G1": "Fetch depth three and require HEAD^ tuple [actual E16 S, actual E16 T, base R7 ad3a4a75...] while HEAD equals GITHUB_SHA.",
+    "G6": "Read actual origin/dev and merge base after fetch; require canonical guard report base to match, bootstrap false, errors[] and approved[].",
+    "knownResults": "No previously observed guard counts, footer totals, nonce, run ID, artifact count or branch cleanup is transferred to E16."
+  },
+  "limits": [
+    "Only static data and Git blobs were authored/read back; no repository code was executed.",
+    "No tree/commit/ref/run or original/ZIP acquisition is authorized by this package.",
+    "Source paths are metadata/pin identities; no diagnostic overlay is described as clean final product qualification.",
+    "E16 is intended to discriminate first-persistence validation/observer boundaries without altering original product operations or claiming performance."
+  ],
+  "authorActivity": {
+    "repositoryExecution": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0
+  }
+}

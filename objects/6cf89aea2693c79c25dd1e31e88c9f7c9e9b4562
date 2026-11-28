@@ -1,0 +1,262 @@
+{
+  "schema": "sf613-e16-typescript-narrowing-package-v1",
+  "status": "STATIC_PROPOSAL_AFTER_FAILED_FOCAL_PENDING_INDEPENDENT_REVIEW_AND_NEW_CI",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/teams_product",
+  "purpose": "Resolve only four diagnostic TypeScript narrowing sites in the E16 helper and focal fixture while preserving the reviewed observation protocol and controls.",
+  "scope": {
+    "sourceBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "meaning": "cumulative clean product base; not the immediate parent of the correction"
+    },
+    "sourcePreimage": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+      "meaning": "proposed sole immediate parent of corrected diagnostic source"
+    },
+    "focalPreimage": {
+      "commit": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+      "tree": "ccccc170d69c50bae3964f8434c642bc147e687f",
+      "meaning": "failed focal that contains the original E16 fixture"
+    },
+    "correction": {
+      "files": 2,
+      "sourcePaths": 1,
+      "focalFixturePaths": 1,
+      "anchors": 4,
+      "hunks": 2,
+      "addedLines": 4,
+      "removedLines": 4,
+      "deltaBytes": 64,
+      "deltaLF": 0
+    },
+    "sourceImmediateDelta": "1M helper",
+    "sourceCumulativeDelta": "18M2A over clean R7, same twenty paths",
+    "prospectiveFocalDelta": "3A1M over corrected source: driver/fixture/parent-test additions and Analytics-to-focal request replacement",
+    "correctedSource": null,
+    "correctedSourceTree": null,
+    "correctedFocal": null,
+    "correctedFocalTree": null,
+    "correctedRun": null
+  },
+  "priorEvidence": {
+    "previousE16Package": {
+      "gitBlob": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+      "status": "historical reviewed proposal; superseded only at the two code pins and their required dependent bindings"
+    },
+    "failedFocal": {
+      "run": "46160549382",
+      "attempt": 1,
+      "closedOriginalsReportedByRoot": true,
+      "mainGitCopy": {
+        "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+        "bytes": 149216,
+        "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d"
+      }
+    },
+    "observedDiagnosticSites": [
+      "sucafina-preview-route-e16-diagnostic.ts(299,68) TS2345",
+      "preview-progress-e16-diagnostic.ts(816,66) TS18048",
+      "preview-progress-e16-diagnostic.ts(817,53) TS18048",
+      "preview-progress-e16-diagnostic.ts(818,51) TS18048"
+    ],
+    "observationLimit": "Only the four distinct diagnostics were extracted for this correction. The seven rendered lines include the three helper errors repeated by the module typecheck. General runtime intake and its acceptance remain root/receiver work.",
+    "rootFinalIntake": null,
+    "independentGeneralIntake": null,
+    "doNotTransferPasses": "No corrected typecheck, focal, Analytics or installed UI result exists at this proposal cut."
+  },
+  "effectiveArtifacts": [
+    {
+      "role": "corrected-helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "scope": "source",
+      "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+      "bytes": 67602,
+      "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b",
+      "lf": 1203,
+      "readbackLiteral": true
+    },
+    {
+      "role": "corrected-fixture",
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "scope": "focal-only",
+      "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0",
+      "bytes": 85264,
+      "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c",
+      "lf": 1320,
+      "readbackLiteral": true
+    },
+    {
+      "role": "anchored-derivation",
+      "gitBlob": "0ac1d4abc8c2d73362f2fc779e1aaf61a70f638b",
+      "bytes": 14098,
+      "sha256": "ad08b1699cff52399bda0308099f0f97c9f986a45e465645f3342493942b37f6",
+      "readbackLiteral": true
+    },
+    {
+      "role": "minimal-patch",
+      "gitBlob": "9d7177fc2710a68a88f02b08c83befaa79f9bb06",
+      "bytes": 2001,
+      "sha256": "83fb6fcdd8e084a504b8af459812a452e30ab77774d4ad280180ccd91764b904",
+      "readbackLiteral": true
+    },
+    {
+      "role": "bounds",
+      "gitBlob": "db9a0d50d9b89e33008b9b5a00c71563b7541849",
+      "bytes": 11152,
+      "sha256": "73c0609187dbed5bb02e05d19d2d8a5463b85aa840522eaaa9c30c61c80e2efa",
+      "readbackLiteral": true
+    }
+  ],
+  "supersededCode": [
+    {
+      "role": "helper",
+      "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+      "bytes": 67552,
+      "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+      "replacedBy": "289523ca2b7f588337473f218476e242776d721d"
+    },
+    {
+      "role": "fixture",
+      "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+      "bytes": 85250,
+      "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+      "replacedBy": "6185635810d712e4be7dfe109422d2d65103a1a0"
+    }
+  ],
+  "changeMap": [
+    {
+      "diagnostic": "TS18048",
+      "site": "helper verifierFor prewrite",
+      "fix": "Guard the private prewrite slot before comparing its verifier handle and taking its verifier."
+    },
+    {
+      "diagnostic": "TS18048",
+      "site": "helper verifierFor initial",
+      "fix": "Guard the private initial slot before comparing its verifier handle and taking its verifier."
+    },
+    {
+      "diagnostic": "TS18048",
+      "site": "helper verifierFor final",
+      "fix": "Guard the private final slot before comparing its verifier handle and taking its verifier."
+    },
+    {
+      "diagnostic": "TS2345",
+      "site": "fixture nested finally restoring AsyncLocalStorage.run",
+      "fix": "Narrow the already captured savedRun descriptor locally before the existing define call."
+    }
+  ],
+  "semanticProof": {
+    "validOpaqueHandles": "All actual verifier handles are private object identities. Guarding absent slots leaves valid-handle order, candidate identity and closed/frame checks unchanged.",
+    "absentDiagnosticHandle": "Optional-chain equality against undefined previously could choose an absent slot and enter a swallowed TypeError. The guarded code returns neutral without relying on that exception. This limited internal difference is explicit.",
+    "refusalAndReentrancy": "The runSfE16Verifier and returnedSfE16Verifier catch boundaries, neutral scope setup, runOnce invocation and return-value preservation are byte-literal. No missing or foreign handle becomes admitted.",
+    "fixture": "The original setup assertion requires savedRun && savedGet. The new restore guard therefore executes the same define call for every setup admitted by that assertion, with no new descriptor read or assertion site.",
+    "otherCode": "Reversing the four exact replacements restores the complete two preimages. No other file or byte is part of this author's executable delta.",
+    "noSuppression": "No non-null assertion, any cast, ts-ignore, weakened assertion or skipped test is introduced."
+  },
+  "preservation": {
+    "originalPromiseAndThrowBoundary": "preserved; the explicit missing-private-handle exception caveat above is not a product exception",
+    "awaitsAndThenFinally": "no sites added or removed",
+    "scopesOwnersGenerationsAdmissionCloseLatches": "literal",
+    "quotasSinksTransportSchemasModels": "literal",
+    "controlModes": 10,
+    "controlLabelEntries": 64,
+    "controlUniqueLabels": 56,
+    "childAssertSites": 303,
+    "parentExpectSites": 8,
+    "C22Test": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "C22Declarations": 5,
+    "C22ReportEmissions": 3,
+    "controlParentTest": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+    "AnalyticsWaitersSeconds": [
+      60,
+      120
+    ],
+    "productFenceSeconds": 30,
+    "diagnosticOnly": true,
+    "newProductQualification": false
+  },
+  "inheritedLimits": {
+    "sourceBounds": {
+      "gitBlob": "cc1cc39705594f57ee2e20e2f7fe4f8bffcf31be",
+      "effectiveMeaning": "protocol/models only; old helper pin is historical"
+    },
+    "controlBounds": {
+      "gitBlob": "faf468b49d36b9d61a3726ddfc221f7d56b3606d",
+      "effectiveMeaning": "protocol/models only; old fixture pin is historical"
+    },
+    "reservedStreamRows": 163,
+    "reservedCampaignRowsAtMost": 164,
+    "independentLateScopes": 13,
+    "streamHardEvents": 191,
+    "streamHardBytes": 195584,
+    "lineHardBytes": 1024,
+    "sourceModelMaxBytes": 920,
+    "newBoundaryModelMaxBytes": 577,
+    "controlAggregateModelBytes": 9180,
+    "childSeconds": 3,
+    "childGraceSeconds": 1,
+    "childBytesPerStream": 65536,
+    "parentBunSeconds": 45,
+    "newGroupCommandSeconds": 60,
+    "newGroupParentSeconds": 90,
+    "modelMeaning": "Calculated data inherited without a wire-format change, not output or timing observations."
+  },
+  "carrierSeparation": {
+    "authorAndIndependentCodeReviewer": "/root/focal_migration",
+    "state": "authorship and review in progress at this cut",
+    "requiredEffectiveHelper": "289523ca2b7f588337473f218476e242776d721d",
+    "requiredEffectiveFixture": "6185635810d712e4be7dfe109422d2d65103a1a0",
+    "parentTestLiteral": true,
+    "allOtherSourcePostimagesLiteral": true,
+    "expectedWorkingTreePins": 40,
+    "expectedGroups": 11,
+    "expectedCommands": 17,
+    "expectedTruncationFlags": 34,
+    "expectedFunctionalProcesses": 7,
+    "expectedDeclarations": 23,
+    "expectedReportEmissions": 12,
+    "topologyCorrectionRequired": "Immediate source parent becomes bb5e7df0; cumulative sourceBase remains ad3a4a75. Both identities must be explicit in the reviewed carrier before binding.",
+    "commandsCapsMs": 2130000,
+    "parentCapsMs": 2820000,
+    "jobMs": 2700000,
+    "budgetCaveat": "The 47-minute sum of parent caps exceeds the 45-minute job; maxima are not an elapsed guarantee.",
+    "template": null,
+    "boundDriver": null,
+    "carrierManifest": null,
+    "carrierReceipt": null
+  },
+  "authorVerification": {
+    "activity": "pure strings and structured data, plus creation and literal readback of the five proposal blobs",
+    "dataChecks": 32,
+    "allDataChecksPassed": true,
+    "uniqueAnchors": 4,
+    "intermediateFingerprints": true,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "patchForwardLiteral": true,
+    "patchInverseLiteral": true,
+    "codeExecuted": false,
+    "compilerInvoked": false,
+    "typecheckInvoked": false,
+    "testInvoked": false,
+    "originalGets": 0,
+    "zipGets": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0
+  },
+  "reviewAndNext": {
+    "authorCodeComplete": true,
+    "independentCodeReview": null,
+    "rootReview": null,
+    "remaining": [
+      "Independent review of these five blobs and carrier retarget.",
+      "Root binding and object audit for the exact corrected source/focal.",
+      "One corrected focal, then original Analytics only if separately authorized by root."
+    ],
+    "executionAuthority": "Root only; this static package does not activate a ref or run."
+  }
+}

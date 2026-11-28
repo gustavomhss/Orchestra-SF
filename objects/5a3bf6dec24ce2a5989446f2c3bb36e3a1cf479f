@@ -1,0 +1,280 @@
+{
+  "schema": "sf613-e16-types-corrected-focal-carrier-package-v1",
+  "status": "PROPOSED_UNBOUND_DIAGNOSTIC_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "purpose": "Retarget the reviewed E16 focal carrier to the minimal helper/fixture type correction while preserving every command, receiver, report gate and deadline. This finite supplement does not rewrite the historical source/control package.",
+  "preimage": {
+    "carrier": {
+      "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+      "bytes": 18300,
+      "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+      "lf": 247
+    },
+    "jointPackage": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+    "carrierBounds": "73a772ec45451bdec486c532110c03612a96ccc9",
+    "historicalCarrierIndependentReview": "c467f72409d4e8eb63e2216037c4b6556a38ae3c",
+    "historicalObjectIndependentReview": "c8c08e1c828e4cf1c3f463b3582b2f9e2d5914e2"
+  },
+  "sourceCorrection": {
+    "manifest": {
+      "gitBlob": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+      "bytes": 11127,
+      "sha256": "dc08ffd3c7a9140c0d961586407a2f76d03efd774bc7f4c1eba179f4daeeec78"
+    },
+    "derivation": "0ac1d4abc8c2d73362f2fc779e1aaf61a70f638b",
+    "patch": "9d7177fc2710a68a88f02b08c83befaa79f9bb06",
+    "bounds": "db9a0d50d9b89e33008b9b5a00c71563b7541849",
+    "independentReview": {
+      "gitBlob": "5308b8f9e1b37a15737d3ee961a4083d2255ea5b",
+      "bytes": 10990,
+      "sha256": "0dbf8f13273fa13b153303c3468af9802f6376c196cbbe99ef3dc8a387b9953a",
+      "lf": 377,
+      "checks": 51,
+      "decision": "STATIC_ACK_NO_REMAINING_FINDING"
+    },
+    "effectiveHelper": {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+      "bytes": 67602,
+      "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b"
+    },
+    "effectiveFixture": {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0",
+      "bytes": 85264,
+      "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c"
+    }
+  },
+  "artifacts": [
+    {
+      "role": "carrier-template",
+      "gitBlob": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+      "bytes": 18611,
+      "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525",
+      "lf": 251,
+      "readbackLiteral": true
+    },
+    {
+      "role": "anchored-derivation",
+      "gitBlob": "9c651d6d37e038418a9e0f7b332782da63fd9a5e",
+      "bytes": 14061,
+      "sha256": "45573566c3251b5571677900b2a2b9d76bb8467c8f66fbe78d6841000ee30b0b",
+      "lf": 523,
+      "readbackLiteral": true
+    },
+    {
+      "role": "direct-carrier-patch",
+      "gitBlob": "00be044a93ba23f40b6a95210c655d19f85a543d",
+      "bytes": 3264,
+      "sha256": "2dd0cec3a448a2117c3e1b405dc6151db6b2a85cd5c352295ac84a2197478e7d",
+      "lf": 45,
+      "readbackLiteral": true
+    },
+    {
+      "role": "full-unbound-snapshot-patch",
+      "gitBlob": "5c4be2450983f543873f511a48c668edea188f47",
+      "bytes": 108443,
+      "sha256": "5cbb2355927797458c3f3256ab9fd7438f5484572aed73873a30943eb97d26da",
+      "lf": 1622,
+      "readbackLiteral": true
+    },
+    {
+      "role": "carrier-bounds",
+      "gitBlob": "e17265878da947d10117d1965646c69e2c09ff3e",
+      "bytes": 11209,
+      "sha256": "ecf6f8018e636a67f7899fe8ff6e4a57a35b26f1e1a6bd91622ee2c8400996a6",
+      "lf": 290,
+      "readbackLiteral": true
+    }
+  ],
+  "topology": {
+    "sourceImmediateParent": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    },
+    "cumulativeBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+    },
+    "sourceImmediateDelta": {
+      "modified": 1,
+      "added": 0,
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
+    },
+    "sourceCumulativeDelta": {
+      "modified": 18,
+      "added": 2,
+      "totalPaths": 20
+    },
+    "focalDelta": {
+      "modified": 1,
+      "added": 3
+    },
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null,
+    "nullMeaning": "These are template bindings intentionally not authored here. Root may create and bind actual objects separately; null does not assert global object absence.",
+    "diagnosticEventBaselinePreserved": true
+  },
+  "exactChanges": {
+    "anchors": 5,
+    "carrierPatch": {
+      "hunks": 4,
+      "addedLines": 8,
+      "removedLines": 4,
+      "deltaBytes": 311,
+      "deltaLF": 4
+    },
+    "operations": [
+      "Declare immediate sourceParent/tree separately from preserved cumulative sourceBase/tree.",
+      "Emit immediate 1M helper delta alongside the unchanged cumulative 18M2A metadata.",
+      "Require HEAD^ tuple to name the immediate sourceParent.",
+      "Replace the helper working pin.",
+      "Replace the focal-only fixture working pin."
+    ],
+    "fullSnapshotPatch": {
+      "files": 4,
+      "added": 3,
+      "modified": 1,
+      "hunks": 4,
+      "addedLines": 1596,
+      "removedLines": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  },
+  "preservation": {
+    "engineLiteral": true,
+    "hostGuardsLiteral": true,
+    "groupsG2ToG11Literal": true,
+    "all17CommandCallsArgvCwdTimeoutLiteral": true,
+    "hashLoopLiteral": true,
+    "workingPins40": {
+      "unchanged": 38,
+      "updated": 2,
+      "pathOrderLiteral": true
+    },
+    "originalRequestsLiteral": true,
+    "sourceTokenNamesLiteral": true,
+    "reportAcceptanceLiteral": true,
+    "selfPin": "Not embedded; actual snapshot tree independently binds the driver."
+  },
+  "bindings": {
+    "count": 2,
+    "items": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "bytes": 20,
+        "occurrences": 1,
+        "futureValue": "Root's actual corrected E16 source commit (40 hex bytes)"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "bytes": 21,
+        "occurrences": 1,
+        "futureValue": "Root's actual corrected E16 source tree (40 hex bytes)"
+      }
+    ],
+    "boundWidthModel": {
+      "status": "CALCULATED_WIDTH_ONLY_NOT_OBJECT",
+      "templateBytes": 18611,
+      "futureBoundBytes": 18650,
+      "deltaBytes": 39,
+      "deltaLf": 0
+    },
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null,
+    "meaning": "Nulls mean deliberately unbound in this proposal, not a claim that root has not separately created immutable objects. Root's actual binding is a separate artifact."
+  },
+  "expectedSelection": {
+    "groups": 11,
+    "commands": 17,
+    "truncationFields": 34,
+    "workingPins": 40,
+    "functionalProcesses": 7,
+    "staticDeclarations": 23,
+    "expectedReportEmissions": 12,
+    "outerExpectedOmni": {
+      "groups": 11,
+      "spawns": 17,
+      "delegations": 0
+    },
+    "C22WholeFile": {
+      "declarations": 5,
+      "reportEmissions": 3,
+      "processMs": 450000,
+      "parentMs": 510000
+    },
+    "E16WholeFile": {
+      "declarations": 1,
+      "reportEmissions": 1,
+      "processMs": 60000,
+      "parentMs": 90000,
+      "children": 10,
+      "bunMs": 45000,
+      "runnerExpectCalls53": "computed complete path only",
+      "dynamicPids": true
+    },
+    "actualResults": null
+  },
+  "budget": {
+    "commandsSumMs": 2130000,
+    "parentsSumMs": 2820000,
+    "jobMs": 2700000,
+    "configuredParentExcessMs": 120000,
+    "unchanged": true,
+    "guaranteeOfCompletion": false,
+    "originalAnalyticsWaitersMs": [
+      60000,
+      120000
+    ],
+    "productFenceMs": 30000,
+    "allControlBudgetsInherited": true
+  },
+  "reportMap": "Inherited exact groups and predicates: C14×2 + C15×2 + C16 + C19 + C20 + C21 + C22×3 + E16 = twelve expected emissions. E16 dynamic PIDs and private child checks are not literal model bytes or observed footer totals.",
+  "negativeHistory": {
+    "finalRootReceipt": {
+      "gitBlob": "be7c07deec5ab262799240ce50ed7b1596bc2bfb",
+      "bytes": 7115,
+      "sha256": "c86f3eeddc4415be1737221b8810b6f1525b356563a2935829297f000fcc49f6",
+      "lf": 194,
+      "scope": "Closed negative prior E16 focal; no corrected result is adopted."
+    },
+    "rootIntake": "c33da64ec5caa1eeca3642281567e16ea9aaae75",
+    "run": "46160549382",
+    "attempt": 1,
+    "qualification": "REJECTED_TYPECHECKS",
+    "originalsClosed": true,
+    "originalsAcquiredByThisAuthor": 0,
+    "zipAcquiredByThisAuthor": 0,
+    "independentGeneralIntake": "Performed by Archive/root separately; not repeated by the carrier author."
+  },
+  "authorVerification": {
+    "kind": "Static pure-data/text reproduction",
+    "checks": 65,
+    "allPassed": true,
+    "forwardInverseLiteral": true,
+    "allCreatedArtifactsReadbackLiteral": true,
+    "repositoryCodeExecuted": false,
+    "newRuntimeClaims": false
+  },
+  "authority": {
+    "carrierIndependentReview": null,
+    "rootBinding": null,
+    "actualObjectReview": null,
+    "newExecution": null,
+    "owner": "Root exclusively creates/audits objects and decides any activation after required reviews. This proposal grants no execution authority."
+  },
+  "limits": [
+    "Only the minimal two-buffer type correction is accepted statically; no corrected compile/focal/Analytics/UI result is claimed.",
+    "The 47-minute parent-cap sum exceeds the 45-minute job. Nested ceilings are not summed with command ceilings or interpreted as completion promises.",
+    "The original ad3/T11bf diagnostic baseline is retained while actual corrected source/snapshot must be separately bound and received.",
+    "No trees, commits, refs, runs, original logs or ZIPs were created/acquired by this package author."
+  ]
+}

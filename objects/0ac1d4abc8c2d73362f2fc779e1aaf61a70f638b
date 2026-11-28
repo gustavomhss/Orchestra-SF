@@ -1,0 +1,387 @@
+{
+  "schema": "sf613-e16-typescript-narrowing-derivation-v1",
+  "status": "PROPOSED_STATIC_CORRECTION_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "diagnosticSource": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    },
+    "focalSnapshot": {
+      "commit": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+      "tree": "ccccc170d69c50bae3964f8434c642bc147e687f"
+    },
+    "cumulativeCleanBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+    },
+    "previousPackage": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8"
+  },
+  "evidence": {
+    "kind": "preserved-git-copy-only",
+    "main": {
+      "bytes": 149216,
+      "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d",
+      "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+      "lf": 1097
+    },
+    "run": "46160549382",
+    "attempt": 1,
+    "uniqueDiagnosticSites": 4,
+    "renderedDiagnosticLines": 7,
+    "diagnostics": [
+      {
+        "line": 811,
+        "text": "2026-11-28T15:35:47.0355872Z ##[error]test/fixture/sucafina-preview-route-e16-diagnostic.ts(299,68): error TS2345: Argument of type 'PropertyDescriptor | undefined' is not assignable to parameter of type 'PropertyDescriptor & ThisType<any>'."
+      },
+      {
+        "line": 814,
+        "text": "2026-11-28T15:35:47.0363378Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'."
+      },
+      {
+        "line": 815,
+        "text": "2026-11-28T15:35:47.0364593Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'."
+      },
+      {
+        "line": 816,
+        "text": "2026-11-28T15:35:47.0366217Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'."
+      },
+      {
+        "line": 860,
+        "text": "2026-11-28T15:36:15.2896129Z ##[error]runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'."
+      },
+      {
+        "line": 861,
+        "text": "2026-11-28T15:36:15.2897988Z ##[error]runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'."
+      },
+      {
+        "line": 862,
+        "text": "2026-11-28T15:36:15.2899428Z ##[error]runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'."
+      }
+    ],
+    "note": "The helper diagnostics occur in both CLI and module typecheck output. This is not a new execution or an independent general intake.",
+    "distinctSites": [
+      "sucafina-preview-route-e16-diagnostic.ts(299,68) TS2345",
+      "preview-progress-e16-diagnostic.ts(816,66) TS18048",
+      "preview-progress-e16-diagnostic.ts(817,53) TS18048",
+      "preview-progress-e16-diagnostic.ts(818,51) TS18048"
+    ]
+  },
+  "scope": {
+    "files": 2,
+    "sourceModifiedFiles": 1,
+    "focalFixtureModifiedFiles": 1,
+    "anchors": 4,
+    "hunks": 2,
+    "addedLines": 4,
+    "removedLines": 4,
+    "deltaBytes": 64,
+    "deltaLF": 0
+  },
+  "files": [
+    {
+      "role": "helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "baseSha": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+      "location": "source",
+      "preimage": {
+        "bytes": 67552,
+        "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5"
+      },
+      "postimage": {
+        "bytes": 67602,
+        "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b",
+        "gitBlob": "289523ca2b7f588337473f218476e242776d721d"
+      },
+      "beforeLF": 1203,
+      "afterLF": 1203,
+      "operations": [
+        {
+          "id": "explicit-prewrite-narrowing",
+          "before": "const value = method.prewrite?.verifier?.handle === handle ? method.prewrite.verifier :",
+          "after": "const value = method.prewrite && method.prewrite.verifier?.handle === handle ? method.prewrite.verifier :",
+          "input": {
+            "bytes": 67552,
+            "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+            "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5"
+          },
+          "output": {
+            "bytes": 67570,
+            "sha256": "635fc6d53a6e38b41f8b94f2d241887d386afa230f4ccf30598cdfb8c6aeff69",
+            "gitBlob": "fe12b2390d0a9ccefcf19712dc03709c5593a5b3"
+          },
+          "forwardOccurrence": 1,
+          "inverseOccurrence": 1
+        },
+        {
+          "id": "explicit-initial-narrowing",
+          "before": "method.initial?.verifier?.handle === handle ? method.initial.verifier :",
+          "after": "method.initial && method.initial.verifier?.handle === handle ? method.initial.verifier :",
+          "input": {
+            "bytes": 67570,
+            "sha256": "635fc6d53a6e38b41f8b94f2d241887d386afa230f4ccf30598cdfb8c6aeff69",
+            "gitBlob": "fe12b2390d0a9ccefcf19712dc03709c5593a5b3"
+          },
+          "output": {
+            "bytes": 67587,
+            "sha256": "62fbe08331bd6a5d2c2289adebeb7d84f6bbea1a10378a59b357b6398202ec0a",
+            "gitBlob": "7c8e7f422a8da474005266e9c1e8c42425859bb2"
+          },
+          "forwardOccurrence": 1,
+          "inverseOccurrence": 1
+        },
+        {
+          "id": "explicit-final-narrowing",
+          "before": "method.final?.verifier?.handle === handle ? method.final.verifier : undefined",
+          "after": "method.final && method.final.verifier?.handle === handle ? method.final.verifier : undefined",
+          "input": {
+            "bytes": 67587,
+            "sha256": "62fbe08331bd6a5d2c2289adebeb7d84f6bbea1a10378a59b357b6398202ec0a",
+            "gitBlob": "7c8e7f422a8da474005266e9c1e8c42425859bb2"
+          },
+          "output": {
+            "bytes": 67602,
+            "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b",
+            "gitBlob": "289523ca2b7f588337473f218476e242776d721d"
+          },
+          "forwardOccurrence": 1,
+          "inverseOccurrence": 1
+        }
+      ],
+      "patch": {
+        "hunks": 1,
+        "added": 3,
+        "removed": 3
+      },
+      "deltaBytes": 50
+    },
+    {
+      "role": "fixture",
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "baseSha": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+      "location": "focal-only-fixture",
+      "preimage": {
+        "bytes": 85250,
+        "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+        "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e"
+      },
+      "postimage": {
+        "bytes": 85264,
+        "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c",
+        "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0"
+      },
+      "beforeLF": 1320,
+      "afterLF": 1320,
+      "operations": [
+        {
+          "id": "captured-descriptor-narrowing-in-finally",
+          "before": "} finally { define(AsyncLocalStorage.prototype, \"run\", savedRun) }",
+          "after": "} finally { if (savedRun) define(AsyncLocalStorage.prototype, \"run\", savedRun) }",
+          "input": {
+            "bytes": 85250,
+            "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+            "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e"
+          },
+          "output": {
+            "bytes": 85264,
+            "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c",
+            "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0"
+          },
+          "forwardOccurrence": 1,
+          "inverseOccurrence": 1
+        }
+      ],
+      "patch": {
+        "hunks": 1,
+        "added": 1,
+        "removed": 1
+      },
+      "deltaBytes": 14
+    }
+  ],
+  "patch": {
+    "bytes": 2001,
+    "sha256": "83fb6fcdd8e084a504b8af459812a452e30ab77774d4ad280180ccd91764b904",
+    "gitBlob": "9d7177fc2710a68a88f02b08c83befaa79f9bb06",
+    "lf": 30
+  },
+  "semantics": [
+    "The three explicit slot guards preserve prewrite, initial, final candidate order for every real private verifier handle.",
+    "A real verifier handle is an own object created as {}. No actual verifier handle is undefined.",
+    "For an absent or undefined diagnostic handle, the former optional equality could select an absent slot and throw a TypeError caught by runSfE16Verifier or returnedSfE16Verifier. The guarded lookup now remains neutral; the swallowed internal exception is not claimed byte-identical.",
+    "No private slot is exposed to a getter, iterator, callback or other hook. The existing currentScope lookup and outer catch boundaries are unchanged.",
+    "The fixture checks savedRun and savedGet before constructing the nested control. The new guard immediately before descriptor restoration narrows that already captured const without a descriptor read or new assertion.",
+    "Under the existing fixture precondition, savedRun is present and restoration invokes exactly the same define call once."
+  ],
+  "preservation": {
+    "allOtherBytesLiteral": true,
+    "assertionsAdded": 0,
+    "assertionsRemoved": 0,
+    "newAwaitOperators": 0,
+    "newThenCalls": 0,
+    "newFinallySites": 0,
+    "promiseIdentityAndOriginalThrownValues": "unchanged outside the explicitly documented private absent-handle lookup",
+    "runOnceScopeAdmissionReentrancyLatchesTransportAndQuotas": "literal",
+    "fixturesModesLabelsBudgetsAndAcceptanceReports": "literal",
+    "nonNullAssertionsAnyTsIgnoreAdded": false,
+    "productFilesOtherThanDiagnosticHelperModified": 0
+  },
+  "topology": {
+    "proposedCorrectedSourceParent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "proposedSourceImmediateDelta": "1M diagnostic helper",
+    "proposedSourceCumulativeDeltaFromCleanR7": "18M2A, same paths; only the helper postimage changes",
+    "fixtureRemainsFocalOnly": true,
+    "focalCarrierAuthor": "/root/focal_migration",
+    "correctedSourceCommit": null,
+    "correctedSourceTree": null,
+    "correctedFocalCommit": null,
+    "correctedFocalTree": null,
+    "note": "Carrier updates both effective pins and distinguishes the immediate E16 parent from the cumulative clean R7 base. Root alone creates and binds objects."
+  },
+  "verification": {
+    "kind": "pure-text-data-only",
+    "checks": 32,
+    "results": [
+      {
+        "id": "helper.authenticated-preimage",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.created-readback-postimage",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-prewrite-narrowing.unique-before",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-prewrite-narrowing.input-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-prewrite-narrowing.output-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-initial-narrowing.unique-before",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-initial-narrowing.input-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-initial-narrowing.output-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-final-narrowing.unique-before",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-final-narrowing.input-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-final-narrowing.output-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.forward-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-final-narrowing.unique-after",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-initial-narrowing.unique-after",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.explicit-prewrite-narrowing.unique-after",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.inverse-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.patch-forward-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.patch-inverse-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "helper.linefeed-count-unchanged",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.authenticated-preimage",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.created-readback-postimage",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.captured-descriptor-narrowing-in-finally.unique-before",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.captured-descriptor-narrowing-in-finally.input-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.captured-descriptor-narrowing-in-finally.output-hash",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.forward-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.captured-descriptor-narrowing-in-finally.unique-after",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.inverse-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.patch-forward-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.patch-inverse-literal",
+        "result": "PASS"
+      },
+      {
+        "id": "fixture.linefeed-count-unchanged",
+        "result": "PASS"
+      },
+      {
+        "id": "main-copy-sha256",
+        "result": "PASS"
+      },
+      {
+        "id": "only-four-distinct-diagnostic-sites",
+        "result": "PASS"
+      }
+    ],
+    "compile": false,
+    "typecheck": false,
+    "test": false,
+    "repoExecution": false,
+    "originalGet": 0,
+    "zipGet": 0
+  },
+  "qualification": {
+    "correctedFocalResult": null,
+    "correctedAnalyticsResult": null,
+    "newProductQualification": false
+  }
+}

@@ -1,0 +1,396 @@
+{
+  "schema": "sf613-e16-focal-root-intake-v1",
+  "status": "NEGATIVE_TYPECHECK_REJECTS_E16_SOURCE_AND_SNAPSHOT",
+  "at": {
+    "current_time": "2026-11-28 15:47:06 UTC"
+  },
+  "source": {
+    "sha": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+  },
+  "snapshot": {
+    "sha": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+    "tree": "ccccc170d69c50bae3964f8434c642bc147e687f"
+  },
+  "run": {
+    "id": 46160549382,
+    "attempt": 1,
+    "conclusion": "failure",
+    "main": {
+      "id": 141026681143,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 141028491347,
+      "conclusion": "success"
+    }
+  },
+  "closure": {
+    "gitBlob": "24b2f8d905838a97cf420a1ed27fec8e23770d65",
+    "bytes": 1844,
+    "sha256": "0478ff473f2a4c368873e6017ec239695571a3c7defa9c9ed6209368986c16b3",
+    "lf": 63,
+    "endsWithLF": true
+  },
+  "terminalMetadata": {
+    "gitBlob": "771ded2c9794014f2fe0277dffc29c0495ebe1b7",
+    "bytes": 26178,
+    "sha256": "48788326856ccd83768c909cab09c0dd4d81a8adcccfcb872a8e41fa7bcd1a9e",
+    "lf": 566,
+    "endsWithLF": true
+  },
+  "copies": {
+    "main": {
+      "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+      "bytes": 149216,
+      "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d",
+      "lf": 1097,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "1e84e3fc894d6686dc9d83b211faa39c20739d1f",
+      "bytes": 1697,
+      "sha256": "1b46b8ad8ad4b38b87af8d9c56fd293a6803eeccc4498b817261cdc58025b6d1",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "b2b3fdffd348b525b2b2a624976295db747bda25",
+      "bytes": 2280,
+      "sha256": "6b76684d0522dcc0df4d1c6e378b966446908062c112cfd3bc53a54a6dd5b416",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "d1b26be1b1028942a631693900cff6bbb23fbbac",
+      "bytes": 1684,
+      "sha256": "46c8da84982c659c50c199f4fa06e0d9809a0d1cf98122fa89cb3964d9c1fbf1",
+      "lf": 60,
+      "endsWithLF": true
+    }
+  },
+  "extraction": {
+    "gitBlob": "f345b4c902e0aa0cecb5a2fbe2ae8c8fa8f8befd",
+    "bytes": 176586,
+    "sha256": "c8b4fe2708a251b3a5554e7160ef557d7e7884110fb3e67979340c8fb8559bd9",
+    "lf": 3452,
+    "endsWithLF": true
+  },
+  "checks": [
+    {
+      "name": "original intake already permanently closed",
+      "pass": true
+    },
+    {
+      "name": "eleven host identities",
+      "pass": true
+    },
+    {
+      "name": "seventeen commands exact runtime identities",
+      "pass": true
+    },
+    {
+      "name": "all thirty-four capture flags false",
+      "pass": true
+    },
+    {
+      "name": "only two typecheck commands exit 2",
+      "pass": true
+    },
+    {
+      "name": "forty actual working pins literal to object review",
+      "pass": true
+    },
+    {
+      "name": "eight inherited report texts literal",
+      "pass": true
+    },
+    {
+      "name": "three C22 report payloads literal to accepted R7",
+      "pass": true
+    },
+    {
+      "name": "seven functional footers all completed",
+      "pass": true,
+      "detail": {
+        "tests": 23,
+        "passed": 23,
+        "failed": 0,
+        "assertions": 2747
+      }
+    },
+    {
+      "name": "outer footer records 9pass2fail67assertions",
+      "pass": true
+    },
+    {
+      "name": "one E16 report plus eleven previous controls",
+      "pass": true
+    },
+    {
+      "name": "ten exact E16 modes order",
+      "pass": true
+    },
+    {
+      "name": "ten distinct valid child PIDs",
+      "pass": true
+    },
+    {
+      "name": "child spawns have no delegation",
+      "pass": true
+    },
+    {
+      "name": "synthetic scope explicit and zero extra requests",
+      "pass": true
+    },
+    {
+      "name": "actual E16 report within16KiB",
+      "pass": true
+    },
+    {
+      "name": "bounded mode check counts",
+      "pass": true
+    },
+    {
+      "name": "all original phases returned without abort",
+      "pass": true
+    },
+    {
+      "name": "guard forty inherited findings unchanged",
+      "pass": true
+    },
+    {
+      "name": "guard uses currentdev and actual mergebase",
+      "pass": true
+    },
+    {
+      "name": "outer Omni observed17spawns0delegated",
+      "pass": true
+    },
+    {
+      "name": "seven diagnostic occurrences four unique sites",
+      "pass": true
+    }
+  ],
+  "observed": {
+    "commands": 17,
+    "falseCaptureFlags": 34,
+    "workingPins": 40,
+    "hosts": 11,
+    "functional": {
+      "tests": 23,
+      "passed": 23,
+      "failed": 0,
+      "assertions": 2747
+    },
+    "outer": {
+      "line": 1073,
+      "pass": 9,
+      "fail": 2,
+      "assertions": 67,
+      "tests": 11,
+      "files": 1,
+      "text": "Ran 11 tests across 1 file. [335.91s]"
+    },
+    "controlReports": 12,
+    "E16": {
+      "actualReportBytes": 8688,
+      "modes": [
+        "route-owner",
+        "work-links",
+        "native-chain",
+        "persistence-tail",
+        "capacity",
+        "mechanism",
+        "sink-zero",
+        "sink-partial",
+        "sink-throw",
+        "forwarder"
+      ],
+      "children": [
+        {
+          "mode": "route-owner",
+          "pid": 3313,
+          "checks": 7,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "work-links",
+          "pid": 3323,
+          "checks": 10,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "native-chain",
+          "pid": 3335,
+          "checks": 4,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "persistence-tail",
+          "pid": 3347,
+          "checks": 5,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "capacity",
+          "pid": 3357,
+          "checks": 9,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "mechanism",
+          "pid": 3367,
+          "checks": 9,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "sink-zero",
+          "pid": 3377,
+          "checks": 4,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "sink-partial",
+          "pid": 3386,
+          "checks": 4,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "sink-throw",
+          "pid": 3395,
+          "checks": 4,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        },
+        {
+          "mode": "forwarder",
+          "pid": 3404,
+          "checks": 8,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "requestGets": 0
+        }
+      ],
+      "scope": "controlled diagnostic children; not installed Analytics acceptance"
+    },
+    "typecheckFailures": [
+      {
+        "gate": "CLI package typecheck",
+        "source": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+        "sourceTree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+        "snapshot": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+        "run": "46160549382",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 2,
+        "durationMs": 28756,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "source": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+        "sourceTree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+        "snapshot": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+        "run": "46160549382",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 2,
+        "durationMs": 28254,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ],
+    "diagnostics": [
+      {
+        "line": 811,
+        "raw": "2026-11-28T15:35:47.0355872Z ##[error]test/fixture/sucafina-preview-route-e16-diagnostic.ts(299,68): error TS2345: Argument of type 'PropertyDescriptor | undefined' is not assignable to parameter of type 'PropertyDescriptor & ThisType<any>'.",
+        "body": "##[error]test/fixture/sucafina-preview-route-e16-diagnostic.ts(299,68): error TS2345: Argument of type 'PropertyDescriptor | undefined' is not assignable to parameter of type 'PropertyDescriptor & ThisType<any>'."
+      },
+      {
+        "line": 814,
+        "raw": "2026-11-28T15:35:47.0363378Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'.",
+        "body": "##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'."
+      },
+      {
+        "line": 815,
+        "raw": "2026-11-28T15:35:47.0364593Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'.",
+        "body": "##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'."
+      },
+      {
+        "line": 816,
+        "raw": "2026-11-28T15:35:47.0366217Z ##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'.",
+        "body": "##[error]../../modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'."
+      },
+      {
+        "line": 860,
+        "raw": "2026-11-28T15:36:15.2896129Z ##[error]runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'.",
+        "body": "##[error]runtime/preview-progress-e16-diagnostic.ts(816,66): error TS18048: 'method.prewrite' is possibly 'undefined'."
+      },
+      {
+        "line": 861,
+        "raw": "2026-11-28T15:36:15.2897988Z ##[error]runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'.",
+        "body": "##[error]runtime/preview-progress-e16-diagnostic.ts(817,53): error TS18048: 'method.initial' is possibly 'undefined'."
+      },
+      {
+        "line": 862,
+        "raw": "2026-11-28T15:36:15.2899428Z ##[error]runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'.",
+        "body": "##[error]runtime/preview-progress-e16-diagnostic.ts(818,51): error TS18048: 'method.final' is possibly 'undefined'."
+      }
+    ],
+    "guards": {
+      "rules": 78,
+      "files": 871,
+      "inheritedFindings": 40,
+      "errors": 0,
+      "bypasses": 0,
+      "currentDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "zipGets": 0,
+    "artifacts": 0
+  },
+  "interpretation": {
+    "cause": "Four TypeScript narrowing errors in diagnostic helper and fixture; both package typechecks exit2. Functional controls passed but the whole focal remains rejected.",
+    "productStatus": "No newly accepted UI area; no installed Analytics execution from this source; no C613/Cgo/tar.",
+    "next": "Minimal reviewed type correction only, bind new actual source and snapshot, then fresh focal. Original Analytics separately gated on corrected focal acceptance.",
+    "noRerunSameSnapshot": true
+  },
+  "independentReview": "PENDING",
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "productionAuthorized": false
+  }
+}

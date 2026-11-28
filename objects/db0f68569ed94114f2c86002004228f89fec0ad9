@@ -1,0 +1,664 @@
+{
+  "schema": "sf613-e16-original-analytics-independent-intake-v1",
+  "status": "RECEIVED_NEGATIVE_BOTH_ORIGINAL_JOURNEYS_FAILED_NO_NEW_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "at": "2026-11-28 16:58:10 UTC",
+  "sourceAndSnapshot": {
+    "sha": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "parent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "sameObject": true,
+    "additionalSnapshotCreated": false
+  },
+  "run": {
+    "id": 46165435477,
+    "attempt": 1,
+    "conclusion": "failure",
+    "main": {
+      "id": 141041831215,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 141044316560,
+      "conclusion": "success"
+    }
+  },
+  "authority": {
+    "gitBlob": "f2925eff74254161703eb29b38c4306c6618ce82",
+    "bytes": 14428,
+    "sha256": "32433a46d1e9d0ff937aa73ecb65b43531e98278a9a0bb8693a887a00d01d275"
+  },
+  "activation": {
+    "gitBlob": "28afadd42e623f7d3a1c0c7fde0aa1ab5bec1d00",
+    "bytes": 1355,
+    "sha256": "9813fcc55d6fbe579992d4ff90e4df75cdbfd231b3ca0eeff5f90ea21d7c28d7"
+  },
+  "runBinding": {
+    "gitBlob": "1b16ec2bd0ca9f55f2366ae4290d920668fb74e5",
+    "bytes": 1220,
+    "sha256": "cc445716af048650c715765e6bc9230461a1d7d60941ea4285563342594d86a4"
+  },
+  "acceptedDiagnosticFocal": {
+    "gitBlob": "eec627390a606faaccf0ff5310b13a18a35c3d93",
+    "bytes": 5353,
+    "sha256": "09a582f0172a064aac53cc4f56a2ccf7233bc7fdf745df9d2663bdd2d2156f28"
+  },
+  "closedAt": "2026-11-28 16:43:38 UTC",
+  "preservation": {
+    "terminalMetadata": {
+      "gitBlob": "5d10f28f24e05ddb88d433834edcbc27a11016f2",
+      "bytes": 27544,
+      "sha256": "82b7cf04649449c06c2ff5069549ef6febe26f6df9aea243c19aa030c7175f5d"
+    },
+    "closure": {
+      "gitBlob": "d615a75b08f36d211c135f5b70e830b67bcb2de2",
+      "bytes": 4966,
+      "sha256": "3ed7601243d44cf72d0c97dfa38a5f220c858d86868af30511ece22eecedff24"
+    },
+    "mainManifest": {
+      "gitBlob": "fa2c6d4de11a18fba9cdcd9a3247c17ab00df509",
+      "bytes": 5523,
+      "sha256": "c1bd59a9ca884802a2e70ef2ea3580f91f1af814f8f529c29683b5f16d4371ec"
+    },
+    "main": {
+      "realPartCount": 11,
+      "allPartsGitSha1Sha256BytesLFVerified": true,
+      "consecutiveByteAndUtf16RangesVerified": true,
+      "bytes": 3158165,
+      "utf16CodeUnits": 3148311,
+      "sha256": "8ea467a007cb3883c472c62940dae09c22fc9bb8d375a9fd63110ea35eaa1f85",
+      "lf": 2108,
+      "endsWithLF": true,
+      "bomByteOffsets": [
+        0,
+        2115242
+      ],
+      "bomCodeUnitOffsets": [
+        0,
+        2110429
+      ],
+      "calculatedGitWhole": "1017bc4ca27f71c6129c836d08dcf66112368437",
+      "wholeActuallyCreated": false,
+      "calculatedWholeFetched": false,
+      "partMaximumBytes": 300000,
+      "lastPartBytes": 158165
+    },
+    "cleanup": {
+      "copy": {
+        "gitBlob": "f24f654ea1febc692e88a911407d1948ac9615e4",
+        "bytes": 2288,
+        "sha256": "13cabe6fae674d39f0e0df130390278fd9e12385c7d075349d4ef6918f8de82b"
+      },
+      "manifest": {
+        "gitBlob": "2c393c5a76e54009c8be0140701ded22c1ae18cd",
+        "bytes": 1683,
+        "sha256": "9f8c58382774ba210ab68c346cb32122a41827a5c42f90484f18db06e5a177a9"
+      },
+      "bytes": 2288,
+      "lf": 39,
+      "endsWithLF": true,
+      "bomByteOffsets": [
+        0
+      ],
+      "wholeActuallyCreated": true
+    },
+    "representation": "Complete decoded original strings preserved as UTF-8 with original BOMs and line endings. Only actual Git parts and actual cleanup whole were acquired by this reviewer.",
+    "rootOriginalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "ownOriginalGets": 0,
+    "ownRunEndpointGets": 0,
+    "zipGets": 0,
+    "allHistoricalOriginalsRemainClosed": true,
+    "branchAbsent": {
+      "value": true,
+      "basis": "Exact terminal ref readback recorded in the authenticated metadata; no new ref query by this reviewer."
+    }
+  },
+  "selection": {
+    "line": 987,
+    "journeys": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "addedNameFilter": false,
+    "config": "e2e/playwright.production.config.ts",
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "authorityTimeouts": {
+      "journeys": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "testNameFilterAdded": false,
+      "originalChannelExclusionsPreserved": true,
+      "perCaseMs": [
+        780000,
+        660000
+      ],
+      "previewMs": 60000,
+      "sensitivityMs": 120000,
+      "fenceMs": 30000,
+      "jobMs": 2700000,
+      "BIObserverOriginal": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e"
+    }
+  },
+  "observed": {
+    "testCases": {
+      "passed": 0,
+      "failed": 2,
+      "first": {
+        "specLine": 12,
+        "errorLine": 1532,
+        "error": "page.waitForResponse: Timeout 60000ms exceeded",
+        "failedAtSpecLine": 72
+      },
+      "second": {
+        "specLine": 443,
+        "errorLine": 1942,
+        "error": "page.waitForResponse: Original BI request failed",
+        "failedAtSpecLine": 611
+      }
+    },
+    "preview": {
+      "request": {
+        "line": 1231,
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      "histories": [
+        {
+          "line": 1193,
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 282,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        },
+        {
+          "line": 1213,
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 521,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      ],
+      "nativeResponseObserved": false,
+      "originalWaitMs": 60000,
+      "historyPrecision": "Unlike some historical attempts, both history responses in this attempt explicitly report HTTP200 and application status ok.",
+      "UI42PartialCaptureCount": 6,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "diagnosticDOM": "The failure-state text shows the preview still running and preview not yet available. It does not prove a specific stalled operation."
+    },
+    "BI": {
+      "casePassed": false,
+      "BI01": {
+        "line": 1748,
+        "operation": "bi-data-readback",
+        "view": "BI01",
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22,
+        "valueBindings": 48,
+        "referenceDigests": 1,
+        "scalarDomObservations": 0
+      },
+      "sourceAcquisitions": [
+        {
+          "line": 1870,
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:effective",
+          "http": 200,
+          "acquisition": "native-response"
+        },
+        {
+          "line": 1892,
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:actual",
+          "http": 200,
+          "acquisition": "native-response"
+        }
+      ],
+      "sourceIdentity": {
+        "line": 1914,
+        "operation": "bi-source-identity-regression",
+        "selectedValues": [
+          "budget:2026-01:effective",
+          "budget:2026-01:actual"
+        ],
+        "samePublishedReference": true,
+        "exactValueAndDigestQueries": 2,
+        "originalProjectionRetained": true
+      },
+      "BI06": {
+        "failedAcquisitionRecords": [
+          {
+            "line": 1918,
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "native-request-failed",
+            "acquisitionFailure": true,
+            "errorClass": "Error",
+            "sameNativeRequest": false,
+            "bodyObserved": false,
+            "http": null,
+            "teardownPhase": "observing",
+            "errorText": "net::ERR_ABORTED"
+          },
+          {
+            "line": 1920,
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "network-loading-failed",
+            "acquisitionFailure": true,
+            "errorClass": "Error",
+            "networkLoadingFailed": true,
+            "errorText": "net::ERR_ABORTED",
+            "canceled": true
+          }
+        ],
+        "positiveReadback": false,
+        "scalarComparisonsObserved": 0,
+        "outsideSelectedValueNegativeObserved": false,
+        "finalScopeReceiptObserved": false,
+        "domTextSnapshot": {
+          "line": 1924,
+          "timestamp": "2026-11-28T16:38:37.9117410Z",
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "evidence": "Partial DOM text, not a validated BI06 response-body receipt or visual screenshot review.",
+          "operationalTableObserved": true,
+          "tableMeasureLabel": "Idade comprovada na etapa",
+          "tableMeasureLabelOccurrences": 3,
+          "displayedValue": "0.00128359",
+          "unit": "days",
+          "sourceReferenceTokenCount": 3,
+          "sourceLinksText": "The source links are loading or unavailable.",
+          "textSha256": "717c9b6a7ac1f728874b3d37260d0d7be6a8b0eb63c77cd4d0d0c756d5bf6fe0"
+        },
+        "abortOrder": {
+          "nativeRequestFailed": {
+            "line": 1918,
+            "timestamp": "2026-11-28T16:38:37.6427120Z",
+            "teardownPhase": "observing"
+          },
+          "networkLoadingFailed": {
+            "line": 1920,
+            "timestamp": "2026-11-28T16:38:37.6506699Z",
+            "canceled": true
+          },
+          "failureDiagnostics": {
+            "line": 1922,
+            "timestamp": "2026-11-28T16:38:37.9055266Z"
+          },
+          "pageClosedDiagnostics": {
+            "line": 1938,
+            "timestamp": "2026-11-28T16:38:38.3932901Z"
+          },
+          "interpretation": "The abort records precede page-closed diagnostics and claim observing phase. No cancelling caller or exclusive cause is established by this main; teardown is not proven as the cause."
+        }
+      }
+    },
+    "markerOccurrences": {
+      "SF_DESIGN_DISCOVERY": 2,
+      "SF_ANALYTICS_SOURCE": 34,
+      "SF_OWNER_ADMISSION_READS": 4,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_DESIGN_PREVIEW": 132,
+      "SF_ANALYTICS_CAPTURE": 25,
+      "SF_PREVIEW_E16_EVENT": 107,
+      "SF_DESIGN_DIAGNOSTICS": 6
+    },
+    "parserNote": "92 generic parser non-JSON matches are plain SF_DESIGN_STAGE labels; no malformed JSON receipt is inferred.",
+    "ownerContextRecords": 4,
+    "ownerContextsWithHTTP200": 8,
+    "authenticatedContextRecords": 2,
+    "separateFixtureDiscoveries": 2,
+    "diagnostics": {
+      "records": 6,
+      "consoleErrorLists": 4,
+      "consoleErrorsObserved": 0,
+      "pageErrorsObserved": 0,
+      "readyStates": 2
+    },
+    "noGlobalBodyDeduplication": "Repeated non-event reports with identical payloads remain distinct line occurrences; no request identity was invented to collapse them."
+  },
+  "E16": {
+    "identity": {
+      "schema": "sf-preview-causal-e16-event-v1",
+      "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "sourceTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "snapshot": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+      "runId": "46165435477",
+      "attempt": "1",
+      "nonce": "sf613-e16-event-D9Cx8l",
+      "pid": 3724,
+      "parentPid": 3680,
+      "request": 1
+    },
+    "actualSourceAndSnapshot": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba / 6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "wireIdentityMeaning": "source/sourceTree are the declared clean diagnostic baseline ad3/T11bf; snapshot is the actual corrected E16 source. These identities are not interchangeable.",
+    "rawCompleteOccurrences": 107,
+    "uniqueEvents": 107,
+    "mirroredDuplicates": 0,
+    "divergentSameIdentity": 0,
+    "sequence": {
+      "first": 1,
+      "last": 107,
+      "continuous": true
+    },
+    "literalPrefixJsonLfBytes": 60428,
+    "unionSha256": "137d780016ddd4f846b078a2c1218e509b8d47ebc8191a4d6e21c7dddaed3f9b",
+    "unionFingerprintCalculatedOnly": true,
+    "maxObservedLineBytes": 654,
+    "ASCII": true,
+    "observedLimits": {
+      "hardEvents": 191,
+      "hardBytes": 195584,
+      "lineBytes": 1024,
+      "reservedEvents": 163,
+      "lookupDetails": false,
+      "validationSlots": 5,
+      "validationPoints": 8,
+      "analysisBindingSlots": 4
+    },
+    "kindCounts": {
+      "request-enter": 1,
+      "http-boundary": 3,
+      "unit-enter": 4,
+      "phase-enter": 7,
+      "phase-close": 5,
+      "route": 43,
+      "compare-body-checkpoint": 3,
+      "binding-validation": 40,
+      "analysis-binding": 1
+    },
+    "fiveValidations": [
+      {
+        "slot": 1,
+        "bindingPhase": "persist-bind",
+        "site": "bind-prewrite",
+        "firstSequence": 60,
+        "lastSequence": 67,
+        "startMs": 32483.3,
+        "endMs": 37433.3,
+        "allEightOrderedPointsObserved": true
+      },
+      {
+        "slot": 2,
+        "bindingPhase": "persist-bind",
+        "site": "read-initial",
+        "firstSequence": 68,
+        "lastSequence": 75,
+        "startMs": 37541.3,
+        "endMs": 42536.6,
+        "allEightOrderedPointsObserved": true
+      },
+      {
+        "slot": 3,
+        "bindingPhase": "persist-bind",
+        "site": "read-final",
+        "firstSequence": 76,
+        "lastSequence": 83,
+        "startMs": 42539.7,
+        "endMs": 47115.9,
+        "allEightOrderedPointsObserved": true
+      },
+      {
+        "slot": 4,
+        "bindingPhase": "persist-read",
+        "site": "read-initial",
+        "firstSequence": 88,
+        "lastSequence": 95,
+        "startMs": 51430.7,
+        "endMs": 55852.9,
+        "allEightOrderedPointsObserved": true
+      },
+      {
+        "slot": 5,
+        "bindingPhase": "persist-read",
+        "site": "read-final",
+        "firstSequence": 96,
+        "lastSequence": 103,
+        "startMs": 55855.8,
+        "endMs": 60342.4,
+        "allEightOrderedPointsObserved": true
+      }
+    ],
+    "milestones": [
+      {
+        "line": 1371,
+        "sequence": 57,
+        "kind": "route",
+        "point": "state-transaction-returned",
+        "elapsedMs": 32158.8
+      },
+      {
+        "line": 1374,
+        "sequence": 58,
+        "kind": "route",
+        "point": "store-write-returned",
+        "elapsedMs": 32279.8
+      },
+      {
+        "line": 1375,
+        "sequence": 59,
+        "kind": "route",
+        "point": "binding-enter",
+        "elapsedMs": 32279.9
+      },
+      {
+        "line": 1444,
+        "sequence": 84,
+        "kind": "route",
+        "point": "binding-returned",
+        "elapsedMs": 47117.3
+      },
+      {
+        "line": 1445,
+        "sequence": 85,
+        "kind": "route",
+        "point": "validation-enter",
+        "elapsedMs": 47117.4
+      },
+      {
+        "line": 1451,
+        "sequence": 87,
+        "kind": "route",
+        "point": "validation-returned",
+        "elapsedMs": 51426.8
+      },
+      {
+        "line": 1502,
+        "sequence": 104,
+        "kind": "route",
+        "point": "binding-read-returned",
+        "elapsedMs": 60343.4
+      },
+      {
+        "line": 1505,
+        "sequence": 105,
+        "kind": "route",
+        "point": "persist-close",
+        "elapsedMs": 60343.7
+      },
+      {
+        "line": 1508,
+        "sequence": 106,
+        "kind": "phase-close",
+        "point": "analysis-persist",
+        "elapsedMs": 60343.8
+      }
+    ],
+    "last": {
+      "line": 1511,
+      "sequence": 107,
+      "kind": "analysis-binding",
+      "point": "initial",
+      "boundary": "enter",
+      "elapsedMs": 60451.8
+    },
+    "requestCloseObserved": false,
+    "terminalFaultSummary": null,
+    "explicitFaultRecords": 0,
+    "unmatchedUnitEntriesInPrefix": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "unmatchedPhaseEntriesInPrefix": [
+      "2:8",
+      "3:9"
+    ],
+    "secondJourneyDisabledRows": 0,
+    "interpretationLimits": [
+      "The 107 events are a single observed prefix, not a completed request.",
+      "Five selected validations reached all eight lexical markers; work-enter is not a proof of physical Finance admission.",
+      "The subsequent analysis initial binding read only entered. Persistence's own binding-read-returned is a distinct preceding observation.",
+      "All intervals share this request clock and remain inclusive; no exclusive operation cost or causal diagnosis is established.",
+      "No request-close means no terminal fault summary; absence of explicit fault rows does not establish zero faults.",
+      "No second-journey disabled row was observed; at-most-one allowance is not a requirement to fabricate one.",
+      "No terminal fault summary is present; explicitFaultRecords=0 does not mean zero faults.",
+      "The 60-second Playwright wait and monotonic E16 elapsed clock are separate clocks; no cross-origin subtraction was performed.",
+      "Synchronous diagnostic transport may perturb I/O; no timing-equivalence or performance improvement is established."
+    ]
+  },
+  "capturesAndPreviews": {
+    "analyticsCaptureCount": 25,
+    "bySurface": {
+      "UI42": 6,
+      "UI45": 6,
+      "UI46": 13
+    },
+    "requiredUI42_UI43_UI44Present": 6,
+    "requiredUI42_UI43_UI44Complete": 33,
+    "requiredSetSatisfied": false,
+    "UI42Names": [
+      "UI42-list-dark-desktop-test-data",
+      "UI42-list-light-desktop-test-data",
+      "UI42-list-dark-390-test-data",
+      "UI42-list-light-320-test-data",
+      "UI42-empty-authorized-case-test-data",
+      "UI42-configure-focused-candidate-test-data"
+    ],
+    "JPEGPreviewGroups": 27,
+    "JPEGChunks": 132,
+    "base64Characters": 2899952,
+    "decodedJPEGBytes": 2174935,
+    "belowSixMiBCeiling": true,
+    "scope": "Each preview was grouped by exact case plus name; identical failure names in the two different cases were not merged.",
+    "strictBase64Decoded": true,
+    "jpegSOIAndEOIVerified": true,
+    "caseCounts": {
+      "first": 7,
+      "second": 20
+    },
+    "jpegMetadataSha256": "28c231f26aff6c74790946fd2942a2ba6bcf1e320491454a4fc230081bae7d1a",
+    "jpegMetadataFingerprintMeaning": "Own calculated fingerprint of the scoped decoded JPEG byte/hash metadata, not a separate Git blob.",
+    "PNGAttachmentDeclarations": 29,
+    "PNGDeclarationsByCase": {
+      "first": 8,
+      "second": 21
+    },
+    "PNGAcquired": 0,
+    "ZIPAcquired": 0,
+    "visualInspectionPerformed": false,
+    "completePNGReaderEligible": false,
+    "limit": "The JPEG checks verify preserved encoded data and JPEG framing only. They do not verify PNG member contents, CRC, rendering or installed visual acceptance. The declared 33-image UI42–UI44 set is incomplete."
+  },
+  "artifact": {
+    "id": 15271693277,
+    "name": "playwright-ubuntu-24.04-1",
+    "bytes": 30512295,
+    "sha256": "34fd07642643e577f18a834e4c86b1c8bdb2cd497d4b2b4269c9e2bfcfd3fe8c",
+    "expiresAt": "2026-12-05T16:38:39Z",
+    "uploadedFileDeclaration": 94,
+    "zipAcquired": false,
+    "pngAcquired": false,
+    "memberInventoryVerified": false
+  },
+  "independentChecks": {
+    "preservation": 21,
+    "events": 22,
+    "journeysHTTPBI": 21,
+    "previewData": 61,
+    "total": 135,
+    "allChecksCompleted": true,
+    "meaning": "These checks verify a faithfully received negative execution; they are not product test passes.",
+    "receptionFindings": [],
+    "materialEvidenceDiscrepancies": [],
+    "rootAgreement": 10
+  },
+  "rootComparison": {
+    "status": "NO_MATERIAL_DISCREPANCY_IN_FINITE_EXTRACTION_COMPARISON",
+    "extraction": {
+      "gitBlob": "831e0cb426d931c2fdf5f7760bea353459bedf32",
+      "bytes": 111529,
+      "sha256": "97125d1e16ec711ecd0f18fae0f54f1d3aecea9e80499447074309629d3a13c7"
+    },
+    "eventUnion": {
+      "gitBlob": "b50584894baa261df2d5da44cba3d35b160fabf9",
+      "bytes": 58181,
+      "sha256": "fc739b04b399e87d766e4031ba19c5b9b35971d2829313d52e9c9cfb2a544b43"
+    },
+    "representation": "Root's actual union is 107 JSON payloads plus LF, 58181 bytes. This review's 60428-byte stream fingerprint adds the 21-byte SF_PREVIEW_E16_EVENT prefix on each of 107 lines. Payloads are literal; different framed hashes are expected.",
+    "checks": 10,
+    "otherReportsLiteral": 73,
+    "previewByteHashModelsLiteral": 27,
+    "scope": "Compared source identity, outcomes, exact event union/slots, other reports, captures, JPEG byte/hash metadata and limits. No new original acquisition or additional causal theory."
+  },
+  "conclusion": {
+    "diagnosticReceived": true,
+    "firstOriginalJourneyPassed": false,
+    "secondOriginalBIJourneyPassed": false,
+    "observedBIAbort": "BI06 native-request-failed and CDP network-loading-failed with net::ERR_ABORTED/canceled true; sameNativeRequest false, bodyObserved false, HTTP null, teardownPhase observing.",
+    "abortCause": "No cancelling caller or exclusive cause established. Abort records precede failure/page-closed diagnostics; teardown is not proven as their cause.",
+    "partialBIDOM": "The failure snapshot contains a ready operational table with three displayed values and loading/unavailable source links. It does not bind those values to a successfully acquired original BI06 response.",
+    "fiveValidationMarkersComplete": true,
+    "nextAnalysisBindingReadEnteredOnly": true,
+    "requestCompletionObserved": false,
+    "exclusiveCostOrDeadlockEstablished": false,
+    "performanceImprovementEstablished": false,
+    "historicalAcceptedAreasPreserved": true,
+    "qualifiedAreasRetained": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "UI42_UI43_UI44Qualified": false,
+    "finalCandidateQualified": false,
+    "mergeApproved": false,
+    "goLiveApproved": false,
+    "productionApproved": false,
+    "priorFocalStatusPreserved": "The corrected E16 focal remains accepted for its exact source/snapshot. The original Analytics result is a separate failure.",
+    "oldBIPassNotTransferred": true,
+    "missingBI06NegativeNotTransferred": true
+  },
+  "reviewerActions": {
+    "reads": "Actual Git copies and own pure data interpretation only.",
+    "originalEndpointGets": 0,
+    "runEndpointGets": 0,
+    "zipGets": 0,
+    "sourceExecution": false,
+    "sourceChanges": false,
+    "treeCommitRefRunMutations": false,
+    "onlyWrite": "This review blob plus literal readback."
+  }
+}

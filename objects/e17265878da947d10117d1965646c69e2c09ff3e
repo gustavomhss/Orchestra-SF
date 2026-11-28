@@ -1,0 +1,290 @@
+{
+  "schema": "sf613-e16-types-corrected-focal-carrier-bounds-v1",
+  "status": "PROPOSED_UNBOUND_DIAGNOSTIC_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "inheritance": {
+    "package": {
+      "gitBlob": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+      "bytes": 54996,
+      "sha256": "d6af1967a9bc5a700315cd495e4e78a6304d95c01036c774ae619655998555cb"
+    },
+    "carrierBounds": {
+      "gitBlob": "73a772ec45451bdec486c532110c03612a96ccc9",
+      "bytes": 23023,
+      "sha256": "4c6c0c22b6d6e8f29a509221f1eed269b7b8e5139bb10538cf1df6e693916a78"
+    },
+    "rule": "All command arrays, cwd, process/parent limits, engine capture/kill behavior, report gates and protocol limits remain inherited literally. Only explicit identity/pin/width/snapshot-patch fields below supersede the historical carrier."
+  },
+  "correctionPackage": {
+    "manifest": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+    "bounds": "db9a0d50d9b89e33008b9b5a00c71563b7541849",
+    "independentReview": {
+      "gitBlob": "5308b8f9e1b37a15737d3ee961a4083d2255ea5b",
+      "bytes": 10990,
+      "sha256": "0dbf8f13273fa13b153303c3468af9802f6376c196cbbe99ef3dc8a387b9953a",
+      "lf": 377
+    }
+  },
+  "template": {
+    "gitBlob": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+    "bytes": 18611,
+    "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525",
+    "lf": 251
+  },
+  "derivation": {
+    "gitBlob": "9c651d6d37e038418a9e0f7b332782da63fd9a5e",
+    "bytes": 14061,
+    "sha256": "45573566c3251b5571677900b2a2b9d76bb8467c8f66fbe78d6841000ee30b0b",
+    "lf": 523
+  },
+  "directPatch": {
+    "gitBlob": "00be044a93ba23f40b6a95210c655d19f85a543d",
+    "bytes": 3264,
+    "sha256": "2dd0cec3a448a2117c3e1b405dc6151db6b2a85cd5c352295ac84a2197478e7d",
+    "lf": 45
+  },
+  "fullSnapshotPatch": {
+    "gitBlob": "5c4be2450983f543873f511a48c668edea188f47",
+    "bytes": 108443,
+    "sha256": "5cbb2355927797458c3f3256ab9fd7438f5484572aed73873a30943eb97d26da",
+    "lf": 1622
+  },
+  "bindings": {
+    "count": 2,
+    "items": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "bytes": 20,
+        "occurrences": 1,
+        "futureValue": "Root's actual corrected E16 source commit (40 hex bytes)"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "bytes": 21,
+        "occurrences": 1,
+        "futureValue": "Root's actual corrected E16 source tree (40 hex bytes)"
+      }
+    ],
+    "boundWidthModel": {
+      "status": "CALCULATED_WIDTH_ONLY_NOT_OBJECT",
+      "templateBytes": 18611,
+      "futureBoundBytes": 18650,
+      "deltaBytes": 39,
+      "deltaLf": 0
+    },
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null,
+    "meaning": "Nulls mean deliberately unbound in this proposal, not a claim that root has not separately created immutable objects. Root's actual binding is a separate artifact."
+  },
+  "ancestry": {
+    "immediateSourceParent": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    },
+    "cumulativeBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+    },
+    "immediateSourceDelta": {
+      "modified": 1,
+      "added": 0,
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
+    },
+    "cumulativeSourceDelta": {
+      "modified": 18,
+      "added": 2,
+      "totalPaths": 20
+    },
+    "snapshotDelta": {
+      "modified": 1,
+      "added": 3
+    },
+    "runtimeCheck": "Unchanged git fetch --depth=3 and git show -s --format=%H%n%T%n%P HEAD^; expected tuple uses [source,sourceTree,sourceParent]. No added command. sourceParentTree is declared metadata, verified with immutable objects by root's separate audit.",
+    "eventBaseline": "The helper's original diagnostic ad3/T11bf identity is preserved; it is not the bound corrected source/snapshot identity or a qualification."
+  },
+  "pins": {
+    "total": 40,
+    "pathsAndOrderLiteral": true,
+    "preserved": 38,
+    "updated": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "before": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+        "after": "289523ca2b7f588337473f218476e242776d721d"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "before": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+        "after": "6185635810d712e4be7dfe109422d2d65103a1a0"
+      }
+    ],
+    "sourceResolvedPopulationExpected": 37,
+    "focalOnlyControlPins": 2,
+    "focalRequestPins": 1,
+    "noExecutableSelfPin": "The driver cannot embed its own Git blob hash; the actual snapshot tree/commit and separate object audit bind it."
+  },
+  "preservation": {
+    "groupsG2ToG11Literal": true,
+    "engineLiteral": true,
+    "hostGuardsLiteral": true,
+    "all17CommandCallsLiteralIncludingArgvCwdAndTimeout": true,
+    "hashLoopLiteral": true,
+    "G1Only": "Immediate parent assertion and honest parent/base metadata; two pin substitutions."
+  },
+  "configuredPopulation": {
+    "groups": 11,
+    "commands": 17,
+    "stdoutStderrTruncationFields": 34,
+    "functionalProcesses": 7,
+    "staticDeclarations": 23,
+    "expectedReportEmissions": 12,
+    "outerExpectedOmni": {
+      "groups": 11,
+      "spawns": 17,
+      "delegations": 0
+    },
+    "internalE16Children": 10,
+    "staticDeclarationSites": {
+      "casesContract": 7,
+      "projection": 5,
+      "portfolioSelection": 3,
+      "scenarioLookup": 1,
+      "nativeScenarioSelection": 1,
+      "criterionChecks": 5,
+      "e16Observation": 1
+    },
+    "reports": {
+      "inheritedEmissions": 11,
+      "newE16Emissions": 1,
+      "totalExpected": 12,
+      "C22EmissionsRetained": 3,
+      "distinctFamiliesNotEquatedToEmissions": true
+    },
+    "actual": {
+      "functionalPass": null,
+      "functionalFail": null,
+      "assertions": null,
+      "outerPass": null,
+      "outerFail": null,
+      "reportCount": null,
+      "omni": null
+    },
+    "caution": "The ten child processes and their private Omni assertions are separate from the carrier's 17 AppProcess commands. Static declarations and expected report emissions are not observed test/assertion totals."
+  },
+  "budget": {
+    "commandsSumMs": 2130000,
+    "commandsSum": "35m30s",
+    "parentsSumMs": 2820000,
+    "parentsSum": "47m",
+    "jobMs": 2700000,
+    "job": "45m",
+    "configuredParentExcessMs": 120000,
+    "configuredParentExcess": "2m",
+    "nominalSpareAfterParentsMs": -120000,
+    "statement": "Configured parent ceilings exceed the job ceiling by two minutes. This is explicitly disclosed; there is no promise that a run using all ceilings completes. Command and parent ceilings nest and must not be added together.",
+    "inheritedG10": {
+      "cooperativeMs": [
+        12000,
+        12000,
+        50000,
+        50000,
+        240000
+      ],
+      "bunMs": [
+        15000,
+        15000,
+        60000,
+        60000,
+        270000
+      ],
+      "nominalCooperativeSumMs": 364000,
+      "nominalBunSumMs": 420000,
+      "commandMs": 450000,
+      "parentMs": 510000
+    },
+    "newG11": {
+      "childModes": 10,
+      "childMs": 3000,
+      "childKillGraceMs": 1000,
+      "childStreamCapBytesEach": 65536,
+      "parentBunMs": 45000,
+      "commandMs": 60000,
+      "parentMs": 90000
+    },
+    "unchangedAnalyticsWaiterSeconds": [
+      60,
+      120
+    ],
+    "unchangedProductFenceSeconds": 30,
+    "overhead": "Setup, acquisition/readiness, scheduler delay, output, finalization and cleanup also use the job budget. No installed latency bound or favorable completion inference follows."
+  },
+  "commandAndParentInventory": {
+    "inheritedFrom": "73a772ec45451bdec486c532110c03612a96ccc9",
+    "commandsCount": 17,
+    "parentsCount": 11,
+    "allLiteral": true,
+    "commandsSumMs": 2130000,
+    "parentsSumMs": 2820000,
+    "jobMs": 2700000,
+    "parentsExceedJobMs": 120000
+  },
+  "engineOutputBounds": {
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "emittedTruncationFieldsPerCommand": 2,
+    "totalConfiguredTruncationFields": 34,
+    "arithmeticStreamCaptureSumBytes": 35651584,
+    "statement": "The sum is only a finite per-command capture arithmetic. It is not a bound on the Actions main log, wrapper overhead or separate descendants. Truncation flags differ from process timeout/kill.",
+    "forceKillGraceMs": 5000,
+    "environment": "GUARDRAIL_APPROVED is cleared while inherited environment is retained.",
+    "acceptance": "Each command prints identity/argv/cwd/exit/duration/truncation fields; truncation throws before exit acceptance. Existing runCommand requires zero exit."
+  },
+  "reportAcceptance": {
+    "E16": {
+      "prefix": "SF_E16_ROUTE_CONTROL ",
+      "carrierCheck": "prefix present after successful whole-file exit and no captured stream truncation",
+      "parentCapBytes": 16384,
+      "modelBytes": 9180,
+      "modelStatus": "pure-data model in control bounds, not runtime receipt",
+      "pids": "dynamic positive safe integers; ten distinct PIDs required by the parent"
+    },
+    "C22": {
+      "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION ",
+      "literalCarrierRequirement": "exactly three lines after successful exit",
+      "scenarios": "single/multiple/unsupported remain the unchanged R7 controls"
+    },
+    "limits": "No single report line, diagnostic progress marker or prefix substitutes for child assertions, whole-file status, types, guards, footer/Omni evidence or later original Analytics/UI acceptance."
+  },
+  "snapshotAdditionArithmetic": {
+    "templateFileBytes": 18611,
+    "fixtureFileBytes": 85264,
+    "parentRunnerFileBytes": 1172,
+    "sourceRequestBytes": 295,
+    "focalRequestBytes": 247,
+    "netTemplateDeltaBytesOverSource": 104999,
+    "netTemplateDeltaLF": 1595,
+    "futureBoundDeltaBytesOverSource": 105038,
+    "meaning": "Arithmetic for the four overlay paths, excluding tree object overhead. All generated candidate hashes remain unbound until root's separate binding."
+  },
+  "limits": [
+    "No corrected typecheck or functional PASS is asserted by this static package.",
+    "Eleven groups, seventeen commands and twenty-three declaration sites are selection metadata; actual footers, assertions, Omni and report count require new received evidence.",
+    "Ten named control children are separate from seventeen carrier AppProcess commands; this is not a count of all descendants.",
+    "SF_E16_ROUTE_CONTROL carries dynamic PIDs; the model is not an expected byte-literal runtime receipt.",
+    "All three C22 acceptance lines remain required. Diagnostic progress is not an additional acceptance report.",
+    "Configured parent sum47m exceeds the job45m ceiling; no completion, SLA or installed performance guarantee follows.",
+    "Original Analytics waiters60/120s and product fence30s remain unchanged."
+  ],
+  "authorVerification": {
+    "checks": 65,
+    "allPassed": true,
+    "fullForwardInverseLiteral": true,
+    "repositoryCodeExecuted": false,
+    "originalLogsOrZIPAcquired": false,
+    "treeCommitRefRunCreated": false
+  }
+}

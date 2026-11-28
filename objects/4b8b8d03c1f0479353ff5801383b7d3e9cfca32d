@@ -1,0 +1,1122 @@
+{
+  "schema": "sf613-e16-focal-independent-negative-intake-v1",
+  "status": "RECEIVED_NEGATIVE_TYPECHECK_SOURCE_AND_SNAPSHOT_NOT_ACCEPTED",
+  "reviewer": "/root/review_archive",
+  "repository": "gustavomhss/Orchestra-SF",
+  "at": "2026-11-28 15:58:09 UTC",
+  "scope": "Independent reception of root-preserved actual Git copies only. No original log/run endpoint, ZIP, repository execution or source correction reviewed in this intake.",
+  "run": {
+    "id": 46160549382,
+    "attempt": 1,
+    "conclusion": "failure",
+    "head": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+    "branch": "ci-run-sf613e16",
+    "main": {
+      "id": 141026681143,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 141028491347,
+      "conclusion": "success"
+    }
+  },
+  "source": {
+    "sha": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+    "soleParent": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "delta": {
+      "M": 18,
+      "A": 2
+    }
+  },
+  "snapshot": {
+    "sha": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+    "tree": "ccccc170d69c50bae3964f8434c642bc147e687f",
+    "soleParent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "delta": {
+      "A": 3,
+      "M": 1
+    }
+  },
+  "diagnosticBaseline": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "role": "R7 clean product and unchanged C22 tests"
+  },
+  "pins": {
+    "executionAuthority": {
+      "gitBlob": "4c778e8970903849d892f1286c90c71854951cfc",
+      "bytes": 14772,
+      "sha256": "9bce38697bca2bc05b1e7c8b6559a99e038918c4cd3a18eade860d2a93264acb",
+      "lf": 409,
+      "endsWithLF": true
+    },
+    "staticSourceControlsReview": {
+      "gitBlob": "50c4602b00c72d62bbd76e7246f616b16b650096",
+      "bytes": 37340,
+      "sha256": "fa442d14f777f379b5fb1a6331f83ad7a6c6e35b8098b938d507c38244cfa066",
+      "lf": 1026,
+      "endsWithLF": true
+    },
+    "carrierReview": {
+      "gitBlob": "c467f72409d4e8eb63e2216037c4b6556a38ae3c",
+      "bytes": 11291,
+      "sha256": "f060e2a4770c7521d0d046b262e6f50046dbba76e61a42d8388f0d31f78cbe6b",
+      "lf": 323,
+      "endsWithLF": true
+    },
+    "actualObjectsPeer": {
+      "gitBlob": "c8c08e1c828e4cf1c3f463b3582b2f9e2d5914e2",
+      "bytes": 16709,
+      "sha256": "67b4e45e587775e9fe34b9a8d3316949bcd8f5fceadd5dcdac56b3fda1dde61e",
+      "lf": 525,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "771ded2c9794014f2fe0277dffc29c0495ebe1b7",
+      "bytes": 26178,
+      "sha256": "48788326856ccd83768c909cab09c0dd4d81a8adcccfcb872a8e41fa7bcd1a9e",
+      "lf": 566,
+      "endsWithLF": true
+    },
+    "closure": {
+      "gitBlob": "24b2f8d905838a97cf420a1ed27fec8e23770d65",
+      "bytes": 1844,
+      "sha256": "0478ff473f2a4c368873e6017ec239695571a3c7defa9c9ed6209368986c16b3",
+      "lf": 63,
+      "endsWithLF": true
+    },
+    "main": {
+      "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+      "bytes": 149216,
+      "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d",
+      "lf": 1097,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "1e84e3fc894d6686dc9d83b211faa39c20739d1f",
+      "bytes": 1697,
+      "sha256": "1b46b8ad8ad4b38b87af8d9c56fd293a6803eeccc4498b817261cdc58025b6d1",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "b2b3fdffd348b525b2b2a624976295db747bda25",
+      "bytes": 2280,
+      "sha256": "6b76684d0522dcc0df4d1c6e378b966446908062c112cfd3bc53a54a6dd5b416",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "d1b26be1b1028942a631693900cff6bbb23fbbac",
+      "bytes": 1684,
+      "sha256": "46c8da84982c659c50c199f4fa06e0d9809a0d1cf98122fa89cb3964d9c1fbf1",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "rootExtraction": {
+      "gitBlob": "f345b4c902e0aa0cecb5a2fbe2ae8c8fa8f8befd",
+      "bytes": 176586,
+      "sha256": "c8b4fe2708a251b3a5554e7160ef557d7e7884110fb3e67979340c8fb8559bd9",
+      "lf": 3452,
+      "endsWithLF": true
+    },
+    "rootIntake": {
+      "gitBlob": "c33da64ec5caa1eeca3642281567e16ea9aaae75",
+      "bytes": 12053,
+      "sha256": "aea429bdc837703a96763aae9bd4057fdb8c9a07a395553bd2dce01c56097b38",
+      "lf": 396,
+      "endsWithLF": true
+    },
+    "retainedR7Reception": {
+      "gitBlob": "04f292fd4580acef00cd8431bd4820973a2e820d",
+      "bytes": 22328,
+      "sha256": "3f01f39adfe30760cfebc647dc73ce328a51822cd6dc99e0d5b27394c65ee516",
+      "lf": 762,
+      "endsWithLF": true
+    }
+  },
+  "preservation": {
+    "status": "COMPLETE",
+    "closedAtLiteral": "2026-11-28 15:44:32 UTC",
+    "originalsPermanentlyClosed": true,
+    "rootMainOriginalGets": 1,
+    "rootCleanupOriginalGets": 1,
+    "zipGets": 0,
+    "representation": "Root provenance is the exact decoded job-log string, UTF8 re-encoding without BOM or line-ending normalization. Independently checked only the named actual Git copies and manifests, not the original HTTP responses.",
+    "main": {
+      "actualWholeCreated": true,
+      "parts": 1,
+      "bytes": 149216,
+      "lf": 1097,
+      "bomByteOffsets": [
+        0
+      ],
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "actualWholeCreated": true,
+      "parts": 1,
+      "bytes": 2280,
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "endsWithLF": true
+    },
+    "recomposition": "Each one-part manifest exactly matches its actual Git whole, UTF8 size/hash/LF, byte spans and UTF16 spans. BOM retained; no normalization.",
+    "provenanceLimit": "Original acquisition count and exact decoded-original representation come from the authenticated root manifests and closure; this reviewer intentionally never reacquired the originals."
+  },
+  "verification": {
+    "dataChecks": {
+      "preservation": 32,
+      "coreEvidence": 71,
+      "dynamicE16AndRootComparison": 63,
+      "total": 166
+    },
+    "allDataChecksPassed": true,
+    "runtimeSuccessNotInferredFromDataChecks": true,
+    "rootAgreement": true,
+    "remainingEvidenceDiscrepancies": [],
+    "ownParserCorrection": {
+      "type": "OWN_PARSER_EXPECTATION",
+      "initialExpected": "enter",
+      "actualStates": [
+        "started",
+        "returned"
+      ],
+      "scope": "Only own data checker adjusted to literal phase tokens; originals and extracted records unchanged.",
+      "repeatedPhaseNames": "Sequential started/returned pairs retain each invocation; repeated controlled-read labels are not deduplicated."
+    }
+  },
+  "observed": {
+    "commandCount": 17,
+    "exitZero": 15,
+    "exitTwo": 2,
+    "falseTruncationFlags": 34,
+    "identityPreambles": 11,
+    "workingPins": 40,
+    "workingPinsLiteralToAuthority": true,
+    "sourceIdentityOutputLiteral": true,
+    "commands": [
+      {
+        "mainLine": 754,
+        "gate": "fetch source parent",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 444,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 758,
+        "gate": "snapshot identity",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 761,
+        "gate": "source identity",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 769,
+        "gate": "complete cases read-set contract whole-file",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 263,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 788,
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 637,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 810,
+        "gate": "CLI package typecheck",
+        "cwd": "apps/cli",
+        "exitCode": 2,
+        "durationMs": 28756,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 859,
+        "gate": "Sucafina package typecheck",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 2,
+        "durationMs": 28254,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 905,
+        "gate": "inspect history completeness",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 908,
+        "gate": "fetch current dev and source ancestry",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 25444,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 913,
+        "gate": "current dev identity",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 4,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 916,
+        "gate": "actual guard merge base",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 8,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 920,
+        "gate": "canonical guardrails",
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 2871,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 926,
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 241,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 942,
+        "gate": "Scenario lookup complete candidates whole-file",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 166,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 956,
+        "gate": "Native scenario candidates selection whole-file",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 440,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 970,
+        "gate": "Comparison criterion observation whole-file",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 246759,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "mainLine": 1056,
+        "gate": "E16 binding observation controls whole-file",
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 1342,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ],
+    "functional": {
+      "processes": 7,
+      "tests": 23,
+      "pass": 23,
+      "fail": 0,
+      "expectCalls": 2747,
+      "footers": [
+        {
+          "line": 784,
+          "pass": 7,
+          "fail": 0,
+          "assertions": 843,
+          "tests": 7,
+          "files": 1,
+          "elapsedMs": 256,
+          "text": "Ran 7 tests across 1 file. [256.00ms]",
+          "commandLine": 769,
+          "gate": "complete cases read-set contract whole-file",
+          "path": "./test/product/wp10/integration/cases-read-contract.test.ts",
+          "commandDurationMs": 263
+        },
+        {
+          "line": 807,
+          "pass": 5,
+          "fail": 0,
+          "assertions": 757,
+          "tests": 5,
+          "files": 1,
+          "elapsedMs": 625,
+          "text": "Ran 5 tests across 1 file. [625.00ms]",
+          "commandLine": 788,
+          "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+          "path": "./test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "commandDurationMs": 637
+        },
+        {
+          "line": 938,
+          "pass": 3,
+          "fail": 0,
+          "assertions": 503,
+          "tests": 3,
+          "files": 1,
+          "elapsedMs": 231,
+          "text": "Ran 3 tests across 1 file. [231.00ms]",
+          "commandLine": 926,
+          "gate": "Portfolio selection cases and preferences whole-file",
+          "path": "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+          "commandDurationMs": 241
+        },
+        {
+          "line": 953,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 147,
+          "tests": 1,
+          "files": 1,
+          "elapsedMs": 159,
+          "text": "Ran 1 test across 1 file. [159.00ms]",
+          "commandLine": 942,
+          "gate": "Scenario lookup complete candidates whole-file",
+          "path": "./test/product/wp10/integration/scenario-lookup-selection.test.ts",
+          "commandDurationMs": 166
+        },
+        {
+          "line": 966,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 157,
+          "tests": 1,
+          "files": 1,
+          "elapsedMs": 427,
+          "text": "Ran 1 test across 1 file. [427.00ms]",
+          "commandLine": 956,
+          "gate": "Native scenario candidates selection whole-file",
+          "path": "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+          "commandDurationMs": 440
+        },
+        {
+          "line": 1052,
+          "pass": 5,
+          "fail": 0,
+          "assertions": 287,
+          "tests": 5,
+          "files": 1,
+          "elapsedMs": 246730,
+          "text": "Ran 5 tests across 1 file. [246.73s]",
+          "commandLine": 970,
+          "gate": "Comparison criterion observation whole-file",
+          "path": "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+          "commandDurationMs": 246759
+        },
+        {
+          "line": 1067,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 53,
+          "tests": 1,
+          "files": 1,
+          "elapsedMs": 1332,
+          "text": "Ran 1 test across 1 file. [1332.00ms]",
+          "commandLine": 1056,
+          "gate": "E16 binding observation controls whole-file",
+          "path": "./test/sucafina-preview-route-e16-diagnostic.test.ts",
+          "commandDurationMs": 1342
+        }
+      ],
+      "scope": "Seven selected functional Bun processes. This total does not assert a global count of the isolated child Node assertions or arbitrary subprocesses."
+    },
+    "outer": {
+      "line": 1073,
+      "pass": 9,
+      "fail": 2,
+      "assertions": 67,
+      "tests": 11,
+      "files": 1,
+      "elapsedMs": 335910,
+      "text": "Ran 11 tests across 1 file. [335.91s]"
+    },
+    "outerOmni": {
+      "line": 1074,
+      "text": "omni positive control [bada0b1fca72214fe9806a9af46aa9c0]: pass (declared: 11 test(s) in test/sucafina-proof-verification.test.ts); 17 omni spawn(s), 0 delegated.",
+      "population": "outer wrapper only",
+      "spawns": 17,
+      "delegations": 0,
+      "declaredGroups": 11
+    },
+    "typecheckFailures": {
+      "commands": [
+        {
+          "mainLine": 810,
+          "gate": "CLI package typecheck",
+          "cwd": "apps/cli",
+          "exitCode": 2
+        },
+        {
+          "mainLine": 859,
+          "gate": "Sucafina package typecheck",
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 2
+        }
+      ],
+      "diagnosticOccurrences": 7,
+      "uniqueReportedSites": 4,
+      "sites": [
+        {
+          "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+          "sourceLine": 299,
+          "sourceColumn": 68,
+          "code": "TS2345",
+          "message": "Argument of type 'PropertyDescriptor | undefined' is not assignable to parameter of type 'PropertyDescriptor & ThisType<any>'.",
+          "occurrences": [
+            {
+              "mainLine": 811,
+              "gate": "CLI package typecheck"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+          "sourceLine": 816,
+          "sourceColumn": 66,
+          "code": "TS18048",
+          "message": "'method.prewrite' is possibly 'undefined'.",
+          "occurrences": [
+            {
+              "mainLine": 814,
+              "gate": "CLI package typecheck"
+            },
+            {
+              "mainLine": 860,
+              "gate": "Sucafina package typecheck"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+          "sourceLine": 817,
+          "sourceColumn": 53,
+          "code": "TS18048",
+          "message": "'method.initial' is possibly 'undefined'.",
+          "occurrences": [
+            {
+              "mainLine": 815,
+              "gate": "CLI package typecheck"
+            },
+            {
+              "mainLine": 861,
+              "gate": "Sucafina package typecheck"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+          "sourceLine": 818,
+          "sourceColumn": 51,
+          "code": "TS18048",
+          "message": "'method.final' is possibly 'undefined'.",
+          "occurrences": [
+            {
+              "mainLine": 816,
+              "gate": "CLI package typecheck"
+            },
+            {
+              "mainLine": 862,
+              "gate": "Sucafina package typecheck"
+            }
+          ]
+        }
+      ],
+      "classification": "Compiler diagnostics in the diagnostic helper and control fixture. The outer runner records each typecheck exit2 and fails the corresponding zero-exit assertion; no runtime functional test failed in these captured footers.",
+      "limits": "Four sites means four distinct reported locations, not proof that a future corrected build has no other errors."
+    },
+    "reports": {
+      "total": 12,
+      "inheritedLiteral": 8,
+      "C22Literal": 3,
+      "E16": 1,
+      "locations": [
+        {
+          "line": 791,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "scenario": "complete-product-and-fresh-authorization"
+        },
+        {
+          "line": 792,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "scenario": "opaque-equivalence-and-live-refusal"
+        },
+        {
+          "line": 793,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "scenario": "whole-graphs-and-shape"
+        },
+        {
+          "line": 794,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "scenario": "shape-precedence-and-drift"
+        },
+        {
+          "line": 795,
+          "prefix": "SF_C16_SELECTION_CONTROL",
+          "scenario": "closed-case-factories"
+        },
+        {
+          "line": 928,
+          "prefix": "SF_C19_PORTFOLIO_CASES",
+          "scenario": null
+        },
+        {
+          "line": 945,
+          "prefix": "SF_C20_SCENARIO_LOOKUP",
+          "scenario": null
+        },
+        {
+          "line": 958,
+          "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+          "scenario": null
+        },
+        {
+          "line": 1012,
+          "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+          "scenario": "single-criterion-and-protocol"
+        },
+        {
+          "line": 1029,
+          "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+          "scenario": "multiple-criteria-shared-source"
+        },
+        {
+          "line": 1040,
+          "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+          "scenario": "unsupported-planner-closure"
+        },
+        {
+          "line": 1059,
+          "prefix": "SF_E16_ROUTE_CONTROL",
+          "scenario": null
+        }
+      ],
+      "inheritedReference": {
+        "gitBlob": "7bd66dd44ac8cb082cea7e0f1cbd8cd5bd1f53f9",
+        "bytes": 128317,
+        "sha256": "4fa1406774aa5ef3cbe68b3eab929100590a022c0a4f634c9b3ed35027bd190f",
+        "lf": 1000,
+        "endsWithLF": true
+      },
+      "comparison": "After removing the Actions timestamp/ANSI wrapper, prefix plus JSON payload plus LF is literal to the eight retained reports and three accepted R7 C22 report payloads."
+    },
+    "E16": {
+      "mainLine": 1059,
+      "actualParentReportFingerprint": {
+        "gitBlob": "f297a882c981f4c6cb10113b92dbec47b9235834",
+        "bytes": 8688,
+        "sha256": "349955003082ed858abbb8b67879cb33e2c519ef48725b351cfb1a74c4ec79ae",
+        "lf": 1,
+        "endsWithLF": true,
+        "standaloneBlobCreated": false
+      },
+      "modeCount": 10,
+      "distinctChildPids": 10,
+      "labels": 64,
+      "uniqueLabels": 56,
+      "parentExpectCalls": 53,
+      "parentProcessExit": 0,
+      "children": [
+        {
+          "mode": "route-owner",
+          "pid": 3313,
+          "labels": 7,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 18,
+          "stdoutAttempts": 18,
+          "stdoutBytes": 10519,
+          "stdoutSha256": "be953fc2f0565817c250d8d9c3c67ac73f66b7010e7285ee693dca437a594eea",
+          "fileAttempts": 18,
+          "fileBytes": 10519,
+          "fileSha256": "be953fc2f0565817c250d8d9c3c67ac73f66b7010e7285ee693dca437a594eea",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 18,
+            "outcome": "returned",
+            "openUnits": 0,
+            "openPhases": 0,
+            "compareBodies": [
+              1,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "work-links",
+          "pid": 3323,
+          "labels": 10,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 56,
+          "stdoutAttempts": 56,
+          "stdoutBytes": 30042,
+          "stdoutSha256": "3767417283fe678c5ee374851b6d8489993f52fb6f6db4abef95a0437f92d531",
+          "fileAttempts": 56,
+          "fileBytes": 30042,
+          "fileSha256": "3767417283fe678c5ee374851b6d8489993f52fb6f6db4abef95a0437f92d531",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 56,
+            "outcome": "returned",
+            "openUnits": 0,
+            "openPhases": 0,
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "native-chain",
+          "pid": 3335,
+          "labels": 4,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 46,
+          "stdoutAttempts": 46,
+          "stdoutBytes": 26213,
+          "stdoutSha256": "7bd41cfefdb993676a11495e1de15c4dbcc0c0adbd6695772d6ac04a80841944",
+          "fileAttempts": 46,
+          "fileBytes": 26213,
+          "fileSha256": "7bd41cfefdb993676a11495e1de15c4dbcc0c0adbd6695772d6ac04a80841944",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 46,
+            "outcome": "returned",
+            "openUnits": 0,
+            "openPhases": 0,
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "persistence-tail",
+          "pid": 3347,
+          "labels": 5,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 43,
+          "stdoutAttempts": 43,
+          "stdoutBytes": 24333,
+          "stdoutSha256": "aca7bfa23cef3dfdd5137e931f7b99fc2cdc40781d1a48ab83cd36a36228f7a4",
+          "fileAttempts": 43,
+          "fileBytes": 24333,
+          "fileSha256": "aca7bfa23cef3dfdd5137e931f7b99fc2cdc40781d1a48ab83cd36a36228f7a4",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 43,
+            "outcome": "returned",
+            "openUnits": 1,
+            "openPhases": 1,
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "capacity",
+          "pid": 3357,
+          "labels": 9,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 163,
+          "stdoutAttempts": 163,
+          "stdoutBytes": 94379,
+          "stdoutSha256": "ecec551917dcdb6f7c3f05a17186e4acbb651f781f0fdbea3b0f9123e172ac3e",
+          "fileAttempts": 163,
+          "fileBytes": 94379,
+          "fileSha256": "ecec551917dcdb6f7c3f05a17186e4acbb651f781f0fdbea3b0f9123e172ac3e",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 163,
+            "outcome": "returned",
+            "openUnits": 0,
+            "openPhases": 0,
+            "compareBodies": [
+              128,
+              128,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "mechanism",
+          "pid": 3367,
+          "labels": 9,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 37,
+          "stdoutAttempts": 37,
+          "stdoutBytes": 20096,
+          "stdoutSha256": "e3c85e3cb2c9d6bb42916550e67d22f0df8f9e0271cd0d48d8441d495c92d746",
+          "fileAttempts": 37,
+          "fileBytes": 20096,
+          "fileSha256": "e3c85e3cb2c9d6bb42916550e67d22f0df8f9e0271cd0d48d8441d495c92d746",
+          "terminal": {
+            "kind": "request-close",
+            "sequence": 37,
+            "outcome": "returned",
+            "openUnits": 1,
+            "openPhases": 1,
+            "compareBodies": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "routeCoverage": [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "faultsBefore": [
+              0,
+              0,
+              1,
+              1,
+              0,
+              0
+            ],
+            "saturated": false
+          }
+        },
+        {
+          "mode": "sink-zero",
+          "pid": 3377,
+          "labels": 4,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 1,
+          "stdoutAttempts": 2,
+          "stdoutBytes": 627,
+          "stdoutSha256": "d2eecd6b87b014af40e278c4ebab38937843880b347bd93d1a95e9e10f30e51b",
+          "fileAttempts": 2,
+          "fileBytes": 627,
+          "fileSha256": "d2eecd6b87b014af40e278c4ebab38937843880b347bd93d1a95e9e10f30e51b",
+          "terminal": null
+        },
+        {
+          "mode": "sink-partial",
+          "pid": 3386,
+          "labels": 4,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 1,
+          "stdoutAttempts": 2,
+          "stdoutBytes": 627,
+          "stdoutSha256": "b751c7d48a0b60dfa05ea8d5ccdce8fecb3ed6e35ce52f1efb2fb2c3a9f3911a",
+          "fileAttempts": 2,
+          "fileBytes": 840,
+          "fileSha256": "3a3d73d2b79a7b046697f61aeebf982dd2791e35171eca0358450147fb1ff061",
+          "terminal": null
+        },
+        {
+          "mode": "sink-throw",
+          "pid": 3395,
+          "labels": 4,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "records": 1,
+          "stdoutAttempts": 2,
+          "stdoutBytes": 627,
+          "stdoutSha256": "a2eba4a30a121d0a868c30fdc4c84e21bd4f620f252ad295f9f6334288ae2112",
+          "fileAttempts": 2,
+          "fileBytes": 627,
+          "fileSha256": "a2eba4a30a121d0a868c30fdc4c84e21bd4f620f252ad295f9f6334288ae2112",
+          "terminal": null
+        },
+        {
+          "mode": "forwarder",
+          "pid": 3404,
+          "labels": 8,
+          "requestGets": 0,
+          "omniSpawns": 1,
+          "omniDelegations": 0,
+          "framingOnly": true,
+          "stdoutAttempts": 200,
+          "completeLines": 197,
+          "partialFragments": 1,
+          "terminal": null
+        }
+      ],
+      "scope": "Observed completion of the pinned synthetic/controlled diagnostic tests, including real LocalStore/C08/consumer/verifier pieces with explicitly controlled host/Planner/fences/context. This is not installed Analytics acceptance."
+    },
+    "compositionPhases": {
+      "records": 66,
+      "fixtures": [
+        {
+          "fixture": "comparison-criteria-single",
+          "records": 40,
+          "pairedInvocations": 20,
+          "allReturnedWithoutAbort": true
+        },
+        {
+          "fixture": "comparison-criteria-multiple",
+          "records": 16,
+          "pairedInvocations": 8,
+          "allReturnedWithoutAbort": true
+        },
+        {
+          "fixture": "comparison-criteria-unsupported",
+          "records": 10,
+          "pairedInvocations": 5,
+          "allReturnedWithoutAbort": true
+        }
+      ],
+      "repeatedPhaseNamesPreserved": true,
+      "C22PassLines": [
+        {
+          "line": 1045,
+          "text": "(pass) Comparison criteria observation owns the post-proof single-criterion batch and retains protocol, method and authority fences [33310.67ms]"
+        },
+        {
+          "line": 1046,
+          "text": "(pass) Comparison criteria observation retains original parallel evaluation for multiple Planner criteria with a shared source [35530.62ms]"
+        },
+        {
+          "line": 1047,
+          "text": "(pass) Comparison criteria observation preserves the complete fallback for unsupported Planner replacements [177412.09ms]"
+        }
+      ]
+    },
+    "guards": {
+      "mainLine": 921,
+      "rules": 78,
+      "files": 871,
+      "findings": 40,
+      "inheritedFindingsLiteral": true,
+      "errors": 0,
+      "approved": 0,
+      "bootstrap": false,
+      "touchesGuards": false,
+      "currentDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "terminal": {
+      "artifacts": 0,
+      "cleanupStepSucceeded": true,
+      "cleanupBranch": "ci-run-sf613e16",
+      "branchAbsenceIndependentlyQueried": false,
+      "branchAbsenceLimit": "Cleanup log executes DELETE with || true. This receipt establishes the recorded successful cleanup job/step, not a separate live ref-absence query.",
+      "liveRunCountIndependentlyQueried": false
+    },
+    "Bun": {
+      "version": "1.3.14",
+      "footerRevision": "0d9b296a",
+      "full40HexRevisionObservedClaim": false
+    }
+  },
+  "interpretation": {
+    "verdict": "The exact E16 source and snapshot fail the focal gate because both required package typechecks reject the helper/fixture. Preserve the successful functional evidence without promoting it to focal acceptance.",
+    "codeRunnerDistinction": "The failures are TS2345 and TS18048 at the four reported code sites. All17 command receipts exist and all34 capture flags are false; the seven functional processes and the scoped outer Omni control complete. This is not classified as a runner timeout, missing receipt or functional-test failure.",
+    "typeCorrections": "A subsequent correction must be separately reviewed and bound to new immutable source/snapshot objects. This receipt does not review or authorize a correction.",
+    "priorPreviewCause": "These compiler diagnostics do not establish the cause of earlier installed preview timeouts or any performance improvement.",
+    "notAcceptedForAnalytics": true,
+    "noRerunSameSnapshotAuthorized": true
+  },
+  "limits": [
+    "The complete child diagnostic streams were not separately acquired or archived by this reviewer. Hashes, row counts and file statistics are values reported by the pinned child tests; the observed parent/control success is preserved.",
+    "stdoutBytes/stdoutSha256 in a non-forwarder child summarize its captured complete-line buffer; a partial stdout fragment is not included in that buffer. The partial file count remains840 versus627 complete stdout bytes.",
+    "forwarder197 complete lines/200 writes/1 fragment span multiple independently bounded forwarders; they are not a single stream violating191.",
+    "requestGets is the fixture property-access counter, not a network trace or universal HTTP request count.",
+    "Host/Planner/fence/context controls remain synthetic. The real verifier publication control is not native Finance authority or installed UI qualification.",
+    "No dynamic result overrides the two rejecting package typechecks.",
+    "Pure data and static model fingerprints are not independently created Git objects unless explicitly marked actual. The8688B E16 report remains content within the authenticated main log; its calculated Git fingerprint must not be GET as a separate blob.",
+    "Open-unit/phase cuts and synthetic clock/ALS/sink fault indicators were retained. They were not normalized to zero or treated as unexpected product failures.",
+    "Source G1 identity bb5e7df0/T42f7fd26 is distinct from the clean baseline ad3a4a75/T11bf210f embedded in diagnostic events.",
+    "No UI42/UI43/UI44 qualification, final candidate, tar, go-live gate or production approval follows from this focal."
+  ],
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "focalAccepted": false,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false,
+    "analyticsAuthorizedByThisReceipt": false
+  },
+  "actions": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "runEndpointGets": 0,
+    "repositoryCodeExecuted": 0,
+    "sourceCorrectionsInspected": 0,
+    "sourceCodeAuthored": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "reviewBlobOnly": true
+  },
+  "next": "Root may use this closed negative intake to continue the separately reviewed minimal correction. Corrected focal acceptance and a new concrete authority are required before original Analytics."
+}

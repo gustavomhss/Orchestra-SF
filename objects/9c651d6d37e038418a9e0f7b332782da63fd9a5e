@@ -1,0 +1,523 @@
+{
+  "schema": "sf613-e16-types-corrected-focal-carrier-derivation-v1",
+  "status": "PROPOSED_UNBOUND_STATIC_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+    "bytes": 18300,
+    "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+    "lf": 247
+  },
+  "post": {
+    "gitBlob": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+    "bytes": 18611,
+    "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525",
+    "lf": 251
+  },
+  "scope": {
+    "immediateSourceParent": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    },
+    "cumulativeBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+    },
+    "sourceImmediate": {
+      "modified": 1,
+      "added": 0
+    },
+    "sourceCumulative": {
+      "modified": 18,
+      "added": 2
+    },
+    "focalDelta": {
+      "modified": 1,
+      "added": 3
+    },
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null
+  },
+  "sourceCorrection": {
+    "manifest": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+    "independentReview": {
+      "gitBlob": "5308b8f9e1b37a15737d3ee961a4083d2255ea5b",
+      "bytes": 10990,
+      "sha256": "0dbf8f13273fa13b153303c3468af9802f6376c196cbbe99ef3dc8a387b9953a",
+      "lf": 377
+    }
+  },
+  "operations": [
+    {
+      "ordinal": 1,
+      "label": "separate-immediate-source-parent-and-cumulative-base",
+      "before": "const sourceBase = \"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\"\n",
+      "after": "const sourceBase = \"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\"\nconst sourceBaseTree = \"11bf210f469be26630c39db586bcfcce87e0de1b\"\nconst sourceParent = \"bb5e7df013ef3404df67cd101ae3ff5c5983779b\"\nconst sourceParentTree = \"42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0\"\n",
+      "occurrences": 1,
+      "preimage": {
+        "git": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+        "bytes": 18300,
+        "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+        "lf": 247,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "9a6a1801768656f9fdd64c3b8c55a8e7a5ad46e1",
+        "bytes": 18498,
+        "sha256": "0dbd73750740bf57f7bff75ed4ad6de7707f604815599bd63b6b2194a48d8466",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "intermediateObjects": "Fingerprints only. Intermediate hashes were not persisted or fetched."
+    },
+    {
+      "ordinal": 2,
+      "label": "honest-immediate-versus-cumulative-delta",
+      "before": "    source, sourceTree, sourceBase, qualification: false, diagnosticOnly: true, workingTreePins: 40,\n",
+      "after": "    source, sourceTree, sourceBase, sourceBaseTree, sourceParent, sourceParentTree,\n    immediateSourceDelta: { modified: 1, added: 0, paths: 1 }, qualification: false, diagnosticOnly: true, workingTreePins: 40,\n",
+      "occurrences": 1,
+      "preimage": {
+        "git": "9a6a1801768656f9fdd64c3b8c55a8e7a5ad46e1",
+        "bytes": 18498,
+        "sha256": "0dbd73750740bf57f7bff75ed4ad6de7707f604815599bd63b6b2194a48d8466",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "4ec3d76295fdc4372e764d1351051204fe3277d0",
+        "bytes": 18609,
+        "sha256": "db206edce417ea29ca05559f644a2f9135820fe491db08485de094ea00acda7b",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "intermediateObjects": "Fingerprints only. Intermediate hashes were not persisted or fetched."
+    },
+    {
+      "ordinal": 3,
+      "label": "verify-new-source-sole-parent",
+      "before": "expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree, sourceBase])",
+      "after": "expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree, sourceParent])",
+      "occurrences": 1,
+      "preimage": {
+        "git": "4ec3d76295fdc4372e764d1351051204fe3277d0",
+        "bytes": 18609,
+        "sha256": "db206edce417ea29ca05559f644a2f9135820fe491db08485de094ea00acda7b",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "8d05b74f21bdb0a0567e96cb42ab44b0e32ba134",
+        "bytes": 18611,
+        "sha256": "85d93087ed120a24dc62a571f08bf8039c2dcc3e87aa8e267ad8b46a27f6e5c4",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "intermediateObjects": "Fingerprints only. Intermediate hashes were not persisted or fetched."
+    },
+    {
+      "ordinal": 4,
+      "label": "helper-type-correction-pin",
+      "before": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+      "after": "289523ca2b7f588337473f218476e242776d721d",
+      "occurrences": 1,
+      "preimage": {
+        "git": "8d05b74f21bdb0a0567e96cb42ab44b0e32ba134",
+        "bytes": 18611,
+        "sha256": "85d93087ed120a24dc62a571f08bf8039c2dcc3e87aa8e267ad8b46a27f6e5c4",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "c64cbcd5658f3c20b3859d0d48eebfecb43f78a4",
+        "bytes": 18611,
+        "sha256": "be0bf286ac5197cf60c0d3ae1dbd235c4c7aeb59a7b03647fc5e0fb0f717c013",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "intermediateObjects": "Fingerprints only. Intermediate hashes were not persisted or fetched."
+    },
+    {
+      "ordinal": 5,
+      "label": "fixture-type-correction-pin",
+      "before": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+      "after": "6185635810d712e4be7dfe109422d2d65103a1a0",
+      "occurrences": 1,
+      "preimage": {
+        "git": "c64cbcd5658f3c20b3859d0d48eebfecb43f78a4",
+        "bytes": 18611,
+        "sha256": "be0bf286ac5197cf60c0d3ae1dbd235c4c7aeb59a7b03647fc5e0fb0f717c013",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+        "bytes": 18611,
+        "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525",
+        "lf": 251,
+        "endsWithLF": true
+      },
+      "intermediateObjects": "Fingerprints only. Intermediate hashes were not persisted or fetched."
+    }
+  ],
+  "directPatch": {
+    "gitBlob": "00be044a93ba23f40b6a95210c655d19f85a543d",
+    "bytes": 3264,
+    "sha256": "2dd0cec3a448a2117c3e1b405dc6151db6b2a85cd5c352295ac84a2197478e7d",
+    "lf": 45,
+    "files": 1,
+    "hunks": 4,
+    "addedLines": 8,
+    "removedLines": 4,
+    "forwardLiteral": true,
+    "inverseLiteral": true
+  },
+  "fullSnapshotPatch": {
+    "gitBlob": "5c4be2450983f543873f511a48c668edea188f47",
+    "bytes": 108443,
+    "sha256": "5cbb2355927797458c3f3256ab9fd7438f5484572aed73873a30943eb97d26da",
+    "lf": 1622,
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "change": "M",
+        "before": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "after": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bothNoLF": true
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "change": "A",
+        "after": "0d2b9c037acae759058b5f070f04b5f64525bfd6"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "change": "A",
+        "after": "6185635810d712e4be7dfe109422d2d65103a1a0"
+      },
+      {
+        "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "change": "A",
+        "after": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f"
+      }
+    ],
+    "modified": 1,
+    "added": 3,
+    "hunks": 4,
+    "plus": 1596,
+    "minus": 1,
+    "forwardLiteral": true,
+    "inverseLiteral": true
+  },
+  "preservation": {
+    "runCommandLiteral": true,
+    "requireHostedCandidateLiteral": true,
+    "groupsG2ToG11Literal": true,
+    "all17CommandCallsArgvCwdTimeoutLiteral": true,
+    "groups": 11,
+    "commands": 17,
+    "truncationFields": 34,
+    "pins": 40,
+    "unchangedPins": 38,
+    "changedPins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "before": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+        "after": "289523ca2b7f588337473f218476e242776d721d"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "before": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+        "after": "6185635810d712e4be7dfe109422d2d65103a1a0"
+      }
+    ],
+    "hashLoopLiteral": true,
+    "requestsLiteral": true,
+    "qualificationFalse": true,
+    "allRuntimeResults": null
+  },
+  "bindingWidth": {
+    "status": "CALCULATED_WIDTH_ONLY_NOT_OBJECT",
+    "templateBytes": 18611,
+    "futureBoundBytes": 18650,
+    "deltaBytes": 39,
+    "deltaLf": 0
+  },
+  "validation": {
+    "kind": "Pure text/data transforms only; no repository code execution",
+    "checks": 65,
+    "allPassed": true,
+    "items": [
+      {
+        "id": "group-count-11",
+        "ok": true
+      },
+      {
+        "id": "literal-G2",
+        "ok": true
+      },
+      {
+        "id": "literal-G3",
+        "ok": true
+      },
+      {
+        "id": "literal-G4",
+        "ok": true
+      },
+      {
+        "id": "literal-G5",
+        "ok": true
+      },
+      {
+        "id": "literal-G6",
+        "ok": true
+      },
+      {
+        "id": "literal-G7",
+        "ok": true
+      },
+      {
+        "id": "literal-G8",
+        "ok": true
+      },
+      {
+        "id": "literal-G9",
+        "ok": true
+      },
+      {
+        "id": "literal-G10",
+        "ok": true
+      },
+      {
+        "id": "literal-G11",
+        "ok": true
+      },
+      {
+        "id": "literal-runCommand-engine",
+        "ok": true
+      },
+      {
+        "id": "literal-requireHostedCandidate",
+        "ok": true
+      },
+      {
+        "id": "17-effective-command-sites",
+        "ok": true
+      },
+      {
+        "id": "literal-command-1",
+        "ok": true
+      },
+      {
+        "id": "literal-command-2",
+        "ok": true
+      },
+      {
+        "id": "literal-command-3",
+        "ok": true
+      },
+      {
+        "id": "literal-command-4",
+        "ok": true
+      },
+      {
+        "id": "literal-command-5",
+        "ok": true
+      },
+      {
+        "id": "literal-command-6",
+        "ok": true
+      },
+      {
+        "id": "literal-command-7",
+        "ok": true
+      },
+      {
+        "id": "literal-command-8",
+        "ok": true
+      },
+      {
+        "id": "literal-command-9",
+        "ok": true
+      },
+      {
+        "id": "literal-command-10",
+        "ok": true
+      },
+      {
+        "id": "literal-command-11",
+        "ok": true
+      },
+      {
+        "id": "literal-command-12",
+        "ok": true
+      },
+      {
+        "id": "literal-command-13",
+        "ok": true
+      },
+      {
+        "id": "literal-command-14",
+        "ok": true
+      },
+      {
+        "id": "literal-command-15",
+        "ok": true
+      },
+      {
+        "id": "literal-command-16",
+        "ok": true
+      },
+      {
+        "id": "literal-command-17",
+        "ok": true
+      },
+      {
+        "id": "40-pin-population",
+        "ok": true
+      },
+      {
+        "id": "exact-two-pin-retargets",
+        "ok": true
+      },
+      {
+        "id": "pin-path-order-literal",
+        "ok": true
+      },
+      {
+        "id": "hash-loop-literal",
+        "ok": true
+      },
+      {
+        "id": "unique-token-__SF613_SOURCE_SHA__",
+        "ok": true
+      },
+      {
+        "id": "unique-token-__SF613_SOURCE_TREE__",
+        "ok": true
+      },
+      {
+        "id": "bound-width-18650",
+        "ok": true
+      },
+      {
+        "id": "tuple-immediate-parent",
+        "ok": true
+      },
+      {
+        "id": "cumulative-base-preserved",
+        "ok": true
+      },
+      {
+        "id": "immediate-delta-explicit",
+        "ok": true
+      },
+      {
+        "id": "configured-command-sum",
+        "ok": true
+      },
+      {
+        "id": "configured-parent-sum",
+        "ok": true
+      },
+      {
+        "id": "truncation-fields-34",
+        "ok": true
+      },
+      {
+        "id": "new-width-delta",
+        "ok": true
+      },
+      {
+        "id": "anchor-1-pre",
+        "ok": true
+      },
+      {
+        "id": "anchor-1-post",
+        "ok": true
+      },
+      {
+        "id": "anchor-2-pre",
+        "ok": true
+      },
+      {
+        "id": "anchor-2-post",
+        "ok": true
+      },
+      {
+        "id": "anchor-3-pre",
+        "ok": true
+      },
+      {
+        "id": "anchor-3-post",
+        "ok": true
+      },
+      {
+        "id": "anchor-4-pre",
+        "ok": true
+      },
+      {
+        "id": "anchor-4-post",
+        "ok": true
+      },
+      {
+        "id": "anchor-5-pre",
+        "ok": true
+      },
+      {
+        "id": "anchor-5-post",
+        "ok": true
+      },
+      {
+        "id": "anchors-forward-literal",
+        "ok": true
+      },
+      {
+        "id": "inverse-unique-fixture-type-correction-pin",
+        "ok": true
+      },
+      {
+        "id": "inverse-unique-helper-type-correction-pin",
+        "ok": true
+      },
+      {
+        "id": "inverse-unique-verify-new-source-sole-parent",
+        "ok": true
+      },
+      {
+        "id": "inverse-unique-honest-immediate-versus-cumulative-delta",
+        "ok": true
+      },
+      {
+        "id": "inverse-unique-separate-immediate-source-parent-and-cumulative-base",
+        "ok": true
+      },
+      {
+        "id": "anchors-inverse-literal",
+        "ok": true
+      },
+      {
+        "id": "patch-forward-literal",
+        "ok": true
+      },
+      {
+        "id": "patch-inverse-literal",
+        "ok": true
+      },
+      {
+        "id": "fullD-literal-readback",
+        "ok": true
+      }
+    ]
+  },
+  "exclusions": [
+    "No repackaging of the prior 36-artifact E16 source/control package.",
+    "No new report, group, command, selection, cwd or deadline.",
+    "No self-pin of the executable; actual snapshot tree binds it separately.",
+    "No tree, commit, ref, run, original log or ZIP operation."
+  ]
+}

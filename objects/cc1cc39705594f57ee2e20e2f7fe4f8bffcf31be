@@ -1,0 +1,949 @@
+{
+  "schema": "sf613-e16-source-bounds-v1",
+  "status": "STATIC_DIAGNOSTIC_PROPOSAL_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "role": "R7 clean product and unchanged C22 tests"
+  },
+  "sourceObject": null,
+  "sourceTree": null,
+  "helper": {
+    "bytes": 67552,
+    "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+    "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+    "lf": 1203
+  },
+  "sourceDerivation": {
+    "bytes": 387718,
+    "sha256": "2e0d3603bbc126f9f3c0c94897c3dcd85ef06203491eb03d45cca834aa08f151",
+    "gitBlob": "a0955763721e66b7de60ecb572d60410473a9560"
+  },
+  "sourcePatch": {
+    "bytes": 223855,
+    "sha256": "0c202d9b5ecab91e528d92420a4bcafdf08d06ac3382d24675af2b9605ddf7f2",
+    "gitBlob": "ca78f84aed4447fa0c069ab7f3af15b83c82e545"
+  },
+  "helperAmendment": {
+    "bytes": 6176,
+    "sha256": "1d253530a6fbdd234a7383e41fbab823f26f98b5e862c36958e838a3f5494406",
+    "gitBlob": "8ae60381abf79118fe343de2722ffbc616c43b17"
+  },
+  "scope": {
+    "modified": 18,
+    "added": 2,
+    "paths": 20,
+    "sourceMutations": "Instrumentation overlay; no claim of product equivalence outside stated diagnostic limitations.",
+    "unchangedC22Test": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "analyticsRequest": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "analyticsWaitSeconds": [
+      60,
+      120
+    ],
+    "productFenceSeconds": 30
+  },
+  "paths": [
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "preimage": {
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+      },
+      "postimage": {
+        "bytes": 14101,
+        "sha256": "3754cff5dea6592a3ede52582e04087c27b1ae6265399cf124f409076ad6deb9",
+        "gitBlob": "8e0f0a10f0be0e848e31218baf12186ccd2c6e30",
+        "lf": 145
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "preimage": {
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "gitBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5"
+      },
+      "postimage": {
+        "bytes": 18817,
+        "sha256": "18fee3464a55f121d37014b7ba83ee6d3415442d0fa11a6fc7e7e1cde44a5f27",
+        "gitBlob": "fe6f34268cd74cc3bacc0a453de1cd33a754e5cf",
+        "lf": 140
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "preimage": {
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+      },
+      "postimage": {
+        "bytes": 9455,
+        "sha256": "02fba7494f07cd27b8c37d6804797de34a9806d1f85c59fb36273954d1519fc0",
+        "gitBlob": "d93e705a3381d2e51e48c9c72ff822b498136e55",
+        "lf": 91
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "preimage": {
+        "bytes": 9554,
+        "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+        "gitBlob": "47c4388c34c21c7294b0ffc34e4adcbe65b138de"
+      },
+      "postimage": {
+        "bytes": 11273,
+        "sha256": "8541d66341cbe1931332baa8ba8fba7c5271c2b8cf5e81e7fe66f5ec2085f3a7",
+        "gitBlob": "c330953f8fff45f5307ac5f687d19d91eeba8d85",
+        "lf": 104
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "preimage": {
+        "bytes": 11633,
+        "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+        "gitBlob": "a1765988434920f8dc9c71eaea2427b6ecac59cb"
+      },
+      "postimage": {
+        "bytes": 12548,
+        "sha256": "919a6528751aa05f630b2f4f6456734f1a60ec19414609a49d8c6c92857e31d0",
+        "gitBlob": "dce03bb345ca388a625592450c77374342b76217",
+        "lf": 126
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "preimage": {
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61"
+      },
+      "postimage": {
+        "bytes": 10249,
+        "sha256": "8f6b4a67bf28eb0074fc60e4803f10054ecba54f8b0d676fbea425837e99af01",
+        "gitBlob": "e585997d630819f8faa70ab98bb9a734b4676dab",
+        "lf": 182
+      }
+    },
+    {
+      "kind": "M",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "preimage": {
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4"
+      },
+      "postimage": {
+        "bytes": 16353,
+        "sha256": "85419568b2995a0f060ae19f5c8cdd8e90935e937aa01cdd46d81adb52215c31",
+        "gitBlob": "e89139c2153f6d312b7f7813a7b5056746af7362",
+        "lf": 265
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "preimage": {
+        "bytes": 15111,
+        "sha256": "da953ef0345f54ac4b2818a462ee6a8f62bac407cac5cc6abad5800d22d20364",
+        "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+      },
+      "postimage": {
+        "bytes": 15646,
+        "sha256": "969e2e0e4e329b748c505180c2f7f1efb9ed7f34deeb993477811a52db0b03a7",
+        "gitBlob": "8f6e932d35567b02e4c5d29bae3de358f1c9d1aa",
+        "lf": 190
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "preimage": {
+        "bytes": 16776,
+        "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+        "gitBlob": "baef3e2fe2169bc556d0358eac8cc74419a4b697"
+      },
+      "postimage": {
+        "bytes": 17534,
+        "sha256": "c358528d65c5ba92d4e173bbd8d5290f3f5b7365daa49e87444da537084f235a",
+        "gitBlob": "ea75454c09819f195a1cb9107b75a375e6b701dc",
+        "lf": 233
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "preimage": {
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      "postimage": {
+        "bytes": 4002,
+        "sha256": "c6fe14e5a563c365341f340e696938c94900d2d54da3bb7f09fd43038c4a5467",
+        "gitBlob": "309de3c2ea9585bd434df182bd7906ae55c45e5d",
+        "lf": 40
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimage": {
+        "bytes": 34043,
+        "sha256": "63ce6e23a2959dcf3abfe79f3dca97b37bafdf0bd9ea84c10d4ec79be3bf6ab1",
+        "gitBlob": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc"
+      },
+      "postimage": {
+        "bytes": 34334,
+        "sha256": "559f1b544728a188f82d8f89fe320606875ee5fdc93be36e5f154efb7b05c4aa",
+        "gitBlob": "9c56de1b2d3acb74745acc327390ac26bf23dcb9",
+        "lf": 366
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": {
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+      },
+      "postimage": {
+        "bytes": 68237,
+        "sha256": "e5e5c230e56893cb90e489227cb26d6224b82b33e41b0d78d90ab32aa172efd2",
+        "gitBlob": "fcf171be7d294ecb791b331bb4fd4cfd608b96e4",
+        "lf": 899
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "preimage": {
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      "postimage": {
+        "bytes": 61828,
+        "sha256": "9e1399f52839f92fa9e730fce69e6f74fafbea1a373c74eebc6c4ccebd023d9c",
+        "gitBlob": "19e9f55cb0212dd820db3dba0e4082d6fe6acf99",
+        "lf": 904
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "preimage": {
+        "bytes": 46151,
+        "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+        "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      "postimage": {
+        "bytes": 46533,
+        "sha256": "b9f84cbded9a749a95b66b34b5731895759c4be9065f0e1f175a025afabf27a2",
+        "gitBlob": "5376c4f7d7cc3c70e7474e5c962fc91a84f8b4c5",
+        "lf": 539
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": {
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+      },
+      "postimage": {
+        "bytes": 99097,
+        "sha256": "56e85b3b1280314c7ddc149d3d23efd21a6e06b1692ae15e51526528faa4ccd4",
+        "gitBlob": "99a3260be512b9bb30857d64c46c2253aa073fb7",
+        "lf": 1730
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "preimage": {
+        "bytes": 9698,
+        "sha256": "4bba3f6d6d829c74b0ad3dc491153e00426b74304ba2084b62d6196bff773837",
+        "gitBlob": "6306e5e165495947cd9e00408c0d88c6051dfb64"
+      },
+      "postimage": {
+        "bytes": 10877,
+        "sha256": "2af65cd20b97e45b8f1ff2659c6bbc075cbea1d27a6eb9bf5952d7665bebdfac",
+        "gitBlob": "8217a4f4def802c890c915163775b272655203fb",
+        "lf": 130
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "preimage": {
+        "bytes": 15053,
+        "sha256": "a6aa3b198c2c4340697c4d635c7480d2d62907162eba8dcfa1d03a57fd66b006",
+        "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+      },
+      "postimage": {
+        "bytes": 16698,
+        "sha256": "32bf6e64ff6184093d15a89854ae28ecabae4a33a266a1a49ab2d6df1443227d",
+        "gitBlob": "80ee1ca05926a49ce8ac4eaf860f0527bc6dfedf",
+        "lf": 144
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "preimage": {
+        "bytes": 30340,
+        "sha256": "0adbedd3ffadce54ab2780f8ac8c5b72392338e6a6e879a2a664bff0c42bba6a",
+        "gitBlob": "c546b9bece7b42d056a10a362b7d5f1052d18279"
+      },
+      "postimage": {
+        "bytes": 30475,
+        "sha256": "1ea43337a36240a6aae5826a92539c9acc3801ef3f20ba142c226aaf211fb48a",
+        "gitBlob": "7a864749f19bd1a3f68ee750ae83bd6622380151",
+        "lf": 358
+      }
+    },
+    {
+      "kind": "A",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "postimage": {
+        "bytes": 67552,
+        "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+        "lf": 1203
+      }
+    },
+    {
+      "kind": "A",
+      "path": ".ci-run.json",
+      "postimage": {
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+      }
+    }
+  ],
+  "preservation": {
+    "C22Test": {
+      "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+      "status": "LITERAL_BASE_PIN_NOT_REWRITTEN"
+    },
+    "analyticsOriginalRequest": {
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "lf": 0
+    },
+    "originalSelectionCases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "waiterSeconds": [
+      60,
+      120
+    ],
+    "productFenceSeconds": 30,
+    "sourceAwaits": "Existing awaits, short circuits, receivers, validation/replay/write/readback order and fences are preserved. The source patch adds no awaited product operation.",
+    "currentAuthority": "C22 observeCriteria remains outside the newly added taps and synchronous scope runners; E15 authority is not used as a replacement preimage.",
+    "sourceHelperReuse": "runOnce, synchronous append/emit, admission and forwarder bodies are reused from E15 after explicit rename/retarget. Source support contains 21 donor operations plus five method-mask amendment operations.",
+    "publicMethodSurface": "Criterion read/bind change from async arrow surface to a synchronous wrapper returning the exact Promise of their original async body. AsyncFunction constructor identity, name/toString and original function identity are not claimed."
+  },
+  "reservations": {
+    "base": {
+      "generalDetail": 17,
+      "firstAnalysisEntry": 1,
+      "firstAnalysisCriticalPairs": 10,
+      "globalCompareBodyCheckpoints": 4,
+      "detailSubtotal": 32,
+      "unitCloses": 28,
+      "requestEnterCloseOverflow": 3,
+      "subtotal": 63
+    },
+    "tail": 12,
+    "canonicalFinance": 8,
+    "persistence": 36,
+    "validationSlots": [
+      {
+        "validation": 1,
+        "bindingPhase": "persist-bind",
+        "validationSite": "bind-prewrite",
+        "points": [
+          "validate-enter",
+          "verify-comparison-enter",
+          "verify-await-returned",
+          "observer-enter",
+          "work-enter",
+          "criteria-await-returned",
+          "observer-await-returned",
+          "validate-await-returned"
+        ]
+      },
+      {
+        "validation": 2,
+        "bindingPhase": "persist-bind",
+        "validationSite": "read-initial",
+        "points": [
+          "validate-enter",
+          "verify-comparison-enter",
+          "verify-await-returned",
+          "observer-enter",
+          "work-enter",
+          "criteria-await-returned",
+          "observer-await-returned",
+          "validate-await-returned"
+        ]
+      },
+      {
+        "validation": 3,
+        "bindingPhase": "persist-bind",
+        "validationSite": "read-final",
+        "points": [
+          "validate-enter",
+          "verify-comparison-enter",
+          "verify-await-returned",
+          "observer-enter",
+          "work-enter",
+          "criteria-await-returned",
+          "observer-await-returned",
+          "validate-await-returned"
+        ]
+      },
+      {
+        "validation": 4,
+        "bindingPhase": "persist-read",
+        "validationSite": "read-initial",
+        "points": [
+          "validate-enter",
+          "verify-comparison-enter",
+          "verify-await-returned",
+          "observer-enter",
+          "work-enter",
+          "criteria-await-returned",
+          "observer-await-returned",
+          "validate-await-returned"
+        ]
+      },
+      {
+        "validation": 5,
+        "bindingPhase": "persist-read",
+        "validationSite": "read-final",
+        "points": [
+          "validate-enter",
+          "verify-comparison-enter",
+          "verify-await-returned",
+          "observer-enter",
+          "work-enter",
+          "criteria-await-returned",
+          "observer-await-returned",
+          "validate-await-returned"
+        ]
+      }
+    ],
+    "validationSubtotal": 40,
+    "analysisBindingReads": {
+      "points": [
+        "initial",
+        "final"
+      ],
+      "boundaries": [
+        "enter",
+        "await-returned"
+      ],
+      "subtotal": 4
+    },
+    "expression": "63 + 12 + 8 + 36 + (5 * 8) + (2 * 2)",
+    "reservedStreamRows": 163,
+    "retiredLookupDetailPlaces": 72,
+    "lookupDetailRows": 0,
+    "independentLateScopeReserve": {
+      "calls": 2,
+      "internalRead": 1,
+      "validations": 5,
+      "verifiers": 5,
+      "total": 13,
+      "unrelatedToOldRouteScopeCap": 32
+    },
+    "campaign": {
+      "selectedOriginalJournals": 2,
+      "installations": 2,
+      "previewCapturingInstallationsAtMost": 1,
+      "otherJourneyLauncherDisabledRowsAtMost": 1,
+      "reservedRowsAtMost": 164,
+      "limitation": "This campaign count uses the unchanged two-journey Analytics route selection. It is not an endpoint-wide limit for arbitrary other callers."
+    },
+    "reachability": "Reservations are maxima, not required observed rows. Skips, refusals, rejection, interruption, sink faults or a missing terminal can leave a prefix. A branch uses its reserved pair but emits one decision row."
+  },
+  "admissionAndAttribution": {
+    "firstRequest": "Single latch after original route guards and before original boundedJson; later requests do not reselect.",
+    "firstPersistence": "Only the first admitted persistence under the first analysis owner has the five validation slots.",
+    "exactMethodOwner": "Private factory-local validate function identity plus exact opaque context reference; no authorization is granted by this identity.",
+    "methods": "Single admitted bind and internal read, then one persistence read. Each method starts once; per-invocation handles and validation generations govern close and emission.",
+    "refusedMethodBody": "Whole refused read/bind body uses the neutral ALS token via runOnce, including preparation callbacks. Undefined/refused handles never borrow the live ancestor's binding scope.",
+    "internalReadAdoption": "The original return read(...) remains inside the original async body, without added await/.then/finally. The internal read child remains live until its own completion while the external bind can no longer admit another method.",
+    "realVerifierEntry": "The real verifyComparison body marks its actual entry. The full verifier return is observed only after authority's original fresh && await optional verifier expression; fresh=false or an absent optional method cannot fabricate entry/return.",
+    "observerOrder": "work-enter follows original admission guards; criteria-await-returned follows original Promise.all; the original open=false latch precedes observer-await-returned.",
+    "singleCall": "runOnce latches invocation before work, returns the original work value/Promise and preserves receiver evaluation and thrown values including undefined. Mechanism return/error never triggers a replay.",
+    "rejectedScope": "A mechanism that fails to install the expected opaque token disables attribution before executing the original work once. This sacrifices observation rather than inheriting an ambient owner.",
+    "concurrency": "Owner/generation/stage are lexical private data, not a mutable last-stage variable. Units support one phase await at a time, as guaranteed by actual callers; concurrent distinct Units remain separate.",
+    "closure": "Point masks, method-start and close latches are updated before clock/sink hooks. Request close invalidates tokens and clears bounded binding state before terminal serialization; reentrant finish is queued after the current synchronous emission.",
+    "retention": "Bounded method/validation/verifier/context references are private to the single selected frame; clearValidationState releases them on persistence/request close. No arbitrary domain graph is serialized."
+  },
+  "transport": {
+    "prefix": "SF_PREVIEW_E16_EVENT ",
+    "schema": "sf-preview-causal-e16-event-v1",
+    "qualification": false,
+    "maxEvents": 191,
+    "maxBytes": 195584,
+    "maxLineBytes": 1024,
+    "encoding": "ASCII-admitted JSON measured as UTF-8 including prefix and LF",
+    "completeRecordBoundary": "Only an actual LF is a complete forwarded record. EOF does not promote a partial fragment.",
+    "twoSinks": "Synchronous file append and synchronous stdout mirror; one attempt per admitted line for each live sink.",
+    "quotaConsumption": "Quota is charged once before writes. Zero/partial writes or throws permanently disable that sink; no retry or reconstruction.",
+    "filePersistence": "No fsync per row. Request-close precedes later fsync/fstat/close and therefore cannot attest to their success.",
+    "transportCampaignHardCap": {
+      "events": 192,
+      "bytes": 196608,
+      "reason": "191 event-stream records plus at most one 1024-byte launcher-disabled row in the unchanged second journey."
+    },
+    "byteBudgetNotMainLimit": "These are diagnostic protocol bytes. They do not bound the complete GitHub Actions log, timestamp/ANSI encapsulation, Playwright output, domain output or artifacts.",
+    "sourceEnvironment": {
+      "platform": "linux",
+      "architecture": "x64",
+      "bunVersion": "1.3.14",
+      "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "attempt": "1",
+      "runIdDigitsAtMost": 20,
+      "noncePattern": "sf613-e16-event-[A-Za-z0-9]{6}",
+      "launcherBytesAtMost": 8192,
+      "encodedBindingCharsAtMost": 4096
+    },
+    "pathAndBinding": "Original launcher identity/hash/bytes, exact role, actual executable/serve context, selected snapshot and private evidence directory are validated before admission. No new domain read or network acquisition is added."
+  },
+  "finiteCounters": {
+    "integerCountCap": 65535,
+    "activeCompareSlots": 64,
+    "scopeAncestorWalkCap": 128,
+    "elapsedTenthMsMax": 999999999,
+    "stages": 11,
+    "stageCounterFields": 33,
+    "saturation": "saturated means an increment was censored because that slot was already 65535; equality alone is not the flag.",
+    "compareBodies": [
+      "bodyEntered",
+      "bodyReturned",
+      "bodyThrew",
+      "open",
+      "maxDepth",
+      "untracked"
+    ],
+    "lineage": [
+      "scoped-root",
+      "scoped-child",
+      "stage-unclassified"
+    ],
+    "checkpoints": [
+      1,
+      8,
+      32,
+      128
+    ],
+    "interpretation": "Compare body exit is not outer Promise settlement, and an awaited return marker does not attest to a following clone, guard, serialization or successful product result."
+  },
+  "models": {
+    "status": "PURE_DATA_WIDTH_OVERAPPROXIMATIONS_NO_REPOSITORY_EXECUTION_NO_STANDALONE_BLOBS",
+    "count": 55,
+    "commonWidths": {
+      "runIdDigits": 20,
+      "nonceChars": 22,
+      "pidAndParentPid": 4294967295,
+      "snapshotChars": 40,
+      "sequence": 191,
+      "elapsedTenthMs": 999999999,
+      "count": 65535,
+      "booleanLongest": "false"
+    },
+    "maximumBytes": 920,
+    "maxLineCap": 1024,
+    "headroomBytes": 104,
+    "familyMaximumBytes": {
+      "request-enter": 668,
+      "request-close": 920,
+      "phase-close": 850,
+      "compare-body-checkpoint": 838,
+      "binding-validation": 577,
+      "analysis-binding": 503,
+      "phase-enter": 823,
+      "unit-enter": 524,
+      "unit-close": 841,
+      "http-boundary": 476,
+      "branch": 806,
+      "overflow": 510,
+      "route": 642
+    },
+    "notes": [
+      "Combinations deliberately include mutually incompatible maximum counters/strings to upper-bound serialized width; they are not claimed reachable executions.",
+      "The request-close model uses saturated=false because it is one byte wider than true.",
+      "The route model superposes the longest admitted strings and five-digit IDs even where that combination is unreachable.",
+      "The hard runtime line check remains the authority even if a future out-of-model record is refused."
+    ],
+    "records": [
+      {
+        "kind": "request-enter",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"request-enter\",\"elapsedTenthMs\":999999999,\"maxEvents\":191,\"maxBytes\":195584,\"maxLineBytes\":1024,\"detailSlots\":32,\"unitCloseSlots\":28,\"activeCompareSlots\":64,\"reservedEvents\":163,\"lookupDetails\":false,\"validationSlots\":5,\"validationPoints\":8,\"analysisBindingSlots\":4}\n",
+        "bytes": 668,
+        "sha256": "690756a1de4616671e128a1b14f90fe0a51e9a7deedeec7548e5f98f7e746246"
+      },
+      {
+        "kind": "request-close",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"request-close\",\"elapsedTenthMs\":999999999,\"outcome\":\"returned\",\"eventsBefore\":190,\"bytesBefore\":195584,\"dropped\":65535,\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false,\"faultsBefore\":[1,1,1,1,1,1],\"routeCoverage\":[1,0,0,1,65535,1]}\n",
+        "bytes": 920,
+        "sha256": "88d95525bf6e2460ed7472bbcb54837e4d1be5e6d5165ce32970e8f13b150d0a"
+      },
+      {
+        "kind": "phase-close",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"phase-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"outcome\":\"await-returned\",\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 850,
+        "sha256": "dce51125eb824284c82ca3deaa871edb86b01990f66397ea5284e53c7ace78a5"
+      },
+      {
+        "kind": "compare-body-checkpoint",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"compare-body-checkpoint\",\"elapsedTenthMs\":999999999,\"bodyExits\":131070,\"compare\":65535,\"parentCompare\":65535,\"depth\":64,\"stage\":10,\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 838,
+        "sha256": "5a065e9af3abcf9a78e7fe5ab84b34140cafe2acb1c7eaa013a49cd2ce7867fb"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"validate-enter\"}\n",
+        "bytes": 568,
+        "sha256": "8f5526a88cf8281d8b79ffed0814a4d3f23ce15e7e1d43c819efba7d70566bf2"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"verify-comparison-enter\"}\n",
+        "bytes": 577,
+        "sha256": "31817007d02d9fbd5d72963e0c5853e34ae8ffdf371235f97f22d6ed6d80f345"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"verify-await-returned\"}\n",
+        "bytes": 575,
+        "sha256": "e1750bb7aa698252bae60b6cde0f9c0c5cbe832ffe84d082e1d11d26d6e7303d"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"observer-enter\"}\n",
+        "bytes": 568,
+        "sha256": "89936f6d9fe526ec9c66235bac8b2d64c6a4ae1939681921f07d5c0b7be4c10e"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"work-enter\"}\n",
+        "bytes": 564,
+        "sha256": "9e632bc41b49d39b978d64b183b7ca829c3dcea3e24a47acf25eca3ddfda4a20"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"criteria-await-returned\"}\n",
+        "bytes": 577,
+        "sha256": "6ffe23c179152464c6c97a3ce1bfce9fea18046dcbe9ebe113354427713e386a"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"observer-await-returned\"}\n",
+        "bytes": 577,
+        "sha256": "f500810bb4078c48f350c1d23aae152572a9e2b654147b0ebd77ae3ca9c799f1"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":1,\"validationSite\":\"bind-prewrite\",\"point\":\"validate-await-returned\"}\n",
+        "bytes": 577,
+        "sha256": "6ab129a5af92b444542f4b33eb7c3ad24f924fa200292a6c56d096f5472464f7"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"validate-enter\"}\n",
+        "bytes": 567,
+        "sha256": "c198e4f9c1c9511f278266dc63231d7a04e04a4e6f91814ec0dbf3af1df37f3c"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"verify-comparison-enter\"}\n",
+        "bytes": 576,
+        "sha256": "139600d389da0cf692b008533864c2223bd2a24fa4f5fe0df10c03d5ffcfd728"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"verify-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "2bd75722be7dd5cfdd0033edd6f9b147becf7d1d3b4763191a38a44534171398"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"observer-enter\"}\n",
+        "bytes": 567,
+        "sha256": "7f14beb5be1240dd66bec6f27abfe26504a68bdaa4772d75563a543d6468e2ae"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"work-enter\"}\n",
+        "bytes": 563,
+        "sha256": "7a0ef4805628aab5b88b3736771eec8a0649ef03cf60b54c581b6c1883928fd3"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"criteria-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "244959db0532cc5ba1e3445360c02e21b61b19abfb58dd3efd372cc5c3c6b637"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"observer-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "0d8464d87b7baa7bea5cefea18529a99cf2d9c09f3dd1ac807fed9a95f34e5a0"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":2,\"validationSite\":\"read-initial\",\"point\":\"validate-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "de1a1c86b5276cd42cb08055633f88e654e4835258c0680a6d00edc80910000f"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"validate-enter\"}\n",
+        "bytes": 565,
+        "sha256": "b214d6caa24495f79cef0752a6f17eb32c88694e7a196da8832bbc7f5fa55b07"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"verify-comparison-enter\"}\n",
+        "bytes": 574,
+        "sha256": "bf7316e0ca8e3ebccf6bdeea7c98ab94a32e25cbea2509cbbfece05b8eaf8336"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"verify-await-returned\"}\n",
+        "bytes": 572,
+        "sha256": "94cf9bb349ced80613aad49f2f67514304a80e74ae81f0c4deddb656cea23eb7"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"observer-enter\"}\n",
+        "bytes": 565,
+        "sha256": "4ce0c704abf52f2c6377eb07b3c49e3437a10e597d892d7c39e7d63a59433c8b"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"work-enter\"}\n",
+        "bytes": 561,
+        "sha256": "ea255411bf756d3aa5379d21c8b8a2897368ffbe61db1d53439a3da44230de10"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"criteria-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "bf18ab294a14471824d8e9eee77fc188a61c954ab5bb5c08a8a15b85783da9fc"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"observer-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "884bb3bec6ab26a4860a337aa183036fcb0a576ad91f00e3b10157a8ec282ac9"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-bind\",\"validation\":3,\"validationSite\":\"read-final\",\"point\":\"validate-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "430f716695eb319903ba0cb772a965769c10ea7080257bdb47a2bfe4a9bca536"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"validate-enter\"}\n",
+        "bytes": 567,
+        "sha256": "a9618ebc6e99309e90c83d52ad8444d971d70d5560b5c674be0ff3bf2c123f42"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"verify-comparison-enter\"}\n",
+        "bytes": 576,
+        "sha256": "0d72ba4063d35ed293d71aaa4518cab1874bc3ea975fb9974779ff91d87ac436"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"verify-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "72a47b6ccb5f31300cfd61d9d157ee5b3c956450c49001570a130826b064d249"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"observer-enter\"}\n",
+        "bytes": 567,
+        "sha256": "d182e197166718e08c98ac709c1ce0c65349982e72981b0ab77be4df63317ba8"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"work-enter\"}\n",
+        "bytes": 563,
+        "sha256": "590933870ef1dd99162a1e0f900213da24c3778c6744ff241a81cc92173b1cb6"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"criteria-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "fabcbd1477730629cac187e7b2cf31b2395238d68d0a4ade96dfd246b8fb64d5"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"observer-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "4fcc65215f7519ec7cb455b617480191d85f72f6e0219a5fdcd4edbc0d327a78"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":4,\"validationSite\":\"read-initial\",\"point\":\"validate-await-returned\"}\n",
+        "bytes": 576,
+        "sha256": "2516ddcc36c24f5b9e9d0b35a99392898b6e2c4882c4569e80e4ec3f198956f6"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"validate-enter\"}\n",
+        "bytes": 565,
+        "sha256": "db1c4d4439b50e7e2fe92ea59e93200caa8954d03acea74586dc7ecd3e2bebca"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"verify-comparison-enter\"}\n",
+        "bytes": 574,
+        "sha256": "8ab11fad7a38cbde517e973f0512f9c32d24df52c60862e4e0d386fa48391dab"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"verify-await-returned\"}\n",
+        "bytes": 572,
+        "sha256": "58a6942112bcf42c63ac3bc91a02240884373e903a18ba4a03657f3ef9497315"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"observer-enter\"}\n",
+        "bytes": 565,
+        "sha256": "ee3e5ada7a8fb75bd926b424d058eb7daffb7b50d89abf488bd097e5979404fd"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"work-enter\"}\n",
+        "bytes": 561,
+        "sha256": "b4895366bde70b2d31dbe62197f0cca149d11f210713c73bc43523dcc55b8a89"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"criteria-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "831423cee71d78d76054b59ef74492c757ac764ba3be047be0f7044f0b32eb45"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"observer-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "8c4d6170a3b8a47c707e4a3a80e0800eaf365a27a7535b83cacb9a7f70698fab"
+      },
+      {
+        "kind": "binding-validation",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"binding-validation\",\"elapsedTenthMs\":999999999,\"persistence\":1,\"bindingPhase\":\"persist-read\",\"validation\":5,\"validationSite\":\"read-final\",\"point\":\"validate-await-returned\"}\n",
+        "bytes": 574,
+        "sha256": "5f55f952fba6f3d5ebc8cbdb681bb77e27887daf00311a78d91c3bdf22cebaa6"
+      },
+      {
+        "kind": "analysis-binding",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"analysis-binding\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"initial\",\"boundary\":\"enter\"}\n",
+        "bytes": 494,
+        "sha256": "a8e6bf00e5c206fa86c397b6e5828b6eb9fc830b8c0e6a0275c3a0110909b428"
+      },
+      {
+        "kind": "analysis-binding",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"analysis-binding\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"initial\",\"boundary\":\"await-returned\"}\n",
+        "bytes": 503,
+        "sha256": "a576425f5b09b8e2dd24dc6679e7b2a4d73dd32e290f59878b3e375324bd2a8e"
+      },
+      {
+        "kind": "analysis-binding",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"analysis-binding\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"final\",\"boundary\":\"enter\"}\n",
+        "bytes": 492,
+        "sha256": "963d042ef7d25205c4508abe1e7df4a88c9491d25ae3b91aeb17f2117321ccba"
+      },
+      {
+        "kind": "analysis-binding",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"analysis-binding\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"final\",\"boundary\":\"await-returned\"}\n",
+        "bytes": 501,
+        "sha256": "0b16289da9bfa0d7119be909b04781a7b1d4a3e22fb557fedad7a38c3eaa4709"
+      },
+      {
+        "kind": "phase-enter",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"phase-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 823,
+        "sha256": "e0b3384841f79242e03f5eaec3a9a9431d92c41d0c47c2555e95a70c2ccdf25d"
+      },
+      {
+        "kind": "unit-enter",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"unit-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"parentUnit\":28,\"parentPhase\":65535}\n",
+        "bytes": 524,
+        "sha256": "7ab4a53f4ea6e76b55cde2f73757c44b3eeb100e192a7ffb161214d842c0aa35"
+      },
+      {
+        "kind": "unit-close",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"unit-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"entryReserved\":false,\"outcome\":\"body-returned\",\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 841,
+        "sha256": "efa32446a9cbcf90cf46af0c8ba96fc581eeb25d46df7f9807b4a1583f195508"
+      },
+      {
+        "kind": "http-boundary",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"http-boundary\",\"elapsedTenthMs\":999999999,\"point\":\"case-callback-entered\"}\n",
+        "bytes": 476,
+        "sha256": "f1ea05502f02474094260577bf13228a532881420544299bb52a32a9945bb899"
+      },
+      {
+        "kind": "branch",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"branch\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"analysis-persist\",\"branch\":\"binding-present\",\"compareBodies\":[65535,65535,65535,64,64,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 806,
+        "sha256": "1d33421b1f5c0be70d28e0cf00f6220851f8fb26dbd39420e70d1389e49de7ba"
+      },
+      {
+        "kind": "overflow",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"overflow\",\"elapsedTenthMs\":999999999,\"reason\":\"compare\",\"generalUsed\":17,\"unitsAdmitted\":28,\"dropped\":65535}\n",
+        "bytes": 510,
+        "sha256": "471ab2e142860c130c9ce50d7ed87e2ac69a03d34016d0b9a01472a0f33a66a3"
+      },
+      {
+        "kind": "route",
+        "literal": "SF_PREVIEW_E16_EVENT {\"schema\":\"sf-preview-causal-e16-event-v1\",\"source\":\"ad3a4a7527baf1e092e87b5478626b2f0a3be57c\",\"sourceTree\":\"11bf210f469be26630c39db586bcfcce87e0de1b\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e16-event-ABC123\",\"pid\":4294967295,\"parentPid\":4294967295,\"request\":1,\"sequence\":191,\"kind\":\"route\",\"elapsedTenthMs\":999999999,\"routeKind\":\"persistence\",\"route\":65535,\"routePhase\":\"state-transaction\",\"point\":\"finance-observation-returned\",\"detail\":\"fallback-no-selection\",\"gates\":[-1,-1,-1,-1,-1],\"parentUnit\":28,\"parentPhase\":65535}\n",
+        "bytes": 642,
+        "sha256": "88db0797e8848462d3c24a218562617b6932630e879ed5e9643514775fa11606"
+      }
+    ]
+  },
+  "observationsNotClaims": [
+    "No E16 runtime result, snapshot, run, selected output, artifact or qualification exists in this proposal.",
+    "A missing marker, terminal or counter is a censored/unobserved boundary, not zero work, a hang or a proved failure cause.",
+    "Intervals include instrumentation/scheduling/overlap; no exclusive CPU attribution, speedup, SLA or product performance claim.",
+    "Opaque owner/context and synthetic controls establish diagnostic attribution only, not authorization or installed UI acceptance.",
+    "Original requests, waits, guards, callbacks and fences are retained; instrumentation can still perturb timing and observable function surface."
+  ],
+  "authorActivity": {
+    "repositoryExecution": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0
+  },
+  "createdObjects": "Only named whole-code/support/bounds blobs are actual. Per-operation/intermediate/subpatch/model fingerprints in supports are calculated text identities, not independently created evidence objects."
+}

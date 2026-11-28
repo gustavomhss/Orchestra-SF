@@ -1,0 +1,519 @@
+{
+  "schema": "sf613-e16r2-independent-terminal-intake-v1",
+  "status": "ACCEPTED_DIAGNOSTIC_FOCAL_ALL_SELECTED_REQUIREMENTS_OBSERVED",
+  "reviewer": "/root/review_archive",
+  "repository": "gustavomhss/Orchestra-SF",
+  "at": "2026-11-28 16:26:09 UTC",
+  "source": {
+    "sha": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "parent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "parentTree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+    "immediateDelta": "1M helper",
+    "cumulativeBase": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "cumulativeTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "cumulativeDelta": "18M2A"
+  },
+  "snapshot": {
+    "sha": "a589b0f3c681837266a8e1b035afcd6e5c46f565",
+    "tree": "337c2030c3c38a4ab707bb0c0f0d94e2098311c5",
+    "parent": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "delta": "3A1M"
+  },
+  "run": {
+    "id": 46163799111,
+    "attempt": 1,
+    "conclusion": "success",
+    "main": {
+      "id": 141036746242,
+      "conclusion": "success"
+    },
+    "cleanup": {
+      "id": 141038533976,
+      "conclusion": "success"
+    }
+  },
+  "closedAt": "2026-11-28 16:19:27 UTC",
+  "authority": {
+    "gitBlob": "9fce6dbbb8a47deb07dd6957e8b36c93b4508321",
+    "bytes": 20567,
+    "sha256": "14f777e53a31e04f928324c5d856af39e5602be82816403e238e715dcb337500"
+  },
+  "activation": {
+    "gitBlob": "9c3cf399fff5fd04b94a287917cdbabb46646f7f",
+    "bytes": 1116,
+    "sha256": "3eadc2dddb250cd526eb4029c7fd0d7d0b699428bca1666c9cff26e092eca05e"
+  },
+  "runBinding": {
+    "gitBlob": "7f0bd4cd06a99658081156eaa7e71afbec09aa8e",
+    "bytes": 1044,
+    "sha256": "408db0e9cd1ab18a67ebd3132a457b5db34dab1f52a3818260baf89deb3083c0"
+  },
+  "actualObjectsReview": {
+    "gitBlob": "0f8b38e2ced022c0dbc86db9140bdc5b250b189c",
+    "bytes": 10228,
+    "sha256": "692f982006e11ee01a140e1c1b9ce1267ae97d1d00a575d58bef7bb54e84c36b"
+  },
+  "preservation": {
+    "closure": {
+      "gitBlob": "cee91a93d82b379e54d4d9bbe45eefc521666139",
+      "bytes": 1846,
+      "sha256": "cbeeff1ee8b1c5bd66ec110b598ea63413ae9e2e8591bfec84d0e8a33c4fef30"
+    },
+    "terminalMetadata": {
+      "gitBlob": "9bf6b11d196af01c36b38195cf1b7d1ea3cd4f9f",
+      "bytes": 26208,
+      "sha256": "534e2ff4f0428d354d2c60adb3cdf5bd74c45661c18ae8bad1fe8686661c0680"
+    },
+    "main": {
+      "copy": {
+        "gitBlob": "0b31bd4dff8e6e96dc224fc6d4ced8148a367b02",
+        "bytes": 140723,
+        "sha256": "b58b81bf8bfadadf7590677f26e60c26652f3873e88d32d405f3b44d1440b014"
+      },
+      "manifest": {
+        "gitBlob": "d430f26a55d6dcdc35c1d2ad265b0576694a65d9",
+        "bytes": 1701,
+        "sha256": "cae705a79752bdd846f23bf77ff7833ce1b4ab18721eb7cc7303e16aa0a39eb4"
+      },
+      "lf": 1011,
+      "bomByteOffsets": [
+        0
+      ],
+      "utf16Length": 140721,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "copy": {
+        "gitBlob": "34953da2aaae6ac4ef141779d80846316a07357d",
+        "bytes": 2282,
+        "sha256": "feb78fa853f057c1412629f9815d57258420f32d4f2166eb0d15a882b44c0b6e"
+      },
+      "manifest": {
+        "gitBlob": "504d7cff09e247cf77ee0bb744867423d68c5b3b",
+        "bytes": 1688,
+        "sha256": "e1a07c4382a12a0ebf43bedf08a9f34870737b23771a219fa29211a4bcdb7f74"
+      },
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "utf16Length": 2280,
+      "endsWithLF": true
+    },
+    "bothWholeBlobsActuallyCreated": true,
+    "onePartEach": true,
+    "representation": "Exact decoded original strings preserved and re-encoded to UTF-8 without line-ending or BOM normalization.",
+    "rootAcquisitionRecord": {
+      "mainOriginalGets": 1,
+      "cleanupOriginalGets": 1,
+      "zipGets": 0,
+      "originalsPermanentlyClosed": true
+    },
+    "ownAcquisitions": {
+      "originalLogs": 0,
+      "runEndpoints": 0,
+      "zips": 0
+    },
+    "artifacts": 0,
+    "branchAbsent": {
+      "value": true,
+      "basis": "The terminal metadata records the exact ref readback. This reviewer made no new ref query; the cleanup shell itself uses || true."
+    }
+  },
+  "observed": {
+    "commands": 17,
+    "commandsExit0": 17,
+    "falseCaptureFlags": 34,
+    "workingPins": 40,
+    "hostPreambles": 11,
+    "identity": "Source/tree/snapshot/run and actual source-parent stdout match the object review. G1 distinguishes immediate parent bb5/T42 from cumulative clean base ad3/T11bf.",
+    "typechecks": [
+      {
+        "line": 803,
+        "gate": "CLI package typecheck",
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 27342
+      },
+      {
+        "line": 808,
+        "gate": "Sucafina package typecheck",
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 26627
+      }
+    ],
+    "typescriptDiagnostics": 0,
+    "failingTestLines": 0,
+    "functionalProcesses": 7,
+    "functional": {
+      "pass": 23,
+      "fail": 0,
+      "assertions": 2747,
+      "tests": 23
+    },
+    "functionalFooters": [
+      {
+        "line": 777,
+        "path": "./test/product/wp10/integration/cases-read-contract.test.ts",
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7
+      },
+      {
+        "line": 800,
+        "path": "./test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5
+      },
+      {
+        "line": 847,
+        "path": "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3
+      },
+      {
+        "line": 861,
+        "path": "./test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1
+      },
+      {
+        "line": 874,
+        "path": "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1
+      },
+      {
+        "line": 961,
+        "path": "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+        "pass": 5,
+        "fail": 0,
+        "assertions": 287,
+        "tests": 5
+      },
+      {
+        "line": 975,
+        "path": "./test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 53,
+        "tests": 1
+      }
+    ],
+    "outer": {
+      "line": 981,
+      "tests": 11,
+      "files": 1,
+      "elapsedMs": 321630,
+      "pass": 11,
+      "fail": 0,
+      "assertions": 67
+    },
+    "reports": {
+      "observed": 12,
+      "historicalEightLiteral": true,
+      "c22ThreeLiteral": true,
+      "comparisonBasis": "The prior closed independent intake authenticated the eight historical reports and three C22 models; exact prefix+JSON comparison reused only those models, not prior pass totals.",
+      "priorIndependentReceipt": "4b8b8d03c1f0479353ff5801383b7d3e9cfca32d",
+      "firstEightSha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+      "c22ThreeSha256": "69eef253c60688f77b543f85d72a67289a607d6719853e73aaa937fb32af510c",
+      "fingerprintsAreCalculatedDataOnly": true
+    },
+    "phases": [
+      {
+        "fixture": "comparison-criteria-single",
+        "records": 40,
+        "allPairsReturned": true,
+        "allReturnedAbortedFalse": true,
+        "lastReturnedMs": 32465
+      },
+      {
+        "fixture": "comparison-criteria-multiple",
+        "records": 16,
+        "allPairsReturned": true,
+        "allReturnedAbortedFalse": true,
+        "lastReturnedMs": 34220
+      },
+      {
+        "fixture": "comparison-criteria-unsupported",
+        "records": 10,
+        "allPairsReturned": true,
+        "allReturnedAbortedFalse": true,
+        "lastReturnedMs": 173937
+      }
+    ],
+    "guards": {
+      "line": 829,
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "rules": 78,
+      "files": 871,
+      "inheritedFindings": 40,
+      "findingsLiteral": true,
+      "errors": 0,
+      "bypasses": 0,
+      "bootstrap": false,
+      "touchesGuards": false
+    },
+    "omni": {
+      "line": 982,
+      "nonce": "aea509be844e2c00249382dcc3a454a9",
+      "population": "outer wrapper only",
+      "spawns": 17,
+      "delegations": 0,
+      "declaredGroups": 11
+    },
+    "bun": {
+      "setupLine": 250,
+      "setupVersion": "1.3.14+0d9b296af",
+      "footerVersion": "1.3.14 (0d9b296a)",
+      "full40HexRevisionObserved": false
+    }
+  },
+  "E16": {
+    "line": 967,
+    "actualAggregate": {
+      "bytes": 8688,
+      "sha256": "d895710608ae77c8dd989539f367ca118f8251d0a6f4e775cb1de4f352b5ed3e",
+      "lf": 1,
+      "kind": "calculated fingerprint of the literal prefix+JSON+LF inside the actual main copy; no separate Git object created"
+    },
+    "childCount": 10,
+    "pids": [
+      3249,
+      3259,
+      3271,
+      3284,
+      3294,
+      3304,
+      3314,
+      3323,
+      3332,
+      3341
+    ],
+    "labelEntries": 64,
+    "uniqueLabels": 56,
+    "childParentAssertions": 53,
+    "modes": [
+      {
+        "mode": "route-owner",
+        "pid": 3249,
+        "labels": 7,
+        "records": 18,
+        "stdoutAttempts": 18,
+        "stdoutBytes": 10519,
+        "fileAttempts": 18,
+        "fileBytes": 10519,
+        "terminalSequence": 18,
+        "openUnits": 0,
+        "openPhases": 0,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "work-links",
+        "pid": 3259,
+        "labels": 10,
+        "records": 56,
+        "stdoutAttempts": 56,
+        "stdoutBytes": 30042,
+        "fileAttempts": 56,
+        "fileBytes": 30042,
+        "terminalSequence": 56,
+        "openUnits": 0,
+        "openPhases": 0,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "native-chain",
+        "pid": 3271,
+        "labels": 4,
+        "records": 46,
+        "stdoutAttempts": 46,
+        "stdoutBytes": 26213,
+        "fileAttempts": 46,
+        "fileBytes": 26213,
+        "terminalSequence": 46,
+        "openUnits": 0,
+        "openPhases": 0,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "persistence-tail",
+        "pid": 3284,
+        "labels": 5,
+        "records": 43,
+        "stdoutAttempts": 43,
+        "stdoutBytes": 24333,
+        "fileAttempts": 43,
+        "fileBytes": 24333,
+        "terminalSequence": 43,
+        "openUnits": 1,
+        "openPhases": 1,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "capacity",
+        "pid": 3294,
+        "labels": 9,
+        "records": 163,
+        "stdoutAttempts": 163,
+        "stdoutBytes": 94379,
+        "fileAttempts": 163,
+        "fileBytes": 94379,
+        "terminalSequence": 163,
+        "openUnits": 0,
+        "openPhases": 0,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "mechanism",
+        "pid": 3304,
+        "labels": 9,
+        "records": 37,
+        "stdoutAttempts": 37,
+        "stdoutBytes": 20096,
+        "fileAttempts": 37,
+        "fileBytes": 20096,
+        "terminalSequence": 37,
+        "openUnits": 1,
+        "openPhases": 1,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "sink-zero",
+        "pid": 3314,
+        "labels": 4,
+        "records": 1,
+        "stdoutAttempts": 2,
+        "stdoutBytes": 627,
+        "fileAttempts": 2,
+        "fileBytes": 627,
+        "terminalSequence": null,
+        "openUnits": null,
+        "openPhases": null,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "sink-partial",
+        "pid": 3323,
+        "labels": 4,
+        "records": 1,
+        "stdoutAttempts": 2,
+        "stdoutBytes": 627,
+        "fileAttempts": 2,
+        "fileBytes": 840,
+        "terminalSequence": null,
+        "openUnits": null,
+        "openPhases": null,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "sink-throw",
+        "pid": 3332,
+        "labels": 4,
+        "records": 1,
+        "stdoutAttempts": 2,
+        "stdoutBytes": 627,
+        "fileAttempts": 2,
+        "fileBytes": 627,
+        "terminalSequence": null,
+        "openUnits": null,
+        "openPhases": null,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      },
+      {
+        "mode": "forwarder",
+        "pid": 3341,
+        "labels": 8,
+        "framingOnly": true,
+        "attempts": 200,
+        "completeLines": 197,
+        "partialFragments": 1,
+        "requestPropertyGets": 0,
+        "omniSpawns": 1,
+        "omniDelegations": 0
+      }
+    ],
+    "limits": [
+      "Each child report is a runtime assertion of internally captured synthetic streams. Separate stream bodies were not acquired or archived.",
+      "stdoutBytes/SHA256 refer to captured complete LF-terminated lines for non-forwarder modes; partial stdout fragments are excluded. The partial sink therefore records 627 complete-line stdout bytes and 840 file bytes.",
+      "The forwarder row aggregates multiple forwarder instances; 197 complete lines/200 writes/one fragment is not one stream with a raised 191-row cap.",
+      "requestGets is the fixture property-access counter, not evidence of an HTTP request count or universal network absence.",
+      "The consumer/verifier work-links control has real C08/LocalStore with controlled host, Planner and fences; it does not attest native installed Finance authority.",
+      "The reported clock/no-op ALS/getStore faults cover the reviewed fixture positions only, not every possible fault ordering.",
+      "These controls do not qualify UI42–UI44 or prove production performance."
+    ]
+  },
+  "independentChecks": {
+    "preservation": 19,
+    "core": 65,
+    "dynamicControls": 60,
+    "rootAgreement": 7,
+    "total": 151,
+    "allPassed": true,
+    "findings": [],
+    "checkerPrecision": "Own checkers used actual stored scope D and normalized root.closedAt.current_time to compare the same literal timestamp. These are reviewer-data adjustments; no source/log change or material evidence discrepancy."
+  },
+  "rootComparison": {
+    "intake": {
+      "gitBlob": "3966516e54a84e2b69e3119a7f5537196d62a9af",
+      "bytes": 11499,
+      "sha256": "dd05b66642a6e75d0f1c6027e0290a8ce1459d0e54ca5e9ecfe53e886a777474"
+    },
+    "extraction": {
+      "gitBlob": "27cda07c680d73c0a17ab0bba08de25edc0d52e9",
+      "bytes": 175208,
+      "sha256": "473f4b6a4ac70d616f2a6592d92496f232f20891d206e40fcb9066a52ef05529"
+    },
+    "agreement": "No material discrepancy. Its pending independent-review field is the earlier root cut and is fulfilled by this separate receipt."
+  },
+  "decision": "The exact corrected diagnostic source and focal snapshot satisfy every selected focal requirement in this run. Both compiler checks and all selected functional and outer groups passed, with all required reports preserved. The first E16 focal remains a separate historical negative due to typecheck rejection.",
+  "qualification": {
+    "installedAnalytics": false,
+    "UI42_UI44": false,
+    "newQualifiedAreas": 0,
+    "retainedQualifiedAreas": 12,
+    "totalAreas": 15,
+    "finalCandidate": false,
+    "linuxTar": false,
+    "realMicrosoftQA": false,
+    "productionAuthorized": false
+  },
+  "next": "Root may separately decide and record authority for the prepared Analytics selection. This receipt neither activates it nor inspects a future Analytics execution.",
+  "scopeLimits": [
+    "Applies only to S c53f203/T6b8fb4 and D a589b0/T337c20 on run 46163799111 attempt 1.",
+    "The actual instrumented source differs from the diagnostic event baseline ad3/T11bf.",
+    "The 17 carrier AppProcess commands, outer Omni result and ten synthetic child wrappers are distinct populations.",
+    "The 191-row/191KiB bounds apply to diagnostic streams, not to the entire 140723-byte Actions main log.",
+    "Positive focal controls do not prove installed UI journeys, production performance, a release candidate or production readiness.",
+    "No source, tree, commit, ref or run was modified. The sole write is this independent review blob plus literal readback."
+  ]
+}

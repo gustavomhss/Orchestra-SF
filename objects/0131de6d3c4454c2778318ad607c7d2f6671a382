@@ -1,0 +1,836 @@
+{
+  "schema": "sf613-e16-control-derivation-v1",
+  "status": "STATIC_PROPOSED_NO_EXECUTION",
+  "sourceHelper": {
+    "bytes": 67552,
+    "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+    "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+    "lf": 1203
+  },
+  "baseSource": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+  "files": [
+    {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "sourceDelta": "A",
+      "donor": {
+        "bytes": 63845,
+        "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+        "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052"
+      },
+      "postimage": {
+        "bytes": 85250,
+        "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+        "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+        "lf": 1320
+      },
+      "operations": [
+        {
+          "label": "diagnostic-version-uppercase",
+          "before": "E15",
+          "after": "E16",
+          "mode": "all",
+          "occurrences": 231,
+          "pre": {
+            "bytes": 63845,
+            "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+            "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052"
+          },
+          "post": {
+            "bytes": 63845,
+            "sha256": "7aa8646e7456dc976cc1df565f8afb2faf8f899eb9925c0aae92e930498bafed",
+            "gitBlob": "0f5b352d441188d20068936df7fabe2881a1115c"
+          }
+        },
+        {
+          "label": "diagnostic-version-lowercase",
+          "before": "e15",
+          "after": "e16",
+          "mode": "all",
+          "occurrences": 12,
+          "pre": {
+            "bytes": 63845,
+            "sha256": "7aa8646e7456dc976cc1df565f8afb2faf8f899eb9925c0aae92e930498bafed",
+            "gitBlob": "0f5b352d441188d20068936df7fabe2881a1115c"
+          },
+          "post": {
+            "bytes": 63845,
+            "sha256": "573f5ab7317f78fa8f4e919c7ae007cff409669dc07140e3a0b5a4ca447f8e70",
+            "gitBlob": "48e701b36ae09846831a788eaaf18e854a77517a"
+          }
+        },
+        {
+          "label": "clean-base-source",
+          "before": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+          "after": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+          "mode": "all",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 63845,
+            "sha256": "573f5ab7317f78fa8f4e919c7ae007cff409669dc07140e3a0b5a4ca447f8e70",
+            "gitBlob": "48e701b36ae09846831a788eaaf18e854a77517a"
+          },
+          "post": {
+            "bytes": 63845,
+            "sha256": "05d268bb4a03525471f6bb01d7bdd909c8b42d3d113ed7ddce81a9c1d9e95361",
+            "gitBlob": "327dffb4f6876e7db1a32d51ef3a0a19980f36ce"
+          }
+        },
+        {
+          "label": "clean-base-tree",
+          "before": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+          "after": "11bf210f469be26630c39db586bcfcce87e0de1b",
+          "mode": "all",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 63845,
+            "sha256": "05d268bb4a03525471f6bb01d7bdd909c8b42d3d113ed7ddce81a9c1d9e95361",
+            "gitBlob": "327dffb4f6876e7db1a32d51ef3a0a19980f36ce"
+          },
+          "post": {
+            "bytes": 63845,
+            "sha256": "eea8012cef7958070c5cef452be1510a38d875482ae894f1678eb2b3f703d580",
+            "gitBlob": "023d72252224d1bfb7335dd4804a4d8201742349"
+          }
+        },
+        {
+          "label": "retired-lookup-details-remain-neutral",
+          "before": "    function lookup(wrapped = false, gates: readonly unknown[] = [true, true, true, true, true], copyThrew = false) {\n      const route = observer.enterSfE16Route(\"lookup\")\n      assert.ok(route)\n      const receiver = {}, snapshot = {}, callback = () => product\n      let invoked = 0\n      const providerWork = function (this: unknown, value: unknown) {\n        assert.equal(this, receiver); assert.equal(value, snapshot); invoked++; return product\n      }\n      const sourceWork = () => apply(providerWork, receiver, [snapshot])\n      const wrappedWork = () => sourceWork()\n      const forwarded = wrapped ? wrappedWork : sourceWork\n      let result: unknown, caught: unknown = sentinel, failed = false\n      try { result = observer.runSfE16Route(route, \"candidate-read\", () => {\n        assert.equal(observer.currentSfE16Route(), route)\n        const beforeMissing = lines.length\n        for (const missing of [undefined, null, {}, \"not-a-callback\"]) {\n          assert.equal(observer.tapSfE16ProviderSelection(missing, product), product)\n          assert.equal(lines.length, beforeMissing)\n        }\n        assert.equal(observer.linkSfE16Work(route, \"provider-read\", providerWork, callback), providerWork)\n        assert.equal(observer.enterSfE16Layer(\"source\", () => product), undefined)\n        assert.equal(observer.enterSfE16Layer(\"source\", providerWork), route)\n        assert.equal(observer.enterSfE16Layer(\"source\", providerWork), undefined)\n        if (gates[0] !== \"not-evaluated\") assert.equal(observer.tapSfE16Gate(route, \"source-root-current\", gates[0]), gates[0])\n        observer.markSfE16Route(route, \"source-selection\", \"decisionResults\")\n        assert.equal(observer.linkSfE16Work(route, \"source-work\", sourceWork), sourceWork)\n        assert.equal(observer.enterSfE16Layer(\"choice\", providerWork), undefined)\n        assert.equal(observer.enterSfE16Layer(\"choice\", sourceWork), route)\n        if (wrapped) assert.equal(observer.linkSfE16Work(route, \"choice-wrapped\", wrappedWork), wrappedWork)\n        observer.markSfE16Route(route, \"choice-forward\", wrapped ? \"wrapped\" : \"direct\")\n        assert.equal(observer.enterSfE16Layer(\"local\", () => product), undefined)\n        assert.equal(observer.enterSfE16Layer(\"local\", forwarded), route)\n        observer.markSfE16Route(route, \"local-enter\", \"child\")\n        const names = [\"callback-equal\", \"store-current\", \"view-current\", \"product-condition\"] as const\n        for (let index = 0; index < names.length; index++) {\n          const value = gates[index + 1]\n          if (value !== \"not-evaluated\") assert.equal(observer.tapSfE16Gate(route, names[index]!, value), value)\n        }\n        observer.markSfE16Route(route, \"native-gates\", wrapped ? \"full\" : \"projected\")\n        observer.markSfE16Route(route, \"copy-enter\", wrapped ? \"full\" : \"projected\")\n        assert.equal(invoked, 0)\n        let copyFailed = false\n        try {\n          if (copyThrew) throw undefined\n          assert.equal(forwarded(), product)\n        } catch (error) { copyFailed = true; throw error }\n        finally { observer.markSfE16Route(route, \"copy-close\", copyFailed ? \"threw\" : \"returned\") }\n        const before = lines.length\n        assert.equal(observer.tapSfE16ProviderSelection(() => product, \"full\"), \"full\")\n        assert.equal(lines.length, before)\n        assert.equal(observer.tapSfE16ProviderSelection(callback, wrapped ? undefined : \"decisionResults\"), wrapped ? undefined : \"decisionResults\")\n        assert.equal(observer.returnedSfE16Route(route, \"candidate-read-returned\", product), product)\n        return product\n      }) } catch (error) { failed = true; caught = error }\n      finally { observer.finishSfE16Route(route, failed) }\n      assert.equal(failed, copyThrew)\n      if (copyThrew) assert.equal(caught, undefined); else assert.equal(result, product)\n      assert.equal(invoked, copyThrew ? 0 : 1)\n      const count = lines.length\n      observer.markSfE16Route(route, \"copy-enter\", \"full\")\n      observer.finishSfE16Route(route, false)\n      assert.equal(lines.length, count)\n      return route\n    }\n",
+          "after": "    function lookup(wrapped = false, gates: readonly unknown[] = [true, true, true, true, true], copyThrew = false) {\n      const route = observer.enterSfE16Route(\"lookup\")\n      assert.equal(route, undefined)\n      const receiver = {}, snapshot = {}, callback = () => product\n      let invoked = 0\n      const providerWork = function (this: unknown, value: unknown) {\n        assert.equal(this, receiver); assert.equal(value, snapshot); invoked++; return product\n      }\n      const sourceWork = () => apply(providerWork, receiver, [snapshot])\n      const forwarded = wrapped ? () => sourceWork() : sourceWork\n      const before = lines.length\n      let result: unknown, caught: unknown = sentinel, failed = false\n      try { result = observer.runSfE16Route(route, \"candidate-read\", () => {\n        assert.equal(observer.currentSfE16Route(), undefined)\n        assert.equal(observer.linkSfE16Work(route, \"provider-read\", providerWork, callback), providerWork)\n        for (const work of [providerWork, sourceWork, forwarded])\n          for (const layer of [\"source\", \"choice\", \"local\"] as const)\n            assert.equal(observer.enterSfE16Layer(layer, work), undefined)\n        assert.equal(observer.linkSfE16Work(route, \"source-work\", sourceWork), sourceWork)\n        assert.equal(observer.linkSfE16Work(route, \"choice-wrapped\", forwarded), forwarded)\n        const names = [\"source-root-current\", \"callback-equal\", \"store-current\", \"view-current\", \"product-condition\"] as const\n        for (let index = 0; index < names.length; index++)\n          assert.equal(observer.tapSfE16Gate(route, names[index]!, gates[index]), gates[index])\n        observer.markSfE16Route(route, \"source-selection\", \"decisionResults\")\n        observer.markSfE16Route(route, \"copy-enter\", wrapped ? \"full\" : \"projected\")\n        if (copyThrew) throw undefined\n        assert.equal(forwarded(), product)\n        assert.equal(observer.tapSfE16ProviderSelection(callback, \"decisionResults\"), \"decisionResults\")\n        return observer.returnedSfE16Route(route, \"candidate-read-returned\", product)\n      }) } catch (error) { failed = true; caught = error }\n      finally { observer.finishSfE16Route(route, failed) }\n      assert.equal(failed, copyThrew)\n      if (copyThrew) assert.equal(caught, undefined); else assert.equal(result, product)\n      assert.equal(invoked, copyThrew ? 0 : 1)\n      assert.equal(lines.length, before)\n      return route\n    }\n",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 63845,
+            "sha256": "eea8012cef7958070c5cef452be1510a38d875482ae894f1678eb2b3f703d580",
+            "gitBlob": "023d72252224d1bfb7335dd4804a4d8201742349"
+          },
+          "post": {
+            "bytes": 62190,
+            "sha256": "b7222b7fb9903b0dcac7693e96f479f5cd11260be65c09639576a52e48f21dde",
+            "gitBlob": "c72432184b096b9814153127e9a70afd87f42d5e"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-binding-option",
+          "before": "    async function persistence(reenterClose = false, pause?: { entered(): void; waiting: Promise<void> }) {",
+          "after": "    async function persistence(reenterClose = false, pause?: { entered(): void; waiting: Promise<void> }, reserved = false) {",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 62190,
+            "sha256": "b7222b7fb9903b0dcac7693e96f479f5cd11260be65c09639576a52e48f21dde",
+            "gitBlob": "c72432184b096b9814153127e9a70afd87f42d5e"
+          },
+          "post": {
+            "bytes": 62208,
+            "sha256": "023d02da964be3708c2e2b1372df91ff79b57209dd13be6075d28d3d4e368622",
+            "gitBlob": "7cc8bffcdd69d04b733db4df609b6258f6c17c70"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-five-validation-slots",
+          "before": "        observer.markSfE16Route(route, \"binding-enter\")\n        // Binding's unrelated work",
+          "after": "        observer.markSfE16Route(route, \"binding-enter\")\n        if (reserved) await syntheticBindingSequence(route)\n        // Binding's unrelated work",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 62208,
+            "sha256": "023d02da964be3708c2e2b1372df91ff79b57209dd13be6075d28d3d4e368622",
+            "gitBlob": "7cc8bffcdd69d04b733db4df609b6258f6c17c70"
+          },
+          "post": {
+            "bytes": 62268,
+            "sha256": "2b1c686e0619188e009b2ee0e201459b6e50c9d2c88582d2b5e6df58f86c0115",
+            "gitBlob": "ce46b68348e36bc01c758516e80ed170043e858b"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "native-read-has-no-lookup-admission",
+          "before": "            const route = observer.enterSfE16Route(\"lookup\")\n            assert.ok(route)",
+          "after": "            const route = observer.enterSfE16Route(\"lookup\")\n            assert.equal(route, undefined)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 62268,
+            "sha256": "2b1c686e0619188e009b2ee0e201459b6e50c9d2c88582d2b5e6df58f86c0115",
+            "gitBlob": "ce46b68348e36bc01c758516e80ed170043e858b"
+          },
+          "post": {
+            "bytes": 62282,
+            "sha256": "55128e5d1de1ed5eb5572e2501b468f89bd6d4c966f925a8c97400d5843e2404",
+            "gitBlob": "e9eb1aaaa0a09978361cad99a33a83275022627f"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "native-read-body-preserved-details-retired",
+          "before": "            for (const id of [1, 2]) {\n              const values = routeRows(\"lookup\").filter((row) => row.route === id)\n              assert.equal(values.find((row) => row.point === \"source-selection\")?.detail, \"root-absent\")\n              assert.equal(values.find((row) => row.point === \"local-enter\")?.detail, \"top-level\")\n              assert.equal(values.find((row) => row.point === \"copy-close\")?.detail, \"full\")\n              assert.equal(values.some((row) => row.point === \"native-gates\" || row.point === \"provider-view\"), false)\n            }\n            for (const id of [3, 5, 6]) {\n              const values = routeRows(\"lookup\").filter((row) => row.route === id)\n              assert.equal(values.find((row) => row.point === \"source-selection\")?.detail, \"decisionResults\")\n              assert.equal(values.find((row) => row.point === \"choice-forward\")?.detail, \"direct\")\n              assert.deepEqual(values.find((row) => row.point === \"native-gates\")?.gates, [1, 1, 1, 1, 1])\n              assert.equal(values.find((row) => row.point === \"copy-close\")?.detail, \"decisionResults\")\n              assert.equal(values.find((row) => row.point === \"provider-view\")?.detail, \"decisionResults\")\n            }\n            const wrapped = routeRows(\"lookup\").filter((row) => row.route === 4)\n            assert.equal(wrapped.find((row) => row.point === \"choice-forward\")?.detail, \"wrapped\")\n            assert.deepEqual(wrapped.find((row) => row.point === \"native-gates\")?.gates, [1, 0, -1, -1, 0])\n            assert.equal(wrapped.find((row) => row.point === \"copy-close\")?.detail, \"full\")\n            assert.equal(wrapped.some((row) => row.point === \"provider-view\"), false)\n            checks.push(\"real-native-top-level-versus-held-root\", \"real-native-direct-and-wrapped-C08-identities\", \"real-native-preimage-keeps-selection\")\n\n",
+          "after": "            assert.equal(routeRows(\"lookup\").length, 0)\n            checks.push(\"real-native-read-bodies-complete-without-lookup-detail\", \"real-native-wrapped-and-preimage-calls-preserved\")\n\n",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 62282,
+            "sha256": "55128e5d1de1ed5eb5572e2501b468f89bd6d4c966f925a8c97400d5843e2404",
+            "gitBlob": "e9eb1aaaa0a09978361cad99a33a83275022627f"
+          },
+          "post": {
+            "bytes": 60632,
+            "sha256": "f4e8c7d069cf71c2c41d853cbd5da236bd36a82e9045ef1f82c4dabcaec073cc",
+            "gitBlob": "97df6656fdf80af9126baacbd41848aa397844cb"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "route-owner-no-lookup-emission",
+          "before": "alse)\n      })\n      assert.ok(lines.length > firstCount)\n      assert.equal(routeRows(\"lookup\").filter((row) => row.point === \"lookup-enter\").length, 2)\n      assert.equal(routeRows(\"canonical\").some((row) => row.poi",
+          "after": "alse)\n      })\n      assert.ok(lines.length > firstCount)\n      assert.equal(routeRows(\"lookup\").length, 0)\n      assert.equal(routeRows(\"canonical\").some((row) => row.poi",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 60632,
+            "sha256": "f4e8c7d069cf71c2c41d853cbd5da236bd36a82e9045ef1f82c4dabcaec073cc",
+            "gitBlob": "97df6656fdf80af9126baacbd41848aa397844cb"
+          },
+          "post": {
+            "bytes": 60586,
+            "sha256": "63455114586275744cc583df35a81c402b609927580d1885c8a944d2c219dd6c",
+            "gitBlob": "fa6d2ba04f42e7c88d2cef1a91d92df0adf2d037"
+          },
+          "contextAddedChars": 64
+        },
+        {
+          "label": "route-owner-six-neutral-calls",
+          "before": "      assert.equal(firstValue, product); assert.equal(calls, 2)\n      const lookups = routeRows(\"lookup\").filter((row) => row.point === \"lookup-enter\")\n      assert.deepEqual(lookups.map((row) => [row.route, row.routePhase]), [[1, \"preparation\"], [2, \"preparation\"],\n        [3, \"comparator\"], [4, \"comparator\"], [5, \"comparator\"], [6, \"comparator\"]])\n      assert.equal(new Set(lookups.map((row) => row.parentPhase)).size, 1)\n      assert.equal(point(\"finance-branch\", \"canonical\").detail, ",
+          "after": "      assert.equal(firstValue, product); assert.equal(calls, 2)\n      assert.equal(routeRows(\"lookup\").length, 0)\n      assert.equal(point(\"finance-branch\", \"canonical\").detail, ",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 60586,
+            "sha256": "63455114586275744cc583df35a81c402b609927580d1885c8a944d2c219dd6c",
+            "gitBlob": "fa6d2ba04f42e7c88d2cef1a91d92df0adf2d037"
+          },
+          "post": {
+            "bytes": 60273,
+            "sha256": "5fb5bcd664a3056e8de7fb05c726ae6778381e97c26be45d43700f7a81757608",
+            "gitBlob": "c93d952804eddfb843755d373e8b069d22e7beb9"
+          },
+          "contextAddedChars": 64
+        },
+        {
+          "label": "route-owner-label",
+          "before": "two-preparation-four-comparator-lookups",
+          "after": "six-original-lookups-neutral-and-once",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 60273,
+            "sha256": "5fb5bcd664a3056e8de7fb05c726ae6778381e97c26be45d43700f7a81757608",
+            "gitBlob": "c93d952804eddfb843755d373e8b069d22e7beb9"
+          },
+          "post": {
+            "bytes": 60271,
+            "sha256": "1ea278e9eb168500f208ad7661d9534497ff080c2a387d1051cd6bbd170b146b",
+            "gitBlob": "d805d60eeb5b14a01b2620bf1a8bb1eeffd348ec"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "work-links-replaced-by-real-binding-consumer",
+          "before": "    } else if (mode === \"work-links\") {\n      let coerced = 0\n      const nonboolean = new Proxy({}, { get() { coerced++; throw outputError } })\n      observer.runSfE16Observation(handle, request, () => {\n        const unit = observer.enterSfE16Unit(\"analysis\")\n        observer.returnedSfE16Await(unit, observer.runSfE16Phase(unit, \"analysis-select-initial\", () => {\n          const canonical = observer.enterSfE16Route(\"canonical\")\n          observer.runSfE16Route(canonical, \"preparation\", () => {\n            lookup()\n            lookup(true, [true, false, \"not-evaluated\", \"not-evaluated\", false])\n          })\n          observer.runSfE16Route(canonical, \"comparator\", () => {\n            const beforeFinance = lines.length\n            assert.equal(observer.markSfE16Finance(\"entered\"), undefined)\n            observer.markSfE16Finance(\"work-enter\")\n            assert.equal(lines.length, beforeFinance)\n            lookup(false, [\"not-evaluated\", \"not-evaluated\", \"not-evaluated\", \"not-evaluated\", \"not-evaluated\"])\n            lookup(false, [nonboolean, true, false, \"not-evaluated\", false])\n            lookup(false, [true, true, true, true, true], true)\n            lookup(false, [true, true, true, true, true])\n          })\n          observer.finishSfE16Route(canonical, false)\n          return product\n        }))\n        observer.finishSfE16Unit(unit, false)\n      })\n      const gate = (id: number) => routeRows(\"lookup\").find((row) => row.route === id && row.point === \"native-gates\")?.gates\n      assert.deepEqual(gate(1), [1, 1, 1, 1, 1])\n      assert.deepEqual(gate(2), [1, 0, -1, -1, 0])\n      assert.deepEqual(gate(3), [-1, -1, -1, -1, -1])\n      assert.deepEqual(gate(4), [2, 1, 0, -1, 0])\n      assert.equal(coerced, 0)\n      const failed = routeRows(\"lookup\").filter((row) => row.route === 5)\n      assert.equal(failed.find((row) => row.point === \"copy-close\")?.detail, \"threw\")\n      assert.equal(failed.find((row) => row.point === \"lookup-close\")?.detail, \"threw\")\n      assert.equal(failed.some((row) => row.point === \"provider-view\" || row.point === \"candidate-read-returned\"), false)\n      checks.push(\"exact-work-links-no-callback-invocation\", \"wrapped-work-requires-explicit-link\",\n        \"provider-missing-and-foreign-callback-no-view\", \"comparator-Finance-cannot-claim-preparation-owner\",\n        \"not-evaluated-false-true-nonboolean-gates\",\n        \"throw-undefined-copy-has-no-returned-view\")\n",
+          "after": "    } else if (mode === \"work-links\") {\n      await bindingConsumer()\n",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 60271,
+            "sha256": "1ea278e9eb168500f208ad7661d9534497ff080c2a387d1051cd6bbd170b146b",
+            "gitBlob": "d805d60eeb5b14a01b2620bf1a8bb1eeffd348ec"
+          },
+          "post": {
+            "bytes": 57914,
+            "sha256": "403d01fdc8037fcc2d4a99ee511d9d2e8fff77d31a7e6c787653d31bdddf3823",
+            "gitBlob": "0462a34d67c4a787bb88e18396cb76672f43631e"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-six-hundred-neutral-routes",
+          "before": "            lookup(); lookup(); finance = observer.markSfE16Finance(\"entered\")",
+          "after": "            for (let index = 0; index < 600; index++) lookup()\n            finance = observer.markSfE16Finance(\"entered\")",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 57914,
+            "sha256": "403d01fdc8037fcc2d4a99ee511d9d2e8fff77d31a7e6c787653d31bdddf3823",
+            "gitBlob": "0462a34d67c4a787bb88e18396cb76672f43631e"
+          },
+          "post": {
+            "bytes": 57957,
+            "sha256": "81605fad699a19b5d392f27c416532be91694404b3341b4ae1f433a8bf39ebd1",
+            "gitBlob": "b5eea1d6dc12c358f8cebd65ef54682377d25b08"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-persistence-five-validations",
+          "before": "observer.runSfE16Phase(analysis, \"analysis-persist\", () => persistence()))",
+          "after": "observer.runSfE16Phase(analysis, \"analysis-persist\", () => persistence(false, undefined, true)))",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 57957,
+            "sha256": "81605fad699a19b5d392f27c416532be91694404b3341b4ae1f433a8bf39ebd1",
+            "gitBlob": "b5eea1d6dc12c358f8cebd65ef54682377d25b08"
+          },
+          "post": {
+            "bytes": 57979,
+            "sha256": "0fa9f98c4561f55442e560b20d16c07af60d4e82ac7f47f3d4992c7a72cc8b4a",
+            "gitBlob": "5db994ba0555202a065662b672142487dbbd0efa"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-four-analysis-binding-rows",
+          "before": "        for (const phase of [\"analysis-bind\", \"analysis-select-final\", \"analysis-revalidate\"] as const)",
+          "after": "        for (const point of [\"initial\", \"final\"] as const) {\n          const bindingRead = observer.enterSfE16AnalysisBinding(analysis, point)\n          assert.ok(bindingRead)\n          assert.equal(observer.returnedSfE16AnalysisBinding(bindingRead, product), product)\n          assert.equal(observer.returnedSfE16AnalysisBinding(bindingRead, product), product)\n        }\n        for (const phase of [\"analysis-bind\", \"analysis-select-final\", \"analysis-revalidate\"] as const)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 57979,
+            "sha256": "0fa9f98c4561f55442e560b20d16c07af60d4e82ac7f47f3d4992c7a72cc8b4a",
+            "gitBlob": "5db994ba0555202a065662b672142487dbbd0efa"
+          },
+          "post": {
+            "bytes": 58351,
+            "sha256": "8c34e1874733e227b4c49e039feb13968929f691f0d570ce37a90ea8e39f4a1f",
+            "gitBlob": "36df8400746e70c8137b3d51c5e538ca27260a4c"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-real-reserved-count",
+          "before": "      assert.equal(rows().length, 191)",
+          "after": "      assert.equal(rows().length, 163)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58351,
+            "sha256": "8c34e1874733e227b4c49e039feb13968929f691f0d570ce37a90ea8e39f4a1f",
+            "gitBlob": "36df8400746e70c8137b3d51c5e538ca27260a4c"
+          },
+          "post": {
+            "bytes": 58351,
+            "sha256": "bd9cee930fa5d0935d5a8d5f2b4ca30ef2f4cd953c69aef938024b35d7ba4359",
+            "gitBlob": "3a48e6f9c81f7570f73abb0ad7253c2e9770e2f1"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-validation-not-lookup",
+          "before": "      assert.equal(routeRows(\"lookup\").length, 72)",
+          "after": "      assert.equal(routeRows(\"lookup\").length, 0)\n      assert.equal(rows().filter((row) => row.kind === \"binding-validation\").length, 40)\n      assert.equal(rows().filter((row) => row.kind === \"analysis-binding\").length, 4)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58351,
+            "sha256": "bd9cee930fa5d0935d5a8d5f2b4ca30ef2f4cd953c69aef938024b35d7ba4359",
+            "gitBlob": "3a48e6f9c81f7570f73abb0ad7253c2e9770e2f1"
+          },
+          "post": {
+            "bytes": 58525,
+            "sha256": "2f6593fa3387bd64146986bc496ae523f137429cf0efb821f4e60b9b4dedebdf",
+            "gitBlob": "f782fa72604934e41bd8e5c529456901853ac6fa"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-route-coverage",
+          "before": "      assert.deepEqual(one(\"request-close\").routeCoverage, [1, 2, 4, 1, 0, 0])",
+          "after": "      assert.deepEqual(one(\"request-close\").routeCoverage, [1, 0, 0, 1, 0, 0])",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58525,
+            "sha256": "2f6593fa3387bd64146986bc496ae523f137429cf0efb821f4e60b9b4dedebdf",
+            "gitBlob": "f782fa72604934e41bd8e5c529456901853ac6fa"
+          },
+          "post": {
+            "bytes": 58525,
+            "sha256": "1a8eb4d2c82064ec7f7ad46fcfe12d9256d21a3a4163c8b0825b647fe803ab44",
+            "gitBlob": "f8fe231b3177c3eaad446de43648d0b08ee85f6b"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-reserve-label",
+          "before": "exact-191-line-reservation-model",
+          "after": "exact-163-reserved-lines-with-forty-plus-four-late-slots",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58525,
+            "sha256": "1a8eb4d2c82064ec7f7ad46fcfe12d9256d21a3a4163c8b0825b647fe803ab44",
+            "gitBlob": "f8fe231b3177c3eaad446de43648d0b08ee85f6b"
+          },
+          "post": {
+            "bytes": 58549,
+            "sha256": "c70f7933663dcfd8067d7611ec737484c9c3916c41167b47ac52ab174d3c125d",
+            "gitBlob": "e472169c4565a1d8ee56ce36cc11d329f4b82734"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "capacity-neutral-label",
+          "before": "\"six-hundred-works-survive-general-detail-cap\",",
+          "after": "\"six-hundred-works-survive-general-detail-cap\", \"six-hundred-neutral-lookups-cannot-consume-thirteen-binding-scopes\",",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58549,
+            "sha256": "c70f7933663dcfd8067d7611ec737484c9c3916c41167b47ac52ab174d3c125d",
+            "gitBlob": "e472169c4565a1d8ee56ce36cc11d329f4b82734"
+          },
+          "post": {
+            "bytes": 58619,
+            "sha256": "346bde465d69bd4993afbb638506284860fe1dd2cb42325f5f056a8d0e31d665",
+            "gitBlob": "4f955e3453a9f15489374e8a9a64bb38c3a9c8a5"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "synthetic-late-reservations-and-fresh-optional-counterexamples",
+          "before": "    async function nativeChain() {",
+          "after": "    async function syntheticBindingSequence(route: unknown, missingVerifier = false) {\n      // This mode proves the diagnostic protocol and its independent reservations.\n      // The real consumer/verifier is exercised separately in work-links.\n      const owner = () => product, context = {}, binding = {}\n      let validationNumber = 0, actualVerifiers = 0\n      async function validate(method: unknown, site: \"bind-prewrite\" | \"read-initial\" | \"read-final\") {\n        const validation = observer.prepareSfE16Validation(method, site, binding)\n        assert.ok(validation)\n        const ordinal = ++validationNumber\n        const result = await observer.runSfE16Validation(validation, async () => {\n          observer.enterSfE16Validation(owner, binding, context)\n          assert.equal(observer.currentSfE16Validation(binding, context), validation)\n          const rejected = observer.prepareSfE16Validation(method, site, binding)\n          assert.equal(rejected, undefined)\n          const before = lines.length\n          assert.equal(observer.runSfE16Validation(rejected, () => {\n            assert.equal(observer.currentSfE16Validation(binding, context), undefined)\n            assert.equal(observer.prepareSfE16Verifier(binding, context), undefined)\n            assert.equal(observer.returnedSfE16Validation(validation, product), product)\n            return product\n          }), product)\n          assert.equal(lines.length, before)\n          assert.equal(observer.currentSfE16Validation(binding, context), validation)\n          const verifier = observer.prepareSfE16Verifier(binding, context)\n          assert.ok(verifier)\n          assert.equal(observer.prepareSfE16Verifier(binding, context), undefined)\n          const actual = { verifyComparison: async () => {\n            actualVerifiers++\n            observer.enterSfE16Verifier(binding, context)\n            return true\n          } }\n          const proof = missingVerifier && ordinal === 2 ? undefined : actual\n          const fresh = !(missingVerifier && ordinal === 1)\n          const accepted = fresh && observer.returnedSfE16Verifier(verifier,\n            await observer.runSfE16Verifier(verifier, () => proof?.verifyComparison() ?? Promise.resolve(false)))\n          if (!accepted) return false\n          observer.markSfE16Validation(validation, \"observer-enter\")\n          observer.markSfE16Validation(validation, \"work-enter\")\n          observer.returnedSfE16ValidationPoint(validation, \"criteria-await-returned\", await Promise.resolve(product))\n          observer.returnedSfE16ValidationPoint(validation, \"observer-await-returned\", await Promise.resolve(product))\n          return true\n        })\n        assert.equal(observer.returnedSfE16Validation(validation, result), result)\n      }\n      const bind = observer.prepareSfE16Binding(route, \"persist-bind\", context)\n      assert.ok(bind)\n      const pending = observer.runSfE16Binding(bind, () => {\n        const method = observer.enterSfE16BindingMethod(\"bind\", owner, context)\n        assert.ok(method)\n        return observer.runSfE16BindingMethod(method, async () => {\n          await validate(method, \"bind-prewrite\")\n          return observer.runSfE16BindingRead(method, () => {\n            const read = observer.enterSfE16BindingMethod(\"read\", owner, context)\n            assert.ok(read)\n            return observer.runSfE16BindingMethod(read, async () => {\n              await validate(read, \"read-initial\")\n              await validate(read, \"read-final\")\n              return product\n            })\n          })\n        })\n      })\n      assert.ok(pending instanceof Promise)\n      assert.equal(observer.returnedSfE16Binding(bind, await pending), product)\n      const read = observer.prepareSfE16Binding(route, \"persist-read\", context)\n      assert.ok(read)\n      const value = await observer.runSfE16Binding(read, () => {\n        const method = observer.enterSfE16BindingMethod(\"read\", owner, context)\n        assert.ok(method)\n        return observer.runSfE16BindingMethod(method, async () => {\n          await validate(method, \"read-initial\")\n          await validate(method, \"read-final\")\n          return product\n        })\n      })\n      assert.equal(observer.returnedSfE16Binding(read, value), product)\n      assert.equal(validationNumber, 5)\n      assert.equal(actualVerifiers, missingVerifier ? 3 : 5)\n      const values = rows().filter((row) => row.kind === \"binding-validation\")\n      assert.deepEqual([...new Set(values.map((row) => row.validation))], [1, 2, 3, 4, 5])\n      for (const id of [1, 2]) {\n        const points = values.filter((row) => row.validation === id).map((row) => row.point)\n        if (missingVerifier) assert.deepEqual(points, [\"validate-enter\", \"validate-await-returned\"])\n        else assert.equal(points.length, 8)\n      }\n      checks.push(missingVerifier ? \"fresh-false-and-absent-optional-verifier-have-no-fabricated-return\" :\n        \"five-reserved-generations-have-eight-real-control-await-points\",\n        \"refused-second-generation-cannot-close-first\", \"thirteen-scopes-independent-of-retired-lookups\")\n    }\n\n    async function nativeChain() {",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 58619,
+            "sha256": "346bde465d69bd4993afbb638506284860fe1dd2cb42325f5f056a8d0e31d665",
+            "gitBlob": "4f955e3453a9f15489374e8a9a64bb38c3a9c8a5"
+          },
+          "post": {
+            "bytes": 63711,
+            "sha256": "88550bea9c79e66334682136aab72e7fc68ba6f299665ff943eaa1f813c5ba49",
+            "gitBlob": "b4b4d93819fc357fd3e01bdf5fa58c57e2e54b26"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "mechanism-fresh-and-optional-null-protocol",
+          "before": "      function installRun(work: (this: unknown, token: unknown, callback: unknown) => unknown) {",
+          "after": "      await observer.runSfE16Observation(handle, request, async () => {\n        const unit = observer.enterSfE16Unit(\"analysis\")\n        observer.returnedSfE16Await(unit, await observer.runSfE16Phase(unit, \"analysis-persist\", async () => {\n          const route = observer.enterSfE16Route(\"persistence\")\n          assert.ok(route)\n          await observer.runSfE16Route(route, \"persist-body\", () => syntheticBindingSequence(route, true))\n          observer.finishSfE16Route(route, false)\n        }))\n        observer.finishSfE16Unit(unit, false)\n      })\n      function installRun(work: (this: unknown, token: unknown, callback: unknown) => unknown) {",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 63711,
+            "sha256": "88550bea9c79e66334682136aab72e7fc68ba6f299665ff943eaa1f813c5ba49",
+            "gitBlob": "b4b4d93819fc357fd3e01bdf5fa58c57e2e54b26"
+          },
+          "post": {
+            "bytes": 64266,
+            "sha256": "4962c252bcc57e16d09a41591be8895520357f2852f85dc26dbc1cab34bdebba",
+            "gitBlob": "5eaf29510a207b36f58225ba67212de792340012"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "real-binding-consumer-verifier-and-reentry-control",
+          "before": "    async function nativeChain() {",
+          "after": "    async function bindingConsumer() {\n      const [{ openLocalStore }, { createSfProductState, initializeAbsentSfProductState }, { createCriterionComparisonBindings },\n        { createCriterionRuleRegistry }, { createSfDecisionResultStore }, { createPortfolioProofVerifier },\n        { digestSfValue }, { sfRunSourceFence }] = await Promise.all([\n        import(\"../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts\"),\n        import(\"../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts\"),\n      ])\n      type Context = import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts\").TrustedDomainContext\n      type UiContext = import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts\").TrustedUiContext\n      type State = import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts\").SfProductState\n      type Snapshot = import(\"../../../../modules/sucafina/Sucafinav1/runtime/contract.ts\").Snapshot\n      type Comparison = import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts\").ScenarioComparison\n      type PortResult<T> = import(\"../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts\").PortResult<T>\n      type Binding = import(\"../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts\").CriterionComparisonBinding\n      const at = \"2027-02-02T00:00:00Z\", caseRef = { id: \"selected\", incarnation: \"selected-inc\", version: 1 }\n      const actor = { principalRef: \"person\", policyVersion: \"policy\", accessRevision: \"access\" }\n      const context = Object.freeze({ kind: \"ui\", binding: Object.freeze({\n        installationId: \"e16-controlled-installation\", projectId: \"project\", principalRef: \"person\",\n        requestId: \"request\", policyVersion: \"policy\", accessRevision: \"access\", expiresAt: \"2028-01-01T00:00:00Z\",\n      }), lease: {} }) as UiContext\n      const otherContext = Object.freeze({ ...context, binding: Object.freeze({ ...context.binding }), lease: {} }) as UiContext\n      const incoming = new Request(\"https://e16-binding.example.invalid\")\n      const store = await openLocalStore(path.join(privateDirectory, \"binding\"))\n      let unusedCalls = 0, validations = 0, evaluations = 0\n      const unused = (): never => { unusedCalls++; throw new Error(\"This dependency is outside the controlled comparison\") }\n      let preparationProbe: (() => void) | undefined, activeBinding: Binding | undefined\n      let releaseRead!: () => void, enteredRead!: () => void\n      const waitingRead = new Promise<void>((resolve) => { releaseRead = resolve })\n      const readEntered = new Promise<void>((resolve) => { enteredRead = resolve })\n      let lateWork: Promise<PortResult<true>> | undefined, lateArmed = false\n      let proof: ReturnType<typeof createPortfolioProofVerifier> | undefined, probeSnapshot: Snapshot | undefined\n      const beforePublication: boolean[] = [], afterPublication: boolean[] = []\n      const attacks: { selected: unknown; verifier: unknown; method: unknown; returned: unknown }[] = []\n      const fences = { dashboard: \"controlled-dashboard\", planner: \"\", procurement: \"controlled-procurement\" }\n      const requestValue = { scenarioRefs: [\"baseline-result\", \"alternative-result\"], criteria: [\"cost\"] }\n      const comparison: Comparison = { baselineResultRef: \"baseline-result\", alternativeResultRef: \"alternative-result\",\n        costCoverageRefs: [], criterionResults: [{ criterionId: \"cost\", state: \"unknown\", reason: \"criterion-rule-unavailable\" }],\n        unresolvedConditions: [\"criterion-rule-unavailable\"], comparisonStatus: \"conditioned\", knownDifference: null, completeDifference: null }\n      const valueOf = <T>(value: { status: \"ok\"; value: T } | { status: string; reason?: string }): T => {\n        assert.equal(value.status, \"ok\")\n        if (!(\"value\" in value)) throw new Error(\"Original consumer refused the controlled data\")\n        return value.value\n      }\n      const published = (binding: Binding, call: Context) => {\n        assert.ok(proof && probeSnapshot)\n        return proof.verifySnapshot(probeSnapshot, binding, call)\n      }\n      let pending: Promise<unknown> | undefined\n      try {\n        await initializeAbsentSfProductState(store, () => \"e16-comparison-state\")\n        await store.transaction(\"dashboard\", async (snapshot) => {\n          const state = snapshot.data.__sfProductV1 as State\n          state.cases[caseRef.id] = { ...caseRef, state: \"investigating\", objective: \"Controlled E16 comparison\",\n            horizon: { start: \"2027-01-01\", end: \"2027-12-31\" }, currency: \"USD\", participants: [\"person\"],\n            criteria: [{ id: \"cost\", description: \"Controlled criterion\", required: true }],\n            sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [],\n            choices: [], preparedChanges: [], receipts: [], ledger: [] }\n          return { commit: true, value: undefined }\n        })\n        await store.transaction(\"planner\", async (snapshot) => {\n          probeSnapshot = structuredClone(snapshot)\n          fences.planner = sfRunSourceFence(snapshot)\n          return { commit: false, value: undefined }\n        })\n        const writes = new WeakSet<object>()\n        const state = createSfProductState({ persistence: store, createId: () => \"e16-controlled-id\",\n          proposalCoverageWrites: writes, authorize: async () => ({ ...actor }),\n          resolveTarget: async (_request, snapshot, _namespace, id) => {\n            const current = (snapshot.data.__sfProductV1 as State).cases[id]\n            return current ? { incarnation: current.incarnation } : undefined\n          },\n        })\n        const host = { requestFor: () => incoming, revalidate: async () => {\n          const callback = preparationProbe\n          preparationProbe = undefined\n          callback?.()\n          return true\n        } }\n        const authorizeCase = async (value: { id: string; incarnation: string; version: number; participants: readonly string[] }, call: Context) =>\n          value.id === caseRef.id && value.incarnation === caseRef.incarnation &&\n          value.version === caseRef.version && value.participants.includes(call.binding.principalRef)\n        const originalRules = createCriterionRuleRegistry({ state, host, authorizeCase,\n          authorizeRule: unused, verifyEvidence: unused, verifySnapshot: unused, readMetric: unused, verifyMetric: unused,\n          operationIdentity: unused, proposalCoverageWrites: writes, now: () => at,\n        })\n        const rules: typeof originalRules = { ...originalRules,\n          evaluate: (...args) => { evaluations++; return originalRules.evaluate(...args) },\n        }\n        const results = createSfDecisionResultStore({ state, host, authorizeCase,\n          verifySources: async (value, refs) => value.kind === \"comparison\" && refs.length === 0,\n          createId: () => \"e16-comparison\", now: () => at,\n        })\n        const stored = valueOf(await results.write({ kind: \"comparison\", result: comparison, caseRef,\n          requestDigest: digestSfValue(requestValue), sourceRefs: [], idempotencyKey: \"e16-comparison-result\" }, context))\n        proof = createPortfolioProofVerifier({\n          cases: { draft: unused, prepareIntent: unused, read: unused },\n          planner: { compareForecast: unused, simulateScenario: unused, evaluateSensitivity: unused,\n            compareScenarios: async () => ({ status: \"ok\", value: structuredClone(comparison) }) },\n          sources: { resolveForecastSource: unused, resolveForecastCoverage: unused },\n          get evidence(): never { return unused() },\n          results, revalidate: async () => true, readSourceFences: async () => ({ ...fences }),\n          lockedSourceFences: () => ({ ...fences }), caseFor: unused, idempotencyKey: unused,\n          get decisions(): never { return unused() },\n          createReceipt: unused, candidateCoverageRefFor: unused, revalidateAnalysis: unused,\n          units: { issue: unused, resolve: unused, revalidate: unused }, sensitivityPreview: unused,\n          observeComparison: async (_request, call, work) => {\n            const accepted = await work()\n            assert.ok(activeBinding)\n            beforePublication.push(published(activeBinding, call))\n            return accepted\n          },\n        })\n        let selected: ReturnType<typeof createCriterionComparisonBindings>, foreignFactory: ReturnType<typeof createCriterionComparisonBindings>\n        const build = () => createCriterionComparisonBindings({ state, host, rules, results, authorizeCase,\n          verifyBinding: async (binding, result, call) => {\n            const ordinal = ++validations\n            activeBinding = binding\n            if (ordinal === 1) {\n              const ancestor = observer.currentSfE16Validation(binding, call)\n              assert.ok(ancestor)\n              // These real read methods are rejected diagnostically before their\n              // real preparatory host callback. Same binding/context cannot steal\n              // the verifier entry reserved for this ancestor.\n              for (const [consumer, reentrantContext] of [[selected, call], [foreignFactory, call], [selected, otherContext]] as const) {\n                preparationProbe = () => {\n                  attacks.push({ selected: observer.currentSfE16Validation(binding, call),\n                    verifier: observer.prepareSfE16Verifier(binding, call),\n                    method: observer.enterSfE16BindingMethod(\"read\", () => product, call),\n                    returned: observer.returnedSfE16Validation(ancestor, product) })\n                }\n                const refused = await consumer.read({ caseRef, resultRef: stored.resultRef }, reentrantContext)\n                assert.equal(refused.status, \"unavailable\")\n              }\n              assert.equal(observer.currentSfE16Validation(binding, call), ancestor)\n              const noMethod = observer.enterSfE16BindingMethod(\"read\", () => product, call)\n              assert.equal(noMethod, undefined)\n              const samePromise = Promise.resolve(product), receiver = {}, argument = {}\n              let calls = 0\n              const original = function (this: unknown, value: unknown) {\n                assert.equal(this, receiver); assert.equal(value, argument); calls++; return samePromise\n              }\n              assert.equal(observer.runSfE16BindingMethod(noMethod, () => apply(original, receiver, [argument])), samePromise)\n              assert.equal(calls, 1)\n              for (const thrown of [outputError, undefined]) {\n                let caught: unknown = sentinel, didThrow = false\n                try { observer.runSfE16BindingMethod(noMethod, () => { calls++; throw thrown }) }\n                catch (error) { didThrow = true; caught = error }\n                assert.equal(didThrow, true); assert.equal(caught, thrown)\n              }\n              assert.equal(calls, 3)\n              assert.equal(observer.currentSfE16Validation(binding, call), ancestor)\n            }\n            // Same short-circuit/optional-method expression as the authority\n            // seam; its dependencies and context are intentionally synthetic.\n            const verifier = observer.prepareSfE16Verifier(binding, call)\n            const accepted = await Promise.resolve(true) && observer.returnedSfE16Verifier(verifier,\n              await observer.runSfE16Verifier(verifier, () => proof?.verifyComparison(binding, result, call) ?? Promise.resolve(false)))\n            afterPublication.push(published(binding, call))\n            if (ordinal === 2) { enteredRead(); await waitingRead }\n            return accepted\n          },\n          verifySnapshot: () => true, operationIdentity: () => \"e16-controlled-bind\", proposalCoverageWrites: writes, now: () => at,\n          observeCriteria: async (_request, _call, work) => {\n            const accepted = await work()\n            if (!lateArmed) {\n              lateArmed = true\n              writeAction = () => { lateWork = work() }\n            }\n            return accepted\n          },\n        })\n        selected = build()\n        foreignFactory = build()\n        const expectedRules = [{ criterionId: \"cost\", ruleRef: null, version: null, digest: null }]\n        pending = observer.runSfE16Observation(handle, request, async () => {\n          const unit = observer.enterSfE16Unit(\"analysis\")\n          assert.ok(unit)\n          observer.returnedSfE16Await(unit, await observer.runSfE16Phase(unit, \"analysis-persist\", async () => {\n            const route = observer.enterSfE16Route(\"persistence\")\n            assert.ok(route)\n            try {\n              return await observer.runSfE16Route(route, \"persist-body\", async () => {\n                const bind = observer.prepareSfE16Binding(route, \"persist-bind\", context)\n                assert.ok(bind)\n                observer.markSfE16Route(route, \"binding-enter\")\n                const bound = observer.returnedSfE16Binding(bind, await observer.runSfE16Binding(bind,\n                  () => selected.bind({ caseRef, resultRef: stored.resultRef, request: requestValue, expectedRules }, context)))\n                assert.equal(bound.status, \"ok\")\n                observer.markSfE16Route(route, \"binding-returned\")\n                const read = observer.prepareSfE16Binding(route, \"persist-read\", context)\n                assert.ok(read)\n                const checked = observer.returnedSfE16Binding(read, await observer.runSfE16Binding(read,\n                  () => selected.read({ caseRef, resultRef: stored.resultRef }, context)))\n                assert.equal(checked.status, \"ok\")\n                observer.returnedSfE16Route(route, \"binding-read-returned\", checked)\n                return checked\n              })\n            } finally { observer.finishSfE16Route(route, false) }\n          }))\n          // The two analysis reads execute their real consumer bodies but are\n          // outside the first persistence's five validation generations.\n          for (const point of [\"initial\", \"final\"] as const) {\n            const read = observer.enterSfE16AnalysisBinding(unit, point)\n            assert.ok(read)\n            const checked = observer.returnedSfE16AnalysisBinding(read,\n              await selected.read({ caseRef, resultRef: stored.resultRef }, context))\n            assert.equal(checked.status, \"ok\")\n          }\n          observer.finishSfE16Unit(unit, false)\n        })\n        await readEntered\n        const prefixValues = rows().filter((row) => row.kind === \"binding-validation\")\n        assert.deepEqual(prefixValues.filter((row) => row.validation === 1).map((row) => row.point),\n          [\"validate-enter\", \"verify-comparison-enter\", \"verify-await-returned\", \"observer-enter\", \"work-enter\",\n            \"criteria-await-returned\", \"observer-await-returned\", \"validate-await-returned\"])\n        assert.deepEqual(prefixValues.filter((row) => row.validation === 2).map((row) => row.point),\n          [\"validate-enter\", \"verify-comparison-enter\", \"verify-await-returned\"])\n        assert.equal(routeRows(\"persistence\").some((row) => row.point === \"binding-returned\" || row.point === \"persist-close\"), false)\n        assert.equal(readFileSync(eventFile, \"utf8\"), lines.join(\"\"))\n        releaseRead()\n        await pending\n        pending = undefined\n        const values = rows().filter((row) => row.kind === \"binding-validation\")\n        assert.equal(values.length, 40)\n        for (const id of [1, 2, 3, 4, 5]) {\n          const selected = values.filter((row) => row.validation === id)\n          assert.equal(selected.length, 8)\n          assert.equal(new Set(selected.map((row) => row.point)).size, 8)\n          assert.ok(selected.every((row) => row.bindingPhase === (id <= 3 ? \"persist-bind\" : \"persist-read\")))\n          assert.ok(selected.every((row) => row.validationSite === (id === 1 ? \"bind-prewrite\" : id === 2 || id === 4 ? \"read-initial\" : \"read-final\")))\n        }\n        assert.equal(validations, 9); assert.equal(evaluations, 9)\n        assert.deepEqual(beforePublication, Array(9).fill(false))\n        assert.deepEqual(afterPublication, Array(9).fill(true))\n        assert.equal(attacks.length, 3)\n        for (const attack of attacks) {\n          assert.equal(attack.selected, undefined); assert.equal(attack.verifier, undefined)\n          assert.equal(attack.method, undefined); assert.equal(attack.returned, product)\n        }\n        assert.ok(lateWork)\n        assert.deepEqual(await lateWork, { status: \"unavailable\", reason: \"comparison-criteria-observation-changed\" })\n        assert.equal(rows().filter((row) => row.kind === \"analysis-binding\").length, 4)\n        assert.equal(unusedCalls, 0)\n        checks.push(\"real-consumer-three-bind-two-read-generations\",\n          \"real-verifier-return-follows-private-fence-publication\",\n          \"same-binding-context-reentrant-preparation-cannot-steal-verifier\",\n          \"foreign-factory-and-context-body-is-neutral\",\n          \"internal-read-Promise-adoption-keeps-child-generation-live\",\n          \"observer-open-latch-precedes-return-marker-hook\",\n          \"analysis-two-reads-are-outside-five-validation-slots\",\n          \"refused-method-once-Promise-receiver-Error-and-undefined\",\n          \"controlled-host-and-planner-are-not-native-authority-proof\")\n      } finally {\n        releaseRead()\n        try { await pending } finally { await store.dispose() }\n      }\n    }\n\n    async function nativeChain() {",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 64266,
+            "sha256": "4962c252bcc57e16d09a41591be8895520357f2852f85dc26dbc1cab34bdebba",
+            "gitBlob": "5eaf29510a207b36f58225ba67212de792340012"
+          },
+          "post": {
+            "bytes": 82275,
+            "sha256": "70e2cd293144fdcb73c86c4c09e50e8e6be96fd33c317d549c3dd167ade88728",
+            "gitBlob": "3c6eddbab449f6807803926e52e1e19f16fb8836"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "refused-method-neutral-or-disabled-before-product",
+          "before": "          observer.returnedSfE16ValidationPoint(validation, \"observer-await-returned\", await Promise.resolve(product))\n          return true",
+          "after": "          observer.returnedSfE16ValidationPoint(validation, \"observer-await-returned\", await Promise.resolve(product))\n          if (missingVerifier && ordinal === 5) {\n            let calls = 0\n            const promise = Promise.resolve(product)\n            define(AsyncLocalStorage.prototype, \"run\", { ...savedRun, value: (_token: unknown, callback: unknown) => {\n              assert.ok(typeof callback === \"function\")\n              return apply(callback, undefined, [])\n            } })\n            try {\n              const returned = observer.runSfE16BindingMethod(undefined, () => {\n                calls++\n                assert.equal(observer.currentSfE16Validation(binding, context), undefined)\n                assert.equal(observer.prepareSfE16Verifier(binding, context), undefined)\n                return promise\n              })\n              assert.equal(returned, promise)\n              assert.equal(calls, 1)\n            } finally { define(AsyncLocalStorage.prototype, \"run\", savedRun) }\n          }\n          return true",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 82275,
+            "sha256": "70e2cd293144fdcb73c86c4c09e50e8e6be96fd33c317d549c3dd167ade88728",
+            "gitBlob": "3c6eddbab449f6807803926e52e1e19f16fb8836"
+          },
+          "post": {
+            "bytes": 83173,
+            "sha256": "4dc90ccd2e2d7579a221c1256bcdd9d3699d4c6085d2e3aa368b7efac2e18a6f",
+            "gitBlob": "5d6d1d1d4e15ce08e9dc24a0c5a7075cd47e7db5"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "positive-consumer-fail-fast-without-hiding-rejection",
+          "before": "        await readEntered\n        const prefixValues =",
+          "after": "        await Promise.race([readEntered, pending.then(() => { throw new Error(\"Internal read did not reach its controlled wait\") })])\n        const prefixValues =",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 83173,
+            "sha256": "4dc90ccd2e2d7579a221c1256bcdd9d3699d4c6085d2e3aa368b7efac2e18a6f",
+            "gitBlob": "5d6d1d1d4e15ce08e9dc24a0c5a7075cd47e7db5"
+          },
+          "post": {
+            "bytes": 83281,
+            "sha256": "c8771cec118294f7464cd9e7bc2708307d26e0fd9a73831637d9046e9a8c360c",
+            "gitBlob": "b09a2b78df835987f6f367224a2b2bb252c425b4"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "clock-fault-keeps-original-Promise-once",
+          "before": "        assert.equal(unusedCalls, 0)\n        checks.push(\"real-consumer-three-bind-two-read-generations\",",
+          "after": "        assert.equal(unusedCalls, 0)\n        const controlledNow = property(performance, \"now\")\n        assert.ok(controlledNow)\n        let clockCalls = 0\n        const clockPromise = Promise.resolve(product)\n        define(performance, \"now\", { configurable: true, value: () => { throw undefined } })\n        try {\n          const same = observer.runSfE16Observation(handle, request, () => observer.runSfE16BindingMethod(undefined, () => {\n            clockCalls++; observer.markSfE16Http(handle, request, \"body-returned\"); return clockPromise\n          }))\n          assert.equal(same, clockPromise)\n          assert.equal(await same, product)\n          assert.equal(clockCalls, 1)\n          assert.equal(rows().at(-1)?.elapsedTenthMs, null)\n        } finally { define(performance, \"now\", controlledNow) }\n        checks.push(\"clock-failure-keeps-original-Promise-once\", \"real-consumer-three-bind-two-read-generations\",",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 83281,
+            "sha256": "c8771cec118294f7464cd9e7bc2708307d26e0fd9a73831637d9046e9a8c360c",
+            "gitBlob": "b09a2b78df835987f6f367224a2b2bb252c425b4"
+          },
+          "post": {
+            "bytes": 84098,
+            "sha256": "8f9b3029df83a5e6df8d75430df7dc0b219eb76ac7145b930fe74d9df5254716",
+            "gitBlob": "27508893996c83ede9e663cf86265e406bbb89dd"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "candidate-read-Promise-thenable-and-throw-neutral",
+          "before": "            lookup(); lookup()\n            finance = observer.markSfE16Finance(\"entered\")",
+          "after": "            lookup(); lookup()\n            const beforeNeutral = lines.length, waitingValue = Promise.resolve(product)\n            assert.equal(observer.runSfE16Route(undefined, \"candidate-read\", () => waitingValue), waitingValue)\n            const opaque = Object.defineProperty({}, \"then\", { get() { throw outputError } })\n            assert.equal(observer.runSfE16Route(undefined, \"candidate-read\", () => opaque), opaque)\n            lookup(false, [true, true, true, true, true], true)\n            assert.equal(lines.length, beforeNeutral)\n            finance = observer.markSfE16Finance(\"entered\")",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 84098,
+            "sha256": "8f9b3029df83a5e6df8d75430df7dc0b219eb76ac7145b930fe74d9df5254716",
+            "gitBlob": "27508893996c83ede9e663cf86265e406bbb89dd"
+          },
+          "post": {
+            "bytes": 84610,
+            "sha256": "def6a709dd87f006031bc08900e6dc3a991e90991d8b74e62a94736a882e6c88",
+            "gitBlob": "642541c0a03887a7d68b1a8711b44d6756ea38be"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "neutral-lookup-label",
+          "before": "six-original-lookups-neutral-and-once",
+          "after": "retired-lookups-preserve-values-Promises-thenables-and-undefined",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 84610,
+            "sha256": "def6a709dd87f006031bc08900e6dc3a991e90991d8b74e62a94736a882e6c88",
+            "gitBlob": "642541c0a03887a7d68b1a8711b44d6756ea38be"
+          },
+          "post": {
+            "bytes": 84637,
+            "sha256": "c96b0876b42f54b677e8337296ceab697a26845ca9159bf7ed79626af7b09358",
+            "gitBlob": "a85c18770be880c07e5bfc6e35288536e50b8282"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "get-store-fault-method-body-once",
+          "before": "      define(AsyncLocalStorage.prototype, \"run\", savedRun)\n      observer.finishSfE16Observation(handle, request, false)",
+          "after": "      define(AsyncLocalStorage.prototype, \"run\", savedRun)\n      const noStorePromise = Promise.resolve(value)\n      let noStoreCalls = 0\n      define(AsyncLocalStorage.prototype, \"getStore\", { ...savedGet, value: () => { throw undefined } })\n      try {\n        assert.equal(observer.runSfE16BindingMethod(undefined, () => { noStoreCalls++; return noStorePromise }), noStorePromise)\n        assert.equal(noStoreCalls, 1)\n      } finally { define(AsyncLocalStorage.prototype, \"getStore\", savedGet) }\n      observer.finishSfE16Observation(handle, request, false)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 84637,
+            "sha256": "c96b0876b42f54b677e8337296ceab697a26845ca9159bf7ed79626af7b09358",
+            "gitBlob": "a85c18770be880c07e5bfc6e35288536e50b8282"
+          },
+          "post": {
+            "bytes": 85078,
+            "sha256": "51594b15c514216e9d56de1b46075cdfa95185d7bba9d1eea2993d149b820f5c",
+            "gitBlob": "f143b0c8fe7acaccb2accdee03be1f90a66c3258"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "neutral-method-mechanism-label",
+          "before": "\"before-noinvoke-after-faults-preserve-work\", \"scope-fallback-disables-attribution\")",
+          "after": "\"before-noinvoke-after-faults-preserve-work\", \"scope-fallback-disables-attribution\",\n        \"refused-method-noop-ALS-and-getStore-throw-never-inherit-owner\")",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 85078,
+            "sha256": "51594b15c514216e9d56de1b46075cdfa95185d7bba9d1eea2993d149b820f5c",
+            "gitBlob": "f143b0c8fe7acaccb2accdee03be1f90a66c3258"
+          },
+          "post": {
+            "bytes": 85152,
+            "sha256": "3b8678c31add90124a035d52edb6ed7104d9683bbf356dfb2b38489813348ab1",
+            "gitBlob": "56c96cf110d908a3646b55b3a6dfb3642e49afc0"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "sink-method-value-once",
+          "before": "assert.equal(observer.runSfE16Observation(handle, request, () => { calls++; return product }), product)",
+          "after": "assert.equal(observer.runSfE16Observation(handle, request, () => observer.runSfE16BindingMethod(undefined, () => { calls++; return product })), product)",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 85152,
+            "sha256": "3b8678c31add90124a035d52edb6ed7104d9683bbf356dfb2b38489813348ab1",
+            "gitBlob": "56c96cf110d908a3646b55b3a6dfb3642e49afc0"
+          },
+          "post": {
+            "bytes": 85201,
+            "sha256": "f2f9ceacbb77fe7c0eaeddb6debce12534b71b461998d94fcf6d84f568b1fbd3",
+            "gitBlob": "e62865e7316cbf320809390058c69c51b2f5e97e"
+          },
+          "contextAddedChars": 0
+        },
+        {
+          "label": "sink-method-thrown-undefined",
+          "before": "try { observer.runSfE16Observation(handle, request, () => { calls++; throw undefined }) } catch",
+          "after": "try { observer.runSfE16Observation(handle, request, () => observer.runSfE16BindingMethod(undefined, () => { calls++; throw undefined })) } catch",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 85201,
+            "sha256": "f2f9ceacbb77fe7c0eaeddb6debce12534b71b461998d94fcf6d84f568b1fbd3",
+            "gitBlob": "e62865e7316cbf320809390058c69c51b2f5e97e"
+          },
+          "post": {
+            "bytes": 85250,
+            "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+            "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e"
+          },
+          "contextAddedChars": 0
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    {
+      "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+      "sourceDelta": "A",
+      "donor": {
+        "bytes": 1167,
+        "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+        "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"
+      },
+      "postimage": {
+        "bytes": 1172,
+        "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+        "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+        "lf": 24
+      },
+      "operations": [
+        {
+          "label": "upper-version",
+          "before": "E15",
+          "after": "E16",
+          "mode": "all",
+          "occurrences": 4,
+          "pre": {
+            "bytes": 1167,
+            "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+            "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"
+          },
+          "post": {
+            "bytes": 1167,
+            "sha256": "ac2b3bf31ee43f5f72f5ef9fd7f9975c07b88dcbd73df03f528a1bd1a2bc4944",
+            "gitBlob": "09d1a164be30e0e54160fe5505b79b22773ef917"
+          }
+        },
+        {
+          "label": "lower-version",
+          "before": "e15",
+          "after": "e16",
+          "mode": "all",
+          "occurrences": 7,
+          "pre": {
+            "bytes": 1167,
+            "sha256": "ac2b3bf31ee43f5f72f5ef9fd7f9975c07b88dcbd73df03f528a1bd1a2bc4944",
+            "gitBlob": "09d1a164be30e0e54160fe5505b79b22773ef917"
+          },
+          "post": {
+            "bytes": 1167,
+            "sha256": "d4d88759179c0bb2bc39a14d97aedafdfd1ffd2029a6c98b57afa81bd08be5bf",
+            "gitBlob": "8fa804c1a4b0cae51ee459ced6d601e6ca24bb5d"
+          }
+        },
+        {
+          "label": "test-title",
+          "before": "E16 route observation preserves lexical ownership and the first persistence tail",
+          "after": "E16 binding observation preserves invocation ownership and the first five validations",
+          "mode": "unique",
+          "occurrences": 1,
+          "pre": {
+            "bytes": 1167,
+            "sha256": "d4d88759179c0bb2bc39a14d97aedafdfd1ffd2029a6c98b57afa81bd08be5bf",
+            "gitBlob": "8fa804c1a4b0cae51ee459ced6d601e6ca24bb5d"
+          },
+          "post": {
+            "bytes": 1172,
+            "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+            "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f"
+          }
+        }
+      ],
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    }
+  ],
+  "reusePatch": {
+    "bytes": 94239,
+    "sha256": "4955435b9250c674c82cb211a2a8c4f75f55c2097c46da7e50d625100ab5f739",
+    "gitBlob": "586245167d27ce473a6e4a694a392a530d339d64"
+  },
+  "fullAdditionsPatch": {
+    "bytes": 88461,
+    "sha256": "902756f671c71ca92731041f8471576ceff24d42ea470e233191f854b4dd5edd",
+    "gitBlob": "8c5c14115b411dddea70a62c76e7cab28852babc"
+  },
+  "patchStats": {
+    "reuse": [
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "hunks": 22,
+        "added": 647,
+        "removed": 314
+      },
+      {
+        "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "hunks": 2,
+        "added": 8,
+        "removed": 8
+      }
+    ],
+    "added": [
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "hunks": 1,
+        "added": 1320,
+        "removed": 0
+      },
+      {
+        "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "hunks": 1,
+        "added": 24,
+        "removed": 0
+      }
+    ]
+  },
+  "staticCounts": {
+    "childModes": 10,
+    "parentDeclarations": 1,
+    "parentExpectSites": 8,
+    "childAssertSites": 303,
+    "rawAwaitWordTokens": 102,
+    "labelEntries": 64,
+    "uniqueLabelStrings": 56
+  },
+  "controlMatrix": {
+    "route-owner": [
+      "first-canonical-private-owner-across-suspension",
+      "second-canonical-and-Finance-cannot-steal",
+      "retired-lookups-preserve-values-Promises-thenables-and-undefined",
+      "undefined-and-closed-route-mask-ambient",
+      "real-LF-prefix-before-completion",
+      "exact-Promise-and-thenable-no-assimilation",
+      "body-return-is-not-Promise-settlement-or-phase-close"
+    ],
+    "work-links": [
+      "clock-failure-keeps-original-Promise-once",
+      "real-consumer-three-bind-two-read-generations",
+      "real-verifier-return-follows-private-fence-publication",
+      "same-binding-context-reentrant-preparation-cannot-steal-verifier",
+      "foreign-factory-and-context-body-is-neutral",
+      "internal-read-Promise-adoption-keeps-child-generation-live",
+      "observer-open-latch-precedes-return-marker-hook",
+      "analysis-two-reads-are-outside-five-validation-slots",
+      "refused-method-once-Promise-receiver-Error-and-undefined",
+      "controlled-host-and-planner-are-not-native-authority-proof"
+    ],
+    "native-chain": [
+      "real-native-read-bodies-complete-without-lookup-detail",
+      "real-native-wrapped-and-preimage-calls-preserved",
+      "real-native-queue-prefix-before-release",
+      "real-native-write-and-post-write-boundaries-distinct"
+    ],
+    "persistence-tail": [
+      "first-persistence-requires-first-analysis-phase",
+      "operation-true-is-not-transaction-identity",
+      "queue-prefix-does-not-fabricate-BEGIN-or-commit",
+      "post-write-binding-remains-distinct",
+      "reentrant-terminal-freezes-open-prefix-without-late-close"
+    ],
+    "capacity": [
+      "five-reserved-generations-have-eight-real-control-await-points",
+      "refused-second-generation-cannot-close-first",
+      "thirteen-scopes-independent-of-retired-lookups",
+      "six-hundred-works-survive-general-detail-cap",
+      "six-hundred-neutral-lookups-cannot-consume-thirteen-binding-scopes",
+      "critical-sites-and-tail-survive-general-cap",
+      "global-four-body-checkpoints-survive-cap",
+      "exact-163-reserved-lines-with-forty-plus-four-late-slots",
+      "terminal-reserved-at-full-cap"
+    ],
+    "mechanism": [
+      "Finance-observation-return-does-not-invent-work",
+      "fresh-false-and-absent-optional-verifier-have-no-fabricated-return",
+      "refused-second-generation-cannot-close-first",
+      "thirteen-scopes-independent-of-retired-lookups",
+      "duplicate-and-tardy-thunk-never-replay",
+      "mechanism-result-and-swallowed-error-not-authoritative",
+      "before-noinvoke-after-faults-preserve-work",
+      "scope-fallback-disables-attribution",
+      "refused-method-noop-ALS-and-getStore-throw-never-inherit-owner"
+    ],
+    "sink-zero": [
+      "sink-zero-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "sink-partial": [
+      "sink-partial-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "sink-throw": [
+      "sink-throw-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "forwarder": [
+      "forwarder-real-chunk-identity-and-multilines",
+      "forwarder-only-real-LF-no-EOF-promotion",
+      "forwarder-ASCII-byte-bound-before-LF",
+      "forwarder-invalid-diagnostic-latches",
+      "forwarder-unrelated-long-lines-ignored",
+      "forwarder-zero-partial-undefined-throw-no-retry",
+      "forwarder-191-events-and-191KiB",
+      "forwarder-one-disabled-and-exclusive-mode"
+    ]
+  },
+  "limits": [
+    "Only the ten bounded child controls execute this synthetic evidence protocol if hosted CI is authorized later.",
+    "work-links uses real LocalStore/C08, consumer and proof-verifier implementations; host/authentication, source fences, controlled comparison result, Planner return and context are synthetic.",
+    "The proof publication assertion verifies the real verifier's private publication order under these controlled inputs; it is not a native Finance authority or installed UI proof.",
+    "native-chain keeps the actual inherited C08/Source/CurrentChoice/LocalStore operations; retired lookup-detail assertions are removed because E16 intentionally has no such emissions.",
+    "Synthetic protocol checks are distinct from the real consumer controls and do not accept a domain result.",
+    "The 600 candidate-read calls and 600 general works are distinct populations. Their eventual execution is not yet observed.",
+    "No repository execution, original GET, ZIP, tree, commit, ref or run occurred in this authoring step."
+  ]
+}

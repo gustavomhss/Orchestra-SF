@@ -1,0 +1,351 @@
+{
+  "schema": "sf613-e16-control-bounds-v1",
+  "status": "STATIC_CONTROL_PROPOSAL_NOT_RUNTIME_ACCEPTANCE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "sourceBase": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+  },
+  "sourceObject": null,
+  "focalObject": null,
+  "run": null,
+  "code": {
+    "fixture": {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "bytes": 85250,
+      "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+      "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+      "lf": 1320
+    },
+    "parent": {
+      "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+      "bytes": 1172,
+      "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+      "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+      "lf": 24
+    },
+    "helper": {
+      "bytes": 67552,
+      "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+      "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+      "lf": 1203
+    }
+  },
+  "donors": {
+    "fixture": {
+      "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052",
+      "bytes": 63845,
+      "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914"
+    },
+    "parent": {
+      "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e",
+      "bytes": 1167,
+      "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6"
+    }
+  },
+  "supports": {
+    "derivation": {
+      "bytes": 75506,
+      "sha256": "07eabe825d0045cf6dc31b983a7bb2941ef9b4f29bdba5db08dc6800074ebc8d",
+      "gitBlob": "0131de6d3c4454c2778318ad607c7d2f6671a382"
+    },
+    "reusePatch": {
+      "bytes": 94239,
+      "sha256": "4955435b9250c674c82cb211a2a8c4f75f55c2097c46da7e50d625100ab5f739",
+      "gitBlob": "586245167d27ce473a6e4a694a392a530d339d64"
+    },
+    "fullAdditionsPatch": {
+      "bytes": 88461,
+      "sha256": "902756f671c71ca92731041f8471576ceff24d42ea470e233191f854b4dd5edd",
+      "gitBlob": "8c5c14115b411dddea70a62c76e7cab28852babc"
+    }
+  },
+  "derivation": {
+    "fixtureOperations": 33,
+    "parentOperations": 3,
+    "total": 36,
+    "reuse": {
+      "hunks": 24,
+      "added": 655,
+      "removed": 322
+    },
+    "fullAdditions": {
+      "files": 2,
+      "hunks": 2,
+      "added": 1344,
+      "removed": 0
+    },
+    "allForwardInverseLiteral": true,
+    "nativeChain": "After explicit E15-to-E16 retarget, actual inherited native read/wrapped/preimage/queue/write/post-write operations remain literal. Only retired lookup-detail expectations are replaced by undefined/no-lines expectations.",
+    "runner": "E15 parent runner retarget plus descriptive title; same ten subprocess modes and isolation engine."
+  },
+  "staticPopulation": {
+    "childModes": 10,
+    "parentDeclarations": 1,
+    "parentExpectSites": 8,
+    "childAssertSites": 303,
+    "rawAwaitWordTokens": 102,
+    "labelEntries": 64,
+    "uniqueLabelStrings": 56,
+    "parentExpectCallsOnAllTenCompletedPath": 53,
+    "parentExpectCallsFormula": "5 * 10 + 3",
+    "newFunctionalProcess": 1,
+    "parentTestDeclarations": 1,
+    "children": 10,
+    "declarationsInC22Unchanged": 5,
+    "C22ReportEmissionsUnchanged": 3,
+    "distinction": "Assert/expect sites and the 53-call completed-path calculation are static source populations, not a runtime assertion footer or observed pass count. Raw await word tokens include strings/comments and are not an operator count."
+  },
+  "modes": {
+    "route-owner": [
+      "first-canonical-private-owner-across-suspension",
+      "second-canonical-and-Finance-cannot-steal",
+      "retired-lookups-preserve-values-Promises-thenables-and-undefined",
+      "undefined-and-closed-route-mask-ambient",
+      "real-LF-prefix-before-completion",
+      "exact-Promise-and-thenable-no-assimilation",
+      "body-return-is-not-Promise-settlement-or-phase-close"
+    ],
+    "work-links": [
+      "clock-failure-keeps-original-Promise-once",
+      "real-consumer-three-bind-two-read-generations",
+      "real-verifier-return-follows-private-fence-publication",
+      "same-binding-context-reentrant-preparation-cannot-steal-verifier",
+      "foreign-factory-and-context-body-is-neutral",
+      "internal-read-Promise-adoption-keeps-child-generation-live",
+      "observer-open-latch-precedes-return-marker-hook",
+      "analysis-two-reads-are-outside-five-validation-slots",
+      "refused-method-once-Promise-receiver-Error-and-undefined",
+      "controlled-host-and-planner-are-not-native-authority-proof"
+    ],
+    "native-chain": [
+      "real-native-read-bodies-complete-without-lookup-detail",
+      "real-native-wrapped-and-preimage-calls-preserved",
+      "real-native-queue-prefix-before-release",
+      "real-native-write-and-post-write-boundaries-distinct"
+    ],
+    "persistence-tail": [
+      "first-persistence-requires-first-analysis-phase",
+      "operation-true-is-not-transaction-identity",
+      "queue-prefix-does-not-fabricate-BEGIN-or-commit",
+      "post-write-binding-remains-distinct",
+      "reentrant-terminal-freezes-open-prefix-without-late-close"
+    ],
+    "capacity": [
+      "five-reserved-generations-have-eight-real-control-await-points",
+      "refused-second-generation-cannot-close-first",
+      "thirteen-scopes-independent-of-retired-lookups",
+      "six-hundred-works-survive-general-detail-cap",
+      "six-hundred-neutral-lookups-cannot-consume-thirteen-binding-scopes",
+      "critical-sites-and-tail-survive-general-cap",
+      "global-four-body-checkpoints-survive-cap",
+      "exact-163-reserved-lines-with-forty-plus-four-late-slots",
+      "terminal-reserved-at-full-cap"
+    ],
+    "mechanism": [
+      "Finance-observation-return-does-not-invent-work",
+      "fresh-false-and-absent-optional-verifier-have-no-fabricated-return",
+      "refused-second-generation-cannot-close-first",
+      "thirteen-scopes-independent-of-retired-lookups",
+      "duplicate-and-tardy-thunk-never-replay",
+      "mechanism-result-and-swallowed-error-not-authoritative",
+      "before-noinvoke-after-faults-preserve-work",
+      "scope-fallback-disables-attribution",
+      "refused-method-noop-ALS-and-getStore-throw-never-inherit-owner"
+    ],
+    "sink-zero": [
+      "sink-zero-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "sink-partial": [
+      "sink-partial-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "sink-throw": [
+      "sink-throw-latches-once",
+      "restored-sink-is-not-retried",
+      "product-undefined-throw-survives-sink-fault",
+      "incomplete-prefix-has-no-fabricated-terminal"
+    ],
+    "forwarder": [
+      "forwarder-real-chunk-identity-and-multilines",
+      "forwarder-only-real-LF-no-EOF-promotion",
+      "forwarder-ASCII-byte-bound-before-LF",
+      "forwarder-invalid-diagnostic-latches",
+      "forwarder-unrelated-long-lines-ignored",
+      "forwarder-zero-partial-undefined-throw-no-retry",
+      "forwarder-191-events-and-191KiB",
+      "forwarder-one-disabled-and-exclusive-mode"
+    ]
+  },
+  "isolationAndBounds": {
+    "modesRunSequentially": true,
+    "childLauncher": "AppProcess via Effect/LayerNode with Omni before/after snapshots; one expected spawn and zero delegations per successful child.",
+    "childTimeoutMs": 3000,
+    "childForceKillAfterMs": 1000,
+    "childKillSignal": "SIGTERM",
+    "childStdoutCapBytes": 65536,
+    "childStderrCapBytes": 65536,
+    "childReceiptCapBytes": 16384,
+    "parentReportCapBytes": 16384,
+    "parentBunTimeoutMs": 45000,
+    "focalCommandCapMs": 60000,
+    "focalParentCapMs": 90000,
+    "childNominalTimeoutSumMs": 30000,
+    "childNominalGraceSumMs": 10000,
+    "caveat": "Timeout and grace sums do not include setup/scheduling/teardown and are not a guarantee of fitting the parent or job. The two stream caps are separate. A truncation flag is distinct from timeout/kill.",
+    "productSelection": "No original request is acquired by these controls; every completed child must report requestGets=0.",
+    "cleanup": "Existing finally blocks restore observer mechanism/clock hooks, argv/cwd/environment and remove the two synthetic temporary directories. The real consumer releases its pause and disposes its store in its cleanup path. A killed process does not prove that finally completed."
+  },
+  "workLinks": {
+    "actualImplementations": [
+      "LocalStore",
+      "C08 product state provider",
+      "createCriterionRuleRegistry",
+      "createSfDecisionResultStore",
+      "createCriterionComparisonBindings",
+      "createPortfolioProofVerifier"
+    ],
+    "controlledInputs": [
+      "host authorization",
+      "UI/domain context identity",
+      "source fences",
+      "Planner comparison result",
+      "scenario/fence returns"
+    ],
+    "proofPublication": "The real proof verifier's private snapshot acceptance is false inside its observation callback and true only after its complete return. This covers publication order under controlled dependencies, not native Finance authority admission.",
+    "selectedValidationPopulation": 5,
+    "selectedValidationPoints": 40,
+    "additionalUnselectedAnalysisReadValidations": 4,
+    "totalControlledValidations": 9,
+    "beforePublicationFalseChecksExpected": 9,
+    "afterPublicationTrueChecksExpected": 9,
+    "criteriaEvaluationsExpected": 9,
+    "invocationIsolation": [
+      "Three actual preparatory reads attempt to obtain the active ancestor's verifier: same binding/context, another factory with the same context, and the same factory with another context.",
+      "The same-binding/context attack executes inside the actual host preparation callback. It cannot obtain current validation, reserve a verifier, close the ancestral validation or take a new binding method.",
+      "A refused second generation returns undefined and cannot close the first generation.",
+      "A paused second validation in the real internal read keeps its original Promise adoption pending after outer bind returns that read. No persist/binding return is fabricated before release.",
+      "A late observer work callback is triggered from the return-marker sink after original open=false; it is refused without additional evaluation."
+    ],
+    "originalReturnChecks": "Undefined/refused method work is invoked once with its receiver, original Promise identity, Error identity and throw undefined preserved.",
+    "syntheticLimit": "The consumer is a diagnostic attribution control. It is not an installed UI test or a new native Finance/dispatcher/LocalEntry authorization proof."
+  },
+  "capacity": {
+    "genericWorks": 600,
+    "neutralCandidateReadCalls": 600,
+    "populationsDistinct": true,
+    "actualDomainQualification": false,
+    "firstOwnerPrivate": true,
+    "duplicateGenerationRefused": true,
+    "lateScopes": 13,
+    "validationPoints": 40,
+    "analysisBindingPoints": 4,
+    "expectedCompleteSyntheticRows": 163,
+    "expectedUnitCloses": 28,
+    "expectedBodyCheckpoints": 4,
+    "expectedCanonicalFinanceRows": 8,
+    "expectedPersistenceRows": 36,
+    "retiredLookupRows": 0,
+    "scopeReserveIndependent": "The neutral candidate-read path returns before old routeScope admission. General detail saturation and 600 lookup calls cannot consume the 13 validation/binding scopes or the 40+4/tail/terminal reservations.",
+    "condition": "These counts are asserted by the proposed synthetic control. They have not been executed or observed in E16."
+  },
+  "faultCoverage": [
+    {
+      "mode": "mechanism",
+      "fault": "no-op ALS run under the active fifth validation",
+      "covered": "The refused-method body cannot inherit its active ancestor; attribution is disabled before work, which is invoked once."
+    },
+    {
+      "mode": "mechanism",
+      "fault": "getStore throws after the previous disabling fault",
+      "covered": "The already-disabled frame does not regain attribution; original work is preserved.",
+      "notCovered": "A separate fresh getStore-throw fault while an admitted validation ancestor is active."
+    },
+    {
+      "mode": "work-links",
+      "fault": "clock throws after the binding operations",
+      "covered": "The original Promise is returned once and elapsed observation becomes unavailable.",
+      "notCovered": "A clock throw at every possible active-validation boundary."
+    },
+    {
+      "mode": "sink-zero",
+      "fault": "synthetic write hook returns zero",
+      "covered": "One attempted fragment/sink latch; restoration does not retry; original throw undefined survives."
+    },
+    {
+      "mode": "sink-partial",
+      "fault": "synthetic write hook reports a partial write",
+      "covered": "Prefix remains incomplete; no fabricated LF or terminal; no retry."
+    },
+    {
+      "mode": "sink-throw",
+      "fault": "synthetic write hook throws undefined",
+      "covered": "Fault is contained and that sink stays disabled; original product throw value is preserved."
+    },
+    {
+      "mode": "forwarder",
+      "fault": "chunk boundaries, missing LF, non-ASCII/oversized/invalid frames and sink faults",
+      "covered": "Actual forwarder retains only complete observed LF records and enforces hard stream limits."
+    }
+  ],
+  "inheritedAndNewMechanismChecks": {
+    "once": "Before/noinvoke/after failures, duplicate and tardy thunks, swallowed mechanism errors and returned substitutes retain the original one-call outcome.",
+    "shortCircuit": "Fresh=false and an absent optional verifier produce no fabricated real verifier-entry or verifier-return marker. This deliberately synthetic protocol sequence does not claim that a false verifier would let product code continue.",
+    "requestClosure": "Reentrant close freezes the cut; later descendants do not mutate terminal counters or emit late rows. Missing or incomplete terminal is preserved as prefix evidence.",
+    "syscallLimit": "Write/clock/ALS faults here are synthetic hooks. Physical filesystem failure and every combined active-ancestor fault permutation are not asserted as dynamically covered."
+  },
+  "report": {
+    "prefix": "SF_E16_ROUTE_CONTROL ",
+    "schema": "sf-preview-e16-control-v1",
+    "synthetic": true,
+    "childModes": 10,
+    "labelEntries": 64,
+    "uniqueLabels": 56,
+    "runtimePids": "PIDs and digests remain dynamic fields. No exact precomputed runtime receipt is required by the carrier.",
+    "model": {
+      "status": "PURE_DATA_UPPER_WIDTH_NOT_RUNTIME_NO_STANDALONE_BLOB",
+      "bytes": 9180,
+      "sha256": "0051ba3d821ca1f1c9442c34782aac4b14e79a4708a4b25637d4e4ef68dd7fa7",
+      "lf": 1,
+      "capBytes": 16384,
+      "headroom": 7204,
+      "assumptions": "Ten successful child envelopes, maximum safe integer PIDs/widths and conservative capped counters/digests. Some maxima are deliberately unreachable together; this is a serialization width model, not an emitted result.",
+      "literal": "SF_E16_ROUTE_CONTROL {\"schema\":\"sf-preview-e16-control-v1\",\"synthetic\":true,\"childModes\":[\"route-owner\",\"work-links\",\"native-chain\",\"persistence-tail\",\"capacity\",\"mechanism\",\"sink-zero\",\"sink-partial\",\"sink-throw\",\"forwarder\"],\"reports\":[{\"pid\":9007199254740991,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"route-owner\",\"pid\":9007199254740991,\"synthetic\":true,\"checks\":[\"first-canonical-private-owner-across-suspension\",\"second-canonical-and-Finance-cannot-steal\",\"retired-lookups-preserve-values-Promises-thenables-and-undefined\",\"undefined-and-closed-route-mask-ambient\",\"real-LF-prefix-before-completion\",\"exact-Promise-and-thenable-no-assimilation\",\"body-return-is-not-Promise-settlement-or-phase-close\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740990,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"work-links\",\"pid\":9007199254740990,\"synthetic\":true,\"checks\":[\"clock-failure-keeps-original-Promise-once\",\"real-consumer-three-bind-two-read-generations\",\"real-verifier-return-follows-private-fence-publication\",\"same-binding-context-reentrant-preparation-cannot-steal-verifier\",\"foreign-factory-and-context-body-is-neutral\",\"internal-read-Promise-adoption-keeps-child-generation-live\",\"observer-open-latch-precedes-return-marker-hook\",\"analysis-two-reads-are-outside-five-validation-slots\",\"refused-method-once-Promise-receiver-Error-and-undefined\",\"controlled-host-and-planner-are-not-native-authority-proof\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740989,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"native-chain\",\"pid\":9007199254740989,\"synthetic\":true,\"checks\":[\"real-native-read-bodies-complete-without-lookup-detail\",\"real-native-wrapped-and-preimage-calls-preserved\",\"real-native-queue-prefix-before-release\",\"real-native-write-and-post-write-boundaries-distinct\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740988,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"persistence-tail\",\"pid\":9007199254740988,\"synthetic\":true,\"checks\":[\"first-persistence-requires-first-analysis-phase\",\"operation-true-is-not-transaction-identity\",\"queue-prefix-does-not-fabricate-BEGIN-or-commit\",\"post-write-binding-remains-distinct\",\"reentrant-terminal-freezes-open-prefix-without-late-close\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740987,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"capacity\",\"pid\":9007199254740987,\"synthetic\":true,\"checks\":[\"five-reserved-generations-have-eight-real-control-await-points\",\"refused-second-generation-cannot-close-first\",\"thirteen-scopes-independent-of-retired-lookups\",\"six-hundred-works-survive-general-detail-cap\",\"six-hundred-neutral-lookups-cannot-consume-thirteen-binding-scopes\",\"critical-sites-and-tail-survive-general-cap\",\"global-four-body-checkpoints-survive-cap\",\"exact-163-reserved-lines-with-forty-plus-four-late-slots\",\"terminal-reserved-at-full-cap\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740986,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"mechanism\",\"pid\":9007199254740986,\"synthetic\":true,\"checks\":[\"Finance-observation-return-does-not-invent-work\",\"fresh-false-and-absent-optional-verifier-have-no-fabricated-return\",\"refused-second-generation-cannot-close-first\",\"thirteen-scopes-independent-of-retired-lookups\",\"duplicate-and-tardy-thunk-never-replay\",\"mechanism-result-and-swallowed-error-not-authoritative\",\"before-noinvoke-after-faults-preserve-work\",\"scope-fallback-disables-attribution\",\"refused-method-noop-ALS-and-getStore-throw-never-inherit-owner\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,64,64,65535],\"routeCoverage\":[1,0,0,1,65535,1],\"faultsBefore\":[1,1,1,1,1,1],\"saturated\":false}},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740985,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"sink-zero\",\"pid\":9007199254740985,\"synthetic\":true,\"checks\":[\"sink-zero-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":null},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740984,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"sink-partial\",\"pid\":9007199254740984,\"synthetic\":true,\"checks\":[\"sink-partial-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":null},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740983,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"sink-throw\",\"pid\":9007199254740983,\"synthetic\":true,\"checks\":[\"sink-throw-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"requestGets\":0,\"records\":191,\"stdoutAttempts\":65535,\"stdoutBytes\":195584,\"stdoutSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"fileAttempts\":65535,\"fileBytes\":195584,\"fileSha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"terminal\":null},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":9007199254740982,\"report\":{\"schema\":\"sf-preview-e16-control-child-v1\",\"mode\":\"forwarder\",\"pid\":9007199254740982,\"synthetic\":true,\"checks\":[\"forwarder-real-chunk-identity-and-multilines\",\"forwarder-only-real-LF-no-EOF-promotion\",\"forwarder-ASCII-byte-bound-before-LF\",\"forwarder-invalid-diagnostic-latches\",\"forwarder-unrelated-long-lines-ignored\",\"forwarder-zero-partial-undefined-throw-no-retry\",\"forwarder-191-events-and-191KiB\",\"forwarder-one-disabled-and-exclusive-mode\"],\"requestGets\":0,\"framingOnly\":true,\"stdoutAttempts\":65535,\"completeLines\":65535,\"partialFragments\":65535,\"terminal\":null},\"omniSpawns\":1,\"omniDelegations\":0}]}\n"
+    },
+    "carrierAcceptance": "Existing child exit/truncation/receipt assertions and the whole-file process exit remain required. G11 checks the report prefix; a prefix alone does not accept a failing file.",
+    "noRuntimeResults": {
+      "pass": null,
+      "fail": null,
+      "assertions": null,
+      "elapsedMs": null,
+      "omniActual": null
+    }
+  },
+  "limits": [
+    "Only the ten bounded child controls execute this synthetic evidence protocol if hosted CI is authorized later.",
+    "work-links uses real LocalStore/C08, consumer and proof-verifier implementations; host/authentication, source fences, controlled comparison result, Planner return and context are synthetic.",
+    "The proof publication assertion verifies the real verifier's private publication order under these controlled inputs; it is not a native Finance authority or installed UI proof.",
+    "native-chain keeps the actual inherited C08/Source/CurrentChoice/LocalStore operations; retired lookup-detail assertions are removed because E16 intentionally has no such emissions.",
+    "Synthetic protocol checks are distinct from the real consumer controls and do not accept a domain result.",
+    "The 600 candidate-read calls and 600 general works are distinct populations. Their eventual execution is not yet observed.",
+    "No repository execution, original GET, ZIP, tree, commit, ref or run occurred in this authoring step.",
+    "No byte of the current C22 test b8f59389 or its five declarations/three reports is changed by these E16 controls.",
+    "No claim that every fault was exercised under an active validation; the faultCoverage table is the exact intended coverage.",
+    "The 9180-byte parent model is data only and is not created as an independent model-result Git blob.",
+    "Diagnostic intervals and counters do not establish CPU attribution, a cause, performance improvement or UI qualification."
+  ],
+  "authorActivity": {
+    "repositoryExecution": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0
+  }
+}

@@ -1,0 +1,323 @@
+{
+  "schema": "sf613-e16-focal-carrier-independent-review-v1",
+  "status": "ACK_STATIC_CARRIER_ONLY",
+  "reviewer": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "cut": "2026-11-28 15:15:39 UTC",
+  "scope": "Independent static review of the focal carrier and its derivation. E16 source and control semantics are reviewed separately by /root/review_archive.",
+  "artifacts": {
+    "baseTemplate": {
+      "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+      "bytes": 15595,
+      "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "template": {
+      "git": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+      "bytes": 18300,
+      "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+      "lf": 247,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "git": "da165a7dbf13ff16ee9f99a11b861777c3af6df7",
+      "bytes": 30149,
+      "sha256": "9ec9374ff08192b24908c40f06c811d8568d293e25a3138ed203f13a25bb04ec",
+      "lf": 538,
+      "endsWithLF": true
+    },
+    "patch": {
+      "git": "aca910aba88694c02d305a9b9e7f6426fa82dfc5",
+      "bytes": 14519,
+      "sha256": "af3cb7b8b0456136353cb49097b7362ebdb506bdf06c3f66ae8d4a2c256ae18f",
+      "lf": 153,
+      "endsWithLF": true
+    },
+    "fullSnapshotPatch": {
+      "git": "6f9981aa08e68e4847561b7df256009670d94bf9",
+      "bytes": 108114,
+      "sha256": "493fb6df9d649ad998efa2258d783326806f45879cd1a0198288fece0635022a",
+      "lf": 1618,
+      "endsWithLF": true
+    },
+    "sourceSupport": {
+      "git": "a0955763721e66b7de60ecb572d60410473a9560",
+      "bytes": 387718,
+      "sha256": "2e0d3603bbc126f9f3c0c94897c3dcd85ef06203491eb03d45cca834aa08f151",
+      "lf": 3244,
+      "endsWithLF": true
+    },
+    "runner": {
+      "git": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+      "bytes": 1172,
+      "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+      "lf": 24,
+      "endsWithLF": true
+    },
+    "fixture": {
+      "git": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+      "bytes": 85250,
+      "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+      "lf": 1320,
+      "endsWithLF": true
+    },
+    "focalRequest": {
+      "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "sourceAnalyticsRequest": {
+      "git": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "inheritedWorkflow": {
+      "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true
+    },
+    "boundsEffective": {
+      "git": "73a772ec45451bdec486c532110c03612a96ccc9",
+      "bytes": 23023,
+      "sha256": "4c6c0c22b6d6e8f29a509221f1eed269b7b8e5139bb10538cf1df6e693916a78",
+      "lf": 711,
+      "endsWithLF": true
+    },
+    "boundsHistorical": {
+      "git": "72f922f949da6422accb097f96d4de28f028e02b",
+      "bytes": 22871,
+      "sha256": "1cf6014418e2523265fd3220f12754c7a085f6d0e9c7fc5a4fdedd034ca5ba3f",
+      "lf": 707,
+      "endsWithLF": true
+    },
+    "boundsAmendment": {
+      "git": "846b3ec830fafb0d0c857f572b981b0508b79c06",
+      "bytes": 3249,
+      "sha256": "0878581441a119e3e446e5ebb194d7b882c7e08be58e99e4415c470c068a83f2",
+      "lf": 77,
+      "endsWithLF": true
+    },
+    "jointManifest": {
+      "git": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+      "bytes": 54996,
+      "sha256": "d6af1967a9bc5a700315cd495e4e78a6304d95c01036c774ae619655998555cb",
+      "lf": 1443,
+      "endsWithLF": true
+    }
+  },
+  "proof": {
+    "operations": 17,
+    "intermediateFingerprintsCheckedInMemory": true,
+    "intermediateObjectsFetched": 0,
+    "directAndInverseLiteral": true,
+    "carrierPatch": {
+      "files": 1,
+      "hunks": 5,
+      "added": 51,
+      "removed": 24,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "fullSnapshotPatch": {
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "mode": "modify",
+          "hunks": 1
+        },
+        {
+          "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+          "mode": "add",
+          "hunks": 1
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+          "mode": "add",
+          "hunks": 1
+        },
+        {
+          "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+          "mode": "add",
+          "hunks": 1
+        }
+      ],
+      "hunks": 4,
+      "added": 1592,
+      "removed": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "engine": "literal R7 runCommand",
+    "inheritedGroups": "G2 through G10 literal",
+    "g1": "diagnostic metadata and working pins, depth3 and source sole-parent check against R7",
+    "onlyTwoExecutableBindings": [
+      "__SF613_SOURCE_SHA__",
+      "__SF613_SOURCE_TREE__"
+    ],
+    "boundModelBytes": 18339,
+    "boundModelStatus": "calculated width only; no bound object asserted",
+    "boundsAmendment": {
+      "operations": 2,
+      "forwardInverseLiteral": true,
+      "deltaBytes": 152,
+      "deltaLf": 4,
+      "codeChanged": false
+    }
+  },
+  "sourceAndSnapshot": {
+    "sourceBase": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "sourceBaseTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "sourceDelta": {
+      "modified": 18,
+      "added": 2
+    },
+    "focalDelta": {
+      "modified": 1,
+      "added": 3
+    },
+    "workingPins": {
+      "total": 40,
+      "oldPaths": 25,
+      "oldLiteral": 18,
+      "oldRetargeted": 7,
+      "newModifiedSourcePaths": 11,
+      "newHelper": 1,
+      "newDiagnosticControls": 2,
+      "snapshotRequest": 1
+    },
+    "requestDifference": "Source has original Analytics request eda49a; focal working tree hashes the replacement request 4a7b64. All other nineteen instrumented source code/helper paths are included in working pins.",
+    "selfPin": "No executable Git self-hash; the driver is bound by snapshot tree review."
+  },
+  "selection": {
+    "groups": 11,
+    "commands": 17,
+    "truncationFields": 34,
+    "workingPins": 40,
+    "functionalProcesses": 7,
+    "expectedDeclarations": 23,
+    "expectedReportEmissions": 12
+  },
+  "newControl": {
+    "declarations": 1,
+    "literalExpectSites": 8,
+    "perModeExpectSites": 5,
+    "modeCount": 10,
+    "outsideLoopExpectSites": 3,
+    "fullSuccessfulPathExpectCalls": 53,
+    "bunTimeoutMs": 45000,
+    "prefix": "SF_E16_ROUTE_CONTROL ",
+    "schema": "sf-preview-e16-control-v1",
+    "pids": "runtime dynamic",
+    "capBytesIncludingPrefixLF": 16384,
+    "receiptValidation": "Carrier requires prefix after successful bounded whole-file exit; the pinned runner and fixture validate schema/mode/synthetic flags, positive safe PID, ten distinct PIDs, private child Omni deltas and 16KiB parent line. Runtime payload is not compared to a calculated literal.",
+    "semanticReview": "E16 control scenarios and source semantics are outside this receipt; Archive confirmed no material finding and is preserving its independent receipt separately."
+  },
+  "budgets": {
+    "commandsMs": 2130000,
+    "parentMs": 2820000,
+    "jobMs": 2700000,
+    "parentsMinusJobMs": 120000,
+    "fitGuaranteed": false
+  },
+  "outputBounds": {
+    "outerPerCommandPerStreamBytes": 1048576,
+    "outerConfiguredTwoStreamSumBytes": 35651584,
+    "childModes": 10,
+    "childPerStreamBytes": 65536,
+    "childrenConfiguredTwoStreamSumBytes": 1310720,
+    "parentControlReportBytes": 16384,
+    "neitherIsWholeMainCap": true
+  },
+  "interpretationLimits": [
+    "All declarations, report emissions and truncation-field counts are expectations for this exact selection; actual footers and statuses require a future preserved run.",
+    "The new runner receipt contains dynamic child PIDs and measured values. No literal receipt model is accepted as execution evidence.",
+    "The ten isolated E16 children are a named population separate from the seventeen outer commands, not a universal subprocess count.",
+    "Parent ceilings sum to47 minutes while the inherited workflow job is45 minutes; neither this sum nor command ceilings guarantee completion within the shared job deadline.",
+    "Per-stream output ceilings are not a limit on the full Actions main log.",
+    "Analytics waiters60/120 and product fence30 are outside this carrier delta and remain governed by the separate source review.",
+    "No current UI qualification, functional equivalence outside diagnostic limits or performance result is asserted."
+  ],
+  "objects": {
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null
+  },
+  "actions": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecution": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "productCodeAuthored": 0
+  },
+  "verificationSummary": {
+    "pureDataChecks": 233,
+    "positive": 233,
+    "negative": 0,
+    "runtimeTestsExecuted": 0,
+    "groups": {
+      "carrierDerivationHashesAndRoundtripPlusSourceUnion": 130,
+      "engineSelectionAncestryAndBudgets": 37,
+      "fullFocalPatch": 13,
+      "boundsAmendmentAndLinkage": 25,
+      "manifestLinkage": 28
+    }
+  },
+  "findingsRemaining": [],
+  "resolvedDocumentaryFindings": [
+    {
+      "field": "preservation.oldArgumentsCwdAndDeadlinesLiteral",
+      "reason": "The original blanket statement did not state the two G1 ancestry argv exceptions.",
+      "resolution": "Effective bounds R2 explicitly state fetch depth2-to-depth3 and format adding %P; cwd/deadlines remain literal."
+    },
+    {
+      "field": "snapshotScope.reason",
+      "reason": "The 247-byte request is package cli.",
+      "resolution": "Effective bounds call it focal CLI request."
+    }
+  ],
+  "expectedReportEmissionMap": [
+    {
+      "selection": "cases-read-contract",
+      "emissions": 0
+    },
+    {
+      "selection": "c08-snapshot-projection",
+      "emissions": 5
+    },
+    {
+      "selection": "portfolio-selection-preferences-read",
+      "emissions": 1
+    },
+    {
+      "selection": "scenario-lookup-selection",
+      "emissions": 1
+    },
+    {
+      "selection": "scenario-candidates-native-projection",
+      "emissions": 1
+    },
+    {
+      "selection": "criterion-comparison-preferences-read",
+      "emissions": 3
+    },
+    {
+      "selection": "sucafina-preview-route-e16-diagnostic",
+      "emissions": 1,
+      "prefix": "SF_E16_ROUTE_CONTROL "
+    }
+  ],
+  "readScope": "Carrier and runner selection/protocol read completely; fixture launcher/receipt surface read for path/cap/selection only. Source support read for finite pin-map linkage. No claim to duplicate the source or control semantic review.",
+  "requiredNextAuthority": "Actual source/snapshot tree audit, exact two-token binding, and any execution/reception are root-owned. This static receipt neither starts a run nor qualifies original Analytics."
+}

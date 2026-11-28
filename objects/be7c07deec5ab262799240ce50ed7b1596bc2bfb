@@ -1,0 +1,194 @@
+{
+  "schema": "sf613-e16-focal-final-negative-receipt-v1",
+  "status": "CLOSED_NEGATIVE_TYPECHECK_SOURCE_AND_SNAPSHOT_REJECTED",
+  "at": {
+    "current_time": "2026-11-28 16:00:36 UTC"
+  },
+  "source": {
+    "sha": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+  },
+  "snapshot": {
+    "sha": "933e3ed2bc9a75526ff1236773570153986c1bb8",
+    "tree": "ccccc170d69c50bae3964f8434c642bc147e687f"
+  },
+  "run": {
+    "id": 46160549382,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46160549382",
+    "conclusion": "failure",
+    "main": {
+      "id": 141026681143,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 141028491347,
+      "conclusion": "success"
+    }
+  },
+  "terminalMetadata": {
+    "gitBlob": "771ded2c9794014f2fe0277dffc29c0495ebe1b7",
+    "bytes": 26178,
+    "sha256": "48788326856ccd83768c909cab09c0dd4d81a8adcccfcb872a8e41fa7bcd1a9e",
+    "lf": 566,
+    "endsWithLF": true
+  },
+  "closure": {
+    "gitBlob": "24b2f8d905838a97cf420a1ed27fec8e23770d65",
+    "bytes": 1844,
+    "sha256": "0478ff473f2a4c368873e6017ec239695571a3c7defa9c9ed6209368986c16b3",
+    "lf": 63,
+    "endsWithLF": true
+  },
+  "closedAt": {
+    "current_time": "2026-11-28 15:44:32 UTC"
+  },
+  "copies": {
+    "main": {
+      "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+      "bytes": 149216,
+      "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d",
+      "lf": 1097,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "1e84e3fc894d6686dc9d83b211faa39c20739d1f",
+      "bytes": 1697,
+      "sha256": "1b46b8ad8ad4b38b87af8d9c56fd293a6803eeccc4498b817261cdc58025b6d1",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "b2b3fdffd348b525b2b2a624976295db747bda25",
+      "bytes": 2280,
+      "sha256": "6b76684d0522dcc0df4d1c6e378b966446908062c112cfd3bc53a54a6dd5b416",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "d1b26be1b1028942a631693900cff6bbb23fbbac",
+      "bytes": 1684,
+      "sha256": "46c8da84982c659c50c199f4fa06e0d9809a0d1cf98122fa89cb3964d9c1fbf1",
+      "lf": 60,
+      "endsWithLF": true
+    }
+  },
+  "extraction": {
+    "gitBlob": "f345b4c902e0aa0cecb5a2fbe2ae8c8fa8f8befd",
+    "bytes": 176586,
+    "sha256": "c8b4fe2708a251b3a5554e7160ef557d7e7884110fb3e67979340c8fb8559bd9",
+    "lf": 3452,
+    "endsWithLF": true
+  },
+  "rootIntake": {
+    "gitBlob": "c33da64ec5caa1eeca3642281567e16ea9aaae75",
+    "bytes": 12053,
+    "sha256": "aea429bdc837703a96763aae9bd4057fdb8c9a07a395553bd2dce01c56097b38",
+    "lf": 396,
+    "endsWithLF": true
+  },
+  "independentIntake": {
+    "gitBlob": "4b8b8d03c1f0479353ff5801383b7d3e9cfca32d",
+    "bytes": 35881,
+    "sha256": "26ca32f7a8a139b96ad7b7f66a5b373ef34ed90225f0c9e84c69776bb67b5cd6",
+    "lf": 1122,
+    "endsWithLF": true
+  },
+  "intakeDiscrepancies": [],
+  "counts": {
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "zipGets": 0,
+    "commands": 17,
+    "falseTruncationFlags": 34,
+    "workingPins": 40,
+    "hostPreambles": 11,
+    "functionalProcesses": 7,
+    "functionalTestsPassed": 23,
+    "functionalTestsFailed": 0,
+    "functionalAssertions": 2747,
+    "outerTestsPassed": 9,
+    "outerTestsFailed": 2,
+    "outerAssertions": 67,
+    "controlReports": 12,
+    "E16Modes": 10,
+    "E16ParentAssertions": 53,
+    "E16ReportBytes": 8688
+  },
+  "failure": {
+    "processes": [
+      "CLI package typecheck",
+      "Sucafina package typecheck"
+    ],
+    "exitCode": 2,
+    "diagnosticOccurrences": 7,
+    "distinctSites": 4,
+    "sites": [
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "line": 299,
+        "column": 68,
+        "diagnostic": "TS2345"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "line": 816,
+        "column": 66,
+        "diagnostic": "TS18048"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "line": 817,
+        "column": 53,
+        "diagnostic": "TS18048"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "line": 818,
+        "column": 51,
+        "diagnostic": "TS18048"
+      }
+    ],
+    "timeoutOrTruncationNotObservedAsCause": true
+  },
+  "limitations": [
+    "The complete child diagnostic streams were not separately acquired or archived by this reviewer. Hashes, row counts and file statistics are values reported by the pinned child tests; the observed parent/control success is preserved.",
+    "stdoutBytes/stdoutSha256 in a non-forwarder child summarize its captured complete-line buffer; a partial stdout fragment is not included in that buffer. The partial file count remains840 versus627 complete stdout bytes.",
+    "forwarder197 complete lines/200 writes/1 fragment span multiple independently bounded forwarders; they are not a single stream violating191.",
+    "requestGets is the fixture property-access counter, not a network trace or universal HTTP request count.",
+    "Host/Planner/fence/context controls remain synthetic. The real verifier publication control is not native Finance authority or installed UI qualification.",
+    "No dynamic result overrides the two rejecting package typechecks.",
+    "Pure data and static model fingerprints are not independently created Git objects unless explicitly marked actual. The8688B E16 report remains content within the authenticated main log; its calculated Git fingerprint must not be GET as a separate blob.",
+    "Open-unit/phase cuts and synthetic clock/ALS/sink fault indicators were retained. They were not normalized to zero or treated as unexpected product failures.",
+    "Source G1 identity bb5e7df0/T42f7fd26 is distinct from the clean baseline ad3a4a75/T11bf210f embedded in diagnostic events.",
+    "No UI42/UI43/UI44 qualification, final candidate, tar, go-live gate or production approval follows from this focal."
+  ],
+  "rootLabelClarification": "The root check label 'synthetic scope explicit and zero extra requests' only checked the child requestGets property-access counter. It must not be read as HTTP/network evidence. The independent receipt correctly defines this scope.",
+  "cleanup": {
+    "branch": "ci-run-sf613e16",
+    "exactRefAbsentOnReadback": true,
+    "checkedAt": "2026-11-28 15:49:55 UTC"
+  },
+  "next": {
+    "sameSnapshotRerun": false,
+    "minimalCorrectionPackage": {
+      "gitBlob": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+      "bytes": 11127,
+      "sha256": "dc08ffd3c7a9140c0d961586407a2f76d03efd774bc7f4c1eba179f4daeeec78",
+      "lf": 262,
+      "endsWithLF": true
+    },
+    "newSourceAndSnapshotRequired": true,
+    "newFocalRequired": true,
+    "AnalyticsRequiresSeparateAcceptance": true
+  },
+  "qualification": {
+    "focalAccepted": false,
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false
+  }
+}

@@ -1,0 +1,30 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts b/modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts
+index cb7eaf748d2e89fa2a274f7714bf8d031e963fb5..289523ca2b7f588337473f218476e242776d721d 100644
+--- a/modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts
++++ b/modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts
+@@ -813,9 +813,9 @@
+   const birth = currentScope()
+   if (!birth) return undefined
+   for (let method = birth.frame.validationState.methods; method; method = method.next) {
+-    const value = method.prewrite?.verifier?.handle === handle ? method.prewrite.verifier :
+-      method.initial?.verifier?.handle === handle ? method.initial.verifier :
+-      method.final?.verifier?.handle === handle ? method.final.verifier : undefined
++    const value = method.prewrite && method.prewrite.verifier?.handle === handle ? method.prewrite.verifier :
++      method.initial && method.initial.verifier?.handle === handle ? method.initial.verifier :
++      method.final && method.final.verifier?.handle === handle ? method.final.verifier : undefined
+     if (value && !value.closed && !value.validation.closed && !method.call.closed && value.frame === birth.frame) return value
+   }
+ }
+diff --git a/apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts b/apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts
+index fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e..6185635810d712e4be7dfe109422d2d65103a1a0 100644
+--- a/apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts
++++ b/apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts
+@@ -296,7 +296,7 @@
+               })
+               assert.equal(returned, promise)
+               assert.equal(calls, 1)
+-            } finally { define(AsyncLocalStorage.prototype, "run", savedRun) }
++            } finally { if (savedRun) define(AsyncLocalStorage.prototype, "run", savedRun) }
+           }
+           return true
+         })

@@ -1,3 +1,109 @@
+# sf613-evidence — R12 documentary proposal
+
+**The corrected E16R2 diagnostic focal passed for its exact source and snapshot. The subsequent original Analytics run failed both journeys.** This archive preserves the first E16 focal's typecheck rejection, the corrected focal's positive evidence, and the later Analytics negative evidence together. It adds **zero** installed UI acceptances: the historical record remains **12 of 15 areas**, and UI42–UI44 remain unqualified.
+
+This is a reviewable documentary proposal prepared at 2026-11-28 17:11:59 UTC. No R12 tree, commit, publication, workflow run, merge, verified tar or production approval is asserted. The R11 README below is retained once, literally, as an explicitly historical cut.
+
+## Exact finite scope
+
+The root supplied [the finite R12 seed](objects/61321247ee003f197a3bc7b965589a6b16713956), with **121 membership rows and 118 actual Git blob identities**. The [authenticated catalog](objects/acf2c5361dffe31c5a005cd60a3ed3b2865a1c7b) contains those identities and the seed itself once: **119 inputs / 122 memberships**. The catalog is excluded from its own inputs and included once in the index. No internal hash reference automatically expands the archive.
+
+Relative to published R11, one seed input is reused: the original 295-byte Analytics request. There are 118 new catalog inputs, including the seed, plus the catalog itself. The proposed documentary tree delta is therefore **119 added files, two modified root documents and zero deletions**.
+
+| Inventory | Published R11 | Proposed R12 |
+|---|---:|---:|
+| Unique object files | 1,190 | 1,309 |
+| Ordered object memberships | 1,454 | 1,577 |
+| Groups | 76 | 85 |
+| Typed streams | 108 | 115 |
+| Stream part references | 328 | 345 |
+| Logical object bytes | 110,746,764 | 117,889,100 |
+
+All 1,190 historical object metadata records and their order, all 1,454 membership prefixes, all 76 groups, all 108 streams and all historical documentary snapshots are preserved. No global sort changes the object sequence. Each new index membership points to its exact catalog object and membership; the catalog in turn points to the exact root-seed row.
+
+The only archive paths are `README.md`, `index.json` and `objects/<actual Git blob SHA>`, all files mode `100644`. Original product paths are metadata. No `.github`, `.ci-run.json`, `apps`, `modules` or `packages` tree is installed by this archive. The current index, README, derivation, diff, bounds and package manifest exclude themselves from the object inventory.
+
+## Actual parents and distinct source identities
+
+The proposed parent order is exactly:
+
+1. Published R11: `2deef54d8a53718f33ebfcdc2909eea11131b54f`, tree `ace807e10ee46695dc1d545405d47d42df1fbc12`.
+2. First E16 focal: `933e3ed2bc9a75526ff1236773570153986c1bb8`, tree `ccccc170d69c50bae3964f8434c642bc147e687f`.
+3. Corrected E16R2 focal: `a589b0f3c681837266a8e1b035afcd6e5c46f565`, tree `337c2030c3c38a4ab707bb0c0f0d94e2098311c5`.
+
+The first focal is a sole child of initial diagnostic source `bb5e7df013ef3404df67cd101ae3ff5c5983779b`, tree `42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0`. The corrected focal is a sole child of corrected diagnostic source `c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba`, tree `6b8fb4e676d778745ccc851efd5ad272a15254a7`. Corrected source c53 is a sole child of bb5; bb5 is a sole child of clean R7 `ad3a4a7527baf1e092e87b5478626b2f0a3be57c`, tree `11bf210f469be26630c39db586bcfcce87e0de1b`.
+
+The Analytics run used **c53 itself as source and snapshot**. The corrected focal parent retains that source ancestry, so an additional direct source parent is unnecessary. Commit/tree identities are retention metadata, never blob entries. API commit metadata and complete Git tree hashes were checked; a hash of raw commit serialization is not claimed.
+
+Retention becomes effective only after the root reviews the actual proposed objects and publishes the expected R11-to-R12 update. A textual hash alone is not reachability, and no garbage collection deadline is asserted. The author performed no ref mutation or current ref lease check.
+
+## Three closed executions
+
+| Evidence | Exact run / attempt | Main / cleanup | Result and final receipt |
+|---|---|---|---|
+| First E16 focal | [46160549382 / 1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/46160549382) | 141026681143 failure / 141028491347 success | [Typecheck rejection](objects/be7c07deec5ab262799240ce50ed7b1596bc2bfb) |
+| Corrected E16R2 focal | [46163799111 / 1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/46163799111) | 141036746242 success / 141038533976 success | [Accepted diagnostic focal only](objects/eec627390a606faaccf0ff5310b13a18a35c3d93) |
+| Original E16 Analytics | [46165435477 / 1](https://github.com/gustavomhss/Orchestra-SF/actions/runs/46165435477) | 141041831215 failure / 141044316560 success | [Both journeys failed; no qualification](objects/14c6cc43d88e95edac7f4740099e15923fb71e93) |
+
+The first focal's original reception closed at **15:44:32 UTC**, the corrected focal's at **16:19:27 UTC**, and Analytics at **16:43:38 UTC**, all on 2026-11-28. Root acquired each of the six original job logs exactly once and preserved them before interpretation. The archive author acquired **zero original endpoints and zero ZIPs**. All these original receptions remain permanently closed.
+
+### First focal: preserve the code/runner distinction
+
+The first E16 focal produced 17 command results with 34 false truncation flags, 40 working pins and 11 host identities. Fifteen commands exited zero; both typecheck commands exited two. The diagnostic set contains seven TypeScript occurrences at four unique source/test sites.
+
+The seven functional processes reported **23 passed / zero failed / 2,747 assertions**, and all 12 control reports were emitted. The outer driver reported **nine passed / two failed / 67 assertions**. Those runtime passes did not override the typecheck rejection. [The independent negative receipt](objects/4b8b8d03c1f0479353ff5801383b7d3e9cfca32d) preserves this distinction.
+
+### Corrected focal: evidence belongs to c53 / a589
+
+The corrected focal independently observed **17 exit-zero commands**, both typechecks passing, 34 false truncation flags, 40 working pins and 11 host identities. Functional footers were **23 passed / zero failed / 2,747 assertions** across seven processes; the outer footer was **11 passed / zero failed / 67 assertions**. These are this run's observed footers, not transferred counts.
+
+All 12 reports were present: eight inherited literal reports, three exact C22 models and one actual E16 parent report of **8,688 bytes**. E16 covered ten child modes with ten distinct PIDs, 64 label occurrences and 56 unique labels; its parent contributed 53 assertions. Guards reported 78 rules, 871 files, 40 inherited findings, zero errors and zero bypasses. The outer Omni observation was 17 spawns / zero delegations, scoped to the wrapper only.
+
+The [independent positive receipt](objects/ae81b3cdce23316e10baa429558c070b518af60f) accepts this bounded diagnostic focal. `requestGets` is a property-access counter, not an HTTP request count. Synthetic stream hashes/counts are assertions in the tests; this archive does not separately acquire every isolated synthetic stream. Models and fingerprints do not become additional actual blobs. No installed UI, final candidate or performance improvement is qualified by the focal.
+
+## Original Analytics: two failures, zero passes
+
+The two original tests retained worker one, retry zero, repeat one and the original 60-second preview / 120-second sensitivity waiters. The portfolio journey timed out at its original first preview response wait. History requests one and two returned HTTP 200 with status ok. Preview request three was observed; a corresponding preview response was not.
+
+Only six UI42 captures were reached. UI43 and UI44 were not reached. The second, BI journey also failed; an earlier attempt's BI pass is not transferred to this source.
+
+BI01 supplied partial HTTP 200 evidence: 36 rows, 14 numeric values, 22 missing values and 48 bindings. Its scalar DOM observations were empty, so this is not a scalar equality proof. BI06's original acquisition failed with `net::ERR_ABORTED`; the native request failure was at main line 1918, network-loading-failed at 1920 and the failure diagnostic at 1922. It reported `sameNativeRequest:false`, `bodyObserved:false`, no HTTP status, `canceled:true` and `teardownPhase:"observing"`.
+
+The page-closed record appears later, at line 1938. The visible order does not establish which caller canceled the request or why. The rendered operational DOM at line 1924 is partial evidence and does not recover the failed original response body. Complete original BI06 readback, scalar comparisons and the outside-selected-value 403 negative proof were not observed in this run. There is no current BI pass.
+
+[The independent Analytics receipt](objects/db0f68569ed94114f2c86002004228f89fec0ad9) and [root receipt](objects/14c6cc43d88e95edac7f4740099e15923fb71e93) agree on the negative outcome and its limits.
+
+## E16 event prefix and representation
+
+There are **107 complete events**, one tuple, sequence 1–107, no gaps, duplicate or divergent payloads. Their wire `source/sourceTree` remains the clean R7 baseline ad3 / 11bf; wire `snapshot` is the executed diagnostic c53. These identities have distinct meanings.
+
+All five reserved first-persistence validation slots emitted their eight points, totaling 40 points. The first persistence phase closed at **60,343.8 ms**. The final event is sequence 107, `analysis-binding initial enter`, at **60,451.8 ms**. No subsequent read return or request-close was observed. A missing terminal fault summary does not prove zero faults. Inclusive observed intervals are not isolated operation costs, physical Finance admission, cache evidence or an exclusive explanation for the timeout.
+
+The [actual event union](objects/b50584894baa261df2d5da44cba3d35b160fabf9) contains **JSON payload plus LF only**, 58,181 bytes and 107 LF. The separately calculated 60,428-byte framed representation adds a 21-byte prefix per event; it was not created or listed as an actual object. Both representations describe the same literal payload sequence. Maximum observed framed line size is 654 bytes.
+
+## Complete log preservation; no artifact content claim
+
+Six new original streams contribute 16 actual part references. The actual derived event union contributes one additional stream and one part reference: **seven streams / 17 references** total.
+
+Five original logs have actual whole Git blobs. Analytics main has **11 ordered actual parts**, recomposed without separators or normalization to **3,158,165 bytes**, 2,108 LF and SHA256 `8ea467a007cb3883c472c62940dae09c22fc9bb8d375a9fd63110ea35eaa1f85`. Its whole Git hash `1017bc4ca27f71c6129c836d08dcf66112368437` is calculated only and was neither fetched nor listed as an actual object. Its two BOMs are preserved at byte offsets 0 and 2,115,242 / UTF-16 offsets 0 and 2,110,429. All six manifest ranges, actual part hashes, recompositions, LF counts and BOM offsets were checked.
+
+The log preserves 27 case-and-name JPEG preview groups in 132 chunks, totaling 2,899,952 base64 characters / 2,174,935 decoded bytes, within the original 6 MiB cap. Strict base64 and JPEG boundary checks are documentary checks, not visual inspection. There are 25 capture rows and 29 PNG attachment declarations; these are different counts. Same-named failure images in different cases were not merged.
+
+Artifact **15271693277**, `playwright-ubuntu-24.04-1`, is metadata only: 30,512,295 bytes, digest `34fd07642643e577f18a834e4c86b1c8bdb2cd497d4b2b4269c9e2bfcfd3fe8c`, expiry 2026-12-05T16:38:39Z. No ZIP or original PNG was acquired or visually inspected. Ninety-four upload paths do not establish a ZIP entry count. Six reached UI42 captures do not satisfy the complete reader's 33 required UI42–UI44 captures; no partial package is promoted to acceptance.
+
+## Current state and remaining work
+
+The [original-closed checkpoint](objects/2feefae2fee573b5640ab34a7c8611e634ee0240) and [final followup checkpoint](objects/86933b0079d68796848253cbe67ddd8a17f473b6) retain separate cuts. The latter is the bounded 17:01:35 UTC followup. Active historical counters do not overwrite closed reception counts. The followup's clean-source composition check and independent BI acquisition diagnosis are preparation only and are not added to this archive as new source changes or execution authority.
+
+The clean product remains R7 ad3 / 11bf. Diagnostic c53 is a separate observation source, not the final candidate. The prior D33 package remains static with four final bindings UNBOUND; the complete PNG reader remains static and unexecuted. The historical #349, #588 and G09 acceptances remain closed. No new QA or recovery reservation is confirmed by this documentary cut; existing host authorization is preserved without asserting fresh login or device availability.
+
+**Readiness remains NOT_READY.** There is no final C613, integrated Migration/Release acceptance on one candidate, verified Linux tar, installed UI42–UI44 acceptance, go-live gate closure or production authorization from these records. Root must independently review this proposal, then review actual objects and perform a fresh expected-parent publication check. Any production turn still requires the user's explicit approval.
+
+## Preserved R11 README — literal historical text begins
+
+<details>
+<summary>R11 README retained verbatim; its current-state statements belong to its historical preparation cut.</summary>
+
 # sf613-evidence — R11 documentary proposal
 
 **C22 R7's focal is closed PASS for the exact executed source. The original Analytics A5 is still closed negative, with one preview failure and one BI pass.** This archive preserves both facts and the complete sequence of earlier negative focals. It adds no installed UI acceptance and does not choose the final #613 candidate.
@@ -861,3 +967,5 @@ The JSON derivation supplied separately records every index operation, exact pre
 </details>
 
 ## Preserved R10 README — literal historical text ends
+
+</details>

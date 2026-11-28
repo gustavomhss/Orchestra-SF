@@ -1,0 +1,406 @@
+{
+  "status": "STATIC_SOURCE_REVIEW_COMPLETE_AWAITING_CONTROLS_AND_CARRIER",
+  "helper": {
+    "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+    "bytes": 67552,
+    "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+    "lf": 1203,
+    "endsWithLF": true
+  },
+  "sourceDerivation": {
+    "gitBlob": "a0955763721e66b7de60ecb572d60410473a9560",
+    "bytes": 387718,
+    "sha256": "2e0d3603bbc126f9f3c0c94897c3dcd85ef06203491eb03d45cca834aa08f151",
+    "lf": 3244,
+    "endsWithLF": true
+  },
+  "sourcePatch": {
+    "gitBlob": "ca78f84aed4447fa0c069ab7f3af15b83c82e545",
+    "bytes": 223855,
+    "sha256": "0c202d9b5ecab91e528d92420a4bcafdf08d06ac3382d24675af2b9605ddf7f2",
+    "lf": 2736,
+    "endsWithLF": true
+  },
+  "mechanical": {
+    "schema": "astra-root-e16-source-mechanical-review-v1",
+    "sourceBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "role": "R7 clean product and unchanged C22 tests"
+    },
+    "derivation": {
+      "gitBlob": "a0955763721e66b7de60ecb572d60410473a9560",
+      "bytes": 387718,
+      "sha256": "2e0d3603bbc126f9f3c0c94897c3dcd85ef06203491eb03d45cca834aa08f151",
+      "lf": 3244,
+      "endsWithLF": true
+    },
+    "patch": {
+      "gitBlob": "ca78f84aed4447fa0c069ab7f3af15b83c82e545",
+      "bytes": 223855,
+      "sha256": "0c202d9b5ecab91e528d92420a4bcafdf08d06ac3382d24675af2b9605ddf7f2",
+      "lf": 2736,
+      "endsWithLF": true
+    },
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "operations": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 13217,
+          "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+          "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+        },
+        "postimage": {
+          "bytes": 14101,
+          "sha256": "3754cff5dea6592a3ede52582e04087c27b1ae6265399cf124f409076ad6deb9",
+          "gitBlob": "8e0f0a10f0be0e848e31218baf12186ccd2c6e30",
+          "lf": 145
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "operations": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 17484,
+          "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+          "gitBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5"
+        },
+        "postimage": {
+          "bytes": 18817,
+          "sha256": "18fee3464a55f121d37014b7ba83ee6d3415442d0fa11a6fc7e7e1cde44a5f27",
+          "gitBlob": "fe6f34268cd74cc3bacc0a453de1cd33a754e5cf",
+          "lf": 140
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "operations": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 8591,
+          "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+          "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+        },
+        "postimage": {
+          "bytes": 9455,
+          "sha256": "02fba7494f07cd27b8c37d6804797de34a9806d1f85c59fb36273954d1519fc0",
+          "gitBlob": "d93e705a3381d2e51e48c9c72ff822b498136e55",
+          "lf": 91
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "operations": 7,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 9554,
+          "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+          "gitBlob": "47c4388c34c21c7294b0ffc34e4adcbe65b138de"
+        },
+        "postimage": {
+          "bytes": 11273,
+          "sha256": "8541d66341cbe1931332baa8ba8fba7c5271c2b8cf5e81e7fe66f5ec2085f3a7",
+          "gitBlob": "c330953f8fff45f5307ac5f687d19d91eeba8d85",
+          "lf": 104
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "operations": 4,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 11633,
+          "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+          "gitBlob": "a1765988434920f8dc9c71eaea2427b6ecac59cb"
+        },
+        "postimage": {
+          "bytes": 12548,
+          "sha256": "919a6528751aa05f630b2f4f6456734f1a60ec19414609a49d8c6c92857e31d0",
+          "gitBlob": "dce03bb345ca388a625592450c77374342b76217",
+          "lf": 126
+        }
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "operations": 8,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 5823,
+          "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+          "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61"
+        },
+        "postimage": {
+          "bytes": 10249,
+          "sha256": "8f6b4a67bf28eb0074fc60e4803f10054ecba54f8b0d676fbea425837e99af01",
+          "gitBlob": "e585997d630819f8faa70ab98bb9a734b4676dab",
+          "lf": 182
+        }
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "operations": 8,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 12321,
+          "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+          "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4"
+        },
+        "postimage": {
+          "bytes": 16353,
+          "sha256": "85419568b2995a0f060ae19f5c8cdd8e90935e937aa01cdd46d81adb52215c31",
+          "gitBlob": "e89139c2153f6d312b7f7813a7b5056746af7362",
+          "lf": 265
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "operations": 6,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 15111,
+          "sha256": "da953ef0345f54ac4b2818a462ee6a8f62bac407cac5cc6abad5800d22d20364",
+          "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+        },
+        "postimage": {
+          "bytes": 15646,
+          "sha256": "969e2e0e4e329b748c505180c2f7f1efb9ed7f34deeb993477811a52db0b03a7",
+          "gitBlob": "8f6e932d35567b02e4c5d29bae3de358f1c9d1aa",
+          "lf": 190
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "operations": 8,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 16776,
+          "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+          "gitBlob": "baef3e2fe2169bc556d0358eac8cc74419a4b697"
+        },
+        "postimage": {
+          "bytes": 17534,
+          "sha256": "c358528d65c5ba92d4e173bbd8d5290f3f5b7365daa49e87444da537084f235a",
+          "gitBlob": "ea75454c09819f195a1cb9107b75a375e6b701dc",
+          "lf": 233
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "operations": 6,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 3614,
+          "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+          "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+        },
+        "postimage": {
+          "bytes": 4002,
+          "sha256": "c6fe14e5a563c365341f340e696938c94900d2d54da3bb7f09fd43038c4a5467",
+          "gitBlob": "309de3c2ea9585bd434df182bd7906ae55c45e5d",
+          "lf": 40
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "operations": 5,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 34043,
+          "sha256": "63ce6e23a2959dcf3abfe79f3dca97b37bafdf0bd9ea84c10d4ec79be3bf6ab1",
+          "gitBlob": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc"
+        },
+        "postimage": {
+          "bytes": 34334,
+          "sha256": "559f1b544728a188f82d8f89fe320606875ee5fdc93be36e5f154efb7b05c4aa",
+          "gitBlob": "9c56de1b2d3acb74745acc327390ac26bf23dcb9",
+          "lf": 366
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "operations": 6,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 67954,
+          "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+          "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+        },
+        "postimage": {
+          "bytes": 68237,
+          "sha256": "e5e5c230e56893cb90e489227cb26d6224b82b33e41b0d78d90ab32aa172efd2",
+          "gitBlob": "fcf171be7d294ecb791b331bb4fd4cfd608b96e4",
+          "lf": 899
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "operations": 6,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 60735,
+          "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+          "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+        },
+        "postimage": {
+          "bytes": 61828,
+          "sha256": "9e1399f52839f92fa9e730fce69e6f74fafbea1a373c74eebc6c4ccebd023d9c",
+          "gitBlob": "19e9f55cb0212dd820db3dba0e4082d6fe6acf99",
+          "lf": 904
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "operations": 5,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 46151,
+          "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+          "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+        },
+        "postimage": {
+          "bytes": 46533,
+          "sha256": "b9f84cbded9a749a95b66b34b5731895759c4be9065f0e1f175a025afabf27a2",
+          "gitBlob": "5376c4f7d7cc3c70e7474e5c962fc91a84f8b4c5",
+          "lf": 539
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "operations": 14,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 96632,
+          "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+          "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+        },
+        "postimage": {
+          "bytes": 99097,
+          "sha256": "56e85b3b1280314c7ddc149d3d23efd21a6e06b1692ae15e51526528faa4ccd4",
+          "gitBlob": "99a3260be512b9bb30857d64c46c2253aa073fb7",
+          "lf": 1730
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+        "operations": 7,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 9698,
+          "sha256": "4bba3f6d6d829c74b0ad3dc491153e00426b74304ba2084b62d6196bff773837",
+          "gitBlob": "6306e5e165495947cd9e00408c0d88c6051dfb64"
+        },
+        "postimage": {
+          "bytes": 10877,
+          "sha256": "2af65cd20b97e45b8f1ff2659c6bbc075cbea1d27a6eb9bf5952d7665bebdfac",
+          "gitBlob": "8217a4f4def802c890c915163775b272655203fb",
+          "lf": 130
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "operations": 19,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 15053,
+          "sha256": "a6aa3b198c2c4340697c4d635c7480d2d62907162eba8dcfa1d03a57fd66b006",
+          "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+        },
+        "postimage": {
+          "bytes": 16698,
+          "sha256": "32bf6e64ff6184093d15a89854ae28ecabae4a33a266a1a49ab2d6df1443227d",
+          "gitBlob": "80ee1ca05926a49ce8ac4eaf860f0527bc6dfedf",
+          "lf": 144
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "operations": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true,
+        "patchBothWays": true,
+        "preimage": {
+          "bytes": 30340,
+          "sha256": "0adbedd3ffadce54ab2780f8ac8c5b72392338e6a6e879a2a664bff0c42bba6a",
+          "gitBlob": "c546b9bece7b42d056a10a362b7d5f1052d18279"
+        },
+        "postimage": {
+          "bytes": 30475,
+          "sha256": "1ea43337a36240a6aae5826a92539c9acc3801ef3f20ba142c226aaf211fb48a",
+          "gitBlob": "7a864749f19bd1a3f68ee750ae83bd6622380151",
+          "lf": 358
+        }
+      }
+    ],
+    "counts": {
+      "files": 20,
+      "hunks": 68,
+      "added": 1818,
+      "removed": 335
+    },
+    "modifiedOperations": 123,
+    "helperDonorOperations": 21,
+    "helperAmendmentOperations": 5,
+    "checks": 2784,
+    "failures": [],
+    "repositoryCodeExecuted": false,
+    "scope": "Pure data reconstruction only; package acceptance awaits controls, carrier, manifest and bounds."
+  },
+  "basePathCount": 21,
+  "observations": [
+    "All18 modified preimages resolve on actual R7 source tree; two added paths absent; C22 test remains b8f59389f0de1be542e36f375f1674c3bc75bd75.",
+    "Five validation slots own eight fixed event bits; two analysis read boundaries own four separate rows.",
+    "The late-scope reserve is13: two calls, one internal read, five validations and five verifiers. It does not consume the old route reserve.",
+    "The full read/bind async bodies execute under the admitted method scope or neutral token. Rejected method preparation cannot inherit an ancestor verifier scope.",
+    "Method wrappers are synchronous and return the original single async-body Promise through runOnce, without added await/then/finally. AsyncFunction/name/toString identity is deliberately not preserved or claimed.",
+    "Verifier entry is at real verifyComparison body entry; completion is after the authority's complete original await, after fresh short circuit, not the internal verification await.",
+    "Verifier optional-chain fallback with no real entry cannot emit a verifier completion.",
+    "Observer open=false remains before diagnostic emission; validation and verifier closure latches precede emission hooks.",
+    "Late/duplicate handles cannot consume a second event slot or close unrelated admitted bindings; public diagnostic functions compare opaque identities, not domain authorization.",
+    "Original product fence30seconds and Analytics60/120seconds remain unchanged."
+  ],
+  "limitations": [
+    "No runtime result or installed performance improvement claimed.",
+    "No source tree, commit, ref or execution created yet.",
+    "Package acceptance requires real controls, final carrier, bounds and both independent review slices."
+  ],
+  "repositoryCodeExecuted": false,
+  "originalGets": 0,
+  "zipGets": 0
+}

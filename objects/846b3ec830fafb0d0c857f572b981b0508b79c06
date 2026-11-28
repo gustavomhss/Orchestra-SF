@@ -1,0 +1,77 @@
+{
+  "schema": "sf613-e16-focal-bounds-r1-r2-amendment-v1",
+  "status": "DOCUMENTARY_ONLY_TWO_PRECISIONS_NO_EXECUTABLE_CHANGE",
+  "preimage": {
+    "bytes": 22871,
+    "sha256": "1cf6014418e2523265fd3220f12754c7a085f6d0e9c7fc5a4fdedd034ca5ba3f",
+    "gitBlob": "72f922f949da6422accb097f96d4de28f028e02b",
+    "lf": 707
+  },
+  "postimage": {
+    "bytes": 23023,
+    "sha256": "4c6c0c22b6d6e8f29a509221f1eed269b7b8e5139bb10538cf1df6e693916a78",
+    "gitBlob": "73a772ec45451bdec486c532110c03612a96ccc9",
+    "lf": 711
+  },
+  "operations": [
+    {
+      "label": "qualify-inherited-argv-exceptions",
+      "before": "    \"oldArgumentsCwdAndDeadlinesLiteral\": true,\n",
+      "after": "    \"oldCommandPreservation\": {\n      \"argv\": \"Literal except G1 fetch depth2-to-depth3 and parent format %H%n%T-to-%H%n%T%n%P.\",\n      \"cwdLiteral\": true,\n      \"deadlinesLiteral\": true\n    },\n",
+      "pre": {
+        "bytes": 22871,
+        "sha256": "1cf6014418e2523265fd3220f12754c7a085f6d0e9c7fc5a4fdedd034ca5ba3f",
+        "gitBlob": "72f922f949da6422accb097f96d4de28f028e02b"
+      },
+      "post": {
+        "bytes": 23017,
+        "sha256": "85ec06fccec53754e08cecf3e86c76bf332e0a08a6be60c1394d72816455a9f0",
+        "gitBlob": "69a8b1518c3fbdf12cfa24867d6f8e8f7572dcfa"
+      }
+    },
+    {
+      "label": "name-request-package-cli",
+      "before": "Source already includes the 295-byte original Analytics request; focal changes it to the original 247-byte app request and adds only driver/test/fixture. It is 3A1M, not 2A.",
+      "after": "Source already includes the 295-byte original Analytics request; focal changes it to the original 247-byte focal CLI request and adds only driver/test/fixture. It is 3A1M, not 2A.",
+      "pre": {
+        "bytes": 23017,
+        "sha256": "85ec06fccec53754e08cecf3e86c76bf332e0a08a6be60c1394d72816455a9f0",
+        "gitBlob": "69a8b1518c3fbdf12cfa24867d6f8e8f7572dcfa"
+      },
+      "post": {
+        "bytes": 23023,
+        "sha256": "4c6c0c22b6d6e8f29a509221f1eed269b7b8e5139bb10538cf1df6e693916a78",
+        "gitBlob": "73a772ec45451bdec486c532110c03612a96ccc9"
+      }
+    }
+  ],
+  "proof": {
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "operations": 2
+  },
+  "reason": "Independent carrier reviewer identified the two original G1 argv adjustments as exceptions and named the actual package cli in the 247-byte focal request. No runtime status or scope changes.",
+  "unchanged": {
+    "template": {
+      "bytes": 18300,
+      "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+      "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+      "lf": 247
+    },
+    "derivation": {
+      "bytes": 30149,
+      "sha256": "9ec9374ff08192b24908c40f06c811d8568d293e25a3138ed203f13a25bb04ec",
+      "gitBlob": "da165a7dbf13ff16ee9f99a11b861777c3af6df7"
+    },
+    "patch": {
+      "bytes": 14519,
+      "sha256": "af3cb7b8b0456136353cb49097b7362ebdb506bdf06c3f66ae8d4a2c256ae18f",
+      "gitBlob": "aca910aba88694c02d305a9b9e7f6426fa82dfc5"
+    },
+    "fullSnapshotPatch": {
+      "bytes": 108114,
+      "sha256": "493fb6df9d649ad998efa2258d783326806f45879cd1a0198288fece0635022a",
+      "gitBlob": "6f9981aa08e68e4847561b7df256009670d94bf9"
+    }
+  }
+}

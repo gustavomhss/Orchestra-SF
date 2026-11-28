@@ -1,0 +1,267 @@
+{
+  "schema": "sf613-e16-typescript-narrowing-bounds-v1",
+  "status": "PROPOSED_STATIC_CORRECTION_NO_TYPECHECK_OR_TEST_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": {
+    "immediateSourceParent": {
+      "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    },
+    "cleanCumulativeBase": {
+      "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+    },
+    "immediateSourceDelta": {
+      "modified": 1,
+      "added": 0,
+      "deleted": 0,
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts"
+    },
+    "cumulativeSourceDelta": {
+      "modified": 18,
+      "added": 2,
+      "deleted": 0,
+      "paths": 20
+    },
+    "focalFixture": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+    "focalDeltaRelativeToCorrectedSource": "3A1M: driver, fixture and parent test are added; existing Analytics request is replaced by the focal request",
+    "changedExecutablePostimages": 2,
+    "changedSites": 4,
+    "patchHunks": 2,
+    "addedLines": 4,
+    "removedLines": 4,
+    "changedBytesNet": 64,
+    "changedLFNet": 0,
+    "noRuntimeQualification": true
+  },
+  "code": {
+    "helper": {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "previous": {
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+        "bytes": 67552,
+        "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934"
+      },
+      "effective": {
+        "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+        "bytes": 67602,
+        "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b"
+      },
+      "lf": 1203,
+      "bytesDelta": 50
+    },
+    "fixture": {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "previous": {
+        "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+        "bytes": 85250,
+        "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1"
+      },
+      "effective": {
+        "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0",
+        "bytes": 85264,
+        "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c"
+      },
+      "lf": 1320,
+      "bytesDelta": 14
+    },
+    "parentTest": {
+      "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+      "unchanged": true
+    },
+    "C22Control": {
+      "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+      "unchanged": true
+    },
+    "analyticsRequest": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "endsWithLF": false,
+      "unchanged": true
+    },
+    "focalRequest": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "endsWithLF": false,
+      "unchanged": true
+    }
+  },
+  "supports": {
+    "derivation": {
+      "gitBlob": "0ac1d4abc8c2d73362f2fc779e1aaf61a70f638b",
+      "bytes": 14098,
+      "sha256": "ad08b1699cff52399bda0308099f0f97c9f986a45e465645f3342493942b37f6"
+    },
+    "minimalPatch": {
+      "gitBlob": "9d7177fc2710a68a88f02b08c83befaa79f9bb06",
+      "bytes": 2001,
+      "sha256": "83fb6fcdd8e084a504b8af459812a452e30ab77774d4ad280180ccd91764b904"
+    }
+  },
+  "inheritedBounds": {
+    "source": {
+      "gitBlob": "cc1cc39705594f57ee2e20e2f7fe4f8bffcf31be",
+      "bytes": 70780,
+      "sha256": "cb05d6b63b0d84a6b67f0bf47211b9c00a592514e3ed37102edb2a31ca55f7d0"
+    },
+    "controls": {
+      "gitBlob": "faf468b49d36b9d61a3726ddfc221f7d56b3606d",
+      "bytes": 27099,
+      "sha256": "c4f54276a5740bfe866aaa5bb186a3967fcc7e614faec5e25766df969b7d921f"
+    },
+    "rule": "Protocol, observations, limitations and calculated models are inherited as historical specifications. Their old executable pins are superseded only by the effective helper and fixture above; these old documents are not claimed to contain the corrected postimages."
+  },
+  "correctedNarrowing": {
+    "helper": {
+      "guardOrder": [
+        "prewrite",
+        "initial",
+        "final"
+      ],
+      "privateData": "BindingMethod slots are private own slots holding Validation or undefined; a Verifier has an own object handle allocated as {}.",
+      "validHandle": "The equality, traversal order, closed checks, frame check and returned verifier are unchanged for every actual opaque handle.",
+      "absentHandle": "For handle undefined and an absent slot, the former optional equality could be true and the unguarded branch could throw an internal TypeError. Both lookup callers already caught that error. Explicit guards now continue the private search and return undefined; no real object handle matches undefined.",
+      "neutralBoundary": "runSfE16Verifier retains its existing unselected scope before the lookup and its catch plus runOnce call. returnedSfE16Verifier retains its catch and returns its original result. No refusal is converted to an admitted scope.",
+      "noNewHooks": "The extra boolean slot guard has no getter, coercion, callback, iteration or await. It does not inspect a domain value or expose private metadata.",
+      "surfaceLimit": "The missing diagnostic handle no longer necessarily takes the swallowed TypeError path. This bounded internal control-flow difference is explicit; byte-identical behavior for malformed private state is not claimed."
+    },
+    "fixture": {
+      "existingPrecondition": "assert.ok(savedRun && savedGet) runs before the nested control can execute. savedRun is a captured const descriptor.",
+      "restore": "The existing finally now checks savedRun immediately before the same Object.defineProperty alias call. When the existing precondition holds, exactly the original restoration is performed once.",
+      "missingDescriptor": "The existing outer assertion still refuses setup if the descriptor is absent. The nested absence branch is therefore not a new admitted control path.",
+      "preserved": "No descriptor recapture, assertion, hook installation, await, Promise continuation or changed try/finally boundary."
+    }
+  },
+  "literalPreservation": {
+    "proof": "Four unique anchored replacements, with full inverse equality, account for every changed byte.",
+    "runOnce": true,
+    "scopeAdmission": true,
+    "neutralMasks": true,
+    "ownerGenerationAndReentrancy": true,
+    "latchesAndCloseOrdering": true,
+    "transportAndSinks": true,
+    "quotaAndReservations": true,
+    "calleesAndReceivers": true,
+    "awaitsThenFinallySites": true,
+    "productGuardsFreshnessReplayReadback": true,
+    "controlAssertionsLabelsModesReportsAndCleanup": true,
+    "sourceAnalyticsWaitersSeconds": [
+      60,
+      120
+    ],
+    "productFenceSeconds": 30,
+    "addedNonNullAssertions": 0,
+    "addedAnyCasts": 0,
+    "addedTsIgnore": 0,
+    "addedAssertions": 0,
+    "addedAwaitOperators": 0,
+    "addedThenCalls": 0,
+    "addedFinallySites": 0
+  },
+  "protocolLimitsUnchanged": {
+    "reservedRows": 163,
+    "secondJourneyDisabledRowsAtMost": 1,
+    "reservedCampaignRowsAtMost": 164,
+    "independentLateScopes": 13,
+    "retiredLookupDetailRows": 0,
+    "hardStreamEvents": 191,
+    "hardStreamBytes": 195584,
+    "maxLineBytes": 1024,
+    "hardCampaignEventsAtMost": 192,
+    "hardCampaignBytesAtMost": 196608,
+    "eventPrefix": "SF_PREVIEW_E16_EVENT ",
+    "eventSchema": "sf-preview-causal-e16-event-v1",
+    "qualification": false,
+    "lineModelMaximumBytes": 920,
+    "newBoundaryModelMaximumBytes": 577,
+    "modelStatus": "pure data, inherited, not observed output",
+    "notAMainLogCap": true,
+    "partialInvalidAndMissingTerminalLimits": "unchanged"
+  },
+  "controlLimitsUnchanged": {
+    "childModes": 10,
+    "parentDeclarations": 1,
+    "parentExpectSites": 8,
+    "childAssertSites": 303,
+    "rawAwaitWordTokens": 102,
+    "labelEntries": 64,
+    "uniqueLabelStrings": 56,
+    "parentExpectCallsOnAllTenCompletedPath": 53,
+    "parentExpectCallsFormula": "5 * 10 + 3",
+    "newFunctionalProcess": 1,
+    "parentTestDeclarations": 1,
+    "children": 10,
+    "declarationsInC22Unchanged": 5,
+    "C22ReportEmissionsUnchanged": 3,
+    "distinction": "Assert/expect sites and the 53-call completed-path calculation are static source populations, not a runtime assertion footer or observed pass count. Raw await word tokens include strings/comments and are not an operator count.",
+    "childTimeoutMs": 3000,
+    "childForceKillAfterMs": 1000,
+    "childStdoutCapBytes": 65536,
+    "childStderrCapBytes": 65536,
+    "childReceiptCapBytes": 16384,
+    "parentReportCapBytes": 16384,
+    "parentBunTimeoutMs": 45000,
+    "focalCommandCapMs": 60000,
+    "focalParentCapMs": 90000,
+    "modes": [
+      "route-owner",
+      "work-links",
+      "native-chain",
+      "persistence-tail",
+      "capacity",
+      "mechanism",
+      "sink-zero",
+      "sink-partial",
+      "sink-throw",
+      "forwarder"
+    ],
+    "reportPrefix": "SF_E16_ROUTE_CONTROL ",
+    "calculatedModelBytes": 9180,
+    "limits": "Real consumer/verifier seams have controlled host, Planner, fences and context. Work entry is not proof of physical/native admission. The fixture does not qualify installed Analytics or promise performance. Existing fault-coverage distinctions remain unchanged."
+  },
+  "carrierHandoff": {
+    "author": "/root/focal_migration",
+    "workingTreePinsExpected": 40,
+    "changedPins": [
+      "diagnostic helper",
+      "E16 fixture"
+    ],
+    "groups": 11,
+    "commands": 17,
+    "truncationFlags": 34,
+    "functionalProcesses": 7,
+    "expectedDeclarations": 23,
+    "expectedReportEmissions": 12,
+    "inheritedC22Declarations": 5,
+    "inheritedC22ReportEmissions": 3,
+    "commandCapsSumMs": 2130000,
+    "parentCapsSumMs": 2820000,
+    "workflowJobMs": 2700000,
+    "parentCapsExceedJobByMs": 120000,
+    "budgetMeaning": "Configured maxima, not additive elapsed predictions or a guarantee of fitting the job. The child population is separate.",
+    "ancestry": "The corrected source is proposed as a child of the current E16 source. The cumulative clean sourceBase stays R7. Carrier/source binding is a separate reviewed package, not silently inherited from the failed focal.",
+    "sourceBinding": null,
+    "sourceTreeBinding": null,
+    "focalCommit": null,
+    "run": null
+  },
+  "evidenceAndExecution": {
+    "originalAccessByAuthor": 0,
+    "zipAccessByAuthor": 0,
+    "repositoryCodeExecuted": false,
+    "localCompile": false,
+    "localTypecheck": false,
+    "localTest": false,
+    "observedDiagnosticsSource": {
+      "gitBlob": "f3d00a7be6c52522e9ad231a76bf666863df4963",
+      "bytes": 149216,
+      "sha256": "5fdbfeadce07aeb840b77d6ad9edddb55d7a681132a2fcedb0157dd5f1bdbf2d"
+    },
+    "fourDistinctSites": true,
+    "helperErrorsRepeatedInTwoTypecheckGroups": true,
+    "generalIntake": "Root and its designated independent receiver close the whole focal intake separately. This correction package authenticates only the cited diagnostic lines from the closed Git copy.",
+    "correctedRuntimeResult": null,
+    "correctedTypecheckResult": null,
+    "correctedAnalyticsResult": null
+  }
+}

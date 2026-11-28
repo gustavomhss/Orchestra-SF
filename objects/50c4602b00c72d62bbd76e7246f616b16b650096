@@ -1,0 +1,1026 @@
+{
+  "schema": "sf613-e16-independent-source-controls-integrated-review-v1",
+  "status": "ACK_STATIC_SOURCE_CONTROLS_AND_PACKAGE_WITH_INDEPENDENT_CARRIER_RECEIPT",
+  "reviewer": "/root/review_archive",
+  "author": "/root/teams_product",
+  "repository": "gustavomhss/Orchestra-SF",
+  "cut": "2026-11-28 15:18:12 UTC",
+  "scope": "Independent source/helper/transport/control/bounds review. Carrier-only review by /root/focal_migration is authenticated and linked, without duplicating its semantic review. This receipt is for static proposal data; root-owned actual object/binding review and separate execution authority remain required.",
+  "base": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "role": "R7 clean product and unchanged C22 tests"
+  },
+  "jointManifest": {
+    "gitBlob": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+    "bytes": 54996,
+    "sha256": "d6af1967a9bc5a700315cd495e4e78a6304d95c01036c774ae619655998555cb",
+    "lf": 1443,
+    "endsWithLF": true
+  },
+  "effectiveRevisions": {
+    "helper": "R2",
+    "controls": "R1",
+    "carrier": "R1 template",
+    "sourceBounds": "R1",
+    "controlBounds": "R1",
+    "carrierBounds": "R2 documentary correction"
+  },
+  "sourceMap": [
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "preimage": {
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+      },
+      "postimage": {
+        "bytes": 14101,
+        "sha256": "3754cff5dea6592a3ede52582e04087c27b1ae6265399cf124f409076ad6deb9",
+        "gitBlob": "8e0f0a10f0be0e848e31218baf12186ccd2c6e30",
+        "lf": 145
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "preimage": {
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "gitBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5"
+      },
+      "postimage": {
+        "bytes": 18817,
+        "sha256": "18fee3464a55f121d37014b7ba83ee6d3415442d0fa11a6fc7e7e1cde44a5f27",
+        "gitBlob": "fe6f34268cd74cc3bacc0a453de1cd33a754e5cf",
+        "lf": 140
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "preimage": {
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+      },
+      "postimage": {
+        "bytes": 9455,
+        "sha256": "02fba7494f07cd27b8c37d6804797de34a9806d1f85c59fb36273954d1519fc0",
+        "gitBlob": "d93e705a3381d2e51e48c9c72ff822b498136e55",
+        "lf": 91
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "preimage": {
+        "bytes": 9554,
+        "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+        "gitBlob": "47c4388c34c21c7294b0ffc34e4adcbe65b138de"
+      },
+      "postimage": {
+        "bytes": 11273,
+        "sha256": "8541d66341cbe1931332baa8ba8fba7c5271c2b8cf5e81e7fe66f5ec2085f3a7",
+        "gitBlob": "c330953f8fff45f5307ac5f687d19d91eeba8d85",
+        "lf": 104
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "preimage": {
+        "bytes": 11633,
+        "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+        "gitBlob": "a1765988434920f8dc9c71eaea2427b6ecac59cb"
+      },
+      "postimage": {
+        "bytes": 12548,
+        "sha256": "919a6528751aa05f630b2f4f6456734f1a60ec19414609a49d8c6c92857e31d0",
+        "gitBlob": "dce03bb345ca388a625592450c77374342b76217",
+        "lf": 126
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "preimage": {
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61"
+      },
+      "postimage": {
+        "bytes": 10249,
+        "sha256": "8f6b4a67bf28eb0074fc60e4803f10054ecba54f8b0d676fbea425837e99af01",
+        "gitBlob": "e585997d630819f8faa70ab98bb9a734b4676dab",
+        "lf": 182
+      }
+    },
+    {
+      "kind": "M",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "preimage": {
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4"
+      },
+      "postimage": {
+        "bytes": 16353,
+        "sha256": "85419568b2995a0f060ae19f5c8cdd8e90935e937aa01cdd46d81adb52215c31",
+        "gitBlob": "e89139c2153f6d312b7f7813a7b5056746af7362",
+        "lf": 265
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "preimage": {
+        "bytes": 15111,
+        "sha256": "da953ef0345f54ac4b2818a462ee6a8f62bac407cac5cc6abad5800d22d20364",
+        "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+      },
+      "postimage": {
+        "bytes": 15646,
+        "sha256": "969e2e0e4e329b748c505180c2f7f1efb9ed7f34deeb993477811a52db0b03a7",
+        "gitBlob": "8f6e932d35567b02e4c5d29bae3de358f1c9d1aa",
+        "lf": 190
+      }
+    },
+    {
+      "kind": "M",
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "preimage": {
+        "bytes": 16776,
+        "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+        "gitBlob": "baef3e2fe2169bc556d0358eac8cc74419a4b697"
+      },
+      "postimage": {
+        "bytes": 17534,
+        "sha256": "c358528d65c5ba92d4e173bbd8d5290f3f5b7365daa49e87444da537084f235a",
+        "gitBlob": "ea75454c09819f195a1cb9107b75a375e6b701dc",
+        "lf": 233
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "preimage": {
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      "postimage": {
+        "bytes": 4002,
+        "sha256": "c6fe14e5a563c365341f340e696938c94900d2d54da3bb7f09fd43038c4a5467",
+        "gitBlob": "309de3c2ea9585bd434df182bd7906ae55c45e5d",
+        "lf": 40
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimage": {
+        "bytes": 34043,
+        "sha256": "63ce6e23a2959dcf3abfe79f3dca97b37bafdf0bd9ea84c10d4ec79be3bf6ab1",
+        "gitBlob": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc"
+      },
+      "postimage": {
+        "bytes": 34334,
+        "sha256": "559f1b544728a188f82d8f89fe320606875ee5fdc93be36e5f154efb7b05c4aa",
+        "gitBlob": "9c56de1b2d3acb74745acc327390ac26bf23dcb9",
+        "lf": 366
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": {
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+      },
+      "postimage": {
+        "bytes": 68237,
+        "sha256": "e5e5c230e56893cb90e489227cb26d6224b82b33e41b0d78d90ab32aa172efd2",
+        "gitBlob": "fcf171be7d294ecb791b331bb4fd4cfd608b96e4",
+        "lf": 899
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "preimage": {
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      "postimage": {
+        "bytes": 61828,
+        "sha256": "9e1399f52839f92fa9e730fce69e6f74fafbea1a373c74eebc6c4ccebd023d9c",
+        "gitBlob": "19e9f55cb0212dd820db3dba0e4082d6fe6acf99",
+        "lf": 904
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "preimage": {
+        "bytes": 46151,
+        "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+        "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      "postimage": {
+        "bytes": 46533,
+        "sha256": "b9f84cbded9a749a95b66b34b5731895759c4be9065f0e1f175a025afabf27a2",
+        "gitBlob": "5376c4f7d7cc3c70e7474e5c962fc91a84f8b4c5",
+        "lf": 539
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": {
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+      },
+      "postimage": {
+        "bytes": 99097,
+        "sha256": "56e85b3b1280314c7ddc149d3d23efd21a6e06b1692ae15e51526528faa4ccd4",
+        "gitBlob": "99a3260be512b9bb30857d64c46c2253aa073fb7",
+        "lf": 1730
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "preimage": {
+        "bytes": 9698,
+        "sha256": "4bba3f6d6d829c74b0ad3dc491153e00426b74304ba2084b62d6196bff773837",
+        "gitBlob": "6306e5e165495947cd9e00408c0d88c6051dfb64"
+      },
+      "postimage": {
+        "bytes": 10877,
+        "sha256": "2af65cd20b97e45b8f1ff2659c6bbc075cbea1d27a6eb9bf5952d7665bebdfac",
+        "gitBlob": "8217a4f4def802c890c915163775b272655203fb",
+        "lf": 130
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "preimage": {
+        "bytes": 15053,
+        "sha256": "a6aa3b198c2c4340697c4d635c7480d2d62907162eba8dcfa1d03a57fd66b006",
+        "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+      },
+      "postimage": {
+        "bytes": 16698,
+        "sha256": "32bf6e64ff6184093d15a89854ae28ecabae4a33a266a1a49ab2d6df1443227d",
+        "gitBlob": "80ee1ca05926a49ce8ac4eaf860f0527bc6dfedf",
+        "lf": 144
+      }
+    },
+    {
+      "kind": "M",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "preimage": {
+        "bytes": 30340,
+        "sha256": "0adbedd3ffadce54ab2780f8ac8c5b72392338e6a6e879a2a664bff0c42bba6a",
+        "gitBlob": "c546b9bece7b42d056a10a362b7d5f1052d18279"
+      },
+      "postimage": {
+        "bytes": 30475,
+        "sha256": "1ea43337a36240a6aae5826a92539c9acc3801ef3f20ba142c226aaf211fb48a",
+        "gitBlob": "7a864749f19bd1a3f68ee750ae83bd6622380151",
+        "lf": 358
+      }
+    },
+    {
+      "kind": "A",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 67552,
+        "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+        "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+        "lf": 1203
+      }
+    },
+    {
+      "kind": "A",
+      "path": ".ci-run.json",
+      "preimage": null,
+      "postimage": {
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b"
+      }
+    }
+  ],
+  "controls": [
+    {
+      "component": "focal",
+      "kind": "A",
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "postimage": {
+        "bytes": 85250,
+        "sha256": "64699345200897b69ead1ea8afb9e7deb59d9a6a2a8248910284577791ff2ed1",
+        "gitBlob": "fafd7ee60c9fd59ddd6031e8ae86f87a3ecf4b8e",
+        "lf": 1320
+      }
+    },
+    {
+      "component": "focal",
+      "kind": "A",
+      "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+      "postimage": {
+        "bytes": 1172,
+        "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1",
+        "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+        "lf": 24
+      }
+    }
+  ],
+  "supports": {
+    "sourceDerivation": {
+      "gitBlob": "a0955763721e66b7de60ecb572d60410473a9560",
+      "bytes": 387718,
+      "sha256": "2e0d3603bbc126f9f3c0c94897c3dcd85ef06203491eb03d45cca834aa08f151",
+      "lf": 3244,
+      "endsWithLF": true
+    },
+    "sourceFullPatch": {
+      "gitBlob": "ca78f84aed4447fa0c069ab7f3af15b83c82e545",
+      "bytes": 223855,
+      "sha256": "0c202d9b5ecab91e528d92420a4bcafdf08d06ac3382d24675af2b9605ddf7f2",
+      "lf": 2736,
+      "endsWithLF": true
+    },
+    "helperAmendment": {
+      "gitBlob": "8ae60381abf79118fe343de2722ffbc616c43b17",
+      "bytes": 6176,
+      "sha256": "1d253530a6fbdd234a7383e41fbab823f26f98b5e862c36958e838a3f5494406",
+      "lf": 133,
+      "endsWithLF": true
+    },
+    "sourceBounds": {
+      "gitBlob": "cc1cc39705594f57ee2e20e2f7fe4f8bffcf31be",
+      "bytes": 70780,
+      "sha256": "cb05d6b63b0d84a6b67f0bf47211b9c00a592514e3ed37102edb2a31ca55f7d0",
+      "lf": 949,
+      "endsWithLF": true
+    },
+    "controlDerivation": {
+      "gitBlob": "0131de6d3c4454c2778318ad607c7d2f6671a382",
+      "bytes": 75506,
+      "sha256": "07eabe825d0045cf6dc31b983a7bb2941ef9b4f29bdba5db08dc6800074ebc8d",
+      "lf": 836,
+      "endsWithLF": true
+    },
+    "controlReusePatch": {
+      "gitBlob": "586245167d27ce473a6e4a694a392a530d339d64",
+      "bytes": 94239,
+      "sha256": "4955435b9250c674c82cb211a2a8c4f75f55c2097c46da7e50d625100ab5f739",
+      "lf": 1407,
+      "endsWithLF": true
+    },
+    "controlFullAdditionsPatch": {
+      "gitBlob": "8c5c14115b411dddea70a62c76e7cab28852babc",
+      "bytes": 88461,
+      "sha256": "902756f671c71ca92731041f8471576ceff24d42ea470e233191f854b4dd5edd",
+      "lf": 1356,
+      "endsWithLF": true
+    },
+    "controlBounds": {
+      "gitBlob": "faf468b49d36b9d61a3726ddfc221f7d56b3606d",
+      "bytes": 27099,
+      "sha256": "c4f54276a5740bfe866aaa5bb186a3967fcc7e614faec5e25766df969b7d921f",
+      "lf": 351,
+      "endsWithLF": true
+    },
+    "controlFixtureDonor": {
+      "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052",
+      "bytes": 63845,
+      "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+      "lf": 987,
+      "endsWithLF": true
+    },
+    "controlParentDonor": {
+      "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e",
+      "bytes": 1167,
+      "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+      "lf": 24,
+      "endsWithLF": true
+    },
+    "helperDonor": {
+      "gitBlob": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+      "bytes": 47324,
+      "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+      "lf": 814,
+      "endsWithLF": true
+    }
+  },
+  "independentCarrier": {
+    "receipt": {
+      "gitBlob": "c467f72409d4e8eb63e2216037c4b6556a38ae3c",
+      "bytes": 11291,
+      "sha256": "f060e2a4770c7521d0d046b262e6f50046dbba76e61a42d8388f0d31f78cbe6b",
+      "lf": 323,
+      "endsWithLF": true
+    },
+    "reviewer": "/root/focal_migration",
+    "status": "ACK_STATIC_CARRIER_ONLY",
+    "artifactLinks": [
+      {
+        "role": "focal:apps/cli/test/sucafina-proof-verification.test.ts",
+        "bytes": 18300,
+        "sha256": "35804690c7fcb6504801db43641f61aecce926b05ff46b353bb3cbd68d08a8a7",
+        "gitBlob": "118ca3fa91c0f8bbb9801e91ec5c0d8711e3a364",
+        "lf": 247
+      },
+      {
+        "role": "carrier-derivation",
+        "bytes": 30149,
+        "sha256": "9ec9374ff08192b24908c40f06c811d8568d293e25a3138ed203f13a25bb04ec",
+        "gitBlob": "da165a7dbf13ff16ee9f99a11b861777c3af6df7"
+      },
+      {
+        "role": "carrier-retarget-patch",
+        "bytes": 14519,
+        "sha256": "af3cb7b8b0456136353cb49097b7362ebdb506bdf06c3f66ae8d4a2c256ae18f",
+        "gitBlob": "aca910aba88694c02d305a9b9e7f6426fa82dfc5"
+      },
+      {
+        "role": "full-D-3A1M-patch",
+        "bytes": 108114,
+        "sha256": "493fb6df9d649ad998efa2258d783326806f45879cd1a0198288fece0635022a",
+        "gitBlob": "6f9981aa08e68e4847561b7df256009670d94bf9"
+      },
+      {
+        "role": "carrier-bounds-effective-R2",
+        "bytes": 23023,
+        "sha256": "4c6c0c22b6d6e8f29a509221f1eed269b7b8e5139bb10538cf1df6e693916a78",
+        "gitBlob": "73a772ec45451bdec486c532110c03612a96ccc9",
+        "lf": 711
+      },
+      {
+        "role": "carrier-bounds-R1-R2-amendment",
+        "bytes": 3249,
+        "sha256": "0878581441a119e3e446e5ebb194d7b882c7e08be58e99e4415c470c068a83f2",
+        "gitBlob": "846b3ec830fafb0d0c857f572b981b0508b79c06",
+        "lf": 77
+      }
+    ],
+    "selection": {
+      "groups": 11,
+      "commands": 17,
+      "truncationFields": 34,
+      "workingPins": 40,
+      "functionalProcesses": 7,
+      "expectedDeclarations": 23,
+      "expectedReportEmissions": 12
+    },
+    "proof": {
+      "operations": 17,
+      "carrierPatch": {
+        "files": 1,
+        "hunks": 5,
+        "added": 51,
+        "removed": 24,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      "fullSnapshotPatch": {
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "mode": "modify",
+            "hunks": 1
+          },
+          {
+            "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+            "mode": "add",
+            "hunks": 1
+          },
+          {
+            "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+            "mode": "add",
+            "hunks": 1
+          },
+          {
+            "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+            "mode": "add",
+            "hunks": 1
+          }
+        ],
+        "hunks": 4,
+        "added": 1592,
+        "removed": 1,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      "boundsAmendment": {
+        "operations": 2,
+        "forwardInverseLiteral": true,
+        "deltaBytes": 152,
+        "deltaLf": 4,
+        "codeChanged": false
+      }
+    },
+    "checks": 233,
+    "scope": "Independent static review of the focal carrier and its derivation. E16 source and control semantics are reviewed separately by /root/review_archive.",
+    "limits": [
+      "All declarations, report emissions and truncation-field counts are expectations for this exact selection; actual footers and statuses require a future preserved run.",
+      "The new runner receipt contains dynamic child PIDs and measured values. No literal receipt model is accepted as execution evidence.",
+      "The ten isolated E16 children are a named population separate from the seventeen outer commands, not a universal subprocess count.",
+      "Parent ceilings sum to47 minutes while the inherited workflow job is45 minutes; neither this sum nor command ceilings guarantee completion within the shared job deadline.",
+      "Per-stream output ceilings are not a limit on the full Actions main log.",
+      "Analytics waiters60/120 and product fence30 are outside this carrier delta and remain governed by the separate source review.",
+      "No current UI qualification, functional equivalence outside diagnostic limits or performance result is asserted."
+    ]
+  },
+  "rootSourceReceipt": {
+    "gitBlob": "6b2576c891179ab19047ad9cf7cd59d2278dd4de",
+    "bytes": 15643,
+    "sha256": "81928cb8472fdd01dddee0abca49d62d61ce0af9b1052f226b024cd411dabafc",
+    "lf": 406,
+    "endsWithLF": true
+  },
+  "mechanical": {
+    "ownPureDataCheckGroups": {
+      "sourceOperations": 2709,
+      "controlOperationsAndPatches": 681,
+      "sourceBounds": 607,
+      "controlLabelCounts": 10,
+      "controlBounds": 141,
+      "manifestLinks": 306,
+      "carrierReceiptLinks": 50
+    },
+    "ownPureDataChecks": 4504,
+    "countsAreNotRuntimeAssertions": true,
+    "source": {
+      "modifiedFiles": 18,
+      "addedFiles": 2,
+      "modifiedOperations": 123,
+      "helperDonorOperations": 21,
+      "helperAmendmentOperations": 5,
+      "allForwardInverseLiteral": true,
+      "fullPatch": {
+        "files": 20,
+        "hunks": 68,
+        "added": 1818,
+        "removed": 335
+      },
+      "postimagesActuallyAuthenticated": true,
+      "preimagesActuallyAuthenticated": true,
+      "intermediateObjectsFetched": 0
+    },
+    "controls": {
+      "fixtureOperations": 33,
+      "parentOperations": 3,
+      "allForwardInverseLiteral": true,
+      "reusePatch": {
+        "files": 2,
+        "hunks": 24,
+        "added": 655,
+        "removed": 322
+      },
+      "fullAdditions": {
+        "files": 2,
+        "hunks": 2,
+        "added": 1344,
+        "removed": 0
+      },
+      "runnerEngineRetargetLiteral": true,
+      "nativeChain": "Actual inherited native operations are literal after version retarget; only retired lookup-detail expectations were changed."
+    },
+    "finalLinkage": {
+      "status": "PASS_COMPLETE_WITH_INDEPENDENT_CARRIER_RECEIPT",
+      "ownManifestChecks": 306,
+      "peerLinkChecks": 50,
+      "directEffectiveArtifacts": 30,
+      "peerEffectiveArtifacts": 6,
+      "totalEffectiveArtifacts": 36,
+      "carrierReceipt": {
+        "gitBlob": "c467f72409d4e8eb63e2216037c4b6556a38ae3c",
+        "bytes": 11291,
+        "sha256": "f060e2a4770c7521d0d046b262e6f50046dbba76e61a42d8388f0d31f78cbe6b",
+        "lf": 323,
+        "endsWithLF": true
+      },
+      "carrierStaticChecks": 233,
+      "findings": []
+    },
+    "dataCheckerCorrections": [
+      {
+        "kind": "OWN_DATA_CHECKER_EXPECTATION_CORRECTED",
+        "detail": "The first bounds checker assumed a terminal object in every non-forwarder model. Sink-fault models explicitly have terminal:null, matching the intended incomplete prefix. No product or author-support change; no original or runtime execution."
+      },
+      {
+        "kind": "OWN_METADATA_CHECKER_CORRECTION",
+        "detail": "Own first metadata checker mistook narrative cleanPreimages field for a list. Actual preimages were then verified from all18 M entries, without changing any author data."
+      }
+    ]
+  },
+  "sourceSemanticReview": {
+    "schema": "sf613-e16-independent-source-semantic-notes-v1",
+    "status": "SOURCE_HELPER_SEMANTICS_ACCEPTED_IN_THIS_INTEGRATED_REVIEW",
+    "currentHelper": {
+      "gitBlob": "cb7eaf748d2e89fa2a274f7714bf8d031e963fb5",
+      "bytes": 67552,
+      "sha256": "e2a21d504c73ed8f34e76ce08f4a0eaea4242872205fd634151ce93261fde934",
+      "lf": 1203,
+      "endsWithLF": true
+    },
+    "newMarkerMeaning": [
+      {
+        "point": "validate-enter",
+        "meaning": "Real private validate body entry; before original stored-result read and rule proofs."
+      },
+      {
+        "point": "verify-comparison-enter",
+        "meaning": "Real verifyComparison body entry under the same private validation/verifier scope and binding/context identities; not arbitrary callee authentication."
+      },
+      {
+        "point": "verify-await-returned",
+        "meaning": "Fulfillment of the original authority RHS await after fresh succeeded and actual verifier entry was observed, including original verifier publication/finally; fulfilled false is not proof acceptance."
+      },
+      {
+        "point": "observer-enter",
+        "meaning": "Original observeCriteria call is about to be invoked; not proof of physical readonly-root admission."
+      },
+      {
+        "point": "work-enter",
+        "meaning": "Original callback already passed open/invocations/current guard before the original Promise.all batch."
+      },
+      {
+        "point": "criteria-await-returned",
+        "meaning": "The original Promise.all batch fulfilled; original current/open checks still follow."
+      },
+      {
+        "point": "observer-await-returned",
+        "meaning": "The original observer await fulfilled and its original open=false latch has already closed; original acceptance/current checks still follow."
+      },
+      {
+        "point": "validate-await-returned",
+        "meaning": "The original validate await fulfilled, possibly undefined. Private validation closes before any clock/sink callback; not proof of successful validation."
+      }
+    ],
+    "fiveSlots": [
+      {
+        "phase": "persist-bind",
+        "site": "bind-prewrite",
+        "id": 1
+      },
+      {
+        "phase": "persist-bind",
+        "site": "read-initial",
+        "id": 2
+      },
+      {
+        "phase": "persist-bind",
+        "site": "read-final",
+        "id": 3
+      },
+      {
+        "phase": "persist-read",
+        "site": "read-initial",
+        "id": 4
+      },
+      {
+        "phase": "persist-read",
+        "site": "read-final",
+        "id": 5
+      }
+    ],
+    "sourceGuards": [
+      "First persistence under firstAnalysis/analysis-persist only; one bind, then one explicit read after bind is closed, with same lexical validate function owner and context object.",
+      "Whole-method synchronous wrapper returns its one async-body Promise unchanged through runOnce; refused/reentrant binding methods execute all preparatory callbacks neutrally.",
+      "Admitted method reuses call/read scope and consumes its private started latch; no extra scope or async adoption handler.",
+      "Internal return read closes bind-method admission only, creates child read scope once, and leaves outer call alive until persistence's existing await returns.",
+      "Five private validation and verifier records each latch once; actual verifier entry required for full await-return marker.",
+      "Every close consumes its own record before emission; rejected siblings cannot close ancestral records.",
+      "Request close and persistence close clear private validation state; live rejects closed ancestors.",
+      "Candidate-read lookup path calls runOnce with neutral scope before any routeScope allocation.",
+      "Emitter/forwarder/runOnce are inherited literally after E15/E16 retarget; forwarder sees complete original chunks before splitLines and returns each input unchanged.",
+      "Original optional-chain receiver input.proof()?.verifyComparison and fresh && short-circuit retained; marker emission/run stay in RHS.",
+      "Criterion C22 single-criterion observation wiring, original parallel Promise.all fallback, original receivers, private checks and throw(undefined) handling retained.",
+      "No fence/wait/test/product budget change in these source overlays."
+    ],
+    "limits": [
+      "Private diagnostic identity attribution is not product authorization or proof of arbitrary callee identity.",
+      "AsyncFunction/name/toString identity of read/bind public wrapper is intentionally not claimed.",
+      "Clock/write overhead and diagnostic I/O may alter timing; no performance or runtime qualification claimed.",
+      "Totals 163 reserved stream rows plus at most one BI-disabled row; hard 191-event/191-KiB/1024-byte stream bounds remain distinct from whole Actions log.",
+      "Finite adversarial controls and exact largest literal line models remain to review; no execution performed."
+    ]
+  },
+  "controlSemanticReview": {
+    "realConsumer": {
+      "bindingConsumer": true,
+      "realProofVerifier": true,
+      "realLocalStoreC08": true,
+      "syntheticDependencies": [
+        "host/authentication",
+        "context",
+        "source fences",
+        "controlled comparison result",
+        "Planner return"
+      ],
+      "validationCounts": {
+        "selected": 5,
+        "analysisUnselected": 4,
+        "totalExpected": 9
+      },
+      "privatePublicationOracle": {
+        "before": 9,
+        "after": 9,
+        "expectedBefore": false,
+        "expectedAfter": true
+      },
+      "sameBindingContextPreparatoryAttacks": 3,
+      "ancestorPreserved": true,
+      "lateObserverCallbackAfterOpenFalse": true,
+      "internalReadPromiseAdoption": true
+    },
+    "protocol": {
+      "fiveSlotsEightPoints": true,
+      "analysisReadFourPoints": true,
+      "neutralLookupPopulation": 600,
+      "independentBindingScopeReservation": 13,
+      "capacityExpectedStreamRows": 163,
+      "forwarderHardStreamCap": 191,
+      "forwarderModeAggregateNotSingleStream": true,
+      "PromiseReceiverThenableAndUndefinedRead": true
+    },
+    "faultCoverage": [
+      {
+        "mode": "mechanism",
+        "fault": "no-op ALS run under the active fifth validation",
+        "covered": "The refused-method body cannot inherit its active ancestor; attribution is disabled before work, which is invoked once."
+      },
+      {
+        "mode": "mechanism",
+        "fault": "getStore throws after the previous disabling fault",
+        "covered": "The already-disabled frame does not regain attribution; original work is preserved.",
+        "notCovered": "A separate fresh getStore-throw fault while an admitted validation ancestor is active."
+      },
+      {
+        "mode": "work-links",
+        "fault": "clock throws after the binding operations",
+        "covered": "The original Promise is returned once and elapsed observation becomes unavailable.",
+        "notCovered": "A clock throw at every possible active-validation boundary."
+      },
+      {
+        "mode": "sink-zero",
+        "fault": "synthetic write hook returns zero",
+        "covered": "One attempted fragment/sink latch; restoration does not retry; original throw undefined survives."
+      },
+      {
+        "mode": "sink-partial",
+        "fault": "synthetic write hook reports a partial write",
+        "covered": "Prefix remains incomplete; no fabricated LF or terminal; no retry."
+      },
+      {
+        "mode": "sink-throw",
+        "fault": "synthetic write hook throws undefined",
+        "covered": "Fault is contained and that sink stays disabled; original product throw value is preserved."
+      },
+      {
+        "mode": "forwarder",
+        "fault": "chunk boundaries, missing LF, non-ASCII/oversized/invalid frames and sink faults",
+        "covered": "Actual forwarder retains only complete observed LF records and enforces hard stream limits."
+      }
+    ],
+    "staticCounts": {
+      "childModes": 10,
+      "parentDeclarations": 1,
+      "parentExpectSites": 8,
+      "childAssertSites": 303,
+      "rawAwaitWordTokens": 102,
+      "labelEntries": 64,
+      "uniqueLabelStrings": 56
+    },
+    "labelsPerMode": {
+      "route-owner": 7,
+      "work-links": 10,
+      "native-chain": 4,
+      "persistence-tail": 5,
+      "capacity": 9,
+      "mechanism": 9,
+      "sink-zero": 4,
+      "sink-partial": 4,
+      "sink-throw": 4,
+      "forwarder": 8
+    },
+    "successfulPathParentExpectCalls": 53,
+    "countsScope": "Static sites, labels and conditional completed-path expectations only; no runtime footer or assertion result.",
+    "childBudgets": {
+      "count": 10,
+      "timeoutMs": 3000,
+      "forceKillGraceMs": 1000,
+      "stdoutCapBytes": 65536,
+      "stderrCapBytes": 65536,
+      "receiptBytes": 16384,
+      "parentBunMs": 45000,
+      "focalProcessMs": 60000,
+      "focalParentMs": 90000
+    },
+    "limits": [
+      "Source wrappers preserve original receiver/arguments and original async-body Promise; AsyncFunction/name/toString equivalence is not asserted.",
+      "No runtime result, native Finance authority proof, installed UI acceptance, performance improvement or delivery-under-kill guarantee."
+    ]
+  },
+  "bounds": {
+    "source": {
+      "receipt": {
+        "gitBlob": "cc1cc39705594f57ee2e20e2f7fe4f8bffcf31be",
+        "bytes": 70780,
+        "sha256": "cb05d6b63b0d84a6b67f0bf47211b9c00a592514e3ed37102edb2a31ca55f7d0",
+        "lf": 949,
+        "endsWithLF": true
+      },
+      "reservations": {
+        "base": 63,
+        "tail": 12,
+        "canonicalFinance": 8,
+        "persistence": 36,
+        "validations": 40,
+        "analysisReads": 4,
+        "reservedStreamRows": 163,
+        "extraBIAtMost": 1,
+        "reservedCampaignRows": 164,
+        "lateScopes": 13
+      },
+      "hardRows": 191,
+      "hardBytes": 195584,
+      "hardLineBytes": 1024,
+      "campaignHardRows": 192,
+      "campaignHardBytes": 196608,
+      "independentBindingScopes": 13,
+      "modelCount": 55,
+      "modelMaximumBytes": 920,
+      "newBindingMaximumBytes": 577,
+      "headroomBytes": 104,
+      "familyMaximumBytes": {
+        "request-enter": 668,
+        "request-close": 920,
+        "phase-close": 850,
+        "compare-body-checkpoint": 838,
+        "binding-validation": 577,
+        "analysis-binding": 503,
+        "phase-enter": 823,
+        "unit-enter": 524,
+        "unit-close": 841,
+        "http-boundary": 476,
+        "branch": 806,
+        "overflow": 510,
+        "route": 642
+      },
+      "independent44NewModelsAndHeaderLiteralAfterNonceNormalization": true,
+      "standaloneModelObjectsAcquired": 0
+    },
+    "controls": {
+      "reportModel": {
+        "bytes": 9180,
+        "sha256": "0051ba3d821ca1f1c9442c34782aac4b14e79a4708a4b25637d4e4ef68dd7fa7",
+        "lf": 1,
+        "capBytes": 16384,
+        "headroom": 7204,
+        "children": [
+          {
+            "mode": "route-owner",
+            "bytes": 963,
+            "labels": 7
+          },
+          {
+            "mode": "work-links",
+            "bytes": 1172,
+            "labels": 10
+          },
+          {
+            "mode": "native-chain",
+            "bytes": 831,
+            "labels": 4
+          },
+          {
+            "mode": "persistence-tail",
+            "bytes": 873,
+            "labels": 5
+          },
+          {
+            "mode": "capacity",
+            "bytes": 1079,
+            "labels": 9
+          },
+          {
+            "mode": "mechanism",
+            "bytes": 1084,
+            "labels": 9
+          },
+          {
+            "mode": "sink-zero",
+            "bytes": 556,
+            "labels": 4
+          },
+          {
+            "mode": "sink-partial",
+            "bytes": 562,
+            "labels": 4
+          },
+          {
+            "mode": "sink-throw",
+            "bytes": 558,
+            "labels": 4
+          },
+          {
+            "mode": "forwarder",
+            "bytes": 572,
+            "labels": 8
+          }
+        ],
+        "standaloneBlobCreated": false
+      },
+      "notWholeActionsMainCap": true
+    },
+    "carrier": {
+      "configuredCommandCapsMs": 2130000,
+      "configuredParentCapsMs": 2820000,
+      "jobMs": 2700000,
+      "fitGuaranteed": false
+    }
+  },
+  "preserved": {
+    "C22Test": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "C22TestChanged": false,
+    "originalAnalyticsRequest": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "originalSpec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "waitSeconds": [
+      60,
+      120
+    ],
+    "productFenceSeconds": 30,
+    "observationCriteriaCardinality": "The current C22 single-criterion opt-in wiring is retained; this overlay does not add a product optimization."
+  },
+  "resolvedReviewMatters": [
+    {
+      "matter": "Preparatory reentrancy",
+      "resolution": "Helper R2 and effective criterion caller neutralize the entire refused read/bind async body. A synchronous wrapper returns that body's Promise without extra await/then/finally. Three real preparatory reads exercise same binding/context, other factory and other context isolation."
+    },
+    {
+      "matter": "Observer late callback window",
+      "resolution": "The original open=false latch precedes the observer-await-returned sink hook; the proposed control checks the refused late callback without another evaluation."
+    },
+    {
+      "matter": "Fault matrix wording",
+      "resolution": "Control bounds explicitly separate active-ancestor no-op ALS, already-disabled getStore throw and post-binding clock throw. No complete active-ancestor fault Cartesian coverage is claimed."
+    },
+    {
+      "matter": "Carrier bounds wording",
+      "resolution": "The independent carrier reviewer closed two documentary corrections: G1 argv exceptions and focal CLI request naming; carrier code is unchanged."
+    }
+  ],
+  "findingsRemaining": [],
+  "verdict": {
+    "staticProposalAccepted": true,
+    "productPerformanceAccepted": false,
+    "installedUiAccepted": false,
+    "nativeFinanceAuthorityAccepted": false,
+    "sourceCandidateQualified": false,
+    "executionAuthorizedByThisReceipt": false,
+    "next": "Root may create/review the real source and focal objects for this exact proposal. The real sole parents, tree deltas, all40 working pins and exactly two carrier token bindings must be audited before a separate authority can activate any run.",
+    "futureObjects": {
+      "source": null,
+      "sourceTree": null,
+      "focal": null,
+      "focalTree": null,
+      "run": null
+    },
+    "runtimeResults": {
+      "pass": null,
+      "fail": null,
+      "assertions": null,
+      "reports": null,
+      "artifact": null
+    },
+    "originalReception": "None. Previously closed originals remain closed; any future reception is root-owned and must preserve both terminal jobs before interpretation."
+  },
+  "activity": {
+    "productCodeAuthored": 0,
+    "repositoryCodeExecuted": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "calculatedObjectGets": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "reviewBlobOnly": true
+  }
+}

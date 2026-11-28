@@ -1,0 +1,373 @@
+{
+  "schema": "sf613-e16-corrected-analytics-conditional-independent-review-v1",
+  "status": "CONDITIONAL_STATIC_ACK_DIAGNOSTIC_ONLY_NOT_EXECUTION_AUTHORITY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/focal_migration",
+  "purpose": "Persist the completed independent static review without reopening source or expanding scope. This is a conditional diagnostic selection ACK, not activation or runtime acceptance.",
+  "source": {
+    "commit": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "parent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "immediateDelta": "1M helper only",
+    "pairCount": 5,
+    "literalSiblings": 124
+  },
+  "sourceProof": {
+    "actualCommitAndTreeRead": true,
+    "exactDelta": "1M corrected helper",
+    "treePairs": 5,
+    "literalSiblings": 124
+  },
+  "selectionPins": {
+    "count": 16,
+    "mode": "100644",
+    "resolvedInActualSourceTree": true,
+    "items": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "role": "original-selection"
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "role": "original-selection"
+      },
+      {
+        "path": "packages/app-shell/playwright.config.ts",
+        "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "role": "original-selection"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "role": "original-selection"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "role": "original-selection"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "gitBlob": "e89139c2153f6d312b7f7813a7b5056746af7362",
+        "role": "E16-instrumented-preserved"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "role": "original-selection"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "gitBlob": "e585997d630819f8faa70ab98bb9a734b4676dab",
+        "role": "E16-instrumented-preserved"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "gitBlob": "8e0f0a10f0be0e848e31218baf12186ccd2c6e30",
+        "role": "E16-instrumented-preserved"
+      },
+      {
+        "path": "packages/app-shell/package.json",
+        "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "role": "original-selection"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "role": "original-selection"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "role": "original-selection"
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "role": "original-selection"
+      },
+      {
+        "path": ".ci-run.json",
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "role": "original-request"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+        "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+        "role": "E16-helper-corrected"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "gitBlob": "7a864749f19bd1a3f68ee750ae83bd6622380151",
+        "role": "E16-verifier-with-original-fence"
+      }
+    ]
+  },
+  "absentFocalPaths": [
+    {
+      "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+      "absent": true
+    },
+    {
+      "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+      "absent": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "absent": true
+    }
+  ],
+  "proofReuse": {
+    "originalSelection": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+    "E16SourcePackage": "b2d3d8a0c690b2fa45f909a4feca1e975f1419b8",
+    "typeCorrectionPackage": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+    "independentCorrection": "5308b8f9e1b37a15737d3ee961a4083d2255ea5b",
+    "notes": "Current S commit/tree/delta and all16 pins were resolved independently; original spec/workflow/config/argv builder and the E16 bridges/verifier were reread. The remaining original-package body proofs and accepted source semantics were reused, not reexecuted."
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "lf": 0,
+    "content": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/design-wave-five-analytics.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    }
+  },
+  "selection": {
+    "journeys": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "testNameFilterAdded": false,
+    "originalChannelExclusionsPreserved": true,
+    "perCaseMs": [
+      780000,
+      660000
+    ],
+    "previewMs": 60000,
+    "sensitivityMs": 120000,
+    "fenceMs": 30000,
+    "jobMs": 2700000,
+    "BIObserverOriginal": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e"
+  },
+  "eventIdentity": {
+    "baselineSource": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "baselineTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "expectedSnapshot": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "expectedSnapshotTree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "runId": null,
+    "attempt": 1,
+    "nonce": null,
+    "pid": null,
+    "parentPid": null,
+    "scope": "Baseline wire labels and actual instrumented source/snapshot are separate identities."
+  },
+  "evidenceLimits": {
+    "reservedRows": 163,
+    "secondJourneyDisabledRowsAtMost": 1,
+    "reservedCampaignRowsAtMost": 164,
+    "independentLateScopes": 13,
+    "retiredLookupDetailRows": 0,
+    "hardStreamEvents": 191,
+    "hardStreamBytes": 195584,
+    "maxLineBytes": 1024,
+    "hardCampaignEventsAtMost": 192,
+    "hardCampaignBytesAtMost": 196608,
+    "eventPrefix": "SF_PREVIEW_E16_EVENT ",
+    "eventSchema": "sf-preview-causal-e16-event-v1",
+    "qualification": false,
+    "lineModelMaximumBytes": 920,
+    "newBoundaryModelMaximumBytes": 577,
+    "modelStatus": "pure data, inherited, not observed output",
+    "notAMainLogCap": true,
+    "partialInvalidAndMissingTerminalLimits": "unchanged"
+  },
+  "checks": {
+    "count": 27,
+    "allPassed": true,
+    "items": [
+      {
+        "id": "original-request-295-noLF",
+        "ok": true
+      },
+      {
+        "id": "single-original-whole-file",
+        "ok": true
+      },
+      {
+        "id": "request-runner-config-env",
+        "ok": true
+      },
+      {
+        "id": "two-journeys",
+        "ok": true
+      },
+      {
+        "id": "case780-660",
+        "ok": true
+      },
+      {
+        "id": "preview60",
+        "ok": true
+      },
+      {
+        "id": "sensitivity120",
+        "ok": true
+      },
+      {
+        "id": "workers1-retries0",
+        "ok": true
+      },
+      {
+        "id": "production-repeat1",
+        "ok": true
+      },
+      {
+        "id": "workflow45-push",
+        "ok": true
+      },
+      {
+        "id": "list-and-validateSelection",
+        "ok": true
+      },
+      {
+        "id": "fence30",
+        "ok": true
+      },
+      {
+        "id": "preview-only-observation",
+        "ok": true
+      },
+      {
+        "id": "one-shot-selection-latch",
+        "ok": true
+      },
+      {
+        "id": "baseline-identity",
+        "ok": true
+      },
+      {
+        "id": "dynamic-snapshot",
+        "ok": true
+      },
+      {
+        "id": "chunk-forwarder-e89139c2153f6d312b7f7813a7b5056746af7362",
+        "ok": true
+      },
+      {
+        "id": "chunk-forwarder-e585997d630819f8faa70ab98bb9a734b4676dab",
+        "ok": true
+      },
+      {
+        "id": "Bun-native-process-gates",
+        "ok": true
+      },
+      {
+        "id": "hard-evidence-caps",
+        "ok": true
+      },
+      {
+        "id": "reserved163-five-slots",
+        "ok": true
+      },
+      {
+        "id": "same-chunk-return",
+        "ok": true
+      },
+      {
+        "id": "one-helper-source-delta",
+        "ok": true
+      },
+      {
+        "id": "all16-actual-tree-pins",
+        "ok": true
+      },
+      {
+        "id": "focal-only-absent-apps/cli/test/sucafina-proof-verification.test.ts",
+        "ok": true
+      },
+      {
+        "id": "focal-only-absent-apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+        "ok": true
+      },
+      {
+        "id": "focal-only-absent-apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+        "ok": true
+      }
+    ]
+  },
+  "prerequisite": {
+    "focalRun": "46163799111",
+    "attempt": 1,
+    "focalSnapshot": "a589b0f3c681837266a8e1b035afcd6e5c46f565",
+    "focalTree": "337c2030c3c38a4ab707bb0c0f0d94e2098311c5",
+    "fullyReceivedAndAccepted": null,
+    "laterRootNotice": {
+      "main": "SUCCESS",
+      "cleanup": "SUCCESS",
+      "reception": "Root receiving and preserving originals; final acceptance not yet provided",
+      "attribution": "Parent message received with this persistence authorization; no Actions or original-log read by this reviewer"
+    },
+    "requirement": "Root must close and accept the entire new focal, including both typechecks, all command exits and nontruncation, guards/Omni, controls, reports, current footers and cleanup. The old failed focal's passes are not transferred."
+  },
+  "conditions": [
+    "Root must first close and accept the entire new focal46163799111/1 at Da589b0f3/T337c2030: both typechecks, all command exits and nontruncation, guards/Omni, controls, reports and current footers.",
+    "Root alone may then issue a separate DIAGNOSTIC_ONLY authority and fresh exact ref/run preflight for ci-run-sf613e16a pointing directly to current source c53f2030.",
+    "No new source clone, budget-only snapshot or .ci-run edit is required: the original295-byte request is already present.",
+    "The actual Analytics snapshot/run/attempt/nonce/nativePID lineage must be authenticated on later reception; preparation does not prove admission or delivery."
+  ],
+  "future": {
+    "newFocalAccepted": null,
+    "analyticsBranch": "ci-run-sf613e16a",
+    "analyticsRun": null,
+    "analyticsResult": null,
+    "activation": null,
+    "productQualification": null
+  },
+  "interpretation": [
+    "Only the first admitted preview in the native process is selected; the one-shot latch precedes admission. Later requests are not automatically observed.",
+    "Two complete original journeys own separate installations. The bounded campaign allowance is scoped to this selection, not universal exclusion of other traffic.",
+    "163 reserved event rows plus at most1BI-disabled row; hard191 rows/195584 bytes per event stream and1024 bytes per line including prefix+LF; campaign hard192/196608. These do not bound the main log or sums of mirrored copies.",
+    "The shared real chunk forwarder is before splitLines, returns the same chunk, accepts complete ASCII LF lines only and latches zero/partial/throw failures without retry or EOF synthesis.",
+    "Missing phase/Request close or counters are unknown; prefix timing does not establish exclusive CPU, causality, deadlock, improvement or product/UI acceptance."
+  ],
+  "activity": {
+    "reviewCompletedBeforePersistence": true,
+    "sourceReadsDuringPersistence": 0,
+    "priorReviewActivity": {
+      "blobWrites": 0,
+      "sourceEdits": 0,
+      "trees": 0,
+      "commits": 0,
+      "refs": 0,
+      "runs": 0,
+      "actionsPolls": 0,
+      "originalGets": 0,
+      "zipGets": 0,
+      "repositoryExecutions": 0
+    },
+    "currentAuthorizedWrites": "One documentary Git blob plus literal readback only",
+    "newRepositoryExecutions": 0,
+    "newOriginalGets": 0,
+    "newZIPGets": 0,
+    "newActionsPolls": 0,
+    "newTrees": 0,
+    "newCommits": 0,
+    "newRefs": 0,
+    "newRuns": 0
+  },
+  "conclusion": "No static blocker was found in the pinned original Analytics selection on the corrected E16 source. Root may consider one separate DIAGNOSTIC_ONLY authority after integral focal acceptance and a fresh exact ref/run preflight. No product/UI qualification, observed admission, performance improvement or guaranteed terminal follows."
+}

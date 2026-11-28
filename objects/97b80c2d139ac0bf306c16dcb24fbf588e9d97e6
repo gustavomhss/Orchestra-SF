@@ -1,0 +1,495 @@
+{
+  "schema": "sf613-e16r2-minimal-correction-root-static-review-v1",
+  "status": "STATIC_SOURCE_AND_CARRIER_ACCEPTED_FOR_UNREFERENCED_OBJECT_CONSTRUCTION_ONLY",
+  "at": {
+    "current_time": "2026-11-28 15:58:12 UTC"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "priorNegative": {
+    "root": {
+      "gitBlob": "c33da64ec5caa1eeca3642281567e16ea9aaae75",
+      "bytes": 12053,
+      "sha256": "aea429bdc837703a96763aae9bd4057fdb8c9a07a395553bd2dce01c56097b38",
+      "lf": 396,
+      "endsWithLF": true
+    },
+    "closure": {
+      "gitBlob": "24b2f8d905838a97cf420a1ed27fec8e23770d65",
+      "bytes": 1844,
+      "sha256": "0478ff473f2a4c368873e6017ec239695571a3c7defa9c9ed6209368986c16b3",
+      "lf": 63,
+      "endsWithLF": true
+    },
+    "independent": "PENDING pinned receipt from review_archive"
+  },
+  "sourcePackage": {
+    "gitBlob": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+    "bytes": 11127,
+    "sha256": "dc08ffd3c7a9140c0d961586407a2f76d03efd774bc7f4c1eba179f4daeeec78",
+    "lf": 262,
+    "endsWithLF": true
+  },
+  "sourceBounds": {
+    "gitBlob": "db9a0d50d9b89e33008b9b5a00c71563b7541849",
+    "bytes": 11152,
+    "sha256": "73c0609187dbed5bb02e05d19d2d8a5463b85aa840522eaaa9c30c61c80e2efa",
+    "lf": 267,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "gitBlob": "0ac1d4abc8c2d73362f2fc779e1aaf61a70f638b",
+    "bytes": 14098,
+    "sha256": "ad08b1699cff52399bda0308099f0f97c9f986a45e465645f3342493942b37f6",
+    "lf": 387,
+    "endsWithLF": true
+  },
+  "patch": {
+    "gitBlob": "9d7177fc2710a68a88f02b08c83befaa79f9bb06",
+    "bytes": 2001,
+    "sha256": "83fb6fcdd8e084a504b8af459812a452e30ab77774d4ad280180ccd91764b904",
+    "lf": 30,
+    "endsWithLF": true
+  },
+  "helper": {
+    "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+    "bytes": 67602,
+    "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b",
+    "lf": 1203,
+    "endsWithLF": true
+  },
+  "fixture": {
+    "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0",
+    "bytes": 85264,
+    "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c",
+    "lf": 1320,
+    "endsWithLF": true
+  },
+  "sourceChecks": [
+    {
+      "name": "helper pre.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "helper pre.bytes",
+      "pass": true
+    },
+    {
+      "name": "helper pre.sha256",
+      "pass": true
+    },
+    {
+      "name": "helper post.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "helper post.bytes",
+      "pass": true
+    },
+    {
+      "name": "helper post.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing unique before",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing output.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing unique before",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing output.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing unique before",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing output.sha256",
+      "pass": true
+    },
+    {
+      "name": "helper forward full literal",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing unique after",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-final-narrowing inverse output.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing unique after",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-initial-narrowing inverse output.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse input.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse input.sha256",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing unique after",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse output.bytes",
+      "pass": true
+    },
+    {
+      "name": "explicit-prewrite-narrowing inverse output.sha256",
+      "pass": true
+    },
+    {
+      "name": "helper inverse full literal",
+      "pass": true
+    },
+    {
+      "name": "helper diff path",
+      "pass": true
+    },
+    {
+      "name": "helper diff forward",
+      "pass": true
+    },
+    {
+      "name": "helper diff inverse",
+      "pass": true
+    },
+    {
+      "name": "helper LF same",
+      "pass": true
+    },
+    {
+      "name": "helper byte delta",
+      "pass": true
+    },
+    {
+      "name": "fixture pre.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "fixture pre.bytes",
+      "pass": true
+    },
+    {
+      "name": "fixture pre.sha256",
+      "pass": true
+    },
+    {
+      "name": "fixture post.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "fixture post.bytes",
+      "pass": true
+    },
+    {
+      "name": "fixture post.sha256",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally input.bytes",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally input.sha256",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally unique before",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally output.bytes",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally output.sha256",
+      "pass": true
+    },
+    {
+      "name": "fixture forward full literal",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse input.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse input.bytes",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse input.sha256",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally unique after",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse output.gitBlob",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse output.bytes",
+      "pass": true
+    },
+    {
+      "name": "captured-descriptor-narrowing-in-finally inverse output.sha256",
+      "pass": true
+    },
+    {
+      "name": "fixture inverse full literal",
+      "pass": true
+    },
+    {
+      "name": "fixture diff path",
+      "pass": true
+    },
+    {
+      "name": "fixture diff forward",
+      "pass": true
+    },
+    {
+      "name": "fixture diff inverse",
+      "pass": true
+    },
+    {
+      "name": "fixture LF same",
+      "pass": true
+    },
+    {
+      "name": "fixture byte delta",
+      "pass": true
+    },
+    {
+      "name": "two files only",
+      "pass": true
+    },
+    {
+      "name": "four anchors only",
+      "pass": true
+    },
+    {
+      "name": "two hunks",
+      "pass": true
+    },
+    {
+      "name": "fouraddedfourremoved",
+      "pass": true
+    },
+    {
+      "name": "parent source binding",
+      "pass": true
+    },
+    {
+      "name": "fixture precondition retained",
+      "pass": true
+    },
+    {
+      "name": "private handle objects retained",
+      "pass": true
+    }
+  ],
+  "semantics": [
+    "All private verifier handles are objects; ordered valid-handle lookup preserved.",
+    "Missing slot plus undefined handle previously could dereference absent method slot and enter the enclosing existing catch; now lookup stays neutral. This diagnostic refusal behavior change is explicit.",
+    "Fixture savedRun is captured const and assert.ok(savedRun&&savedGet) precedes child work; local restore guard supplies closure narrowing without reread/assert or reachable restoration change.",
+    "No changes to async bodies, returned Promise identity, verifier/observer ordering, five validation slots, deadlines, original Analytics request/spec, or transport controls."
+  ],
+  "carrier": {
+    "template": {
+      "gitBlob": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+      "bytes": 18611,
+      "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525",
+      "lf": 251,
+      "endsWithLF": true
+    },
+    "patch": {
+      "gitBlob": "00be044a93ba23f40b6a95210c655d19f85a543d",
+      "bytes": 3264,
+      "sha256": "2dd0cec3a448a2117c3e1b405dc6151db6b2a85cd5c352295ac84a2197478e7d",
+      "lf": 45,
+      "endsWithLF": true
+    },
+    "literalProof": {
+      "groupsOld": 11,
+      "groupsNew": 11,
+      "g2ThroughG11Literal": true,
+      "engineLiteral": true,
+      "oldCommands": 17,
+      "newCommands": 17,
+      "oldPins": 40,
+      "newPins": 40,
+      "changedPins": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e16-diagnostic.ts",
+          "sha": "289523ca2b7f588337473f218476e242776d721d"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+          "sha": "6185635810d712e4be7dfe109422d2d65103a1a0"
+        }
+      ],
+      "metadataBaselinesSeparated": true
+    },
+    "derivationAndIndependentSourceReceipt": "PENDING Focal support finalization"
+  },
+  "topology": {
+    "sourceParent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "sourceParentTree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0",
+    "sourceCalculatedTree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "sourceDelta": "1M helper only",
+    "sourceCumulativeBase": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "sourceCumulativeDelta": "18M2A same paths",
+    "snapshotParent": "NEW_SOURCE_UNBOUND",
+    "snapshotDelta": "3A1M driver+parenttest+fixture additions and request replacement"
+  },
+  "execution": {
+    "treeCreationAuthorized": true,
+    "unreferencedCommitConstructionAuthorized": true,
+    "activationAuthorized": false,
+    "remainingBeforeActivation": [
+      "Independent negative old-run intake pinned",
+      "Focal minimal source review and carrier support pinned",
+      "Exact constructed source/snapshot and pins reviewed",
+      "Fresh reference/workflow/run preflight and concrete single activation authority"
+    ]
+  },
+  "findings": [],
+  "qualification": {
+    "newUIAreas": 0,
+    "productionAuthorized": false
+  }
+}

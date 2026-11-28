@@ -1,0 +1,252 @@
+{
+  "schema": "sf613-e16-typing-correction-independent-actual-object-review-v1",
+  "status": "ACK_ACTUAL_OBJECTS_AND_LITERAL_BINDING_NO_REMAINING_FINDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "reviewedAtUTC": "2026-11-28 16:10:14 UTC",
+  "scope": "Independent audit of existing immutable Git objects and exact driver binding only. Source and carrier semantic reviews are separately pinned; no product or historical evidence re-review.",
+  "source": {
+    "commit": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "tree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+    "soleParent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "message": "fix(sucafina): narrow diagnostic lookup slots",
+    "delta": {
+      "modified": 1,
+      "added": 0,
+      "deleted": 0,
+      "treePairs": 5,
+      "literalSiblings": 124
+    }
+  },
+  "snapshot": {
+    "commit": "a589b0f3c681837266a8e1b035afcd6e5c46f565",
+    "tree": "337c2030c3c38a4ab707bb0c0f0d94e2098311c5",
+    "soleParent": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+    "message": "test(sucafina): verify typed E16 observation",
+    "delta": {
+      "modified": 1,
+      "added": 3,
+      "deleted": 0,
+      "treePairs": 5,
+      "literalSiblings": 149
+    }
+  },
+  "sourceImmediateParent": {
+    "commit": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+    "tree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+  },
+  "cumulativeCleanBaseline": {
+    "commit": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b"
+  },
+  "ancestry": "Current source is the sole child of the failed E16 source. That immediate parent is the sole child of R7. The cumulative baseline remains R7 and is not substituted for the immediate parent.",
+  "cumulativeSourceDelta": {
+    "modified": 18,
+    "added": 2,
+    "deleted": 0,
+    "treePairs": 22,
+    "literalSiblings": 676,
+    "preservation": "All 20 paths match the accepted E16 cumulative map; only the diagnostic helper postimage is updated. The 18 preimages and 19 other postimages remain literal."
+  },
+  "actualGitVerification": {
+    "commitMetadata": {
+      "commits": 3,
+      "shaTreeSoleParentMessageVerified": true,
+      "rawCommitBodyHashVerified": false,
+      "limit": "The Git commit API normalizes date metadata and does not supply a raw serialized commit body. No claim is made of reconstructing that body."
+    },
+    "completeTreeSha1HashesVerified": 60,
+    "treeWalksComplete": true,
+    "truncatedTreesAccepted": false,
+    "literalSiblingMeaning": "Matching mode, type and object SHA on unchanged siblings; unchanged blob bodies were not reacquired.",
+    "pathResolution": {
+      "snapshot": 40,
+      "source": 37,
+      "special": 4,
+      "total": 81,
+      "sha256OfOrderedResolutionData": "d265ea49113f862c9216b3c4b1118d4a5555f16f9c5bb52e5743d246c3db86f8",
+      "fingerprintMeaning": "SHA256 of the own ordered resolution-data serialization, not a separately created Git blob."
+    },
+    "workingDriverTuplesLiteral": true,
+    "specialPins": [
+      {
+        "scope": "special-source-request",
+        "path": ".ci-run.json",
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295
+      },
+      {
+        "scope": "special-source-workflow",
+        "path": ".github/workflows/test-ci.yml",
+        "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476
+      },
+      {
+        "scope": "special-snapshot-workflow",
+        "path": ".github/workflows/test-ci.yml",
+        "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476
+      },
+      {
+        "scope": "special-no-source-driver",
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "sha": null,
+        "bytes": null
+      }
+    ],
+    "ownFinalCrossChecks": 43,
+    "countingLimit": "43 final consistency checks, 81 path resolutions and 60 complete tree hashes are overlapping verification categories, not independent runtime tests."
+  },
+  "effectiveBlobs": {
+    "helper": {
+      "gitBlob": "289523ca2b7f588337473f218476e242776d721d",
+      "bytes": 67602,
+      "sha256": "a5b62d3fb02988029212c2a6cd4ffa3e445aefe8ae0f71c16494271a4bd8684b"
+    },
+    "fixture": {
+      "gitBlob": "6185635810d712e4be7dfe109422d2d65103a1a0",
+      "bytes": 85264,
+      "sha256": "376814985a070cb14f82ae24a86ca08173ea45cf14b3a9c1745f3bca5f54a55c"
+    },
+    "runner": {
+      "gitBlob": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f",
+      "bytes": 1172,
+      "sha256": "f4500395cbc8b122949cab379eda5c20219e5c7681c7eb8f891a6b2fc21154e1"
+    },
+    "boundDriver": {
+      "gitBlob": "de6f57b7424aa9e3a9e8355dca21e880b7399d57",
+      "bytes": 18650,
+      "sha256": "fd64afece5a08b19954e4c817580691469d74b818d31636a9861579f5ea53d05"
+    },
+    "carrierTemplate": {
+      "gitBlob": "0d2b9c037acae759058b5f070f04b5f64525bfd6",
+      "bytes": 18611,
+      "sha256": "501b05c47895c462e8edc8985580af70cdd1b2801fffb493af718f0d330d8525"
+    },
+    "sourceAnalyticsRequest": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295
+    },
+    "focalRequest": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247
+    },
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476
+    }
+  },
+  "directSnapshotChanges": [
+    {
+      "path": ".ci-run.json",
+      "kind": "M",
+      "before": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "after": "4a7b64a8392138f1b79d386557e48ac4453617f5"
+    },
+    {
+      "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+      "kind": "A",
+      "before": null,
+      "after": "de6f57b7424aa9e3a9e8355dca21e880b7399d57"
+    },
+    {
+      "path": "apps/cli/test/sucafina-preview-route-e16-diagnostic.test.ts",
+      "kind": "A",
+      "before": null,
+      "after": "b6cd3cb2e37a5b312b73525cc10c3db523992b1f"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e16-diagnostic.ts",
+      "kind": "A",
+      "before": null,
+      "after": "6185635810d712e4be7dfe109422d2d65103a1a0"
+    }
+  ],
+  "literalBinding": {
+    "receipt": {
+      "gitBlob": "a883aea38372d24c76913f2907a03014567d9cb2",
+      "bytes": 1486,
+      "sha256": "6ed4ad03a83fd035409e58d294bf0f3d52584e5265a1b334706a7d7bb8c398ca"
+    },
+    "substitutions": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "value": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+        "occurrences": 1
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "value": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+        "occurrences": 1
+      }
+    ],
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "bytesDelta": 39,
+    "lfDelta": 0,
+    "identityConstants": {
+      "source": "c53f203066ab94f8db25d02e9ecc0a5a8d9c48ba",
+      "sourceTree": "6b8fb4e676d778745ccc851efd5ad272a15254a7",
+      "sourceBase": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "sourceBaseTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "sourceParent": "bb5e7df013ef3404df67cd101ae3ff5c5983779b",
+      "sourceParentTree": "42f7fd2645fc8d3a620a7dbb2f395f5a0e1b19f0"
+    }
+  },
+  "reviewLinks": {
+    "sourceProposal": {
+      "gitBlob": "6cf89aea2693c79c25dd1e31e88c9f7c9e9b4562",
+      "bytes": 11127,
+      "sha256": "dc08ffd3c7a9140c0d961586407a2f76d03efd774bc7f4c1eba179f4daeeec78"
+    },
+    "independentSourceReview": {
+      "gitBlob": "5308b8f9e1b37a15737d3ee961a4083d2255ea5b",
+      "bytes": 10990,
+      "sha256": "0dbf8f13273fa13b153303c3468af9802f6376c196cbbe99ef3dc8a387b9953a",
+      "status": "STATIC_ACK_NO_REMAINING_FINDING",
+      "scope": "Focal's independent review of the four guard corrections; no dynamic qualification."
+    },
+    "rootSourceCarrierStaticReview": {
+      "gitBlob": "97b80c2d139ac0bf306c16dcb24fbf588e9d97e6",
+      "bytes": 12816,
+      "sha256": "5f423972dae5ae6ac44b9a5f9dc4d4d5afea1dd857fe57c384a57d1d27e3c1a2"
+    },
+    "finalCarrierManifest": {
+      "gitBlob": "5a3bf6dec24ce2a5989446f2c3bb36e3a1cf479f",
+      "bytes": 9850,
+      "sha256": "04cf05e85da64b247cc8a3bf11e62903069a360ae4bedc6e1435395f3ee1c80f",
+      "nullMeaning": "Unbound fields are the author's template cut; actual objects and binding are verified separately in this receipt."
+    },
+    "rootActualObjectReview": {
+      "gitBlob": "059489439df39cc7f95fbb26e21496d378b28550",
+      "bytes": 65853,
+      "sha256": "a7f4dce78e2bdde9f63566db4335a9c18cb762114de9fb5b1f87f4d5790998ed",
+      "cutMeaning": "Its pending carrier support and peer-object fields describe the earlier root receipt cut; the final manifest and this object review are separately pinned here."
+    },
+    "priorNegativeIndependentIntake": {
+      "gitBlob": "4b8b8d03c1f0479353ff5801383b7d3e9cfca32d",
+      "bytes": 35881,
+      "sha256": "26ca32f7a8a139b96ad7b7f66a5b373ef34ed90225f0c9e84c69776bb67b5cd6"
+    },
+    "priorNegativeFinalRoot": {
+      "gitBlob": "be7c07deec5ab262799240ce50ed7b1596bc2bfb",
+      "bytes": 7115,
+      "sha256": "c86f3eeddc4415be1737221b8810b6f1525b356563a2935829297f000fcc49f6",
+      "provenance": "Root-provided final negative pin; the original reception remains closed."
+    }
+  },
+  "findings": [],
+  "decision": "The actual source/snapshot topology, exact deltas, pins and literal binding are accepted for root's separate activation decision. This receipt does not assert a passing corrected compiler run, Analytics result, UI qualification, final candidate or production readiness.",
+  "limits": {
+    "originalActionsLogs": "No acquisition; first E16 originals remain permanently closed at 2026-11-28 15:44:32 UTC.",
+    "zipAcquisitions": 0,
+    "runEndpointReads": 0,
+    "sourceExecution": false,
+    "treeCommitRefRunMutations": false,
+    "onlyWrite": "This independent review blob plus literal readback.",
+    "protectedRefPreflight": "Root-owned; not independently queried in this object-only review.",
+    "qualification": "Prior first E16 focal remains negative due to typecheck rejection. Corrected focal execution and reception remain future gates. UI qualification remains 12/15; no area is newly accepted.",
+    "production": "No production authorization."
+  }
+}
