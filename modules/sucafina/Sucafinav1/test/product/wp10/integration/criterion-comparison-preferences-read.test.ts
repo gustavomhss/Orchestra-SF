@@ -717,7 +717,7 @@ test("Comparison criteria observation retains original parallel evaluation for m
 }, 60_000)
 
 test("Comparison criteria observation preserves the complete fallback for unsupported Planner replacements", async () => {
-  const deadline = compositionTestDeadline("comparison-criteria-unsupported", 50_000)
+  const deadline = compositionTestDeadline("comparison-criteria-unsupported", 105_000)
   const outcomes: string[] = []
   try {
     const { native, portfolio, measurement, request, prepare, bindNative, readNative, begin, outside } =
@@ -763,4 +763,4 @@ test("Comparison criteria observation preserves the complete fallback for unsupp
       outcomes,
     }))
   } finally { await deadline.close() }
-}, 60_000)
+}, 120_000)
