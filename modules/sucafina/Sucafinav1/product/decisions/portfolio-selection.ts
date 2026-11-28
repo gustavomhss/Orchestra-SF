@@ -1,5 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
-import { selectSfPreferencesRead } from "../host-binding/state-provider.ts"
+import { selectSfCasesRead, selectSfPreferencesRead } from "../host-binding/state-provider.ts"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -11,7 +11,9 @@ type CaseRef = { id: string; incarnation: string; version: number }
 export type PortfolioSelectionRequest = { caseRef: CaseRef; baselineAlternativeId: string; alternativeId: string; criteria: readonly string[]; expectedVersion: number }
 export type PortfolioSelection = { schema: "sf-portfolio-selection-v1"; selectionRef: string; caseRef: CaseRef; baselineAlternativeId: string; alternativeId: string; baselineRef: string; alternativeRef: string; criteria: readonly string[]; comparisonDigest: string; version: number; principalRef: string; accessRevision: string; policyVersion: string; createdAt: string; selectionDigest: string }
 
-/** A human selects both alternatives; no candidate is implicitly made the baseline. */
+/** A human selects both alternatives; no candidate is implicitly made the baseline.
+ * The cases callbacks opt into the whole cases graph; effects and errors reachable
+ * only through other namespaces are outside their declared read-set. */
 export function createDecisionPortfolioSelection(input: {
   state: SfProductStatePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
@@ -28,7 +30,7 @@ export function createDecisionPortfolioSelection(input: {
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "selection-access-unavailable" }
       const readState = () => input.state.read(source, "preferences", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined))
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))
       if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "selection-access-unavailable" }
       const saved = await readState()
       if (saved.status !== "ok") return { status: "unavailable", reason: "selection-unavailable" }
@@ -48,7 +50,7 @@ export function createDecisionPortfolioSelection(input: {
     try {
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "selection-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))
       if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "selection-access-unavailable" }
       const saved = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined)
       if (saved.status !== "ok" || saved.value !== undefined && !isSelection(saved.value)) return { status: "unavailable", reason: "selection-unavailable" }
@@ -66,7 +68,7 @@ export function createDecisionPortfolioSelection(input: {
       const source = input.host.requestFor(context)
       const operation = input.operationIdentity(context)
       if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || !await input.authorizeSelection(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "selection-access-unavailable" }
-      const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
+      const current = await input.state.read(source, "cases", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))
       const preferences = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { active: state.preferences[selectionKey(request.caseRef)], prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `portfolio-selection:${operation}`])] } : undefined)
       if (current.status !== "ok" || preferences.status !== "ok" || !preferences.value || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context)) return { status: "denied", reason: "selection-access-unavailable" }
       if (preferences.value.prior) {

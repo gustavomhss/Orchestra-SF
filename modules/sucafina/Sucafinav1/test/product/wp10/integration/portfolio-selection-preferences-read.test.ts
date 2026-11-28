@@ -405,3 +405,183 @@ test("Portfolio selection uses fresh whole-preferences C08 reads and detects cha
     }
   } finally { await deadline.close() }
 }, 15_000)
+
+test("Portfolio selection declares cases at read, inspect and register while preserving guards and mixed reads", async () => {
+  const deadline = compositionTestDeadline("portfolio-selection-cases-read-set", 18_000)
+  try {
+    const sites = ["read", "inspect", "register"] as const
+    const fields = ["principalRef", "policyVersion", "accessRevision"] as const
+    const observed = { customCaptures: 0, nativeReads: 0, reachableFailures: 0, revocations: 0, mixedReads: 0 }
+    for (const site of sites) {
+      for (const mode of ["frozen", "mutable"] as const) {
+        deadline.check()
+        const base = frozenContext()
+        const call = mode === "frozen" ? base : { ...base, binding: { ...base.binding } }
+        const source = new Request("https://portfolio-cases-custom.example.test", { signal: deadline.signal })
+        const order: string[] = [], callbacks: Read[] = []
+        const seen: { request: Request; namespace: SfStateNamespace }[] = []
+        let id = "selected", unused = 0, selectionCalls = 0, revalidations = 0, copiedRequest = false
+        const ref = { get id() { order.push("request.id"); return id }, incarnation: "selected-inc", version: 1 }
+        const request = { caseRef: { id: "selected", incarnation: "selected-inc", version: 1 },
+          baselineAlternativeId: "baseline", alternativeId: "candidate", criteria: ["cost"], expectedVersion: 0 }
+        const arm = (value: { caseRef: CaseRef }) => Object.defineProperty(value, "caseRef", {
+          configurable: true, enumerable: true, get: () => { order.push("request.caseRef"); return ref },
+        })
+        // register first clones its incoming request. Install the late getters
+        // on that real clone at authorizeSelection, never before its clone.
+        if (site !== "register") arm(request)
+        const readPort: SfProductStatePort["read"] = async (incoming, namespace, read) => {
+          order.push("call:" + namespace)
+          seen.push({ request: incoming, namespace })
+          if (namespace === "cases") callbacks.push(read)
+          return { status: "unavailable", reason: "callback-captured-without-invocation" }
+        }
+        const state: SfProductStatePort = {
+          get read() { order.push("lookup:read"); return readPort },
+          transaction: async () => { unused++; throw new Error("No write belongs to callback capture") },
+        }
+        const registry = createDecisionPortfolioSelection({
+          state, host: { requestFor: () => source, revalidate: async () => { revalidations++; return true } },
+          compare: async () => { unused++; return { status: "unavailable", reason: "capture-only" } },
+          authorizeCase: async () => { unused++; return false },
+          authorizeSelection: async (incoming) => {
+            selectionCalls++; copiedRequest = incoming !== request; arm(incoming); return true
+          },
+          verifySnapshot: () => { unused++; return false },
+          operationIdentity: () => "capture-selection", proposalCoverageWrites: new WeakSet<object>(),
+          now: () => { unused++; return "2027-02-02T00:00:00Z" },
+        })
+        const result = site === "register" ? await registry.register(request, call)
+          : site === "inspect" ? await registry.inspect(request, call) : await registry.read(request, call)
+        expect(result).toEqual({ status: "denied", reason: "selection-access-unavailable" })
+        expect(seen).toEqual((site === "register" ? ["cases", "preferences"] as const : ["cases"] as const)
+          .map((namespace) => ({ request: source, namespace })))
+        expect(order).toEqual(site === "register"
+          ? ["lookup:read", "call:cases", "lookup:read", "call:preferences"] : ["lookup:read", "call:cases"])
+        expect(revalidations).toBe(1)
+        expect(selectionCalls).toBe(site === "register" ? 1 : 0)
+        expect(copiedRequest).toBe(site === "register")
+        expect(unused).toBe(0)
+        expect(callbacks).toHaveLength(1)
+        const read = callbacks[0]
+        if (!read) throw new Error("The actual portfolio cases callback was not delivered")
+        id = "later"
+        const selected = { marker: site }
+        for (const mismatch of [...fields, "none"] as const) {
+          order.length = 0
+          const authorityOrder: string[] = []
+          const authority = { ...actor }
+          for (const field of fields) Object.defineProperty(authority, field, { enumerable: true,
+            get: () => { authorityOrder.push(field); return field === mismatch ? "different" : actor[field] } })
+          const cases = Object.defineProperty({}, "later", { enumerable: true,
+            get: () => { order.push("case.value"); return selected } })
+          const state = Object.defineProperty({}, "cases", { enumerable: true,
+            get: () => { order.push("state.cases"); return cases } }) as Readonly<SfProductState>
+          // Run outside the service catch so a swallowed assertion cannot pass.
+          const observedRead = await capture(() => read(state, authority))
+          const reached = mismatch === "none" ? fields.length : fields.indexOf(mismatch) + 1
+          expect(authorityOrder).toEqual(fields.slice(0, reached))
+          expect(observedRead.error).toBeUndefined()
+          expect(observedRead.value).toBe(mismatch === "none" ? selected : undefined)
+          expect(order).toEqual(mismatch === "none"
+            ? ["state.cases", "request.caseRef", "request.id", "case.value"] : [])
+        }
+        observed.customCaptures++
+      }
+    }
+
+    const f = await selectionFixture(deadline)
+    for (const site of sites) {
+      const invoke = (registry = f.selected, call = f.call) => site === "register"
+        ? registry.register({ caseRef: f.ref, baselineAlternativeId: "baseline", alternativeId: "candidate",
+          criteria: ["cost"], expectedVersion: 1 }, call)
+        : site === "inspect" ? registry.inspect({ caseRef: f.ref }, call) : registry.read({ caseRef: f.ref }, call)
+      const expected = site === "inspect" ? { status: "ok" as const, value: { version: 2, selection: f.second } }
+        : { status: "ok" as const, value: f.second }
+      for (const mode of ["marked", "opaque", "mutable"] as const) {
+        await f.reset()
+        let outsideReads = 0
+        f.control.before = (snapshot, count, namespace) => {
+          if (count !== 1 || namespace !== "cases") return
+          const state = snapshot.data.__sfProductV1 as SfProductState
+          Object.defineProperty(state.documents, "outsideCases", { enumerable: true,
+            get: () => { outsideReads++; return "exclusively outside cases" } })
+        }
+        const call = mode === "mutable" ? { ...f.call, binding: { ...f.call.binding } } : f.call
+        const result = await invoke(mode === "opaque" ? f.opaque : f.selected, call)
+        expect(result).toEqual(expected)
+        expect(outsideReads).toBe(mode === "marked" ? 0 : 1)
+        expect(f.control.calls.slice(0, 2)).toEqual([
+          { namespace: "cases", mode: "read" }, { namespace: "cases", mode: "read" },
+        ])
+        expect(f.control.calls).toHaveLength(site === "read" ? 6 : 10)
+        expect(f.control.calls.every((entry) => entry.mode === "read")).toBe(true)
+        expect(f.audit.comparisonCalls).toBe(2)
+        expect(f.audit.errors).toEqual([])
+        observed.nativeReads++
+      }
+      // A sibling is inside the complete cases graph, even when the callback
+      // returns another case. Preserve its failure and never replay the read.
+      for (const opaque of [false, true]) {
+        await f.reset()
+        const sentinel = new Error("Reachable portfolio cases failure")
+        let reads = 0
+        f.control.before = (snapshot, count) => {
+          if (count !== 1) return
+          const state = snapshot.data.__sfProductV1 as SfProductState
+          Object.defineProperty(state.cases.other!, "reachableFailure", { enumerable: true,
+            get: () => { reads++; throw sentinel } })
+        }
+        const result = await invoke(opaque ? f.opaque : f.selected)
+        expect(result).toEqual({ status: "unavailable", reason: "selection-unavailable" })
+        expect(f.audit.errors).toEqual([sentinel])
+        expect(f.audit.errors[0]).toBe(sentinel)
+        expect(reads).toBe(1)
+        expect(f.control.calls).toEqual([{ namespace: "cases", mode: "read" }])
+        expect(f.audit.preferences).toEqual([])
+        expect(f.audit.comparisonCalls).toBe(0)
+        observed.reachableFailures++
+      }
+      await f.reset()
+      f.control.before = (_snapshot, count) => { if (count === 2) f.control.active = false }
+      const revoked = await invoke()
+      expect(revoked).toEqual({ status: "denied", reason: "selection-access-unavailable" })
+      expect(f.control.calls).toEqual((site === "register" ? ["cases", "cases", "preferences"] as const : ["cases", "cases"] as const)
+        .map((namespace) => ({ namespace, mode: "read" as const })))
+      expect(f.audit.comparisonCalls).toBe(0)
+      expect(f.audit.errors).toEqual([])
+      expect(f.audit.steps.some((step) => step.startsWith("compare:"))).toBe(false)
+      observed.revocations++
+    }
+
+    // register's separate preferences + transactions read remains opaque.
+    // Its real idempotency branch needs the transaction and still observes
+    // unrelated namespaces; the preceding cases declaration cannot mark it.
+    await f.reset()
+    let outsideMixedReads = 0, priorReads = 0, priorFound = false
+    f.control.before = (snapshot, count, namespace) => {
+      if (count !== 3 || namespace !== "preferences") return
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      const key = JSON.stringify([actor.principalRef, "preferences", f.ref.id, "portfolio-selection:selection-registration-two"])
+      const prior = state.transactions[key]
+      priorFound = prior !== undefined
+      Object.defineProperty(state.transactions, key, { enumerable: true,
+        get: () => { priorReads++; return prior } })
+      Object.defineProperty(state.documents, "outsideMixed", { enumerable: true,
+        get: () => { outsideMixedReads++; return "outside preferences and transactions" } })
+    }
+    const registered = await f.selected.register({ caseRef: f.ref, baselineAlternativeId: "baseline",
+      alternativeId: "candidate", criteria: ["cost"], expectedVersion: 1 }, f.call)
+    expect(registered).toEqual({ status: "ok", value: f.second })
+    expect(priorFound).toBe(true)
+    expect(priorReads).toBe(1)
+    expect(outsideMixedReads).toBe(1)
+    expect(f.control.calls).toHaveLength(10)
+    expect(f.control.calls.every((entry) => entry.mode === "read")).toBe(true)
+    expect(f.audit.comparisonCalls).toBe(2)
+    expect(f.audit.errors).toEqual([])
+    observed.mixedReads++
+    expect(observed).toEqual({ customCaptures: 6, nativeReads: 9, reachableFailures: 6, revocations: 3, mixedReads: 1 })
+    console.log("SF_C19_PORTFOLIO_CASES " + JSON.stringify({ schema: "sf-c19-portfolio-cases-v1", ...observed }))
+  } finally { await deadline.close() }
+}, 20_000)
