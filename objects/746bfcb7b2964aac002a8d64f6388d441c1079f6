@@ -1,0 +1,160 @@
+{
+  "schema": "sf613-c22r3-focal-final-receipt-v1",
+  "status": "RECEIVED_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "at": "2026-11-28 11:36:10 UTC",
+  "source": {
+    "sha": "c05fb0bbd7182c669d4905155e1ff0b0aa201840",
+    "tree": "e1bea29e74eedfbe1c6847da257f358e4ef6d45d"
+  },
+  "snapshot": {
+    "sha": "f1d88805abdfc27e5fe0dbbf55bd3d4aa164aa46",
+    "tree": "e1c623d0cc96b37675deca90c4cd6ccd488dc552"
+  },
+  "run": {
+    "id": 46139531712,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46139531712",
+    "conclusion": "failure",
+    "mainJob": 140962164000,
+    "mainConclusion": "failure",
+    "cleanupJob": 140963025397,
+    "cleanupConclusion": "success"
+  },
+  "authority": {
+    "gitBlob": "4112639822b383025565cb2b9d2ee866d3deaac3",
+    "bytes": 10841,
+    "sha256": "165b9dfff67f20f66b49bd39f6d47db53d2ecbcb152bf52b9cbffe5016346bd6",
+    "lf": 279,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "d6f64c9ed46cd149de95433ca745c8c2aa90ab98",
+    "bytes": 2117,
+    "sha256": "e4f87cd05834785033b1fcb62316e717e2311d169dad4c85fd39279d54c10b82",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "binding": {
+    "gitBlob": "09f5fe079aeae8dc86974a786f8c8c618934785e",
+    "bytes": 1429,
+    "sha256": "0b362deac95a612e4f835c4fad4719348a0b065a07aa1931cdadd61a184800bd",
+    "lf": 45,
+    "endsWithLF": true
+  },
+  "context": {
+    "gitBlob": "6da9f68c9fc2ba095a7f5a63972f48a055cbf59d",
+    "bytes": 26050,
+    "sha256": "2f77a8eda939b686522ae5c6feb8266ae537ccf453e0ef9f7090de31fae66029",
+    "lf": 562,
+    "endsWithLF": true
+  },
+  "originals": {
+    "main": {
+      "gitBlob": "2f541ec777aed7403eecf6cb5dea211576912430",
+      "bytes": 120864,
+      "sha256": "d56e2db24e3208a856889ebb6449e8c7d31f5934ef8dda2d59ae8f97a14f2d91",
+      "lf": 977,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "505015ef84e50fb5ffd59a105a2f8c76aef8a123",
+      "bytes": 1692,
+      "sha256": "5565746a31ffb62f8c6647e76e489cf4267b92d6135f92471fdd67f91f9bbad0",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "5f75420b2ea1df378281103bbec3ab0aed51a975",
+      "bytes": 2282,
+      "sha256": "c127f517da2e61d377a1cbd860fd178ed390cbef3f3409103e2fab6a235c55a6",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "bc26813939e3a99d587d3f522a35f611aeb1733c",
+      "bytes": 1682,
+      "sha256": "eb9447b38d12c8372cf0ea09744ebd6acc9c0d04ae1b3ca703e78a570a48eab6",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "closedPermanentlyAt": "2026-11-28 11:27:10 UTC",
+    "literalReadbackAndRecomposition": true,
+    "BOMPreservedAtByte": 0
+  },
+  "extraction": {
+    "gitBlob": "d67308439dc594bbef7874ea8ef6e0306f59a9e2",
+    "bytes": 119342,
+    "sha256": "6fc1870e14baada8d07d0eb9a45889012a5c30feb7cf0f15612e4f97fe675617",
+    "lf": 2076,
+    "endsWithLF": true
+  },
+  "rootIntake": {
+    "gitBlob": "6b92f8f705e4161ead1f90987a0b98671e992e59",
+    "bytes": 3490,
+    "sha256": "659a389c8bacb5b1864d5129a755d024b3431243e659af62cb552a7f6539f70c",
+    "lf": 122,
+    "endsWithLF": true
+  },
+  "peerIntake": {
+    "gitBlob": "079f7e770e4b3fc6c290376659c9bd688a72bb53",
+    "bytes": 11834,
+    "sha256": "74ade5ebd6e8a609b9289c4e90d560a0babfe8856bef9e44f1303ea4f0fcb535",
+    "lf": 376,
+    "endsWithLF": true
+  },
+  "received": {
+    "commands": 16,
+    "commandExitsZero": 15,
+    "truncationFlagsFalse": 32,
+    "workingPins": 25,
+    "hosts": 10,
+    "functionalProcesses": 6,
+    "functionalPass": 19,
+    "functionalFail": 1,
+    "functionalAssertions": 2652,
+    "outerPass": 9,
+    "outerFail": 1,
+    "outerAssertions": 49,
+    "CLITypecheck": "pass",
+    "SFTypecheck": "pass",
+    "inheritedReportsLiteral": 8,
+    "C22Reports": 0,
+    "separatePhaseRecords": 8,
+    "guards": {
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "findingsLiteralC21": true,
+      "errors": 0,
+      "approved": 0
+    },
+    "artifacts": 0,
+    "branchPresent": false
+  },
+  "failure": {
+    "command": "Comparison criterion observation whole-file",
+    "exitCode": 1,
+    "cooperativeDeadlineMs": 50000,
+    "commandDurationMs": 50505,
+    "lastPhaseReturnedMs": 32209,
+    "exclusiveBlockedOperation": null
+  },
+  "decision": {
+    "focalAccepted": false,
+    "analyticsMayActivate": false,
+    "preparedAnalytics": "9782fed45da682a25c2b307ffb19766cb126eae9",
+    "automaticRerun": false,
+    "next": "Review a finite restructuring of the new test with all seventeen outcomes retained. Record each native scenario separately with its own unchanged50s cooperative/60s Bun budget, and justify the whole-file aggregate cap."
+  },
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAcceptances": 0,
+    "installedAdmissionAccepted": false,
+    "performanceAccepted": false,
+    "productionAuthorized": false
+  }
+}

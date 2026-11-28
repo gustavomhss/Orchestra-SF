@@ -1,0 +1,385 @@
+{
+  "schema": "sf613-d33-g24-only-derivation-v1",
+  "status": "PROPOSED_FOUR_BINDINGS_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "wrapper": {
+      "git": "2d5f09d41f0170e2bbcaaf69df77e00d12bf83ef",
+      "bytes": 20047,
+      "sha256": "2a5b0b74cec0fe1e419900d6072eb5f2989f610655f2e3d7f1b14f08de0f6344",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "git": "8ca55d786b0ae9cf8755e9aa359da8f8ce69847f",
+      "bytes": 20131,
+      "sha256": "389fe3f09580181dc0155ead11dd61cbe79f92e1fcda4b36fa2f7d65b438225f",
+      "lf": 570,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "596ff2b9b02c5dfed4f1a8bc5f63ac5ffbead443",
+      "bytes": 19142,
+      "sha256": "56fe5889d476e95a36ee61554af34d19d7f530fce4ca8463fdae6b1014ab6e5d",
+      "lf": 541,
+      "endsWithLF": true
+    },
+    "peer": {
+      "git": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+      "bytes": 16168,
+      "sha256": "0e108dd97ba423501a9d8708764690a544021b05120c5ac609b7394f4c139178",
+      "lf": 480,
+      "endsWithLF": true
+    }
+  },
+  "path": "apps/cli/test/sf613-final-verification.test.ts",
+  "postimage": {
+    "git": "6e621343ac701b2017654ff2228011df48793c1a",
+    "bytes": 20047,
+    "sha256": "2dbe18196ab07448ebe8afb041823b604ba738391ddedeb44081d2f4555a72c3",
+    "lf": 369,
+    "endsWithLF": true
+  },
+  "operations": [
+    {
+      "id": "G24-process-only",
+      "before": "\"test\", \"./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\",\n  ], module, 300_000)",
+      "after": "\"test\", \"./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\",\n  ], module, 450_000)",
+      "offset": 17564,
+      "occurrences": 1,
+      "preimage": {
+        "git": "2d5f09d41f0170e2bbcaaf69df77e00d12bf83ef",
+        "bytes": 20047,
+        "sha256": "2a5b0b74cec0fe1e419900d6072eb5f2989f610655f2e3d7f1b14f08de0f6344",
+        "lf": 369,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "7cf2a0619b80ac820eb9d032bbee24b3d936bf0d",
+        "bytes": 20047,
+        "sha256": "923070c3587da484b484dfa161caa6ed5386a208b34f6bc1e0a89175ee1cbe21",
+        "lf": 369,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "G24-parent-only",
+      "before": "\"scenario\" in report && report.scenario === scenario)).toHaveLength(1)\n}), 360_000)",
+      "after": "\"scenario\" in report && report.scenario === scenario)).toHaveLength(1)\n}), 510_000)",
+      "offset": 18282,
+      "occurrences": 1,
+      "preimage": {
+        "git": "7cf2a0619b80ac820eb9d032bbee24b3d936bf0d",
+        "bytes": 20047,
+        "sha256": "923070c3587da484b484dfa161caa6ed5386a208b34f6bc1e0a89175ee1cbe21",
+        "lf": 369,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "6e621343ac701b2017654ff2228011df48793c1a",
+        "bytes": 20047,
+        "sha256": "2dbe18196ab07448ebe8afb041823b604ba738391ddedeb44081d2f4555a72c3",
+        "lf": 369,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "patch": {
+    "git": "efbc663f2df5c5758d65c6a26cd3f55046ab357b",
+    "bytes": 1254,
+    "sha256": "687304e9433e807e9fee36ce81b313584c4b613411ef922a3922693a65b05d1f",
+    "lf": 21,
+    "endsWithLF": true,
+    "hunks": 2,
+    "add": 2,
+    "del": 2
+  },
+  "delta": {
+    "files": 1,
+    "status": "M",
+    "bytes": 0,
+    "lf": 0,
+    "changes": "Only G24 process300000→450000 and parent360000→510000"
+  },
+  "literalCompanions": [
+    {
+      "role": "envelope",
+      "git": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+      "bytes": 43811,
+      "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+      "lf": 723,
+      "endsWithLF": true,
+      "actualDriverPath": null,
+      "reviewCompanionOnly": true,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    },
+    {
+      "role": "finalizer",
+      "git": "3865560d88636917d080015e91a714537cfa35af",
+      "bytes": 15782,
+      "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+      "lf": 250,
+      "endsWithLF": true,
+      "actualDriverPath": null,
+      "reviewCompanionOnly": true,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    },
+    {
+      "role": "workflow",
+      "git": "50cfa806e399238a8730bf1c4c58203932c8676b",
+      "bytes": 80067,
+      "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+      "lf": 1154,
+      "endsWithLF": true,
+      "actualDriverPath": ".github/workflows/sf613-final-qualification.yml",
+      "reviewCompanionOnly": false,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    }
+  ],
+  "transport": {
+    "envelopeEmbedding": {
+      "range": {
+        "start": 103,
+        "end": 825
+      },
+      "indent": 12,
+      "exact": true,
+      "stats": {
+        "git": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+        "bytes": 43811,
+        "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+        "lf": 723,
+        "endsWithLF": true
+      }
+    },
+    "finalizerEmbedding": {
+      "range": {
+        "start": 895,
+        "end": 1144
+      },
+      "indent": 10,
+      "exact": true,
+      "stats": {
+        "git": "3865560d88636917d080015e91a714537cfa35af",
+        "bytes": 15782,
+        "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+        "lf": 250,
+        "endsWithLF": true
+      }
+    },
+    "envelopeDigest": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+    "embeddedWrapper": false,
+    "wrapperAcquisition": "Existing Git blob and SHA256 checks; final concrete pin is one of the four future bindings.",
+    "workflowRunCharacterLimit": 21000,
+    "maxDraftRunCharacters": 15833,
+    "maxConcreteWidthRunCharacters": 15930,
+    "runBlocksEqualD31": true,
+    "widthOnlyBindingModels": [
+      {
+        "artifact": "wrapper",
+        "draftBytes": 20047,
+        "concreteWidthBytes": 20086,
+        "modelOnly": true,
+        "gitObjectCreated": false
+      },
+      {
+        "artifact": "envelope",
+        "draftBytes": 43811,
+        "concreteWidthBytes": 43908,
+        "modelOnly": true,
+        "gitObjectCreated": false
+      },
+      {
+        "artifact": "finalizer",
+        "draftBytes": 15782,
+        "concreteWidthBytes": 15879,
+        "modelOnly": true,
+        "gitObjectCreated": false
+      },
+      {
+        "artifact": "workflow",
+        "draftBytes": 80067,
+        "concreteWidthBytes": 80281,
+        "modelOnly": true,
+        "gitObjectCreated": false
+      }
+    ],
+    "loaderLiteral": true
+  },
+  "invariants": {
+    "before": {
+      "groups": 28,
+      "expectSpawn": 28,
+      "syntacticCommandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78
+    },
+    "after": {
+      "groups": 28,
+      "expectSpawn": 28,
+      "syntacticCommandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78
+    },
+    "englishReadLoopExecutions": 6,
+    "proofChildrenSeparately": 6,
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "actualRunResults": null,
+    "noUniversalSubprocessTotalClaimed": true,
+    "engineLiteral": true,
+    "G1ThroughG23AndG25ThroughG28Literal": true,
+    "argvAndCwdLiteral": true,
+    "reportGateLiteral": true,
+    "guardsLiteral": true,
+    "OmniContractLiteral": true,
+    "globalCapsLiteral": true,
+    "sourceRuntimeFilesChanged": 0
+  },
+  "protocol": {
+    "wrapperVerification": "sf613-final-composition-literal-c-d32-r1",
+    "verificationConsumedByCompanions": false,
+    "envelopeReceiptSchema": "sf613-final-technical-literal-c-d26-r1",
+    "finalizerSchema": "sf613-final-technical-finalizer-v1",
+    "workflowHistoricalD30CommentLiteral": true,
+    "wrapperNotEmbedded": true,
+    "wrapperAcquiredByFourBoundPins": true,
+    "derivedEnvelopeDigestNotFifthBinding": true,
+    "packageRevision": "D33",
+    "wrapperVerificationRetainedFromD32": true,
+    "reason": "Authorization limits executable changes to the two G24 budgets. The historical label is not consumed by the companions and is intentionally preserved."
+  },
+  "binding": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFour": true,
+    "derivedEnvelopeDigestIsNotAFifthBinding": true,
+    "referenceIsNotFinalC613": true,
+    "source": null,
+    "sourceTree": null,
+    "wrapperBlob": null,
+    "wrapperSha256": null
+  },
+  "staticChecks": [
+    {
+      "check": "2uniqueanchorsroundtrip",
+      "pass": true
+    },
+    {
+      "check": "fullpatchroundtrip",
+      "pass": true
+    },
+    {
+      "check": "onlyG24changed",
+      "pass": true
+    },
+    {
+      "check": "prefixAndEngineLiteral",
+      "pass": true
+    },
+    {
+      "check": "28groups",
+      "pass": true
+    },
+    {
+      "check": "34syntacticCalls",
+      "pass": true
+    },
+    {
+      "check": "28parentCaps",
+      "pass": true
+    },
+    {
+      "check": "parentSum7650000",
+      "pass": true
+    },
+    {
+      "check": "G24reportGateLiteral",
+      "pass": true
+    },
+    {
+      "check": "twoSourceTokensLiteral",
+      "pass": true
+    },
+    {
+      "check": "D32identityPreservedByOnlyG24Scope",
+      "pass": true
+    },
+    {
+      "check": "sameWidthLF",
+      "pass": true
+    }
+  ],
+  "forwardAndInverseLiteral": true,
+  "verification": {
+    "dataOnly": true,
+    "repoCodeExecuted": false,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "newTreeCommitRefRun": false
+  },
+  "instructions": {
+    "root": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "appsAndCliInheritedInventory": "Previously read in S21; no code changed in those instruction paths by C22.",
+    "appsCliTestExtraInstructions": [],
+    "appsCliTestInventoryRef": "a0afd32f76c5c6e959ce36de6515a7f0b444e0ad",
+    "actualFinalWrapperAbsentAtReference": true
+  }
+}

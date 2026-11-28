@@ -1,0 +1,348 @@
+{
+  "schema": "sf-c22r6-final-diagnostic-receipt-v1",
+  "status": "RECEIVED_DIAGNOSTIC_FAILURE_NOT_ACCEPTED",
+  "at": {
+    "current_time": "2026-11-28 13:42:13 UTC"
+  },
+  "purpose": "DIAGNOSTIC_ONLY",
+  "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+  "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+  "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+  "snapshotTree": "5daaac91ffac218091a826d09468859bdcb44826",
+  "run": 46149115180,
+  "attempt": 1,
+  "terminal": {
+    "main": 140991547681,
+    "mainConclusion": "failure",
+    "cleanup": 140992991435,
+    "cleanupConclusion": "success",
+    "artifacts": 0,
+    "headRuns": 1,
+    "branchDeleted": true
+  },
+  "intake": {
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "closedAt": {
+      "current_time": "2026-11-28 13:27:14 UTC"
+    },
+    "main": {
+      "gitBlob": "2c721c85838421751233e67b34beb5cfb1e41a61",
+      "bytes": 1695,
+      "sha256": "7515a8106c80182bc9ae298e851198fa59741230219836369de217a04ee3ee10",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "4a4cc1b1e2efb6c72989e5136c4f60226c846a8d",
+      "bytes": 1682,
+      "sha256": "07180da549d40c3743c58f788af59a269e765d0dddfb19d86a65c882ea741ed3",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "context": {
+      "gitBlob": "bc6d5e0731acc6c411e329d76cfd46a003a2bb71",
+      "bytes": 42103,
+      "sha256": "e47756685f6a2723d904b16547d1715a9eb89452221f25600e83786debaa852c",
+      "lf": 804,
+      "endsWithLF": true
+    }
+  },
+  "wholeLogs": {
+    "main": {
+      "gitBlob": "2c2a66c1baffc0f9a3c6e72d1125528595a1c1d6",
+      "bytes": 134955,
+      "sha256": "c98ccf7b804db4217d5aa829dae79b7e82c4696edb6f00e5460033ca5db44780",
+      "lf": 1053,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "d25b0237500957f032e125be88624d27d7e6639f",
+      "bytes": 2282,
+      "sha256": "10ed13d0e79af254edf9d91fd3dd8e6b8137bcf9fba89eaa3894d7e691afb256",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "bothActuallyCreated": true
+  },
+  "reviews": {
+    "root": {
+      "gitBlob": "0ad12d58ef1151d602bf0f5d5b0f5379dc3014a5",
+      "bytes": 9567,
+      "sha256": "c4927254aac933ff4fbcb0033ded26c6c6fa83fd6d87a82194256b57683df530",
+      "lf": 330,
+      "endsWithLF": true
+    },
+    "peer": {
+      "gitBlob": "31ed0848ab52e02b47c5aafe0816e6abd41cd04d",
+      "bytes": 29752,
+      "sha256": "4c0a33069bc15bfd7139c6bf0461988a3bb76edbdc63407985dcada0d5da74db",
+      "lf": 955,
+      "endsWithLF": true
+    },
+    "extraction": {
+      "gitBlob": "3791ad08a2c073c58980dd1b91faf56352a33c1f",
+      "bytes": 158005,
+      "sha256": "7d04360ff5e44c832e4d00b151544bcfa69560dd1b54002806b1bf77fdf40cac",
+      "lf": 3091,
+      "endsWithLF": true
+    }
+  },
+  "results": {
+    "functional": {
+      "processes": 6,
+      "pass": 21,
+      "fail": 1,
+      "assertions": 2682,
+      "declarations": 22,
+      "footers": [
+        {
+          "line": 785,
+          "pass": 7,
+          "fail": 0,
+          "assertions": 843,
+          "tests": 7,
+          "files": 1,
+          "text": "Ran 7 tests across 1 file. [327.00ms]"
+        },
+        {
+          "line": 808,
+          "pass": 5,
+          "fail": 0,
+          "assertions": 757,
+          "tests": 5,
+          "files": 1,
+          "text": "Ran 5 tests across 1 file. [669.00ms]"
+        },
+        {
+          "line": 855,
+          "pass": 3,
+          "fail": 0,
+          "assertions": 503,
+          "tests": 3,
+          "files": 1,
+          "text": "Ran 3 tests across 1 file. [249.00ms]"
+        },
+        {
+          "line": 869,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 147,
+          "tests": 1,
+          "files": 1,
+          "text": "Ran 1 test across 1 file. [161.00ms]"
+        },
+        {
+          "line": 882,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 157,
+          "tests": 1,
+          "files": 1,
+          "text": "Ran 1 test across 1 file. [451.00ms]"
+        },
+        {
+          "line": 1013,
+          "pass": 4,
+          "fail": 1,
+          "assertions": 275,
+          "tests": 5,
+          "files": 1,
+          "text": "Ran 5 tests across 1 file. [172.68s]"
+        }
+      ]
+    },
+    "outer": {
+      "line": 948,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "tests": 10,
+      "files": 1,
+      "text": "Ran 10 tests across 1 file. [266.36s]"
+    },
+    "footerOrderWarning": "Outer10test footer appears before last5test child footer; parse by identity, not lastposition.",
+    "types": [
+      {
+        "gate": "CLI package typecheck",
+        "exit": 0,
+        "durationMs": 31931
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "exit": 0,
+        "durationMs": 31885
+      }
+    ],
+    "guards": {
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "findingsLiteralC21": true,
+      "errors": 0,
+      "approved": 0
+    },
+    "reports": {
+      "expected": 11,
+      "observed": 10,
+      "inheritedLiteral": 8,
+      "C22LiteralR5": 2,
+      "missing": "unsupported-planner-closure"
+    },
+    "phases": {
+      "single": 40,
+      "multiple": 16,
+      "unsupported": 8
+    },
+    "newPassLines": [
+      {
+        "line": 997,
+        "body": "(pass) Comparison criteria observation owns the post-proof single-criterion batch and retains protocol, method and authority fences [32766.46ms]"
+      },
+      {
+        "line": 998,
+        "body": "(pass) Comparison criteria observation retains original parallel evaluation for multiple Planner criteria with a shared source [34363.60ms]"
+      }
+    ],
+    "controlProcessMs": 172715
+  },
+  "diagnostic": {
+    "points": [
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 1,
+        "measurement": 1,
+        "point": "bind-action-enter",
+        "proofOrdinal": 0,
+        "elapsedMs": 29472
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 2,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 29868
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 3,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52076
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 4,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52170
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 5,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 1,
+        "elapsedMs": 58258
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 6,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 58514
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 7,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 80960
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 8,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 81057
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 9,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 2,
+        "elapsedMs": 87301
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 10,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 3,
+        "elapsedMs": 87517
+      }
+    ],
+    "proofEntryToPostProofObserverIntervalsMs": [
+      22208,
+      22446
+    ],
+    "existingWorkAwaitIntervalsMs": [
+      6088,
+      6244
+    ],
+    "bindActionEntryMs": 29472,
+    "thirdProofEntryMs": 87517,
+    "explicitReadObserved": false,
+    "suppression": false,
+    "finalControlReportObserved": false,
+    "limits": [
+      "Intervals between markers include nested work, event-loop scheduling and observer overhead; not exclusive CPU cost.",
+      "work-await-returned marks continuation after the existing await, before later checks and cleanup; not acceptance.",
+      "Two cycles progress before a third proof begins; this observation is not a complete fallback success or a general deadlock exclusion.",
+      "The old30second proof fence remains unchanged and no relaxation is authorized."
+    ]
+  },
+  "clockCaution": "SF_COMPOSITION_PROGRESS uses native-fixture-entry; SF_COMPOSITION_PHASE uses the deadlineclock. Do not subtract elapsedvalues across those origins.",
+  "next": "R7 proposal removes tracing, retains literal product/fences/required3+2verification contract, and dimensions the complete fallback test budget from observed partial progress. New test pass is not predicted or guaranteed.",
+  "qualification": false,
+  "UIAreasAccepted": 0,
+  "productionAuthorized": false
+}

@@ -1,3 +1,106 @@
+# sf613-evidence — R11 documentary proposal
+
+**C22 R7's focal is closed PASS for the exact executed source. The original Analytics A5 is still closed negative, with one preview failure and one BI pass.** This archive preserves both facts and the complete sequence of earlier negative focals. It adds no installed UI acceptance and does not choose the final #613 candidate.
+
+Documentary cut: **2026-11-28 14:26:39 UTC**. The finite root seed is `08aca6f387efb6fd538a3c68ea3d7507fd499534`, cut at **2026-11-28 14:17:09 UTC**. The R7 focal receipt was closed at **2026-11-28 14:14:49 UTC**. E16 is outside this archive cut. No original Actions log or ZIP was acquired by this archive author.
+
+Root alone may create the archive tree, commit and ref after independent review and a fresh lease. These are documentary proposal blobs. The own tree may contain only root `README.md`, root `index.json` and mode100644 `objects/<actual Git blob SHA>`; it contains no workflow, request or executable source layout.
+
+## Exact evidence states
+
+| Scope | Run / attempt | Functional result recorded by the closed receipt | Meaning retained |
+|---|---|---|---|
+| C22 initial focal | 46137780758 / 1 | 19 pass, 1 fail, 2,626 assertions; outer 8 pass / 2 fail | Sucafina typecheck and new control fail; no C22 report |
+| C22 R3 focal | 46139531712 / 1 | 19 pass, 1 fail, 2,652 assertions; outer 9 / 1 | Types pass; cumulative 50-second control deadline; no C22 report |
+| C22 R4 focal | 46142400841 / 1 | 21 pass, 1 fail, 2,682 assertions; outer 9 / 1 | Two C22 scenarios pass; unsupported scenario reaches its 50-second deadline |
+| C22 R5 focal | 46144857724 / 1 | 21 pass, 1 fail, 2,682 assertions; outer 9 / 1 | Unsupported scenario reaches its 105-second deadline; explicit read not reached |
+| C22 R6 diagnostic focal | 46149115180 / 1 | 21 pass, 1 fail, 2,682 assertions; outer 9 / 1 | Ten progress records show work between verifications; complete unsupported control still absent |
+| C22 R7 focal | 46152236997 / 1 | **22 pass, 0 fail, 2,694 assertions; outer 10 / 0, 50 assertions** | **Source-bound focal acceptance only**, 16 commands, 32 false truncation flags, 25 pins, 11 report emissions |
+| Original Analytics A5 | 46146541990 / 1 | **1 failed preview, 1 passed BI journey** | **DIAGNOSTIC_ONLY**, original 60-second preview waiter still negative; no new qualification |
+
+The R7 source is **`ad3a4a7527baf1e092e87b5478626b2f0a3be57c`**, tree **`11bf210f469be26630c39db586bcfcce87e0de1b`**. Its executed focal snapshot is **`867df3c67f75eacd0912e172c108777477024967`**, tree **`4c3a823e9e8f96a802c82d8298ba185f1377271b`**. The final receipt is `581e7295a9ef05c23e14e8536cfca4ed46122d99`; the independent reception receipt is `04f292fd4580acef00cd8431bd4820973a2e820d`.
+
+All three current C22 report lines matched their expected models: single-criterion-and-protocol (623 B), multiple-criteria-shared-source (316 B), and unsupported-planner-closure (296 B). Their outcomes partition is **15 + 1 + 1**, preserving all17 outcomes. The unsupported control completed the required three bind validation batches and two explicit-read validation batches through the full fallback, without a native observation scope. Those are control observations on this source, not installed UI or throughput evidence.
+
+R7 removes the R6 progress tracing and preserves R5's test body except the two explicit unsupported budgets. The unsupported control uses240s cooperative/270s Bun; its whole file uses450s process/510s parent. The other scenarios, assertions, product source, authority fences and installed Analytics waiters remain as reviewed. Configured ceilings and their sums are not a guarantee that all worst cases fit the parent/job wall clock. The successful durations in the receipt are observations of one run, not an SLA or exclusive cost model.
+
+The R6 progress clock starts at native-fixture entry; phase records use another origin. The archive preserves their raw values and the corrected limits. No duration is formed by subtracting timestamps from those two clocks. Progress does not by itself prove a completed final verification, deadlock absence in every path, or exclusive operation cost.
+
+A5 executed **R5 source `9c2800360497e4cd037e06b43cc3b6ee3fee5ca7`**, through snapshot `d2a5920f1b79d4660932ab6d9024199af9ff3ea9`. Its receipt `ea72e908681dc0b3d65e9dcd700a387bc4c211c7` remains negative and is not replaced by the later R7 focal pass. The original two journeys, one worker, retry0, repeat1 and preview60s/sensitivity120s waiters remain unchanged. A5 has six partial UI42 capture declarations; UI43 and UI44 were not reached. Artifact **15263679973** is metadata only: **45,832,544 B**, SHA256 `7acc057851cde59b9557a3b799c13c277df6c1ebf814192776e53c7738781e09`. No ZIP GET, extraction or PNG inspection is implied.
+
+## Static packages and operational handoff
+
+- **D33** remains a reviewed static package with four final bindings UNBOUND. Its manifest is `a33c8374af8e680038451752325ecd5ba7c40e01`; no final global execution or total functional/report/assertion result is claimed. It preserves28 groups,34 command sites,39 effective commands and78 truncation flags, with only the explicit G24 control budget updated to450/510s.
+- **Complete-PNG reader R3** remains UNBOUND. Its current manifest is `140fd558ace82e20071729651a996f8329df763b`, with later root/peer review blobs explicitly retained. Static code and reviews do not prove that a future archive contains the33 required captures, that all images fit the joint transport envelope, or that their pixels satisfy UI42–44.
+- The operational receipt `c6ccc9467c404cd15f61662b1b31a8c051d9a109` records seven comments corroborated by root and the independently reported109-comment reading scope. No new reservation is confirmed within that reading. It is not a fresh VM, Entra, private-channel or backup inspection; existing host authorization is preserved.
+- The two S21 #673 reconciliation proposals and all earlier Migration/Release limits remain retained from R10. They still require revalidation against the actual final candidate. No final C/T, tar, QA/recovery reservation or production approval is created here.
+
+Historical qualification remains **12 of15 areas, zero new installed acceptances**. UI42, UI43, UI44 and UI6 remain unqualified by this increment. R7's focal pass does not authorize a repeat of unchanged original Analytics or a production action. E16 source, controls, observations and future runs are deliberately excluded.
+
+## Finite inventory and exact preservation
+
+The actual R11 catalog is **`ff7a596a8a5c34658d970deec27606b868a70a99`**, **183,748 B**, SHA256 **`951d5e735aa39924289f3b588ed2c1939272cd5ab8b699b9a51a7a837c2a4c93`**. It lists143 actual input blobs: the142 explicit seed pins plus the actual seed itself. Only the previous R10 catalog overlaps the published R10 object set. The catalog does not list itself; the index adds it once after literal readback.
+
+| Measure | Published R10 retained | R11 increment | Proposed R11 total |
+|---|---:|---:|---:|
+| Actual objects | 1,047 | 143 | **1,190** |
+| Object bytes | 100,228,804 | 10,517,960 | **110,746,764** |
+| Ordered memberships | 1,310 | 144 | **1,454** |
+| Groups | 64 | 12 | **76** |
+| Typed streams | 94 | 14 | **108** |
+| Part references | 298 | 30 | **328** |
+
+All1,047 inherited object metadata records retain their order and values. All1,310 prior memberships remain literal prefixes; one inherited object receives an additional membership. All64 groups,94 streams,298 part references and historical snapshots remain literal. The current prior index and README are themselves actual retained objects. The entire prior README appears unchanged below the historical delimiter.
+
+Only explicit actual inputs are listed. References inside manifests, derivation fragments, calculated models and intermediate hashes do not expand this set. The four optional historical metadata prefixes omitted from the seed remain explicitly unresolved; their final receipts and closed Git log copies are present. This does not claim that those metadata objects never existed.
+
+## New closed original streams
+
+| Stream | Bytes | LF | Parts | Actual representation |
+|---|---:|---:|---:|---|
+| c22_focal_main | 125,340 | 1032 | 1 | actual whole blob |
+| c22_focal_cleanup | 2,281 | 39 | 1 | actual whole blob |
+| c22r3_focal_main | 120,864 | 977 | 1 | actual whole blob |
+| c22r3_focal_cleanup | 2,282 | 39 | 1 | actual whole blob |
+| c22r4_focal_main | 132,716 | 1053 | 1 | actual whole blob |
+| c22r4_focal_cleanup | 2,282 | 39 | 1 | actual whole blob |
+| c22r5_focal_main | 131,435 | 1033 | 1 | actual whole blob |
+| c22r5_focal_cleanup | 2,282 | 39 | 1 | actual whole blob |
+| c22r6_focal_main | 134,955 | 1053 | 1 | actual whole blob |
+| c22r6_focal_cleanup | 2,282 | 39 | 1 | actual whole blob |
+| c22r7_focal_main | 128,317 | 1000 | 1 | actual whole blob |
+| c22r7_focal_cleanup | 2,282 | 39 | 1 | actual whole blob |
+| c22a5_main | 4,867,192 | 1983 | 17 | 17 actual parts; whole hash calculated only |
+| c22a5_cleanup | 2,282 | 39 | 1 | actual whole blob |
+
+These14 streams total **5,656,792 B**. Every actual part was authenticated and recomposed in order with exact byte/code-unit boundaries, BOM positions and LF/tail behavior. Original acquisition counts and closure are taken from the preserved root manifests. No separator, BOM stripping, newline normalization or JSON reserialization was applied.
+
+A5 main's whole Git hash **`9401376acf2294abc646d567494e9d8ad8a6de7a`** is **calculated only**. Its17 real parts are retained. The whole was not fetched, asserted as an actual blob or placed in `objects/`. Artifact ZIPs, E16, current package self-references and unlisted transitive targets are excluded.
+
+## Proposed retention parents
+
+| Order / purpose | Commit | Actual tree read |
+|---|---|---|
+| 1. published-R10 | `8d383d5e1b1eb5a745940ab57603df6dce3bfa8d` | `f3c296b6936d8adf32c30abf805a8b32528575ba` |
+| 2. initial-focal | `ed4dbb032a317be35e46835d27197a9aa60d6766` | `3ddfa87f2f314ae0f8a1b098bfb23042c48fccc5` |
+| 3. r3-focal | `f1d88805abdfc27e5fe0dbbf55bd3d4aa164aa46` | `e1c623d0cc96b37675deca90c4cd6ccd488dc552` |
+| 4. r4-focal | `a9c21083502063e9afe8b9c3cd2700638aebbd32` | `a22945a7cef3f298f123ded3fa0d017a01ac128e` |
+| 5. r5-focal | `1ec21ba381a2ae12c313c958f9610f276ce1d30b` | `946c8a0cf366fee2aa7898d4328cff89f2b881d9` |
+| 6. r6-focal | `7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb` | `5daaac91ffac218091a826d09468859bdcb44826` |
+| 7. r7-focal | `867df3c67f75eacd0912e172c108777477024967` | `4c3a823e9e8f96a802c82d8298ba185f1377271b` |
+| 8. a5-Analytics | `d2a5920f1b79d4660932ab6d9024199af9ff3ea9` | `fcec47ed77217b70a76a1b6a98321910ffd15f7b` |
+| 9. r7-superseded-before-activation | `214097757329b78f66520b46c874bfcefcc51b37` | `e9bdf762b21b4c1bad8149c06aade7742424b37b` |
+
+These are nine proposed parents, beginning with published R10. The six focal snapshots and A5 retain the actual source chain; the superseded R7 snapshot is retained explicitly as historical and unexecuted. No additional direct source parents are needed. Commit/tree metadata is separate from the blob inventory.
+
+R10's actual root tree and all1,047 entries of its objects tree were read and matched to the index; inherited bodies were not globally fetched again. All143 current input bodies, including the seed, were hashed. Future reachability requires root's actual archive commit and ref publication; textual hashes alone do not establish it. No garbage-collection deadline or current branch lease is asserted.
+
+## Review and publication boundary
+
+The proposal consists of catalog, index, README, reversible derivation, unified diff, bounds and manifest blobs, with literal Git readback. Root and an independent reviewer must verify those bytes and the future actual archive objects before one nonforce publication against the fresh expected archive head. This author creates no tree, commit, ref, run, product change or external message.
+
+## Preserved R10 README — literal historical text begins
+
 # sf613-evidence — R10 documentary proposal
 
 **E15's diagnostic focal is closed PASS within its tested scope. Its original Analytics suite is closed negative: one preview journey failed at the original 60-second waiter and the BI journey passed.** This increment retains that diagnostic evidence and two independently reviewed, static Migration reconciliation proposals on clean S21. It adds no qualified area and makes no performance-gain or production claim.
@@ -756,3 +859,5 @@ The JSON derivation supplied separately records every index operation, exact pre
 <!-- R8 literal README ends; R9 documentary wrapper only. -->
 
 </details>
+
+## Preserved R10 README — literal historical text ends

@@ -1,0 +1,308 @@
+{
+  "schema": "sf-ui42-44-png-root-static-review-v1",
+  "status": "ACK_STATIC_R3_UNBOUND",
+  "reviewer": "/root",
+  "at": {
+    "current_time": "2026-11-28 13:39:08 UTC"
+  },
+  "code": {
+    "gitBlob": "c376f5d933c9803180a0c1bd08483211da0043d1",
+    "bytes": 71037,
+    "sha256": "2e748b99d8b807e2e663304f83e6b6846be68705e273a8a825cb8ed09eb24caa",
+    "lf": 1310,
+    "endsWithLF": true
+  },
+  "workflow": {
+    "gitBlob": "e9e425bfd292280e031817489e5c126d14235603",
+    "bytes": 88762,
+    "sha256": "17a74401dd085c694ebf9e8f305664e415992198017a2287265863f24787cb2e",
+    "lf": 1365,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "140fd558ace82e20071729651a996f8329df763b",
+    "bytes": 13151,
+    "sha256": "c5a0610d6b530df2f5ee25337272c2398db1449ba7131710a15828d3d2534e2d",
+    "lf": 334,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "48935760fd8d66e38b152bde68e78ceb725a01fd",
+    "bytes": 22714,
+    "sha256": "f9d913477a34c4a7b1b632853e2b13200c7b3804d498917f920eb051c9da2550",
+    "lf": 465,
+    "endsWithLF": true
+  },
+  "independentPeer": {
+    "gitBlob": "a62a38bcb1cb9626df81b08b5166006c48c33822",
+    "bytes": 21338,
+    "sha256": "3c873c617442de7b9f88d85d7a019ae4d339b682fb5a8a44ffa8adcbc55c024a",
+    "lf": 571,
+    "endsWithLF": true
+  },
+  "derivations": [
+    {
+      "gitBlob": "cc19cb2d50ac471497400c8cd66d682dfe38ebdd",
+      "bytes": 366213,
+      "sha256": "5608d43e44af492917105ffe31ee33f04051dad0cc25e25de9d6470a316c030c",
+      "lf": 514,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "1d6ef1956e907f8e6bcd8545db982bae2a3a2665",
+      "bytes": 6831,
+      "sha256": "04310fafab43fff07f1732af3604dce854db5ebafb0581fe717161948dc7a005",
+      "lf": 208,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "3ae48d8ed7e77f42a37872244e9ebcf0238ff5be",
+      "bytes": 11007,
+      "sha256": "6676b37716569667fb319fc925ab372095115598b8c50d0853f0fcc3cd673798",
+      "lf": 252,
+      "endsWithLF": true
+    }
+  ],
+  "patches": [
+    {
+      "gitBlob": "4877bfa18b090569b885340ae4149bc67c40723e",
+      "bytes": 239574,
+      "sha256": "08457ec913d360c0fe38ba2ce037b322ead595b8b466c5a7bcf905121b005de8",
+      "lf": 3404,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "c7f2ef46a8665de8399a16f886973e9c55f7906f",
+      "bytes": 3787,
+      "sha256": "612811508da81941c1b7151e55af01bf4aba94670c9a126caf8d9ab338f0dd59",
+      "lf": 70,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "53b69c579478d7eab511f22fa9ad53b601dfdfa2",
+      "bytes": 6024,
+      "sha256": "e6c4d233d0eeeb0d5580dc2e236a58a111a6f09e5b1cbc9cf19a348c3d137f72",
+      "lf": 99,
+      "endsWithLF": true
+    }
+  ],
+  "checks": {
+    "anchors": [
+      {
+        "revision": 1,
+        "kind": "python",
+        "anchors": 10,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "revision": 1,
+        "kind": "workflow",
+        "anchors": 5,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "revision": 2,
+        "kind": "python",
+        "anchors": 2,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "revision": 2,
+        "kind": "workflow",
+        "anchors": 3,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "revision": 3,
+        "kind": "python",
+        "anchors": 3,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "revision": 3,
+        "kind": "workflow",
+        "anchors": 4,
+        "forward": true,
+        "inverse": true
+      }
+    ],
+    "patches": [
+      {
+        "path": "reader/sf613-original-artifact-reader.py",
+        "from": "ui42_44_png_base_python",
+        "to": "ui42_44_png_reader_r1",
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "from": "ui42_44_png_base_workflow",
+        "to": "ui42_44_png_workflow_r1",
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": "reader/sf613-original-artifact-reader.py",
+        "from": "ui42_44_png_reader_r1",
+        "to": "ui42_44_png_reader_r2",
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "from": "ui42_44_png_workflow_r1",
+        "to": "ui42_44_png_workflow_r2",
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": "reader/sf613-original-artifact-reader.py",
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "forward": true,
+        "inverse": true
+      }
+    ],
+    "inherited": [
+      {
+        "label": "imports",
+        "bytes": 227,
+        "sha256": "33159a1b7122baf58a910620ae64aa55fcf6ab67ab4abf4a2ec5532b733d62d1",
+        "literal": true
+      },
+      {
+        "label": "caps",
+        "bytes": 415,
+        "sha256": "9ff68756ff7ebac6bb505f3194fdf5872570860ae8e2fe8b6653adc5198772c9",
+        "literal": true
+      },
+      {
+        "label": "download-safeZIP-and-JSONhelpers",
+        "bytes": 13921,
+        "sha256": "bf122fe596a7284c653351840682922ec66b7664c015f318859e8994745eb28d",
+        "literal": true
+      },
+      {
+        "label": "inventory",
+        "bytes": 242,
+        "sha256": "4cd9463de7a30fbdd948eda4075fd7a7be852aaed33b29eddd94625e33efc56a",
+        "literal": true
+      },
+      {
+        "label": "failure-exit-harness",
+        "bytes": 244,
+        "sha256": "d98c8e5a01dee3ee586ba9424c59c1efffba5f1a4dfd8b008267a2813a493b3c",
+        "literal": true
+      }
+    ],
+    "helpers": [
+      {
+        "name": "download_original",
+        "literal": true
+      },
+      {
+        "name": "inspect_zip",
+        "literal": true
+      },
+      {
+        "name": "storage_url_allowed",
+        "literal": true
+      },
+      {
+        "name": "bounded_read",
+        "literal": true
+      },
+      {
+        "name": "path_parts",
+        "literal": true
+      },
+      {
+        "name": "read_file",
+        "literal": true
+      },
+      {
+        "name": "wire_line",
+        "literal": true
+      },
+      {
+        "name": "write_wire",
+        "literal": true
+      },
+      {
+        "name": "digest",
+        "literal": true
+      },
+      {
+        "name": "canonical",
+        "literal": true
+      },
+      {
+        "name": "api",
+        "literal": true
+      },
+      {
+        "name": "pages",
+        "literal": true
+      }
+    ],
+    "embedding": {
+      "embeddingCount": 1,
+      "hashPin": true
+    },
+    "exact33NamesComparedToOriginalSpec": true
+  },
+  "assessment": [
+    "Unbound UI_BINDING fails before network/download. Future candidate/run/job/artifact tuple must be concretely reviewed and source selection pins checked.",
+    "Exact original request selection supports Analytics2 or UI6. For UI6 source/snapshot and trees must be literal final candidate.",
+    "PNG bytes are selected by exact absolute original attachment path to exact outer ZIP member, with unique literal path references across all results independent of MIME. Selected slot still requires image/png.",
+    "All33 required named captures are mandatory; at most2 conditional captures and1 failure capture can extend set. No subset may be emitted to claim a complete set.",
+    "Download and ZIP walker retained; complete original SHA/size checked before ZIP opening and full inventory CRC/SHA verified. PNG chunks and IHDR validated without claiming decoded pixel review.",
+    "Joint export plan encodes all PNGs, summaries, inventory, frozen receipt and terminal before first payload; exact7MiB emitter bound remains. Successful main and preservation-upload receipts must later be checked.",
+    "Three findings closed: branch≤3words; references independent of MIME; JSON floating exponent overflow rejected.",
+    "Original ZIP cap46003924B remains configuration. A future larger artifact requires a reviewed bound change before any acquisition, not an inferred permission to drop images.",
+    "No code execution, runtime fit, eligible producer, original PNG inspection, UI qualification or production approval is claimed."
+  ],
+  "limits": {
+    "originalZipCeilingBytes": 46003924,
+    "perPngBytes": 4194304,
+    "emitterBytes": 7340032,
+    "wholeMainReceiverBytes": 8388608,
+    "workflowMinutes": 20,
+    "auditArtifactRetentionDays": 7,
+    "permissionsExpanded": false,
+    "deadlineExpanded": false,
+    "originalZipExportedInMain": false,
+    "pngsGuaranteedToFit": false,
+    "wholeMainFitGuaranteed": false,
+    "concreteStopConditions": [
+      "An artifact larger than46,003,924B is rejected before API/download; this is deliberately no increase over the prior exact original-size bound.",
+      "A future original main that lacks the33 target capture names is ineligible for this complete-PNG mode.",
+      "Wrong layout, missing/ambiguous owner or member, malformed/capped file, metadata overflow or whole-set transport overflow produces no complete PNG receipt.",
+      "The always-upload artifact retains original.zip for7days, not permanently. A successful Python terminal alone does not attest the later preservation upload."
+    ]
+  },
+  "bindings": {
+    "source": null,
+    "sourceTree": null,
+    "run": null,
+    "artifact": null,
+    "artifactSha256": null,
+    "readerRun": null
+  },
+  "actions": {
+    "originalLogGet": 0,
+    "zipGet": 0,
+    "ref": false,
+    "run": false,
+    "qualification": false,
+    "production": false
+  }
+}

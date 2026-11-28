@@ -1,0 +1,762 @@
+{
+  "schema": "sf-c22r7-independent-complete-focal-reception-v1",
+  "status": "ACCEPT_FOCAL_FOR_EXECUTED_SOURCE_ONLY",
+  "reviewer": "/root/review_archive",
+  "at": {
+    "current_time": "2026-11-28 14:13:55 UTC"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Independent complete reception using authenticated Git copies only. Original main and cleanup were acquired once by root, preserved and permanently closed; this review made no original or ZIP acquisition.",
+  "binding": {
+    "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "sourceTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "snapshot": "867df3c67f75eacd0912e172c108777477024967",
+    "snapshotTree": "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+    "run": 46152236997,
+    "attempt": 1,
+    "mainJob": 141001177464,
+    "cleanupJob": 141002891372,
+    "branch": "ci-run-sf613c22r7",
+    "actualObjectReview": {
+      "gitBlob": "a66dc0f9c34d32a86255705ebbc2dc2c8a7a2339",
+      "bytes": 8421,
+      "sha256": "c4064113bd04f5acf7b015829947e33da4abb35230968c053ce777658f47918f",
+      "lf": 245,
+      "endsWithLF": true
+    },
+    "staticCodeReview": {
+      "gitBlob": "1c8621c058cf5a2de72a6a92424e51da51dad03c",
+      "bytes": 19832,
+      "sha256": "bb9304e2b7de08fa255911a2dfe7d2d85479982ea8b94a049dbc1c9c1b1e9d41",
+      "lf": 595,
+      "endsWithLF": true
+    },
+    "bindingReceipt": {
+      "gitBlob": "f416ad0d93a70c346132cc3df8686283159e79d2",
+      "bytes": 3590,
+      "sha256": "8fffa9020a97e7bdae64242cc11e06d3da86ffedf4429b7f31586ee83e7df053",
+      "lf": 102,
+      "endsWithLF": true
+    }
+  },
+  "authenticatedCopies": {
+    "main": {
+      "gitBlob": "7bd66dd44ac8cb082cea7e0f1cbd8cd5bd1f53f9",
+      "bytes": 128317,
+      "sha256": "4fa1406774aa5ef3cbe68b3eab929100590a022c0a4f634c9b3ed35027bd190f",
+      "lf": 1000,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "1ee6276c824cd1d37e8412cc3d53c66f405cbe4b",
+      "bytes": 1695,
+      "sha256": "ed4802c72fc04a188645752d112d18248031325eb7b66c7a99071836d8eb4a1e",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "4bdf528df06cc263e6a2366af491b4b7bae37029",
+      "bytes": 2282,
+      "sha256": "48158431e526e8afb4364bce6780432b4ab0b218ac0aedaf5eddfb8c69b7f99a",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "f9947f01f4571ab496271a156758ab68553890a5",
+      "bytes": 1682,
+      "sha256": "994695529818a6f47d35f9ac7cfa745bc8950004780ab783d081ec5aba58d2c5",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "terminalMetadata": {
+      "gitBlob": "ded31ce72f2133396152398f9d5ecfa42b16b0c4",
+      "bytes": 57620,
+      "sha256": "87697061173f507625b743f75988fe8c4926975e10aaed980a51cab09c193a6c",
+      "lf": 1033,
+      "endsWithLF": true
+    },
+    "rootExtraction": {
+      "gitBlob": "fdc337cc28e8c80588c59441a5dcc5b3f2fdbe0b",
+      "bytes": 147799,
+      "sha256": "d0ede3f9d83e9a0a4ef1b711740ff7465c032d81c9bc26f0247c7d2db4941b46",
+      "lf": 2825,
+      "endsWithLF": true
+    },
+    "rootIntake": {
+      "gitBlob": "507725e458753045434d6017fa4364249e1935b4",
+      "bytes": 13346,
+      "sha256": "b183a6105b61410463e55c809a4723601716a4b7beae3a1b6cdf2580026bf18f",
+      "lf": 377,
+      "endsWithLF": true
+    }
+  },
+  "preservation": {
+    "representation": "Exact decoded original strings returned to root, re-encoded to UTF8; no normalization of line endings or BOM in preserved copies.",
+    "mainParts": 1,
+    "cleanupParts": 1,
+    "bothWholeBlobsActuallyCreated": true,
+    "mainLF": 1000,
+    "cleanupLF": 39,
+    "bomOffsetsBoth": [
+      0
+    ],
+    "mainOriginalGetsByRoot": 1,
+    "cleanupOriginalGetsByRoot": 1,
+    "closedAt": "2026-11-28 14:06:12 UTC",
+    "permanentlyClosed": true,
+    "ZIPGets": 0
+  },
+  "checks": [
+    {
+      "id": "literal_main_whole",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_main_part",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_main_BOM_preserved",
+      "result": "PASS"
+    },
+    {
+      "id": "preserved_main_acquisition_record",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_cleanup_whole",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_cleanup_part",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_cleanup_BOM_preserved",
+      "result": "PASS"
+    },
+    {
+      "id": "preserved_cleanup_acquisition_record",
+      "result": "PASS"
+    },
+    {
+      "id": "16_zero_exit_commands",
+      "result": "PASS"
+    },
+    {
+      "id": "32_false_truncation_flags",
+      "result": "PASS"
+    },
+    {
+      "id": "all_command_bindings",
+      "result": "PASS"
+    },
+    {
+      "id": "10_bound_host_preambles",
+      "result": "PASS"
+    },
+    {
+      "id": "25_runtime_pins_equal_actual_source_and_snapshot",
+      "result": "PASS"
+    },
+    {
+      "id": "corrected_runtime_budget_telemetry",
+      "result": "PASS"
+    },
+    {
+      "id": "outer_10_pass_0_fail_50",
+      "result": "PASS"
+    },
+    {
+      "id": "six_functional_processes_22_0_2694",
+      "result": "PASS"
+    },
+    {
+      "id": "both_typechecks_pass",
+      "result": "PASS"
+    },
+    {
+      "id": "eight_inherited_reports_literal",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_C22_single-criterion-and-protocol",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_C22_multiple-criteria-shared-source",
+      "result": "PASS"
+    },
+    {
+      "id": "literal_C22_unsupported-planner-closure",
+      "result": "PASS"
+    },
+    {
+      "id": "three_distinct_C22_reports_17_outcomes",
+      "result": "PASS"
+    },
+    {
+      "id": "phases_40_16_10_separate",
+      "result": "PASS"
+    },
+    {
+      "id": "single_guard_json_each",
+      "result": "PASS"
+    },
+    {
+      "id": "40_findings_raw_array_literal_C21",
+      "result": "PASS"
+    },
+    {
+      "id": "guards_78_860_no_error_or_bypass",
+      "result": "PASS"
+    },
+    {
+      "id": "current_dev_guard_binding",
+      "result": "PASS"
+    },
+    {
+      "id": "terminal_run_success_bound",
+      "result": "PASS"
+    },
+    {
+      "id": "both_terminal_jobs_success",
+      "result": "PASS"
+    },
+    {
+      "id": "zero_artifacts_branch_absent_single_head_run",
+      "result": "PASS"
+    },
+    {
+      "id": "no_parser_errors_or_R6_progress",
+      "result": "PASS"
+    },
+    {
+      "id": "outer_Omni_16_0_scoped",
+      "result": "PASS"
+    }
+  ],
+  "checkCount": 32,
+  "observations": {
+    "commands": [
+      {
+        "line": 751,
+        "gate": "fetch source parent",
+        "exitCode": 0,
+        "durationMs": 365,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 755,
+        "gate": "snapshot identity",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 758,
+        "gate": "source identity",
+        "exitCode": 0,
+        "durationMs": 17,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 765,
+        "gate": "complete cases read-set contract whole-file",
+        "exitCode": 0,
+        "durationMs": 251,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 784,
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "exitCode": 0,
+        "durationMs": 636,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 806,
+        "gate": "CLI package typecheck",
+        "exitCode": 0,
+        "durationMs": 28546,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 811,
+        "gate": "Sucafina package typecheck",
+        "exitCode": 0,
+        "durationMs": 28285,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 816,
+        "gate": "inspect history completeness",
+        "exitCode": 0,
+        "durationMs": 5,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 819,
+        "gate": "fetch current dev and source ancestry",
+        "exitCode": 0,
+        "durationMs": 27179,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 824,
+        "gate": "current dev identity",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 827,
+        "gate": "actual guard merge base",
+        "exitCode": 0,
+        "durationMs": 8,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 831,
+        "gate": "canonical guardrails",
+        "exitCode": 0,
+        "durationMs": 1645,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 837,
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "exitCode": 0,
+        "durationMs": 233,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 853,
+        "gate": "Scenario lookup complete candidates whole-file",
+        "exitCode": 0,
+        "durationMs": 172,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 867,
+        "gate": "Native scenario candidates selection whole-file",
+        "exitCode": 0,
+        "durationMs": 454,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      {
+        "line": 881,
+        "gate": "Comparison criterion observation whole-file",
+        "exitCode": 0,
+        "durationMs": 242000,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    ],
+    "commandCount": 16,
+    "requiredFalseTruncationFlags": 32,
+    "allIdentitiesMatchActualSourceTreeSnapshotRun": true,
+    "identityPreambles": 10,
+    "workingPins": {
+      "line": 762,
+      "count": 25,
+      "exactMatch": true
+    },
+    "runtimeBudgetTelemetry": {
+      "line": 750,
+      "cooperativeMs": [
+        50000,
+        50000,
+        240000
+      ],
+      "BunMs": [
+        60000,
+        60000,
+        270000
+      ],
+      "wholeNominalBunMs": 420000,
+      "processMs": 450000,
+      "parentMs": 510000,
+      "exactToFinalReviewedCarrier": true
+    },
+    "functionalProcesses": 6,
+    "functionalFooters": [
+      {
+        "line": 781,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "text": "Ran 7 tests across 1 file. [243.00ms]"
+      },
+      {
+        "line": 803,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [624.00ms]"
+      },
+      {
+        "line": 849,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "text": "Ran 3 tests across 1 file. [224.00ms]"
+      },
+      {
+        "line": 864,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [164.00ms]"
+      },
+      {
+        "line": 878,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [442.00ms]"
+      },
+      {
+        "line": 963,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 287,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [241.98s]"
+      }
+    ],
+    "functionalTotals": {
+      "pass": 22,
+      "fail": 0,
+      "assertions": 2694
+    },
+    "outer": {
+      "line": 970,
+      "pass": 10,
+      "fail": 0,
+      "assertions": 50,
+      "tests": 10,
+      "files": 1,
+      "text": "Ran 10 tests across 1 file. [330.07s]"
+    },
+    "footerScope": "The six functional process footers and the10-test outer wrapper are separate. Observed total22pass/0fail/2694 functional assertions is not increased by the outer10pass/0fail/50 assertions.",
+    "reports": {
+      "retainedLines": [
+        786,
+        787,
+        788,
+        790,
+        791,
+        839,
+        856,
+        869
+      ],
+      "retainedUnion": {
+        "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "bytes": 10691,
+        "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+        "lf": 8,
+        "endsWithLF": true
+      },
+      "c22": [
+        {
+          "line": 923,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "single-criterion-and-protocol",
+            "qualification": false,
+            "singleCriterion": {
+              "bindingBatches": 3,
+              "readBatches": 2,
+              "nativeScope": true
+            },
+            "outcomes": [
+              "absent-opt-in-order-and-receiver",
+              "single-work-private-checks",
+              "no-work",
+              "refused-after-work",
+              "double-work",
+              "late-work",
+              "hook-drift",
+              "registry-drift",
+              "method-drift",
+              "binding-drift",
+              "throw-undefined-not-converted-or-replayed",
+              "original-check-status",
+              "native-single-criterion-post-proof-and-durable-bind",
+              "native-evaluator-identity-drift",
+              "native-authority-revoked-after-batch"
+            ]
+          },
+          "bytes": 623,
+          "sha256": "618effd8bc9a7bdcb086cb8deb6a30f56816dfa1b65bdec751c9f144a714932e",
+          "modelMatch": true,
+          "standaloneBlobCreated": false
+        },
+        {
+          "line": 940,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "multiple-criteria-shared-source",
+            "qualification": false,
+            "multipleCriteria": {
+              "criteria": 2,
+              "sharedPlannerSources": true,
+              "newBatchObservations": 0
+            },
+            "outcomes": [
+              "multiple-planner-criteria-original-parallel-fallback"
+            ]
+          },
+          "bytes": 316,
+          "sha256": "ed8d1285741c5117527eff39a1f6712d0d0e7222e61f977a4592c2ef29fe2907",
+          "modelMatch": true,
+          "standaloneBlobCreated": false
+        },
+        {
+          "line": 951,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "unsupported-planner-closure",
+            "qualification": false,
+            "unsupportedClosure": {
+              "bindingBatches": 3,
+              "readBatches": 2,
+              "nativeScope": false
+            },
+            "outcomes": [
+              "unsupported-planner-closure-complete-fallback"
+            ]
+          },
+          "bytes": 296,
+          "sha256": "b7f9e4df187383d5682d91b7763bd120daec6d8a7a266bfc62f14cb41b7bf91f",
+          "modelMatch": true,
+          "standaloneBlobCreated": false
+        }
+      ],
+      "total": 11
+    },
+    "phases": {
+      "count": 66,
+      "counts": {
+        "comparison-criteria-single": 40,
+        "comparison-criteria-multiple": 16,
+        "comparison-criteria-unsupported": 10
+      },
+      "unsupported": [
+        {
+          "line": 941,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 0
+        },
+        {
+          "line": 942,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5413,
+          "elapsedMs": 5413,
+          "aborted": false
+        },
+        {
+          "line": 943,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "started",
+          "elapsedMs": 5414
+        },
+        {
+          "line": 944,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "returned",
+          "phaseMs": 1304,
+          "elapsedMs": 6719,
+          "aborted": false
+        },
+        {
+          "line": 945,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "started",
+          "elapsedMs": 6719
+        },
+        {
+          "line": 946,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "returned",
+          "phaseMs": 22404,
+          "elapsedMs": 29122,
+          "aborted": false
+        },
+        {
+          "line": 947,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "started",
+          "elapsedMs": 29122
+        },
+        {
+          "line": 948,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "returned",
+          "phaseMs": 86478,
+          "elapsedMs": 115601,
+          "aborted": false
+        },
+        {
+          "line": 949,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-read",
+          "state": "started",
+          "elapsedMs": 115601
+        },
+        {
+          "line": 950,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-read",
+          "state": "returned",
+          "phaseMs": 58041,
+          "elapsedMs": 173642,
+          "aborted": false
+        }
+      ]
+    },
+    "guard": {
+      "line": 832,
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "findingsRawLiteralC21": true,
+      "findingArray": {
+        "bytes": 13929,
+        "sha256": "a346cc874c24de30d984231d1b82aa9c3b6557b4a73f74eee55b848c0aa7b7a8",
+        "calculatedOnly": true
+      },
+      "errors": [],
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false,
+      "ancestry": {
+        "gate": "guard ancestry",
+        "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+        "sourceTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+        "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+        "command": "bun run check:guards --base origin/dev --json"
+      }
+    },
+    "terminal": {
+      "run": 46152236997,
+      "attempt": 1,
+      "main": 141001177464,
+      "cleanup": 141002891372,
+      "conclusion": "success",
+      "artifacts": 0,
+      "branchAbsent": true,
+      "headRuns": 1
+    },
+    "Omni": {
+      "line": 971,
+      "text": "omni positive control [5449f6cf569045e16e1f946d8d5e5535]: pass (declared: 10 test(s) in test/sucafina-proof-verification.test.ts); 16 omni spawn(s), 0 delegated.",
+      "scope": "outer10-test wrapper only"
+    },
+    "Bun": {
+      "setupObserved": "1.3.14+0d9b296af",
+      "testHeaderObserved": "1.3.14 (0d9b296a)",
+      "full40HexCommitObserved": false
+    }
+  },
+  "fallback": {
+    "observedReportLine": 951,
+    "passedTestLine": 958,
+    "passedTestMs": 173646.78,
+    "bindingBatches": 3,
+    "explicitReadBatches": 2,
+    "nativeScope": false,
+    "bindingPhaseMs": 86478,
+    "explicitReadPhaseMs": 58041,
+    "allFiveUnsupportedPhasesReturnedWithAbortedFalse": true,
+    "successBasis": "Whole-file test exit0, passing named test, preserved3+2 proof/batch assertions, exact durable explicit read equality, outside-scope checks and final unsupported report. A phase finally-returned marker alone is not used as success.",
+    "physicalMeaning": "For this actual promoted unsupported Planner replacement fixture, every selected post-proof batch asserted owned:false,planner:false,same:false,currentAfter:false,booleanOnly:true. The successful full original fallback is observed. This is not a claim of universal absence of native scopes or support for arbitrary unsupported inputs.",
+    "positiveAndMultipleMeaning": "The single-criterion scenario observes physical scope and identity inside each selected batch and scope absence at API return; no inter-batch root identity is asserted. The two-criterion shared-source scenario retains original parallel fallback and zero new batch observations."
+  },
+  "limits": {
+    "testCooperativeMs": 240000,
+    "testBunMs": 270000,
+    "controlProcessMs": 450000,
+    "controlParentMs": 510000,
+    "observedControlProcessMs": 242000,
+    "observedOuterBunMs": 330070,
+    "timing": "Wall intervals for this executed test source include nested work, scheduling and overhead. They are not installed preview timings, exclusive CPU costs, a general no-blocking result, a performance qualification or a future deadline guarantee.",
+    "AnalyticsWaitersMs": [
+      60000,
+      120000
+    ],
+    "productProofFenceMs": 30000,
+    "unchangedProductAndAnalyticsDeadlines": true,
+    "noImageOrInstalledJourneyInThisRun": true,
+    "artifacts": 0
+  },
+  "comparisonToRoot": {
+    "disagreements": [],
+    "rootIntakeMatchesIndependentMaterialResults": true
+  },
+  "qualification": {
+    "focalAcceptedForSource": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "focalAcceptedForTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "historicalNegativeRunsReclassified": false,
+    "installedAreasPreviouslyAccepted": 12,
+    "installedAreasAdded": 0,
+    "totalInstalledAreas": 15,
+    "UI42UI43UI44": "Pending installed journeys and complete evidence; this focal does not accept them.",
+    "UI6Accepted": false,
+    "finalCandidate": null,
+    "MigrationReleaseCommonCandidateAck": false,
+    "tar": null,
+    "D33Run": null,
+    "productionAuthorized": false
+  },
+  "remaining": "E16 diagnostic review and original preview investigation, then necessary product correction and final integrated qualification on the actual candidate. No automatic new execution is authorized by this receipt.",
+  "actions": {
+    "onlyThisReviewBlobCreated": true,
+    "originalLogGets": 0,
+    "ZIPGets": 0,
+    "repositoryCodeExecutions": 0,
+    "treeCreations": 0,
+    "commitCreations": 0,
+    "refMutations": 0,
+    "runsCreated": 0
+  }
+}

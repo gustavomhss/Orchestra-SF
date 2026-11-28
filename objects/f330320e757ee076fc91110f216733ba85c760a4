@@ -1,0 +1,299 @@
+{
+  "schema": "sf613-c22-r7-focal-derivation-v1",
+  "status": "PROPOSED_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "template": {
+      "git": "a7b3d0bba95bcd5f3471654083723bdea11ab4b5",
+      "bytes": 15595,
+      "sha256": "d91770e6b1e0b710b62425d0be13a666fccb699001ac9b5b132227e52c6ff7d0",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "git": "fdc8b675b716c23cdfa08ca363aecb78c689933f",
+      "bytes": 9503,
+      "sha256": "60341a0385722e9ca276863552efd50c0afbae84ab9be2e34530e73ed0758998",
+      "lf": 327,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "d8ddbe26d8d6b168c0f562e1e811bf0a0644200b",
+      "bytes": 17352,
+      "sha256": "a85843ca7cc107fa1f3ccaee1bca42c6a85f0ae9fa80d8412ad6225fd17724ed",
+      "lf": 563,
+      "endsWithLF": true
+    }
+  },
+  "postimage": {
+    "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+    "bytes": 15595,
+    "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+    "lf": 220,
+    "endsWithLF": true
+  },
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "operations": [
+    {
+      "id": "binding-guard-label",
+      "before": "C22 R6 source and tree must be bound to reviewed Git objects before execution",
+      "after": "C22 R7 source and tree must be bound to reviewed Git objects before execution",
+      "offset": 1011,
+      "occurrences": 1,
+      "preimage": {
+        "git": "a7b3d0bba95bcd5f3471654083723bdea11ab4b5",
+        "bytes": 15595,
+        "sha256": "d91770e6b1e0b710b62425d0be13a666fccb699001ac9b5b132227e52c6ff7d0",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "cb1b1bcee65417be348769d4ebcf2878c0e96934",
+        "bytes": 15595,
+        "sha256": "f431af9f2269540450b644a7fe4e8f240df69bc555d26031b33543765a91f2cb",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "verification-label",
+      "before": "sf613-c22r6-comparison-criteria-observation-focal",
+      "after": "sf613-c22r7-comparison-criteria-observation-focal",
+      "offset": 1505,
+      "occurrences": 1,
+      "preimage": {
+        "git": "cb1b1bcee65417be348769d4ebcf2878c0e96934",
+        "bytes": 15595,
+        "sha256": "f431af9f2269540450b644a7fe4e8f240df69bc555d26031b33543765a91f2cb",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "12caa457c6670947a4cc77af7a4388d2b9a55242",
+        "bytes": 15595,
+        "sha256": "f4ca0ff245bc77e55b49a2f39788c2a7b6cfec0c261da521c761c289f6b1c5ae",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "reviewed-test-pin",
+      "before": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\",\"201a3caef45735e38d2df9d4d6a1c885a5949ed0\"]",
+      "after": "[\"modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\",\"b8f59389f0de1be542e36f375f1674c3bc75bd75\"]",
+      "offset": 9032,
+      "occurrences": 1,
+      "preimage": {
+        "git": "12caa457c6670947a4cc77af7a4388d2b9a55242",
+        "bytes": 15595,
+        "sha256": "f4ca0ff245bc77e55b49a2f39788c2a7b6cfec0c261da521c761c289f6b1c5ae",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "4250b6dd88559116b9598696079d3421a48850ac",
+        "bytes": 15595,
+        "sha256": "12a968d94521f57d8fda3bdedbea738e1c239759856a40b66274d4114c2f1111",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "G10-process-budget",
+      "before": "[\"test\", \"./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\"], module, 300_000)",
+      "after": "[\"test\", \"./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\"], module, 450_000)",
+      "offset": 15352,
+      "occurrences": 1,
+      "preimage": {
+        "git": "4250b6dd88559116b9598696079d3421a48850ac",
+        "bytes": 15595,
+        "sha256": "12a968d94521f57d8fda3bdedbea738e1c239759856a40b66274d4114c2f1111",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "d05eb8208a1c8e251826a051992b67b2ac44193c",
+        "bytes": 15595,
+        "sha256": "24f0a14f31555c8a3316fbd17dc0acd4cca31c0692418494ac017ca3a20c5286",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "G10-parent-budget",
+      "before": "expect(output.split(\"\\n\").filter((line) => line.startsWith(\"SF_C22_COMPARISON_CRITERIA_OBSERVATION \"))).toHaveLength(3)\n}), 360_000)",
+      "after": "expect(output.split(\"\\n\").filter((line) => line.startsWith(\"SF_C22_COMPARISON_CRITERIA_OBSERVATION \"))).toHaveLength(3)\n}), 510_000)",
+      "offset": 15462,
+      "occurrences": 1,
+      "preimage": {
+        "git": "d05eb8208a1c8e251826a051992b67b2ac44193c",
+        "bytes": 15595,
+        "sha256": "24f0a14f31555c8a3316fbd17dc0acd4cca31c0692418494ac017ca3a20c5286",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182",
+        "bytes": 15595,
+        "sha256": "0bad099afb09abbef2aa96a4225a54d5771c538c10472ac0c85af8b27598c528",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "G1-budget-telemetry",
+      "before": "criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 105000], addedBun: [60000, 60000, 120000], declaredTests: 5, nominalSum: 270000, process: 300000, parent: 360000 }",
+      "after": "criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 240000], addedBun: [60000, 60000, 270000], declaredTests: 5, nominalSum: 420000, process: 450000, parent: 510000 }",
+      "offset": 5413,
+      "occurrences": 1,
+      "preimage": {
+        "git": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182",
+        "bytes": 15595,
+        "sha256": "0bad099afb09abbef2aa96a4225a54d5771c538c10472ac0c85af8b27598c528",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+        "bytes": 15595,
+        "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "patch": {
+    "git": "2d16d396982b8c6cd48c85424956370e3ff91a40",
+    "bytes": 4134,
+    "sha256": "ac06d6f35e6172d7a24534e43f63f67c193736193ba0373b3217fed4e6c6a9d6",
+    "lf": 48,
+    "endsWithLF": true,
+    "hunks": 5,
+    "add": 6,
+    "del": 6
+  },
+  "delta": {
+    "bytes": 0,
+    "lf": 0,
+    "changes": "Two revision strings, one reviewed test pin, G10 process/parent budgets, and the matching G1 criterionChecksControlsMs telemetry object. No other executable byte changes."
+  },
+  "testsAsData": [
+    {
+      "check": "sixanchorsroundtrip",
+      "pass": true
+    },
+    {
+      "check": "patchroundtrip",
+      "pass": true
+    },
+    {
+      "check": "runCommandliteral",
+      "pass": true
+    },
+    {
+      "check": "G2throughG9literal",
+      "pass": true
+    },
+    {
+      "check": "10groups",
+      "pass": true
+    },
+    {
+      "check": "16commandcalls",
+      "pass": true
+    },
+    {
+      "check": "25pins",
+      "pass": true
+    },
+    {
+      "check": "24literalpins",
+      "pass": true
+    },
+    {
+      "check": "samewidthandLF",
+      "pass": true
+    },
+    {
+      "check": "twoUniqueSentinels",
+      "pass": true
+    },
+    {
+      "check": "threeC22emissionsliteral",
+      "pass": true
+    },
+    {
+      "check": "noProgressParser",
+      "pass": true
+    },
+    {
+      "check": "G1criterionChecksControlsMsMatchesTestAndG10",
+      "pass": true
+    }
+  ],
+  "forwardAndInverseLiteral": true,
+  "engineLiteral": true,
+  "groups2Through9Literal": true,
+  "binding": {
+    "tokens": [
+      "__SF613_SOURCE_SHA__",
+      "__SF613_SOURCE_TREE__"
+    ],
+    "occurrencesEach": 1,
+    "source": null,
+    "sourceTree": null,
+    "modelOnly": {
+      "boundBytes": 15634,
+      "deltaBytes": 39,
+      "lf": 220
+    },
+    "noExecutableSelfPin": "A Git blob cannot contain its own eventual content hash; the same carrier convention is retained."
+  },
+  "scope": {
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "repoCodeExecuted": false,
+    "tree": false,
+    "commit": false,
+    "ref": false,
+    "run": false
+  },
+  "supersededDraftTelemetryCorrection": {
+    "operation": {
+      "id": "G1-budget-telemetry",
+      "before": "criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 105000], addedBun: [60000, 60000, 120000], declaredTests: 5, nominalSum: 270000, process: 300000, parent: 360000 }",
+      "after": "criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 240000], addedBun: [60000, 60000, 270000], declaredTests: 5, nominalSum: 420000, process: 450000, parent: 510000 }",
+      "offset": 5413,
+      "occurrences": 1,
+      "preimage": {
+        "git": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182",
+        "bytes": 15595,
+        "sha256": "0bad099afb09abbef2aa96a4225a54d5771c538c10472ac0c85af8b27598c528",
+        "lf": 220,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+        "bytes": 15595,
+        "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+        "lf": 220,
+        "endsWithLF": true
+      }
+    },
+    "patch": "diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts\n--- a/apps/cli/test/sucafina-proof-verification.test.ts\n+++ b/apps/cli/test/sucafina-proof-verification.test.ts\n@@ -73,7 +73,7 @@\n     portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n     scenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, internalInvocations: 14, nominalSum: 20000, process: 45000, parent: 60000 },\n     nativeScenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, nominalSum: 20000, process: 45000, parent: 60000 },\n-    criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 105000], addedBun: [60000, 60000, 120000], declaredTests: 5, nominalSum: 270000, process: 300000, parent: 360000 },\n+    criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 240000], addedBun: [60000, 60000, 270000], declaredTests: 5, nominalSum: 420000, process: 450000, parent: 510000 },\n     typecheckMs: { process: 240000, parent: 300000 },\n     guardsMs: { defaultProcess: 180000, parent: 600000 },\n     snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n",
+    "forwardInverseLiteral": true,
+    "oldTemplate": {
+      "git": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182",
+      "bytes": 15595,
+      "sha256": "0bad099afb09abbef2aa96a4225a54d5771c538c10472ac0c85af8b27598c528",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "newTemplate": {
+      "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+      "bytes": 15595,
+      "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+      "lf": 220,
+      "endsWithLF": true
+    }
+  }
+}

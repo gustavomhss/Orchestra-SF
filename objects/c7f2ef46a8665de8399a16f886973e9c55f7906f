@@ -1,0 +1,70 @@
+diff --git a/reader/sf613-original-artifact-reader.py b/reader/sf613-original-artifact-reader.py
+index 0f8883c181fd9571274a889bd13599e8cad7aa82..470ded51d5e417762da8ec2f9e07dea38a77abb8 100644
+--- a/reader/sf613-original-artifact-reader.py
++++ b/reader/sf613-original-artifact-reader.py
+@@ -22,7 +22,7 @@
+ # One reviewed future binding replaces this literal. No environment input can enable download.
+ UI_BINDING = None
+ _binding = UI_BINDING if isinstance(UI_BINDING, dict) else {}
+-BRANCH = _binding.get("readerBranch", "sf613-artifact-png-UNBOUND")
++BRANCH = _binding.get("readerBranch", "sf613-png-UNBOUND")
+ WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+ SOURCE = _binding.get("source")
+ SOURCE_TREE = _binding.get("sourceTree")
+@@ -408,7 +408,7 @@
+             "artifactSha256", "runConclusion", "mainConclusion", "testStepConclusion",
+             "selectionMode", "caseStatuses", "analyticsMarkers", "mainIntake"}
+     need(set(UI_BINDING) == keys, "UI_BINDING_FIELDS")
+-    need(isinstance(BRANCH, str) and re.fullmatch(r"sf613-artifact-png-[a-z0-9-]{1,48}", BRANCH)
++    need(isinstance(BRANCH, str) and re.fullmatch(r"sf613-png-[a-z0-9]{1,48}", BRANCH)
+          and "unbound" not in BRANCH.lower(), "UI_READER_BRANCH_UNBOUND")
+     for field in ("source", "sourceTree", "snapshot", "snapshotTree"):
+         need(isinstance(UI_BINDING[field], str)
+diff --git a/.github/workflows/sf613-artifact-read.yml b/.github/workflows/sf613-artifact-read.yml
+index fec520cbc0a8e41505b5f1002415c9b7317c37e3..3027452f5e809c860acdc3d35a461a848cd67e9b 100644
+--- a/.github/workflows/sf613-artifact-read.yml
++++ b/.github/workflows/sf613-artifact-read.yml
+@@ -2,14 +2,14 @@
+ 
+ on:
+   push:
+-    branches: [sf613-artifact-png-UNBOUND]
++    branches: [sf613-png-UNBOUND]
+ 
+ permissions:
+   contents: read
+   actions: read
+ 
+ concurrency:
+-  group: sf613-artifact-png-UNBOUND-${{ github.sha }}
++  group: sf613-png-UNBOUND-${{ github.sha }}
+   cancel-in-progress: false
+ 
+ jobs:
+@@ -20,7 +20,7 @@
+       - name: Verify original immutable artifact without checkout
+         env:
+           GH_TOKEN: ${{ github.token }}
+-          SF613_ARTIFACT_READER_SHA256: b11f4d2f8789dfab7dc4c134b19fa947b7af779e631d1a20faddd67cf2c6fd07
++          SF613_ARTIFACT_READER_SHA256: 8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882
+           SF613_ARTIFACT_READER_SOURCE: |
+             #!/usr/bin/env python3
+             """Receive a bound complete UI42-UI44 original PNG set; never execute repository code."""
+@@ -46,7 +46,7 @@
+             # One reviewed future binding replaces this literal. No environment input can enable download.
+             UI_BINDING = None
+             _binding = UI_BINDING if isinstance(UI_BINDING, dict) else {}
+-            BRANCH = _binding.get("readerBranch", "sf613-artifact-png-UNBOUND")
++            BRANCH = _binding.get("readerBranch", "sf613-png-UNBOUND")
+             WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+             SOURCE = _binding.get("source")
+             SOURCE_TREE = _binding.get("sourceTree")
+@@ -432,7 +432,7 @@
+                         "artifactSha256", "runConclusion", "mainConclusion", "testStepConclusion",
+                         "selectionMode", "caseStatuses", "analyticsMarkers", "mainIntake"}
+                 need(set(UI_BINDING) == keys, "UI_BINDING_FIELDS")
+-                need(isinstance(BRANCH, str) and re.fullmatch(r"sf613-artifact-png-[a-z0-9-]{1,48}", BRANCH)
++                need(isinstance(BRANCH, str) and re.fullmatch(r"sf613-png-[a-z0-9]{1,48}", BRANCH)
+                      and "unbound" not in BRANCH.lower(), "UI_READER_BRANCH_UNBOUND")
+                 for field in ("source", "sourceTree", "snapshot", "snapshotTree"):
+                     need(isinstance(UI_BINDING[field], str)

@@ -1,0 +1,571 @@
+{
+  "schema": "sf613-complete-ui-png-reader-independent-review-v1",
+  "status": "ACK_STATIC_R3_UNBOUND_CODE_SUPPORTS_AND_DOCUMENTARY_LINKS",
+  "at": "2026-11-28 13:32:41 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/teams_product",
+  "scope": "Independent source-text, data-only derivation, bounds and final documentary review. No concrete producer or reader execution is accepted.",
+  "effective": {
+    "python": {
+      "gitBlob": "c376f5d933c9803180a0c1bd08483211da0043d1",
+      "bytes": 71037,
+      "sha256": "2e748b99d8b807e2e663304f83e6b6846be68705e273a8a825cb8ed09eb24caa",
+      "lf": 1310
+    },
+    "workflow": {
+      "gitBlob": "e9e425bfd292280e031817489e5c126d14235603",
+      "bytes": 88762,
+      "sha256": "17a74401dd085c694ebf9e8f305664e415992198017a2287265863f24787cb2e",
+      "lf": 1365
+    },
+    "bounds": {
+      "gitBlob": "48935760fd8d66e38b152bde68e78ceb725a01fd",
+      "bytes": 22714,
+      "sha256": "f9d913477a34c4a7b1b632853e2b13200c7b3804d498917f920eb051c9da2550",
+      "lf": 465
+    },
+    "manifest": {
+      "gitBlob": "140fd558ace82e20071729651a996f8329df763b",
+      "bytes": 13151,
+      "sha256": "c5a0610d6b530df2f5ee25337272c2398db1449ba7131710a15828d3d2534e2d",
+      "lf": 334
+    }
+  },
+  "support": {
+    "plan": {
+      "gitBlob": "0087ad17fc10fc6662dd3cef44ba0cdb2441da4d",
+      "bytes": 20604,
+      "sha256": "c02e7e7e9704d11bd5f5ea650e232e75abbe1c9e621f21d0746d26887747b41c",
+      "lf": 397
+    },
+    "basePython": {
+      "gitBlob": "6f82d68e4b3f7c50cefa2b6183f6786b23a25cc8",
+      "bytes": 98691,
+      "sha256": "69d63b8f6c885235b64e9c2fe0f9bc5f1f8345f275e86eadf76f39c6f16dddcf",
+      "lf": 1649
+    },
+    "baseWorkflow": {
+      "gitBlob": "13db57775b23b9603ea1018dc734ffd314942811",
+      "bytes": 120481,
+      "sha256": "53e406460ae12a9c15dd439aa2993005355edb40ca9724188002fb7f88f8711b",
+      "lf": 1704
+    },
+    "e12ToR1Derivation": {
+      "gitBlob": "cc19cb2d50ac471497400c8cd66d682dfe38ebdd",
+      "bytes": 366213,
+      "sha256": "5608d43e44af492917105ffe31ee33f04051dad0cc25e25de9d6470a316c030c",
+      "lf": 514
+    },
+    "e12ToR1Patch": {
+      "gitBlob": "4877bfa18b090569b885340ae4149bc67c40723e",
+      "bytes": 239574,
+      "sha256": "08457ec913d360c0fe38ba2ce037b322ead595b8b466c5a7bcf905121b005de8",
+      "lf": 3404
+    },
+    "r1ToR2Amendment": {
+      "gitBlob": "1d6ef1956e907f8e6bcd8545db982bae2a3a2665",
+      "bytes": 6831,
+      "sha256": "04310fafab43fff07f1732af3604dce854db5ebafb0581fe717161948dc7a005",
+      "lf": 208
+    },
+    "r1ToR2Patch": {
+      "gitBlob": "c7f2ef46a8665de8399a16f886973e9c55f7906f",
+      "bytes": 3787,
+      "sha256": "612811508da81941c1b7151e55af01bf4aba94670c9a126caf8d9ab338f0dd59",
+      "lf": 70
+    },
+    "r2ToR3Amendment": {
+      "gitBlob": "3ae48d8ed7e77f42a37872244e9ebcf0238ff5be",
+      "bytes": 11007,
+      "sha256": "6676b37716569667fb319fc925ab372095115598b8c50d0853f0fcc3cd673798",
+      "lf": 252
+    },
+    "r2ToR3Patch": {
+      "gitBlob": "53b69c579478d7eab511f22fa9ad53b601dfdfa2",
+      "bytes": 6024,
+      "sha256": "e6c4d233d0eeeb0d5580dc2e236a58a111a6f09e5b1cbc9cf19a348c3d137f72",
+      "lf": 99
+    }
+  },
+  "evidenceSource": {
+    "analyticsSpec": {
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lf": 814
+    },
+    "analyticsHelper": {
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "bytes": 21102,
+      "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+      "lf": 364
+    },
+    "originalCapture": {
+      "gitBlob": "b3c02539245cce5091e0f200e84d3021016074ea",
+      "bytes": 10068,
+      "sha256": "8a36118cfd8a40dc4003c1c816c58a880c4bb670be858d452b0ef964a6e37cf4",
+      "lf": 180
+    }
+  },
+  "corrections": [
+    {
+      "origin": "root",
+      "finding": "Reader branch exceeded root naming constraint.",
+      "resolvedIn": "R2",
+      "effective": "sf613-png-[a-z0-9]{1,48}"
+    },
+    {
+      "origin": "/root/teams_product",
+      "finding": "Other-MIME references to selected attachment.path escaped owner counting.",
+      "resolvedIn": "R3",
+      "effective": "All string attachment paths counted, exact selected canonical path required, selected MIME remains image/png."
+    },
+    {
+      "origin": "/root/teams_product",
+      "finding": "Exponent-overflow JSON floats could bypass parse_constant and become Infinity.",
+      "resolvedIn": "R3",
+      "effective": "ui_finite_float rejects nonfinite parse_float results."
+    }
+  ],
+  "finalDocumentCorrection": {
+    "preimage": "bf9bc8e92ff00ccc7e6133d524e0157819718906",
+    "postimage": "140fd558ace82e20071729651a996f8329df763b",
+    "path": "remaining[0]",
+    "before": "Finish independent code review on exact R2postimages and transitive supports.",
+    "after": "Finish independent code review on exact R3postimages and transitive supports.",
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "byteDelta": 0,
+    "lfDelta": 0
+  },
+  "derivation": {
+    "E12toR1": {
+      "pythonAnchors": 10,
+      "workflowAnchors": 5,
+      "hunks": 38,
+      "added": 1147,
+      "removed": 1837,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "R1toR2": {
+      "pythonAnchors": 2,
+      "workflowAnchors": 3,
+      "hunks": 6,
+      "added": 7,
+      "removed": 7,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "R2toR3": {
+      "pythonAnchors": 3,
+      "workflowAnchors": 4,
+      "hunks": 7,
+      "added": 25,
+      "removed": 13,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "exactPythonEmbeddingAndChecksum": true,
+    "inheritedFunctionsLiteral": 24
+  },
+  "documentLinkReview": {
+    "authenticatedOccurrences": 29,
+    "distinctBodies": 17,
+    "historicalReceiptsAndRequestLocatorsNotRefetchedInThisScope": true,
+    "allEffectiveCodeAndSupportLinksChecked": true
+  },
+  "bounds": {
+    "requiredPng": 33,
+    "areaPartition": {
+      "UI42": 9,
+      "UI43": 6,
+      "UI44": 18
+    },
+    "conditionalPng": 2,
+    "optionalFailurePng": 1,
+    "maxPng": 36,
+    "maxExports": 39,
+    "originalZipCeilingBytes": 46003924,
+    "pngCapBytes": 4194304,
+    "emitterBytes": 7340032,
+    "wholeMainReceiverBytes": 8388608,
+    "maxima": {
+      "raw": 151519232,
+      "base64": 202025744,
+      "chunks": 8239,
+      "beforeTerminal": 210462480,
+      "withMaxTerminal": 210495248
+    },
+    "saturatedMaximaFit": false,
+    "actualProducerFit": null
+  },
+  "checks": {
+    "count": 56,
+    "allPassed": true,
+    "items": [
+      {
+        "number": 1,
+        "id": "current-python-workflow",
+        "result": "PASS",
+        "evidence": "R3 Python and workflow exact Git SHA, UTF-8 bytes, SHA256 and LF authenticated."
+      },
+      {
+        "number": 2,
+        "id": "base-code",
+        "result": "PASS",
+        "evidence": "Actual E12 Python and workflow authenticated as code preimages; historical receipts are provenance only, not new original acquisitions."
+      },
+      {
+        "number": 3,
+        "id": "plan",
+        "result": "PASS",
+        "evidence": "Recovered complete-PNG plan authenticated and matched to finite required/conditional/failure selection."
+      },
+      {
+        "number": 4,
+        "id": "applicable-instructions",
+        "result": "PASS",
+        "evidence": "Root and applicable app-shell/e2e AGENTS read; six required official Playwright guides consulted; no E2E test changed."
+      },
+      {
+        "number": 5,
+        "id": "full-source-review",
+        "result": "PASS",
+        "evidence": "Modified/new Python functions and complete workflow inspected as source text; no compile, import or execution."
+      },
+      {
+        "number": 6,
+        "id": "literal-infrastructure",
+        "result": "PASS",
+        "evidence": "Twenty-four E12 functions remain literal, including API/download/safe ZIP walker and bounded I/O helpers."
+      },
+      {
+        "number": 7,
+        "id": "removed-semantics",
+        "result": "PASS",
+        "evidence": "Old target IDs and CPU/progress-specific parsers/completion claims removed from the PNG mode."
+      },
+      {
+        "number": 8,
+        "id": "e12-r1-python",
+        "result": "PASS",
+        "evidence": "Ten Python anchors applied and inverted literally."
+      },
+      {
+        "number": 9,
+        "id": "e12-r1-workflow",
+        "result": "PASS",
+        "evidence": "Five workflow anchors applied and inverted literally."
+      },
+      {
+        "number": 10,
+        "id": "e12-r1-patch",
+        "result": "PASS",
+        "evidence": "Two-file patch applied/inverted literally:38 hunks,+1147/-1837."
+      },
+      {
+        "number": 11,
+        "id": "r1-r2-python",
+        "result": "PASS",
+        "evidence": "Two Python branch anchors applied/inverted literally."
+      },
+      {
+        "number": 12,
+        "id": "r1-r2-workflow",
+        "result": "PASS",
+        "evidence": "Three YAML anchors applied/inverted literally, including three occurrences in the branch retarget."
+      },
+      {
+        "number": 13,
+        "id": "r1-r2-patch",
+        "result": "PASS",
+        "evidence": "Two-file correction patch applied/inverted literally:6 hunks,+7/-7."
+      },
+      {
+        "number": 14,
+        "id": "r2-r3-python",
+        "result": "PASS",
+        "evidence": "Three Python ownership/finite-float anchors applied/inverted literally."
+      },
+      {
+        "number": 15,
+        "id": "r2-r3-workflow",
+        "result": "PASS",
+        "evidence": "Four YAML embedding/checksum anchors applied/inverted literally."
+      },
+      {
+        "number": 16,
+        "id": "r2-r3-patch",
+        "result": "PASS",
+        "evidence": "Two-file correction patch applied/inverted literally:7 hunks,+25/-13."
+      },
+      {
+        "number": 17,
+        "id": "exact-embedding",
+        "result": "PASS",
+        "evidence": "All reviewed revisions contain the exact Python body and matching SHA256 in their workflow."
+      },
+      {
+        "number": 18,
+        "id": "branch-finding",
+        "result": "PASS",
+        "evidence": "Effective branch validates sf613-png-[a-z0-9]{1,48}, at most three hyphen-delimited words."
+      },
+      {
+        "number": 19,
+        "id": "unbound-gate",
+        "result": "PASS",
+        "evidence": "UI_BINDING=None fails before API/download; code remains an unbound proposal."
+      },
+      {
+        "number": 20,
+        "id": "binding-contract",
+        "result": "PASS",
+        "evidence": "Programmed checks require exact source/tree, snapshot/tree, attempt1, run/jobs/statuses/artifact and independent main-marker binding; no actual target tuple is claimed here."
+      },
+      {
+        "number": 21,
+        "id": "two-selection-modes",
+        "result": "PASS",
+        "evidence": "Analytics2 and finalUI6 request contracts remain distinct; finalUI6 requires actual final source=snapshot, not a request-bearing child."
+      },
+      {
+        "number": 22,
+        "id": "source-pin-contract",
+        "result": "PASS",
+        "evidence": "Future reader checks the sixteen fixed original selection/support source pins; this review does not assert a future producer already satisfies them."
+      },
+      {
+        "number": 23,
+        "id": "reader-object-contract",
+        "result": "PASS",
+        "evidence": "Future reader checks its own single workflow addition and sole source parent; no such reader object is created by this review."
+      },
+      {
+        "number": 24,
+        "id": "main-intake-reference",
+        "result": "PASS",
+        "evidence": "Original main intake is an explicit retained locator, not fetched by the reader; concrete binding review must authenticate it."
+      },
+      {
+        "number": 25,
+        "id": "permissions",
+        "result": "PASS",
+        "evidence": "Workflow retains contents:read/actions:read, ubuntu-24.04,20 minutes, cancel-in-progress:false and no checkout/subprocess/Omni."
+      },
+      {
+        "number": 26,
+        "id": "acquisition-once",
+        "result": "PASS",
+        "evidence": "Literal downloader performs one body acquisition without retry/resume, after exact completed producer/artifact metadata checks."
+      },
+      {
+        "number": 27,
+        "id": "credential-boundary",
+        "result": "PASS",
+        "evidence": "Bearer remains GitHub-API-only; signed-storage requests omit Authorization/Cookie/Referer, enforce HTTPS approved origins and at most three redirects."
+      },
+      {
+        "number": 28,
+        "id": "whole-zip-digest",
+        "result": "PASS",
+        "evidence": "Exact downloaded length and SHA256 are checked before opening ZipFile; original.zip is preserved."
+      },
+      {
+        "number": 29,
+        "id": "safe-zip",
+        "result": "PASS",
+        "evidence": "Literal walker enforces path, duplicate, encryption, file-type, compression, depth, count and expanded-byte limits; no extractall or evaluation."
+      },
+      {
+        "number": 30,
+        "id": "crc-and-sha",
+        "result": "PASS",
+        "evidence": "Every discovered entry is read to EOF with CRC and SHA256; undiscovered opaque HTML embedding is not asserted covered."
+      },
+      {
+        "number": 31,
+        "id": "outer-selected-members",
+        "result": "PASS",
+        "evidence": "Selected PNG slots resolve only to exact outer archive0 members, without suffix/latest/embedded/JPEG fallback."
+      },
+      {
+        "number": 32,
+        "id": "json",
+        "result": "PASS",
+        "evidence": "UI parser rejects duplicate keys, nonfinite literals and exponent-overflow floats via finite parse_float."
+      },
+      {
+        "number": 33,
+        "id": "runtime-selection",
+        "result": "PASS",
+        "evidence": "Programmed runtime checks require original files/titles/order,2 or6 cases,1 worker, retry0/repeat1, one result each and exact bound statuses."
+      },
+      {
+        "number": 34,
+        "id": "request-evidence",
+        "result": "PASS",
+        "evidence": "Runtime request evidence and Git request bytes/hash are independently tied to the programmed producer snapshot."
+      },
+      {
+        "number": 35,
+        "id": "marker-derivation",
+        "result": "PASS",
+        "evidence": "Report chunks concatenate before UTF-8 decode; normalized marker union is bound by byte count/SHA256/counts; no raw interleaving parity is claimed."
+      },
+      {
+        "number": 36,
+        "id": "required-allowlist",
+        "result": "PASS",
+        "evidence": "Thirty-three unique required names match original capture source and plan: UI42=9, UI43=6, UI44=18."
+      },
+      {
+        "number": 37,
+        "id": "viewport-mapping",
+        "result": "PASS",
+        "evidence": "Original capture modes and fixed names support the declared1440/390/320 viewport-width checks."
+      },
+      {
+        "number": 38,
+        "id": "all-mime-ownership",
+        "result": "PASS",
+        "evidence": "R3 counts every string attachment.path reference regardless of MIME; selected slot still requires image/png and exact canonical path."
+      },
+      {
+        "number": 39,
+        "id": "unique-file-ownership",
+        "result": "PASS",
+        "evidence": "Each selected exact path must be referenced only by the target case/result/attachment; one fileId cannot satisfy multiple slots."
+      },
+      {
+        "number": 40,
+        "id": "conditional-captures",
+        "result": "PASS",
+        "evidence": "Each of the two conditional scroll images requires both marker and same-result attachment, with equivalence checked."
+      },
+      {
+        "number": 41,
+        "id": "failure-capture",
+        "result": "PASS",
+        "evidence": "Optional failure PNG is limited to the same non-passed result and cannot replace any required capture."
+      },
+      {
+        "number": 42,
+        "id": "png-byte-preservation",
+        "result": "PASS",
+        "evidence": "PNG payload bytes remain unchanged; signature/IHDR/chunk CRC/IDAT/IEND and width are checked, without pixel decoding/rendering."
+      },
+      {
+        "number": 43,
+        "id": "per-file-and-metadata-caps",
+        "result": "PASS",
+        "evidence": "Each PNG has4MiB cap; summary128KiB, inventory256KiB and receipt128KiB retain explicit caps."
+      },
+      {
+        "number": 44,
+        "id": "joint-preflight",
+        "result": "PASS",
+        "evidence": "All33 required and every present conditional/failure PNG plus metadata, receipt, framing and success terminal are frozen and budgeted before first payload."
+      },
+      {
+        "number": 45,
+        "id": "no-subset-to-fit",
+        "result": "PASS",
+        "evidence": "Missing/invalid/over-budget complete selection fails; no required subset is dropped to fit."
+      },
+      {
+        "number": 46,
+        "id": "wire-bounds",
+        "result": "PASS",
+        "evidence": "Chunk24576, metadata+prefix+LF<=1024, wireline<=32768, emitter7MiB and whole-main receiver8MiB remain distinct."
+      },
+      {
+        "number": 47,
+        "id": "maxima-arithmetic",
+        "result": "PASS",
+        "evidence": "Independent arithmetic reproduces151519232 raw bytes,202025744 base64 chars,8239 chunks and210495248 coarse wire bytes including terminal; maxima do not fit7MiB."
+      },
+      {
+        "number": 48,
+        "id": "partial-transport",
+        "result": "PASS",
+        "evidence": "Short/interrupted output can prevent complete exports or failure terminal; acceptance requires full ordered recomposition, hashes, terminal and successful job."
+      },
+      {
+        "number": 49,
+        "id": "error-output",
+        "result": "PASS",
+        "evidence": "Failure outputs do not serialize exception text/stack or signed URLs; no transport success is inferred from a failure terminal."
+      },
+      {
+        "number": 50,
+        "id": "preservation-upload",
+        "result": "PASS",
+        "evidence": "Pinned always-upload preserves reader root/original.zip for7 days; later upload success and artifact metadata require independent observation."
+      },
+      {
+        "number": 51,
+        "id": "jpeg-limit",
+        "result": "PASS",
+        "evidence": "Original JPEG preview source is diagnostic only, with per-TestInfo limits; no PNG replacement or installed-area acceptance."
+      },
+      {
+        "number": 52,
+        "id": "final-doc-pins",
+        "result": "PASS",
+        "evidence": "Final bounds and manifest links resolve to the authenticated R3 code and all effective transitive supports."
+      },
+      {
+        "number": 53,
+        "id": "final-doc-scope",
+        "result": "PASS",
+        "evidence": "Bounds retain UNBOUND, no acquisition/activation, no real PNG-size/fit/rendering result, and no qualification."
+      },
+      {
+        "number": 54,
+        "id": "manifest-single-field-fix",
+        "result": "PASS",
+        "evidence": "Residual remaining[0] R2→R3 corrected by one literal forward/inverse replacement; all other manifest bytes preserved."
+      },
+      {
+        "number": 55,
+        "id": "future-gates",
+        "result": "PASS",
+        "evidence": "Concrete producer binding, reader objects, execution, complete original transport, upload and visual inspection remain future gates."
+      },
+      {
+        "number": 56,
+        "id": "no-external-effects",
+        "result": "PASS",
+        "evidence": "Review made zero original/ZIP acquisitions, repository executions, trees, commits, refs or runs."
+      }
+    ]
+  },
+  "limitations": [
+    "UNBOUND. No current producer run/artifact, reader commit/tree or future final composition has been reviewed by this receipt.",
+    "The programmer-enforced original selection and source pin checks are static contracts, not claims that an eligible producer has run.",
+    "Exact attachment.path ownership does not assert arbitrary filesystem alias equivalence.",
+    "Marker parity concerns a normalized semantic union, not raw stdout/stderr interleaving or cross-clock equivalence.",
+    "ZIP inventory covers every discovered member under the supported walker; unrecognized HTML embeddings remain explicitly pending.",
+    "PNG structure/CRC/SHA checks do not decode pixels or establish visual correctness, UI completion or new qualification.",
+    "The deliberate46003924-byte ZIP ceiling can reject a larger future UI6 artifact; no cap expansion is authorized.",
+    "Per-file maxima cannot fit simultaneously. All actual bytes must pass exact joint preflight; no future PNG-size or complete transport promise.",
+    "The7MiB emitter does not guarantee the independent8MiB whole-main reception bound.",
+    "Successful Python terminal precedes audit upload; job/upload/artifact metadata and complete original reader receipt remain required.",
+    "Seven-day audit retention is not permanent archival.",
+    "Historical E12 originals remain closed; no historical outcome is transferred."
+  ],
+  "actions": {
+    "repositoryCodeExecuted": false,
+    "pythonCompiled": false,
+    "originalGets": 0,
+    "zipGets": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "qualificationGranted": false,
+    "reviewReceiptBlobsAuthorized": 1
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "schema": "sf613-complete-ui-png-reader-r3-amendment-v1",
+  "status": "UNBOUND_PROPOSAL_SUPERSEDES_R2_POSTIMAGES",
+  "at": "2026-11-28 13:25:16 UTC",
+  "author": "/root/review_archive",
+  "findings": [
+    "A non-image/png attachment could reference the selected exact path and be omitted from owner counts.",
+    "json.loads('1e999') returns a nonfinite float without invoking parse_constant."
+  ],
+  "base": {
+    "python": {
+      "gitBlob": "470ded51d5e417762da8ec2f9e07dea38a77abb8",
+      "bytes": 70835,
+      "sha256": "8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882",
+      "lf": 1304,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "3027452f5e809c860acdc3d35a461a848cd67e9b",
+      "bytes": 88488,
+      "sha256": "1c888ca14de13cdb11de3a110e0a42c4749467fb0cf36caa3a73186bc7f83e20",
+      "lf": 1359,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "17775bfe97e26fad98e0f45d44d6c4d5fab5fe76",
+      "bytes": 11337,
+      "sha256": "59d35776c920dca46b1dfc4229a12bbd77c9cf1a1771a56da899fcf8f2547299",
+      "lf": 288,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "6b48f8e22d694af2106f471911f894033b356832",
+      "bytes": 21922,
+      "sha256": "2b01362b84cfcd6b3424d920ec8fd8003861e660bcf1ec1ace2136c8272a2cc7",
+      "lf": 451,
+      "endsWithLF": true
+    }
+  },
+  "postimages": {
+    "python": {
+      "gitBlob": "c376f5d933c9803180a0c1bd08483211da0043d1",
+      "bytes": 71037,
+      "sha256": "2e748b99d8b807e2e663304f83e6b6846be68705e273a8a825cb8ed09eb24caa",
+      "lf": 1310,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "e9e425bfd292280e031817489e5c126d14235603",
+      "bytes": 88762,
+      "sha256": "17a74401dd085c694ebf9e8f305664e415992198017a2287265863f24787cb2e",
+      "lf": 1365,
+      "endsWithLF": true
+    }
+  },
+  "operations": {
+    "python": [
+      {
+        "label": "all-attachment-path-references-independent-of-MIME",
+        "before": "            if attachment.get(\"contentType\") == \"image/png\":\n                need(\"body\" not in attachment, \"UI_PNG_ATTACHMENT_FILE_REQUIRED\")\n                member = ui_attachment_member(attachment.get(\"path\"))\n                owners.setdefault(member, []).append([index + 1, 1, attachment_index + 1])",
+        "after": "            attachment_path = attachment.get(\"path\")\n            if attachment_path is not None:\n                need(isinstance(attachment_path, str), \"UI_ATTACHMENT_PATH_TYPE\")\n                owners.setdefault(attachment_path, []).append([index + 1, 1, attachment_index + 1])",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "c62c6387a0616af989bf830ce66f8064708947ac",
+          "bytes": 303,
+          "sha256": "c86c64e74ce9c09819dc7ec83a1fda607333694719a099870272a670d101424b",
+          "lf": 3,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "cfd853639b56a60a01d9159b621f94f3fa1b5dc4",
+          "bytes": 278,
+          "sha256": "2ee9b9fd98565e7f02f934482d3d366a94bfa06770aa1c29f56bfec1d007f590",
+          "lf": 3,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "exact-selected-original-attachment-path-owner",
+        "before": "need(owners.get(member) == [[1, 1, attachment_index]], \"UI_ATTACHMENT_UNIQUE_RESULT_OWNER\")",
+        "after": "need(owners.get(attachment[\"path\"]) == [[1, 1, attachment_index]], \"UI_ATTACHMENT_UNIQUE_RESULT_OWNER\")",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "736ddd953c578b966907ebfbf618b6a6b7825fcb",
+          "bytes": 91,
+          "sha256": "4af78b3956a0532e34a347de65b773c725f041c623585c1d055a562ababd4483",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "7889c99e1d4decfb4a1c686d31de9d12800c1dfd",
+          "bytes": 103,
+          "sha256": "ebb639481ce672c545e8dceffb8bd35df0623d6d6f3ef0b91450319dde83a659",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "reject-float-overflow-nonfinite-JSON-numbers",
+        "before": "def ui_json(raw):\n    try:\n        return json.loads(raw, object_pairs_hook=ui_unique_object, parse_constant=ui_bad_constant)",
+        "after": "def ui_finite_float(value):\n    number = float(value)\n    need(number == number and abs(number) != float(\"inf\"), \"UI_JSON_NONFINITE_NUMBER\")\n    return number\n\ndef ui_json(raw):\n    try:\n        return json.loads(raw, object_pairs_hook=ui_unique_object,\n                          parse_constant=ui_bad_constant, parse_float=ui_finite_float)",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "43ac0899cce42e106fd68a4dda0059caaebc2e16",
+          "bytes": 125,
+          "sha256": "e9a00d1d085ae701d0f4b56f8070dca66b679ca9575fdee0825ce31b6130a470",
+          "lf": 2,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "6fd1fee66ad8db5f6f77db84262942ed79ae42a8",
+          "bytes": 340,
+          "sha256": "4f7928d9693592b99ae4ef6d530fd0f9fe9211a0a65118aa1b452b41790beec0",
+          "lf": 8,
+          "endsWithLF": false
+        }
+      }
+    ],
+    "workflow": [
+      {
+        "label": "embedded-all-attachment-path-references-independent-of-MIME",
+        "before": "                        if attachment.get(\"contentType\") == \"image/png\":\n                            need(\"body\" not in attachment, \"UI_PNG_ATTACHMENT_FILE_REQUIRED\")\n                            member = ui_attachment_member(attachment.get(\"path\"))\n                            owners.setdefault(member, []).append([index + 1, 1, attachment_index + 1])",
+        "after": "                        attachment_path = attachment.get(\"path\")\n                        if attachment_path is not None:\n                            need(isinstance(attachment_path, str), \"UI_ATTACHMENT_PATH_TYPE\")\n                            owners.setdefault(attachment_path, []).append([index + 1, 1, attachment_index + 1])",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "7c6e254ecff1558551f45d1b9166ab9a22e18553",
+          "bytes": 351,
+          "sha256": "d64b4dd8ab64e37f01c54b22211961e9a6acc11607ce7bcd6d79acb395585a8a",
+          "lf": 3,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "e50cca328a58f278976bf399da3fc8ba95dd504a",
+          "bytes": 326,
+          "sha256": "f8ce9f5b932c5190c86aa5238bdbd45bf8e63f0f55e5644238ff9e46d42ee537",
+          "lf": 3,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "embedded-exact-selected-original-attachment-path-owner",
+        "before": "            need(owners.get(member) == [[1, 1, attachment_index]], \"UI_ATTACHMENT_UNIQUE_RESULT_OWNER\")",
+        "after": "            need(owners.get(attachment[\"path\"]) == [[1, 1, attachment_index]], \"UI_ATTACHMENT_UNIQUE_RESULT_OWNER\")",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "6fdac6844e6292dfcc6904b42381c693bfedb7c2",
+          "bytes": 103,
+          "sha256": "c4d8f42ba941b86e83f50d1b3cf8c920582ea03027a2565d37e6c2a9754941f2",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "c8356f92014ea6402bd2de5d942337baee46c444",
+          "bytes": 115,
+          "sha256": "ab798c663ebed38eb559774a1007d994bc704350bc6853239a08a08404d23f9d",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "embedded-reject-float-overflow-nonfinite-JSON-numbers",
+        "before": "            def ui_json(raw):\n                try:\n                    return json.loads(raw, object_pairs_hook=ui_unique_object, parse_constant=ui_bad_constant)",
+        "after": "            def ui_finite_float(value):\n                number = float(value)\n                need(number == number and abs(number) != float(\"inf\"), \"UI_JSON_NONFINITE_NUMBER\")\n                return number\n            \n            def ui_json(raw):\n                try:\n                    return json.loads(raw, object_pairs_hook=ui_unique_object,\n                                      parse_constant=ui_bad_constant, parse_float=ui_finite_float)",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "6fa026d69d08335691908ac8da77108783d2fd4e",
+          "bytes": 161,
+          "sha256": "c1de083711206b530516cc35071f781132ffbebc69f2b851a5ab6f9999207d5d",
+          "lf": 2,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "381eda52f9dbbbc16230b72af58daf1995adc2d4",
+          "bytes": 448,
+          "sha256": "7c18ca9e13e5d972d5fbb7ae0ec001084b1d3ce864ae9cbab7f1b2c18b3178cb",
+          "lf": 8,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "exact-reader-embedding-checksum",
+        "before": "8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882",
+        "after": "2e748b99d8b807e2e663304f83e6b6846be68705e273a8a825cb8ed09eb24caa",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "ea443c293b83075e9ab9c98f16e3490a1d601207",
+          "bytes": 64,
+          "sha256": "856cf5e61911c04959d771df47f785affd78e18081138791b67394859d490649",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "e3d51df5ac18e97d0a3c16db33527eda170646eb",
+          "bytes": 64,
+          "sha256": "926baa5eb38add142c94a094274a250bf4e29eace509d807532b566643511c2c",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      }
+    ]
+  },
+  "operationCount": 7,
+  "scope": "Only all-MIME exact-path owner accounting and finite parse_float, plus exact embedded copies and checksum. Selected slots still require image/png and a canonical mapped outer-member path. No new original/file access, size or transport change.",
+  "roundtrip": {
+    "pythonForward": true,
+    "pythonInverse": true,
+    "workflowForward": true,
+    "workflowInverse": true,
+    "workflowEmbedsExactPython": true
+  },
+  "patch": {
+    "gitBlob": "53b69c579478d7eab511f22fa9ad53b601dfdfa2",
+    "bytes": 6024,
+    "sha256": "e6c4d233d0eeeb0d5580dc2e236a58a111a6f09e5b1cbc9cf19a348c3d137f72",
+    "lf": 99,
+    "endsWithLF": true
+  },
+  "patchAudit": {
+    "files": [
+      {
+        "path": "reader/sf613-original-artifact-reader.py",
+        "embeddedGitPins": true,
+        "hunks": 3,
+        "added": 12,
+        "removed": 6,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "embeddedGitPins": true,
+        "hunks": 4,
+        "added": 13,
+        "removed": 7,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      }
+    ],
+    "hunks": 7,
+    "added": 25,
+    "removed": 13
+  },
+  "fragmentsAreCalculatedNotSeparateGitBlobs": true,
+  "binding": "UNBOUND",
+  "nativeValidation": false,
+  "actions": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "treesCommitsRefsRuns": 0,
+    "pythonExecution": false
+  }
+}

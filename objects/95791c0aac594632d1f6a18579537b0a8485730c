@@ -1,0 +1,131 @@
+{
+  "schema": "sf613-c22-r7-clock-document-correction-v1",
+  "status": "DOCUMENT_ONLY_CORRECTION",
+  "finding": "The two elapsed values use different performance.now origins. Their subtraction is invalid; no duration for the censored third proof is derived.",
+  "operations": [
+    {
+      "document": "bounds",
+      "before": "\"thirdProofEnterMs\": 87517,\n      \"deadlineFinallyMs\": 105029,\n      \"thirdProofCensoredBracketMs\": 17512",
+      "after": "\"thirdProofEnter\": { \"elapsedMs\": 87517, \"clock\": \"performance.now\", \"origin\": \"native-fixture-entry\" },\n      \"deadlineFinally\": { \"elapsedMs\": 105029, \"clock\": \"performance.now\", \"origin\": \"deadline creation before native fixture entry\" },\n      \"durationBetweenTheseRecords\": null,\n      \"crossClockSubtractionValid\": false",
+      "offset": 10183,
+      "occurrences": 1,
+      "preimage": {
+        "git": "d6a16762b8db6563a1fc4a621ccc1b9a8e60c533",
+        "bytes": 17871,
+        "sha256": "8554f07954687d4c35f7bd34c0a708d5ffa3fb5d2197e92d4a37442fe3b02cf3",
+        "lf": 516,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "e40b8ee45b962b03dc8325cf39eac444f09fcc1c",
+        "bytes": 18092,
+        "sha256": "328ac965ff871fedbb44791834e028e7d0f5f1c7c0cd77f35e9b439b5e2300ba",
+        "lf": 517,
+        "endsWithLF": true
+      }
+    },
+    {
+      "document": "bounds",
+      "before": "\"assumption\": \"Hypothetically repeat the longer of the two observed proof-through-work-continuation brackets five times and four gaps of256ms after the observed prelude.\"",
+      "after": "\"assumption\": \"Hypothetically repeat the longer of the two observed proof-through-work-continuation brackets five times and four gaps of256ms after the observed prelude on the native-fixture-entry clock. This excludes the offset from the outer deadline origin and is not a complete-test duration estimate.\"",
+      "offset": 10546,
+      "occurrences": 1,
+      "preimage": {
+        "git": "e40b8ee45b962b03dc8325cf39eac444f09fcc1c",
+        "bytes": 18092,
+        "sha256": "328ac965ff871fedbb44791834e028e7d0f5f1c7c0cd77f35e9b439b5e2300ba",
+        "lf": 517,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+        "bytes": 18228,
+        "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+        "lf": 517,
+        "endsWithLF": true
+      }
+    },
+    {
+      "document": "manifest",
+      "before": "\"bounds\": {\n      \"git\": \"d6a16762b8db6563a1fc4a621ccc1b9a8e60c533\",\n      \"bytes\": 17871,\n      \"sha256\": \"8554f07954687d4c35f7bd34c0a708d5ffa3fb5d2197e92d4a37442fe3b02cf3\",\n      \"lf\": 516,\n      \"endsWithLF\": true\n    }",
+      "after": "\"bounds\": {\n      \"git\": \"cb4dd2981c5431c5de7a57e965ff0437ad990ace\",\n      \"bytes\": 18228,\n      \"sha256\": \"75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba\",\n      \"lf\": 517,\n      \"endsWithLF\": true\n    }",
+      "offset": 2708,
+      "occurrences": 1,
+      "preimage": {
+        "git": "3b3ab8a4d8990993d2e250054c5bdef727291978",
+        "bytes": 13474,
+        "sha256": "a23b9912a4bd861e3e02c83bace775b4070c12a4a4c29d598fc04f9a8b29da95",
+        "lf": 430,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+        "bytes": 13474,
+        "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+        "lf": 430,
+        "endsWithLF": true
+      }
+    },
+    {
+      "document": "focal_bounds",
+      "before": "\"controlPackage\": {\n    \"git\": \"3b3ab8a4d8990993d2e250054c5bdef727291978\",\n    \"bytes\": 13474,\n    \"sha256\": \"a23b9912a4bd861e3e02c83bace775b4070c12a4a4c29d598fc04f9a8b29da95\",\n    \"lf\": 430,\n    \"endsWithLF\": true\n  }",
+      "after": "\"controlPackage\": {\n    \"git\": \"5539193ef804a6e5b700d9e3da9e40067cb59880\",\n    \"bytes\": 13474,\n    \"sha256\": \"bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343\",\n    \"lf\": 430,\n    \"endsWithLF\": true\n  }",
+      "offset": 1522,
+      "occurrences": 1,
+      "preimage": {
+        "git": "9b97b3c81ee9825865b23c8d5e961f0078e6cd21",
+        "bytes": 15236,
+        "sha256": "0ae6643ab1185dcd06c94546a56ede69864fd92617c18f59b40382951fda5a79",
+        "lf": 497,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "7718ee64a564ee6cf93ba453bf6f1cf843605be2",
+        "bytes": 15236,
+        "sha256": "ec9c83813d3e4c5fa23a9b1ebb9d5082f637bfe4e015270bdb9fc03aab978452",
+        "lf": 497,
+        "endsWithLF": true
+      }
+    },
+    {
+      "document": "focal_bounds",
+      "before": "\"controlBounds\": {\n    \"git\": \"d6a16762b8db6563a1fc4a621ccc1b9a8e60c533\",\n    \"bytes\": 17871,\n    \"sha256\": \"8554f07954687d4c35f7bd34c0a708d5ffa3fb5d2197e92d4a37442fe3b02cf3\",\n    \"lf\": 516,\n    \"endsWithLF\": true\n  }",
+      "after": "\"controlBounds\": {\n    \"git\": \"cb4dd2981c5431c5de7a57e965ff0437ad990ace\",\n    \"bytes\": 18228,\n    \"sha256\": \"75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba\",\n    \"lf\": 517,\n    \"endsWithLF\": true\n  }",
+      "offset": 1744,
+      "occurrences": 1,
+      "preimage": {
+        "git": "7718ee64a564ee6cf93ba453bf6f1cf843605be2",
+        "bytes": 15236,
+        "sha256": "ec9c83813d3e4c5fa23a9b1ebb9d5082f637bfe4e015270bdb9fc03aab978452",
+        "lf": 497,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "ce42fe91def2fd89fa28ca10652a7d770a00cba8",
+        "bytes": 15236,
+        "sha256": "67c1ed0dbfb324ddeff04e22e04648e2b72c3592e946a6a339ec1ebdbb32e17b",
+        "lf": 497,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "roundtripLiteral": true,
+  "codeChanged": false,
+  "patchesChanged": false,
+  "budgetsChanged": false,
+  "referenceTest": {
+    "git": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "bytes": 44338,
+    "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+    "lf": 766,
+    "endsWithLF": true
+  },
+  "referenceCarrier": {
+    "git": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182",
+    "bytes": 15595,
+    "sha256": "0bad099afb09abbef2aa96a4225a54d5771c538c10472ac0c85af8b27598c528",
+    "lf": 220,
+    "endsWithLF": true
+  },
+  "qualification": false
+}

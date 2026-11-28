@@ -1,0 +1,742 @@
+{
+  "schema": "sf613-evidence-r10-package-manifest-v1",
+  "status": "PROPOSED_BLOBS_ONLY_INDEPENDENT_PACKAGE_REVIEW_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/teams_product",
+  "documentaryCutUtc": "2026-11-28 10:05:47 UTC",
+  "requestScope": "Root authorized six documentary proposal blobs only: finite catalog, index, README, reversible derivation, compact diff and manifest with literal Git readback. Root alone reviews and creates archive trees/commits/refs. No original log/ZIP acquisition, repository execution, workflow, run, product edit or PR/comment.",
+  "files": {
+    "catalog": {
+      "bytes": 188867,
+      "sha256": "04de8a48d2076b8442709455b479778381f926654f7f74905d919a1208b9a6eb",
+      "gitBlob": "30a65577427401543b56b6d1368f4119cc17f7a3",
+      "lf": 5783,
+      "endsWithLF": true,
+      "logicalName": "sf613-evidence-r10-input-catalog.json",
+      "placement": "Included exactly once as objects/<sha>; excluded from its own inputs.",
+      "literalGitReadback": true
+    },
+    "index": {
+      "bytes": 1571323,
+      "sha256": "49a212ec3952aab02d64e340a658345f3f557ee61b02e36879445e07e85e85c8",
+      "gitBlob": "a33d37440a72856b25ea2f735258e7560ae9d0bc",
+      "lf": 46600,
+      "endsWithLF": true,
+      "logicalName": "index.json",
+      "placement": "Root document of proposed archive tree.",
+      "literalGitReadback": true
+    },
+    "readme": {
+      "bytes": 89240,
+      "sha256": "05e26c5d9257b408821572e4a6b72b09b70a9adafed0ca83b895001d8e80c299",
+      "gitBlob": "77b972b66a2acf349b528b1ff62f1d61023d4998",
+      "lf": 758,
+      "endsWithLF": true,
+      "logicalName": "README.md",
+      "placement": "Root document of proposed archive tree.",
+      "literalGitReadback": true
+    },
+    "derivation": {
+      "bytes": 458697,
+      "sha256": "f2e4840bbc915d422d6cb75d29c5c8da5e99df9ec3e06fb28243bbd1c3dd71a6",
+      "gitBlob": "90be10d6450bb01b38692f9d6e4764a05431f410",
+      "lf": 9550,
+      "endsWithLF": true,
+      "logicalName": "sf613-evidence-r10-derivation.json",
+      "placement": "Review support; not recursively included in current archive input objects.",
+      "literalGitReadback": true
+    },
+    "diff": {
+      "bytes": 281643,
+      "sha256": "bd1fa8059bdc8bac97487e49c50295e65beb613fc591be5c9bec075eb3cde839",
+      "gitBlob": "a3c587947b1be68a4dd8ef9c97935c990be96741",
+      "lf": 7427,
+      "endsWithLF": true,
+      "logicalName": "sf613-evidence-r10-root-documents.diff",
+      "placement": "Review support for two root documents; added evidence objects are enumerated separately.",
+      "literalGitReadback": true
+    }
+  },
+  "packageFileCountIncludingThisManifest": 6,
+  "currentManifestSelfReference": "Deliberately omitted to avoid self-reference. Its actual Git SHA/bytes/SHA256 are returned after create/readback.",
+  "publishedBase": {
+    "commit": "b74255922a58b649eca522d4427192040d49a079",
+    "tree": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+    "objectsTree": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c",
+    "index": {
+      "gitBlob": "84b0c6cd395ad966fea2914ce4c0936d637e1637",
+      "bytes": 1339991,
+      "sha256": "14f77ef56da9d71c390347ccc7001e36ae1d8e815e7fcdfb82517ac0415ca901",
+      "lf": 40027,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "05ecd9ed7d337c1b161408ef4c41af8092fa1b1f",
+      "bytes": 77617,
+      "sha256": "8491d58554c36113b3018b049714c542c58e6c332694aa933feacbd926576d78",
+      "lf": 656,
+      "endsWithLF": true
+    },
+    "catalog": {
+      "gitBlob": "06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+      "bytes": 159675,
+      "sha256": "77776c9611784f10c12dd1ab1ad116e6b88693fd8f01e586d0546efb2969f537",
+      "lf": 5124,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "b6a3b80dc6f495877613b3d6817823873dd6a7e2",
+      "bytes": 56443,
+      "sha256": "21d9c23895f2e71370d48c8681be0fefcf4ac5a6d491b46cb8455a6161e08be0",
+      "lf": 1636,
+      "endsWithLF": true
+    },
+    "publication": {
+      "gitBlob": "50da09766fe2ca397bef0525bc48d3110ba1670f",
+      "bytes": 6318,
+      "sha256": "15afa38a3caef49bae46b891e8608044dea0fa1aa4c0b79bbd3e3c62573311a9",
+      "lf": 197,
+      "endsWithLF": true
+    }
+  },
+  "proposal": {
+    "branch": "sf613-evidence",
+    "ownTree": true,
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "b74255922a58b649eca522d4427192040d49a079",
+        "tree": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+        "role": "published R9 archive"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "tree": "a11006ec7afbfcbc693abcf469e5833e0c0f2844",
+        "soleParent": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "role": "executed E15 focal; its sole parent is the executed E15 Analytics source"
+      }
+    ],
+    "actualParentMetadataRead": true,
+    "ancestry": {
+      "R9": [
+        "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+        "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+      ],
+      "DfE15": [
+        "908dab0b3124cea5aa4015fa6a5b96128e730c77"
+      ],
+      "SE15": [
+        "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
+      ]
+    },
+    "nonRedundantRetention": "DfE15 -> executed E15 source/Analytics 908dab0b -> clean S21 29374ab6. No redundant direct parent for S_E15 or S21 is proposed.",
+    "rootFiles": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "allFilesMode": "100644",
+    "sourcePathsAreMetadataOnly": true,
+    "tree": null,
+    "commit": null,
+    "refUpdated": false,
+    "expectedRefBeforeUpdate": "b74255922a58b649eca522d4427192040d49a079",
+    "rootMustReviewAuditAndFreshlyLeaseBeforePublishing": true,
+    "plannedDelta": {
+      "additions": 122,
+      "modifications": 2,
+      "deletions": 0
+    },
+    "reservedRootPathsAbsent": [
+      ".github",
+      ".ci-run.json",
+      "apps",
+      "modules",
+      "packages"
+    ],
+    "noExecutableLayout": true,
+    "historicalLedgerPreserved": true,
+    "productAndExecutionRefsUnchangedByAuthor": true,
+    "commitsAndTreesNotBlobEntries": true,
+    "textReferencesAreNotReachabilityProof": true,
+    "gcDeadlineClaimed": false
+  },
+  "inputCatalog": {
+    "gitBlob": "30a65577427401543b56b6d1368f4119cc17f7a3",
+    "bytes": 188867,
+    "sha256": "04de8a48d2076b8442709455b479778381f926654f7f74905d919a1208b9a6eb",
+    "lf": 5783,
+    "endsWithLF": true,
+    "totals": {
+      "uniqueActualInputBlobs": 156,
+      "logicalMemberships": 189,
+      "newRelativeToR9": 121,
+      "newBytes": 10752275,
+      "reusedFromR9": 35,
+      "inputLogicalBlobBytes": 11711069,
+      "groups": 6,
+      "streams": 9,
+      "partReferences": 25,
+      "streamLogicalBytes": 5216065,
+      "catalogSelfNotIncluded": true
+    },
+    "closedFiniteEnumeration": true,
+    "selfOutsideOwnInputs": true,
+    "onlyCurrentR2AddedToIndex": true,
+    "noImplicitTransitiveClosure": true
+  },
+  "finalIndexCounts": {
+    "objects": 1047,
+    "objectBytes": 100228804,
+    "memberships": 1310,
+    "groups": 64,
+    "streams": 94,
+    "partReferences": 298,
+    "inheritedObjects": 925,
+    "inheritedObjectBytes": 89287662,
+    "inheritedMembershipPrefixes": 1120,
+    "inheritedGroups": 58,
+    "inheritedStreams": 85,
+    "inheritedPartReferences": 273,
+    "newObjects": 122,
+    "newObjectBytes": 10941142,
+    "newMemberships": 190,
+    "newGroups": 6,
+    "newStreams": 9,
+    "newPartReferences": 25,
+    "inheritedObjectsReceivingMemberships": 35,
+    "newMembershipsOnInheritedObjects": 38,
+    "membershipsOnNewObjects": 152,
+    "totalFilesIncludingRootDocs": 1049,
+    "totalLogicalTreeFileBytes": 101889367
+  },
+  "derivation": {
+    "support": {
+      "bytes": 458697,
+      "sha256": "f2e4840bbc915d422d6cb75d29c5c8da5e99df9ec3e06fb28243bbd1c3dd71a6",
+      "gitBlob": "90be10d6450bb01b38692f9d6e4764a05431f410",
+      "lf": 9550,
+      "endsWithLF": true
+    },
+    "diff": {
+      "bytes": 281643,
+      "sha256": "bd1fa8059bdc8bac97487e49c50295e65beb613fc591be5c9bec075eb3cde839",
+      "gitBlob": "a3c587947b1be68a4dd8ef9c97935c990be96741",
+      "lf": 7427,
+      "endsWithLF": true
+    },
+    "indexOperations": {
+      "forwardLiteral": true,
+      "inverseLiteral": true,
+      "operationCount": 115,
+      "counts": {
+        "replace": 45,
+        "append": 42,
+        "add": 28
+      },
+      "forwardHash": {
+        "bytes": 1571323,
+        "sha256": "49a212ec3952aab02d64e340a658345f3f557ee61b02e36879445e07e85e85c8",
+        "gitBlob": "a33d37440a72856b25ea2f735258e7560ae9d0bc"
+      },
+      "inverseHash": {
+        "bytes": 1339991,
+        "sha256": "14f77ef56da9d71c390347ccc7001e36ae1d8e815e7fcdfb82517ac0415ca901",
+        "gitBlob": "84b0c6cd395ad966fea2914ce4c0936d637e1637"
+      }
+    },
+    "sequentialValueFingerprintsVerifiedBothDirections": true,
+    "readme": {
+      "baseLiteralOnce": true,
+      "prefixBytes": 11611,
+      "baseBytes": 77617,
+      "suffixBytes": 12,
+      "forwardInverseLiteral": true
+    },
+    "patch": {
+      "hunks": 60,
+      "added": 6802,
+      "deleted": 127,
+      "files": [
+        {
+          "path": "index.json",
+          "hunks": 58,
+          "added": 6700,
+          "deleted": 127
+        },
+        {
+          "path": "README.md",
+          "hunks": 2,
+          "added": 102,
+          "deleted": 0
+        }
+      ],
+      "forwardInverseLiteral": true
+    },
+    "structuralChecks": 1180,
+    "failedChecks": 0,
+    "validationIsPureDataOnly": true
+  },
+  "verification": {
+    "immutableBaseCommitRead": true,
+    "sourceAndFocalParentEdgesRead": true,
+    "allNewInputBodiesAuthenticated": 121,
+    "newInputBytes": 10752275,
+    "reusedInputMetadataComparedWithR9": 35,
+    "allNewInputLfsCompared": true,
+    "catalogR2CreatedAndReadback": true,
+    "oldObjectRecords": 925,
+    "oldMetadataAndOrderLiteral": true,
+    "oldMembershipPrefixes": 1120,
+    "oldGroups": 58,
+    "oldStreams": 85,
+    "oldPartReferences": 273,
+    "oldRevisionHistoryPrefixLiteral": true,
+    "oldSnapshotsLiteral": true,
+    "oldExcludedAndDerivedEvidenceKeysLiteral": true,
+    "oldResolvedAndUnresolvedHistoryPrefixesLiteral": true,
+    "oldCurrentProductLiteral": true,
+    "oldCurrentD30QualificationLiteral": true,
+    "reusedObjectsReceivingMemberships": 35,
+    "newMembershipsOnReusedObjects": 38,
+    "newObjectCountIncludingCatalog": 122,
+    "newObjectMemberships": 152,
+    "newMembershipsTotal": 190,
+    "newStreamsRecomposed": 9,
+    "newPartReferences": 25,
+    "fiveUnionsLiteralOrdered": true,
+    "mainBomAndByteCodeUnitSeamsVerified": true,
+    "inherited925BodiesReacquired": false,
+    "inherited85StreamsRecomposedAgain": false,
+    "noOldRuntimeAcceptanceReinterpreted": true,
+    "originalGetsByAuthor": 0,
+    "zipGetsByAuthor": 0,
+    "repositoryCodeExecuted": false,
+    "allFivePrecedingOutputBlobsExactReadback": true,
+    "currentManifestReadback": "To be verified immediately after creation before delivering its pin."
+  },
+  "newStreams": [
+    {
+      "id": "E15-focal-main",
+      "kind": "original-log",
+      "run": 46129731679,
+      "bytes": 123734,
+      "sha256": "847c8bb8ac0c42627993c26df0ae553188fef70f2a4d0ec461c639d398ff3f42",
+      "lf": 927,
+      "parts": 1,
+      "wholeGitBlobCalculated": "6351127ada1494283b35201c8e42d9fdcacdded9",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "E15-focal-cleanup",
+      "kind": "original-log",
+      "run": 46129731679,
+      "bytes": 2281,
+      "sha256": "ff1b0427d996328336215c0c59e2f78a5aa48210ccb9d4db6b641306aa9cca90",
+      "lf": 39,
+      "parts": 1,
+      "wholeGitBlobCalculated": "c7af4a321d3e67d125d04e35ac4cd7c7b79eb42e",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "E15-focal-reports",
+      "kind": "derived-union",
+      "run": 46129731679,
+      "bytes": 18610,
+      "sha256": "e8a05a9be415f12899e3946d7860d730aacd0acec47ace7c4abe17c1f7804360",
+      "lf": 9,
+      "parts": 1,
+      "wholeGitBlobCalculated": "b76b693cea0cc460a91e0e532f5a54ff05102dd5",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "E15-Analytics-main",
+      "kind": "original-log",
+      "run": 46130942119,
+      "bytes": 4951586,
+      "sha256": "9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2",
+      "lf": 2268,
+      "parts": 17,
+      "wholeGitBlobCalculated": "28882b074b5030d2fa677093f11edee4158e4330",
+      "wholeGitBlobPersisted": false,
+      "byteOrderMarkByteOffsets": [
+        0,
+        2107842,
+        4211566
+      ]
+    },
+    {
+      "id": "E15-Analytics-cleanup",
+      "kind": "original-log",
+      "run": 46130942119,
+      "bytes": 2281,
+      "sha256": "cad673a7b15dbc94a4a09dfd3bf6470731e568f3d043e8caad7622c8e9fdb710",
+      "lf": 39,
+      "parts": 1,
+      "wholeGitBlobCalculated": "2814939e44f3eee93e0bd1e1714b740429399c95",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "E15-Analytics-events-union",
+      "kind": "derived-union",
+      "run": 46130942119,
+      "bytes": 76525,
+      "sha256": "8c25530af2cc8566ca2e1df5d11c6966d51524ff69c6ac2c90f85731883b3db3",
+      "lf": 134,
+      "parts": 1,
+      "wholeGitBlobCalculated": "f80c2745ee085608e47f7120bd8f007d655e3327",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "E15-Analytics-core-union",
+      "kind": "derived-union",
+      "run": 46130942119,
+      "bytes": 34168,
+      "sha256": "f890276dc2e8b78e9a11dfaf2d155dfc4ffb82ba8612c63cf7b2b240cf96e1a6",
+      "lf": 96,
+      "parts": 1,
+      "wholeGitBlobCalculated": "f58aee9a18aafec45e1931334f0405987fe81ec3",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "E15-Analytics-context-union",
+      "kind": "derived-union",
+      "run": 46130942119,
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "parts": 1,
+      "wholeGitBlobCalculated": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "E15-Analytics-discovery-owner-union",
+      "kind": "derived-union",
+      "run": 46130942119,
+      "bytes": 1452,
+      "sha256": "55b5e3d16d4f429c7f38f8082fc78e776995d1b9d96201344c95f5ca1f16ed52",
+      "lf": 10,
+      "parts": 1,
+      "wholeGitBlobCalculated": "be48167c0118b7c2ebac0f5086a8809c85fb9c57",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    }
+  ],
+  "closedEvidence": {
+    "focal": {
+      "receipt": {
+        "gitBlob": "fde3ff40abcb500d1232377804e39786c6a76338",
+        "bytes": 9032,
+        "sha256": "5a69a7d8e53c7cb788ad39efa8a56fa6ab84f31b188ba17a791879424e7e4757",
+        "lf": 303,
+        "endsWithLF": true
+      },
+      "run": 46129731679,
+      "attempt": 1,
+      "status": "CLOSED_DIAGNOSTIC_FOCAL_PASS_ONLY",
+      "functionalTests": 18,
+      "functionalAssertions": 2460,
+      "outerGroups": 10,
+      "outerAssertions": 57,
+      "commands": 16,
+      "truncationFlags": 32,
+      "reports": 9,
+      "qualifiesCleanProduct": false
+    },
+    "analytics": {
+      "receipt": {
+        "gitBlob": "202fc2defc6bffcfe9d4f096d4fb1b731356ba92",
+        "bytes": 8470,
+        "sha256": "2ad00dd5697e20c332088143e7c441fefa9556abe0c6ba2c986c7532eb7ee4cb",
+        "lf": 237,
+        "endsWithLF": true
+      },
+      "root": {
+        "gitBlob": "2c543ab9c3c27991510866929291a09184f3ac32",
+        "bytes": 11211,
+        "sha256": "d0e760cc92da5b9750c7fac0e2759deeb3ebacfd61a6acead2f1ceeca5a37177",
+        "lf": 400,
+        "endsWithLF": true
+      },
+      "peer": {
+        "gitBlob": "7e9fefa609440fa8337120f5b1478dd492f435ef",
+        "bytes": 19989,
+        "sha256": "7708ba2d321ffa93ac8c1f61b7699eed01d42b018729994bc1f37473b37d891d",
+        "lf": 663,
+        "endsWithLF": true
+      },
+      "extraction": {
+        "gitBlob": "4c9121054af660b98785bd303cb7182f05e091de",
+        "bytes": 74268,
+        "sha256": "c26e710bc362c629bd76cb2298a8e32a8a1a940bbdecb2345b8d122acc507da3",
+        "lf": 3519,
+        "endsWithLF": true
+      },
+      "run": 46130942119,
+      "attempt": 1,
+      "sourceAndExecutedSnapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+      "status": "CLOSED_NEGATIVE_PREVIEW_TIMEOUT_BI_PASS_NO_NEW_QUALIFICATION",
+      "failed": 1,
+      "passed": 1,
+      "rootChecks": 67,
+      "peerAck": true,
+      "originalsClosedRootReportedUtc": "2026-11-28 09:43:59 UTC",
+      "mainGetsByRoot": 1,
+      "cleanupGetsByRoot": 1,
+      "zipGets": 0,
+      "eventPrefixRecords": 134,
+      "eventPrefixBytes": 76525,
+      "requestTerminal": false,
+      "exclusiveCauseProven": false,
+      "artifact": {
+        "id": 15258196107,
+        "name": "playwright-ubuntu-24.04-1",
+        "size": 45835820,
+        "sha256": "95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2",
+        "metadataOnly": true,
+        "zipGets": 0,
+        "uploadSourceFilesDeclared": 150,
+        "zipEntryCount": null
+      },
+      "limits": [
+        "Markers are diagnostic and not qualification",
+        "No request-close, HTTP terminal preview response, unit-close chain or analysis-bind phase appears",
+        "Measured intervals include nested work, scheduling and instrumentation; not exclusive CPU or independent read-only timings",
+        "Logs and upload metadata do not constitute image/ZIP inspection",
+        "150 upload-source files is not a ZIP entry count",
+        "Configured full Bun revision is not directly observed full revision; stdout gives 1.3.14+0d9b296af",
+        "No exclusive source/database/queue cause asserted",
+        "No automatic rerun or diagnostic merge permitted"
+      ]
+    },
+    "cleanProduct": {
+      "sha": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "historicalAccepted": 12,
+      "totalAreas": 15,
+      "newAccepted": 0,
+      "latestCleanInstalledReceiptLiteralR9": true
+    },
+    "migrationTwoSeams": {
+      "base": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "baseTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "donor": "b2f97817a82dc55a66298428107c30d5e3d97354",
+      "derivation": {
+        "gitBlob": "347917389482e8c89fbdde3c82357d1ef3cb3251",
+        "bytes": 18955,
+        "sha256": "6f004f8c52f0ad8779509efd0ca95ff9690db1dee6e2c2a8df43e132bd68f504",
+        "lf": 430,
+        "endsWithLF": true
+      },
+      "diff": {
+        "gitBlob": "f7efa03bb1c26add39e8a58fe48f9268f02acac5",
+        "bytes": 1881,
+        "sha256": "db97e8c2d9ae5c76f547a22129de2d6072aa91446a9a1ebe4af73e2f57742469",
+        "lf": 31,
+        "endsWithLF": true
+      },
+      "peer": {
+        "gitBlob": "380ce3ba2513ffef839d154726958f9d22c9f19b",
+        "bytes": 7896,
+        "sha256": "f3b5357426045915764bcd8eeb7a80369af49293dcaa38b82e2f9bd033f2a225",
+        "lf": 183,
+        "endsWithLF": true
+      },
+      "postimages": [
+        {
+          "gitBlob": "dc1bd081ee3b10c585b53c09a99ad29c2e2fb795",
+          "bytes": 9367,
+          "sha256": "bfdf83b9af6a9764f28f7524cd2829a20b427aa60329ee6e63b261998a00d175",
+          "lf": 195,
+          "endsWithLF": true
+        },
+        {
+          "gitBlob": "3c07a434fadfd3bc25cd0f45e73611d060953dce",
+          "bytes": 35985,
+          "sha256": "0663941d52427aa971e75f56cd9f2de5de52b678e9f9ab675e3230951f6e4b12",
+          "lf": 497,
+          "endsWithLF": true
+        }
+      ],
+      "scope": "runtime/contract.ts preserves C21 dashboardProductRead and adds sfPlannerMonthlyReceipts; local/entry.ts adds only three late availability callbacks. Two hunks +11/-0, 54 awaits retained.",
+      "independentStaticChecks": 112,
+      "finalC613": null,
+      "finalTree": null,
+      "performanceGainClaimed": false,
+      "qualificationTransferred": false,
+      "requiredBeforeIntegration": "Resolve actual Cfinal preimages; if either differs from S21, rederive and review. Consume only in the sole #673 composition route after #613 acceptance. The four source-bound baselines remain pending. Preserve the closed historical acceptances and records for #349, #588 and G09, and bind their existing evidence to the actual final candidate without reopening those scopes."
+    },
+    "inheritedD30": {
+      "status": "STATIC_REVIEWED_FOUR_BINDINGS_UNBOUND",
+      "currentGlobalFunctionalTotal": null,
+      "currentGlobalAssertionTotal": null,
+      "currentGlobalReportTotal": null,
+      "noNewExecution": true
+    }
+  },
+  "supersededAndHistorical": {
+    "catalogR1": {
+      "bytes": 188719,
+      "sha256": "c7564c2b15628fc62b716552a368adac776404d7ae0047d31a3570aca351a548",
+      "gitBlob": "da146db2a0281ae884617068a43b4de775e46b87",
+      "lf": 5783,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_DOCUMENTARY_DRAFT_NOT_EXECUTION_PROOF",
+      "includedAsInput": false,
+      "correction": {
+        "path": [
+          "migrationProposalFacts",
+          "requiredBeforeIntegration"
+        ],
+        "before": "Resolve actual Cfinal preimages; if either differs from S21, rederive and review. Consume only in the sole #673 composition route after #613 acceptance; four source-bound baselines and #349/#588/G09 obligations remain pending.",
+        "after": "Resolve actual Cfinal preimages; if either differs from S21, rederive and review. Consume only in the sole #673 composition route after #613 acceptance. The four source-bound baselines remain pending. Preserve the closed historical acceptances and records for #349, #588 and G09, and bind their existing evidence to the actual final candidate without reopening those scopes.",
+        "deltaBytes": 148,
+        "deltaLF": 0,
+        "forwardInverseLiteral": true,
+        "support": {
+          "bytes": 458697,
+          "sha256": "f2e4840bbc915d422d6cb75d29c5c8da5e99df9ec3e06fb28243bbd1c3dd71a6",
+          "gitBlob": "90be10d6450bb01b38692f9d6e4764a05431f410",
+          "lf": 9550,
+          "endsWithLF": true
+        }
+      }
+    },
+    "sourceDrafts": "Actual superseded E15 helper/product/control/support drafts are enumerated with roles in the catalog. Current replacement records and unchanged R1 test are not mislabeled as superseded.",
+    "historicalR9": "Complete R9 index/README/package/reviews/publication are retained. Its old pending archive label is historical and resolved by appended R9 publication metadata, without rewriting historical snapshots.",
+    "closedTechnicalScopes": "#349/#588/G09 technical scopes and historical acceptances remain closed. Preserve existing evidence and its later linkage to the actual final candidate without reopening them; the four source-bound baselines remain pending."
+  },
+  "exclusions": {
+    "entries": [
+      {
+        "sha": "87cca451b4092ebff61b7040366ba7f80a62514d",
+        "type": "actual-blob",
+        "reason": "Discovery checkpoint only; excluded by scope. No automatic checkpoint/helper retention."
+      },
+      {
+        "sha": "c0e25fb87846019dc8988a6f15f9c8bee0a5884e",
+        "type": "calculated-only-blob-fingerprint",
+        "reason": "Single E15 control report line was not persisted; actual retained artifact is the nine-line union b76b693cea0cc460a91e0e532f5a54ff05102dd5. Never fetched or materialized.",
+        "bytes": 7919,
+        "sha256": "cb3f8a56fe87c5fc8df0eaf39f216780a664cd145fe40989ddcee4ee3bc18cfc"
+      },
+      {
+        "type": "commits-and-trees",
+        "reason": "Retention/identity metadata only; not blob entries."
+      },
+      {
+        "type": "calculated-models-intermediate-fragments-whole-hashes",
+        "reason": "Excluded unless a receipt explicitly proves actual persisted Git blob. No implicit transitive SHA closure."
+      },
+      {
+        "sha": "28882b074b5030d2fa677093f11edee4158e4330",
+        "bytes": 4951586,
+        "sha256": "9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2",
+        "type": "calculated-only-whole-main",
+        "reason": "Reconstructed locally from 17 actual Git parts; whole was not persisted and was never fetched/materialized. Retain only parts and stream metadata."
+      },
+      {
+        "type": "artifact-zip",
+        "id": 15258196107,
+        "bytes": 45835820,
+        "sha256": "95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2",
+        "state": "METADATA_ONLY_ZERO_ZIP_GETS",
+        "reason": "No artifact ZIP bytes, images, internal event file or CRC inventory acquired for this archive. The declared 150 upload-source files are not an inspected ZIP entry count."
+      },
+      {
+        "type": "future-product-and-other-scope",
+        "names": [
+          "C22",
+          "future final C613/tree/tar",
+          "UI6 execution/binding",
+          "new Migration composition"
+        ],
+        "reason": "Outside this finite input set; no future result, qualification or binding inferred."
+      },
+      {
+        "type": "current-package-self-recursion",
+        "names": [
+          "R10 index",
+          "R10 README",
+          "R10 derivation",
+          "R10 diff",
+          "R10 manifest"
+        ],
+        "reason": "Current package outputs are not recursively input objects. The catalog is outside its own inputs and is added once to the index after actual creation/readback."
+      }
+    ],
+    "futureD31": "Excluded; no D31 object, run or qualification included.",
+    "checkpointDiscoveryOnly": "87cca451b4092ebff61b7040366ba7f80a62514d",
+    "calculatedAnalyticsWhole": "28882b074b5030d2fa677093f11edee4158e4330",
+    "calculatedControlReport": "c0e25fb87846019dc8988a6f15f9c8bee0a5884e",
+    "currentSelfRecursion": "No current index/README/derivation/diff/manifest or superseded catalog R1 recursively enters the finite inputs. R2 catalog alone is added once to objects."
+  },
+  "unresolvedReferences": [
+    {
+      "id": "R10-PUBLICATION",
+      "status": "PENDING_ROOT_REVIEW_AND_FRESH_LEASE",
+      "scope": "No tree/commit/ref exists from this author; root is sole publisher."
+    },
+    {
+      "id": "MIGRATION-CFINAL",
+      "status": "UNBOUND",
+      "scope": "Resolve the actual accepted Cfinal preimages before consuming the two S21 proposals; rederive/review if changed."
+    },
+    {
+      "id": "FOUR-SOURCE-BOUND-BASELINES",
+      "status": "PENDING",
+      "names": [
+        "CI-SF",
+        "APP-SRC",
+        "UI-OPERATIONS",
+        "UI-DECISIONS"
+      ]
+    },
+    {
+      "id": "FINAL-C613-UI6-PRODUCTION",
+      "status": "NOT_AUTHORIZED_BY_THIS_PACKAGE",
+      "scope": "No final candidate/tree/tar, UI6 run, new G08/G10 confirmation, or production acceptance is supplied."
+    }
+  ],
+  "acceptance": {
+    "archiveDataProposalOnly": true,
+    "independentPackageReview": "PENDING; catalog R2 independent data review has no remaining finding, but final package review is not inferred.",
+    "rootFinalReview": "PENDING",
+    "productAcceptance": false,
+    "newQualifications": 0,
+    "productionAuthorized": false
+  },
+  "authorEffects": {
+    "currentPackageFilesIncludingThisManifest": 6,
+    "actualOutputBlobsCreatedBeforeThisManifest": 6,
+    "supersededCatalogDraftsCreated": 1,
+    "totalOutputBlobsAfterSuccessfulManifestCreation": 7,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "pullRequests": 0,
+    "comments": 0,
+    "repositoryExecutions": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "scope": "Current six-output proposal plus the documented superseded R1 catalog, all Git blobs only."
+  }
+}

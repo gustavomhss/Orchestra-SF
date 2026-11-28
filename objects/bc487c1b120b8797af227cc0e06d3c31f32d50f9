@@ -1,0 +1,230 @@
+{
+  "schema": "sf613-c22r4-focal-root-intake-v1",
+  "status": "RECEIVED_NEGATIVE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "at": "2026-11-28 12:07:33 UTC",
+  "source": "ae22c9b79d72b90b0420f729ba73dbf53158fe0e",
+  "sourceTree": "e80f5bb2f21611402d71b5487e1673c163f27ccc",
+  "snapshot": "a9c21083502063e9afe8b9c3cd2700638aebbd32",
+  "snapshotTree": "a22945a7cef3f298f123ded3fa0d017a01ac128e",
+  "run": {
+    "id": 46142400841,
+    "attempt": 1,
+    "conclusion": "failure",
+    "mainJobId": 140971028303,
+    "cleanupJobId": 140972286494,
+    "main": "failure",
+    "cleanup": "success"
+  },
+  "preservation": {
+    "main": {
+      "gitBlob": "f2d42064b60f5e588151ddc6cc3525de951e7692",
+      "bytes": 132716,
+      "sha256": "c5d99b7942852a7e478a9a032b6941a7274283d64a68fd168eb1bb6d728a4174",
+      "lf": 1053,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "d2f626b600c8f8d016da2172bbe168e4eb6bcfb1",
+      "bytes": 1695,
+      "sha256": "ac6e61599e8568bbb6273b0569021e88760f776f9b3c194bf20fc34070e47735",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "5a213a3c3746d6f3b681c67c21f78a5dff61871f",
+      "bytes": 2282,
+      "sha256": "d2d433ac8d7a00c1848a1da4fe7c4e4ece3413cc969be112588a4627e30edb66",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "17c3cfb233338e2c4d05af57ba316c4d0b745ee1",
+      "bytes": 1682,
+      "sha256": "0ec467a01e249d1f1ba70056592f091084c2a22d8a5579623889c3f07bd1c1b2",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "context": {
+      "gitBlob": "c79c53e2c3d59edb6ba43ede53a8e786d58f4eeb",
+      "bytes": 25770,
+      "sha256": "e704ef01ebde26255568b2a57991e4a36dba852e978b34e69ae85720e2073733",
+      "lf": 562,
+      "endsWithLF": true
+    },
+    "extraction": {
+      "gitBlob": "99983e16c71f0449daefee15cf0ccceffbd1bad1",
+      "bytes": 147053,
+      "sha256": "7c8bf0395a611bbfe71f129e152427459ee821460c1e6c77c136aa7ea99cd1d1",
+      "lf": 2806,
+      "endsWithLF": true
+    },
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "zipGets": 0,
+    "closedAt": "2026-11-28 12:04:49 UTC",
+    "reacquisitionAllowed": false,
+    "BOMByteZeroPreserved": true
+  },
+  "identity": {
+    "hosts": 10,
+    "workingPins": 25,
+    "literalExpectedPins": true,
+    "commands": 16,
+    "exitZero": 15,
+    "exitOne": 1,
+    "truncationFlagsFalse": 32,
+    "headRuns": 1,
+    "artifacts": 0,
+    "branchAbsent": true
+  },
+  "results": {
+    "functional": {
+      "pass": 21,
+      "fail": 1,
+      "assertions": 2682
+    },
+    "footers": [
+      {
+        "line": 795,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "text": "Ran 7 tests across 1 file. [357.00ms]"
+      },
+      {
+        "line": 817,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [847.00ms]"
+      },
+      {
+        "line": 864,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "text": "Ran 3 tests across 1 file. [315.00ms]"
+      },
+      {
+        "line": 879,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [209.00ms]"
+      },
+      {
+        "line": 892,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [583.00ms]"
+      },
+      {
+        "line": 1013,
+        "pass": 4,
+        "fail": 1,
+        "assertions": 275,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [135.39s]"
+      }
+    ],
+    "outer": {
+      "line": 952,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "tests": 10,
+      "files": 1,
+      "text": "Ran 10 tests across 1 file. [251.18s]"
+    },
+    "types": {
+      "CLI": "PASS",
+      "Sucafina": "PASS"
+    },
+    "guard": {
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "errors": 0,
+      "approved": 0,
+      "literalC21Findings": true
+    },
+    "inheritedReportsLiteral": 8,
+    "C22Reports": [
+      {
+        "scenario": "single-criterion-and-protocol",
+        "line": 967,
+        "literalModel": true
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "line": 984,
+        "literalModel": true
+      }
+    ],
+    "phaseRecords": 64,
+    "phaseDistribution": {
+      "single": 40,
+      "multiple": 16,
+      "unsupported": 8
+    },
+    "omni": {
+      "declaredTests": 10,
+      "spawns": 16,
+      "delegated": 0
+    }
+  },
+  "failure": {
+    "scenario": "unsupported-planner-closure",
+    "cooperativeDeadlineMs": 50000,
+    "BunTestMs": 50020.36,
+    "wholeFileCommandMs": 135429,
+    "setupMs": 6903,
+    "promotionMs": 1677,
+    "criterionDataMs": 28277,
+    "bind": {
+      "startElapsedMs": 36859,
+      "bracketExitElapsedMs": 50014,
+      "bracketMs": 13155,
+      "aborted": true,
+      "successEstablished": false
+    },
+    "readReached": false,
+    "finalUnsupportedReport": false,
+    "cause": "The scenario exceeded its cumulative cooperative fixture deadline during the bind bracket. The preserved phase markers do not determine a single internal blocking operation.",
+    "phaseReturnedSemantics": "finally runs on both success and failure"
+  },
+  "acceptedPartialObservations": {
+    "singleCriterion": {
+      "BunPass": true,
+      "durationMs": 41552.77,
+      "reportLiteral": true
+    },
+    "multipleCriteria": {
+      "BunPass": true,
+      "durationMs": 43160.6,
+      "reportLiteral": true
+    },
+    "completeControlAccepted": false
+  },
+  "limits": {
+    "newInstalledAcceptances": 0,
+    "AnalyticsAuthorized": false,
+    "productChangeInR4": false,
+    "performanceConclusion": false,
+    "productionAuthorized": false
+  }
+}

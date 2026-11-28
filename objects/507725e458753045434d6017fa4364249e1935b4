@@ -1,0 +1,377 @@
+{
+  "schema": "sf-c22r7-root-intake-review-v1",
+  "status": "ACCEPT_FOCAL_FOR_EXECUTED_SOURCE_ONLY_PENDING_INDEPENDENT_RECEIPT_REVIEW",
+  "at": "2026-11-28 14:07:20 UTC",
+  "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+  "sourceTree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+  "snapshot": "867df3c67f75eacd0912e172c108777477024967",
+  "snapshotTree": "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+  "run": 46152236997,
+  "attempt": 1,
+  "jobs": {
+    "main": 141001177464,
+    "cleanup": 141002891372
+  },
+  "terminalMetadata": {
+    "gitBlob": "ded31ce72f2133396152398f9d5ecfa42b16b0c4",
+    "bytes": 57620,
+    "sha256": "87697061173f507625b743f75988fe8c4926975e10aaed980a51cab09c193a6c",
+    "lf": 1033,
+    "endsWithLF": true
+  },
+  "extraction": {
+    "gitBlob": "fdc337cc28e8c80588c59441a5dcc5b3f2fdbe0b",
+    "bytes": 147799,
+    "sha256": "d0ede3f9d83e9a0a4ef1b711740ff7465c032d81c9bc26f0247c7d2db4941b46",
+    "lf": 2825,
+    "endsWithLF": true
+  },
+  "originals": {
+    "closedAt": "2026-11-28 14:06:12 UTC",
+    "main": {
+      "gitBlob": "1ee6276c824cd1d37e8412cc3d53c66f405cbe4b",
+      "bytes": 1695,
+      "sha256": "ed4802c72fc04a188645752d112d18248031325eb7b66c7a99071836d8eb4a1e",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "mainWhole": {
+      "gitBlob": "7bd66dd44ac8cb082cea7e0f1cbd8cd5bd1f53f9",
+      "bytes": 128317,
+      "sha256": "4fa1406774aa5ef3cbe68b3eab929100590a022c0a4f634c9b3ed35027bd190f",
+      "lf": 1000,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "f9947f01f4571ab496271a156758ab68553890a5",
+      "bytes": 1682,
+      "sha256": "994695529818a6f47d35f9ac7cfa745bc8950004780ab783d081ec5aba58d2c5",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanupWhole": {
+      "gitBlob": "4bdf528df06cc263e6a2366af491b4b7bae37029",
+      "bytes": 2282,
+      "sha256": "48158431e526e8afb4364bce6780432b4ab0b218ac0aedaf5eddfb8c69b7f99a",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "mainGetCount": 1,
+    "cleanupGetCount": 1,
+    "zipGets": 0,
+    "closed": true,
+    "wholeBlobsActuallyCreated": true
+  },
+  "checks": {
+    "commandsComplete": true,
+    "allExitZero": true,
+    "all32TruncationFlagsFalse": true,
+    "hostIdentities": true,
+    "workingPins": true,
+    "outerComplete": true,
+    "functionalComplete": true,
+    "allReports": true,
+    "oldReportsLiteral": true,
+    "threeC22ReportsExact": true,
+    "guards": true,
+    "noErrors": true,
+    "noProgressTracing": true,
+    "omni10Declared16Spawn0Delegate": true
+  },
+  "functional": {
+    "pass": 22,
+    "fail": 0,
+    "assertions": 2694,
+    "tests": 22
+  },
+  "outer": {
+    "line": 970,
+    "pass": 10,
+    "fail": 0,
+    "assertions": 50,
+    "tests": 10,
+    "files": 1,
+    "text": "Ran 10 tests across 1 file. [330.07s]"
+  },
+  "reports": [
+    {
+      "scenario": "single-criterion-and-protocol",
+      "observedCount": 1,
+      "bytes": 623,
+      "sha256": "618effd8bc9a7bdcb086cb8deb6a30f56816dfa1b65bdec751c9f144a714932e",
+      "exactModel": true
+    },
+    {
+      "scenario": "multiple-criteria-shared-source",
+      "observedCount": 1,
+      "bytes": 316,
+      "sha256": "ed8d1285741c5117527eff39a1f6712d0d0e7222e61f977a4592c2ef29fe2907",
+      "exactModel": true
+    },
+    {
+      "scenario": "unsupported-planner-closure",
+      "observedCount": 1,
+      "bytes": 296,
+      "sha256": "b7f9e4df187383d5682d91b7763bd120daec6d8a7a266bfc62f14cb41b7bf91f",
+      "exactModel": true
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+      "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+      "gitBlob": "6c34520bf11aa42c0d42244a830bf00433894757"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+      "gitBlob": "120f4169cec2e5e82a961399230476a83a5425b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "gitBlob": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+    }
+  ],
+  "guards": {
+    "rules": 78,
+    "files": 860,
+    "inheritedFindings": 40,
+    "findingsLiteralToC21": true,
+    "errors": 0,
+    "approvedBypasses": 0
+  },
+  "fallback": {
+    "scenario": "unsupported-planner-closure",
+    "nativeScope": false,
+    "bindingBatches": 3,
+    "readBatches": 2,
+    "outcome": "unsupported-planner-closure-complete-fallback",
+    "fullControlPassed": true
+  },
+  "timing": {
+    "controlProcessMs": 242000,
+    "unsupportedPhases": [
+      {
+        "line": 941,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"native-setup\",\"state\":\"started\",\"elapsedMs\":0}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 942,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"native-setup\",\"state\":\"returned\",\"phaseMs\":5413,\"elapsedMs\":5413,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5413,
+          "elapsedMs": 5413,
+          "aborted": false
+        }
+      },
+      {
+        "line": 943,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-promotion\",\"state\":\"started\",\"elapsedMs\":5414}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "started",
+          "elapsedMs": 5414
+        }
+      },
+      {
+        "line": 944,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-promotion\",\"state\":\"returned\",\"phaseMs\":1304,\"elapsedMs\":6719,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "returned",
+          "phaseMs": 1304,
+          "elapsedMs": 6719,
+          "aborted": false
+        }
+      },
+      {
+        "line": 945,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-criterion-data\",\"state\":\"started\",\"elapsedMs\":6719}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "started",
+          "elapsedMs": 6719
+        }
+      },
+      {
+        "line": 946,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-criterion-data\",\"state\":\"returned\",\"phaseMs\":22404,\"elapsedMs\":29122,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "returned",
+          "phaseMs": 22404,
+          "elapsedMs": 29122,
+          "aborted": false
+        }
+      },
+      {
+        "line": 947,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-bind\",\"state\":\"started\",\"elapsedMs\":29122}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "started",
+          "elapsedMs": 29122
+        }
+      },
+      {
+        "line": 948,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-bind\",\"state\":\"returned\",\"phaseMs\":86478,\"elapsedMs\":115601,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "returned",
+          "phaseMs": 86478,
+          "elapsedMs": 115601,
+          "aborted": false
+        }
+      },
+      {
+        "line": 949,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-read\",\"state\":\"started\",\"elapsedMs\":115601}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-read",
+          "state": "started",
+          "elapsedMs": 115601
+        }
+      },
+      {
+        "line": 950,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-read\",\"state\":\"returned\",\"phaseMs\":58041,\"elapsedMs\":173642,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-read",
+          "state": "returned",
+          "phaseMs": 58041,
+          "elapsedMs": 173642,
+          "aborted": false
+        }
+      }
+    ],
+    "limit": "Observed wall intervals on this executed source; not an installed preview benchmark, exclusive CPU attribution, general deadline guarantee or performance qualification."
+  },
+  "qualification": {
+    "focalAcceptedOnThisSource": true,
+    "installedAreasAdded": 0,
+    "UI6Accepted": false,
+    "finalCandidate": null,
+    "tar": null,
+    "MigrationReleaseAck": false,
+    "productionAuthorized": false
+  },
+  "remaining": [
+    "Independent complete receipt review",
+    "E16 diagnosed original preview, then implementation correction if supported",
+    "Final composition and all final qualifications on actual candidate"
+  ]
+}

@@ -1,0 +1,3091 @@
+{
+  "schema": "sf-c22r6-diagnostic-extraction-v1",
+  "status": "DERIVED_AFTER_CLOSED_ORIGINAL_PRESERVATION",
+  "at": {
+    "current_time": "2026-11-28 13:28:59 UTC"
+  },
+  "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+  "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+  "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+  "snapshotTree": "5daaac91ffac218091a826d09468859bdcb44826",
+  "run": 46149115180,
+  "attempt": 1,
+  "main": 140991547681,
+  "cleanup": 140992991435,
+  "context": {
+    "gitBlob": "bc6d5e0731acc6c411e329d76cfd46a003a2bb71",
+    "bytes": 42103,
+    "sha256": "e47756685f6a2723d904b16547d1715a9eb89452221f25600e83786debaa852c",
+    "lf": 804,
+    "endsWithLF": true
+  },
+  "mainManifest": {
+    "gitBlob": "2c721c85838421751233e67b34beb5cfb1e41a61",
+    "bytes": 1695,
+    "sha256": "7515a8106c80182bc9ae298e851198fa59741230219836369de217a04ee3ee10",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "cleanupManifest": {
+    "gitBlob": "4a4cc1b1e2efb6c72989e5136c4f60226c846a8d",
+    "bytes": 1682,
+    "sha256": "07180da549d40c3743c58f788af59a269e765d0dddfb19d86a65c882ea741ed3",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "analysisOnlyTransform": "Timestamp/BOM/ANSI stripped in derived view only. Preserved decoded originals remain literal.",
+  "result": {
+    "commands": [
+      {
+        "from": 756,
+        "to": 756,
+        "value": {
+          "gate": "fetch source parent",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--depth=2",
+            "origin",
+            "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 408,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"fetch source parent\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":408,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 760,
+        "to": 760,
+        "value": {
+          "gate": "snapshot identity",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 3,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"snapshot identity\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 763,
+        "to": 763,
+        "value": {
+          "gate": "source identity",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "show",
+            "-s",
+            "--format=%H%n%T",
+            "HEAD^"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 18,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"source identity\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":18,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 770,
+        "to": 770,
+        "value": {
+          "gate": "complete cases read-set contract whole-file",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/cases-read-contract.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 338,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"complete cases read-set contract whole-file\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/cases-read-contract.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":338,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 789,
+        "to": 789,
+        "value": {
+          "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 688,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"C14/C15/C16/C17 snapshot projection and closed case selection\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/c08-snapshot-projection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":688,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 811,
+        "to": 811,
+        "value": {
+          "gate": "CLI package typecheck",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "apps/cli",
+          "exitCode": 0,
+          "durationMs": 31931,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"CLI package typecheck\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":31931,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 816,
+        "to": 816,
+        "value": {
+          "gate": "Sucafina package typecheck",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "typecheck"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 31885,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"Sucafina package typecheck\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":31885,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 821,
+        "to": 821,
+        "value": {
+          "gate": "inspect history completeness",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "rev-parse",
+            "--is-shallow-repository"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 3,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"inspect history completeness\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"rev-parse\",\"--is-shallow-repository\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":3,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 824,
+        "to": 824,
+        "value": {
+          "gate": "fetch current dev and source ancestry",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "fetch",
+            "--no-tags",
+            "--unshallow",
+            "origin",
+            "+refs/heads/dev:refs/remotes/origin/dev",
+            "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 24714,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"fetch current dev and source ancestry\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--unshallow\",\"origin\",\"+refs/heads/dev:refs/remotes/origin/dev\",\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":24714,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 829,
+        "to": 829,
+        "value": {
+          "gate": "current dev identity",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "rev-parse",
+            "--verify",
+            "refs/remotes/origin/dev^{commit}"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 4,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"current dev identity\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"rev-parse\",\"--verify\",\"refs/remotes/origin/dev^{commit}\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 832,
+        "to": 832,
+        "value": {
+          "gate": "actual guard merge base",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "git",
+            "merge-base",
+            "HEAD",
+            "origin/dev"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 8,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"actual guard merge base\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"git\",\"merge-base\",\"HEAD\",\"origin/dev\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":8,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 836,
+        "to": 836,
+        "value": {
+          "gate": "canonical guardrails",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "run",
+            "check:guards",
+            "--base",
+            "origin/dev",
+            "--json"
+          ],
+          "cwd": ".",
+          "exitCode": 0,
+          "durationMs": 2469,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"canonical guardrails\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"check:guards\",\"--base\",\"origin/dev\",\"--json\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":2469,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 842,
+        "to": 842,
+        "value": {
+          "gate": "Portfolio selection cases and preferences whole-file",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 261,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"Portfolio selection cases and preferences whole-file\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":261,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 858,
+        "to": 858,
+        "value": {
+          "gate": "Scenario lookup complete candidates whole-file",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 172,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"Scenario lookup complete candidates whole-file\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":172,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 872,
+        "to": 872,
+        "value": {
+          "gate": "Native scenario candidates selection whole-file",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 0,
+          "durationMs": 468,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"Native scenario candidates selection whole-file\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":468,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      },
+      {
+        "from": 886,
+        "to": 886,
+        "value": {
+          "gate": "Comparison criterion observation whole-file",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "command": [
+            "/home/runner/.bun/bin/bun",
+            "test",
+            "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts"
+          ],
+          "cwd": "modules/sucafina/Sucafinav1",
+          "exitCode": 1,
+          "durationMs": 172715,
+          "stdoutTruncated": false,
+          "stderrTruncated": false
+        },
+        "body": "{\"gate\":\"Comparison criterion observation whole-file\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":1,\"durationMs\":172715,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+      }
+    ],
+    "hosts": [
+      {
+        "from": 754,
+        "to": 754,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 769,
+        "to": 769,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 788,
+        "to": 788,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 810,
+        "to": 810,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 815,
+        "to": 815,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 820,
+        "to": 820,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 841,
+        "to": 841,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 857,
+        "to": 857,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 871,
+        "to": 871,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      },
+      {
+        "from": 885,
+        "to": 885,
+        "value": {
+          "verification": "sf613-c22r6-comparison-criteria-observation-focal",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "run": "46149115180",
+          "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+        },
+        "body": "{\"verification\":\"sf613-c22r6-comparison-criteria-observation-focal\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"run\":\"46149115180\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+      }
+    ],
+    "pinRows": [
+      {
+        "from": 767,
+        "to": 767,
+        "value": {
+          "gate": "reviewed source blobs",
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+          "files": [
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+              "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+              "sha": "b7de9404461591ce0162d496ec917a47fb72a479"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+              "sha": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+            },
+            {
+              "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+              "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+              "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+              "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+              "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+              "sha": "6287eedc5387f5e7495963a12364bc31157a7789"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+              "sha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+              "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+              "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+              "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+              "sha": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+              "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+              "sha": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+              "sha": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+              "sha": "b62d93080073964d7adc993c3a5c02277abab38a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+              "sha": "0b03c45e7288985b99914c186522bf062f9e3595"
+            },
+            {
+              "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+              "sha": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+              "sha": "201a3caef45735e38d2df9d4d6a1c885a5949ed0"
+            },
+            {
+              "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+              "sha": "6c34520bf11aa42c0d42244a830bf00433894757"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+              "sha": "120f4169cec2e5e82a961399230476a83a5425b7"
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+              "sha": "3eb140557b597156baf52578d8981d332e52aef3"
+            },
+            {
+              "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+              "sha": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+            }
+          ],
+          "expectedGroups": 10,
+          "expectedCommands": 16,
+          "functionalProcessesLaunched": 6,
+          "staticDeclarationSites": {
+            "casesContract": 7,
+            "projection": 5,
+            "portfolioSelection": 3,
+            "scenarioLookup": 1,
+            "nativeScenarioSelection": 1,
+            "criterionChecks": 5
+          },
+          "expectedControlReports": 11
+        },
+        "body": "{\"gate\":\"reviewed source blobs\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"snapshot\":\"7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb\",\"files\":[{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"sha\":\"1017609000bdbdb39fc0510b045dc6dfde371faf\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"sha\":\"b7de9404461591ce0162d496ec917a47fb72a479\"},{\"path\":\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"sha\":\"91413a24723c27cc5102368c3fe9a6090d9cdcea\"},{\"path\":\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"sha\":\"244d46ee41e9ce288a7260938174a57161137bab\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"sha\":\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"sha\":\"ccc5ea87046144843e1751b1288e907974d24ca5\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"sha\":\"f183dd1049ef205c38395bda99c83efa8eddc80a\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"sha\":\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"sha\":\"6287eedc5387f5e7495963a12364bc31157a7789\"},{\"path\":\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"sha\":\"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"sha\":\"6bef21db9129db064b018f5f0bf632306e3a16ec\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"sha\":\"11661b32f4dc782558b39902c0f396145cbe8a4a\"},{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts\",\"sha\":\"44cff7d70fca11ca022f863d7811b9a2610186fd\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts\",\"sha\":\"b6938565cb8b468a454178688ea88a4ec88da9fa\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"sha\":\"68ae48f9a039180824f5471a1de27c0ca34be088\"},{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts\",\"sha\":\"c8dd1c26b46ea7c287db80d0ca5746205e45f1ef\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"sha\":\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts\",\"sha\":\"b62d93080073964d7adc993c3a5c02277abab38a\"},{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts\",\"sha\":\"0b03c45e7288985b99914c186522bf062f9e3595\"},{\"path\":\"apps/cli/src/sucafina-product/portfolio-authority.ts\",\"sha\":\"05f6f4fd963dd2746220a44ec8115ea4c0a40e1a\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\",\"sha\":\"201a3caef45735e38d2df9d4d6a1c885a5949ed0\"},{\"path\":\"apps/cli/src/sucafina-product/portfolio-comparison-observation.ts\",\"sha\":\"6c34520bf11aa42c0d42244a830bf00433894757\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts\",\"sha\":\"120f4169cec2e5e82a961399230476a83a5425b7\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts\",\"sha\":\"3eb140557b597156baf52578d8981d332e52aef3\"},{\"path\":\"apps/cli/src/sucafina-product/portfolio-services.ts\",\"sha\":\"ee6a5c7a9476ce1786d3532985571f7097becc35\"}],\"expectedGroups\":10,\"expectedCommands\":16,\"functionalProcessesLaunched\":6,\"staticDeclarationSites\":{\"casesContract\":7,\"projection\":5,\"portfolioSelection\":3,\"scenarioLookup\":1,\"nativeScenarioSelection\":1,\"criterionChecks\":5},\"expectedControlReports\":11}"
+      }
+    ],
+    "controlReports": [
+      {
+        "line": 792,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "payload": "{\"scenario\":\"complete-product-and-fresh-authorization\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"preimage\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"top-level\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2}],\"subsequentPreferenceVersion\":2,\"createIdReceiver\":\"original mutable C08 input\",\"projector\":\"installed original\",\"limit\":\"top-level stays full; no parse count, domain-size ratio or performance qualification\"}",
+        "value": {
+          "scenario": "complete-product-and-fresh-authorization",
+          "qualification": false,
+          "outcomes": [
+            {
+              "mode": "readonly",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            },
+            {
+              "mode": "preimage",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            },
+            {
+              "mode": "top-level",
+              "callbacks": 3,
+              "authentication": 18,
+              "opaqueAuthorizationSnapshots": 2
+            }
+          ],
+          "subsequentPreferenceVersion": 2,
+          "createIdReceiver": "original mutable C08 input",
+          "projector": "installed original",
+          "limit": "top-level stays full; no parse count, domain-size ratio or performance qualification"
+        }
+      },
+      {
+        "line": 793,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "payload": "{\"scenario\":\"opaque-equivalence-and-live-refusal\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"preimage-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"preimage-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"readonly-source-checks-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-source-checks-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"source-accessor-full-fallback\",\"callbacks\":1},{\"scenario\":\"driver-drift-before-body\",\"callbacks\":0,\"authentication\":0},{\"scenario\":\"CurrentChoice-scoped-full-fallback\",\"callbacks\":2,\"authentication\":18},{\"scenario\":\"real-authority-revoked-after-body\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"callback-error-without-replay-or-poison\",\"callbacks\":1},{\"scenario\":\"request-abort-after-body\",\"callbacks\":1,\"authentication\":3},{\"scenario\":\"caught-nested-write-still-poisons-owner\",\"callbacks\":1},{\"scenario\":\"early-prototype-full\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"late-prototype-projected\",\"callbacks\":0,\"authentication\":3},{\"scenario\":\"late-prototype-opaque\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"opaque-native-driver-full-fallback\",\"callbacks\":2}],\"limit\":\"functional route and refusal evidence only; no latency, parse-count or clean Analytics claim\"}",
+        "value": {
+          "scenario": "opaque-equivalence-and-live-refusal",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "readonly-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "readonly-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "preimage-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "preimage-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "readonly-source-checks-projected-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "replacementCalls": 0
+            },
+            {
+              "scenario": "readonly-source-checks-opaque-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "replacementCalls": 1
+            },
+            {
+              "scenario": "source-accessor-full-fallback",
+              "callbacks": 1
+            },
+            {
+              "scenario": "driver-drift-before-body",
+              "callbacks": 0,
+              "authentication": 0
+            },
+            {
+              "scenario": "CurrentChoice-scoped-full-fallback",
+              "callbacks": 2,
+              "authentication": 18
+            },
+            {
+              "scenario": "real-authority-revoked-after-body",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "callback-error-without-replay-or-poison",
+              "callbacks": 1
+            },
+            {
+              "scenario": "request-abort-after-body",
+              "callbacks": 1,
+              "authentication": 3
+            },
+            {
+              "scenario": "caught-nested-write-still-poisons-owner",
+              "callbacks": 1
+            },
+            {
+              "scenario": "early-prototype-full",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "late-prototype-projected",
+              "callbacks": 0,
+              "authentication": 3
+            },
+            {
+              "scenario": "late-prototype-opaque",
+              "callbacks": 1,
+              "authentication": 6
+            },
+            {
+              "scenario": "opaque-native-driver-full-fallback",
+              "callbacks": 2
+            }
+          ],
+          "limit": "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"
+        }
+      },
+      {
+        "line": 794,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "payload": "{\"scenario\":\"whole-graphs-and-shape\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"readonly\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18}],\"aliases\":\"custom full path retained; each selected callback receives its own graph\",\"limit\":\"native structural copy and functional composition; no latency or current Analytics result\"}",
+        "value": {
+          "scenario": "whole-graphs-and-shape",
+          "qualification": false,
+          "outcomes": [
+            {
+              "mode": "readonly",
+              "namespace": "cases",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "readonly",
+              "namespace": "preferences",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "preimage",
+              "namespace": "cases",
+              "callbacks": 3,
+              "authentication": 18
+            },
+            {
+              "mode": "preimage",
+              "namespace": "preferences",
+              "callbacks": 3,
+              "authentication": 18
+            }
+          ],
+          "aliases": "custom full path retained; each selected callback receives its own graph",
+          "limit": "native structural copy and functional composition; no latency or current Analytics result"
+        }
+      },
+      {
+        "line": 795,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "payload": "{\"scenario\":\"shape-precedence-and-drift\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"readonly-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"active-source-checks-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"narrow-second-authorization-drift\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"returned body withheld\"},{\"scenario\":\"case-precedence\",\"callbacks\":null,\"authentication\":6,\"outcome\":\"factory callback returned; not wrapped to count\"},{\"scenario\":\"namespace-mismatch\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"late-registration\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"invalid-map\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-version\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-additive\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"legacy\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original legacy normalization\"},{\"scenario\":\"throw-sentinel\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"},{\"scenario\":\"throw-undefined\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"}],\"limit\":\"narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores\"}",
+        "value": {
+          "scenario": "shape-precedence-and-drift",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "readonly-cases-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "readonly-preferences-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "preimage-cases-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "preimage-preferences-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "active-source-checks-narrow-drift",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "refused before callback"
+            },
+            {
+              "scenario": "narrow-second-authorization-drift",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "returned body withheld"
+            },
+            {
+              "scenario": "case-precedence",
+              "callbacks": null,
+              "authentication": 6,
+              "outcome": "factory callback returned; not wrapped to count"
+            },
+            {
+              "scenario": "namespace-mismatch",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original full fallback and selection order"
+            },
+            {
+              "scenario": "late-registration",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original full fallback and selection order"
+            },
+            {
+              "scenario": "invalid-map",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "invalid-version",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "invalid-additive",
+              "callbacks": 0,
+              "authentication": 3,
+              "outcome": "original invalid-product-state"
+            },
+            {
+              "scenario": "legacy",
+              "callbacks": 1,
+              "authentication": 6,
+              "outcome": "original legacy normalization"
+            },
+            {
+              "scenario": "throw-sentinel",
+              "callbacks": 1,
+              "authentication": 9,
+              "outcome": "original exception; next child remains usable"
+            },
+            {
+              "scenario": "throw-undefined",
+              "callbacks": 1,
+              "authentication": 9,
+              "outcome": "original exception; next child remains usable"
+            }
+          ],
+          "limit": "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"
+        }
+      },
+      {
+        "line": 796,
+        "prefix": "SF_C16_SELECTION_CONTROL",
+        "payload": "{\"scenario\":\"closed-case-factories\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"case-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-key-observed-after-first-authorization\",\"authentication\":6,\"outcome\":\"no key read at registration, native selection or reauthorization\"},{\"scenario\":\"identity-throw-sentinel\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-throw-undefined\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-request-abort\",\"authentication\":3,\"outcome\":\"original abort refuses the root\"},{\"scenario\":\"poisoned-native-root\",\"authentication\":0,\"outcome\":\"no child result or root accepted after caught commit:true\"}],\"identityProjection\":{\"cases\":[\"mixed-map-and-detached-readonly\",\"mixed-map-and-detached-preimage\",\"composed-identity-first-authorization-drift\",\"composed-identity-second-authorization-drift\",\"restored-codec-birth-keeps-complete-case\",\"restored-codec-exposure-keeps-complete-case\",\"cold-plan-birth-survives-restore-and-memo\",\"owner-weakmap-escape-latches-across-roots\",\"owner-als-escape-latches-across-roots\"],\"limit\":\"readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases\"},\"limits\":\"composed functional and refusal oracles; no latency or current Analytics qualification\"}",
+        "value": {
+          "scenario": "closed-case-factories",
+          "qualification": false,
+          "outcomes": [
+            {
+              "scenario": "case-readonly-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "case-readonly-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-readonly-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-preimage-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "case-preimage-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-preimage-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-readonly-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "identity-readonly-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-readonly-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-preimage-fresh-values",
+              "authentication": 18,
+              "outcome": "same values and metadata; independent copies; both real authorizations"
+            },
+            {
+              "scenario": "identity-preimage-c16Missing",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "identity-preimage-c16Malformed",
+              "authentication": 12,
+              "outcome": "closed factory matches the original full fallback"
+            },
+            {
+              "scenario": "case-first-prototype",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-first-concurrent-declaration",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-second-prototype",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-second-concurrent-declaration",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-first-prototype",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-first-concurrent-declaration",
+              "authentication": 3,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-second-prototype",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "identity-second-concurrent-declaration",
+              "authentication": 6,
+              "outcome": "projected result withheld without replay"
+            },
+            {
+              "scenario": "case-concurrent",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "case-opaque-context",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "case-namespace",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-concurrent",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-opaque-context",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-namespace",
+              "authentication": 6,
+              "outcome": "complete fallback preserved"
+            },
+            {
+              "scenario": "identity-key-observed-after-first-authorization",
+              "authentication": 6,
+              "outcome": "no key read at registration, native selection or reauthorization"
+            },
+            {
+              "scenario": "identity-throw-sentinel",
+              "authentication": 9,
+              "outcome": "original throw preserved; next child remains usable"
+            },
+            {
+              "scenario": "identity-throw-undefined",
+              "authentication": 9,
+              "outcome": "original throw preserved; next child remains usable"
+            },
+            {
+              "scenario": "identity-request-abort",
+              "authentication": 3,
+              "outcome": "original abort refuses the root"
+            },
+            {
+              "scenario": "poisoned-native-root",
+              "authentication": 0,
+              "outcome": "no child result or root accepted after caught commit:true"
+            }
+          ],
+          "identityProjection": {
+            "cases": [
+              "mixed-map-and-detached-readonly",
+              "mixed-map-and-detached-preimage",
+              "composed-identity-first-authorization-drift",
+              "composed-identity-second-authorization-drift",
+              "restored-codec-birth-keeps-complete-case",
+              "restored-codec-exposure-keeps-complete-case",
+              "cold-plan-birth-survives-restore-and-memo",
+              "owner-weakmap-escape-latches-across-roots",
+              "owner-als-escape-latches-across-roots"
+            ],
+            "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+          },
+          "limits": "composed functional and refusal oracles; no latency or current Analytics qualification"
+        }
+      },
+      {
+        "line": 845,
+        "prefix": "SF_C19_PORTFOLIO_CASES",
+        "payload": "{\"schema\":\"sf-c19-portfolio-cases-v1\",\"customCaptures\":6,\"nativeReads\":9,\"reachableFailures\":6,\"revocations\":3,\"mixedReads\":1}",
+        "value": {
+          "schema": "sf-c19-portfolio-cases-v1",
+          "customCaptures": 6,
+          "nativeReads": 9,
+          "reachableFailures": 6,
+          "revocations": 3,
+          "mixedReads": 1
+        }
+      },
+      {
+        "line": 861,
+        "prefix": "SF_C20_SCENARIO_LOOKUP",
+        "payload": "{\"schema\":\"sf-c20-scenario-lookup-v1\",\"checks\":[\"consumer-selects-complete-detached-results\",\"opaque-wrapper-keeps-full-state\",\"mutable-context-uses-opaque-fallback\",\"proxy-context-uses-opaque-fallback\",\"map-prototype-uses-opaque-fallback\",\"request-key-remains-late-after-admission\",\"mutable-binding-is-observed-after-admission\",\"admission-denied-does-not-disclose\",\"egress-revoked-does-not-disclose\",\"abort-does-not-disclose\",\"unmatched-getter-selected\",\"unmatched-getter-opaque\",\"unmatched-function-selected\",\"unmatched-function-opaque\"]}",
+        "value": {
+          "schema": "sf-c20-scenario-lookup-v1",
+          "checks": [
+            "consumer-selects-complete-detached-results",
+            "opaque-wrapper-keeps-full-state",
+            "mutable-context-uses-opaque-fallback",
+            "proxy-context-uses-opaque-fallback",
+            "map-prototype-uses-opaque-fallback",
+            "request-key-remains-late-after-admission",
+            "mutable-binding-is-observed-after-admission",
+            "admission-denied-does-not-disclose",
+            "egress-revoked-does-not-disclose",
+            "abort-does-not-disclose",
+            "unmatched-getter-selected",
+            "unmatched-getter-opaque",
+            "unmatched-function-selected",
+            "unmatched-function-opaque"
+          ]
+        }
+      },
+      {
+        "line": 874,
+        "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+        "payload": "{\"schema\":\"sf-c21-native-scenario-selection-v1\",\"outcomes\":[\"native-whole-collection-readonly\",\"composed-fresh-candidates-readonly\",\"native-whole-collection-preimage\",\"composed-fresh-candidates-preimage\",\"request-key-after-first-authorize\",\"composed-prototype-first\",\"composed-declaration-first\",\"composed-prototype-second\",\"composed-declaration-second\",\"full-fallback-mutable-context\",\"full-fallback-wrapped-callback\",\"full-fallback-concurrent-declaration\",\"full-fallback-namespace\",\"full-fallback-top-level\",\"full-fallback-CurrentChoice-scoped\",\"full-shape-fallback-absent\",\"full-shape-fallback-own-undefined\",\"full-shape-fallback-array\",\"empty-collection-is-a-real-selection\"],\"contexts\":[\"readonly\",\"preimage\"],\"originalProjectionControlsPreserved\":5,\"claim\":\"physical child selection and fallback only; no installed latency measurement\"}",
+        "value": {
+          "schema": "sf-c21-native-scenario-selection-v1",
+          "outcomes": [
+            "native-whole-collection-readonly",
+            "composed-fresh-candidates-readonly",
+            "native-whole-collection-preimage",
+            "composed-fresh-candidates-preimage",
+            "request-key-after-first-authorize",
+            "composed-prototype-first",
+            "composed-declaration-first",
+            "composed-prototype-second",
+            "composed-declaration-second",
+            "full-fallback-mutable-context",
+            "full-fallback-wrapped-callback",
+            "full-fallback-concurrent-declaration",
+            "full-fallback-namespace",
+            "full-fallback-top-level",
+            "full-fallback-CurrentChoice-scoped",
+            "full-shape-fallback-absent",
+            "full-shape-fallback-own-undefined",
+            "full-shape-fallback-array",
+            "empty-collection-is-a-real-selection"
+          ],
+          "contexts": [
+            "readonly",
+            "preimage"
+          ],
+          "originalProjectionControlsPreserved": 5,
+          "claim": "physical child selection and fallback only; no installed latency measurement"
+        }
+      },
+      {
+        "line": 957,
+        "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+        "payload": "{\"schema\":\"sf-c22-comparison-criteria-observation-v2\",\"scenario\":\"single-criterion-and-protocol\",\"qualification\":false,\"singleCriterion\":{\"bindingBatches\":3,\"readBatches\":2,\"nativeScope\":true},\"outcomes\":[\"absent-opt-in-order-and-receiver\",\"single-work-private-checks\",\"no-work\",\"refused-after-work\",\"double-work\",\"late-work\",\"hook-drift\",\"registry-drift\",\"method-drift\",\"binding-drift\",\"throw-undefined-not-converted-or-replayed\",\"original-check-status\",\"native-single-criterion-post-proof-and-durable-bind\",\"native-evaluator-identity-drift\",\"native-authority-revoked-after-batch\"]}",
+        "value": {
+          "schema": "sf-c22-comparison-criteria-observation-v2",
+          "scenario": "single-criterion-and-protocol",
+          "qualification": false,
+          "singleCriterion": {
+            "bindingBatches": 3,
+            "readBatches": 2,
+            "nativeScope": true
+          },
+          "outcomes": [
+            "absent-opt-in-order-and-receiver",
+            "single-work-private-checks",
+            "no-work",
+            "refused-after-work",
+            "double-work",
+            "late-work",
+            "hook-drift",
+            "registry-drift",
+            "method-drift",
+            "binding-drift",
+            "throw-undefined-not-converted-or-replayed",
+            "original-check-status",
+            "native-single-criterion-post-proof-and-durable-bind",
+            "native-evaluator-identity-drift",
+            "native-authority-revoked-after-batch"
+          ]
+        }
+      },
+      {
+        "line": 974,
+        "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+        "payload": "{\"schema\":\"sf-c22-comparison-criteria-observation-v2\",\"scenario\":\"multiple-criteria-shared-source\",\"qualification\":false,\"multipleCriteria\":{\"criteria\":2,\"sharedPlannerSources\":true,\"newBatchObservations\":0},\"outcomes\":[\"multiple-planner-criteria-original-parallel-fallback\"]}",
+        "value": {
+          "schema": "sf-c22-comparison-criteria-observation-v2",
+          "scenario": "multiple-criteria-shared-source",
+          "qualification": false,
+          "multipleCriteria": {
+            "criteria": 2,
+            "sharedPlannerSources": true,
+            "newBatchObservations": 0
+          },
+          "outcomes": [
+            "multiple-planner-criteria-original-parallel-fallback"
+          ]
+        }
+      }
+    ],
+    "phases": [
+      {
+        "line": 888,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-setup\",\"state\":\"started\",\"elapsedMs\":0}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-setup",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 889,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-setup\",\"state\":\"returned\",\"phaseMs\":15,\"elapsedMs\":16,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-setup",
+          "state": "returned",
+          "phaseMs": 15,
+          "elapsedMs": 16,
+          "aborted": false
+        }
+      },
+      {
+        "line": 890,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":16}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 16
+        }
+      },
+      {
+        "line": 891,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":4,\"elapsedMs\":20,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 4,
+          "elapsedMs": 20,
+          "aborted": false
+        }
+      },
+      {
+        "line": 892,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":20}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 20
+        }
+      },
+      {
+        "line": 893,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":4,\"elapsedMs\":24,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 4,
+          "elapsedMs": 24,
+          "aborted": false
+        }
+      },
+      {
+        "line": 894,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":24}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 24
+        }
+      },
+      {
+        "line": 895,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":25,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 25,
+          "aborted": false
+        }
+      },
+      {
+        "line": 896,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":25}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 25
+        }
+      },
+      {
+        "line": 897,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":26,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 26,
+          "aborted": false
+        }
+      },
+      {
+        "line": 898,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":26}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 26
+        }
+      },
+      {
+        "line": 899,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":28,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 28,
+          "aborted": false
+        }
+      },
+      {
+        "line": 900,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":28}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 28
+        }
+      },
+      {
+        "line": 901,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":29,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 29,
+          "aborted": false
+        }
+      },
+      {
+        "line": 902,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":29}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 29
+        }
+      },
+      {
+        "line": 903,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":2,\"elapsedMs\":31,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 2,
+          "elapsedMs": 31,
+          "aborted": false
+        }
+      },
+      {
+        "line": 904,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":31}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 31
+        }
+      },
+      {
+        "line": 905,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":2,\"elapsedMs\":32,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 2,
+          "elapsedMs": 32,
+          "aborted": false
+        }
+      },
+      {
+        "line": 906,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":32}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 32
+        }
+      },
+      {
+        "line": 907,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":34,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 34,
+          "aborted": false
+        }
+      },
+      {
+        "line": 908,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":34}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 34
+        }
+      },
+      {
+        "line": 909,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":35,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 35,
+          "aborted": false
+        }
+      },
+      {
+        "line": 910,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":35}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 35
+        }
+      },
+      {
+        "line": 911,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":36,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 36,
+          "aborted": false
+        }
+      },
+      {
+        "line": 912,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":36}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 36
+        }
+      },
+      {
+        "line": 913,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":37,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 37,
+          "aborted": false
+        }
+      },
+      {
+        "line": 914,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"started\",\"elapsedMs\":37}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "started",
+          "elapsedMs": 37
+        }
+      },
+      {
+        "line": 915,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"controlled-read\",\"state\":\"returned\",\"phaseMs\":1,\"elapsedMs\":38,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "controlled-read",
+          "state": "returned",
+          "phaseMs": 1,
+          "elapsedMs": 38,
+          "aborted": false
+        }
+      },
+      {
+        "line": 916,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-setup\",\"state\":\"started\",\"elapsedMs\":38}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 38
+        }
+      },
+      {
+        "line": 917,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-setup\",\"state\":\"returned\",\"phaseMs\":5668,\"elapsedMs\":5707,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5668,
+          "elapsedMs": 5707,
+          "aborted": false
+        }
+      },
+      {
+        "line": 918,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"single-criterion-data\",\"state\":\"started\",\"elapsedMs\":5707}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "single-criterion-data",
+          "state": "started",
+          "elapsedMs": 5707
+        }
+      },
+      {
+        "line": 919,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"single-criterion-data\",\"state\":\"returned\",\"phaseMs\":2747,\"elapsedMs\":8454,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "single-criterion-data",
+          "state": "returned",
+          "phaseMs": 2747,
+          "elapsedMs": 8454,
+          "aborted": false
+        }
+      },
+      {
+        "line": 949,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-bind\",\"state\":\"started\",\"elapsedMs\":8454}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-bind",
+          "state": "started",
+          "elapsedMs": 8454
+        }
+      },
+      {
+        "line": 950,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-bind\",\"state\":\"returned\",\"phaseMs\":10514,\"elapsedMs\":18968,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-bind",
+          "state": "returned",
+          "phaseMs": 10514,
+          "elapsedMs": 18968,
+          "aborted": false
+        }
+      },
+      {
+        "line": 951,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-read\",\"state\":\"started\",\"elapsedMs\":18969}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-read",
+          "state": "started",
+          "elapsedMs": 18969
+        }
+      },
+      {
+        "line": 952,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-read\",\"state\":\"returned\",\"phaseMs\":6947,\"elapsedMs\":25915,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-read",
+          "state": "returned",
+          "phaseMs": 6947,
+          "elapsedMs": 25915,
+          "aborted": false
+        }
+      },
+      {
+        "line": 953,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-method-drift-read\",\"state\":\"started\",\"elapsedMs\":25915}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-method-drift-read",
+          "state": "started",
+          "elapsedMs": 25915
+        }
+      },
+      {
+        "line": 954,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-method-drift-read\",\"state\":\"returned\",\"phaseMs\":3384,\"elapsedMs\":29299,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-method-drift-read",
+          "state": "returned",
+          "phaseMs": 3384,
+          "elapsedMs": 29299,
+          "aborted": false
+        }
+      },
+      {
+        "line": 955,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-authority-revocation-read\",\"state\":\"started\",\"elapsedMs\":29299}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-authority-revocation-read",
+          "state": "started",
+          "elapsedMs": 29299
+        }
+      },
+      {
+        "line": 956,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-single\",\"phase\":\"native-authority-revocation-read\",\"state\":\"returned\",\"phaseMs\":3457,\"elapsedMs\":32756,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-single",
+          "phase": "native-authority-revocation-read",
+          "state": "returned",
+          "phaseMs": 3457,
+          "elapsedMs": 32756,
+          "aborted": false
+        }
+      },
+      {
+        "line": 958,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"native-setup\",\"state\":\"started\",\"elapsedMs\":0}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 959,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"native-setup\",\"state\":\"returned\",\"phaseMs\":5638,\"elapsedMs\":5638,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5638,
+          "elapsedMs": 5638,
+          "aborted": false
+        }
+      },
+      {
+        "line": 960,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-admission\",\"state\":\"started\",\"elapsedMs\":5638}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-admission",
+          "state": "started",
+          "elapsedMs": 5638
+        }
+      },
+      {
+        "line": 961,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-admission\",\"state\":\"returned\",\"phaseMs\":2,\"elapsedMs\":5640,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-admission",
+          "state": "returned",
+          "phaseMs": 2,
+          "elapsedMs": 5640,
+          "aborted": false
+        }
+      },
+      {
+        "line": 962,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-read\",\"state\":\"started\",\"elapsedMs\":5640}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-read",
+          "state": "started",
+          "elapsedMs": 5640
+        }
+      },
+      {
+        "line": 963,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-read\",\"state\":\"returned\",\"phaseMs\":156,\"elapsedMs\":5796,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-read",
+          "state": "returned",
+          "phaseMs": 156,
+          "elapsedMs": 5796,
+          "aborted": false
+        }
+      },
+      {
+        "line": 964,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-case-append\",\"state\":\"started\",\"elapsedMs\":5796}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-case-append",
+          "state": "started",
+          "elapsedMs": 5796
+        }
+      },
+      {
+        "line": 965,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-case-append\",\"state\":\"returned\",\"phaseMs\":5,\"elapsedMs\":5801,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-case-append",
+          "state": "returned",
+          "phaseMs": 5,
+          "elapsedMs": 5801,
+          "aborted": false
+        }
+      },
+      {
+        "line": 966,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-registration\",\"state\":\"started\",\"elapsedMs\":5802}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-registration",
+          "state": "started",
+          "elapsedMs": 5802
+        }
+      },
+      {
+        "line": 967,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-rule-registration\",\"state\":\"returned\",\"phaseMs\":242,\"elapsedMs\":6044,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-rule-registration",
+          "state": "returned",
+          "phaseMs": 242,
+          "elapsedMs": 6044,
+          "aborted": false
+        }
+      },
+      {
+        "line": 968,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-criterion-data\",\"state\":\"started\",\"elapsedMs\":6044}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-criterion-data",
+          "state": "started",
+          "elapsedMs": 6044
+        }
+      },
+      {
+        "line": 969,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-criterion-data\",\"state\":\"returned\",\"phaseMs\":3620,\"elapsedMs\":9663,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-criterion-data",
+          "state": "returned",
+          "phaseMs": 3620,
+          "elapsedMs": 9663,
+          "aborted": false
+        }
+      },
+      {
+        "line": 970,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-native-bind\",\"state\":\"started\",\"elapsedMs\":9664}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-native-bind",
+          "state": "started",
+          "elapsedMs": 9664
+        }
+      },
+      {
+        "line": 971,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-native-bind\",\"state\":\"returned\",\"phaseMs\":14900,\"elapsedMs\":24564,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-native-bind",
+          "state": "returned",
+          "phaseMs": 14900,
+          "elapsedMs": 24564,
+          "aborted": false
+        }
+      },
+      {
+        "line": 972,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-native-read\",\"state\":\"started\",\"elapsedMs\":24564}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-native-read",
+          "state": "started",
+          "elapsedMs": 24564
+        }
+      },
+      {
+        "line": 973,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-multiple\",\"phase\":\"multiple-native-read\",\"state\":\"returned\",\"phaseMs\":9793,\"elapsedMs\":34357,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-multiple",
+          "phase": "multiple-native-read",
+          "state": "returned",
+          "phaseMs": 9793,
+          "elapsedMs": 34357,
+          "aborted": false
+        }
+      },
+      {
+        "line": 975,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"native-setup\",\"state\":\"started\",\"elapsedMs\":0}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "line": 976,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"native-setup\",\"state\":\"returned\",\"phaseMs\":5564,\"elapsedMs\":5564,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5564,
+          "elapsedMs": 5564,
+          "aborted": false
+        }
+      },
+      {
+        "line": 977,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-promotion\",\"state\":\"started\",\"elapsedMs\":5564}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "started",
+          "elapsedMs": 5564
+        }
+      },
+      {
+        "line": 978,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-promotion\",\"state\":\"returned\",\"phaseMs\":1320,\"elapsedMs\":6884,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "returned",
+          "phaseMs": 1320,
+          "elapsedMs": 6884,
+          "aborted": false
+        }
+      },
+      {
+        "line": 979,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-criterion-data\",\"state\":\"started\",\"elapsedMs\":6885}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "started",
+          "elapsedMs": 6885
+        }
+      },
+      {
+        "line": 980,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-criterion-data\",\"state\":\"returned\",\"phaseMs\":22416,\"elapsedMs\":29301,\"aborted\":false}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "returned",
+          "phaseMs": 22416,
+          "elapsedMs": 29301,
+          "aborted": false
+        }
+      },
+      {
+        "line": 981,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-bind\",\"state\":\"started\",\"elapsedMs\":29301}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "started",
+          "elapsedMs": 29301
+        }
+      },
+      {
+        "line": 992,
+        "prefix": "SF_COMPOSITION_PHASE",
+        "payload": "{\"fixture\":\"comparison-criteria-unsupported\",\"phase\":\"unsupported-native-bind\",\"state\":\"returned\",\"phaseMs\":75728,\"elapsedMs\":105029,\"aborted\":true}",
+        "value": {
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "returned",
+          "phaseMs": 75728,
+          "elapsedMs": 105029,
+          "aborted": true
+        }
+      }
+    ],
+    "footers": [
+      {
+        "line": 785,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "text": "Ran 7 tests across 1 file. [327.00ms]"
+      },
+      {
+        "line": 808,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [669.00ms]"
+      },
+      {
+        "line": 855,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "text": "Ran 3 tests across 1 file. [249.00ms]"
+      },
+      {
+        "line": 869,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [161.00ms]"
+      },
+      {
+        "line": 882,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "text": "Ran 1 test across 1 file. [451.00ms]"
+      },
+      {
+        "line": 948,
+        "pass": 9,
+        "fail": 1,
+        "assertions": 49,
+        "tests": 10,
+        "files": 1,
+        "text": "Ran 10 tests across 1 file. [266.36s]"
+      },
+      {
+        "line": 1013,
+        "pass": 4,
+        "fail": 1,
+        "assertions": 275,
+        "tests": 5,
+        "files": 1,
+        "text": "Ran 5 tests across 1 file. [172.68s]"
+      }
+    ],
+    "guard": {
+      "from": 837,
+      "to": 837,
+      "value": {
+        "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+        "bootstrap": false,
+        "rules": 78,
+        "files": 860,
+        "findings": [
+          {
+            "rule": "test-globalthis",
+            "severity": "warn",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+            "line": 89,
+            "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+            "excerpt": "    globalThis.structuredClone = (value, options) => {",
+            "match": [
+              4,
+              33
+            ]
+          },
+          {
+            "rule": "test-globalthis",
+            "severity": "warn",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+            "line": 95,
+            "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+            "excerpt": "    finally { globalThis.structuredClone = original }",
+            "match": [
+              14,
+              43
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+            "line": 110,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      }, { timeout: 60_000 })",
+            "match": [
+              9,
+              28
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+            "line": 218,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      }, { timeout: 60_000 })",
+            "match": [
+              9,
+              28
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 13,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  analyticsTest.setTimeout(780_000)",
+            "match": [
+              16,
+              34
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 14,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(20_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 72,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+            "match": [
+              124,
+              143
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 89,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+            "match": [
+              124,
+              143
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 98,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+            "match": [
+              126,
+              145
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 156,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))",
+            "match": [
+              5,
+              24
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 203,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+            "match": [
+              129,
+              149
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 438,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+            "match": [
+              113,
+              132
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 444,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  analyticsTest.setTimeout(660_000)",
+            "match": [
+              16,
+              34
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 445,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(20_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 471,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+            "match": [
+              125,
+              144
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 486,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+            "match": [
+              116,
+              135
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 527,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+            "match": [
+              126,
+              145
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 616,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "    }, { timeout: 60_000 })",
+            "match": [
+              7,
+              26
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+            "line": 661,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+            "match": [
+              5,
+              24
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 20,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  collabTest.setTimeout(900_000)",
+            "match": [
+              13,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 21,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(20_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 103,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+            "match": [
+              109,
+              128
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 142,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+            "match": [
+              68,
+              87
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 263,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  waveFourTest.setTimeout(600_000)",
+            "match": [
+              15,
+              33
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+            "line": 264,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(20_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 66,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  }, { timeout: 40_000 }).then(async (response) => {",
+            "match": [
+              5,
+              24
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 79,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })",
+            "match": [
+              66,
+              85
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 101,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+            "match": [
+              105,
+              124
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 113,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+            "match": [
+              100,
+              119
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 124,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+            "match": [
+              36,
+              55
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 128,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+            "match": [
+              38,
+              57
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 135,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  waveFourTest.setTimeout(420_000)",
+            "match": [
+              15,
+              33
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 136,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(15_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 153,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+            "match": [
+              78,
+              97
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 218,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  waveFourTest.setTimeout(720_000)",
+            "match": [
+              15,
+              33
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 219,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  page.setDefaultTimeout(15_000)",
+            "match": [
+              7,
+              31
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 237,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+            "match": [
+              69,
+              88
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 326,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+            "match": [
+              139,
+              158
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 405,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+            "match": [
+              83,
+              102
+            ]
+          },
+          {
+            "rule": "test-timeout-raised",
+            "severity": "warn",
+            "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+            "line": 437,
+            "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+            "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+            "match": [
+              90,
+              109
+            ]
+          }
+        ],
+        "errors": [],
+        "approved": [],
+        "touchesGuards": false
+      },
+      "body": "{\"base\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"bootstrap\":false,\"rules\":78,\"files\":860,\"findings\":[{\"rule\":\"test-globalthis\",\"severity\":\"warn\",\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts\",\"line\":89,\"message\":\"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.\",\"excerpt\":\"    globalThis.structuredClone = (value, options) => {\",\"match\":[4,33]},{\"rule\":\"test-globalthis\",\"severity\":\"warn\",\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts\",\"line\":95,\"message\":\"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.\",\"excerpt\":\"    finally { globalThis.structuredClone = original }\",\"match\":[14,43]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts\",\"line\":110,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      }, { timeout: 60_000 })\",\"match\":[9,28]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts\",\"line\":218,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      }, { timeout: 60_000 })\",\"match\":[9,28]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":13,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(780_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":14,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":72,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":89,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":98,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-evaluate\\\"), { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":156,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":203,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-sensitivity-evaluate\\\"), { timeout: 120_000 })\",\"match\":[129,149]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":438,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\\\"sf\\\") === \\\"bi-options\\\", { timeout: 60_000 })\",\"match\":[113,132]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":444,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(660_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":445,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":471,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[125,144]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":486,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[116,135]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":527,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-source\\\", { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":616,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    }, { timeout: 60_000 })\",\"match\":[7,26]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":661,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":20,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  collabTest.setTimeout(900_000)\",\"match\":[13,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":21,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":103,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      \\\"/api/ui/pages/CAP18?\\\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })\",\"match\":[109,128]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":142,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      expect(surface).toHaveAttribute(\\\"data-sf-phase\\\", \\\"reviewing\\\", { timeout: 90_000 }),\",\"match\":[68,87]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":263,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(600_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":264,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":66,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 40_000 }).then(async (response) => {\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":79,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })\",\"match\":[66,85]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":101,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", selected.state, { timeout: 40_000 })\",\"match\":[105,124]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":113,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", \\\"ready\\\", { timeout: 40_000 })\",\"match\":[100,119]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":124,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(preview).toBeVisible({ timeout: 40_000 })\",\"match\":[36,55]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":128,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(confirmed).toBeVisible({ timeout: 40_000 })\",\"match\":[38,57]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":135,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(420_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":136,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":153,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(initialSource).not.toHaveAttribute(\\\"data-sf-state\\\", \\\"loading\\\", { timeout: 40_000 })\",\"match\":[78,97]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":218,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(720_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":219,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":237,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(page.locator(\\\"[data-sf-agenda-preview]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[69,88]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":326,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toHaveAttribute(\\\"data-sf-comparison-compatibility\\\", \\\"compatible\\\", { timeout: 40_000 })\",\"match\":[139,158]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":405,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[83,102]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":437,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(localized.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[90,109]}],\"errors\":[],\"approved\":[],\"touchesGuards\":false}"
+    },
+    "ancestry": {
+      "from": 835,
+      "to": 835,
+      "value": {
+        "gate": "guard ancestry",
+        "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+        "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+        "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+        "command": "bun run check:guards --base origin/dev --json"
+      },
+      "body": "{\"gate\":\"guard ancestry\",\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"dev\":\"c0bc0f22a4f2f5a2bdfa64407cd35769fd877886\",\"mergeBase\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\",\"command\":\"bun run check:guards --base origin/dev --json\"}"
+    },
+    "manifest": {
+      "from": 755,
+      "to": 755,
+      "value": {
+        "criterionChecksManifest": {
+          "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+          "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+          "qualification": false,
+          "sourcePaths": 25,
+          "productDeltaPaths": 2,
+          "candidateDeltaPaths": 3,
+          "deltaBase": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+          "expectedGroups": 10,
+          "expectedCommands": 16,
+          "functionalProcessesLaunched": 6,
+          "staticDeclarationSites": {
+            "casesContract": 7,
+            "projection": 5,
+            "portfolioSelection": 3,
+            "scenarioLookup": 1,
+            "nativeScenarioSelection": 1,
+            "criterionChecks": 5
+          },
+          "expectedControlReports": 11,
+          "preservedC16Outcomes": 31,
+          "identityProjectionOracles": 9,
+          "nameFilter": null,
+          "mechanism": "canonical composition observes only a single-criterion validation batch after verifyBinding; zero or multiple criteria retain original work, and every validation, replay, write and readback remains",
+          "callbackIdentity": "private checks require one completed callback, original rules.evaluate receiver, unchanged hook/registry/evaluate/binding and true observer egress; no observer can supply checks",
+          "assertions": "whole-file cases contract, C08 projection, Portfolio, scenario lookup, native scenario selection and comparison criterion observation controls; observed test and assertion totals require actual footers",
+          "casesControlsMs": {
+            "cooperativePerTest": 12000,
+            "bunPerTest": 15000,
+            "declaredTests": 7,
+            "nominalSum": 105000,
+            "process": 120000,
+            "parent": 180000
+          },
+          "projectionControlsMs": {
+            "inheritedC14": {
+              "cooperativePerTest": 110000,
+              "bunPerTest": 120000,
+              "selectedTests": 2
+            },
+            "inheritedC15": {
+              "cooperativePerTest": 18000,
+              "bunPerTest": 20000,
+              "selectedTests": 2
+            },
+            "retainedC16": {
+              "cooperativePerTest": 8000,
+              "bunPerTest": 10000,
+              "selectedTests": 1
+            },
+            "selectedTests": 5,
+            "nominalSum": 290000,
+            "process": 300000,
+            "parent": 360000
+          },
+          "portfolioControlsMs": {
+            "inheritedCooperative": [
+              12000,
+              12000
+            ],
+            "inheritedBun": [
+              15000,
+              15000
+            ],
+            "addedCooperative": 18000,
+            "addedBun": 20000,
+            "declaredTests": 3,
+            "nominalSum": 50000,
+            "process": 120000,
+            "parent": 180000
+          },
+          "scenarioControlsMs": {
+            "cooperative": 18000,
+            "bun": 20000,
+            "declaredTests": 1,
+            "internalInvocations": 14,
+            "nominalSum": 20000,
+            "process": 45000,
+            "parent": 60000
+          },
+          "nativeScenarioControlsMs": {
+            "cooperative": 18000,
+            "bun": 20000,
+            "declaredTests": 1,
+            "nominalSum": 20000,
+            "process": 45000,
+            "parent": 60000
+          },
+          "criterionChecksControlsMs": {
+            "inheritedCooperative": [
+              12000,
+              12000
+            ],
+            "inheritedBun": [
+              15000,
+              15000
+            ],
+            "addedCooperative": [
+              50000,
+              50000,
+              105000
+            ],
+            "addedBun": [
+              60000,
+              60000,
+              120000
+            ],
+            "declaredTests": 5,
+            "nominalSum": 270000,
+            "process": 300000,
+            "parent": 360000
+          },
+          "typecheckMs": {
+            "process": 240000,
+            "parent": 300000
+          },
+          "guardsMs": {
+            "defaultProcess": 180000,
+            "parent": 600000
+          },
+          "snapshotOverlays": [
+            ".ci-run.json",
+            "apps/cli/test/sucafina-proof-verification.test.ts"
+          ]
+        }
+      },
+      "body": "{\"criterionChecksManifest\":{\"source\":\"c4bd85e5d2683cc116993788269bb6869e8552ac\",\"sourceTree\":\"b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d\",\"qualification\":false,\"sourcePaths\":25,\"productDeltaPaths\":2,\"candidateDeltaPaths\":3,\"deltaBase\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"expectedGroups\":10,\"expectedCommands\":16,\"functionalProcessesLaunched\":6,\"staticDeclarationSites\":{\"casesContract\":7,\"projection\":5,\"portfolioSelection\":3,\"scenarioLookup\":1,\"nativeScenarioSelection\":1,\"criterionChecks\":5},\"expectedControlReports\":11,\"preservedC16Outcomes\":31,\"identityProjectionOracles\":9,\"nameFilter\":null,\"mechanism\":\"canonical composition observes only a single-criterion validation batch after verifyBinding; zero or multiple criteria retain original work, and every validation, replay, write and readback remains\",\"callbackIdentity\":\"private checks require one completed callback, original rules.evaluate receiver, unchanged hook/registry/evaluate/binding and true observer egress; no observer can supply checks\",\"assertions\":\"whole-file cases contract, C08 projection, Portfolio, scenario lookup, native scenario selection and comparison criterion observation controls; observed test and assertion totals require actual footers\",\"casesControlsMs\":{\"cooperativePerTest\":12000,\"bunPerTest\":15000,\"declaredTests\":7,\"nominalSum\":105000,\"process\":120000,\"parent\":180000},\"projectionControlsMs\":{\"inheritedC14\":{\"cooperativePerTest\":110000,\"bunPerTest\":120000,\"selectedTests\":2},\"inheritedC15\":{\"cooperativePerTest\":18000,\"bunPerTest\":20000,\"selectedTests\":2},\"retainedC16\":{\"cooperativePerTest\":8000,\"bunPerTest\":10000,\"selectedTests\":1},\"selectedTests\":5,\"nominalSum\":290000,\"process\":300000,\"parent\":360000},\"portfolioControlsMs\":{\"inheritedCooperative\":[12000,12000],\"inheritedBun\":[15000,15000],\"addedCooperative\":18000,\"addedBun\":20000,\"declaredTests\":3,\"nominalSum\":50000,\"process\":120000,\"parent\":180000},\"scenarioControlsMs\":{\"cooperative\":18000,\"bun\":20000,\"declaredTests\":1,\"internalInvocations\":14,\"nominalSum\":20000,\"process\":45000,\"parent\":60000},\"nativeScenarioControlsMs\":{\"cooperative\":18000,\"bun\":20000,\"declaredTests\":1,\"nominalSum\":20000,\"process\":45000,\"parent\":60000},\"criterionChecksControlsMs\":{\"inheritedCooperative\":[12000,12000],\"inheritedBun\":[15000,15000],\"addedCooperative\":[50000,50000,105000],\"addedBun\":[60000,60000,120000],\"declaredTests\":5,\"nominalSum\":270000,\"process\":300000,\"parent\":360000},\"typecheckMs\":{\"process\":240000,\"parent\":300000},\"guardsMs\":{\"defaultProcess\":180000,\"parent\":600000},\"snapshotOverlays\":[\".ci-run.json\",\"apps/cli/test/sucafina-proof-verification.test.ts\"]}}"
+    },
+    "errors": [
+      {
+        "line": 927,
+        "body": "error: Comparison criterion observation whole-file"
+      },
+      {
+        "line": 943,
+        "body": "(fail) Comparison criterion observation preserves native admission, original fallback and fresh authority [172717.45ms]"
+      },
+      {
+        "line": 1005,
+        "body": "error: comparison-criteria-unsupported exceeded its 105000ms cooperative deadline"
+      },
+      {
+        "line": 1008,
+        "body": "(fail) Comparison criteria observation preserves the complete fallback for unsupported Planner replacements [105032.91ms]"
+      },
+      {
+        "line": 1022,
+        "body": "error: Comparison criterion observation whole-file"
+      }
+    ],
+    "omni": [
+      {
+        "line": 1030,
+        "body": "omni positive control [9971965358d8d4edb70e13a823a11672]: pass (declared: 10 test(s) in test/sucafina-proof-verification.test.ts); 16 omni spawn(s), 0 delegated."
+      }
+    ],
+    "oldReportComparison": [
+      {
+        "ordinal": 1,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 2,
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 3,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 4,
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 5,
+        "prefix": "SF_C16_SELECTION_CONTROL",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 6,
+        "prefix": "SF_C19_PORTFOLIO_CASES",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 7,
+        "prefix": "SF_C20_SCENARIO_LOOKUP",
+        "literalReportText": true
+      },
+      {
+        "ordinal": 8,
+        "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+        "literalReportText": true
+      }
+    ],
+    "guardComparison": {
+      "currentFiles": 860,
+      "baselineC21Files": 860,
+      "findingsLiteralToC21": true
+    },
+    "diagnosticProgress": [
+      {
+        "line": 982,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":1,\"measurement\":1,\"point\":\"bind-action-enter\",\"proofOrdinal\":0,\"elapsedMs\":29472}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 1,
+          "measurement": 1,
+          "point": "bind-action-enter",
+          "proofOrdinal": 0,
+          "elapsedMs": 29472
+        }
+      },
+      {
+        "line": 983,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":2,\"measurement\":1,\"point\":\"proof-enter\",\"proofOrdinal\":1,\"elapsedMs\":29868}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 2,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 29868
+        }
+      },
+      {
+        "line": 984,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":3,\"measurement\":1,\"point\":\"observer-post-proof-enter\",\"proofOrdinal\":1,\"elapsedMs\":52076}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 3,
+          "measurement": 1,
+          "point": "observer-post-proof-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 52076
+        }
+      },
+      {
+        "line": 985,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":4,\"measurement\":1,\"point\":\"work-enter\",\"proofOrdinal\":1,\"elapsedMs\":52170}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 4,
+          "measurement": 1,
+          "point": "work-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 52170
+        }
+      },
+      {
+        "line": 986,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":5,\"measurement\":1,\"point\":\"work-await-returned\",\"proofOrdinal\":1,\"elapsedMs\":58258}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 5,
+          "measurement": 1,
+          "point": "work-await-returned",
+          "proofOrdinal": 1,
+          "elapsedMs": 58258
+        }
+      },
+      {
+        "line": 987,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":6,\"measurement\":1,\"point\":\"proof-enter\",\"proofOrdinal\":2,\"elapsedMs\":58514}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 6,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 58514
+        }
+      },
+      {
+        "line": 988,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":7,\"measurement\":1,\"point\":\"observer-post-proof-enter\",\"proofOrdinal\":2,\"elapsedMs\":80960}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 7,
+          "measurement": 1,
+          "point": "observer-post-proof-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 80960
+        }
+      },
+      {
+        "line": 989,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":8,\"measurement\":1,\"point\":\"work-enter\",\"proofOrdinal\":2,\"elapsedMs\":81057}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 8,
+          "measurement": 1,
+          "point": "work-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 81057
+        }
+      },
+      {
+        "line": 990,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":9,\"measurement\":1,\"point\":\"work-await-returned\",\"proofOrdinal\":2,\"elapsedMs\":87301}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 9,
+          "measurement": 1,
+          "point": "work-await-returned",
+          "proofOrdinal": 2,
+          "elapsedMs": 87301
+        }
+      },
+      {
+        "line": 991,
+        "payload": "{\"schema\":\"sf-composition-progress-v1\",\"fixture\":\"comparison-criteria-unsupported\",\"clock\":\"performance.now\",\"origin\":\"native-fixture-entry\",\"sequence\":10,\"measurement\":1,\"point\":\"proof-enter\",\"proofOrdinal\":3,\"elapsedMs\":87517}",
+        "value": {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 10,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 3,
+          "elapsedMs": 87517
+        }
+      }
+    ],
+    "diagnosticProgressChecks": {
+      "bounded": true,
+      "sequenceContiguous": true,
+      "schema": true,
+      "points": true,
+      "elapsedNonDecreasing": true,
+      "suppression": true
+    },
+    "diagnosticPurpose": "DIAGNOSTIC_ONLY",
+    "progressDoesNotQualify": true
+  },
+  "diagnosticInterpretation": {
+    "points": [
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 1,
+        "measurement": 1,
+        "point": "bind-action-enter",
+        "proofOrdinal": 0,
+        "elapsedMs": 29472
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 2,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 29868
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 3,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52076
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 4,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52170
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 5,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 1,
+        "elapsedMs": 58258
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 6,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 58514
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 7,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 80960
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 8,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 81057
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 9,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 2,
+        "elapsedMs": 87301
+      },
+      {
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 10,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 3,
+        "elapsedMs": 87517
+      }
+    ],
+    "proofEntryToPostProofObserverIntervalsMs": [
+      22208,
+      22446
+    ],
+    "existingWorkAwaitIntervalsMs": [
+      6088,
+      6244
+    ],
+    "bindActionEntryMs": 29472,
+    "thirdProofEntryMs": 87517,
+    "explicitReadObserved": false,
+    "suppression": false,
+    "finalControlReportObserved": false,
+    "limits": [
+      "Intervals between markers include nested work, event-loop scheduling and observer overhead; not exclusive CPU cost.",
+      "work-await-returned marks continuation after the existing await, before later checks and cleanup; not acceptance.",
+      "Two cycles progress before a third proof begins; this observation is not a complete fallback success or a general deadlock exclusion.",
+      "The old30second proof fence remains unchanged and no relaxation is authorized."
+    ]
+  },
+  "qualification": false,
+  "productionAuthorized": false
+}

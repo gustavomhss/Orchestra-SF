@@ -1,0 +1,208 @@
+{
+  "schema": "sf613-complete-ui-png-reader-r2-amendment-v1",
+  "status": "UNBOUND_PROPOSAL_SUPERSEDES_R1_POSTIMAGES",
+  "at": "2026-11-28 13:16:42 UTC",
+  "author": "/root/review_archive",
+  "finding": "Root identified AGENTS branch-name maximum of three hyphen-delimited words. Use sf613-png-<single alphanumeric tag>.",
+  "base": {
+    "python": {
+      "gitBlob": "0f8883c181fd9571274a889bd13599e8cad7aa82",
+      "bytes": 70854,
+      "sha256": "b11f4d2f8789dfab7dc4c134b19fa947b7af779e631d1a20faddd67cf2c6fd07",
+      "lf": 1304,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "fec520cbc0a8e41505b5f1002415c9b7317c37e3",
+      "bytes": 88525,
+      "sha256": "95aa8a970ecbf039844c24b9bea085b77aaecbd738fa0426449163faefbee02d",
+      "lf": 1359,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "cc19cb2d50ac471497400c8cd66d682dfe38ebdd",
+      "bytes": 366213,
+      "sha256": "5608d43e44af492917105ffe31ee33f04051dad0cc25e25de9d6470a316c030c",
+      "lf": 514,
+      "endsWithLF": true
+    },
+    "patch": {
+      "gitBlob": "4877bfa18b090569b885340ae4149bc67c40723e",
+      "bytes": 239574,
+      "sha256": "08457ec913d360c0fe38ba2ce037b322ead595b8b466c5a7bcf905121b005de8",
+      "lf": 3404,
+      "endsWithLF": true
+    }
+  },
+  "postimages": {
+    "python": {
+      "gitBlob": "470ded51d5e417762da8ec2f9e07dea38a77abb8",
+      "bytes": 70835,
+      "sha256": "8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882",
+      "lf": 1304,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "3027452f5e809c860acdc3d35a461a848cd67e9b",
+      "bytes": 88488,
+      "sha256": "1c888ca14de13cdb11de3a110e0a42c4749467fb0cf36caa3a73186bc7f83e20",
+      "lf": 1359,
+      "endsWithLF": true
+    }
+  },
+  "operations": {
+    "python": [
+      {
+        "label": "three-word-default-branch",
+        "before": "\"sf613-artifact-png-UNBOUND\"",
+        "after": "\"sf613-png-UNBOUND\"",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "d4a9f091b64a9ee789f517e8eae8dcbdf401186c",
+          "bytes": 28,
+          "sha256": "b1fd5dad020e2750c32c3b125e969c2ead1d985e6c0d56a28a243f986b18c497",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "9b41a2f06b5051bd965577f1e0d3772a63977ecd",
+          "bytes": 19,
+          "sha256": "190fbb973ce50237d6c9a8f8cfdcc79290e9c0b543f05d288b95bdd8c04ad42b",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "three-word-bound-branch-with-single-alphanumeric-tag",
+        "before": "r\"sf613-artifact-png-[a-z0-9-]{1,48}\"",
+        "after": "r\"sf613-png-[a-z0-9]{1,48}\"",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "6aec6e42f03abf9e765e9798c0995505c4973b8d",
+          "bytes": 37,
+          "sha256": "010e9f4c00b9fb209527f4ca2bdb577bc743a1d9174906af086076975de3bdb9",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "607ee1058599f5079dec08727c3e67b8aba83e9c",
+          "bytes": 27,
+          "sha256": "80379cfdfeca5028343bfa636cb9792c219cad1c554604c25e20f6ca56719c10",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      }
+    ],
+    "workflow": [
+      {
+        "label": "three-word-trigger-concurrency-and-embedded-default",
+        "before": "sf613-artifact-png-UNBOUND",
+        "after": "sf613-png-UNBOUND",
+        "count": 3,
+        "beforeMeta": {
+          "gitBlob": "d9e6ce1d374e534e88f4a44bb6f79b609a84c8e6",
+          "bytes": 26,
+          "sha256": "7f3c298b4dc2d42518e255a6e505d172a5c14ee395d3db88cee748c8657f2966",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "92382cf2cb721383cfe7328d401c2d0159cf7416",
+          "bytes": 17,
+          "sha256": "284c751243d0453475ce5ac1fac91268ade552c991d848b3260e54cc76c3a8a2",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "embedded-three-word-branch-check",
+        "before": "r\"sf613-artifact-png-[a-z0-9-]{1,48}\"",
+        "after": "r\"sf613-png-[a-z0-9]{1,48}\"",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "6aec6e42f03abf9e765e9798c0995505c4973b8d",
+          "bytes": 37,
+          "sha256": "010e9f4c00b9fb209527f4ca2bdb577bc743a1d9174906af086076975de3bdb9",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "607ee1058599f5079dec08727c3e67b8aba83e9c",
+          "bytes": 27,
+          "sha256": "80379cfdfeca5028343bfa636cb9792c219cad1c554604c25e20f6ca56719c10",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      {
+        "label": "embedded-source-checksum",
+        "before": "b11f4d2f8789dfab7dc4c134b19fa947b7af779e631d1a20faddd67cf2c6fd07",
+        "after": "8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882",
+        "count": 1,
+        "beforeMeta": {
+          "gitBlob": "2f51bb0cb008d2451bb4f2528ecc20580cbfd32f",
+          "bytes": 64,
+          "sha256": "20b6d8b76ed0295bdec7c500acc39f2d78bbf40fd3ed6a23d2f5224e266ec968",
+          "lf": 0,
+          "endsWithLF": false
+        },
+        "afterMeta": {
+          "gitBlob": "ea443c293b83075e9ab9c98f16e3490a1d601207",
+          "bytes": 64,
+          "sha256": "856cf5e61911c04959d771df47f785affd78e18081138791b67394859d490649",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      }
+    ]
+  },
+  "operationCount": 5,
+  "semanticsPreserved": "Only branch spelling/regex and exact workflow embedding SHA256 change. All parser, ownership, acquisition, budget, PNG and transport bytes remain literal R1.",
+  "roundtrip": {
+    "pythonForward": true,
+    "pythonInverse": true,
+    "workflowForward": true,
+    "workflowInverse": true,
+    "workflowEmbedsExactPython": true
+  },
+  "patch": {
+    "gitBlob": "c7f2ef46a8665de8399a16f886973e9c55f7906f",
+    "bytes": 3787,
+    "sha256": "612811508da81941c1b7151e55af01bf4aba94670c9a126caf8d9ab338f0dd59",
+    "lf": 70,
+    "endsWithLF": true
+  },
+  "patchAudit": {
+    "files": [
+      {
+        "path": "reader/sf613-original-artifact-reader.py",
+        "embeddedGitPins": true,
+        "hunks": 2,
+        "added": 2,
+        "removed": 2,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      },
+      {
+        "path": ".github/workflows/sf613-artifact-read.yml",
+        "embeddedGitPins": true,
+        "hunks": 4,
+        "added": 5,
+        "removed": 5,
+        "forwardLiteral": true,
+        "inverseLiteral": true
+      }
+    ],
+    "hunks": 6,
+    "added": 7,
+    "removed": 7
+  },
+  "fragmentsAreCalculatedNotSeparateGitBlobs": true,
+  "bindings": "UNBOUND",
+  "actions": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "treesCommitsRefsRuns": 0,
+    "pythonExecution": false
+  }
+}

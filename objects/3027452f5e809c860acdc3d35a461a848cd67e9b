@@ -1,0 +1,1359 @@
+name: SF613 complete original UI42-UI44 PNG receipt
+
+on:
+  push:
+    branches: [sf613-png-UNBOUND]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: sf613-png-UNBOUND-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  original-artifact:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Verify original immutable artifact without checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SF613_ARTIFACT_READER_SHA256: 8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882
+          SF613_ARTIFACT_READER_SOURCE: |
+            #!/usr/bin/env python3
+            """Receive a bound complete UI42-UI44 original PNG set; never execute repository code."""
+            import base64
+            import binascii
+            import hashlib
+            import io
+            import json
+            import os
+            import pathlib
+            import re
+            import stat
+            import sys
+            import time
+            import urllib.error
+            import urllib.parse
+            import urllib.request
+            import zipfile
+            import zlib
+            
+            REPO = "gustavomhss/Orchestra-SF"
+            MODE = "ui42-44-complete-original-png-v1"
+            # One reviewed future binding replaces this literal. No environment input can enable download.
+            UI_BINDING = None
+            _binding = UI_BINDING if isinstance(UI_BINDING, dict) else {}
+            BRANCH = _binding.get("readerBranch", "sf613-png-UNBOUND")
+            WORKFLOW = ".github/workflows/sf613-artifact-read.yml"
+            SOURCE = _binding.get("source")
+            SOURCE_TREE = _binding.get("sourceTree")
+            SNAPSHOT = _binding.get("snapshot")
+            SNAPSHOT_TREE = _binding.get("snapshotTree")
+            ORIGINAL_RUN = _binding.get("originalRun")
+            ORIGINAL_ATTEMPT = 1
+            MAIN_JOB = _binding.get("mainJob")
+            CLEANUP_JOB = _binding.get("cleanupJob")
+            ARTIFACT_ID = _binding.get("artifactId")
+            ARTIFACT_NAME = _binding.get("artifactName")
+            ARTIFACT_BYTES = _binding.get("artifactBytes")
+            ARTIFACT_SHA = _binding.get("artifactSha256")
+            ORIGINAL_CONCLUSION = _binding.get("runConclusion")
+            MAIN_CONCLUSION = _binding.get("mainConclusion")
+            CLEANUP_CONCLUSION = "success"
+            TEST_STEP_CONCLUSION = _binding.get("testStepConclusion")
+            PRODUCER_WORKSPACE = "/home/runner/work/Orchestra-SF/Orchestra-SF"
+            PRODUCER_E2E_ROOT = PRODUCER_WORKSPACE + "/packages/app-shell/e2e"
+            PNG_MEMBER_PREFIX = "packages/app-shell/e2e/test-results/"
+            SEMANTIC_PREFIXES = ("SF_ANALYTICS_SOURCE", "SF_ANALYTICS_CAPTURE",
+                                 "SF_DESIGN_DIAGNOSTICS", "SF_ANALYTICS_SCOPE")
+            CORE_CAP = {"png": 4 * 1024 * 1024, "summary": 128 * 1024,
+                        "inventory": 256 * 1024, "receipt": 128 * 1024}
+            ORIGINAL_ZIP_CAP_BYTES = 46003924  # No increase over the reviewed E12 original-size bound.
+            MAX_PNG_EXPORTS = 36
+            MAX_CORE_EXPORTS = 39
+            REQUEST_OPTIONS = {
+                "analytics-2": {
+                    "requestBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+                    "requestBytes": 295,
+                    "requestSha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+                    "args": [
+                        "e2e/sucafina/design-wave-five-analytics.spec.ts"
+                    ]
+                },
+                "ui6-final": {
+                    "requestBlob": "2bd57a54180a099bbf904d188fe6e0eb22362cea",
+                    "requestBytes": 390,
+                    "requestSha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+                    "args": [
+                        "e2e/sucafina/design-wave-five-analytics.spec.ts",
+                        "e2e/sucafina/design-wave-five-collab.spec.ts",
+                        "e2e/sucafina/design-wave-five-reviews.spec.ts"
+                    ]
+                }
+            }
+            CASE_OPTIONS = [
+                {
+                    "file": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+                    "title": "wave five analytics: native scenarios, recorded results and sensitivity",
+                    "timeoutMs": 780000
+                },
+                {
+                    "file": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+                    "title": "wave five analytics: question catalog and original contextual BI",
+                    "timeoutMs": 660000
+                },
+                {
+                    "file": "e2e/sucafina/design-wave-five-collab.spec.ts",
+                    "title": "UI55 UI56 · original scanned import preview, cancellation and provenance",
+                    "timeoutMs": 900000
+                },
+                {
+                    "file": "e2e/sucafina/design-wave-five-collab.spec.ts",
+                    "title": "UI51 UI52 UI53 · original relationships, unsent discussion and material confirmation",
+                    "timeoutMs": 600000
+                },
+                {
+                    "file": "e2e/sucafina/design-wave-five-reviews.spec.ts",
+                    "title": "wave five proposals: original draft and missing-source boundaries",
+                    "timeoutMs": 420000
+                },
+                {
+                    "file": "e2e/sucafina/design-wave-five-reviews.spec.ts",
+                    "title": "wave five reviews: original agenda, preserved sources, comparison and report selection",
+                    "timeoutMs": 720000
+                }
+            ]
+            SOURCE_SELECTION_PINS = [
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+                    "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+                    "bytes": 56661,
+                    "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+                },
+                {
+                    "path": "packages/app-shell/e2e/playwright.production.config.ts",
+                    "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+                    "bytes": 4384,
+                    "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+                },
+                {
+                    "path": "packages/app-shell/playwright.config.ts",
+                    "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+                    "bytes": 1892,
+                    "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+                    "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+                    "bytes": 21102,
+                    "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+                    "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+                    "bytes": 719,
+                    "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+                    "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+                    "bytes": 12321,
+                    "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+                    "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+                    "bytes": 15525,
+                    "sha256": "c4e921a271e7a39669b9c962c0aa3601dd589ef5f43d928f733aa6f5b963b653"
+                },
+                {
+                    "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+                    "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+                    "bytes": 5823,
+                    "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab"
+                },
+                {
+                    "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+                    "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+                    "bytes": 13217,
+                    "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68"
+                },
+                {
+                    "path": "packages/app-shell/package.json",
+                    "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+                    "bytes": 4225,
+                    "sha256": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155"
+                },
+                {
+                    "path": "script/test-ci-request.ts",
+                    "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+                    "bytes": 17001,
+                    "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+                },
+                {
+                    "path": "script/test-ci.ts",
+                    "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+                    "bytes": 19419,
+                    "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b"
+                },
+                {
+                    "path": ".github/workflows/test-ci.yml",
+                    "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+                    "bytes": 18476,
+                    "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+                    "gitBlob": "b3c02539245cce5091e0f200e84d3021016074ea",
+                    "bytes": 10068,
+                    "sha256": "8a36118cfd8a40dc4003c1c816c58a880c4bb670be858d452b0ef964a6e37cf4"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+                    "gitBlob": "756732ed624aefc40345b896005cc7f5a781a247",
+                    "bytes": 33261,
+                    "sha256": "59f364233f9968496d798109bcc80f2f12100a0d315f8c90a423663c2661ee45"
+                },
+                {
+                    "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+                    "gitBlob": "7cda60f820508ac4123693a97cd9ffe2e0eeee56",
+                    "bytes": 29843,
+                    "sha256": "bd01cd9c45794b177c952fd0d03850ba038dff3484f33f02d654edc4f5523874"
+                }
+            ]
+            PNG_REQUIRED_NAMES = [
+                "UI42-list-dark-desktop-test-data",
+                "UI42-list-light-desktop-test-data",
+                "UI42-list-dark-390-test-data",
+                "UI42-list-light-320-test-data",
+                "UI43-recorded-conditioned-dark-desktop-test-data",
+                "UI43-recorded-conditioned-light-desktop-test-data",
+                "UI43-recorded-conditioned-dark-390-test-data",
+                "UI43-recorded-conditioned-light-320-test-data",
+                "UI44-issued-units-editor-dark-desktop-test-data",
+                "UI44-issued-units-editor-light-desktop-test-data",
+                "UI44-issued-units-editor-dark-390-test-data",
+                "UI44-issued-units-editor-light-320-test-data",
+                "UI44-recorded-samples-dark-desktop-test-data",
+                "UI44-recorded-samples-light-desktop-test-data",
+                "UI44-recorded-samples-dark-390-test-data",
+                "UI44-recorded-samples-light-320-test-data",
+                "UI44-recorded-sample-table-dark-desktop-test-data",
+                "UI44-recorded-sample-table-light-desktop-test-data",
+                "UI44-recorded-sample-table-dark-390-test-data",
+                "UI44-recorded-sample-table-light-320-test-data",
+                "UI42-empty-authorized-case-test-data",
+                "UI42-configure-focused-candidate-test-data",
+                "UI42-preview-condition-preserved-test-data",
+                "UI42-dark-390-confirm-evaluation-test-data",
+                "UI43-source-restrictions-disclosure-test-data",
+                "UI44-no-source-scenarios-test-data",
+                "UI44-original-source-selection-test-data",
+                "UI44-dark-desktop-review-test-data",
+                "UI44-dark-320-review-actions-test-data",
+                "UI42-pt-BR-dark-desktop-test-data",
+                "UI43-pt-BR-dark-desktop-test-data",
+                "UI44-pt-BR-dark-desktop-test-data",
+                "UI44-pt-BR-dark-320-recorded-test-data"
+            ]
+            PNG_CONDITIONAL_NAMES = [
+                "UI44-recorded-sample-table-dark-390-scrolled-values-test-data",
+                "UI44-recorded-sample-table-light-320-scrolled-values-test-data"
+            ]
+            PNG_FAILURE_NAME = "FAILED-native-wave-three-test-data"
+            
+            CAP = {
+                "apiBytes": 16 * 1024 * 1024, "entries": 20000, "archives": 64,
+                "entryBytes": 128 * 1024 * 1024, "expandedBytes": 1024 * 1024 * 1024,
+                "depth": 3, "jsonBytes": 32 * 1024 * 1024,
+                "htmlBytes": 64 * 1024 * 1024, "jsonlLineBytes": 4 * 1024 * 1024,
+                "traceRows": 200000, "summaryRows": 4000,
+                "logBytes": 7 * 1024 * 1024, "mainLogReviewCapBytes": 8 * 1024 * 1024, "chunkBytes": 24 * 1024,
+            }
+            ROOT = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf613-artifact-read"
+            ROOT.mkdir(mode=0o700, exist_ok=False)
+            (ROOT / "api").mkdir(mode=0o700)
+            (ROOT / "derived").mkdir(mode=0o700)
+            (ROOT / "originals").mkdir(mode=0o700)
+            os.umask(0o077)
+            RECEIPT = {
+                "schema": 1, "kind": "original-artifact-receipt", "qualification": False,
+                "status": "STARTED", "source": SOURCE, "sourceTree": SOURCE_TREE,
+                "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                "originalRun": ORIGINAL_RUN, "originalAttempt": ORIGINAL_ATTEMPT,
+                "artifactId": ARTIFACT_ID, "caps": CAP, "checks": [],
+                "pending": [], "failures": [], "parsers": {}, "logExports": [],
+            }
+            FILES = []
+            ARCHIVES = []
+            TOTAL_EXPANDED = 0
+            TOTAL_ENTRIES = 0
+            LOG_BYTES = 0
+            API_COUNT = 0
+            TRACE_ROWS = []
+            TRACE_OBSERVED = 0
+            CORE_LINES_WRITTEN = 0
+            PNG_EMISSION_BUDGET = None
+            
+            class ReceiptFailure(Exception):
+                def __init__(self, code):
+                    self.code = code
+                    super().__init__(code)
+            
+            def need(value, code):
+                if not value:
+                    raise ReceiptFailure(code)
+            
+            def digest(data):
+                return hashlib.sha256(data).hexdigest()
+            
+            def canonical(value):
+                return (json.dumps(value, ensure_ascii=True, sort_keys=True, indent=2) + "\n").encode("ascii")
+            
+            def write_bytes(path, data):
+                path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                with open(path, "xb") as handle:
+                    handle.write(data)
+            
+            def save_json(relative, value):
+                data = canonical(value)
+                write_bytes(ROOT / relative, data)
+                return {"path": relative, "bytes": len(data), "sha256": digest(data)}
+            
+            def checked(code):
+                RECEIPT["checks"].append(code)
+            
+            def pending(code, detail=None):
+                item = {"code": code}
+                if detail is not None:
+                    item["detail"] = detail
+                RECEIPT["pending"].append(item)
+            
+            def wire_line(prefix, value):
+                raw = (prefix + " " + json.dumps(value, ensure_ascii=True, separators=(",", ":")) + "\n").encode("ascii")
+                need(len(raw) <= 32768, "LOG_LINE_EXCEEDS_32_KIB")
+                return raw
+            
+            def write_wire(raw):
+                global LOG_BYTES
+                need(isinstance(raw, bytes) and len(raw) <= 32768
+                     and LOG_BYTES + len(raw) <= CAP["logBytes"], "LOG_PREFLIGHT_BUDGET_CHANGED")
+                written = sys.stdout.buffer.write(raw)
+                need(written == len(raw), "LOG_SHORT_WRITE")
+                sys.stdout.buffer.flush()
+                LOG_BYTES += len(raw)
+            
+            class NoRedirect(urllib.request.HTTPRedirectHandler):
+                def redirect_request(self, req, fp, code, msg, headers, newurl):
+                    return None
+            
+            NO_REDIRECT = urllib.request.build_opener(NoRedirect())
+            TOKEN = os.environ.get("GH_TOKEN", "")
+            
+            def bounded_read(handle, limit):
+                chunks = []
+                count = 0
+                while True:
+                    block = handle.read(min(1024 * 1024, limit + 1 - count))
+                    if not block:
+                        break
+                    count += len(block)
+                    need(count <= limit, "HTTP_BODY_CAP")
+                    chunks.append(block)
+                return b"".join(chunks)
+            
+            def api(route, label):
+                global API_COUNT
+                need(route.startswith("/") and "\n" not in route, "API_ROUTE_INVALID")
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + route,
+                    headers={"Authorization": "Bearer " + TOKEN,
+                             "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28",
+                             "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    with NO_REDIRECT.open(request, timeout=45) as response:
+                        need(response.status == 200, "API_STATUS")
+                        raw = bounded_read(response, CAP["apiBytes"])
+                except urllib.error.HTTPError as error:
+                    raise ReceiptFailure("API_HTTP_" + str(error.code)) from None
+                except (urllib.error.URLError, TimeoutError):
+                    raise ReceiptFailure("API_TRANSPORT") from None
+                API_COUNT += 1
+                write_bytes(ROOT / "api" / (label + ".json"), raw)
+                try:
+                    return json.loads(raw)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("API_JSON_INVALID") from None
+            
+            def pages(route, key, prefix):
+                all_rows = []
+                total = None
+                for number in range(1, 21):
+                    separator = "&" if "?" in route else "?"
+                    data = api(route + separator + "per_page=100&page=" + str(number), prefix + "-" + str(number))
+                    need(isinstance(data, dict) and isinstance(data.get(key), list), "API_COLLECTION_SHAPE")
+                    if total is None:
+                        total = data.get("total_count")
+                        need(isinstance(total, int) and 0 <= total <= 2000, "API_COLLECTION_TOTAL")
+                    need(data.get("total_count") == total, "API_COLLECTION_CHANGED")
+                    all_rows.extend(data[key])
+                    if len(all_rows) >= total:
+                        need(len(all_rows) == total, "API_COLLECTION_COUNT")
+                        return all_rows
+                    need(len(data[key]) == 100, "API_COLLECTION_INCOMPLETE")
+                raise ReceiptFailure("API_COLLECTION_PAGE_CAP")
+            
+            def ui_unique_object(pairs):
+                value = {}
+                for key, item in pairs:
+                    need(key not in value, "UI_JSON_DUPLICATE_KEY")
+                    value[key] = item
+                return value
+            
+            def ui_bad_constant(value):
+                raise ReceiptFailure("UI_JSON_NONFINITE_NUMBER")
+            
+            def ui_json(raw):
+                try:
+                    return json.loads(raw, object_pairs_hook=ui_unique_object, parse_constant=ui_bad_constant)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("UI_JSON_PARSE") from None
+            
+            def check_original_and_reader():
+                need(MODE == "ui42-44-complete-original-png-v1" and isinstance(UI_BINDING, dict)
+                     and UI_BINDING.get("complete") is True, "UI_CAPTURE_BINDINGS_UNBOUND")
+                keys = {"complete", "readerBranch", "source", "sourceTree", "snapshot", "snapshotTree",
+                        "originalRun", "mainJob", "cleanupJob", "artifactId", "artifactName", "artifactBytes",
+                        "artifactSha256", "runConclusion", "mainConclusion", "testStepConclusion",
+                        "selectionMode", "caseStatuses", "analyticsMarkers", "mainIntake"}
+                need(set(UI_BINDING) == keys, "UI_BINDING_FIELDS")
+                need(isinstance(BRANCH, str) and re.fullmatch(r"sf613-png-[a-z0-9]{1,48}", BRANCH)
+                     and "unbound" not in BRANCH.lower(), "UI_READER_BRANCH_UNBOUND")
+                for field in ("source", "sourceTree", "snapshot", "snapshotTree"):
+                    need(isinstance(UI_BINDING[field], str)
+                         and re.fullmatch(r"[a-f0-9]{40}", UI_BINDING[field]), "UI_GIT_BINDING")
+                for field in ("originalRun", "mainJob", "cleanupJob", "artifactId", "artifactBytes"):
+                    need(type(UI_BINDING[field]) is int and 0 < UI_BINDING[field] < 2 ** 53,
+                         "UI_INTEGER_BINDING")
+                need(ARTIFACT_BYTES <= ORIGINAL_ZIP_CAP_BYTES, "UI_ORIGINAL_ZIP_SIZE_CAP")
+                need(MAIN_JOB != CLEANUP_JOB and ARTIFACT_NAME == "playwright-ubuntu-24.04-1"
+                     and isinstance(ARTIFACT_SHA, str) and re.fullmatch(r"[a-f0-9]{64}", ARTIFACT_SHA),
+                     "UI_ARTIFACT_BINDING")
+                need(ORIGINAL_CONCLUSION in ("success", "failure")
+                     and MAIN_CONCLUSION == ORIGINAL_CONCLUSION
+                     and TEST_STEP_CONCLUSION == MAIN_CONCLUSION, "UI_TERMINAL_BINDING")
+                selection_mode = UI_BINDING["selectionMode"]
+                need(selection_mode in REQUEST_OPTIONS, "UI_SELECTION_MODE")
+                expected_cases = CASE_OPTIONS[:2] if selection_mode == "analytics-2" else CASE_OPTIONS
+                statuses = UI_BINDING["caseStatuses"]
+                need(isinstance(statuses, list) and len(statuses) == len(expected_cases)
+                     and all(status in ("passed", "failed", "timedOut", "interrupted") for status in statuses),
+                     "UI_EXPECTED_CASE_STATUSES")
+                need((all(status == "passed" for status in statuses)) == (MAIN_CONCLUSION == "success"),
+                     "UI_CASES_JOB_CONSISTENCY")
+                markers = UI_BINDING["analyticsMarkers"]
+                need(isinstance(markers, dict) and set(markers) == {"bytes", "sha256", "counts"}
+                     and type(markers["bytes"]) is int and 0 < markers["bytes"] <= CAP["jsonBytes"]
+                     and isinstance(markers["sha256"], str) and re.fullmatch(r"[a-f0-9]{64}", markers["sha256"])
+                     and isinstance(markers["counts"], dict) and set(markers["counts"]) == set(SEMANTIC_PREFIXES)
+                     and all(type(n) is int and 0 <= n <= CAP["traceRows"] for n in markers["counts"].values()),
+                     "UI_MAIN_MARKER_BINDING")
+                intake = UI_BINDING["mainIntake"]
+                need(isinstance(intake, dict) and set(intake) == {"gitBlob", "bytes", "sha256"}
+                     and isinstance(intake["gitBlob"], str) and re.fullmatch(r"[a-f0-9]{40}", intake["gitBlob"])
+                     and type(intake["bytes"]) is int and 0 < intake["bytes"] <= CAP["apiBytes"]
+                     and isinstance(intake["sha256"], str) and re.fullmatch(r"[a-f0-9]{64}", intake["sha256"]),
+                     "UI_MAIN_INTAKE_LOCATOR")
+                need(bool(TOKEN), "GITHUB_TOKEN_REQUIRED")
+                driver = os.environ.get("GITHUB_SHA", "")
+                run_id = os.environ.get("GITHUB_RUN_ID", "")
+                attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "")
+                need(os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("RUNNER_OS") == "Linux",
+                     "HOSTED_LINUX_REQUIRED")
+                need(os.environ.get("GITHUB_REPOSITORY") == REPO and os.environ.get("GITHUB_EVENT_NAME") == "push",
+                     "READER_EVENT_REQUIRED")
+                need(os.environ.get("GITHUB_REF") == "refs/heads/" + BRANCH, "READER_REF_REQUIRED")
+                need(re.fullmatch(r"[a-f0-9]{40}", driver) is not None and driver != SOURCE,
+                     "READER_DRIVER_SHA_REQUIRED")
+                need(run_id.isdecimal() and attempt == "1" and int(run_id) != ORIGINAL_RUN,
+                     "READER_FIRST_ATTEMPT_REQUIRED")
+                event_raw = pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes()
+                need(len(event_raw) <= CAP["apiBytes"], "EVENT_CAP")
+                event = ui_json(event_raw)
+                need(event.get("after") == driver and event.get("ref") == "refs/heads/" + BRANCH
+                     and event.get("repository", {}).get("full_name") == REPO, "READER_EVENT_BINDING")
+                write_bytes(ROOT / "api" / "reader-event.json", event_raw)
+                current_run = api("/actions/runs/" + run_id + "/attempts/1", "reader-run")
+                need(current_run.get("head_sha") == driver and current_run.get("event") == "push"
+                     and current_run.get("run_attempt") == 1 and current_run.get("head_branch") == BRANCH
+                     and current_run.get("repository", {}).get("full_name") == REPO,
+                     "READER_API_BINDING")
+                need(str(current_run.get("path", "")).split("@")[0] == WORKFLOW, "READER_WORKFLOW_PATH")
+                current_commit = api("/git/commits/" + driver, "reader-commit")
+                need([p.get("sha") for p in current_commit.get("parents", [])] == [SOURCE],
+                     "READER_SOLE_PARENT")
+                source_commit = api("/git/commits/" + SOURCE, "source-commit")
+                need(source_commit.get("tree", {}).get("sha") == SOURCE_TREE, "SOURCE_TREE")
+                delta = api("/compare/" + SOURCE + "..." + driver, "reader-delta")
+                need(delta.get("ahead_by") == 1 and delta.get("behind_by") == 0
+                     and delta.get("total_commits") == 1, "READER_COMMIT_DELTA")
+                changes = delta.get("files")
+                need(isinstance(changes, list) and len(changes) == 1
+                     and changes[0].get("filename") == WORKFLOW and changes[0].get("status") == "added",
+                     "READER_EXACT_ONE_WORKFLOW_ADDITION")
+                ref = api("/git/ref/heads/" + BRANCH, "reader-ref")
+                need(ref.get("object", {}).get("sha") == driver, "READER_REF_DRIFT")
+                RECEIPT["mode"] = MODE
+                RECEIPT["reader"] = {
+                    "driver": driver, "driverTree": current_commit["tree"]["sha"],
+                    "run": int(run_id), "attempt": 1, "event": "push", "branch": BRANCH,
+                    "workflow": WORKFLOW, "workflowBlob": changes[0]["sha"],
+                    "soleParent": SOURCE, "noCheckout": True, "repositoryCodeExecuted": False,
+                }
+                option = REQUEST_OPTIONS[selection_mode]
+                snapshot = api("/git/commits/" + SNAPSHOT, "original-snapshot-commit")
+                need(snapshot.get("tree", {}).get("sha") == SNAPSHOT_TREE, "ORIGINAL_SNAPSHOT_TREE")
+                if selection_mode == "analytics-2":
+                    need(SNAPSHOT != SOURCE and [p.get("sha") for p in snapshot.get("parents", [])] == [SOURCE],
+                         "ANALYTICS_SOLE_SOURCE_PARENT")
+                    original_delta = api("/compare/" + SOURCE + "..." + SNAPSHOT, "original-snapshot-delta")
+                    original_changes = original_delta.get("files", [])
+                    need(original_delta.get("ahead_by") == 1 and original_delta.get("behind_by") == 0
+                         and original_delta.get("total_commits") == 1 and len(original_changes) == 1
+                         and original_changes[0].get("filename") == ".ci-run.json"
+                         and original_changes[0].get("status") == "added"
+                         and original_changes[0].get("sha") == option["requestBlob"],
+                         "ANALYTICS_EXACT_ONE_REQUEST_ADDITION")
+                else:
+                    need(SNAPSHOT == SOURCE and SNAPSHOT_TREE == SOURCE_TREE, "UI6_LITERAL_FINAL_CANDIDATE")
+                original_run = api("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1", "original-run")
+                need(original_run.get("id") == ORIGINAL_RUN and original_run.get("run_attempt") == 1
+                     and original_run.get("head_sha") == SNAPSHOT and original_run.get("event") == "push"
+                     and original_run.get("status") == "completed" and original_run.get("conclusion") == ORIGINAL_CONCLUSION
+                     and original_run.get("repository", {}).get("full_name") == REPO
+                     and str(original_run.get("path", "")).split("@")[0] == ".github/workflows/test-ci.yml",
+                     "ORIGINAL_RUN_BINDING")
+                jobs = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/attempts/1/jobs", "jobs", "original-jobs")
+                need(len(jobs) == 2 and {j.get("id") for j in jobs} == {MAIN_JOB, CLEANUP_JOB}, "ORIGINAL_JOB_SET")
+                for job in jobs:
+                    expected = MAIN_CONCLUSION if job["id"] == MAIN_JOB else CLEANUP_CONCLUSION
+                    need(job.get("run_id") == ORIGINAL_RUN and job.get("run_attempt") == 1
+                         and job.get("head_sha") == SNAPSHOT and job.get("status") == "completed"
+                         and job.get("conclusion") == expected, "ORIGINAL_JOB_TERMINAL")
+                main = next(j for j in jobs if j["id"] == MAIN_JOB)
+                need(any(step.get("name") == "Run tests" and step.get("conclusion") == TEST_STEP_CONCLUSION
+                         for step in main.get("steps", [])), "ORIGINAL_TEST_STEP")
+                artifact = api("/actions/artifacts/" + str(ARTIFACT_ID), "original-artifact")
+                listed = pages("/actions/runs/" + str(ORIGINAL_RUN) + "/artifacts", "artifacts", "original-artifacts")
+                matches = [a for a in listed if a.get("id") == ARTIFACT_ID]
+                need(len(matches) == 1, "ARTIFACT_RUN_MEMBERSHIP")
+                for data in [artifact, matches[0]]:
+                    need(data.get("id") == ARTIFACT_ID and data.get("name") == ARTIFACT_NAME
+                         and data.get("size_in_bytes") == ARTIFACT_BYTES
+                         and data.get("digest") == "sha256:" + ARTIFACT_SHA
+                         and data.get("expired") is False, "ARTIFACT_METADATA_BINDING")
+                    binding = data.get("workflow_run", {})
+                    need(binding.get("id") == ORIGINAL_RUN and binding.get("head_sha") == SNAPSHOT,
+                         "ARTIFACT_WORKFLOW_BINDING")
+                request_item = api("/contents/.ci-run.json?ref=" + SNAPSHOT, "original-request")
+                need(request_item.get("type") == "file" and request_item.get("sha") == option["requestBlob"]
+                     and request_item.get("encoding") == "base64", "ORIGINAL_REQUEST_GIT_BINDING")
+                raw = base64.b64decode("".join(request_item["content"].split()), validate=True)
+                need(len(raw) == option["requestBytes"] and digest(raw) == option["requestSha256"]
+                     and hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest() == option["requestBlob"],
+                     "ORIGINAL_REQUEST_BYTES")
+                request = ui_json(raw)
+                need(set(request) == {"package", "directory", "packageSelector", "runner", "args", "env", "config"}
+                     and request["package"] == "app" and request["directory"] == "packages/app-shell"
+                     and request["packageSelector"] == "@orchestra/app" and request["runner"] == "playwright"
+                     and request["args"] == option["args"] and request["config"] == "e2e/playwright.production.config.ts"
+                     and request["env"] == {"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict", "ORCHESTRA_CHANNEL": "prod"},
+                     "ORIGINAL_REQUEST_SELECTION")
+                write_bytes(ROOT / "originals" / "source-request.json", raw)
+                RECEIPT["originalRequest"] = {"gitBlob": option["requestBlob"], "bytes": len(raw),
+                                              "sha256": digest(raw), "normalized": request}
+                RECEIPT["originalJobs"] = [
+                    {"id": j["id"], "status": j["status"], "conclusion": j["conclusion"],
+                     "startedAt": j.get("started_at"), "completedAt": j.get("completed_at")} for j in jobs]
+                RECEIPT["artifact"] = {"id": ARTIFACT_ID, "name": ARTIFACT_NAME, "bytes": ARTIFACT_BYTES,
+                                       "sha256": ARTIFACT_SHA, "expired": False}
+                source_pins = []
+                for index, pin in enumerate(SOURCE_SELECTION_PINS):
+                    item = api("/contents/" + pin["path"] + "?ref=" + SOURCE, "source-selection-" + str(index))
+                    need(item.get("type") == "file" and item.get("path") == pin["path"]
+                         and item.get("sha") == pin["gitBlob"] and item.get("encoding") == "base64",
+                         "SOURCE_SELECTION_FILE_BINDING")
+                    raw = base64.b64decode("".join(item["content"].split()), validate=True)
+                    need(len(raw) == pin["bytes"] and digest(raw) == pin["sha256"]
+                         and hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest() == pin["gitBlob"],
+                         "SOURCE_SELECTION_BYTES")
+                    source_pins.append(dict(pin))
+                RECEIPT["sourceSelectionPins"] = source_pins
+                RECEIPT["mainIntakeLocator"] = dict(intake)
+                RECEIPT["mainIntakeLocatorBodyFetched"] = False
+                checked("exact_original_request_and_selection_source_pins")
+                checked("reader_and_original_api_git_bindings")
+            
+            def storage_url_allowed(url):
+                value = urllib.parse.urlsplit(url)
+                host = (value.hostname or "").lower()
+                suffixes = (".blob.core.windows.net", ".githubusercontent.com", ".amazonaws.com")
+                return (value.scheme == "https" and not value.username and not value.password
+                        and value.port in (None, 443) and any(host.endswith(suffix) for suffix in suffixes))
+            
+            def download_original():
+                request = urllib.request.Request(
+                    "https://api.github.com/repos/" + REPO + "/actions/artifacts/" + str(ARTIFACT_ID) + "/zip",
+                    headers={"Authorization": "Bearer " + TOKEN, "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "sf613-original-artifact-reader"},
+                )
+                try:
+                    response = NO_REDIRECT.open(request, timeout=45)
+                except urllib.error.HTTPError as error:
+                    need(error.code == 302, "ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                    location = error.headers.get("Location", "")
+                    error.close()
+                else:
+                    response.close()
+                    raise ReceiptFailure("ARTIFACT_DOWNLOAD_REDIRECT_REQUIRED")
+                need(storage_url_allowed(location), "ARTIFACT_STORAGE_ORIGIN")
+                # A separate request/opener receives no GitHub Authorization, cookie or referer.
+                for redirect_count in range(4):
+                    unsigned = urllib.request.Request(location, headers={"User-Agent": "sf613-original-artifact-reader"})
+                    try:
+                        response = NO_REDIRECT.open(unsigned, timeout=120)
+                    except urllib.error.HTTPError as error:
+                        need(error.code in (301, 302, 303, 307, 308) and redirect_count < 3,
+                             "ARTIFACT_STORAGE_HTTP")
+                        location = urllib.parse.urljoin(location, error.headers.get("Location", ""))
+                        error.close()
+                        need(storage_url_allowed(location), "ARTIFACT_STORAGE_REDIRECT_ORIGIN")
+                        continue
+                    except (urllib.error.URLError, TimeoutError):
+                        raise ReceiptFailure("ARTIFACT_STORAGE_TRANSPORT") from None
+                    with response:
+                        need(response.status == 200, "ARTIFACT_STORAGE_STATUS")
+                        hasher = hashlib.sha256()
+                        size = 0
+                        with open(ROOT / "original.zip", "xb") as output:
+                            while True:
+                                block = response.read(1024 * 1024)
+                                if not block:
+                                    break
+                                size += len(block)
+                                need(size <= ARTIFACT_BYTES, "ARTIFACT_TOO_LARGE")
+                                output.write(block)
+                                hasher.update(block)
+                        need(size == ARTIFACT_BYTES and hasher.hexdigest() == ARTIFACT_SHA,
+                             "ARTIFACT_BYTES_OR_SHA256")
+                        RECEIPT["artifact"]["verifiedBytes"] = size
+                        RECEIPT["artifact"]["verifiedSha256"] = hasher.hexdigest()
+                        RECEIPT["artifact"]["downloadCount"] = 1
+                        checked("original_zip_bytes_and_sha256")
+                        return
+                raise ReceiptFailure("ARTIFACT_REDIRECT_CAP")
+            
+            # Phase 2: read archive bytes only; never use extractall, shell, imports or executable entries.
+            def path_parts(name, directory):
+                need(isinstance(name, str) and name and "\x00" not in name and "\\" not in name
+                     and not name.startswith("/") and not re.match(r"^[A-Za-z]:", name),
+                     "ZIP_PATH_INVALID")
+                pieces = name.rstrip("/").split("/") if directory else name.split("/")
+                need(bool(pieces) and all(part not in ("", ".", "..") for part in pieces),
+                     "ZIP_PATH_TRAVERSAL")
+                need(all(len(part.encode("utf-8")) <= 255 for part in pieces), "ZIP_COMPONENT_CAP")
+                need(len(name.encode("utf-8")) <= 4096, "ZIP_PATH_CAP")
+                return pieces
+            
+            def inspect_zip(source_file, label, depth, parent_file=None):
+                global TOTAL_EXPANDED, TOTAL_ENTRIES
+                need(depth <= CAP["depth"] and len(ARCHIVES) < CAP["archives"], "NESTED_ZIP_CAP")
+                archive_index = len(ARCHIVES)
+                output_root = ROOT / "originals" / ("archive-" + str(archive_index).zfill(3))
+                output_root.mkdir(mode=0o700)
+                source_hasher = hashlib.sha256()
+                source_size = 0
+                with open(source_file, "rb") as original_zip:
+                    while True:
+                        block = original_zip.read(1024 * 1024)
+                        if not block:
+                            break
+                        source_hasher.update(block)
+                        source_size += len(block)
+                archive = {"index": archive_index, "label": label, "depth": depth,
+                           "sourcePath": str(pathlib.Path(source_file).relative_to(ROOT)),
+                           "sourceBytes": source_size, "sourceSha256": source_hasher.hexdigest(),
+                           "parentFile": parent_file, "entries": 0, "crcVerified": 0,
+                           "expandedBytes": 0, "status": "STARTED"}
+                ARCHIVES.append(archive)
+                nested = []
+                with zipfile.ZipFile(source_file, "r") as source:
+                    entries = source.infolist()
+                    need(len(entries) + TOTAL_ENTRIES <= CAP["entries"], "ZIP_ENTRY_COUNT_CAP")
+                    seen = set()
+                    for entry in entries:
+                        name = entry.filename
+                        need(entry.orig_filename == name, "ZIP_RAW_PATH_ALTERED")
+                        directory = entry.is_dir()
+                        pieces = path_parts(name, directory)
+                        normalized = "/".join(pieces)
+                        need(normalized not in seen, "ZIP_DUPLICATE_PATH")
+                        seen.add(normalized)
+                        kind = stat.S_IFMT(entry.external_attr >> 16)
+                        need(kind in (0, stat.S_IFDIR if directory else stat.S_IFREG),
+                             "ZIP_SPECIAL_FILE_OR_SYMLINK")
+                        need((entry.flag_bits & 1) == 0, "ZIP_ENCRYPTED_ENTRY")
+                        need(entry.compress_type in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED),
+                             "ZIP_COMPRESSION_UNSUPPORTED")
+                        need(0 <= entry.file_size <= CAP["entryBytes"], "ZIP_ENTRY_SIZE_CAP")
+                        need(TOTAL_EXPANDED + entry.file_size <= CAP["expandedBytes"], "ZIP_EXPANDED_CAP")
+                        destination = output_root.joinpath(*pieces)
+                        need(output_root == destination.parent or output_root in destination.parents,
+                             "ZIP_DESTINATION_ESCAPE")
+                        TOTAL_ENTRIES += 1
+                        file_id = len(FILES)
+                        item = {
+                            "id": file_id, "archive": archive_index, "path": name, "directory": directory,
+                            "compressedBytes": entry.compress_size, "declaredBytes": entry.file_size,
+                            "expectedCrc32": format(entry.CRC, "08x"),
+                            "storedPath": str(destination.relative_to(ROOT)),
+                        }
+                        FILES.append(item)
+                        if directory:
+                            need(entry.file_size == 0 and entry.CRC == 0, "ZIP_DIRECTORY_PAYLOAD")
+                            with source.open(entry, "r") as original:
+                                need(original.read(1) == b"", "ZIP_DIRECTORY_PAYLOAD")
+                            destination.mkdir(mode=0o700, parents=True, exist_ok=True)
+                            item.update({"bytes": 0, "sha256": digest(b""), "crc32": "00000000", "crcVerified": True})
+                        else:
+                            destination.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+                            hasher = hashlib.sha256()
+                            crc = 0
+                            size = 0
+                            # zipfile checks the local header and EOF CRC as well; calculate independently.
+                            with source.open(entry, "r") as original, open(destination, "xb") as target:
+                                while True:
+                                    block = original.read(1024 * 1024)
+                                    if not block:
+                                        break
+                                    size += len(block)
+                                    TOTAL_EXPANDED += len(block)
+                                    need(size <= entry.file_size and size <= CAP["entryBytes"]
+                                         and TOTAL_EXPANDED <= CAP["expandedBytes"], "ZIP_ACTUAL_EXPANSION_CAP")
+                                    target.write(block)
+                                    hasher.update(block)
+                                    crc = zlib.crc32(block, crc)
+                            need(size == entry.file_size and (crc & 0xffffffff) == entry.CRC, "ZIP_CRC_OR_SIZE")
+                            item.update({"bytes": size, "sha256": hasher.hexdigest(),
+                                         "crc32": format(crc & 0xffffffff, "08x"), "crcVerified": True})
+                            with open(destination, "rb") as header:
+                                magic = header.read(4)
+                            if name.lower().endswith(".zip") or magic in (b"PK\x03\x04", b"PK\x05\x06"):
+                                nested.append((destination, "zip-entry", file_id))
+                        archive["entries"] += 1
+                        archive["crcVerified"] += 1
+                        archive["expandedBytes"] += entry.file_size
+                archive["status"] = "CRC_VERIFIED"
+                for destination, nested_label, file_id in nested:
+                    inspect_zip(destination, nested_label, depth + 1, file_id)
+                return archive_index
+            
+            def read_file(item, limit):
+                need(not item["directory"] and item["bytes"] <= limit, "PARSER_INPUT_CAP")
+                data = (ROOT / item["storedPath"]).read_bytes()
+                need(len(data) == item["bytes"] and digest(data) == item["sha256"], "EXTRACTED_FILE_CHANGED")
+                return data
+            
+            def locate_suffix(suffix, outer_only=False):
+                rows = [row for row in FILES if not row["directory"]
+                        and (not outer_only or row["archive"] == 0)
+                        and (row["path"] == suffix or row["path"].endswith("/" + suffix))]
+                return rows
+            
+            def one_original_json(suffix):
+                rows = locate_suffix(suffix, outer_only=True)
+                need(len(rows) == 1, "ORIGINAL_JSON_CARDINALITY_" + suffix.replace(".", "_"))
+                raw = read_file(rows[0], CAP["jsonBytes"])
+                try:
+                    data = json.loads(raw)
+                except (ValueError, UnicodeError):
+                    raise ReceiptFailure("ORIGINAL_JSON_PARSE") from None
+                return rows[0], raw, data
+            
+            def unpack_html_reports():
+                reports = locate_suffix("playwright-report/index.html", outer_only=True)
+                if not reports:
+                    pending("HTML_REPORT_ABSENT")
+                    return
+                parsed = []
+                for item in reports:
+                    raw = read_file(item, CAP["htmlBytes"])
+                    text = raw.decode("utf-8")
+                    # Read only the embedded archive string. No HTML/JavaScript is evaluated.
+                    found = re.findall(r'data:application/zip;base64,([A-Za-z0-9+/=\r\n]+)', text)
+                    if not found:
+                        assignments = re.findall(r'playwrightReportBase64\s*=\s*["\x27]([A-Za-z0-9+/=\r\n]+)["\x27]', text)
+                        found = assignments
+                    need(len(found) <= 1, "HTML_REPORT_ARCHIVE_AMBIGUOUS")
+                    if not found:
+                        pending("HTML_REPORT_EMBEDDED_ARCHIVE_UNRECOGNIZED", {"file": item["id"]})
+                        continue
+                    encoded = re.sub(r"[\r\n]", "", found[0])
+                    need(len(encoded) <= CAP["htmlBytes"], "HTML_REPORT_BASE64_CAP")
+                    decoded = base64.b64decode(encoded, validate=True)
+                    need(len(decoded) <= CAP["htmlBytes"] and decoded.startswith(b"PK"), "HTML_REPORT_ZIP")
+                    filename = ROOT / "originals" / ("html-embedded-" + str(item["id"]) + ".zip")
+                    write_bytes(filename, decoded)
+                    nested_id = inspect_zip(filename, "html-report-embedded", 1, item["id"])
+                    parsed.append({"htmlFile": item["id"], "zipBytes": len(decoded),
+                                   "zipSha256": digest(decoded), "archive": nested_id})
+                RECEIPT["parsers"]["htmlArchives"] = parsed
+            
+            def tests_from_report(report):
+                tests = []
+                visited = 0
+                def visit(suite, trail, depth):
+                    nonlocal visited
+                    visited += 1
+                    need(visited <= 10000 and depth <= 32 and isinstance(suite, dict), "REPORT_SUITE_CAP")
+                    for spec in suite.get("specs", []):
+                        need(isinstance(spec, dict), "REPORT_SPEC_SHAPE")
+                        for test in spec.get("tests", []):
+                            need(isinstance(test, dict), "REPORT_TEST_SHAPE")
+                            tests.append((spec, test, trail))
+                    for child in suite.get("suites", []):
+                        visit(child, trail + [suite.get("title", "")], depth + 1)
+                need(isinstance(report, dict) and isinstance(report.get("suites"), list), "REPORT_ROOT_SHAPE")
+                for suite in report["suites"]:
+                    visit(suite, [], 0)
+                return tests
+            
+            def report_configuration(report, tests, label):
+                config = report.get("config", {})
+                need(isinstance(config, dict) and config.get("workers") == 1, label + "_WORKERS")
+                projects = config.get("projects")
+                need(isinstance(projects, list) and bool(projects), label + "_PROJECTS")
+                selected = {test.get("projectId") or test.get("projectName") for _, test, _ in tests}
+                checked_projects = []
+                for project in projects:
+                    if project.get("id") in selected or project.get("name") in selected or len(projects) == 1:
+                        need(project.get("retries") == 0 and project.get("repeatEach") == 1,
+                             label + "_RETRY_REPEAT")
+                        need(project.get("id") in (None, "chromium") and project.get("name") == "chromium",
+                             label + "_CHROMIUM_PROJECT")
+                        checked_projects.append({"id": project.get("id"), "name": project.get("name"),
+                                                 "retries": 0, "repeatEach": 1})
+                need(bool(checked_projects), label + "_SELECTED_PROJECT")
+                return {"workers": 1, "projects": checked_projects}
+            
+            def error_summary(errors):
+                out = []
+                for error in errors:
+                    if not isinstance(error, dict):
+                        continue
+                    message = str(error.get("message", ""))
+                    stack = str(error.get("stack", ""))
+                    combined = message + "\n" + stack
+                    position = re.search(r"design-wave-five-analytics\.spec\.ts:(\d+):(\d+)", combined)
+                    out.append({
+                        "timeout60000": bool(re.search(r"Timeout\s+60000ms|60000\s*ms", combined)),
+                        "waitForResponse": "waitForResponse" in combined,
+                        "source": {"file": "design-wave-five-analytics.spec.ts",
+                                   "line": int(position.group(1)), "column": int(position.group(2))} if position else None,
+                        "messageBytes": len(message.encode("utf-8")), "messageSha256": digest(message.encode("utf-8")),
+                        "stackBytes": len(stack.encode("utf-8")), "stackSha256": digest(stack.encode("utf-8")),
+                    })
+                return out
+            
+            def marker_stream(results, case_ordinal):
+                all_lines = []
+                streams = []
+                pattern = re.compile(r"^(?:\x1b\[[0-?]*[ -/]*[@-~])*"
+                                     r"(SF_ANALYTICS_SOURCE|SF_ANALYTICS_CAPTURE|SF_DESIGN_DIAGNOSTICS|SF_ANALYTICS_SCOPE) (.*)$")
+                for result_ordinal, result in enumerate(results, 1):
+                    for field in ("stdout", "stderr"):
+                        chunks = []
+                        size = 0
+                        for chunk in result.get(field, []):
+                            need(isinstance(chunk, dict), "RUNTIME_STDIO_CHUNK_SHAPE")
+                            if isinstance(chunk.get("text"), str) and "buffer" not in chunk:
+                                raw = chunk["text"].encode("utf-8")
+                            elif isinstance(chunk.get("buffer"), str) and "text" not in chunk:
+                                encoded = chunk["buffer"]
+                                need(len(encoded) <= (CAP["jsonBytes"] * 4 // 3 + 4), "RUNTIME_STDIO_BASE64_CAP")
+                                raw = base64.b64decode(encoded, validate=True)
+                            else:
+                                raise ReceiptFailure("RUNTIME_STDIO_CHUNK_ENCODING")
+                            size += len(raw)
+                            need(size <= CAP["jsonBytes"], "RUNTIME_STDIO_STREAM_CAP")
+                            chunks.append(raw)
+                        # Decode only after concatenating one stream: a chunk may split a UTF-8 character.
+                        stream_raw = b"".join(chunks)
+                        text = stream_raw.decode("utf-8", errors="strict")
+                        lines = []
+                        for line in text.splitlines():
+                            match = pattern.match(line)
+                            if match:
+                                lines.append(match.group(1) + " " + match.group(2))
+                        marker_raw = (("\n".join(lines) + "\n") if lines else "").encode("utf-8")
+                        marker_path = ("derived/runtime-case-" + str(case_ordinal) + "-result-"
+                                       + str(result_ordinal) + "-" + field + "-semantic-markers.lf.log")
+                        write_bytes(ROOT / marker_path, marker_raw)
+                        streams.append({"case": case_ordinal, "result": result_ordinal, "stream": field,
+                                        "bytes": len(stream_raw), "sha256": digest(stream_raw),
+                                        "markerBytes": len(marker_raw), "markerSha256": digest(marker_raw),
+                                        "markerPath": marker_path, "markerLines": len(lines)})
+                        all_lines.extend(lines)
+                return {"lines": all_lines, "streams": streams}
+            
+            def one_ui_json(path):
+                rows = [item for item in FILES if item["archive"] == 0 and not item["directory"]
+                        and item["path"] == path]
+                need(len(rows) == 1, "UI_ORIGINAL_JSON_EXACT_PATH")
+                raw = read_file(rows[0], CAP["jsonBytes"])
+                return rows[0], raw, ui_json(raw)
+            
+            def ui_report_file(value):
+                need(isinstance(value, str), "UI_REPORT_FILE_TYPE")
+                prefix = PRODUCER_E2E_ROOT + "/"
+                relative = value[len(prefix):] if value.startswith(prefix) else value
+                need(not relative.startswith("/"), "UI_REPORT_FILE_ROOT")
+                return "e2e/" + "/".join(path_parts(relative, False))
+            
+            def ui_attachment_member(value):
+                need(isinstance(value, str) and value.startswith(PRODUCER_WORKSPACE + "/"),
+                     "UI_ATTACHMENT_ABSOLUTE_WORKSPACE_PATH")
+                relative = value[len(PRODUCER_WORKSPACE) + 1:]
+                normalized = "/".join(path_parts(relative, False))
+                need(normalized == relative and normalized.startswith(PNG_MEMBER_PREFIX),
+                     "UI_ATTACHMENT_EXACT_TEST_RESULTS_PATH")
+                return normalized
+            
+            def ui_png(raw, expected_width):
+                need(raw.startswith(b"\x89PNG\r\n\x1a\n") and len(raw) >= 45
+                     and raw[8:12] == b"\0\0\0\r" and raw[12:16] == b"IHDR",
+                     "UI_PNG_SIGNATURE_IHDR")
+                width = int.from_bytes(raw[16:20], "big")
+                height = int.from_bytes(raw[20:24], "big")
+                need(0 < width <= 20000 and 0 < height <= 20000, "UI_PNG_DIMENSIONS")
+                if expected_width is not None:
+                    need(width == expected_width, "UI_PNG_CAPTURE_VIEWPORT_WIDTH")
+                offset, chunks, idat, ended = 8, 0, 0, False
+                while offset < len(raw):
+                    need(offset + 12 <= len(raw), "UI_PNG_CHUNK_HEADER")
+                    length = int.from_bytes(raw[offset:offset + 4], "big")
+                    kind = raw[offset + 4:offset + 8]
+                    end = offset + 12 + length
+                    need(end <= len(raw) and re.fullmatch(b"[A-Za-z]{4}", kind) is not None,
+                         "UI_PNG_CHUNK_BOUNDS")
+                    crc = zlib.crc32(raw[offset + 4:offset + 8 + length]) & 0xffffffff
+                    need(crc == int.from_bytes(raw[offset + 8 + length:end], "big"), "UI_PNG_CHUNK_CRC")
+                    need((kind == b"IHDR") == (chunks == 0), "UI_PNG_IHDR_CARDINALITY")
+                    need(kind not in (b"acTL", b"fcTL", b"fdAT"), "UI_PNG_STATIC_CAPTURE_REQUIRED")
+                    if kind == b"IDAT":
+                        idat += 1
+                    if kind == b"IEND":
+                        need(length == 0 and end == len(raw) and idat > 0, "UI_PNG_IEND")
+                        ended = True
+                    chunks += 1
+                    offset = end
+                need(ended and offset == len(raw), "UI_PNG_COMPLETE_CHUNKS")
+                return {"width": width, "height": height, "pngChunks": chunks, "pngChunkCrcVerified": True,
+                        "decodedPixelsReviewed": False}
+            
+            def parse_ui_runtime_and_pngs():
+                selection_item, selection_raw, selection = one_ui_json("test-ci-evidence/playwright-selection.json")
+                runtime_item, runtime_raw, runtime = one_ui_json("test-ci-evidence/playwright-runtime.json")
+                request_item, request_raw, evidence_request = one_ui_json("test-ci-evidence/request.json")
+                need(isinstance(evidence_request, dict) and set(evidence_request) == {"request", "platform", "arch", "sha"}
+                     and evidence_request["sha"] == SNAPSHOT and evidence_request["platform"] == "linux"
+                     and evidence_request["arch"] == "x64"
+                     and evidence_request["request"] == RECEIPT["originalRequest"]["normalized"],
+                     "UI_ARTIFACT_REQUEST_CANDIDATE_BINDING")
+                selected = tests_from_report(selection)
+                executed = tests_from_report(runtime)
+                expected = CASE_OPTIONS[:2] if UI_BINDING["selectionMode"] == "analytics-2" else CASE_OPTIONS
+                need(len(selected) == len(expected) and len(executed) == len(expected), "UI_EXACT_TEST_COUNT")
+                for report, tests, label in ((selection, selected, "SELECTION"), (runtime, executed, "RUNTIME")):
+                    need(report.get("config", {}).get("rootDir") == PRODUCER_E2E_ROOT, label + "_EXACT_ROOT")
+                    for index, (spec, test, _) in enumerate(tests):
+                        need(spec.get("title") == expected[index]["title"]
+                             and ui_report_file(spec.get("file")) == expected[index]["file"],
+                             label + "_EXACT_CASE_FILE_TITLE_ORDER")
+                selection_config = report_configuration(selection, selected, "SELECTION")
+                runtime_config = report_configuration(runtime, executed, "RUNTIME")
+                cases, all_markers, results, captures = [], [], [], {}
+                owners = {}
+                for index, (spec, test, _) in enumerate(executed):
+                    result_rows = test.get("results")
+                    need(isinstance(result_rows, list) and len(result_rows) == 1
+                         and isinstance(result_rows[0], dict), "UI_SINGLE_RESULT")
+                    result = result_rows[0]
+                    need(result.get("retry", 0) == 0 and test.get("expectedStatus", "passed") == "passed",
+                         "UI_RESULT_ATTEMPT")
+                    worker_index, parallel_index = result.get("workerIndex"), result.get("parallelIndex")
+                    need(type(worker_index) is int and worker_index >= 0
+                         and type(parallel_index) is int and parallel_index == 0, "UI_SINGLE_PARALLEL_WORKER")
+                    need(result.get("status") == UI_BINDING["caseStatuses"][index], "UI_CURRENT_CASE_VERDICT")
+                    attachments = result.get("attachments", [])
+                    need(isinstance(attachments, list) and len(attachments) <= CAP["entries"],
+                         "UI_ATTACHMENTS_SHAPE")
+                    for attachment_index, attachment in enumerate(attachments):
+                        need(isinstance(attachment, dict), "UI_ATTACHMENT_SHAPE")
+                        if attachment.get("contentType") == "image/png":
+                            need("body" not in attachment, "UI_PNG_ATTACHMENT_FILE_REQUIRED")
+                            member = ui_attachment_member(attachment.get("path"))
+                            owners.setdefault(member, []).append([index + 1, 1, attachment_index + 1])
+                    captured = marker_stream(result_rows, index + 1)
+                    need(len(captured["lines"]) <= CAP["traceRows"], "UI_MARKER_ROW_CAP")
+                    all_markers.extend(captured["lines"])
+                    if index == 0:
+                        for line in captured["lines"]:
+                            need(len(line.encode("utf-8")) <= CAP["jsonlLineBytes"], "UI_MARKER_LINE_CAP")
+                            if line.startswith("SF_ANALYTICS_CAPTURE "):
+                                value = ui_json(line[len("SF_ANALYTICS_CAPTURE "):])
+                                need(isinstance(value, dict) and set(value) == {"name", "width", "surface", "stage"},
+                                     "UI_CAPTURE_MARKER_SHAPE")
+                                name = value["name"]
+                                need(isinstance(name, str) and name not in captures
+                                     and name in PNG_REQUIRED_NAMES + PNG_CONDITIONAL_NAMES,
+                                     "UI_CAPTURE_EXACT_ALLOWLIST_AND_UNIQUENESS")
+                                need(type(value["width"]) is int and value["width"] in (1440, 390, 320),
+                                     "UI_CAPTURE_VIEWPORT")
+                                expected_width = 320 if "-320-" in name else 390 if "-390-" in name else 1440
+                                need(value["width"] == expected_width, "UI_CAPTURE_NAME_WIDTH")
+                                for field in ("surface", "stage"):
+                                    need(value[field] is None or isinstance(value[field], str)
+                                         and len(value[field].encode("utf-8")) <= 128
+                                         and all(ord(c) >= 32 and ord(c) != 127 for c in value[field]),
+                                         "UI_CAPTURE_ATTRIBUTE_BOUND")
+                                captures[name] = value
+                    errors = result.get("errors", [])
+                    if not errors and isinstance(result.get("error"), dict):
+                        errors = [result["error"]]
+                    need(isinstance(errors, list), "UI_ERRORS_SHAPE")
+                    cases.append({"ordinal": index + 1, "file": expected[index]["file"], "title": expected[index]["title"],
+                                  "status": result["status"], "retry": 0, "workerIndex": worker_index,
+                                  "parallelIndex": parallel_index, "durationMs": result.get("duration"),
+                                  "startTime": result.get("startTime"), "errors": error_summary(errors),
+                                  "attachmentCount": len(attachments), "stdioStreams": captured["streams"]})
+                    results.append(result)
+                marker_raw = (("\n".join(all_markers) + "\n") if all_markers else "").encode("utf-8")
+                counts = {name: sum(line.startswith(name + " ") for line in all_markers) for name in SEMANTIC_PREFIXES}
+                expected_markers = UI_BINDING["analyticsMarkers"]
+                need(len(marker_raw) == expected_markers["bytes"] and digest(marker_raw) == expected_markers["sha256"]
+                     and counts == expected_markers["counts"], "UI_RUNTIME_MAIN_SEMANTIC_PARITY")
+                write_bytes(ROOT / "derived" / "runtime-semantic-markers.lf.log", marker_raw)
+                RECEIPT["captureSet"] = {"required": 33, "completeNamedPngSet": False,
+                    "missingCaptureMarkers": [name for name in PNG_REQUIRED_NAMES if name not in captures],
+                    "requiredMarkersPresent": sum(name in captures for name in PNG_REQUIRED_NAMES),
+                    "conditionalMarkersPresent": [name for name in PNG_CONDITIONAL_NAMES if name in captures],
+                    "visualAcceptance": False, "qualification": False}
+                need(len(PNG_REQUIRED_NAMES) == 33 and len(set(PNG_REQUIRED_NAMES)) == 33
+                     and not RECEIPT["captureSet"]["missingCaptureMarkers"], "UI_REQUIRED_33_CAPTURES")
+                target = results[0]
+                attachment_by_name = {}
+                allowed = PNG_REQUIRED_NAMES + PNG_CONDITIONAL_NAMES + [PNG_FAILURE_NAME]
+                for attachment_index, attachment in enumerate(target.get("attachments", [])):
+                    name = attachment.get("name")
+                    if isinstance(name, str) and name.startswith(("UI42-", "UI43-", "UI44-")):
+                        need(name in allowed, "UI_UNEXPECTED_TARGET_ATTACHMENT")
+                    if name in allowed:
+                        need(name not in attachment_by_name and attachment.get("contentType") == "image/png"
+                             and "body" not in attachment, "UI_EXACT_PNG_ATTACHMENT")
+                        attachment_by_name[name] = (attachment_index + 1, attachment)
+                RECEIPT["captureSet"]["missingAttachments"] = [name for name in PNG_REQUIRED_NAMES
+                                                                if name not in attachment_by_name]
+                need(not RECEIPT["captureSet"]["missingAttachments"], "UI_REQUIRED_33_ATTACHMENTS")
+                for name in PNG_CONDITIONAL_NAMES:
+                    need((name in captures) == (name in attachment_by_name), "UI_CONDITIONAL_MARKER_ATTACHMENT_PARITY")
+                failure_present = PNG_FAILURE_NAME in attachment_by_name
+                need(not failure_present or target["status"] != "passed", "UI_FAILURE_CAPTURE_VERDICT")
+                names = (PNG_REQUIRED_NAMES + [name for name in PNG_CONDITIONAL_NAMES if name in captures]
+                         + ([PNG_FAILURE_NAME] if failure_present else []))
+                need(33 <= len(names) <= MAX_PNG_EXPORTS and set(attachment_by_name) == set(names),
+                     "UI_EXACT_PRESENT_CAPTURE_SET")
+                pngs, seen_files = [], set()
+                for name in names:
+                    attachment_index, attachment = attachment_by_name[name]
+                    member = ui_attachment_member(attachment["path"])
+                    need(owners.get(member) == [[1, 1, attachment_index]], "UI_ATTACHMENT_UNIQUE_RESULT_OWNER")
+                    matching = [item for item in FILES if item["archive"] == 0 and not item["directory"]
+                                and item["path"] == member]
+                    need(len(matching) == 1, "UI_ATTACHMENT_EXACT_OUTER_MEMBER")
+                    item = matching[0]
+                    need(item["id"] not in seen_files and item.get("crcVerified") is True,
+                         "UI_PNG_DISTINCT_CRC_VERIFIED_MEMBER")
+                    seen_files.add(item["id"])
+                    raw = read_file(item, CORE_CAP["png"])
+                    marker = captures.get(name)
+                    image = ui_png(raw, marker["width"] if marker else None)
+                    owner = {"case": 1, "result": 1, "attachment": attachment_index, "caseFile": expected[0]["file"],
+                             "caseTitle": expected[0]["title"], "captureName": name, "archive": item["archive"],
+                             "member": item["path"], "file": item["id"], "mime": "image/png",
+                             "bytes": item["bytes"], "sha256": item["sha256"], "zipCrc32": item["crc32"],
+                             "zipCrcVerified": True, "captureMarker": marker, **image}
+                    pngs.append({"name": name + ".png", "file": item["id"], "raw": raw, "owner": owner})
+                RECEIPT["parsers"]["selection"] = {"file": selection_item["id"], "bytes": len(selection_raw),
+                    "sha256": digest(selection_raw), "tests": len(selected), "config": selection_config}
+                RECEIPT["parsers"]["runtime"] = {"file": runtime_item["id"], "bytes": len(runtime_raw),
+                    "sha256": digest(runtime_raw), "tests": len(executed), "config": runtime_config, "cases": cases,
+                    "semanticMarkers": {"bytes": len(marker_raw), "sha256": digest(marker_raw), "counts": counts,
+                                        "matchesOriginalMainSequence": True,
+                                        "order": "case/result order, stdout then stderr; no clock interleaving is inferred"}}
+                RECEIPT["parsers"]["artifactRequest"] = {"file": request_item["id"], "bytes": len(request_raw),
+                    "sha256": digest(request_raw), "snapshot": SNAPSHOT, "normalizedRequestMatches": True}
+                RECEIPT["parsers"]["targetPngs"] = [png["owner"] for png in pngs]
+                RECEIPT["captureSet"] = {"required": 33, "requiredPresent": 33,
+                    "conditionalPresent": sum(name in captures for name in PNG_CONDITIONAL_NAMES),
+                    "failurePresent": failure_present, "pngFiles": len(pngs), "completeNamedPngSet": True,
+                    "decodedPixelsReviewed": False, "visualAcceptance": False, "qualification": False}
+                checked("original_runtime_selection_request_and_main_semantic_parity")
+                checked("all33_required_pngs_and_present_conditionals_exact_case_attachment_member_ownership")
+                checked("original_pngs_zip_crc_png_chunk_crc_sha256_and_ihdr_dimensions")
+                return pngs
+            
+            def ensure_inventory():
+                if "inventory" not in RECEIPT:
+                    inventory = {"schema": 1, "archives": ARCHIVES, "files": FILES}
+                    RECEIPT["inventory"] = save_json("derived/inventory.json", inventory)
+                return RECEIPT["inventory"]
+            
+            def prepare_core_export(key, name, raw, mime, original, original_file=None):
+                need(key in CORE_CAP and isinstance(raw, bytes) and len(raw) <= CORE_CAP[key],
+                     "CORE_RAW_CAP_" + key)
+                if original:
+                    need(key == "png" and type(original_file) is int
+                         and 0 <= original_file < len(FILES), "CORE_ORIGINAL_INVENTORY_BINDING")
+                    item = FILES[original_file]
+                    need(not item["directory"] and item["id"] == original_file
+                         and item["bytes"] == len(raw) and item["sha256"] == digest(raw),
+                         "CORE_ORIGINAL_INVENTORY_BYTES")
+                else:
+                    need(original_file is None and len(raw) > 0, "CORE_DERIVED_NONEMPTY")
+                encoded = base64.b64encode(raw).decode("ascii")
+                pieces = ([encoded[i:i + CAP["chunkBytes"]] for i in range(0, len(encoded), CAP["chunkBytes"])]
+                          if encoded else [""])
+                metadata = {"name": name, "bytes": len(raw), "sha256": digest(raw), "mime": mime,
+                            "original": original, "encoding": "base64", "chunks": len(pieces)}
+                if original:
+                    metadata["file"] = original_file
+                lines = []
+                for index, piece in enumerate(pieces, 1):
+                    envelope = {"schema": 1, **metadata, "index": index}
+                    # Bound all metadata plus empty data and transport prefix/LF, not just one field.
+                    need(len(wire_line("SF613_ARTIFACT_BYTES", {**envelope, "data": ""})) <= 1024,
+                         "CORE_CHUNK_METADATA_CAP")
+                    need((0 < len(piece) <= CAP["chunkBytes"]) or
+                         (len(raw) == 0 and original and len(pieces) == 1 and index == 1 and piece == ""),
+                         "CORE_BASE64_CHUNK_CAP")
+                    lines.append(wire_line("SF613_ARTIFACT_BYTES", {**envelope, "data": piece}))
+                return {"key": key, "metadata": metadata, "lines": lines}
+            def finalize_core(pngs):
+                global CORE_LINES_WRITTEN, PNG_EMISSION_BUDGET
+                need(33 <= len(pngs) <= MAX_PNG_EXPORTS and RECEIPT["captureSet"]["completeNamedPngSet"] is True,
+                     "PNG_CORE_COMPLETE_SET_REQUIRED")
+                expected_names = (PNG_REQUIRED_NAMES + [name for name in PNG_CONDITIONAL_NAMES
+                                  if any(png["owner"]["captureName"] == name for png in pngs)]
+                                  + ([PNG_FAILURE_NAME] if RECEIPT["captureSet"]["failurePresent"] else []))
+                need([png["name"] for png in pngs] == [name + ".png" for name in expected_names]
+                     and len({png["file"] for png in pngs}) == len(pngs), "PNG_CORE_EXACT_PRESENT_EXPORTS")
+                inventory = ensure_inventory()
+                inventory_raw = (ROOT / inventory["path"]).read_bytes()
+                need(len(inventory_raw) == inventory["bytes"] and digest(inventory_raw) == inventory["sha256"],
+                     "INVENTORY_BYTES_CHANGED")
+                RECEIPT["apiReads"] = API_COUNT
+                RECEIPT["archiveSummary"] = {
+                    "archives": len(ARCHIVES), "entries": TOTAL_ENTRIES,
+                    "crcVerified": sum(1 for row in FILES if row.get("crcVerified")),
+                    "expandedBytes": TOTAL_EXPANDED,
+                    "allEntriesVerified": bool(FILES) and all(row.get("crcVerified") is True for row in FILES),
+                }
+                need(RECEIPT["archiveSummary"]["allEntriesVerified"] is True and not RECEIPT["failures"],
+                     "CORE_REQUIRED_VALIDATION_FAILURE")
+                summary = canonical({
+                    "schema": 1, "kind": "ui42-44-original-png-summary", "qualification": False,
+                    "source": SOURCE, "sourceTree": SOURCE_TREE, "snapshot": SNAPSHOT, "snapshotTree": SNAPSHOT_TREE,
+                    "run": ORIGINAL_RUN, "attempt": 1, "artifact": RECEIPT["artifact"],
+                    "selection": RECEIPT["parsers"]["selection"], "runtime": RECEIPT["parsers"]["runtime"],
+                    "artifactRequest": RECEIPT["parsers"]["artifactRequest"],
+                    "captureSet": RECEIPT["captureSet"], "targetPngs": RECEIPT["parsers"]["targetPngs"],
+                    "archiveSummary": RECEIPT["archiveSummary"], "limits": RECEIPT["limits"],
+                })
+                write_bytes(ROOT / "derived" / "safe-summary.json", summary)
+                first_payloads = [
+                    ("png", png["name"], png["raw"], "image/png", True, png["file"]) for png in pngs]
+                first_payloads.extend([
+                    ("summary", "safe-summary.json", summary, "application/json", False, None),
+                    ("inventory", "inventory.json", inventory_raw, "application/json", False, None),
+                ])
+                prepared = [prepare_core_export(*item) for item in first_payloads]
+                RECEIPT["coreEmission"] = {
+                    "state": "PLANNED_REQUIRES_SUCCESS_TERMINAL",
+                    "order": [item["metadata"]["name"] for item in prepared] + ["receipt.json"],
+                    "payloadsBeforeReceipt": [item["metadata"] for item in prepared],
+                    "completeNamedPngSet": True, "requiredPngs": 33, "maximumPngs": MAX_PNG_EXPORTS,
+                    "absentConditionalHasNoExport": True, "noRequiredCaptureMayBeDroppedToFit": True,
+                    "rawCaps": CORE_CAP, "beforeBytes": LOG_BYTES,
+                    "exactPreflight": "All immutable PNGs, metadata, inventory, frozen receipt and terminal are encoded and jointly checked before the first payload.",
+                    "completion": "Every ordered hash-verified export, the success terminal and successful reader/preservation steps are required. Transport does not constitute visual or product acceptance.",
+                    "selfReference": "This receipt has no own hash. Its exact bytes/hash are attested by the terminal.",
+                }
+                RECEIPT["preservation"] = {
+                    "originalZipPath": "original.zip", "originalBytes": ARTIFACT_BYTES, "originalSha256": ARTIFACT_SHA,
+                    "allOriginalsRetainedOnRunner": True, "alwaysUploadWorkflowRequired": True,
+                    "auditArtifactRetentionDays": 7, "auditUploadNotYetObserved": True,
+                    "wholeOriginalZipExportedInLog": False, "permanentRemoteRetentionClaim": False,
+                }
+                RECEIPT["readerExitCodePlanned"] = 0
+                # Freeze once, before any payload is emitted.
+                receipt_raw = canonical(RECEIPT)
+                prepared.append(prepare_core_export("receipt", "receipt.json", receipt_raw, "application/json", False))
+                need([item["key"] for item in prepared] == ["png"] * len(pngs) + ["summary", "inventory", "receipt"]
+                     and len(prepared) == len(pngs) + 3 and 36 <= len(prepared) <= MAX_CORE_EXPORTS,
+                     "PNG_CORE_EXACT_EXPORT_COUNT")
+                core_lines = tuple(line for item in prepared for line in item["lines"])
+                core_bytes = sum(len(line) for line in core_lines)
+                before_bytes = LOG_BYTES
+                final = {
+                    "schema": 1, "kind": "ui42-44-png-terminal", "qualification": False,
+                    "status": RECEIPT["status"], "coreBytesComplete": True, "receiptBase64Complete": True,
+                    "completeNamedPngSet": True, "visualAcceptance": False,
+                    "requiredPngs": 33, "pngFiles": len(pngs),
+                    "coreFiles": len(prepared), "coreChunks": len(core_lines),
+                    "corePayloadBytes": sum(item["metadata"]["bytes"] for item in prepared),
+                    "coreLogBytes": core_bytes, "logBytesBeforeCore": before_bytes,
+                    "logBytesBeforeTerminal": before_bytes + core_bytes,
+                    "emitterCapBytes": CAP["logBytes"], "mainLogReviewCapBytes": CAP["mainLogReviewCapBytes"],
+                    "receiptBytes": len(receipt_raw), "receiptSha256": digest(receipt_raw),
+                    "exports": [item["metadata"] for item in prepared],
+                    "entries": TOTAL_ENTRIES, "crcVerified": RECEIPT["archiveSummary"]["crcVerified"],
+                    "expandedBytes": TOTAL_EXPANDED, "pending": len(RECEIPT["pending"]),
+                    "originalZipPreservationUploadPending": True, "failures": [], "readerExitCode": 0,
+                }
+                terminal_raw = wire_line("SF613_ARTIFACT_RECEIPT", final)
+                total_bytes = before_bytes + core_bytes + len(terminal_raw)
+                PNG_EMISSION_BUDGET = {"coreFiles": len(prepared), "pngFiles": len(pngs),
+                    "coreChunks": len(core_lines), "beforeBytes": before_bytes, "coreLogBytes": core_bytes,
+                    "terminalBytes": len(terminal_raw), "totalEmitterBytes": total_bytes,
+                    "capBytes": CAP["logBytes"], "mainLogReviewCapBytes": CAP["mainLogReviewCapBytes"]}
+                need(total_bytes <= CAP["logBytes"], "PNG_CORE_JOINT_LOG_BUDGET")
+                plan = {"schema": 1, **PNG_EMISSION_BUDGET,
+                        "terminalSha256": digest(terminal_raw), "exports": final["exports"]}
+                # Disk preservation and the exact complete preflight precede the first payload.
+                write_bytes(ROOT / "receipt.json", receipt_raw)
+                save_json("derived/core-emission-plan.json", plan)
+                for raw in core_lines:
+                    write_wire(raw)
+                    CORE_LINES_WRITTEN += 1
+                need(LOG_BYTES == before_bytes + core_bytes and CORE_LINES_WRITTEN == len(core_lines),
+                     "CORE_EMITTED_COUNT_MISMATCH")
+                write_wire(terminal_raw)
+                need(LOG_BYTES == total_bytes, "CORE_FINAL_EMITTED_BYTES_MISMATCH")
+            
+            def report_failure(code, error_type=None):
+                # No exception text/traceback: it could contain a signed URL. Never emit a success terminal here.
+                failure = {"code": code}
+                if error_type is not None:
+                    failure["type"] = error_type
+                RECEIPT["status"] = "RECEIPT_FAILED"
+                RECEIPT["failures"].append(failure)
+                RECEIPT["readerExitCode"] = 1
+                RECEIPT["apiReads"] = API_COUNT
+                receipt_meta = None
+                try:
+                    failure_raw = canonical(RECEIPT)
+                    if len(failure_raw) <= CORE_CAP["receipt"]:
+                        write_bytes(ROOT / "failure-receipt.json", failure_raw)
+                        receipt_meta = {"bytes": len(failure_raw), "sha256": digest(failure_raw)}
+                except Exception:
+                    pass
+                terminal = {
+                    "schema": 1, "kind": "ui42-44-png-terminal", "qualification": False, "status": "RECEIPT_FAILED",
+                    "coreBytesComplete": False, "receiptBase64Complete": False, "readerExitCode": 1,
+                    "coreChunksWritten": CORE_LINES_WRITTEN, "logBytesBeforeTerminal": LOG_BYTES,
+                    "failures": [failure], "failureReceipt": receipt_meta,
+                    "mode": MODE, "captureSet": RECEIPT.get("captureSet"),
+                    "emissionBudget": PNG_EMISSION_BUDGET,
+                    "limit": "No complete transport is accepted without every listed present payload, success terminal and successful job; capture completion is separate.",
+                }
+                try:
+                    write_wire(wire_line("SF613_ARTIFACT_RECEIPT", terminal))
+                except Exception:
+                    # A broken stdout may prevent even a failure terminal; process exit remains nonzero.
+                    pass
+            
+            def main():
+                check_original_and_reader()
+                download_original()
+                inspect_zip(ROOT / "original.zip", "original-artifact", 0)
+                unpack_html_reports()
+                checked("all_discovered_zip_entries_crc_sha256_and_safe_paths")
+                pngs = parse_ui_runtime_and_pngs()
+                need(not RECEIPT["failures"], "REQUIRED_PARSER_FAILURE")
+                RECEIPT["status"] = "ORIGINAL_PNG_BYTES_VERIFIED_NOT_VISUALLY_ACCEPTED"
+                RECEIPT["qualification"] = False
+                RECEIPT["limits"] = [
+                    "This reader receives one bound original ZIP. It never checks out or executes repository product, tests or observers.",
+                    "All33 required named PNGs must exist with exact case/result/attachment/member ownership. Missing required images fail the complete mode.",
+                    "The two optional scroll captures require both their same-result capture marker and attachment. The optional failure image requires that same result to be non-passed.",
+                    "Original ZIP entries are read to EOF and independently CRC/SHA verified. PNG chunks are CRC checked without pixel decompression or rendering.",
+                    "PNG signature, IHDR, CRC and hashes do not constitute visual acceptance; a reviewer must inspect the exact exported bytes.",
+                    "The fixed upload layout and absolute Linux attachment path must map to one exact archive0 member. No suffix, basename, first-match or latest-match fallback exists.",
+                    "Every selected original PNG is exported unchanged. JPEG previews, HTML rendering, resized or regenerated images are never substitutes.",
+                    "Raw runtime, selection, original request, HTML and error contexts remain in the preserved audit artifact; only safe summaries and selected PNGs enter the payload transport.",
+                    "Semantic parity binds runtime case/result stdout-then-stderr marker order to the independently received original main. It makes no cross-stream clock claim.",
+                    "All PNGs plus metadata, inventory, receipt and terminal must jointly fit7MiB before the first payload. No required PNG is omitted to fit.",
+                    "The independent receiver must authenticate the whole original reader Actions main and enforce8MiB including Actions framing.",
+                    "The always-upload step must preserve original.zip and receipt. Its7day retention is not permanent archival and the whole original ZIP is not exported in this log.",
+                    "An incomplete capture set, oversized PNG, metadata overflow, budget excess or interrupted transport yields no complete receipt or visual acceptance.",
+                    "The original2Analytics or6UI6 test selection, waits and fixtures are unchanged. This receipt grants no new area acceptance, merge or production authorization.",
+                ]
+                finalize_core(pngs)
+            
+            exit_code = 0
+            try:
+                main()
+            except ReceiptFailure as error:
+                exit_code = 1
+                report_failure(error.code)
+            except Exception as error:
+                exit_code = 1
+                report_failure("UNEXPECTED_READER_ERROR", type(error).__name__)
+            sys.exit(exit_code)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import os
+          import pathlib
+          
+          raw = os.environ.pop("SF613_ARTIFACT_READER_SOURCE").encode("utf-8")
+          expected = os.environ.pop("SF613_ARTIFACT_READER_SHA256")
+          if hashlib.sha256(raw).hexdigest() != expected:
+              raise RuntimeError("READER_SOURCE_SHA256_MISMATCH")
+          target = pathlib.Path(os.environ["RUNNER_TEMP"]).resolve() / "sf613-artifact-reader.py"
+          workspace = pathlib.Path(os.environ["GITHUB_WORKSPACE"]).resolve()
+          if target == workspace or workspace in target.parents:
+              raise RuntimeError("READER_SOURCE_MUST_BE_OUTSIDE_WORKSPACE")
+          with target.open("xb") as handle:
+              handle.write(raw)
+          exec(compile(raw, str(target), "exec"),
+               {"__name__": "__main__", "__file__": str(target)})
+          PY
+
+      - name: Preserve original bytes and receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2, same pin as original producer
+        with:
+          name: sf613-ui42-44-original-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf613-artifact-read
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 7

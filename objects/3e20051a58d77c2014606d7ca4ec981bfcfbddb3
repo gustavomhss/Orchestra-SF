@@ -1,0 +1,229 @@
+{
+  "schema": "sf613-d33-root-review-v1",
+  "status": "ACK_STATIC_UNBOUND",
+  "at": "2026-11-28 13:57:06 UTC",
+  "reviewer": "Astra /root",
+  "wrapper": {
+    "gitBlob": "6e621343ac701b2017654ff2228011df48793c1a",
+    "bytes": 20047,
+    "sha256": "2dbe18196ab07448ebe8afb041823b604ba738391ddedeb44081d2f4555a72c3",
+    "lf": 369,
+    "endsWithLF": true
+  },
+  "patch": {
+    "gitBlob": "efbc663f2df5c5758d65c6a26cd3f55046ab357b",
+    "bytes": 1254,
+    "sha256": "687304e9433e807e9fee36ce81b313584c4b613411ef922a3922693a65b05d1f",
+    "lf": 21,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "gitBlob": "fd7e793498679eaed4eb64114fb757d8be8baa61",
+    "bytes": 11121,
+    "sha256": "af30f49de74eef399dbb3b39bbe0be8df9ba359be5212f51524ecee1ad23de08",
+    "lf": 385,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "66315ea383e3c4fb10186a7fa946f881ead2c485",
+    "bytes": 18153,
+    "sha256": "e64b18feb3ca067d258b5bfe0fb59bfe1a9477481fe01aa4fa6e132cbb7ec4ae",
+    "lf": 572,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "a33c8374af8e680038451752325ecd5ba7c40e01",
+    "bytes": 11484,
+    "sha256": "9c8dd11aa800b1049adda026dbf079a1abbdca81af555eaf720542f0f3f47ebd",
+    "lf": 385,
+    "endsWithLF": true
+  },
+  "independentPeer": {
+    "gitBlob": "3dbfe9a24501577890c0c2d5bbfd057d7dddb20c",
+    "bytes": 12803,
+    "sha256": "b23c1c8ab69271e7e399f9dcfc7de782afd03b4e91b5bf9db98de14128e81e59",
+    "lf": 400,
+    "endsWithLF": true
+  },
+  "baseRootReview": {
+    "gitBlob": "5c190b69660ac446da74dc5c61d6ee5fa0ce82f0",
+    "bytes": 3688,
+    "sha256": "c361770c824711fbf62a379cf80e8844ae91cc6035524d596ac0fba56f78c906",
+    "lf": 109,
+    "endsWithLF": true
+  },
+  "baseIndependentPeer": {
+    "git": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+    "bytes": 16168,
+    "sha256": "0e108dd97ba423501a9d8708764690a544021b05120c5ac609b7394f4c139178",
+    "lf": 480,
+    "endsWithLF": true
+  },
+  "checks": {
+    "twoAnchors": true,
+    "forward": true,
+    "inverse": true,
+    "patchForward": true,
+    "patchInverse": true,
+    "hunks": 2,
+    "groups": 28,
+    "expectSpawn": 28,
+    "sourceTokenCount": 1,
+    "treeTokenCount": 1,
+    "sameWidth": true
+  },
+  "delta": "Exactly two G24 numeric budgets: process 300→450s and parent360→510s. All other bytes are literal D32, including the historical verification label.",
+  "unchanged": {
+    "before": {
+      "groups": 28,
+      "expectSpawn": 28,
+      "syntacticCommandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78
+    },
+    "after": {
+      "groups": 28,
+      "expectSpawn": 28,
+      "syntacticCommandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78
+    },
+    "englishReadLoopExecutions": 6,
+    "proofChildrenSeparately": 6,
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "actualRunResults": null,
+    "noUniversalSubprocessTotalClaimed": true,
+    "engineLiteral": true,
+    "G1ThroughG23AndG25ThroughG28Literal": true,
+    "argvAndCwdLiteral": true,
+    "reportGateLiteral": true,
+    "guardsLiteral": true,
+    "OmniContractLiteral": true,
+    "globalCapsLiteral": true,
+    "sourceRuntimeFilesChanged": 0
+  },
+  "companions": [
+    {
+      "role": "envelope",
+      "git": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+      "bytes": 43811,
+      "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+      "lf": 723,
+      "endsWithLF": true,
+      "actualDriverPath": null,
+      "reviewCompanionOnly": true,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    },
+    {
+      "role": "finalizer",
+      "git": "3865560d88636917d080015e91a714537cfa35af",
+      "bytes": 15782,
+      "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+      "lf": 250,
+      "endsWithLF": true,
+      "actualDriverPath": null,
+      "reviewCompanionOnly": true,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    },
+    {
+      "role": "workflow",
+      "git": "50cfa806e399238a8730bf1c4c58203932c8676b",
+      "bytes": 80067,
+      "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+      "lf": 1154,
+      "endsWithLF": true,
+      "actualDriverPath": ".github/workflows/sf613-final-qualification.yml",
+      "reviewCompanionOnly": false,
+      "created": true,
+      "readbackLiteral": true,
+      "changedFromD30": false,
+      "changed": false
+    }
+  ],
+  "binding": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFour": true,
+    "derivedEnvelopeDigestIsNotAFifthBinding": true,
+    "referenceIsNotFinalC613": true,
+    "source": null,
+    "sourceTree": null,
+    "wrapperBlob": null,
+    "wrapperSha256": null
+  },
+  "limits": {
+    "globalProcessMs": 2100000,
+    "technicalStepMs": 2400000,
+    "jobMs": 2700000,
+    "finalizerMs": 180000,
+    "configuredCommandSumMs": 5910000,
+    "configuredParentSumMs": 7650000,
+    "completionGuarantee": false
+  },
+  "runtimeEvidence": null,
+  "actions": {
+    "localRepoExecution": false,
+    "newOriginalGets": 0,
+    "newZipGets": 0,
+    "refs": false,
+    "runs": false,
+    "candidateBinding": false,
+    "qualification": false,
+    "productionAuthorized": false
+  }
+}

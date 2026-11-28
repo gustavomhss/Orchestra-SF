@@ -1,0 +1,400 @@
+{
+  "schema": "sf613-d33-independent-g24-review-v1",
+  "status": "ACK_STATIC_FOUR_BINDINGS_UNBOUND_NO_RUNTIME_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "author": "/root/focal_migration",
+  "at": {
+    "current_time": "2026-11-28 13:54:44 UTC"
+  },
+  "scope": "Independent review of the complete D33 wrapper against actual D32 bytes, exact derivation/patch, changed budget and documentary bindings. Inherited unchanged companion bytes and transport review are retained through the authenticated D32 independent receipt; no old parser or product review is reopened.",
+  "effective": {
+    "wrapper": {
+      "gitBlob": "6e621343ac701b2017654ff2228011df48793c1a",
+      "bytes": 20047,
+      "sha256": "2dbe18196ab07448ebe8afb041823b604ba738391ddedeb44081d2f4555a72c3",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "patch": {
+      "gitBlob": "efbc663f2df5c5758d65c6a26cd3f55046ab357b",
+      "bytes": 1254,
+      "sha256": "687304e9433e807e9fee36ce81b313584c4b613411ef922a3922693a65b05d1f",
+      "lf": 21,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "fd7e793498679eaed4eb64114fb757d8be8baa61",
+      "bytes": 11121,
+      "sha256": "af30f49de74eef399dbb3b39bbe0be8df9ba359be5212f51524ecee1ad23de08",
+      "lf": 385,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "66315ea383e3c4fb10186a7fa946f881ead2c485",
+      "bytes": 18153,
+      "sha256": "e64b18feb3ca067d258b5bfe0fb59bfe1a9477481fe01aa4fa6e132cbb7ec4ae",
+      "lf": 572,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "a33c8374af8e680038451752325ecd5ba7c40e01",
+      "bytes": 11484,
+      "sha256": "9c8dd11aa800b1049adda026dbf079a1abbdca81af555eaf720542f0f3f47ebd",
+      "lf": 385,
+      "endsWithLF": true
+    }
+  },
+  "basis": {
+    "wrapper": {
+      "gitBlob": "2d5f09d41f0170e2bbcaaf69df77e00d12bf83ef",
+      "bytes": 20047,
+      "sha256": "2a5b0b74cec0fe1e419900d6072eb5f2989f610655f2e3d7f1b14f08de0f6344",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "596ff2b9b02c5dfed4f1a8bc5f63ac5ffbead443",
+      "bytes": 19142,
+      "sha256": "56fe5889d476e95a36ee61554af34d19d7f530fce4ca8463fdae6b1014ab6e5d",
+      "lf": 541,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "8ca55d786b0ae9cf8755e9aa359da8f8ce69847f",
+      "bytes": 20131,
+      "sha256": "389fe3f09580181dc0155ead11dd61cbe79f92e1fcda4b36fa2f7d65b438225f",
+      "lf": 570,
+      "endsWithLF": true
+    },
+    "independentReview": {
+      "gitBlob": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+      "bytes": 16168,
+      "sha256": "0e108dd97ba423501a9d8708764690a544021b05120c5ac609b7394f4c139178",
+      "lf": 480,
+      "endsWithLF": true
+    }
+  },
+  "independentData": {
+    "anchorsAndPatch": {
+      "anchors": [
+        {
+          "id": "G24-process-only",
+          "offset": 17564,
+          "fullFingerprints": true,
+          "unique": true
+        },
+        {
+          "id": "G24-parent-only",
+          "offset": 18282,
+          "fullFingerprints": true,
+          "unique": true
+        }
+      ],
+      "patch": {
+        "files": [
+          {
+            "path": "apps/cli/test/sf613-final-verification.test.ts",
+            "embeddedGitPins": false,
+            "hunks": 2,
+            "added": 2,
+            "removed": 2,
+            "forwardLiteral": true,
+            "inverseLiteral": true
+          }
+        ],
+        "hunks": 2,
+        "added": 2,
+        "removed": 2
+      },
+      "roundtrip": true
+    },
+    "changedGroups": [
+      24
+    ],
+    "nonG24BodiesLiteral": 27,
+    "allTitlesLiteral": 28,
+    "engineLiteral": true,
+    "reportGateLiteral": true,
+    "argvCwdLiteral": true,
+    "groups": 28,
+    "syntacticCommands": 34,
+    "effectiveCommands": 39,
+    "truncationFlags": 78,
+    "expectSpawnSites": 28,
+    "parentCapsMs": [
+      180000,
+      180000,
+      180000,
+      180000,
+      180000,
+      360000,
+      300000,
+      300000,
+      600000,
+      300000,
+      300000,
+      300000,
+      300000,
+      180000,
+      240000,
+      180000,
+      660000,
+      660000,
+      180000,
+      180000,
+      180000,
+      180000,
+      180000,
+      510000,
+      180000,
+      360000,
+      60000,
+      60000
+    ],
+    "parentSumMs": 7650000,
+    "commandSumMs": 5910000,
+    "commandSumBasis": "Retained peer baseline5760000 plus only G24 process increment150000",
+    "companions": [
+      {
+        "role": "envelope",
+        "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+        "bytes": 43811,
+        "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+        "inheritedFromActualPeer": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+        "bodyReacquired": false
+      },
+      {
+        "role": "finalizer",
+        "gitBlob": "3865560d88636917d080015e91a714537cfa35af",
+        "bytes": 15782,
+        "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+        "inheritedFromActualPeer": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+        "bodyReacquired": false
+      },
+      {
+        "role": "workflow",
+        "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b",
+        "bytes": 80067,
+        "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+        "inheritedFromActualPeer": "a0e72b92412631ec99a71fea64ee6e88dc3a7b16",
+        "bodyReacquired": false
+      }
+    ],
+    "fourBindingsLiteralAndUnbound": true,
+    "globalCapsLiteral": true,
+    "modelObjectsAcquired": false,
+    "globalResultTotalsRemainNull": true,
+    "documentReferencesVerified": 13
+  },
+  "change": {
+    "group": 24,
+    "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+    "processMs": {
+      "before": 300000,
+      "after": 450000
+    },
+    "parentMs": {
+      "before": 360000,
+      "after": 510000
+    },
+    "onlyTwoNumericReplacements": true,
+    "byteDelta": 0,
+    "lfDelta": 0,
+    "sourceProductChanged": false,
+    "testChangedByD33": false,
+    "newGroup": false,
+    "newCommand": false,
+    "newFilter": false,
+    "newRetry": false
+  },
+  "reportGate": {
+    "literalD32": true,
+    "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION ",
+    "schema": "sf-c22-comparison-criteria-observation-v2",
+    "qualification": false,
+    "exactLines": 3,
+    "eachScenarioExactlyOnce": [
+      "single-criterion-and-protocol",
+      "multiple-criteria-shared-source",
+      "unsupported-planner-closure"
+    ],
+    "orderRequired": false,
+    "nonzeroExitAndTruncationFailBeforeParsing": true,
+    "malformedJsonFails": true,
+    "missingOrDuplicateScenarioFails": true,
+    "fullSemanticPayloadAcceptance": "Future independent intake still required; the static gate verifies envelope/scenario identity and is not a replacement for semantic intake.",
+    "actualAssertionTotal": null
+  },
+  "references": {
+    "R7Control": {
+      "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+      "bytes": 44338,
+      "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+      "lf": 766,
+      "endsWithLF": true
+    },
+    "R7ControlPackage": {
+      "gitBlob": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+      "bytes": 13474,
+      "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+      "lf": 430,
+      "endsWithLF": true
+    },
+    "R7ControlBounds": {
+      "gitBlob": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+      "bytes": 18228,
+      "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+      "lf": 517,
+      "endsWithLF": true
+    },
+    "R7IndependentReview": {
+      "gitBlob": "1c8621c058cf5a2de72a6a92424e51da51dad03c",
+      "bytes": 19832,
+      "sha256": "bb9304e2b7de08fa255911a2dfe7d2d85479982ea8b94a049dbc1c9c1b1e9d41",
+      "lf": 595,
+      "endsWithLF": true
+    },
+    "R6FinalNegative": {
+      "gitBlob": "9d7ad023151159a193c93122cd4920f5572a3f04",
+      "bytes": 10381,
+      "sha256": "a51fa9a07678ad460b12e33b73a91e2af8ff2e55b792fc88851edeeb13f76a66",
+      "lf": 348,
+      "endsWithLF": true
+    },
+    "UI6ActualRequest": {
+      "gitBlob": "2bd57a54180a099bbf904d188fe6e0eb22362cea",
+      "bytes": 390,
+      "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+      "lf": 0,
+      "endsWithLF": false
+    }
+  },
+  "timeAndCapture": {
+    "referenceControlCooperativeMs": [
+      12000,
+      12000,
+      50000,
+      50000,
+      240000
+    ],
+    "referenceControlBunMs": [
+      15000,
+      15000,
+      60000,
+      60000,
+      270000
+    ],
+    "nominalCooperativeSumMs": 364000,
+    "nominalBunSumMs": 420000,
+    "processMarginAboveNominalBunMs": 30000,
+    "parentMarginAboveProcessMs": 60000,
+    "configuredCommandSumMs": 5910000,
+    "configuredParentSumMs": 7650000,
+    "globalProcessMs": 2100000,
+    "technicalStepMs": 2400000,
+    "jobMs": 2700000,
+    "alwaysFinalizerMs": 180000,
+    "globalCapsChanged": false,
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "requiredFalseFlags": 78,
+    "arithmeticAllStreamsBytes": 81788928,
+    "arithmeticIsNotMainLogCap": true,
+    "globalFunctionalTotal": null,
+    "globalReportsTotal": null,
+    "globalAssertionTotal": null,
+    "completionGuaranteed": false
+  },
+  "protocol": {
+    "packageRevision": "D33",
+    "historicalWrapperLabel": "sf613-final-composition-literal-c-d32-r1",
+    "labelRetainedIntentionally": true,
+    "reason": "The authorized executable delta is only the two G24 numeric caps. Companion protocol remains inherited and uses concrete immutable pins rather than treating this historical label as final-candidate qualification.",
+    "wrapperEmbeddedInWorkflow": false,
+    "unchangedEnvelopeAndFinalizerEmbeddingInherited": true,
+    "loaderCalculatedSegmentFetched": false,
+    "originalsAcquired": false
+  },
+  "bindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "source": null,
+    "sourceTree": null,
+    "wrapperBlob": null,
+    "wrapperSha256": null,
+    "snapshot": null,
+    "run": null,
+    "derivedEnvelopeDigestIsNotFifthBinding": true,
+    "widthOnlyModelsRemainCalculated": true
+  },
+  "limitations": [
+    "Only static D33 data/code/document review is accepted. The integrated final C613 source and tree are not selected or qualified.",
+    "The R7 source/test is a reference, not a binding of final C613. No R6, R7, Analytics or UI6 outcome is transferred.",
+    "Configured command ceilings total98m30 and parent ceilings127m30; both exceed the unchanged35min process cap. These are ceilings, not predicted runtime, and no full-run or finalizer-window guarantee follows.",
+    "The six retained proof children, nested populations and envelope/bootstrap/finalizer operations are distinct from the39 effective wrapper commands.",
+    "The complete actual output, flags, reports, test/assertion counts, original installed UI6 and final integrated candidate still require reception on a concrete authorized execution.",
+    "Historical originals and all calculated-only models remain closed or unfetched. The unchanged companion bodies were not reacquired in this delta review; their exact pins were matched to the actual independent D32 receipt."
+  ],
+  "findings": [],
+  "runtimeQualification": false,
+  "productionAuthorized": false,
+  "actions": {
+    "reviewBlobOnly": true,
+    "repositoryCodeExecutions": 0,
+    "originalLogGets": 0,
+    "ZIPGets": 0,
+    "treeCreations": 0,
+    "commitCreations": 0,
+    "refMutations": 0,
+    "runsCreated": 0,
+    "sourceEdits": 0
+  }
+}

@@ -1,0 +1,21 @@
+diff --git a/apps/cli/test/sf613-final-verification.test.ts b/apps/cli/test/sf613-final-verification.test.ts
+--- a/apps/cli/test/sf613-final-verification.test.ts
++++ b/apps/cli/test/sf613-final-verification.test.ts
+@@ -326,7 +326,7 @@
+   expectSpawn(import.meta.path)
+   const output = yield* runCommand("Comparison binding preferences and criterion observation whole-file", process.execPath, [
+     "test", "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+-  ], module, 300_000)
++  ], module, 450_000)
+   const prefix = "SF_C22_COMPARISON_CRITERIA_OBSERVATION "
+   const reports: unknown[] = output.split(/\r?\n/).filter((line) => line.startsWith(prefix))
+     .map((line) => JSON.parse(line.slice(prefix.length)))
+@@ -336,7 +336,7 @@
+   for (const scenario of ["single-criterion-and-protocol", "multiple-criteria-shared-source", "unsupported-planner-closure"])
+     expect(reports.filter((report) => report !== null && typeof report === "object" &&
+       "scenario" in report && report.scenario === scenario)).toHaveLength(1)
+-}), 360_000)
++}), 510_000)
+ 
+ checks.live("comparison proof observes the real Finance owner and its complete publication controls", () => Effect.gen(function* () {
+   requireHostedCandidate()

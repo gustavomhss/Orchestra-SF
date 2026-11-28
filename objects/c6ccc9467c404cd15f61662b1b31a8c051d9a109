@@ -1,0 +1,146 @@
+{
+  "schema": "orchestra-operational-dependencies-readback-v1",
+  "status": "RESERVATIONS_AND_ACCESS_CONFIRMATIONS_PENDING",
+  "at": "2026-11-28 14:17:08 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "Astra /root",
+  "independentReading": {
+    "reviewer": "/root/focal_migration",
+    "cutoff": "2026-11-28T14:09:01Z",
+    "coverage": {
+      "pulls": [
+        657,
+        628,
+        666
+      ],
+      "issueComments": [
+        60,
+        49,
+        0
+      ],
+      "totalIssueComments": 109,
+      "bodiesRead": true,
+      "headerCountsRechecked": true
+    },
+    "finding": "No new confirmed QA/recovery reservation, Entra identity matrix or independent backup route in the consulted records.",
+    "limitation": "Not a check of private channels, review threads, live VM/Azure/Entra or current Settings."
+  },
+  "rootCorroboration": [
+    {
+      "id": 7089799944,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7089799944",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-23T02:16:07Z",
+      "updatedAt": "2026-11-23T02:16:07Z"
+    },
+    {
+      "id": 7149647480,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7149647480",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-25T01:31:38Z",
+      "updatedAt": "2026-11-25T01:31:38Z"
+    },
+    {
+      "id": 7092390302,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7092390302",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-23T05:25:11Z",
+      "updatedAt": "2026-11-23T05:25:11Z"
+    },
+    {
+      "id": 7092768151,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7092768151",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-23T05:49:45Z",
+      "updatedAt": "2026-11-23T05:49:45Z"
+    },
+    {
+      "id": 7089930087,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7089930087",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-23T02:25:48Z",
+      "updatedAt": "2026-11-23T02:25:48Z"
+    },
+    {
+      "id": 7088154702,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7088154702",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-23T00:12:38Z",
+      "updatedAt": "2026-11-23T00:12:38Z"
+    },
+    {
+      "id": 7149384104,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/628#issuecomment-7149384104",
+      "githubAuthor": "gustavomhss",
+      "createdAt": "2026-11-25T01:16:41Z",
+      "updatedAt": "2026-11-25T01:16:41Z"
+    }
+  ],
+  "dependencies": [
+    {
+      "gate": "G08/G10",
+      "item": "guest inventory completion",
+      "verifiedOwner": "Codex local session 01a1ffe5-86c4-77e1-880b-8c1bf8271c88",
+      "host": "orchsf-vm",
+      "alreadyAuthorized": true,
+      "action": "Complete the already authorized read-only inventory and privately reconcile active executable, cwd/current, effective roots/writers, installed/retained R, volumes and existing access. Return original private receipt reference and sanitized summary.",
+      "finalCandidateNeededForInventory": false,
+      "reservationConfirmed": false
+    },
+    {
+      "gate": "G08",
+      "item": "administrative admission",
+      "verifiedGitHubAdmin": "gustavomhss (historical inventory, not rechecked live)",
+      "ownerRole": "Owner/coordination chooses dispatch, reviewer and admitted retention configuration; Preparation/publication applies and reads back window controls.",
+      "action": "Record the admitted dispatch/review/window configuration; after candidate/ACK/tar/reservation inputs, check then-current queues, workflows, actors, ref/pins and temporary runner admission.",
+      "environmentAlreadyObserved": true,
+      "secondHumanRequirementInvented": false
+    },
+    {
+      "gate": "G08",
+      "item": "real Microsoft/Entra identities and grants",
+      "nominalEntraOwner": null,
+      "requiredRoles": [
+        "requester",
+        "holder",
+        "denied",
+        "dashboardAdmin"
+      ],
+      "action": "Owner must identify an authorized tenant owner and obtain confirmation of the four real contexts, grants, allowed mutations and cleanup.",
+      "GitHubAdminDoesNotProveEntraAuthority": true
+    },
+    {
+      "gate": "G10",
+      "item": "private original backup and independent restore route",
+      "nominalDestinationOwner": null,
+      "keyCustodian": null,
+      "externalObserver": null,
+      "action": "Designated guest operator completes inventory/proposal; owners confirm private channel, authorized independent destination/capacity, key custody, observer, exclusive slot and RPO/RTO.",
+      "emptyLocalStagingIsNotBackup": true
+    }
+  ],
+  "preservation": {
+    "sameExistingHostG08ThenG10": true,
+    "newVMOrQuotaNotAutomaticallyRequired": true,
+    "pilotAndClawPreserved": true,
+    "oldSSHAndBlobFailuresAreBoundedHistoricalObservations": true,
+    "noNetworkChangeAuthorizedByTheseObservations": true
+  },
+  "prerequisites": {
+    "commonCandidateAndTree": null,
+    "migrationAck": null,
+    "releaseAck": null,
+    "verifiedG07Tar": null,
+    "QAReservation": null,
+    "recoveryReservation": null
+  },
+  "actions": {
+    "newOriginalGets": 0,
+    "ZIPGets": 0,
+    "guestChanges": false,
+    "repositoryRefsChanged": false,
+    "SettingsChanged": false,
+    "externalMessages": false,
+    "productionAuthorized": false
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "schema": "sf613-c22r3-focal-execution-authority-v1",
+  "status": "AUTHORIZED_ONE_CREATE_ONLY_ACTIVATION_AFTER_IMMEDIATE_PREFLIGHT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "/root",
+  "preparedAtUtc": "2026-11-28 11:21:49 UTC",
+  "userMandate": "Complete #613 and go-live through reviewed PRs into dev. CI execution is authorized; production cutover requires explicit user approval and is not authorized.",
+  "source": {
+    "commit": "c05fb0bbd7182c669d4905155e1ff0b0aa201840",
+    "tree": "e1bea29e74eedfbe1c6847da257f358e4ef6d45d",
+    "soleParent": "a0afd32f76c5c6e959ce36de6515a7f0b444e0ad",
+    "delta": "1M0A0D control correction",
+    "accumulatedDeltaFromS21": "3M0A0D",
+    "package": {
+      "gitBlob": "99bc58dccc04f8f7af2f12d831607f5615e394c0",
+      "bytes": 12090,
+      "sha256": "a815e7c56220bc172475d6a7acd52446d0c00844b0d7d662106e57d07a9e49b7",
+      "lf": 349,
+      "endsWithLF": true
+    },
+    "rootReview": {
+      "gitBlob": "ebaf90e2ee5bf5390d12af55431a461246bd69f4",
+      "bytes": 4356,
+      "sha256": "4b539808fd72d1b42159414e6c5fde7ee3e731410f536aff962525bf8a25c775",
+      "lf": 126,
+      "endsWithLF": true
+    },
+    "sourcePeer": {
+      "gitBlob": "95f72e194b8fa2383ad8890536974dbd955ef6d4",
+      "bytes": 13184,
+      "sha256": "125200a6e21ae93b5579f3fef0ef0e85358549d50902e457f0657d2d04b2ff38",
+      "lf": 275,
+      "endsWithLF": true
+    },
+    "controlPeer": {
+      "gitBlob": "2f1eaa99a2a121e4408a0896e2dc593c7651ad67",
+      "bytes": 7995,
+      "sha256": "6019eecff29429b9c35b5705b323032c53c79dce45bd58bfd3a0472c73c40910",
+      "lf": 189,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "f1d88805abdfc27e5fe0dbbf55bd3d4aa164aa46",
+    "tree": "e1c623d0cc96b37675deca90c4cd6ccd488dc552",
+    "soleParent": "c05fb0bbd7182c669d4905155e1ff0b0aa201840",
+    "delta": "2A0M0D",
+    "rootObjects": {
+      "gitBlob": "859fd06b375e5c64cc5963ba16195b02ff8feaa2",
+      "bytes": 5899,
+      "sha256": "d219711f5db61c1053c0440101cceed7e88fd53e332f561cd3c95e4a71554701",
+      "lf": 173,
+      "endsWithLF": true
+    },
+    "independentObjects": {
+      "gitBlob": "f27894b327ab960be27e0e0a914ac0d3f9e9607e",
+      "bytes": 11971,
+      "sha256": "ac4fc560e8b7ac31cdb79548042d9c25d256d1a7151288b8056d0d3fd7309718",
+      "lf": 365,
+      "endsWithLF": true
+    }
+  },
+  "driver": {
+    "gitBlob": "422bdd91a92ca2357788b3167d499477949aaea8",
+    "bytes": 15540,
+    "sha256": "9f4fa4b633c3a83647003bcdad5a2e8496617b3d9aa85ab43ce7f7b2889e09c2",
+    "lf": 220,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "binding": {
+    "gitBlob": "06f772bcafb26dd68a53ff7641f8c382c9e2c470",
+    "bytes": 2194,
+    "sha256": "e785137a92c04baa05b62878a3f9dcca2b6de43e5aad905f582351e4e17d280f",
+    "lf": 73,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "e47f245dfd7e35528ec2cf5b5efe0a9263fd7547",
+    "bytes": 3677,
+    "sha256": "264fe536b4f6caa063cc9f6f6db8c82b42f7c80743fef347a62dedd070e14af9",
+    "lf": 103,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "f89bd7bbe4bfccf65ddd5b59f9cd4d391fbdcc6c",
+    "bytes": 8844,
+    "sha256": "23761d59c785c05607fe3a7680efddf82ad843070b61886fd67468c492f3f46f",
+    "lf": 284,
+    "endsWithLF": true
+  },
+  "templatePeer": {
+    "gitBlob": "2f1eaa99a2a121e4408a0896e2dc593c7651ad67",
+    "bytes": 7995,
+    "sha256": "6019eecff29429b9c35b5705b323032c53c79dce45bd58bfd3a0472c73c40910",
+    "lf": 189,
+    "endsWithLF": true
+  },
+  "activation": {
+    "branch": "ci-run-sf613c22r3",
+    "createOnly": true,
+    "forceAllowed": false,
+    "oneActivationOnly": true,
+    "expectedWorkflow": ".github/workflows/test-ci.yml",
+    "workflow": {
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true
+    },
+    "expectedEvent": "push",
+    "expectedLinuxRunner": "ubuntu-24.04",
+    "jobTimeoutMs": 2700000,
+    "runDiscoveryWindowMs": 180000,
+    "automaticRerunOrRecoveryAllowed": false,
+    "preconditions": [
+      "No matching ref before creation",
+      "No previous run for exact focal head or intended branch",
+      "Reviewed source/snapshot identities and sole parents read back",
+      "All static and actual object reviews present",
+      "Protected source/product/archive refs unchanged at immediate preflight"
+    ]
+  },
+  "scope": {
+    "groups": 10,
+    "commands": 16,
+    "truncationFlags": 32,
+    "workingPins": 25,
+    "functionalProcesses": 6,
+    "staticTestDeclarations": 20,
+    "expectedReportEmissions": 9,
+    "workingPaths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+        "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+        "gitBlob": "aa62f8f6f1e5d70ddac73b1437d6dd1ea0ebafb0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "gitBlob": "6c34520bf11aa42c0d42244a830bf00433894757"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+        "gitBlob": "120f4169cec2e5e82a961399230476a83a5425b7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "gitBlob": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+      }
+    ],
+    "actualResults": null
+  },
+  "originalReception": {
+    "receiver": "/root",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "when": "Exactly one matching run/attempt 1 and both expected terminal jobs are recorded in the intake context.",
+    "preservation": "Preserve exact decoded originals in actual Git blobs with literal readback and full ordered recomposition before interpretation.",
+    "artifactZipGets": 0,
+    "closeAfterPreservation": true,
+    "reacquisitionAllowed": false,
+    "oldOriginals": "All originals through C22 failed focal inclusive are permanently CLOSED. Use actual preserved Git copies only."
+  },
+  "limits": {
+    "localRepositoryExecution": false,
+    "publicSourceRefMoved": false,
+    "productMerge": false,
+    "installedQualification": false,
+    "performanceClaim": false,
+    "productionAuthorized": false,
+    "buildChannelProdIsNotProductionCutover": true
+  },
+  "templateAmendment": {
+    "gitBlob": "24d48b7f2004d58b432541f1393a1456e856819f",
+    "bytes": 3713,
+    "sha256": "6bb7185e936bcbd6e5a3a05c6353a037c8bddbc0cfa7fcc5f6b53a7f7c4b9e83",
+    "lf": 117,
+    "endsWithLF": true
+  },
+  "manifestInheritance": "The original C22 focal manifest/bounds remain applicable with the one control pin and template amendment above; all counts, engine, argv, cwd and deadlines are unchanged.",
+  "priorNegativeReceipt": {
+    "gitBlob": "87d100fd740ab394f92fae20d0dae9be306b2a76",
+    "bytes": 5468,
+    "sha256": "b569399585d3acb67ebf5d0a259f41cad7c7e9757e42d49679895f806409c91e",
+    "lf": 175,
+    "endsWithLF": true
+  },
+  "notARerun": "New immutable corrected source/snapshot and one new run only; no rerun or receipt replacement of failed D22."
+}

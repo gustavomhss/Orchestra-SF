@@ -1,0 +1,427 @@
+{
+  "schema": "sf613-c22r5-a5-independent-diagnostic-reception-v1",
+  "status": "RECEIVED_DIAGNOSTIC_FAILURE_NO_QUALIFICATION",
+  "reviewer": "/root/review_archive",
+  "at": "2026-11-28 13:35:36 UTC",
+  "source": {
+    "commit": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+    "tree": "3666601c7e03036e4573d724394b8dfc254cb30a"
+  },
+  "snapshot": {
+    "commit": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9",
+    "tree": "fcec47ed77217b70a76a1b6a98321910ffd15f7b"
+  },
+  "run": {
+    "id": 46146541990,
+    "attempt": 1,
+    "conclusion": "failure",
+    "main": {
+      "job": 140983738715,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "job": 140986593617,
+      "conclusion": "success"
+    },
+    "branch": "ci-run-sf613c22a5",
+    "branchAbsent": true,
+    "headRunCount": 1
+  },
+  "authority": {
+    "root": {
+      "gitBlob": "78fc5592f796ac5cbf883af1fd2dffd32a2ddea5",
+      "bytes": 8158,
+      "sha256": "7afcfb56733421e5f34298fbce7ee5b71a009c784e3ac7fc65cf001cca5d5aec",
+      "lf": 212,
+      "endsWithLF": true
+    },
+    "purposeReview": {
+      "gitBlob": "7e7c73c6b31b938515912474ab584a60a7fa3a69",
+      "bytes": 8690,
+      "sha256": "422a19e590fd50488ff47157bdcf4980b9edccb168bebca0f367f19db377ba0e",
+      "lf": 216,
+      "endsWithLF": true
+    },
+    "purpose": "DIAGNOSTIC_ONLY",
+    "conditionalQualificationAckPreserved": {
+      "gitBlob": "692a4ec466259fd1321a714d8e97f9570d004234",
+      "bytes": 7889,
+      "sha256": "643492ce4db40c59baa0a4b3a1dc798639c6588ffe8f3b02158e79a67ea1e524",
+      "lf": 244,
+      "endsWithLF": true
+    },
+    "failedFocalStillBlocking": {
+      "gitBlob": "d4d1af07de701e010eb8cc55809270b7753e5d46",
+      "bytes": 18163,
+      "sha256": "9f3cb3e2d3ff46d55992685f944fe459a33efed13a78174c45991084cba24e6c",
+      "lf": 528,
+      "endsWithLF": true
+    }
+  },
+  "authenticatedInputs": {
+    "mainManifest": {
+      "gitBlob": "dabfcd80d3b0c25a712b54ba4dd43a6da2e5df8e",
+      "bytes": 7849,
+      "sha256": "6ee8a9802da5f1bf2f3cb3eaa241b2b23db6fd49041d3e22f8f4da84c6fc1acb",
+      "lf": 272,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "6ce442ab1c90aca6b86acbde4edc32ff70818bc1",
+      "bytes": 2282,
+      "sha256": "d645d3b77e0f9f0876ed0574c7bdb3dcee2d84b98bc3592b05094132b8f1f444",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "776c50608b1db81baadf33040b4a6b75b57de3ca",
+      "bytes": 1676,
+      "sha256": "da6ac8a4cbf660e2c152859fc544b80459c4b4d831d890b118a8695dced330f4",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "b38234eee16b3c776f31f034ef89a5ccd1921964",
+      "bytes": 43648,
+      "sha256": "400cfa653a6a2c78bd4b0aab34876975696ac515183df8b2d1cfe2397b87042d",
+      "lf": 830,
+      "endsWithLF": true
+    }
+  },
+  "preservation": {
+    "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+    "mainParts": 17,
+    "allRealPartGitShaAndSha256Verified": true,
+    "allSequentialByteAndUtf16BoundariesVerified": true,
+    "partMaximumBytes": 300000,
+    "lastPartBytes": 67192,
+    "mainWholeCalculatedOnly": {
+      "gitBlob": "9401376acf2294abc646d567494e9d8ad8a6de7a",
+      "bytes": 4867192,
+      "sha256": "ae4a5638b482b76671b0916fbcd7f1bc7dec4eb3d68b7a8335cac6a72944713a",
+      "lf": 1983,
+      "endsWithLF": true
+    },
+    "wholeGitBlobActuallyCreated": false,
+    "wholeCalculatedHashFetched": false,
+    "mainUtf16CodeUnits": 4862362,
+    "mainBomCodeUnitOffsets": [
+      0,
+      2101048,
+      4221683
+    ],
+    "mainBomByteOffsets": [
+      0,
+      2105861,
+      4226507
+    ],
+    "allPreserved": true,
+    "cleanupBytes": 2282,
+    "cleanupLF": 39,
+    "rootOriginalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "reviewerOriginalGets": 0,
+    "zipGets": 0,
+    "rootReportedPermanentClosureAt": "2026-11-28 13:07:09 UTC",
+    "historicalOriginalsRemainClosed": true
+  },
+  "observations": {
+    "originalSelection": {
+      "tests": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "actualInvocationLine": 1008,
+      "runCountLine": 1036,
+      "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "config": "e2e/playwright.production.config.ts",
+      "staticOriginalWaitsMs": {
+        "preview": 60000,
+        "repreview": 60000,
+        "portfolioEvaluate": 60000,
+        "sensitivity": 120000
+      },
+      "sourcePinsReused": "Exact already-audited13pin selection and295Boriginal request; no original test overlay."
+    },
+    "terminalCases": {
+      "failed": 1,
+      "passed": 1,
+      "failedFooterLine": 1916,
+      "passedFooterLine": 1918,
+      "totalDisplayedElapsed": "10.5m",
+      "failedCase": "wave five analytics: native scenarios, recorded results and sensitivity",
+      "passedCase": "wave five analytics: question catalog and original contextual BI"
+    },
+    "previewFailure": {
+      "requestLine": 1254,
+      "sequence": 3,
+      "method": "POST",
+      "ownerBinding": "exact",
+      "observedResponse": false,
+      "errorLine": 1278,
+      "error": "page.waitForResponse: Timeout60000ms exceeded while waiting for response",
+      "originalSpecLocation": "design-wave-five-analytics.spec.ts:72:32",
+      "stackLine": 1287,
+      "UI42Captures": 6,
+      "UI43Captures": 0,
+      "UI44Captures": 0,
+      "UI42CaptureNames": [
+        {
+          "line": 1186,
+          "name": "UI42-list-dark-desktop-test-data",
+          "width": 1440,
+          "stage": "list"
+        },
+        {
+          "line": 1198,
+          "name": "UI42-list-light-desktop-test-data",
+          "width": 1440,
+          "stage": "list"
+        },
+        {
+          "line": 1204,
+          "name": "UI42-list-dark-390-test-data",
+          "width": 390,
+          "stage": "list"
+        },
+        {
+          "line": 1210,
+          "name": "UI42-list-light-320-test-data",
+          "width": 320,
+          "stage": "list"
+        },
+        {
+          "line": 1232,
+          "name": "UI42-empty-authorized-case-test-data",
+          "width": 1440,
+          "stage": "configure"
+        },
+        {
+          "line": 1252,
+          "name": "UI42-configure-focused-candidate-test-data",
+          "width": 1440,
+          "stage": "configure"
+        }
+      ]
+    },
+    "historyPrecision": {
+      "sequence1": [
+        {
+          "line": 1212,
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 1,
+          "method": "POST",
+          "ownerBinding": "exact"
+        },
+        {
+          "line": 1214,
+          "operation": "decision-portfolio-results",
+          "phase": "native-request-failed",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 350
+        },
+        {
+          "line": 1216,
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 347,
+          "http": 200,
+          "acquisitionFailure": "response-body-unavailable"
+        }
+      ],
+      "sequence2": [
+        {
+          "line": 1234,
+          "operation": "decision-portfolio-results",
+          "phase": "native-request",
+          "sequence": 2,
+          "method": "POST",
+          "ownerBinding": "exact"
+        },
+        {
+          "line": 1236,
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 769,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      ],
+      "limit": "Sequence1 proves observedHTTP200 transport only: request-failed and response-body-unavailable are explicit, with no status/body. Only sequence2 has HTTP200/statusok/array. This differs from the previous E15 two-ok-history description."
+    },
+    "markerCounts": {
+      "SF_ANALYTICS_SOURCE": 45,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_DESIGN_DISCOVERY": 2,
+      "SF_OWNER_ADMISSION_READS": 8,
+      "SF_DESIGN_PREVIEW": 212,
+      "SF_DESIGN_STAGE_plainText": 92
+    },
+    "semanticUnion": {
+      "calculatedOnly": {
+        "gitBlob": "ac71f0758aa5f4fb960e9cd9d05223d5cb16d3c0",
+        "bytes": 34307,
+        "sha256": "a3553aceea1accaac0878382681c887f8e3e7c1cfbf314312bd4ec0cb37acf4a",
+        "lf": 97,
+        "endsWithLF": true
+      },
+      "standaloneGitBlobCreated": false,
+      "representation": "Exact decoded complete marker+JSON lines forSOURCE/CAPTURE/DIAGNOSTICS/SCOPE in observed log order, each withLF. No JPEG payload included.",
+      "rows": 97
+    },
+    "BI": {
+      "casePassed": true,
+      "captureCount": 40,
+      "captureAreas": {
+        "UI45": 7,
+        "UI46": 33
+      },
+      "BI01": {
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22,
+        "scalarDomObservations": 0
+      },
+      "BI06": {
+        "readbacks": 2,
+        "httpEach": 200,
+        "rowsEach": 3,
+        "numericValuesEach": 3,
+        "missingEach": 1,
+        "scalarDomObservations": {
+          "enUS": 3,
+          "ptBR": 3
+        },
+        "nativeResponseCDPObserved": true,
+        "originalSourceHttp": 200,
+        "outsideSelectedValue": {
+          "http": 403,
+          "status": "denied",
+          "reason": "bi-source-outside-selected-value"
+        }
+      },
+      "originalSourceIdentity": {
+        "samePublishedReference": true,
+        "exactValueAndDigestQueries": 2,
+        "originalProjectionRetained": true
+      },
+      "scope": {
+        "line": 1912,
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      },
+      "limitation": "These are exact current-run console assertions and the observed BIcase pass, not new area qualification. EmptyBI01scalar observations do not prove scalar equality."
+    },
+    "diagnostics": {
+      "consoleErrorArraysObservedEmpty": 4,
+      "pageErrorArraysObservedEmpty": 4,
+      "nativeViewObserved": "discovery/provider/view ready; UI42 Preview combinations Running; preview not available",
+      "nativeViewTextNotPixelInspection": true
+    },
+    "previews": {
+      "series": 47,
+      "chunks": 212,
+      "seriesIndicesAndCountsComplete": true,
+      "strictBase64AlphabetAndPaddingShape": true,
+      "perImageMaximumObservedLengthFromEncoding": 137711,
+      "perImageOriginalCap": 491520,
+      "firstCaseOrdinaryEncodedLengthEquivalentBytes": 432812,
+      "firstCaseFailureEncodedLengthEquivalentBytes": 110667,
+      "secondCaseOrdinaryEncodedLengthEquivalentBytes": 2956075,
+      "ordinaryPerTestInfoCap": 6291456,
+      "failureExemptFromCumulativeCap": true,
+      "totalLengthEquivalentBytes": 3499554,
+      "individualImagesDecoded": false,
+      "pixelsViewed": false,
+      "meaning": "Encoded preview sequences only. No image bytes were printed, rendered, edited or used for acceptance."
+    },
+    "artifact": {
+      "id": 15263679973,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45832544,
+      "sha256MetadataAndUploadLog": "7acc057851cde59b9557a3b799c13c277df6c1ebf814192776e53c7738781e09",
+      "expiresAt": "2026-12-05T13:00:53Z",
+      "uploadStepSucceeded": true,
+      "uploadReportedFiles": 147,
+      "uploadReportedFilesAreNotZipEntries": true,
+      "zipAcquired": false,
+      "zipCrcOrInventoryVerified": false
+    },
+    "parserNote": "The92 generic report-parser nonJSONrecords are all plain SF_DESIGN_STAGE strings, not malformed JSON receipts. They were classified separately, without changing original log bytes."
+  },
+  "checks": {
+    "count": 19,
+    "allPassed": true,
+    "items": [
+      "17 real parts authenticate and compose exact4,867,192-byte preserved UTF8 main",
+      "All three BOMs preserved at exact byte and UTF16 positions",
+      "Cleanup exact real single-part preservation",
+      "Correct original acquisitions once each and no ZIP",
+      "Exact reviewed source snapshot trees and attempt",
+      "New diagnostic authority does not grant qualification or merge",
+      "Both exact terminal jobs mainFAIL cleanupSUCCESS",
+      "Branch gone and one head run",
+      "Original two-test single-worker zero-retry repeat1 invocation",
+      "One failed first journey and one passed BI case",
+      "First preview original60000ms waiter at72:32 fails",
+      "History1 transport200 body unavailable and requestfailed;history2ok",
+      "Preview sequence3 request only no observed response",
+      "Six UI42captures no UI43 or UI44 and forty BIcaptures",
+      "BI original source checks and negative403 remain literal observations",
+      "BI01 scalarobservations empty and BI06en/ptBR3each",
+      "Ninety-two parser nonJSONrows are plain original SF_DESIGN_STAGE",
+      "Single artifact metadata agrees with upload log, no ZIP assertion",
+      "47 preview series212orderedchunks obey original per-image and per-case byte caps"
+    ]
+  },
+  "receptionFindings": [],
+  "conclusion": {
+    "diagnosticReceived": true,
+    "previewStillFailedAtOriginal60000msWait": true,
+    "exclusiveCauseEstablished": false,
+    "performanceImprovementEstablished": false,
+    "completeFocalAccepted": false,
+    "UI42_UI43_UI44Qualified": false,
+    "qualifiedAreaCountUnchanged": "12/15",
+    "newAreaAcceptances": 0,
+    "mergeApproved": false,
+    "goLiveApproved": false,
+    "productionApproved": false,
+    "completePngReaderEligible": false,
+    "reasonPngReaderIneligible": "Only6of33required UI42-UI44 captures observed; no UI43/UI44 captures. PNG reader remains separately UNBOUND.",
+    "oldEvidencePreserved": true
+  },
+  "reviewerActions": {
+    "gitCopiesOnly": true,
+    "newReceiptOnly": true,
+    "productEditsDuringReception": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "treesCommitsRefsRuns": 0
+  }
+}

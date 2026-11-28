@@ -1,0 +1,142 @@
+{
+  "schema": "sf-c22a5-final-diagnostic-receipt-v1",
+  "status": "RECEIVED_DIAGNOSTIC_FAILURE_NO_QUALIFICATION",
+  "at": {
+    "current_time": "2026-11-28 13:42:12 UTC"
+  },
+  "purpose": "DIAGNOSTIC_ONLY",
+  "source": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+  "sourceTree": "3666601c7e03036e4573d724394b8dfc254cb30a",
+  "snapshot": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9",
+  "snapshotTree": "fcec47ed77217b70a76a1b6a98321910ffd15f7b",
+  "run": 46146541990,
+  "attempt": 1,
+  "main": {
+    "job": 140983738715,
+    "status": "failure",
+    "manifest": {
+      "gitBlob": "dabfcd80d3b0c25a712b54ba4dd43a6da2e5df8e",
+      "bytes": 7849,
+      "sha256": "6ee8a9802da5f1bf2f3cb3eaa241b2b23db6fd49041d3e22f8f4da84c6fc1acb",
+      "lf": 272,
+      "endsWithLF": true
+    },
+    "bytes": 4867192,
+    "sha256": "ae4a5638b482b76671b0916fbcd7f1bc7dec4eb3d68b7a8335cac6a72944713a",
+    "parts": 17,
+    "wholeBlobActuallyCreated": false
+  },
+  "cleanup": {
+    "job": 140986593617,
+    "status": "success",
+    "manifest": {
+      "gitBlob": "776c50608b1db81baadf33040b4a6b75b57de3ca",
+      "bytes": 1676,
+      "sha256": "da6ac8a4cbf660e2c152859fc544b80459c4b4d831d890b118a8695dced330f4",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "whole": {
+      "gitBlob": "6ce442ab1c90aca6b86acbde4edc32ff70818bc1",
+      "bytes": 2282,
+      "sha256": "d645d3b77e0f9f0876ed0574c7bdb3dcee2d84b98bc3592b05094132b8f1f444",
+      "lf": 39,
+      "endsWithLF": true
+    }
+  },
+  "intake": {
+    "closed": true,
+    "at": {
+      "current_time": "2026-11-28 13:07:09 UTC"
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "branchRemoved": true,
+    "headRuns": 1
+  },
+  "reviews": {
+    "root": {
+      "gitBlob": "c60f2327765e8e3ac5caa09092e0dd16e3bb5fae",
+      "bytes": 3534,
+      "sha256": "75f1c6088dd9e141dcd4c70409e19bc47f25f66f42f3115772f8fd7ed73adc12",
+      "lf": 101,
+      "endsWithLF": true
+    },
+    "peer": {
+      "gitBlob": "ad1d5d48f222fa2b445faef23506a381484dd840",
+      "bytes": 14425,
+      "sha256": "79178a04a10fdf736412238829d46085f4771272a08581aa97e37afee954b3c3",
+      "lf": 427,
+      "endsWithLF": true
+    },
+    "extraction": {
+      "gitBlob": "57a09a79659f4759353d7f8dd265e8ec9129781d",
+      "bytes": 63927,
+      "sha256": "9f6d93f4f12c4c29f52037207e38db7c3fc4942357ac9bf44cea7cbc742ad834",
+      "lf": 870,
+      "endsWithLF": true
+    },
+    "JPEGDiagnosticOnly": {
+      "gitBlob": "6fad5f0f19ba46f3ecb58cd45e08c111b8e1b91d",
+      "bytes": 2133,
+      "sha256": "0f9d502ecc75640cf1fb63aa1ca3011c4a8090513a7102b3d4d76a51a6564fc2",
+      "lf": 59,
+      "endsWithLF": true
+    }
+  },
+  "results": {
+    "tests": 2,
+    "pass": 1,
+    "fail": 1,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "failedCase": "Native scenarios, recorded results and sensitivity: preview response not received within original60000ms",
+    "passedCase": "Question catalog and original contextual BI",
+    "captureRecords": 46,
+    "UI42": 6,
+    "UI43": 0,
+    "UI44": 0,
+    "UI45": 7,
+    "UI46": 33,
+    "history1": "HTTP200 with response-body-unavailable; no applicationstatus/body observed",
+    "history2": "HTTP200/statusok/array",
+    "previewSequence3": "request emitted; no response observed beforetimeout",
+    "exclusiveCauseEstablished": false
+  },
+  "artifact": {
+    "id": 15263679973,
+    "node_id": "MDg6QXJ0aWZhY3QxNTI2MzY3OTk3Mw==",
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 45832544,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15263679973",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15263679973/zip",
+    "expired": false,
+    "digest": "sha256:7acc057851cde59b9557a3b799c13c277df6c1ebf814192776e53c7738781e09",
+    "created_at": "2026-11-28T13:00:55Z",
+    "updated_at": "2026-11-28T13:00:55Z",
+    "expires_at": "2026-12-05T13:00:53Z",
+    "workflow_run": {
+      "id": 46146541990,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613c22a5",
+      "head_sha": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9"
+    }
+  },
+  "limits": {
+    "newUIAreasAccepted": 0,
+    "historicalAreasRetained": 12,
+    "totalAreas": 15,
+    "unsupportedControlAccepted": false,
+    "UI6FinalCandidateQualified": false,
+    "finalCandidate": null,
+    "finalTree": null,
+    "tar": null,
+    "zipAcquired": false,
+    "originalPNGPixelsInspected": false,
+    "productionAuthorized": false
+  },
+  "next": "Continue distinct preview and fallback investigation. Do not rerun unchanged originalAnalytics without a reviewed new purpose or product correction; preserve this failed diagnostic."
+}

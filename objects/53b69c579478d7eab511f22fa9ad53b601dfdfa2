@@ -1,0 +1,99 @@
+diff --git a/reader/sf613-original-artifact-reader.py b/reader/sf613-original-artifact-reader.py
+index 470ded51d5e417762da8ec2f9e07dea38a77abb8..c376f5d933c9803180a0c1bd08483211da0043d1 100644
+--- a/reader/sf613-original-artifact-reader.py
++++ b/reader/sf613-original-artifact-reader.py
+@@ -394,9 +394,15 @@
+ def ui_bad_constant(value):
+     raise ReceiptFailure("UI_JSON_NONFINITE_NUMBER")
+ 
++def ui_finite_float(value):
++    number = float(value)
++    need(number == number and abs(number) != float("inf"), "UI_JSON_NONFINITE_NUMBER")
++    return number
++
+ def ui_json(raw):
+     try:
+-        return json.loads(raw, object_pairs_hook=ui_unique_object, parse_constant=ui_bad_constant)
++        return json.loads(raw, object_pairs_hook=ui_unique_object,
++                          parse_constant=ui_bad_constant, parse_float=ui_finite_float)
+     except (ValueError, UnicodeError):
+         raise ReceiptFailure("UI_JSON_PARSE") from None
+ 
+@@ -981,10 +987,10 @@
+              "UI_ATTACHMENTS_SHAPE")
+         for attachment_index, attachment in enumerate(attachments):
+             need(isinstance(attachment, dict), "UI_ATTACHMENT_SHAPE")
+-            if attachment.get("contentType") == "image/png":
+-                need("body" not in attachment, "UI_PNG_ATTACHMENT_FILE_REQUIRED")
+-                member = ui_attachment_member(attachment.get("path"))
+-                owners.setdefault(member, []).append([index + 1, 1, attachment_index + 1])
++            attachment_path = attachment.get("path")
++            if attachment_path is not None:
++                need(isinstance(attachment_path, str), "UI_ATTACHMENT_PATH_TYPE")
++                owners.setdefault(attachment_path, []).append([index + 1, 1, attachment_index + 1])
+         captured = marker_stream(result_rows, index + 1)
+         need(len(captured["lines"]) <= CAP["traceRows"], "UI_MARKER_ROW_CAP")
+         all_markers.extend(captured["lines"])
+@@ -1058,7 +1064,7 @@
+     for name in names:
+         attachment_index, attachment = attachment_by_name[name]
+         member = ui_attachment_member(attachment["path"])
+-        need(owners.get(member) == [[1, 1, attachment_index]], "UI_ATTACHMENT_UNIQUE_RESULT_OWNER")
++        need(owners.get(attachment["path"]) == [[1, 1, attachment_index]], "UI_ATTACHMENT_UNIQUE_RESULT_OWNER")
+         matching = [item for item in FILES if item["archive"] == 0 and not item["directory"]
+                     and item["path"] == member]
+         need(len(matching) == 1, "UI_ATTACHMENT_EXACT_OUTER_MEMBER")
+diff --git a/.github/workflows/sf613-artifact-read.yml b/.github/workflows/sf613-artifact-read.yml
+index 3027452f5e809c860acdc3d35a461a848cd67e9b..e9e425bfd292280e031817489e5c126d14235603 100644
+--- a/.github/workflows/sf613-artifact-read.yml
++++ b/.github/workflows/sf613-artifact-read.yml
+@@ -20,7 +20,7 @@
+       - name: Verify original immutable artifact without checkout
+         env:
+           GH_TOKEN: ${{ github.token }}
+-          SF613_ARTIFACT_READER_SHA256: 8ed129fce381919739edbe7039450ac883f815a89b832af70553d022bf86b882
++          SF613_ARTIFACT_READER_SHA256: 2e748b99d8b807e2e663304f83e6b6846be68705e273a8a825cb8ed09eb24caa
+           SF613_ARTIFACT_READER_SOURCE: |
+             #!/usr/bin/env python3
+             """Receive a bound complete UI42-UI44 original PNG set; never execute repository code."""
+@@ -418,9 +418,15 @@
+             def ui_bad_constant(value):
+                 raise ReceiptFailure("UI_JSON_NONFINITE_NUMBER")
+             
++            def ui_finite_float(value):
++                number = float(value)
++                need(number == number and abs(number) != float("inf"), "UI_JSON_NONFINITE_NUMBER")
++                return number
++            
+             def ui_json(raw):
+                 try:
+-                    return json.loads(raw, object_pairs_hook=ui_unique_object, parse_constant=ui_bad_constant)
++                    return json.loads(raw, object_pairs_hook=ui_unique_object,
++                                      parse_constant=ui_bad_constant, parse_float=ui_finite_float)
+                 except (ValueError, UnicodeError):
+                     raise ReceiptFailure("UI_JSON_PARSE") from None
+             
+@@ -1005,10 +1011,10 @@
+                          "UI_ATTACHMENTS_SHAPE")
+                     for attachment_index, attachment in enumerate(attachments):
+                         need(isinstance(attachment, dict), "UI_ATTACHMENT_SHAPE")
+-                        if attachment.get("contentType") == "image/png":
+-                            need("body" not in attachment, "UI_PNG_ATTACHMENT_FILE_REQUIRED")
+-                            member = ui_attachment_member(attachment.get("path"))
+-                            owners.setdefault(member, []).append([index + 1, 1, attachment_index + 1])
++                        attachment_path = attachment.get("path")
++                        if attachment_path is not None:
++                            need(isinstance(attachment_path, str), "UI_ATTACHMENT_PATH_TYPE")
++                            owners.setdefault(attachment_path, []).append([index + 1, 1, attachment_index + 1])
+                     captured = marker_stream(result_rows, index + 1)
+                     need(len(captured["lines"]) <= CAP["traceRows"], "UI_MARKER_ROW_CAP")
+                     all_markers.extend(captured["lines"])
+@@ -1082,7 +1088,7 @@
+                 for name in names:
+                     attachment_index, attachment = attachment_by_name[name]
+                     member = ui_attachment_member(attachment["path"])
+-                    need(owners.get(member) == [[1, 1, attachment_index]], "UI_ATTACHMENT_UNIQUE_RESULT_OWNER")
++                    need(owners.get(attachment["path"]) == [[1, 1, attachment_index]], "UI_ATTACHMENT_UNIQUE_RESULT_OWNER")
+                     matching = [item for item in FILES if item["archive"] == 0 and not item["directory"]
+                                 and item["path"] == member]
+                     need(len(matching) == 1, "UI_ATTACHMENT_EXACT_OUTER_MEMBER")

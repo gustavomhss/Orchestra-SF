@@ -1,0 +1,507 @@
+{
+  "schema": "sf613-c22r7-focal-execution-authority-v1",
+  "status": "ROOT_AUTHORIZED_SINGLE_CONTROL_VERIFICATION_ACTIVATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "/root",
+  "preparedAtUtc": "2026-11-28 13:58:14 UTC",
+  "userMandate": "Continue diagnosis, necessary corrections and reviewed integration for #613 and go-live. This bounded Linux CI control verification is within that mandate. Production cutover remains subject to separate explicit user approval, absent.",
+  "purpose": "FOCAL_CONTROL_VERIFICATION_NOT_FINAL_CANDIDATE",
+  "source": {
+    "sha": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+    "soleParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "delta": "One existing control modified: remove R6 tracing and restore R5 with only unsupported240s cooperative/270s Bun; both product files literal.",
+    "rootCodeReview": {
+      "gitBlob": "04fe7977e90a5b5b123d71306f0c17fd8d1d66fc",
+      "bytes": 2978,
+      "sha256": "c57b9e19c32699adfe76268160bc8e67fdac89db8fc646a0585d1fcf551aa5e9",
+      "lf": 79,
+      "endsWithLF": true
+    },
+    "correctedManifest": {
+      "gitBlob": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+      "bytes": 13474,
+      "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+      "lf": 430,
+      "endsWithLF": true
+    },
+    "correctedBounds": {
+      "gitBlob": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+      "bytes": 18228,
+      "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+      "lf": 517,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "sha": "867df3c67f75eacd0912e172c108777477024967",
+    "tree": "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+    "soleParent": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+    "delta": "Exactly2A unchanged focal request and final reviewed bound driver",
+    "rootObjectReview": {
+      "gitBlob": "5d59502a2e0ce41411e9c4a642d2b4d3fbf0b835",
+      "bytes": 29089,
+      "sha256": "1a31f61d4163f6e28ee8bc362ea9acd6ac198978a5eb571433b5789fa960df9b",
+      "lf": 786,
+      "endsWithLF": true
+    }
+  },
+  "driver": {
+    "gitBlob": "c2fc68c0d49400fc2c909bb5f38c8539cea26f89",
+    "bytes": 15634,
+    "sha256": "a1d90b4a6e24427d732e3c0eeb6e6caab6d712eb21919f72195aaf56dfabe180",
+    "lf": 220,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "binding": {
+    "gitBlob": "f416ad0d93a70c346132cc3df8686283159e79d2",
+    "bytes": 3590,
+    "sha256": "8fffa9020a97e7bdae64242cc11e06d3da86ffedf4429b7f31586ee83e7df053",
+    "lf": 102,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "9ea3c3b16ec95d1f4fdeed6d053cb58550bd5017",
+    "bytes": 9572,
+    "sha256": "9b6f37fe02c8c902ed55a58b0f22f2e348f90b44418386a40b3719bf77036502",
+    "lf": 326,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "8bde245faf5ec1753ae4b57b226a4da379147d8e",
+    "bytes": 15288,
+    "sha256": "e1df4abd35eb2c8234d65e0463730f3d5d366bc7a8b85855f8e2f1e0e32c8279",
+    "lf": 498,
+    "endsWithLF": true
+  },
+  "independentStaticPeer": {
+    "gitBlob": "1c8621c058cf5a2de72a6a92424e51da51dad03c",
+    "bytes": 19832,
+    "sha256": "bb9304e2b7de08fa255911a2dfe7d2d85479982ea8b94a049dbc1c9c1b1e9d41",
+    "lf": 595,
+    "endsWithLF": true
+  },
+  "independentActualObjectsPeer": {
+    "gitBlob": "a66dc0f9c34d32a86255705ebbc2dc2c8a7a2339",
+    "bytes": 8421,
+    "sha256": "c4064113bd04f5acf7b015829947e33da4abb35230968c053ce777658f47918f",
+    "lf": 245,
+    "endsWithLF": true
+  },
+  "activation": {
+    "branch": "ci-run-sf613c22r7",
+    "createOnly": true,
+    "forceAllowed": false,
+    "oneActivationOnly": true,
+    "expectedWorkflow": ".github/workflows/test-ci.yml",
+    "workflow": {
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true
+    },
+    "expectedEvent": "push",
+    "expectedLinuxRunner": "ubuntu-24.04",
+    "jobTimeoutMs": 2700000,
+    "runDiscoveryWindowMs": 180000,
+    "automaticRerunOrRecoveryAllowed": false,
+    "preconditions": [
+      "No exact branch ref",
+      "No prior run for exact snapshot or branch",
+      "Actual source/snapshot sole-parent identities read back",
+      "Root and independent static and actual object reviews complete",
+      "Protected refs unchanged at activation preflight"
+    ]
+  },
+  "scope": {
+    "groups": 10,
+    "functionalProcesses": 6,
+    "commands": 16,
+    "truncationFlagsRequiredFalse": 32,
+    "workingPins": 25,
+    "expectedFunctionalDeclarations": 22,
+    "expectedReportEmissions": 11,
+    "C22ExpectedEmissions": 3,
+    "staticOutcomes": 17,
+    "outcomesPartition": [
+      15,
+      1,
+      1
+    ],
+    "wholeFiles": true,
+    "filtersAdded": false,
+    "workingPaths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+        "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+        "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+        "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "gitBlob": "6c34520bf11aa42c0d42244a830bf00433894757"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+        "gitBlob": "120f4169cec2e5e82a961399230476a83a5425b7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "gitBlob": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+      }
+    ],
+    "actualResults": null,
+    "progressPrefixRemoved": true,
+    "allThreeReportsRequired": true,
+    "allAssertionsRequired": true,
+    "noPartialUnsupportedAcceptance": true
+  },
+  "originalReception": {
+    "receiver": "/root",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "when": "Only after one exact matching run attempt1 and both terminal expected jobs are recorded in the intake context.",
+    "preservation": "Preserve each exact decoded original in actual Git blobs with literal readback and complete ordered recomposition before interpretation.",
+    "artifactZipGets": 0,
+    "closeAfterPreservation": true,
+    "reacquisitionAllowed": false,
+    "oldOriginals": "All streams through R6 focal and A5 Analytics permanently CLOSED; use preserved Git copies."
+  },
+  "limits": {
+    "controlCooperativeMs": [
+      12000,
+      12000,
+      50000,
+      50000,
+      240000
+    ],
+    "controlBunMs": [
+      15000,
+      15000,
+      60000,
+      60000,
+      270000
+    ],
+    "wholeNominalCooperativeMs": 364000,
+    "wholeNominalBunMs": 420000,
+    "controlProcessMs": 450000,
+    "controlParentMs": 510000,
+    "configuredCommandSumMs": 2070000,
+    "configuredParentSumMs": 2730000,
+    "jobMs": 2700000,
+    "parentSumExceedsJobMs": 30000,
+    "completionGuaranteed": false,
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "forceKillAfter": "5 seconds",
+    "unchangedAnalyticsWaitersMs": [
+      60000,
+      120000
+    ]
+  },
+  "priorNegativeReceipts": {
+    "R6": {
+      "gitBlob": "9d7ad023151159a193c93122cd4920f5572a3f04",
+      "bytes": 10381,
+      "sha256": "a51fa9a07678ad460b12e33b73a91e2af8ff2e55b792fc88851edeeb13f76a66",
+      "lf": 348,
+      "endsWithLF": true
+    },
+    "A5": {
+      "gitBlob": "ea72e908681dc0b3d65e9dcd700a387bc4c211c7",
+      "bytes": 4710,
+      "sha256": "1f3cb79f80b2c31b3da9aa8354bd91b692bbbfc36c792f1ecd2e465ff7c82774",
+      "lf": 142,
+      "endsWithLF": true
+    }
+  },
+  "superseded": {
+    "sha": "214097757329b78f66520b46c874bfcefcc51b37",
+    "tree": "e9bdf762b21b4c1bad8149c06aade7742424b37b",
+    "driver": {
+      "gitBlob": "78223cfef85e2266e320e13b2fec6db2a9320e8a",
+      "bytes": 15634,
+      "sha256": "dd42488f2587e9f82bbc33270102d54abc87fd9bffd9e957851b5f84ee1895db",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "reason": "Superseded before activation: stale G1 criterionChecksControlsMs telemetry corrected by independently reviewed carrier 2705049e; no ref or run ever created.",
+    "activated": false
+  },
+  "notARerun": "New reviewed control budget and final carrier snapshot. Old refs/runs/original receptions are not retried or reopened.",
+  "preflight": {
+    "at": "2026-11-28 13:57:48 UTC",
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "8d383d5e1b1eb5a745940ab57603df6dce3bfa8d"
+    },
+    "branch": "ci-run-sf613c22r7",
+    "newBranchAbsent": true,
+    "headRuns": 0,
+    "branchRuns": 0,
+    "supersededHeadRuns": 0,
+    "raw": {
+      "dev": [
+        {
+          "ref": "refs/heads/dev",
+          "node_id": "REF_kwDOVsSYpq5yZWZzL2hlYWRzL2Rldg",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/dev",
+          "object": {
+            "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+            "type": "commit",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+          }
+        }
+      ],
+      "sf-design-next": [
+        {
+          "ref": "refs/heads/sf-design-next",
+          "node_id": "REF_kwDOVsSYprlyZWZzL2hlYWRzL3NmLWRlc2lnbi1uZXh0",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf-design-next",
+          "object": {
+            "sha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+            "type": "commit",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/0a1247db9a16f9eead04788a76d25723672c7e6a"
+          }
+        }
+      ],
+      "sf613-astra-finish": [
+        {
+          "ref": "refs/heads/sf613-astra-finish",
+          "node_id": "REF_kwDOVsSYpr1yZWZzL2hlYWRzL3NmNjEzLWFzdHJhLWZpbmlzaA",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-astra-finish",
+          "object": {
+            "sha": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+            "type": "commit",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+          }
+        }
+      ],
+      "sf613-ledger": [
+        {
+          "ref": "refs/heads/sf613-ledger",
+          "node_id": "REF_kwDOVsSYprdyZWZzL2hlYWRzL3NmNjEzLWxlZGdlcg",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-ledger",
+          "object": {
+            "sha": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+            "type": "commit",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/b6278bcd02c544a5583d978a8b48583798bf6ebe"
+          }
+        }
+      ],
+      "sf613-evidence": [
+        {
+          "ref": "refs/heads/sf613-evidence",
+          "node_id": "REF_kwDOVsSYprlyZWZzL2hlYWRzL3NmNjEzLWV2aWRlbmNl",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-evidence",
+          "object": {
+            "sha": "8d383d5e1b1eb5a745940ab57603df6dce3bfa8d",
+            "type": "commit",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/8d383d5e1b1eb5a745940ab57603df6dce3bfa8d"
+          }
+        }
+      ],
+      "branch": [],
+      "headruns": {
+        "total_count": 0,
+        "workflow_runs": []
+      },
+      "branchruns": {
+        "total_count": 0,
+        "workflow_runs": []
+      },
+      "supersededHeadRuns": {
+        "total_count": 0,
+        "workflow_runs": []
+      },
+      "sourceCommit": {
+        "sha": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+        "node_id": "C_kwDOVsSYptoAKGFkM2E0YTc1MjdiYWYxZTA5MmU4N2I1NDc4NjI2YjJmMGEzYmU1N2M",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-28T13:43:42Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-28T13:43:42Z"
+        },
+        "tree": {
+          "sha": "11bf210f469be26630c39db586bcfcce87e0de1b",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/11bf210f469be26630c39db586bcfcce87e0de1b"
+        },
+        "message": "test(sucafina): budget complete fallback verification",
+        "parents": [
+          {
+            "sha": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/c4bd85e5d2683cc116993788269bb6869e8552ac",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/c4bd85e5d2683cc116993788269bb6869e8552ac"
+          }
+        ],
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "snapshotCommit": {
+        "sha": "867df3c67f75eacd0912e172c108777477024967",
+        "node_id": "C_kwDOVsSYptoAKDg2N2RmM2M2N2Y3NWVhY2QwOTEyZTE3MmMxMDg3Nzc0NzcwMjQ5Njc",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/867df3c67f75eacd0912e172c108777477024967",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/867df3c67f75eacd0912e172c108777477024967",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-28T13:54:16Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-28T13:54:16Z"
+        },
+        "tree": {
+          "sha": "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/4c3a823e9e8f96a802c82d8298ba185f1377271b"
+        },
+        "message": "test(sucafina): verify complete criterion fallback",
+        "parents": [
+          {
+            "sha": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ad3a4a7527baf1e092e87b5478626b2f0a3be57c"
+          }
+        ],
+        "verification": {
+          "verified": false,
+          "reason": "unsigned",
+          "signature": null,
+          "payload": null,
+          "verified_at": null
+        }
+      },
+      "workflow": {
+        "present": true,
+        "path": ".github/workflows/test-ci.yml",
+        "entry": {
+          "path": "test-ci.yml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+          "size": 18476,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8cdc9485b3c26b75b6157981ca5c3300b1847151"
+        },
+        "trees": [
+          "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+          "7663f4b9fe0fdee867137b9e719f29058339317d",
+          "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7"
+        ]
+      }
+    }
+  },
+  "qualification": {
+    "runtimeAccepted": false,
+    "installedAreasAdded": 0,
+    "finalC613Selected": false,
+    "tar": null,
+    "productionAuthorized": false,
+    "newAnalyticsAuthorized": false
+  }
+}

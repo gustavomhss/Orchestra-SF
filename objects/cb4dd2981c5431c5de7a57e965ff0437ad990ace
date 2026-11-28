@@ -1,0 +1,517 @@
+{
+  "schema": "sf613-c22-r7-control-bounds-v1",
+  "status": "PROPOSED_FINITE_CONTROL_BUDGET_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "executedR6": {
+      "git": "cd2e9572a5038401ae7bf98d8ed4ef0b2ae678ee",
+      "bytes": 21751,
+      "sha256": "7dedd3f98a9f67d963ba6ba09a0ab2c40ccaba6da28c1604b8eaf2f46a82414f",
+      "lf": 621,
+      "endsWithLF": true
+    },
+    "literalR5": {
+      "git": "23fe5500297968e7f5effd8d3d5f5a8fecd63e5b",
+      "bytes": 12984,
+      "sha256": "66e58a26462b6001f300762301676ef4f9a6d138c099f94d60f9ca5150057817",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "inheritedR5Bounds": {
+      "git": "e2a2cb1fdba77bfb717c727b664a125314582c62",
+      "bytes": 14684,
+      "sha256": "ebd54bd954d5d6cbb076ff210cc91fccfa16567466cb39aa92c692e89abc25b6",
+      "lf": 380,
+      "endsWithLF": true
+    },
+    "immediateParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "immediateParentTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d"
+  },
+  "test": {
+    "git": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "bytes": 44338,
+    "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+    "lf": 766,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "git": "76f456f855b45ef47d70cc2192c5497b5690361f",
+    "bytes": 21048,
+    "sha256": "2e9a2d1b5757abbadfafa608e9efcb2c5d330b6dbc1d7009a31b0e9c8c34af4f",
+    "lf": 196,
+    "endsWithLF": true
+  },
+  "patch": {
+    "git": "8357b194b658d6399b06f22363068db7d232acaa",
+    "bytes": 8557,
+    "sha256": "54f1253b51d4cf0fb33493406b65782d009eba25bef93d2e7131bfa2b12bb0b4",
+    "lf": 146,
+    "endsWithLF": true
+  },
+  "evidence": {
+    "run": 46149115180,
+    "attempt": 1,
+    "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+    "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+    "snapshotTree": "5daaac91ffac218091a826d09468859bdcb44826",
+    "mainJob": 140991547681,
+    "mainConclusion": "failure",
+    "cleanupJob": 140992991435,
+    "cleanupConclusion": "success",
+    "main": {
+      "git": "2c2a66c1baffc0f9a3c6e72d1125528595a1c1d6",
+      "bytes": 134955,
+      "sha256": "c98ccf7b804db4217d5aa829dae79b7e82c4696edb6f00e5460033ca5db44780",
+      "lf": 1053,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "git": "2c721c85838421751233e67b34beb5cfb1e41a61",
+      "bytes": 1695,
+      "sha256": "7515a8106c80182bc9ae298e851198fa59741230219836369de217a04ee3ee10",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "git": "d25b0237500957f032e125be88624d27d7e6639f",
+      "bytes": 2282,
+      "sha256": "10ed13d0e79af254edf9d91fd3dd8e6b8137bcf9fba89eaa3894d7e691afb256",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "context": {
+      "git": "bc6d5e0731acc6c411e329d76cfd46a003a2bb71",
+      "bytes": 42103,
+      "sha256": "e47756685f6a2723d904b16547d1715a9eb89452221f25600e83786debaa852c",
+      "lf": 804,
+      "endsWithLF": true
+    },
+    "originalsClosedByRoot": "13:27:14 UTC",
+    "onlyGitCopiesReadByAuthor": true,
+    "independentDataChecks": 35,
+    "allPositive": true,
+    "currentResults": {
+      "functionalPass": 21,
+      "functionalFail": 1,
+      "functionalAssertions": 2682,
+      "outerPass": 9,
+      "outerFail": 1,
+      "outerAssertions": 49,
+      "commands": 16,
+      "falseTruncationFlags": 32,
+      "reports": 10,
+      "unsupportedReportPresent": false,
+      "explicitReadReached": false
+    },
+    "progress": {
+      "prefix": "SF_COMPOSITION_PROGRESS ",
+      "count": 10,
+      "suppression": false,
+      "clock": "performance.now relative to entry into the native fixture",
+      "records": [
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 1,
+          "measurement": 1,
+          "point": "bind-action-enter",
+          "proofOrdinal": 0,
+          "elapsedMs": 29472
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 2,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 29868
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 3,
+          "measurement": 1,
+          "point": "observer-post-proof-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 52076
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 4,
+          "measurement": 1,
+          "point": "work-enter",
+          "proofOrdinal": 1,
+          "elapsedMs": 52170
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 5,
+          "measurement": 1,
+          "point": "work-await-returned",
+          "proofOrdinal": 1,
+          "elapsedMs": 58258
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 6,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 58514
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 7,
+          "measurement": 1,
+          "point": "observer-post-proof-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 80960
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 8,
+          "measurement": 1,
+          "point": "work-enter",
+          "proofOrdinal": 2,
+          "elapsedMs": 81057
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 9,
+          "measurement": 1,
+          "point": "work-await-returned",
+          "proofOrdinal": 2,
+          "elapsedMs": 87301
+        },
+        {
+          "schema": "sf-composition-progress-v1",
+          "fixture": "comparison-criteria-unsupported",
+          "clock": "performance.now",
+          "origin": "native-fixture-entry",
+          "sequence": 10,
+          "measurement": 1,
+          "point": "proof-enter",
+          "proofOrdinal": 3,
+          "elapsedMs": 87517
+        }
+      ],
+      "interpretation": "Actual finite prefix; work-await-returned precedes acceptance and guard checks. No success/terminal is inferred from finally markers or missing records."
+    },
+    "finalReceipt": null,
+    "preservation": "R6 and all earlier negative receipts remain historical; this proposal does not reclassify them or transfer successful earlier reports to a future run.",
+    "independentPeer": {
+      "git": "31ed0848ab52e02b47c5aafe0816e6abd41cd04d",
+      "bytes": 29752,
+      "sha256": "4c0a33069bc15bfd7139c6bf0461988a3bb76edbdc63407985dcada0d5da74db",
+      "lf": 955,
+      "endsWithLF": true
+    }
+  },
+  "justification": {
+    "mechanism": "A complete successful unsupported bind requires three validate calls: prewrite plus two in its readback. The separate explicit read requires two further validate calls. Each retains verifyComparison then the post-proof criterion batch; source product and native fixtures remain literal.",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "git": "0b03c45e7288985b99914c186522bf062f9e3595",
+        "bytes": 15053,
+        "sha256": "a6aa3b198c2c4340697c4d635c7480d2d62907162eba8dcfa1d03a57fd66b006",
+        "lf": 129,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "git": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a",
+        "bytes": 15111,
+        "sha256": "da953ef0345f54ac4b2818a462ee6a8f62bac407cac5cc6abad5800d22d20364",
+        "lf": 181,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "git": "6c34520bf11aa42c0d42244a830bf00433894757",
+        "bytes": 7129,
+        "sha256": "3fe3f4f2e98d7e37a90164f80cdaf4d69a163ac92cff697053ebf351a44ff46a",
+        "lf": 107,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "git": "baef3e2fe2169bc556d0358eac8cc74419a4b697",
+        "bytes": 16776,
+        "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+        "lf": 229,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "git": "3be682e658192bd3fe9c14805fb9e15591f7cc80",
+        "bytes": 80982,
+        "sha256": "176cbd4105a73e90d22d10de3b19443a14de6206001e9a2b4a5f6dcefc3d0688",
+        "lf": 820,
+        "endsWithLF": true
+      }
+    ],
+    "observed": {
+      "preludeBeforeFirstProofMs": 29868,
+      "firstProofToObserverMs": 22208,
+      "firstWorkMs": 6088,
+      "firstProofThroughWorkContinuationMs": 28390,
+      "secondProofToObserverMs": 22446,
+      "secondWorkMs": 6244,
+      "secondProofThroughWorkContinuationMs": 28787,
+      "interCycleGapsMs": [
+        256,
+        216
+      ],
+      "thirdProofEnter": { "elapsedMs": 87517, "clock": "performance.now", "origin": "native-fixture-entry" },
+      "deadlineFinally": { "elapsedMs": 105029, "clock": "performance.now", "origin": "deadline creation before native fixture entry" },
+      "durationBetweenTheseRecords": null,
+      "crossClockSubtractionValid": false
+    },
+    "sizingExample": {
+      "assumption": "Hypothetically repeat the longer of the two observed proof-through-work-continuation brackets five times and four gaps of256ms after the observed prelude on the native-fixture-entry clock. This excludes the offset from the outer deadline origin and is not a complete-test duration estimate.",
+      "formula": "29868 + 5*28787 + 4*256",
+      "resultMs": 174827,
+      "empiricallyEstablishedMinimum": false,
+      "performancePrediction": false
+    },
+    "decision": "A finite240s cooperative /270s Bun budget is authorized for the complete unsupported control. The extra room covers unobserved remaining work and overhead without reducing the five required validations. It is not proof that the control or job will finish.",
+    "limits": [
+      "Two cycles completed and a third began; this demonstrates advancement during the trace, not exclusive CPU cost or a universal absence of blocking.",
+      "The third validation, successful bind/readback and explicit read were not completed in R6; their durations cannot be recovered from the censored prefix.",
+      "The old105s envelope failed; this alone does not establish a product defect or a minimum adequate budget.",
+      "The real fixture uses a replacementRef unsupported by the closed Finance pair. It is not a measured model for the original UI preview.",
+      "The parent deadline sum exceeds the unchanged45min workflow cap; global termination can still censor the run.",
+      "The30s proof fence, all product authority/freshness/receivers and Analytics60/120s waiters remain literal."
+    ]
+  },
+  "budgets": {
+    "declarations": [
+      {
+        "scenario": "comparison-preferences-original-callback",
+        "cooperativeMs": 12000,
+        "bunMs": 15000,
+        "changed": false
+      },
+      {
+        "scenario": "comparison-preferences-native-readback",
+        "cooperativeMs": 12000,
+        "bunMs": 15000,
+        "changed": false
+      },
+      {
+        "scenario": "single-criterion-and-protocol",
+        "cooperativeMs": 50000,
+        "bunMs": 60000,
+        "changed": false
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "cooperativeMs": 50000,
+        "bunMs": 60000,
+        "changed": false
+      },
+      {
+        "scenario": "unsupported-planner-closure",
+        "cooperativeMs": 240000,
+        "bunMs": 270000,
+        "previousCooperativeMs": 105000,
+        "previousBunMs": 120000,
+        "changed": true
+      }
+    ],
+    "wholeFileNominalCooperativeMs": 364000,
+    "wholeFileNominalBunMs": 420000,
+    "processMs": 450000,
+    "parentMs": 510000,
+    "nominalProcessMinusBunMs": 30000,
+    "nominalParentMinusProcessMs": 60000,
+    "focal": {
+      "groups": 10,
+      "commands": 16,
+      "truncationFlagsRequiredFalse": 32,
+      "workingPins": 25,
+      "functionalProcesses": 6,
+      "expectedStaticDeclarations": 22,
+      "expectedReportEmissions": 11,
+      "commandConfiguredCeilingSumMs": 2070000,
+      "parentConfiguredCeilingSumMs": 2730000,
+      "jobMs": 2700000,
+      "parentSumExceedsJobMs": 30000,
+      "guaranteedToFit": false
+    },
+    "analytics": {
+      "previewWaitMs": 60000,
+      "sensitivityWaitMs": 120000,
+      "changed": false,
+      "newRunAuthorized": false
+    },
+    "finalGlobalPackage": {
+      "base": "D32",
+      "revision": "D33",
+      "onlyGroupChanged": 24,
+      "processMs": 450000,
+      "parentMs": 510000,
+      "groups": 28,
+      "commandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78,
+      "globalProcessMs": 2100000,
+      "technicalStepMs": 2400000,
+      "jobMs": 2700000,
+      "finalizerMs": 180000,
+      "globalCapsChanged": false,
+      "finalBindings": "UNBOUND",
+      "runtimeResults": null
+    }
+  },
+  "reports": {
+    "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION ",
+    "schema": "sf-c22-comparison-criteria-observation-v2",
+    "emissionsExpected": 3,
+    "outcomesExpected": 17,
+    "partition": [
+      15,
+      1,
+      1
+    ],
+    "qualification": false,
+    "models": [
+      {
+        "scenario": "single-criterion-and-protocol",
+        "bytes": 623,
+        "sha256": "618effd8bc9a7bdcb086cb8deb6a30f56816dfa1b65bdec751c9f144a714932e",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "bytes": 316,
+        "sha256": "ed8d1285741c5117527eff39a1f6712d0d0e7222e61f977a4592c2ef29fe2907",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      },
+      {
+        "scenario": "unsupported-planner-closure",
+        "bytes": 296,
+        "sha256": "b7f9e4df187383d5682d91b7763bd120daec6d8a7a266bfc62f14cb41b7bf91f",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      }
+    ],
+    "required": "All three distinct scenario reports remain required; first/two reports do not certify the later scenario.",
+    "runtimeAssertions": null
+  },
+  "preservation": {
+    "unchangedNativeFixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+      "git": "120f4169cec2e5e82a961399230476a83a5425b7",
+      "bytes": 11755,
+      "sha256": "a5ab56d35dfb0e8c7824110c83e4e33496a6bf39815a3ec5a51cc5e3dd411355",
+      "lf": 148,
+      "endsWithLF": true,
+      "literal": true
+    },
+    "unchangedDeadlineHelper": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "git": "3eb140557b597156baf52578d8981d332e52aef3",
+      "bytes": 2313,
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "lf": 41,
+      "endsWithLF": true,
+      "literal": true
+    },
+    "noAssertionsRemoved": true,
+    "noProductMutation": true,
+    "noCloneElision": true,
+    "noRevalidationRemoval": true,
+    "noExtraScheduling": true,
+    "noResetOrMockNativeMethodsAdded": true,
+    "protocolAndReportsLiteral": true,
+    "singleAndMultipleUnchanged": true,
+    "oldDeclarationsAndImportsUnchanged": true,
+    "AnalyticsPreviewWaitMs": 60000,
+    "AnalyticsSensitivityWaitMs": 120000,
+    "analyticsChanged": false,
+    "progressTracingRemoved": true,
+    "restoredR5ExceptTwoBudgetValues": true,
+    "map17Literal": true,
+    "productImages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+        "postimage": {
+          "git": "0b03c45e7288985b99914c186522bf062f9e3595",
+          "bytes": 15053,
+          "sha256": "a6aa3b198c2c4340697c4d635c7480d2d62907162eba8dcfa1d03a57fd66b006",
+          "lf": 129,
+          "endsWithLF": true
+        },
+        "literal": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "postimage": {
+          "git": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a",
+          "bytes": 15111,
+          "sha256": "da953ef0345f54ac4b2818a462ee6a8f62bac407cac5cc6abad5800d22d20364",
+          "lf": 181,
+          "endsWithLF": true
+        },
+        "literal": true
+      }
+    ]
+  },
+  "acceptance": {
+    "allFiveDeclarationsRequired": true,
+    "allThreeScenarioReportsRequired": true,
+    "noPrematureAggregate": true,
+    "expectedOutcomesPartition": [
+      15,
+      1,
+      1
+    ],
+    "actualAssertions": null,
+    "actualReports": null,
+    "runtimeQualification": false
+  },
+  "authorization": {
+    "scope": "Git blobs and literal readbacks only",
+    "treeCreated": false,
+    "commitCreated": false,
+    "refChanged": false,
+    "runStarted": false,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "repoCodeExecuted": false,
+    "newOriginalAnalyticsAuthorized": false
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema": "sf-c22r7-root-source-review-v1",
+  "status": "ACK_STATIC_TEST_ONLY_PENDING_PEER",
+  "at": {
+    "current_time": "2026-11-28 13:43:37 UTC"
+  },
+  "base": {
+    "sha": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "tree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d"
+  },
+  "test": {
+    "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "bytes": 44338,
+    "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+    "lf": 766,
+    "endsWithLF": true
+  },
+  "patch": {
+    "gitBlob": "8357b194b658d6399b06f22363068db7d232acaa",
+    "bytes": 8557,
+    "sha256": "54f1253b51d4cf0fb33493406b65782d009eba25bef93d2e7131bfa2b12bb0b4",
+    "lf": 146,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "gitBlob": "76f456f855b45ef47d70cc2192c5497b5690361f",
+    "bytes": 21048,
+    "sha256": "2e9a2d1b5757abbadfafa608e9efcb2c5d330b6dbc1d7009a31b0e9c8c34af4f",
+    "lf": 196,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "3b3ab8a4d8990993d2e250054c5bdef727291978",
+    "bytes": 13474,
+    "sha256": "a23b9912a4bd861e3e02c83bace775b4070c12a4a4c29d598fc04f9a8b29da95",
+    "lf": 430,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "d6a16762b8db6563a1fc4a621ccc1b9a8e60c533",
+    "bytes": 17871,
+    "sha256": "8554f07954687d4c35f7bd34c0a708d5ffa3fb5d2197e92d4a37442fe3b02cf3",
+    "lf": 516,
+    "endsWithLF": true
+  },
+  "checks": {
+    "literalR5PlusTwoBudgets": true,
+    "revertBudgetsLiteralR5": true,
+    "patchR6ToR7": true,
+    "patchR7ToR6": true,
+    "traceRemoved": true,
+    "declarations5": true,
+    "expectSites125": true,
+    "awaits73": true,
+    "reports3": true,
+    "derivationForwardInverse": true
+  },
+  "basis": {
+    "negative": {
+      "gitBlob": "9d7ad023151159a193c93122cd4920f5572a3f04",
+      "bytes": 10381,
+      "sha256": "a51fa9a07678ad460b12e33b73a91e2af8ff2e55b792fc88851edeeb13f76a66",
+      "lf": 348,
+      "endsWithLF": true
+    },
+    "requiredVerificationCycles": "3 within bind including readback, then2 in explicit read",
+    "observedOnly": "Two complete measured post-proof cycles and entry of third before cooperative abort; no complete fallback success or reliable totalduration.",
+    "clockSeparation": true
+  },
+  "assessment": [
+    "Removes the diagnostic tracing completely, returning to the literal R5 test with only two unsupported-budget constants changed.",
+    "All5test declarations,125expect sites,73awaits,3reports and17outcomes retained; product code and30second proof fence unchanged.",
+    "Finite240s cooperative/270s Bun budget dimensions the full required composition after105s was observed to stopduringthirdverification. Passing is not assumed.",
+    "Other scenarios and originalAnalytics60/120second waits unchanged.",
+    "Whole-file450s process/510s parent and aggregate limits must be reconciled in the carrier andG24 wrapper before execution; no activation by this source review."
+  ],
+  "qualification": false,
+  "productionAuthorized": false
+}

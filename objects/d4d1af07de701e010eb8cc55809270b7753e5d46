@@ -1,0 +1,528 @@
+{
+  "schema": "sf613-c22r5-independent-focal-reception-v1",
+  "status": "RECEIVED_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "reviewer": "/root/review_archive",
+  "at": "2026-11-28 12:43:25 UTC",
+  "scope": "Independent reception of actual preserved Git copies only. No original log/ZIP acquisition, product execution, source/tree/commit/ref/run mutation.",
+  "source": {
+    "commit": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+    "tree": "3666601c7e03036e4573d724394b8dfc254cb30a",
+    "independentObjectReview": {
+      "gitBlob": "e4cd00d020b86fb2abf5ebd2a5fe9d5b16cf2abc",
+      "bytes": 11522,
+      "sha256": "adf6f9b2dc1c48fad2b6dbb72c609632eddbeff1ff897cbd74bc52e7581d470c",
+      "lf": 322,
+      "endsWithLF": true
+    }
+  },
+  "focal": {
+    "commit": "1ec21ba381a2ae12c313c958f9610f276ce1d30b",
+    "tree": "946c8a0cf366fee2aa7898d4328cff89f2b881d9",
+    "runId": 46144857724,
+    "attempt": 1,
+    "runConclusion": "failure",
+    "mainJobId": 140978539039,
+    "mainConclusion": "failure",
+    "cleanupJobId": 140979897692,
+    "cleanupConclusion": "success",
+    "authority": {
+      "gitBlob": "e89915b9e79a872578a78f1420893bd491c5053f",
+      "bytes": 11267,
+      "sha256": "87d7e2559e8fdce9044f59a0e0cded4b7bf182bef75d585587de7866219c5c44",
+      "lf": 303,
+      "endsWithLF": true
+    },
+    "runBinding": {
+      "gitBlob": "14e4097c718020de5f8efec49b020831028f0846",
+      "bytes": 1231,
+      "sha256": "8cee0543442bf4807e87e9abb86d27172e3b327060b4c1503bebeff342eee9f3",
+      "lf": 38,
+      "endsWithLF": true
+    }
+  },
+  "authenticatedCopies": {
+    "main": {
+      "gitBlob": "777bcd2acd9e9b4d69f83ec6d6f0f8575b2c2e07",
+      "bytes": 131435,
+      "sha256": "9e408d1f81087b35bf2360bd51d157f97402c562ee3ef7ca5ae114f3b3b22df3",
+      "lf": 1033,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "efa7e759a1c39593eb8e4235b1270b32998172d4",
+      "bytes": 1695,
+      "sha256": "1eb7c2821b51cf54152cad79ef9ab022f743ff5a2f2500237c9fd0acbbc79609",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "d543c531a86fbd8d8d97746620bd75926b16b4e9",
+      "bytes": 2282,
+      "sha256": "e71fc89a7d05ea4c23a49c75343ebd3d3c676868b9ae88458aaa847356e6060d",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "f427155e5c10ba1a33f2eb5c1dc8207e23e1b2e3",
+      "bytes": 1682,
+      "sha256": "02daca06b2a26b19e4f5c0ce57f935c46b9c93f2d15779fc59acbb1daa7ea1d6",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "f9f3a9c0bd8497afdcea4cb2d9471993377f0912",
+      "bytes": 25766,
+      "sha256": "140cbf6aeff2882b98d7fd04435a41329dad9b380f0595a384f61300d3bb4590",
+      "lf": 562,
+      "endsWithLF": true
+    }
+  },
+  "preservation": {
+    "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+    "rootOriginalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "reviewerOriginalGets": 0,
+    "zipGets": 0,
+    "rootReportedPermanentClosureAt": "2026-11-28 12:35:54 UTC",
+    "main": {
+      "lf": 1033,
+      "utf16CodeUnits": 131433,
+      "initialBOMPreserved": true
+    },
+    "cleanup": {
+      "lf": 39,
+      "utf16CodeUnits": 2280,
+      "initialBOMPreserved": true
+    },
+    "oneRealPartEach": true,
+    "literalFingerprintsAndBoundaries": true,
+    "reacquisitionAllowed": false
+  },
+  "observations": {
+    "commands": {
+      "count": 16,
+      "zeroExitCount": 15,
+      "all32CaptureFlagsFalse": true,
+      "receiptLines": [
+        746,
+        750,
+        753,
+        760,
+        779,
+        801,
+        806,
+        811,
+        814,
+        819,
+        822,
+        826,
+        832,
+        848,
+        862,
+        876
+      ],
+      "onlyNonzero": {
+        "gate": "Comparison criterion observation whole-file",
+        "line": 876,
+        "exitCode": 1,
+        "durationMs": 173696
+      },
+      "bothPackageTypechecksPassed": true
+    },
+    "identityPreambles": 10,
+    "workingPins": 25,
+    "workingPinsExactToObjectReview": {
+      "gitBlob": "e4cd00d020b86fb2abf5ebd2a5fe9d5b16cf2abc",
+      "bytes": 11522,
+      "sha256": "adf6f9b2dc1c48fad2b6dbb72c609632eddbeff1ff897cbd74bc52e7581d470c",
+      "lf": 322,
+      "endsWithLF": true
+    },
+    "functionalProcesses": [
+      {
+        "gate": "complete cases read-set contract whole-file",
+        "commandLine": 760,
+        "fileHeaderLine": 763,
+        "footerLine": 775,
+        "footer": "Ran 7 tests across 1 file. [261.00ms]",
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "exitCode": 0
+      },
+      {
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "commandLine": 779,
+        "fileHeaderLine": 788,
+        "footerLine": 798,
+        "footer": "Ran 5 tests across 1 file. [610.00ms]",
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "exitCode": 0
+      },
+      {
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "commandLine": 832,
+        "fileHeaderLine": 836,
+        "footerLine": 844,
+        "footer": "Ran 3 tests across 1 file. [226.00ms]",
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "exitCode": 0
+      },
+      {
+        "gate": "Scenario lookup complete candidates whole-file",
+        "commandLine": 848,
+        "fileHeaderLine": 853,
+        "footerLine": 859,
+        "footer": "Ran 1 test across 1 file. [152.00ms]",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "exitCode": 0
+      },
+      {
+        "gate": "Native scenario candidates selection whole-file",
+        "commandLine": 862,
+        "fileHeaderLine": 866,
+        "footerLine": 872,
+        "footer": "Ran 1 test across 1 file. [424.00ms]",
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "exitCode": 0
+      },
+      {
+        "gate": "Comparison criterion observation whole-file",
+        "commandLine": 876,
+        "fileHeaderLine": 974,
+        "footerLine": 993,
+        "footer": "Ran 5 tests across 1 file. [173.67s]",
+        "pass": 4,
+        "fail": 1,
+        "assertions": 275,
+        "exitCode": 1
+      }
+    ],
+    "functionalTotals": {
+      "pass": 21,
+      "fail": 1,
+      "assertions": 2682
+    },
+    "outer": {
+      "tests": 10,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "footerLine": 932,
+      "elapsed": "256.46s"
+    },
+    "footerInterpretation": "The outer ten-test footer at line932 precedes the last child five-test footer at line993. Each child was anchored to its own exact file header, not to the last footer in the interleaved stream.",
+    "reports": {
+      "retainedCount": 8,
+      "retainedLiteralUnion": {
+        "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "bytes": 10691,
+        "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+        "lf": 8,
+        "endsWithLF": true
+      },
+      "c22ObservedCount": 2,
+      "c22ExpectedCount": 3,
+      "c22Observed": [
+        {
+          "scenario": "single-criterion-and-protocol",
+          "line": 947,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "single-criterion-and-protocol",
+            "qualification": false,
+            "singleCriterion": {
+              "bindingBatches": 3,
+              "readBatches": 2,
+              "nativeScope": true
+            },
+            "outcomes": [
+              "absent-opt-in-order-and-receiver",
+              "single-work-private-checks",
+              "no-work",
+              "refused-after-work",
+              "double-work",
+              "late-work",
+              "hook-drift",
+              "registry-drift",
+              "method-drift",
+              "binding-drift",
+              "throw-undefined-not-converted-or-replayed",
+              "original-check-status",
+              "native-single-criterion-post-proof-and-durable-bind",
+              "native-evaluator-identity-drift",
+              "native-authority-revoked-after-batch"
+            ]
+          },
+          "literalToReviewedModel": true,
+          "bytesIncludingPrefixAndLF": 623,
+          "sha256": "618effd8bc9a7bdcb086cb8deb6a30f56816dfa1b65bdec751c9f144a714932e",
+          "within1024ByteLineCap": true,
+          "standaloneReportBlobCreated": false
+        },
+        {
+          "scenario": "multiple-criteria-shared-source",
+          "line": 964,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "multiple-criteria-shared-source",
+            "qualification": false,
+            "multipleCriteria": {
+              "criteria": 2,
+              "sharedPlannerSources": true,
+              "newBatchObservations": 0
+            },
+            "outcomes": [
+              "multiple-planner-criteria-original-parallel-fallback"
+            ]
+          },
+          "literalToReviewedModel": true,
+          "bytesIncludingPrefixAndLF": 316,
+          "sha256": "ed8d1285741c5117527eff39a1f6712d0d0e7222e61f977a4592c2ef29fe2907",
+          "within1024ByteLineCap": true,
+          "standaloneReportBlobCreated": false
+        }
+      ],
+      "missingScenario": "unsupported-planner-closure",
+      "observedTotal": 10,
+      "expectedTotal": 11,
+      "phaseRowsNotControlReports": 64
+    },
+    "phaseSummary": {
+      "namedPhaseRows": 64,
+      "modeledMaximumNamedRows": 66,
+      "scope": "Only named test phase brackets; not every product operation or the complete main log.",
+      "fixtures": [
+        {
+          "fixture": "comparison-criteria-single",
+          "rows": 40,
+          "passLine": 977,
+          "elapsedMs": 33263.39,
+          "allReturnedMarkersAbortedFalse": true
+        },
+        {
+          "fixture": "comparison-criteria-multiple",
+          "rows": 16,
+          "passLine": 978,
+          "elapsedMs": 34908.41,
+          "allReturnedMarkersAbortedFalse": true
+        },
+        {
+          "fixture": "comparison-criteria-unsupported",
+          "rows": 8,
+          "failLine": 988,
+          "elapsedMs": 105015.72
+        }
+      ],
+      "unsupported": [
+        {
+          "line": 965,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "started",
+          "elapsedMs": 4
+        },
+        {
+          "line": 966,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "native-setup",
+          "state": "returned",
+          "phaseMs": 5346,
+          "elapsedMs": 5350,
+          "aborted": false
+        },
+        {
+          "line": 967,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "started",
+          "elapsedMs": 5351
+        },
+        {
+          "line": 968,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-promotion",
+          "state": "returned",
+          "phaseMs": 1294,
+          "elapsedMs": 6645,
+          "aborted": false
+        },
+        {
+          "line": 969,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "started",
+          "elapsedMs": 6645
+        },
+        {
+          "line": 970,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-criterion-data",
+          "state": "returned",
+          "phaseMs": 22047,
+          "elapsedMs": 28693,
+          "aborted": false
+        },
+        {
+          "line": 971,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "started",
+          "elapsedMs": 28693
+        },
+        {
+          "line": 972,
+          "fixture": "comparison-criteria-unsupported",
+          "phase": "unsupported-native-bind",
+          "state": "returned",
+          "phaseMs": 76317,
+          "elapsedMs": 105010,
+          "aborted": true
+        }
+      ],
+      "semantics": "returned is emitted from finally. It denotes bracket exit including exceptions and deadline failure, not successful binding, commit or a product response."
+    },
+    "failure": {
+      "logLine": 985,
+      "error": "comparison-criteria-unsupported exceeded its 105000ms cooperative deadline",
+      "errorConstructionLocation": "composition-test-deadline.ts:5:29",
+      "deadlineCreationCallLocation": "criterion-comparison-preferences-read.test.ts:574:8",
+      "failedDeclaration": "Comparison criteria observation preserves the complete fallback for unsupported Planner replacements",
+      "failedDeclarationElapsedMs": 105015.72,
+      "unsupportedNativeBindReturnedAbortedTrue": true,
+      "unsupportedNativeReadMarkerObserved": false,
+      "unsupportedFinalReportObserved": false
+    },
+    "guard": {
+      "line": 827,
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "findingsRawArrayLiteralToPriorR4": true,
+      "priorR4FindingsAlreadyLiteralToC21E15": true,
+      "findingRules": {
+        "test-globalthis": 2,
+        "test-timeout-raised": 38
+      },
+      "errors": [],
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false,
+      "actualDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "terminal": {
+      "branch": "ci-run-sf613c22r5",
+      "matchingRefs": [],
+      "artifacts": 0,
+      "headRunIds": [
+        46144857724
+      ]
+    },
+    "omni": {
+      "line": 1010,
+      "id": "18bc55663cb283ccfbf7784267923ea3",
+      "spawns": 16,
+      "delegated": 0,
+      "scope": "outer ten-test wrapper only",
+      "universalAggregateClaim": false
+    },
+    "bun": {
+      "setupObserved": "1.3.14+0d9b296af",
+      "testFooterObserved": "1.3.14 (0d9b296a)",
+      "full40HexCommitObserved": false
+    }
+  },
+  "boundsScope": {
+    "reviewedControlBounds": {
+      "gitBlob": "e2a2cb1fdba77bfb717c727b664a125314582c62",
+      "bytes": 14684,
+      "sha256": "ebd54bd954d5d6cbb076ff210cc91fccfa16567466cb39aa92c692e89abc25b6",
+      "lf": 380,
+      "endsWithLF": true
+    },
+    "reviewedFocalBounds": {
+      "gitBlob": "6cdf2dc6ef3f1feae31a20d03a1508a16cfb7d68",
+      "bytes": 10482,
+      "sha256": "1512ab4a263414627eda3f35a4563b1908540745edd12bdcdfbe1c7e0c9bc265",
+      "lf": 331,
+      "endsWithLF": true
+    },
+    "singleAndMultipleCooperativeMs": 50000,
+    "singleAndMultipleBunMs": 60000,
+    "unsupportedCooperativeMs": 105000,
+    "unsupportedBunMs": 120000,
+    "wholeComparisonCommandMs": 300000,
+    "outerComparisonGroupMs": 360000,
+    "cooperativeDeadlineTriggered": true,
+    "wholeCommandOrOuterGroupDeadlineFailureClaim": false,
+    "perReportLineBytesIncludingPrefixAndLF": 1024,
+    "phaseAndReportScopes": "66 records bounds named phase brackets only. Per-line report bounds do not bound the whole main log or promise terminal delivery.",
+    "modeledReportHashesAreNotCreatedGitObjects": true
+  },
+  "checks": {
+    "count": 24,
+    "allPassed": true,
+    "items": [
+      "main exact preserved UTF8 fingerprint and real one-part manifest",
+      "main exact byte/UTF16 boundaries and one initial BOM",
+      "main recorded single original GET correct run/job and ZIP0",
+      "cleanup exact preserved UTF8 fingerprint and real one-part manifest",
+      "cleanup exact byte/UTF16 boundaries and one initial BOM",
+      "cleanup recorded single original GET correct run/job and ZIP0",
+      "Exact source/focal tuple and run attempt terminal FAILURE",
+      "Main failure and cleanup success terminal exact jobs",
+      "No artifacts no branch one head run",
+      "16 command receipts with exact identity and32falseflags",
+      "15zero exits only criterion comparison control nonzero",
+      "Both package typechecks passed",
+      "Ten exact identity preambles",
+      "25 working pins literal to independently audited actual source",
+      "Six child footers anchored to own headers21pass1fail2682assertions",
+      "Outer10-test footer932 precedes last child5-test footer993",
+      "Eight retained report lines literal C21 union",
+      "Two C22 reports exact reviewed literal models and perline cap",
+      "64phase rows40single16multiple8unsupported distinct from10reports",
+      "32matched phase brackets only unsupported bind aborted",
+      "Unsupported setup5346 promotion1294 data22047 bind28693to105010 no read",
+      "Observed single and multiple PASS unsupported105000msdeadline FAIL",
+      "Guards78rules860files40literal inherited warnings noerrors",
+      "Omni outer wrapper scope16spawns0delegated"
+    ]
+  },
+  "receptionFindings": [],
+  "conclusions": {
+    "negativeReceptionClosed": true,
+    "criterionControlNotAccepted": true,
+    "missingThirdReportPreventsCompleteControlAcceptance": true,
+    "sourceQualification": false,
+    "installedUIQualification": false,
+    "qualifiedAreasUnchanged": "12/15",
+    "UI42_UI43_UI44RemainPending": true,
+    "priorConditionalAnalyticsQualificationAck": {
+      "gitBlob": "692a4ec466259fd1321a714d8e97f9570d004234",
+      "bytes": 7889,
+      "sha256": "643492ce4db40c59baa0a4b3a1dc798639c6588ffe8f3b02158e79a67ea1e524",
+      "lf": 244,
+      "endsWithLF": true
+    },
+    "priorQualificationConditionMet": false,
+    "preparedAnalyticsSnapshot": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9",
+    "preparedAnalyticsNotActivatedAtRootTerminalContext": true,
+    "diagnosticAuthorityGrantedByThisReceipt": false,
+    "mergeApproved": false,
+    "productionApproved": false,
+    "causalLimit": "Observed abort within unsupported-native-bind after 76,317 ms in that bracket and 105,010 ms overall does not isolate the blocking operation or establish that the only cause is ordinary slowness. No further budget increase or execution is authorized by this reception.",
+    "retainedEvidence": "The other21 child passes and the two C22 report payloads remain exact partial evidence bound to this source/focal run; they do not stand in for the failed unsupported scenario."
+  }
+}

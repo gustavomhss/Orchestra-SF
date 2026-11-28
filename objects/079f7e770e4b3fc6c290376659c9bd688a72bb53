@@ -1,0 +1,376 @@
+{
+  "schema": "sf613-c22r3-independent-focal-reception-v1",
+  "status": "RECEIVED_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "reviewer": "/root/review_archive",
+  "at": "2026-11-28 11:31:34 UTC",
+  "source": {
+    "sha": "c05fb0bbd7182c669d4905155e1ff0b0aa201840",
+    "tree": "e1bea29e74eedfbe1c6847da257f358e4ef6d45d"
+  },
+  "focal": {
+    "sha": "f1d88805abdfc27e5fe0dbbf55bd3d4aa164aa46",
+    "tree": "e1c623d0cc96b37675deca90c4cd6ccd488dc552",
+    "run": 46139531712,
+    "attempt": 1,
+    "mainJob": 140962164000,
+    "cleanupJob": 140963025397,
+    "runConclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success"
+  },
+  "copies": {
+    "main": {
+      "gitBlob": "2f541ec777aed7403eecf6cb5dea211576912430",
+      "bytes": 120864,
+      "sha256": "d56e2db24e3208a856889ebb6449e8c7d31f5934ef8dda2d59ae8f97a14f2d91",
+      "lf": 977,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "505015ef84e50fb5ffd59a105a2f8c76aef8a123",
+      "bytes": 1692,
+      "sha256": "5565746a31ffb62f8c6647e76e489cf4267b92d6135f92471fdd67f91f9bbad0",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "5f75420b2ea1df378281103bbec3ab0aed51a975",
+      "bytes": 2282,
+      "sha256": "c127f517da2e61d377a1cbd860fd178ed390cbef3f3409103e2fab6a235c55a6",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "bc26813939e3a99d587d3f522a35f611aeb1733c",
+      "bytes": 1682,
+      "sha256": "eb9447b38d12c8372cf0ea09744ebd6acc9c0d04ae1b3ca703e78a570a48eab6",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "6da9f68c9fc2ba095a7f5a63972f48a055cbf59d",
+      "bytes": 26050,
+      "sha256": "2f77a8eda939b686522ae5c6feb8266ae537ccf453e0ef9f7090de31fae66029",
+      "lf": 562,
+      "endsWithLF": true
+    }
+  },
+  "preservation": {
+    "representation": "Exact decoded original job-log strings preserved as UTF-8 Git blobs; hashes do not claim independently acquired raw HTTP bytes.",
+    "main": {
+      "utf16Length": 120862,
+      "utf8Bytes": 120864,
+      "lf": 977,
+      "bomByteOffsets": [
+        0
+      ],
+      "bomCodeUnitOffsets": [
+        0
+      ]
+    },
+    "cleanup": {
+      "utf16Length": 2280,
+      "utf8Bytes": 2282,
+      "lf": 39,
+      "bomByteOffsets": [
+        0
+      ],
+      "bomCodeUnitOffsets": [
+        0
+      ]
+    },
+    "oneActualPartPerCopy": true,
+    "fingerprintsAndRangesVerified": true,
+    "recordedRootOriginalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "recordedRootZipGets": 0,
+    "permanentClosureReportedAt": "2026-11-28 11:27:10 UTC",
+    "reviewerOriginalGets": 0,
+    "reviewerZipGets": 0
+  },
+  "observations": {
+    "commands": {
+      "count": 16,
+      "zeroExits": 15,
+      "falseCaptureFlags": 32,
+      "allIdentitiesExact": true,
+      "receiptLines": [
+        750,
+        754,
+        757,
+        764,
+        783,
+        805,
+        810,
+        815,
+        818,
+        823,
+        826,
+        830,
+        836,
+        852,
+        866,
+        880
+      ],
+      "onlyNonzero": {
+        "gate": "Comparison criterion observation whole-file",
+        "exitCode": 1,
+        "line": 880,
+        "processDurationMs": 50505
+      },
+      "typechecks": [
+        {
+          "package": "CLI",
+          "line": 805,
+          "exitCode": 0
+        },
+        {
+          "package": "Sucafina",
+          "line": 810,
+          "exitCode": 0
+        }
+      ]
+    },
+    "identityPreambles": 10,
+    "workingPins": 25,
+    "workingPinsExactToActualObjectReview": {
+      "gitBlob": "f27894b327ab960be27e0e0a914ac0d3f9e9607e",
+      "bytes": 11971,
+      "sha256": "ac4fc560e8b7ac31cdb79548042d9c25d256d1a7151288b8056d0d3fd7309718",
+      "lf": 365,
+      "endsWithLF": true
+    },
+    "functionalProcesses": [
+      {
+        "gate": "complete cases read-set contract whole-file",
+        "commandLine": 764,
+        "exit": 0,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "footerLine": 779,
+        "footer": "Ran 7 tests across 1 file. [247.00ms]"
+      },
+      {
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "commandLine": 783,
+        "exit": 0,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "footerLine": 802,
+        "footer": "Ran 5 tests across 1 file. [2.71s]"
+      },
+      {
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "commandLine": 836,
+        "exit": 0,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "footerLine": 848,
+        "footer": "Ran 3 tests across 1 file. [220.00ms]"
+      },
+      {
+        "gate": "Scenario lookup complete candidates whole-file",
+        "commandLine": 852,
+        "exit": 0,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "footerLine": 862,
+        "footer": "Ran 1 test across 1 file. [153.00ms]"
+      },
+      {
+        "gate": "Native scenario candidates selection whole-file",
+        "commandLine": 866,
+        "exit": 0,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "footerLine": 876,
+        "footer": "Ran 1 test across 1 file. [416.00ms]"
+      },
+      {
+        "gate": "Comparison criterion observation whole-file",
+        "commandLine": 880,
+        "exit": 1,
+        "pass": 2,
+        "fail": 1,
+        "assertions": 245,
+        "footerLine": 908,
+        "footer": "Ran 3 tests across 1 file. [50.48s]"
+      }
+    ],
+    "functionalTotals": {
+      "pass": 19,
+      "fail": 1,
+      "assertions": 2652
+    },
+    "outer": {
+      "tests": 10,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "footerLine": 953,
+      "elapsed": "141.23s"
+    },
+    "reports": {
+      "retainedCount": 8,
+      "literalToC21Union": {
+        "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "bytes": 10691,
+        "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+        "lf": 8,
+        "endsWithLF": true
+      },
+      "literalToPriorC22RetainedRows": true,
+      "finalC22ReportEmitted": false,
+      "finalC22Prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+      "phaseRowsExcluded": 8
+    },
+    "phases": [
+      {
+        "phase": "single-criterion-data",
+        "startMs": 5364,
+        "returnedMs": 8080,
+        "reportedPhaseMs": 2716,
+        "aborted": false,
+        "logLines": [
+          882,
+          883
+        ]
+      },
+      {
+        "phase": "native-bind",
+        "startMs": 8080,
+        "returnedMs": 18312,
+        "reportedPhaseMs": 10232,
+        "aborted": false,
+        "logLines": [
+          884,
+          885
+        ]
+      },
+      {
+        "phase": "native-read",
+        "startMs": 18312,
+        "returnedMs": 25032,
+        "reportedPhaseMs": 6719,
+        "aborted": false,
+        "logLines": [
+          886,
+          887
+        ]
+      },
+      {
+        "phase": "multiple-criterion-data",
+        "startMs": 28703,
+        "returnedMs": 32209,
+        "reportedPhaseMs": 3507,
+        "aborted": false,
+        "logLines": [
+          888,
+          889
+        ]
+      }
+    ],
+    "failure": {
+      "logLine": 900,
+      "error": "comparison-criteria-observation exceeded its 50000ms cooperative deadline",
+      "errorConstructionLocation": "composition-test-deadline.ts:5:29",
+      "deadlineCreationCallLocation": "criterion-comparison-preferences-read.test.ts:321:16",
+      "failedDeclarationLine": 903,
+      "failedDeclaration": "Comparison criteria observation owns only the post-proof single-criterion batch and preserves fallback and revocation",
+      "failedDeclarationElapsedMs": 50012.77,
+      "inheritedDeclarationsPassed": 2,
+      "controlFileFooter": {
+        "pass": 2,
+        "fail": 1,
+        "assertions": 245,
+        "tests": 3,
+        "elapsed": "50.48s",
+        "line": 908
+      }
+    },
+    "guards": {
+      "line": 831,
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "findingsLiteralToC21E15AndPriorC22": true,
+      "findingRules": {
+        "test-globalthis": 2,
+        "test-timeout-raised": 38
+      },
+      "errors": [],
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false,
+      "actualDev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "terminal": {
+      "artifacts": 0,
+      "matchingRefs": [],
+      "headRunIds": [
+        46139531712
+      ],
+      "branch": "ci-run-sf613c22r3",
+      "cleanupSuccessful": true
+    },
+    "omni": {
+      "scope": "outer focal wrapper only",
+      "id": "5065ac803e6f4abc596521b769d2aa64",
+      "declaredTests": 10,
+      "spawns": 16,
+      "delegated": 0,
+      "universalAggregateClaim": false
+    }
+  },
+  "checks": {
+    "count": 22,
+    "allPassed": true,
+    "items": [
+      "main preserved UTF8 fingerprint and one real part",
+      "main exact byte/UTF16 ranges and preserved BOM",
+      "main recorded acquisition exact run job 1GET zeroZIP",
+      "cleanup preserved UTF8 fingerprint and one real part",
+      "cleanup exact byte/UTF16 ranges and preserved BOM",
+      "cleanup recorded acquisition exact run job 1GET zeroZIP",
+      "source focal run attempt tuple terminal failure",
+      "two terminal jobs main failure cleanup success",
+      "zero artifacts branch absent one head run",
+      "16 exact command identities and 32 false capture flags",
+      "15 zero exits only criterion control fails",
+      "both package typechecks pass",
+      "10 exact host identity preambles",
+      "25 exact actual reviewed working pins",
+      "six functional real footers 19 pass 1 fail 2652 assertions",
+      "outer real footer separate 9 pass 1 fail 49 assertions",
+      "8 retained reports exactly C21 preserved union",
+      "no C22 report and 8 phase rows excluded",
+      "4 phase started returned pairs correct values",
+      "observed cooperative 50000ms error",
+      "guards 78 rules 860 files inherited 40 findings",
+      "Omni scoped wrapper 16spawns zero delegated"
+    ]
+  },
+  "receptionFindings": [],
+  "conclusions": {
+    "focalAccepted": false,
+    "analyticsPrerequisiteSatisfied": false,
+    "newInstalledAreasQualified": 0,
+    "actualProgress": "Both typechecks pass. The single-criterion data, native bind and native read phases returned; the multiple-criterion data phase also returned before the cooperative deadline failure.",
+    "reportLimit": "Phase records and partial assertions are not the absent C22 final report and do not prove that all added oracles completed.",
+    "causalityLimit": "The last observed phase returned at elapsed 32209ms. The subsequent cooperative timeout and error-construction stack do not isolate the later blocking operation or establish an exclusive product cause.",
+    "timingLimit": "ElapsedMs and phaseMs are separately reported rounded measurements; no stronger timing precision or exact subtraction identity is asserted.",
+    "captureLimit": "All 32 command capture flags are false. This does not imply that every intended assertion or report was reached.",
+    "analytics": "Prepared Analytics 9782fed45da682a25c2b307ffb19766cb126eae9 remains without an accepted focal prerequisite; conditional object ACK 16b5a51c894f70e7d393f95cff693ef2d3a0deb0 is not activation authority.",
+    "historicalEvidence": "The prior failed focal 46137780758/1 and this failed R3 run remain separate immutable observations. Neither is converted to acceptance by static source or object reviews.",
+    "scope": "No product correction, test execution, tree/commit/ref/run change, original reacquisition or ZIP acquisition was performed by this reviewer. Only this independent receipt is created and read back.",
+    "productionAuthorized": false
+  }
+}

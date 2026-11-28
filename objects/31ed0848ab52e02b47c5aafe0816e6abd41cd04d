@@ -1,0 +1,955 @@
+{
+  "schema": "sf613-c22r6-independent-preserved-log-intake-v1",
+  "status": "CLOSED_NEGATIVE_DIAGNOSTIC_TRACE_RECEIVED_NO_QUALIFICATION",
+  "at": "2026-11-28 13:38:15 UTC",
+  "reviewer": "/root/teams_product",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Independent interpretation of authenticated preserved Git copies only. Root received the original streams; this receipt creates no new acquisition authority.",
+  "tuple": {
+    "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "sourceTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+    "snapshot": "7ba55b16fb5407fbcd7efd7e52e5e86f9db9fadb",
+    "snapshotTree": "5daaac91ffac218091a826d09468859bdcb44826",
+    "run": 46149115180,
+    "attempt": 1,
+    "branch": "ci-run-sf613c22r6",
+    "mainJob": 140991547681,
+    "cleanupJob": 140992991435,
+    "runConclusion": "failure",
+    "mainConclusion": "failure",
+    "cleanupConclusion": "success"
+  },
+  "pins": {
+    "main": {
+      "gitBlob": "2c2a66c1baffc0f9a3c6e72d1125528595a1c1d6",
+      "bytes": 134955,
+      "sha256": "c98ccf7b804db4217d5aa829dae79b7e82c4696edb6f00e5460033ca5db44780",
+      "lf": 1053
+    },
+    "mainManifest": {
+      "gitBlob": "2c721c85838421751233e67b34beb5cfb1e41a61",
+      "bytes": 1695,
+      "sha256": "7515a8106c80182bc9ae298e851198fa59741230219836369de217a04ee3ee10",
+      "lf": 60
+    },
+    "cleanup": {
+      "gitBlob": "d25b0237500957f032e125be88624d27d7e6639f",
+      "bytes": 2282,
+      "sha256": "10ed13d0e79af254edf9d91fd3dd8e6b8137bcf9fba89eaa3894d7e691afb256",
+      "lf": 39
+    },
+    "cleanupManifest": {
+      "gitBlob": "4a4cc1b1e2efb6c72989e5136c4f60226c846a8d",
+      "bytes": 1682,
+      "sha256": "07180da549d40c3743c58f788af59a269e765d0dddfb19d86a65c882ea741ed3",
+      "lf": 60
+    },
+    "terminalContext": {
+      "gitBlob": "bc6d5e0731acc6c411e329d76cfd46a003a2bb71",
+      "bytes": 42103,
+      "sha256": "e47756685f6a2723d904b16547d1715a9eb89452221f25600e83786debaa852c",
+      "lf": 804
+    },
+    "authority": {
+      "gitBlob": "e9b715e37278bbbc0897adc8e38b78d6dc659118",
+      "bytes": 13853,
+      "sha256": "9cd2ba77e079395ddce3c133019f91a1203b29315d36df757ffb8451907996bb",
+      "lf": 365
+    },
+    "activation": {
+      "gitBlob": "c9d8e886c3d1e560492151f68c15ee26499b7d37",
+      "bytes": 1924,
+      "sha256": "812675183579c9d3cd15d5bcf9f14d6bca73a9a6038b26af1f7b52c6d6bbc308",
+      "lf": 53
+    },
+    "runBinding": {
+      "gitBlob": "13d6ee042c6e543fe7111e4dc9bc019e5fec2402",
+      "bytes": 1146,
+      "sha256": "9b89099566a440aefbe2ce1a2c99cb079959b4a57467dee42073a29773bb4e28",
+      "lf": 35
+    },
+    "rootExtraction": {
+      "gitBlob": "3791ad08a2c073c58980dd1b91faf56352a33c1f",
+      "bytes": 158005,
+      "sha256": "7d04360ff5e44c832e4d00b151544bcfa69560dd1b54002806b1bf77fdf40cac",
+      "lf": 3091
+    },
+    "rootIntake": {
+      "gitBlob": "0ad12d58ef1151d602bf0f5d5b0f5379dc3014a5",
+      "bytes": 9567,
+      "sha256": "c4927254aac933ff4fbcb0033ded26c6c6fa83fd6d87a82194256b57683df530",
+      "lf": 330
+    },
+    "priorOwnStaticReview": {
+      "gitBlob": "06ab3ce0cf689aafbb32bf94c5b472efe84b6288",
+      "bytes": 19173,
+      "sha256": "a083cf96084f0da11355cc75127d4f6668e6b2c0d2418e00ccd8f878fb7be2ab"
+    }
+  },
+  "originalBoundary": {
+    "receiver": "/root",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "zipGets": 0,
+    "closedAt": "2026-11-28 13:27:14 UTC",
+    "basis": "Authenticated root preservation/intake records; not acquisitions performed by this reviewer.",
+    "reacquisitionAllowed": false,
+    "analyticalTransform": "Only analytical views remove initial BOM, timestamp carrier and ANSI; original bodies remain exact."
+  },
+  "checks": {
+    "independentCount": 46,
+    "independent": [
+      {
+        "number": 1,
+        "id": "main-body",
+        "result": "PASS",
+        "evidence": "Exact preserved main body authenticated:134955B/1053LF/BOM byte0."
+      },
+      {
+        "number": 2,
+        "id": "cleanup-body",
+        "result": "PASS",
+        "evidence": "Exact preserved cleanup body authenticated:2282B/39LF/BOM byte0."
+      },
+      {
+        "number": 3,
+        "id": "main-manifest",
+        "result": "PASS",
+        "evidence": "Main manifest records one actual Git part; ranges, UTF16 length, bytes/SHA/GitSHA/LF/BOM reproduce the body."
+      },
+      {
+        "number": 4,
+        "id": "cleanup-manifest",
+        "result": "PASS",
+        "evidence": "Cleanup manifest records one actual Git part; ranges, UTF16 length, bytes/SHA/GitSHA/LF/BOM reproduce the body."
+      },
+      {
+        "number": 5,
+        "id": "original-boundary",
+        "result": "PASS",
+        "evidence": "Root preservation receipts record one original GET per job, zero ZIP and closed13:27:14UTC; reviewer used Git copies only."
+      },
+      {
+        "number": 6,
+        "id": "run-binding",
+        "result": "PASS",
+        "evidence": "Authority, activation, run-binding and terminal context agree on run46149115180/1 and source/snapshot identities."
+      },
+      {
+        "number": 7,
+        "id": "terminal-jobs",
+        "result": "PASS",
+        "evidence": "Exact main140991547681 completed failure; cleanup140992991435 completed success; both attempt1 and expected head."
+      },
+      {
+        "number": 8,
+        "id": "diagnostic-purpose",
+        "result": "PASS",
+        "evidence": "Authority explicitly DIAGNOSTIC_ONLY; static receipt and actual bound driver/test pins match."
+      },
+      {
+        "number": 9,
+        "id": "ten-identities",
+        "result": "PASS",
+        "evidence": "All ten logged verification identities bind exact source/tree/snapshot/run."
+      },
+      {
+        "number": 10,
+        "id": "snapshot-observation",
+        "result": "PASS",
+        "evidence": "Logged git identity outputs match the reviewed source parent and snapshot."
+      },
+      {
+        "number": 11,
+        "id": "working-pins",
+        "result": "PASS",
+        "evidence": "Twenty-five logged path/SHA pairs equal all twenty-five declared pins in the authenticated bound driver."
+      },
+      {
+        "number": 12,
+        "id": "command-count",
+        "result": "PASS",
+        "evidence": "Sixteen actual command rows, all bound to exact run/source/snapshot."
+      },
+      {
+        "number": 13,
+        "id": "command-exits",
+        "result": "PASS",
+        "evidence": "Fifteen exits0; only Comparison criterion observation whole-file exits1."
+      },
+      {
+        "number": 14,
+        "id": "truncation",
+        "result": "PASS",
+        "evidence": "All32 stdout/stderr truncation flags are false."
+      },
+      {
+        "number": 15,
+        "id": "whole-file-selection",
+        "result": "PASS",
+        "evidence": "Six functional test processes use whole-file argv without name filters."
+      },
+      {
+        "number": 16,
+        "id": "footers",
+        "result": "PASS",
+        "evidence": "Seven actual footers parsed by process identity: six functional plus the outer driver."
+      },
+      {
+        "number": 17,
+        "id": "functional-total",
+        "result": "PASS",
+        "evidence": "Functional totals are22 declarations,21pass/1fail,2682 assertions."
+      },
+      {
+        "number": 18,
+        "id": "outer-total",
+        "result": "PASS",
+        "evidence": "Outer driver totals10 declarations,9pass/1fail,49 assertions."
+      },
+      {
+        "number": 19,
+        "id": "footer-order",
+        "result": "PASS",
+        "evidence": "Outer footer line948 precedes the last child footer line1013; totals do not treat footer position as process identity."
+      },
+      {
+        "number": 20,
+        "id": "criterion-child",
+        "result": "PASS",
+        "evidence": "Criterion child reports4pass/1fail/275 assertions across5 tests; command duration172715ms."
+      },
+      {
+        "number": 21,
+        "id": "old-criterion-cases",
+        "result": "PASS",
+        "evidence": "Both pre-existing criterion tests have explicit PASS lines995/996."
+      },
+      {
+        "number": 22,
+        "id": "single-criterion-pass",
+        "result": "PASS",
+        "evidence": "Single-criterion/protocol test explicitly passes32766.46ms; its623B report has15 outcomes and binding/read batches3/2."
+      },
+      {
+        "number": 23,
+        "id": "multiple-criteria-pass",
+        "result": "PASS",
+        "evidence": "Shared-source multiple-criteria test explicitly passes34363.60ms;316B report has one outcome and zero new batch observations."
+      },
+      {
+        "number": 24,
+        "id": "unsupported-failure",
+        "result": "PASS",
+        "evidence": "Unsupported case explicitly fails at105032.91ms with105000ms cooperative-deadline error, not a type error."
+      },
+      {
+        "number": 25,
+        "id": "report-count",
+        "result": "PASS",
+        "evidence": "Ten actual control reports versus eleven expected: eight prior controls plus two C22; unsupported report absent."
+      },
+      {
+        "number": 26,
+        "id": "prior-report-populations",
+        "result": "PASS",
+        "evidence": "Current C16 report carries31 outcomes+9 identity cases; C19 carries6/9/6/3/1; C20 carries14 labels; C21 carries19 outcomes."
+      },
+      {
+        "number": 27,
+        "id": "report-qualification",
+        "result": "PASS",
+        "evidence": "Both C22 reports remain qualification:false; sixteen reported C22 outcomes do not establish all17."
+      },
+      {
+        "number": 28,
+        "id": "cli-types",
+        "result": "PASS",
+        "evidence": "CLI typecheck exit0,31931ms."
+      },
+      {
+        "number": 29,
+        "id": "sucafina-types",
+        "result": "PASS",
+        "evidence": "Sucafina typecheck exit0,31885ms."
+      },
+      {
+        "number": 30,
+        "id": "guard-ancestry",
+        "result": "PASS",
+        "evidence": "Actual guard base490a1e1352081d28c0eb22afcd05fffea8b5323f is tied to observed devc0bc0f22a4f2f5a2bdfa64407cd35769fd877886."
+      },
+      {
+        "number": 31,
+        "id": "guard-results",
+        "result": "PASS",
+        "evidence": "Guard JSON:78rules/860files/40warn/0errors/0approved, bootstrap:false,touchesGuards:false."
+      },
+      {
+        "number": 32,
+        "id": "omni",
+        "result": "PASS",
+        "evidence": "Omni nonce9971965358d8d4edb70e13a823a11672 matches initial nonce; declared10/spawns16/delegated0."
+      },
+      {
+        "number": 33,
+        "id": "phase-counts",
+        "result": "PASS",
+        "evidence": "Current phase records total64:single40/multiple16/unsupported8."
+      },
+      {
+        "number": 34,
+        "id": "unsupported-setup",
+        "result": "PASS",
+        "evidence": "Unsupported setup/promotion/data phases return without abort before native bind starts29301ms on deadline clock."
+      },
+      {
+        "number": 35,
+        "id": "unsupported-bind",
+        "result": "PASS",
+        "evidence": "Final unsupported-native-bind phase is marked aborted:true at105029ms with75728ms bracket; finally-style returned label is not success."
+      },
+      {
+        "number": 36,
+        "id": "explicit-read-absent",
+        "result": "PASS",
+        "evidence": "No unsupported-native-read phase and no unsupported control report observed."
+      },
+      {
+        "number": 37,
+        "id": "trace-count",
+        "result": "PASS",
+        "evidence": "Ten progress records, bounded below32, each logical line<=512B."
+      },
+      {
+        "number": 38,
+        "id": "trace-sequence",
+        "result": "PASS",
+        "evidence": "Progress sequence1..10 contiguous, measurement1, expected schema/fixture/clock/origin and nondecreasing elapsed."
+      },
+      {
+        "number": 39,
+        "id": "trace-first-cycle",
+        "result": "PASS",
+        "evidence": "First proof-enter→post-proof observer interval22208ms; existing-work-await interval6088ms."
+      },
+      {
+        "number": 40,
+        "id": "trace-second-cycle",
+        "result": "PASS",
+        "evidence": "Second proof-enter→post-proof observer interval22446ms; existing-work-await interval6244ms."
+      },
+      {
+        "number": 41,
+        "id": "trace-last-point",
+        "result": "PASS",
+        "evidence": "Last progress point is proof-enter ordinal3 at87517ms; no later post-proof/work-return point or suppression record."
+      },
+      {
+        "number": 42,
+        "id": "trace-clock-scope",
+        "result": "PASS",
+        "evidence": "Progress origin is native-fixture-entry; phase deadline clock is distinct. No cross-origin elapsed subtraction is claimed."
+      },
+      {
+        "number": 43,
+        "id": "trace-boundary-meaning",
+        "result": "PASS",
+        "evidence": "work-await-returned precedes later scope/result checks and cleanup; neither interval is exclusive CPU or complete bind acceptance."
+      },
+      {
+        "number": 44,
+        "id": "cleanup-log",
+        "result": "PASS",
+        "evidence": "Cleanup log targets exactly ci-run-sf613c22r6 and completes; DELETE||true alone is not used to prove absence."
+      },
+      {
+        "number": 45,
+        "id": "root-metadata-observations",
+        "result": "PASS",
+        "evidence": "Authenticated terminal context separately records branch matching-refs[],artifacts0 and exactly one head run."
+      },
+      {
+        "number": 46,
+        "id": "no-acquisition",
+        "result": "PASS",
+        "evidence": "No original endpoint, ZIP, repository code execution, ref, tree, commit or run used by this independent intake."
+      }
+    ],
+    "documentaryCount": 10,
+    "documentary": [
+      {
+        "number": 1,
+        "id": "commandsLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 2,
+        "id": "hostsLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 3,
+        "id": "pinsLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 4,
+        "id": "reportsLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 5,
+        "id": "phasesLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 6,
+        "id": "progressLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 7,
+        "id": "guardLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 8,
+        "id": "ancestryLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 9,
+        "id": "footersLiteral",
+        "result": "PASS"
+      },
+      {
+        "number": 10,
+        "id": "rootTotals",
+        "result": "PASS"
+      }
+    ],
+    "allPassed": true
+  },
+  "observed": {
+    "identities": 10,
+    "workingPins": 25,
+    "commands": 16,
+    "commandExits": {
+      "zero": 15,
+      "one": 1
+    },
+    "truncationFlagsFalse": 32,
+    "functionalProcesses": 6,
+    "functional": {
+      "tests": 22,
+      "pass": 21,
+      "fail": 1,
+      "assertions": 2682,
+      "footers": [
+        {
+          "line": 785,
+          "tests": 7,
+          "files": 1,
+          "pass": 7,
+          "fail": 0,
+          "assertions": 843,
+          "text": "Ran 7 tests across 1 file. [327.00ms]"
+        },
+        {
+          "line": 808,
+          "tests": 5,
+          "files": 1,
+          "pass": 5,
+          "fail": 0,
+          "assertions": 757,
+          "text": "Ran 5 tests across 1 file. [669.00ms]"
+        },
+        {
+          "line": 855,
+          "tests": 3,
+          "files": 1,
+          "pass": 3,
+          "fail": 0,
+          "assertions": 503,
+          "text": "Ran 3 tests across 1 file. [249.00ms]"
+        },
+        {
+          "line": 869,
+          "tests": 1,
+          "files": 1,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 147,
+          "text": "Ran 1 test across 1 file. [161.00ms]"
+        },
+        {
+          "line": 882,
+          "tests": 1,
+          "files": 1,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 157,
+          "text": "Ran 1 test across 1 file. [451.00ms]"
+        },
+        {
+          "line": 1013,
+          "tests": 5,
+          "files": 1,
+          "pass": 4,
+          "fail": 1,
+          "assertions": 275,
+          "text": "Ran 5 tests across 1 file. [172.68s]"
+        }
+      ]
+    },
+    "outer": {
+      "line": 948,
+      "tests": 10,
+      "files": 1,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "text": "Ran 10 tests across 1 file. [266.36s]"
+    },
+    "types": [
+      {
+        "gate": "CLI package typecheck",
+        "exit": 0,
+        "line": 811
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "exit": 0,
+        "line": 816
+      }
+    ],
+    "guards": {
+      "rules": 78,
+      "files": 860,
+      "warnings": 40,
+      "errors": 0,
+      "approved": 0,
+      "bootstrap": false,
+      "touchesGuards": false,
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "omni": {
+      "line": 1030,
+      "nonce": "9971965358d8d4edb70e13a823a11672",
+      "declaredTests": 10,
+      "spawns": 16,
+      "delegated": 0
+    },
+    "reports": {
+      "expected": 11,
+      "observed": 10,
+      "priorControls": 8,
+      "C22": 2,
+      "C22OutcomeCounts": [
+        15,
+        1
+      ],
+      "missingScenario": "unsupported-planner-closure",
+      "currentReportLines": [
+        {
+          "line": 792,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "scenario": "complete-product-and-fresh-authorization",
+          "bytesWithLF": 585
+        },
+        {
+          "line": 793,
+          "prefix": "SF_C14_SNAPSHOT_CONTROL",
+          "scenario": "opaque-equivalence-and-live-refusal",
+          "bytesWithLF": 1581
+        },
+        {
+          "line": 794,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "scenario": "whole-graphs-and-shape",
+          "bytesWithLF": 591
+        },
+        {
+          "line": 795,
+          "prefix": "SF_C15_SELECTION_CONTROL",
+          "scenario": "shape-precedence-and-drift",
+          "bytesWithLF": 1937
+        },
+        {
+          "line": 796,
+          "prefix": "SF_C16_SELECTION_CONTROL",
+          "scenario": "closed-case-factories",
+          "bytesWithLF": 4407
+        },
+        {
+          "line": 845,
+          "prefix": "SF_C19_PORTFOLIO_CASES",
+          "scenario": null,
+          "bytesWithLF": 150
+        },
+        {
+          "line": 861,
+          "prefix": "SF_C20_SCENARIO_LOOKUP",
+          "scenario": null,
+          "bytesWithLF": 564
+        },
+        {
+          "line": 874,
+          "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+          "scenario": null,
+          "bytesWithLF": 876
+        },
+        {
+          "line": 957,
+          "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+          "scenario": "single-criterion-and-protocol",
+          "bytesWithLF": 623
+        },
+        {
+          "line": 974,
+          "prefix": "SF_C22_COMPARISON_CRITERIA_OBSERVATION",
+          "scenario": "multiple-criteria-shared-source",
+          "bytesWithLF": 316
+        }
+      ],
+      "currentC22": [
+        {
+          "line": 957,
+          "bytes": 623,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "single-criterion-and-protocol",
+            "qualification": false,
+            "singleCriterion": {
+              "bindingBatches": 3,
+              "readBatches": 2,
+              "nativeScope": true
+            },
+            "outcomes": [
+              "absent-opt-in-order-and-receiver",
+              "single-work-private-checks",
+              "no-work",
+              "refused-after-work",
+              "double-work",
+              "late-work",
+              "hook-drift",
+              "registry-drift",
+              "method-drift",
+              "binding-drift",
+              "throw-undefined-not-converted-or-replayed",
+              "original-check-status",
+              "native-single-criterion-post-proof-and-durable-bind",
+              "native-evaluator-identity-drift",
+              "native-authority-revoked-after-batch"
+            ]
+          }
+        },
+        {
+          "line": 974,
+          "bytes": 316,
+          "payload": {
+            "schema": "sf-c22-comparison-criteria-observation-v2",
+            "scenario": "multiple-criteria-shared-source",
+            "qualification": false,
+            "multipleCriteria": {
+              "criteria": 2,
+              "sharedPlannerSources": true,
+              "newBatchObservations": 0
+            },
+            "outcomes": [
+              "multiple-planner-criteria-original-parallel-fallback"
+            ]
+          }
+        }
+      ]
+    },
+    "phaseCounts": {
+      "comparison-criteria-single": 40,
+      "comparison-criteria-multiple": 16,
+      "comparison-criteria-unsupported": 8
+    },
+    "unsupportedPhases": [
+      {
+        "line": 975,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "native-setup",
+        "state": "started",
+        "elapsedMs": 0
+      },
+      {
+        "line": 976,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "native-setup",
+        "state": "returned",
+        "phaseMs": 5564,
+        "elapsedMs": 5564,
+        "aborted": false
+      },
+      {
+        "line": 977,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-promotion",
+        "state": "started",
+        "elapsedMs": 5564
+      },
+      {
+        "line": 978,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-promotion",
+        "state": "returned",
+        "phaseMs": 1320,
+        "elapsedMs": 6884,
+        "aborted": false
+      },
+      {
+        "line": 979,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-criterion-data",
+        "state": "started",
+        "elapsedMs": 6885
+      },
+      {
+        "line": 980,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-criterion-data",
+        "state": "returned",
+        "phaseMs": 22416,
+        "elapsedMs": 29301,
+        "aborted": false
+      },
+      {
+        "line": 981,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-native-bind",
+        "state": "started",
+        "elapsedMs": 29301
+      },
+      {
+        "line": 992,
+        "fixture": "comparison-criteria-unsupported",
+        "phase": "unsupported-native-bind",
+        "state": "returned",
+        "phaseMs": 75728,
+        "elapsedMs": 105029,
+        "aborted": true
+      }
+    ],
+    "error": [
+      {
+        "line": 1005,
+        "text": "error: comparison-criteria-unsupported exceeded its 105000ms cooperative deadline"
+      }
+    ],
+    "artifacts0RootObservation": true,
+    "branchAbsentRootObservation": true,
+    "headRuns1RootObservation": true
+  },
+  "diagnostic": {
+    "clock": "performance.now",
+    "origin": "native-fixture-entry",
+    "points": [
+      {
+        "line": 982,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 1,
+        "measurement": 1,
+        "point": "bind-action-enter",
+        "proofOrdinal": 0,
+        "elapsedMs": 29472
+      },
+      {
+        "line": 983,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 2,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 29868
+      },
+      {
+        "line": 984,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 3,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52076
+      },
+      {
+        "line": 985,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 4,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 1,
+        "elapsedMs": 52170
+      },
+      {
+        "line": 986,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 5,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 1,
+        "elapsedMs": 58258
+      },
+      {
+        "line": 987,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 6,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 58514
+      },
+      {
+        "line": 988,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 7,
+        "measurement": 1,
+        "point": "observer-post-proof-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 80960
+      },
+      {
+        "line": 989,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 8,
+        "measurement": 1,
+        "point": "work-enter",
+        "proofOrdinal": 2,
+        "elapsedMs": 81057
+      },
+      {
+        "line": 990,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 9,
+        "measurement": 1,
+        "point": "work-await-returned",
+        "proofOrdinal": 2,
+        "elapsedMs": 87301
+      },
+      {
+        "line": 991,
+        "schema": "sf-composition-progress-v1",
+        "fixture": "comparison-criteria-unsupported",
+        "clock": "performance.now",
+        "origin": "native-fixture-entry",
+        "sequence": 10,
+        "measurement": 1,
+        "point": "proof-enter",
+        "proofOrdinal": 3,
+        "elapsedMs": 87517
+      }
+    ],
+    "observedIntervalsMs": [
+      {
+        "from": "bind-action-enter#0",
+        "to": "proof-enter#1",
+        "ms": 396
+      },
+      {
+        "from": "proof-enter#1",
+        "to": "observer-post-proof-enter#1",
+        "ms": 22208
+      },
+      {
+        "from": "observer-post-proof-enter#1",
+        "to": "work-enter#1",
+        "ms": 94
+      },
+      {
+        "from": "work-enter#1",
+        "to": "work-await-returned#1",
+        "ms": 6088
+      },
+      {
+        "from": "work-await-returned#1",
+        "to": "proof-enter#2",
+        "ms": 256
+      },
+      {
+        "from": "proof-enter#2",
+        "to": "observer-post-proof-enter#2",
+        "ms": 22446
+      },
+      {
+        "from": "observer-post-proof-enter#2",
+        "to": "work-enter#2",
+        "ms": 97
+      },
+      {
+        "from": "work-enter#2",
+        "to": "work-await-returned#2",
+        "ms": 6244
+      },
+      {
+        "from": "work-await-returned#2",
+        "to": "proof-enter#3",
+        "ms": 216
+      }
+    ],
+    "thirdProofObserved": true,
+    "thirdProofCompletedObserved": false,
+    "unsupportedReadObserved": false,
+    "unsupportedReportObserved": false,
+    "suppressionObserved": false,
+    "phaseClock": "Independent compositionTestDeadline origin; do not subtract phase elapsed from progress elapsed.",
+    "interpretation": "Two post-proof observer/work continuations were observed, followed by entry into third verifier before cooperative abort. This is partial causal progress, not completion of bind/read or a latency qualification."
+  },
+  "historicalComparisons": {
+    "rootReportsPrior8AndGuardsLiteralToC21": true,
+    "rootReportsC22TwoLiteralToR5": true,
+    "reviewerScope": "Current payloads, full warning JSON and source/report contracts checked; this intake does not claim a new independent fetch/rehash of older original streams."
+  },
+  "limitations": [
+    "DIAGNOSTIC_ONLY and negative. The unsupported scenario did not reach its post-bind assertions, explicit read, third report or complete cleanup success for that functional test.",
+    "The phase helper emits returned from finally; aborted:true and the failure footer govern interpretation.",
+    "Intervals between progress points include nested work, scheduling and instrumentation; they are not exclusive CPU costs or an estimate guaranteed for future cycles.",
+    "Observed progress in two cycles does not prove absence of every deadlock or ensure later completion.",
+    "No product30s fence, Analytics60/120 waiter or functional oracle is relaxed by this receipt.",
+    "Root context metadata proves its observation of branch absence; the cleanup DELETE command alone is insufficient.",
+    "No installed UI qualification, production authorization or success transfer from single/multiple into unsupported.",
+    "Historical UI status remains12/15 with zero new areas; no installed Analytics run is part of this focal receipt."
+  ],
+  "actions": {
+    "reviewReceiptOnly": true,
+    "reviewerOriginalGets": 0,
+    "reviewerZipGets": 0,
+    "repoExecutions": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "newQualification": 0
+  }
+}

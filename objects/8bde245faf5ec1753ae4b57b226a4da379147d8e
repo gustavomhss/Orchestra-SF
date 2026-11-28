@@ -1,0 +1,498 @@
+{
+  "schema": "sf613-c22-r7-focal-bounds-v1",
+  "status": "PROPOSED_UNBOUND_NO_RUNTIME_RESULTS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inherits": {
+    "R6Bounds": {
+      "git": "d8ddbe26d8d6b168c0f562e1e811bf0a0644200b",
+      "bytes": 17352,
+      "sha256": "a85843ca7cc107fa1f3ccaee1bca42c6a85f0ae9fa80d8412ad6225fd17724ed",
+      "lf": 563,
+      "endsWithLF": true
+    },
+    "R6Manifest": {
+      "git": "fdc8b675b716c23cdfa08ca363aecb78c689933f",
+      "bytes": 9503,
+      "sha256": "60341a0385722e9ca276863552efd50c0afbae84ab9be2e34530e73ed0758998",
+      "lf": 327,
+      "endsWithLF": true
+    },
+    "historicalBytesPreserved": true
+  },
+  "template": {
+    "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+    "bytes": 15595,
+    "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+    "lf": 220,
+    "endsWithLF": true
+  },
+  "patch": {
+    "git": "2d16d396982b8c6cd48c85424956370e3ff91a40",
+    "bytes": 4134,
+    "sha256": "ac06d6f35e6172d7a24534e43f63f67c193736193ba0373b3217fed4e6c6a9d6",
+    "lf": 48,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "git": "f330320e757ee076fc91110f216733ba85c760a4",
+    "bytes": 11613,
+    "sha256": "3f12cedaa0f26603173a59a683323463c53e64bd0cf2a5fbe06458524661a864",
+    "lf": 299,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "controlPackage": {
+    "git": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+    "bytes": 13474,
+    "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+    "lf": 430,
+    "endsWithLF": true
+  },
+  "controlBounds": {
+    "git": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+    "bytes": 18228,
+    "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+    "lf": 517,
+    "endsWithLF": true
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "gitBlob": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "gitBlob": "b7de9404461591ce0162d496ec917a47fb72a479"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "gitBlob": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlob": "6287eedc5387f5e7495963a12364bc31157a7789"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "gitBlob": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "gitBlob": "0b03c45e7288985b99914c186522bf062f9e3595"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "gitBlob": "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+      "gitBlob": "b8f59389f0de1be542e36f375f1674c3bc75bd75"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+      "gitBlob": "6c34520bf11aa42c0d42244a830bf00433894757"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts",
+      "gitBlob": "120f4169cec2e5e82a961399230476a83a5425b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "gitBlob": "ee6a5c7a9476ce1786d3532985571f7097becc35"
+    }
+  ],
+  "selection": {
+    "groups": [
+      {
+        "group": 1,
+        "kind": "identity",
+        "commandDeadlinesMs": [
+          60000,
+          30000,
+          30000
+        ],
+        "parentMs": 180000
+      },
+      {
+        "group": 2,
+        "kind": "functional",
+        "name": "cases",
+        "declaredTests": 7,
+        "nominalTestsMs": 105000,
+        "commandDeadlinesMs": [
+          120000
+        ],
+        "parentMs": 180000
+      },
+      {
+        "group": 3,
+        "kind": "functional",
+        "name": "projection",
+        "declaredTests": 5,
+        "nominalTestsMs": 290000,
+        "commandDeadlinesMs": [
+          300000
+        ],
+        "parentMs": 360000
+      },
+      {
+        "group": 4,
+        "kind": "typecheck",
+        "name": "CLI",
+        "commandDeadlinesMs": [
+          240000
+        ],
+        "parentMs": 300000
+      },
+      {
+        "group": 5,
+        "kind": "typecheck",
+        "name": "Sucafina",
+        "commandDeadlinesMs": [
+          240000
+        ],
+        "parentMs": 300000
+      },
+      {
+        "group": 6,
+        "kind": "guards",
+        "commandDeadlinesMs": [
+          30000,
+          120000,
+          30000,
+          30000,
+          180000
+        ],
+        "parentMs": 600000
+      },
+      {
+        "group": 7,
+        "kind": "functional",
+        "name": "portfolioSelection",
+        "declaredTests": 3,
+        "nominalTestsMs": 50000,
+        "commandDeadlinesMs": [
+          120000
+        ],
+        "parentMs": 180000
+      },
+      {
+        "group": 8,
+        "kind": "functional",
+        "name": "scenarioLookup",
+        "declaredTests": 1,
+        "nominalTestsMs": 20000,
+        "commandDeadlinesMs": [
+          45000
+        ],
+        "parentMs": 60000
+      },
+      {
+        "group": 9,
+        "kind": "functional",
+        "name": "nativeScenarioSelection",
+        "declaredTests": 1,
+        "nominalTestsMs": 20000,
+        "commandDeadlinesMs": [
+          45000
+        ],
+        "parentMs": 60000
+      },
+      {
+        "group": 10,
+        "kind": "functional",
+        "name": "comparisonCriteria",
+        "declaredTests": 5,
+        "nominalTestsMs": 420000,
+        "newScenarios": 3,
+        "commandDeadlinesMs": [
+          450000
+        ],
+        "parentMs": 510000,
+        "newCooperativeMs": [
+          50000,
+          50000,
+          240000
+        ],
+        "newBunMs": [
+          60000,
+          60000,
+          270000
+        ]
+      }
+    ],
+    "groupCount": 10,
+    "commandCount": 16,
+    "truncationFlagsRequiredFalse": 32,
+    "workingPins": 25,
+    "functionalProcesses": 6,
+    "staticDeclarations": 22,
+    "expectedReportEmissions": 11,
+    "actualFunctionalResults": null,
+    "actualAssertions": null,
+    "actualReports": null,
+    "manifestTelemetryMatchesG10AndControl": true
+  },
+  "budgets": {
+    "declarations": [
+      {
+        "scenario": "comparison-preferences-original-callback",
+        "cooperativeMs": 12000,
+        "bunMs": 15000,
+        "changed": false
+      },
+      {
+        "scenario": "comparison-preferences-native-readback",
+        "cooperativeMs": 12000,
+        "bunMs": 15000,
+        "changed": false
+      },
+      {
+        "scenario": "single-criterion-and-protocol",
+        "cooperativeMs": 50000,
+        "bunMs": 60000,
+        "changed": false
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "cooperativeMs": 50000,
+        "bunMs": 60000,
+        "changed": false
+      },
+      {
+        "scenario": "unsupported-planner-closure",
+        "cooperativeMs": 240000,
+        "bunMs": 270000,
+        "previousCooperativeMs": 105000,
+        "previousBunMs": 120000,
+        "changed": true
+      }
+    ],
+    "wholeFileNominalCooperativeMs": 364000,
+    "wholeFileNominalBunMs": 420000,
+    "processMs": 450000,
+    "parentMs": 510000,
+    "nominalProcessMinusBunMs": 30000,
+    "nominalParentMinusProcessMs": 60000,
+    "focal": {
+      "groups": 10,
+      "commands": 16,
+      "truncationFlagsRequiredFalse": 32,
+      "workingPins": 25,
+      "functionalProcesses": 6,
+      "expectedStaticDeclarations": 22,
+      "expectedReportEmissions": 11,
+      "commandConfiguredCeilingSumMs": 2070000,
+      "parentConfiguredCeilingSumMs": 2730000,
+      "jobMs": 2700000,
+      "parentSumExceedsJobMs": 30000,
+      "guaranteedToFit": false
+    },
+    "analytics": {
+      "previewWaitMs": 60000,
+      "sensitivityWaitMs": 120000,
+      "changed": false,
+      "newRunAuthorized": false
+    },
+    "finalGlobalPackage": {
+      "base": "D32",
+      "revision": "D33",
+      "onlyGroupChanged": 24,
+      "processMs": 450000,
+      "parentMs": 510000,
+      "groups": 28,
+      "commandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78,
+      "globalProcessMs": 2100000,
+      "technicalStepMs": 2400000,
+      "jobMs": 2700000,
+      "finalizerMs": 180000,
+      "globalCapsChanged": false,
+      "finalBindings": "UNBOUND",
+      "runtimeResults": null
+    }
+  },
+  "limits": {
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "forceKillAfter": "5 seconds",
+    "outerRequestBunTimeoutMs": 600000,
+    "commandConfiguredCeilingsSumMs": 2070000,
+    "parentConfiguredCeilingsSumMs": 2730000,
+    "jobMs": 2700000,
+    "parentCeilingsExceedJobMs": 30000,
+    "qualification": "Configured ceilings, not predicted or additive execution time. The parent sum exceeds the unchanged45min job by30s; setup, capture, scheduling and cleanup add overhead. Global termination may occur before a child ceiling; no completion or finalizer-window guarantee.",
+    "engine": "Literal R6/C21 runCommand, complete capture and truncation checks",
+    "analyticsWaitersMs": [
+      60000,
+      120000
+    ],
+    "analyticsChanged": false
+  },
+  "reports": {
+    "inheritedExpectedEmissions": 8,
+    "C22ExpectedEmissions": 3,
+    "totalExpectedEmissions": 11,
+    "C22Scenarios": [
+      "single-criterion-and-protocol",
+      "multiple-criteria-shared-source",
+      "unsupported-planner-closure"
+    ],
+    "outcomesPartition": [
+      15,
+      1,
+      1
+    ],
+    "outcomesUnion": 17,
+    "models": [
+      {
+        "scenario": "single-criterion-and-protocol",
+        "bytes": 623,
+        "sha256": "618effd8bc9a7bdcb086cb8deb6a30f56816dfa1b65bdec751c9f144a714932e",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "bytes": 316,
+        "sha256": "ed8d1285741c5117527eff39a1f6712d0d0e7222e61f977a4592c2ef29fe2907",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      },
+      {
+        "scenario": "unsupported-planner-closure",
+        "bytes": 296,
+        "sha256": "b7f9e4df187383d5682d91b7763bd120daec6d8a7a266bfc62f14cb41b7bf91f",
+        "lf": 1,
+        "modelOnly": true,
+        "gitObjectExists": false
+      }
+    ],
+    "executableC22Requirement": "After untruncated command exit0, the unchanged carrier requires exactly3 lines starting with SF_C22_COMPARISON_CRITERIA_OBSERVATION. Payload/scenario equality is also checked during future reception.",
+    "noProgressPrefixInTest": true,
+    "noProgressParserInCarrier": true,
+    "phaseFinallyIsNotSuccess": true
+  },
+  "history": {
+    "R6FinalNegative": {
+      "git": "9d7ad023151159a193c93122cd4920f5572a3f04",
+      "bytes": 10381,
+      "sha256": "a51fa9a07678ad460b12e33b73a91e2af8ff2e55b792fc88851edeeb13f76a66",
+      "lf": 348,
+      "endsWithLF": true
+    },
+    "R6IndependentPeer": {
+      "git": "31ed0848ab52e02b47c5aafe0816e6abd41cd04d",
+      "bytes": 29752,
+      "sha256": "4c0a33069bc15bfd7139c6bf0461988a3bb76edbdc63407985dcada0d5da74db",
+      "lf": 955,
+      "endsWithLF": true
+    },
+    "R7ControlPackageCut": "The control package was serialized before receipt9d7ad0 arrived, so its finalReceipt:null remains a historical cut. This document links the now-authenticated final negative receipt without rewriting that package.",
+    "negativeResultsRemainNegative": true,
+    "acceptanceTransferred": false
+  },
+  "sourcePlan": {
+    "soleParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "parentTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+    "delta": "1M test, no product change",
+    "accumulatedBase": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "accumulatedDelta": "same3M C22 paths"
+  },
+  "binding": {
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null,
+    "templateTokens": [
+      "__SF613_SOURCE_SHA__",
+      "__SF613_SOURCE_TREE__"
+    ],
+    "onlyTwoReplacementsAllowed": true,
+    "modelBoundBytes": 15634,
+    "modelDeltaBytes": 39,
+    "modelLF": 220,
+    "objectBindingOwner": "/root"
+  },
+  "snapshotPlan": {
+    "soleParent": "future reviewed R7 source",
+    "delta": "2A",
+    "paths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-proof-verification.test.ts"
+    ],
+    "requestLiteral": true
+  },
+  "review": {
+    "independentReviewer": "/root/review_archive",
+    "runtimeResult": null,
+    "executionRequiresRootAuthority": true,
+    "newOriginalAnalyticsAuthorized": false
+  }
+}

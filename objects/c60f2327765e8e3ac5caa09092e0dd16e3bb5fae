@@ -1,0 +1,101 @@
+{
+  "schema": "sf-c22a5-root-intake-review-v1",
+  "status": "DIAGNOSTIC_RECEIVED_FAILURE",
+  "run": 46146541990,
+  "attempt": 1,
+  "source": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+  "sourceTree": "3666601c7e03036e4573d724394b8dfc254cb30a",
+  "snapshot": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9",
+  "snapshotTree": "fcec47ed77217b70a76a1b6a98321910ffd15f7b",
+  "terminalMetadata": {
+    "gitBlob": "b38234eee16b3c776f31f034ef89a5ccd1921964",
+    "bytes": 43648,
+    "sha256": "400cfa653a6a2c78bd4b0aab34876975696ac515183df8b2d1cfe2397b87042d",
+    "lf": 830,
+    "endsWithLF": true
+  },
+  "originals": {
+    "main": {
+      "gitBlob": "dabfcd80d3b0c25a712b54ba4dd43a6da2e5df8e",
+      "bytes": 7849,
+      "sha256": "6ee8a9802da5f1bf2f3cb3eaa241b2b23db6fd49041d3e22f8f4da84c6fc1acb",
+      "lf": 272,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "776c50608b1db81baadf33040b4a6b75b57de3ca",
+      "bytes": 1676,
+      "sha256": "da6ac8a4cbf660e2c152859fc544b80459c4b4d831d890b118a8695dced330f4",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "mainParts": 17,
+    "mainWholeActuallyCreated": false,
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "zipGets": 0,
+    "closedAt": {
+      "current_time": "2026-11-28 13:07:09 UTC"
+    }
+  },
+  "extraction": {
+    "gitBlob": "57a09a79659f4759353d7f8dd265e8ec9129781d",
+    "bytes": 63927,
+    "sha256": "9f6d93f4f12c4c29f52037207e38db7c3fc4942357ac9bf44cea7cbc742ad834",
+    "lf": 870,
+    "endsWithLF": true
+  },
+  "results": {
+    "totalTests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "passed": 1,
+    "failed": 1,
+    "failure": "Portfolio preview page.waitForResponse exceeded original60000ms. Request emitted; response absent before failure.",
+    "sensitivity": "not reached",
+    "UI42": [
+      "UI42-list-dark-desktop-test-data",
+      "UI42-list-light-desktop-test-data",
+      "UI42-list-dark-390-test-data",
+      "UI42-list-light-320-test-data",
+      "UI42-empty-authorized-case-test-data",
+      "UI42-configure-focused-candidate-test-data"
+    ],
+    "UI43": 0,
+    "UI44": 0,
+    "BI": "original second case passed;SF_ANALYTICS_SCOPE UI45/UI46 literal",
+    "allCaptureRecords": 46,
+    "UI45": 7,
+    "UI46": 33
+  },
+  "limits": [
+    "Diagnostic-only run under new authority. No accepted area, no fallback acceptance, no final candidate or merge.",
+    "No PNG pixel inspection, ZIP remainsunacquired.",
+    "No console/pageerrors in failure diagnostics; this does not prove backend health or exclusive cause.",
+    "Historical12accepted areas remainhistorical,zero newlyaccepted."
+  ],
+  "artifact": {
+    "id": 15263679973,
+    "node_id": "MDg6QXJ0aWZhY3QxNTI2MzY3OTk3Mw==",
+    "name": "playwright-ubuntu-24.04-1",
+    "size_in_bytes": 45832544,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15263679973",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15263679973/zip",
+    "expired": false,
+    "digest": "sha256:7acc057851cde59b9557a3b799c13c277df6c1ebf814192776e53c7738781e09",
+    "created_at": "2026-11-28T13:00:55Z",
+    "updated_at": "2026-11-28T13:00:55Z",
+    "expires_at": "2026-12-05T13:00:53Z",
+    "workflow_run": {
+      "id": 46146541990,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "ci-run-sf613c22a5",
+      "head_sha": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9"
+    }
+  },
+  "at": {
+    "current_time": "2026-11-28 13:09:09 UTC"
+  }
+}

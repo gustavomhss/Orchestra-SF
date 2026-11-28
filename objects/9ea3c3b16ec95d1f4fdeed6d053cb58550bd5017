@@ -1,0 +1,326 @@
+{
+  "schema": "sf613-c22-r7-focal-package-v1",
+  "status": "PROPOSED_UNBOUND_NO_RUNTIME_RESULTS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "independentReviewer": "/root/review_archive",
+  "bindingAndExecutionOwner": "/root",
+  "purpose": "Complete the unchanged C22 functional control selection under the reviewed finite unsupported budget,after the negative R6 diagnostic. No installed-UI acceptance or performance qualification is provided.",
+  "base": {
+    "template": {
+      "git": "a7b3d0bba95bcd5f3471654083723bdea11ab4b5",
+      "bytes": 15595,
+      "sha256": "d91770e6b1e0b710b62425d0be13a666fccb699001ac9b5b132227e52c6ff7d0",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "git": "fdc8b675b716c23cdfa08ca363aecb78c689933f",
+      "bytes": 9503,
+      "sha256": "60341a0385722e9ca276863552efd50c0afbae84ab9be2e34530e73ed0758998",
+      "lf": 327,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "d8ddbe26d8d6b168c0f562e1e811bf0a0644200b",
+      "bytes": 17352,
+      "sha256": "a85843ca7cc107fa1f3ccaee1bca42c6a85f0ae9fa80d8412ad6225fd17724ed",
+      "lf": 563,
+      "endsWithLF": true
+    }
+  },
+  "artifacts": {
+    "template": {
+      "git": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+      "bytes": 15595,
+      "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "patch": {
+      "git": "2d16d396982b8c6cd48c85424956370e3ff91a40",
+      "bytes": 4134,
+      "sha256": "ac06d6f35e6172d7a24534e43f63f67c193736193ba0373b3217fed4e6c6a9d6",
+      "lf": 48,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "git": "f330320e757ee076fc91110f216733ba85c760a4",
+      "bytes": 11613,
+      "sha256": "3f12cedaa0f26603173a59a683323463c53e64bd0cf2a5fbe06458524661a864",
+      "lf": 299,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "8bde245faf5ec1753ae4b57b226a4da379147d8e",
+      "bytes": 15288,
+      "sha256": "e1df4abd35eb2c8234d65e0463730f3d5d366bc7a8b85855f8e2f1e0e32c8279",
+      "lf": 498,
+      "endsWithLF": true
+    },
+    "request": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "clockDocumentCorrection": {
+      "git": "95791c0aac594632d1f6a18579537b0a8485730c",
+      "bytes": 6346,
+      "sha256": "399288df35fb609381d751a782bc31c3e5c3846b85a00d38db95f0b3564c93fe",
+      "lf": 131,
+      "endsWithLF": true
+    }
+  },
+  "control": {
+    "test": {
+      "git": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+      "bytes": 44338,
+      "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+      "lf": 766,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "git": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+      "bytes": 13474,
+      "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+      "lf": 430,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+      "bytes": 18228,
+      "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+      "lf": 517,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "git": "76f456f855b45ef47d70cc2192c5497b5690361f",
+      "bytes": 21048,
+      "sha256": "2e9a2d1b5757abbadfafa608e9efcb2c5d330b6dbc1d7009a31b0e9c8c34af4f",
+      "lf": 196,
+      "endsWithLF": true
+    },
+    "patch": {
+      "git": "8357b194b658d6399b06f22363068db7d232acaa",
+      "bytes": 8557,
+      "sha256": "54f1253b51d4cf0fb33493406b65782d009eba25bef93d2e7131bfa2b12bb0b4",
+      "lf": 146,
+      "endsWithLF": true
+    }
+  },
+  "delta": {
+    "operations": 6,
+    "hunks": 5,
+    "add": 6,
+    "del": 6,
+    "bytes": 0,
+    "lf": 0,
+    "changes": [
+      "R6→R7 binding error label",
+      "R6→R7 verification identifier",
+      "reviewed test pin",
+      "G10 process300000→450000",
+      "G10 parent360000→510000",
+      "G1 criterionChecksControlsMs matches the same R7 budgets"
+    ],
+    "runCommandLiteral": true,
+    "groups2Through9Literal": true,
+    "argvCwdAndReportCheckLiteral": true,
+    "sourcePins": 25,
+    "unchangedPins": 24
+  },
+  "selection": {
+    "groups": 10,
+    "functionalProcesses": 6,
+    "commands": 16,
+    "truncationFlagsRequiredFalse": 32,
+    "workingPins": 25,
+    "expectedFunctionalDeclarations": 22,
+    "expectedReportEmissions": 11,
+    "C22ExpectedEmissions": 3,
+    "staticOutcomes": 17,
+    "outcomesPartition": [
+      15,
+      1,
+      1
+    ],
+    "wholeFiles": true,
+    "filtersAdded": false
+  },
+  "limits": {
+    "controlCooperativeMs": [
+      12000,
+      12000,
+      50000,
+      50000,
+      240000
+    ],
+    "controlBunMs": [
+      15000,
+      15000,
+      60000,
+      60000,
+      270000
+    ],
+    "wholeNominalCooperativeMs": 364000,
+    "wholeNominalBunMs": 420000,
+    "controlProcessMs": 450000,
+    "controlParentMs": 510000,
+    "configuredCommandSumMs": 2070000,
+    "configuredParentSumMs": 2730000,
+    "jobMs": 2700000,
+    "parentSumExceedsJobMs": 30000,
+    "completionGuaranteed": false,
+    "stdoutBytesPerCommand": 1048576,
+    "stderrBytesPerCommand": 1048576,
+    "forceKillAfter": "5 seconds",
+    "unchangedAnalyticsWaitersMs": [
+      60000,
+      120000
+    ]
+  },
+  "budgetInterpretation": "All sums are configured ceilings. The parent sum45m30 exceeds the unchanged45min job cap; no guaranteed fit or finalizer window is claimed. Dependency setup,capture,cleanup and scheduling are additional costs.",
+  "reportSemantics": {
+    "R6ProgressRemoved": true,
+    "progressIsAcceptanceReport": false,
+    "noNewParser": true,
+    "threeC22LinesCheckLiteral": true,
+    "actualAssertions": null,
+    "actualReports": null,
+    "partialReportsDoNotAcceptUnsupported": true
+  },
+  "history": {
+    "R6FinalNegative": {
+      "git": "9d7ad023151159a193c93122cd4920f5572a3f04",
+      "bytes": 10381,
+      "sha256": "a51fa9a07678ad460b12e33b73a91e2af8ff2e55b792fc88851edeeb13f76a66",
+      "lf": 348,
+      "endsWithLF": true
+    },
+    "peerIntake": {
+      "git": "31ed0848ab52e02b47c5aafe0816e6abd41cd04d",
+      "bytes": 29752,
+      "sha256": "4c0a33069bc15bfd7139c6bf0461988a3bb76edbdc63407985dcada0d5da74db",
+      "lf": 955,
+      "endsWithLF": true
+    },
+    "controlPackageCutPreserved": true,
+    "clockCorrection": "No duration is derived between the third proof-entry and deadline-finally records because they have distinct origins.",
+    "priorOutcomesNotTransferred": true,
+    "supersededCarrierDraft": "5de20aa3a21c3da6f9bc6758fb6edcdbeccca182 omitted the budget telemetry update. The current template adds only that field correction and supersedes the draft; product and test remain unchanged."
+  },
+  "sourcePlan": {
+    "immediateParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "parentTree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+    "delta": "1M test; two product images literal",
+    "accumulatedBase": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "accumulatedPaths": 3,
+    "rootReportedObject": {
+      "source": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "soleParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+      "auditByThisAuthor": false
+    },
+    "templateNotYetBound": true
+  },
+  "future": {
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "snapshotTree": null,
+    "run": null,
+    "actualResults": null,
+    "rootExecutionAuthority": null,
+    "independentReview": null
+  },
+  "binding": {
+    "tokens": [
+      "__SF613_SOURCE_SHA__",
+      "__SF613_SOURCE_TREE__"
+    ],
+    "occurrencesEach": 1,
+    "allowedReplacements": 2,
+    "modelBoundBytes": 15634,
+    "deltaBytes": 39,
+    "modelLF": 220,
+    "calculatedOnly": true,
+    "noExecutableSelfPin": true
+  },
+  "snapshotPlan": {
+    "delta": "2A",
+    "paths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-proof-verification.test.ts"
+    ],
+    "requestLiteral": true
+  },
+  "verification": {
+    "checks": [
+      {
+        "check": "sixanchorsroundtrip",
+        "pass": true
+      },
+      {
+        "check": "patchroundtrip",
+        "pass": true
+      },
+      {
+        "check": "runCommandliteral",
+        "pass": true
+      },
+      {
+        "check": "G2throughG9literal",
+        "pass": true
+      },
+      {
+        "check": "10groups",
+        "pass": true
+      },
+      {
+        "check": "16commandcalls",
+        "pass": true
+      },
+      {
+        "check": "25pins",
+        "pass": true
+      },
+      {
+        "check": "24literalpins",
+        "pass": true
+      },
+      {
+        "check": "samewidthandLF",
+        "pass": true
+      },
+      {
+        "check": "twoUniqueSentinels",
+        "pass": true
+      },
+      {
+        "check": "threeC22emissionsliteral",
+        "pass": true
+      },
+      {
+        "check": "noProgressParser",
+        "pass": true
+      },
+      {
+        "check": "G1criterionChecksControlsMsMatchesTestAndG10",
+        "pass": true
+      }
+    ],
+    "artifactsCreatedAndReadbackLiteral": true,
+    "repoCodeExecuted": false,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "treeCommitRefRunCreated": false,
+    "sixAnchorsAndPatchForwardInverse": true
+  },
+  "authorization": {
+    "proposalOnly": true,
+    "newOriginalAnalyticsAuthorized": false,
+    "D33": "Separate static G24-only revision; no global final qualification or final candidate binding is performed here."
+  }
+}

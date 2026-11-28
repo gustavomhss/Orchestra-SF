@@ -1,0 +1,870 @@
+{
+  "schema": "sf-c22a5-diagnostic-derived-extraction-v1",
+  "purpose": "DIAGNOSTIC_ONLY",
+  "originalsClosed": true,
+  "main": {
+    "gitBlob": "dabfcd80d3b0c25a712b54ba4dd43a6da2e5df8e",
+    "bytes": 7849,
+    "sha256": "6ee8a9802da5f1bf2f3cb3eaa241b2b23db6fd49041d3e22f8f4da84c6fc1acb",
+    "lf": 272,
+    "endsWithLF": true
+  },
+  "cleanup": {
+    "gitBlob": "776c50608b1db81baadf33040b4a6b75b57de3ca",
+    "bytes": 1676,
+    "sha256": "da6ac8a4cbf660e2c152859fc544b80459c4b4d831d890b118a8695dced330f4",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "selected": [
+    {
+      "line": 1036,
+      "body": "Running 2 tests using 1 worker"
+    },
+    {
+      "line": 1038,
+      "body": "[1/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity"
+    },
+    {
+      "line": 1039,
+      "body": "[chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity"
+    },
+    {
+      "line": 1134,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-controls\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1136,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-controls\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1138,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"parameter-source-read\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1140,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-promote-parameter\",\"http\":200,\"status\":\"ok\",\"parameterPeriod\":{\"start\":\"2026-02-01\",\"end\":\"2026-02-28\"},\"parameterUnit\":\"USD\"}"
+    },
+    {
+      "line": 1142,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-controls\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1144,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"sensitivity-controls-units-read\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1146,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-criteria\",\"phase\":\"source-request\",\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1148,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-criteria\",\"http\":200,\"status\":\"ok\",\"elapsedMs\":1235}"
+    },
+    {
+      "line": 1150,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"sensitivity-controls-units-read\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1152,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"sensitivity-rule-fixture-registered-readback\",\"status\":\"ok\",\"caseVersion\":6,\"criterionId\":\"0cb62081-cf73-4b3e-8a66-cd3aaa8f9349\",\"ruleRef\":\"criterion-rule:1457913cb25ccebbd1bb236fa0cac8ac4c5fab51041e2675bce86358b0f84391\",\"previousVersion\":1,\"ruleVersion\":2,\"baselineRef\":\"decision-result:b48693ecd38c8ceb43762dc6af528143142ea5f1b1dd8e075f689614cf0b362f\",\"scenarioRef\":\"decision-result:9719b4bf190957f8d6b8ec0c4ccdefe1a8babf39235bc32887d7c7d59c2bd306\",\"parameterRef\":\"738bd1f1-91b1-4f25-b636-a3f8e8850f6b:2\",\"parameterUnit\":\"USD\",\"resultUnit\":\"USD\",\"engineVersion\":\"planner-runtime-v1\",\"sourceReferences\":[{\"refId\":\"planner-version:e728b132-0a27-4afc-84ae-c05e0c9768d8:2aad1532-7053-47bc-9e42-b304141f7d49:1\",\"refDigest\":\"97878c53182c12c96431b9f2b2b5c76ef46489f4c3b4c22a0bb066379d903add\"},{\"refId\":\"planner-version:e89da6fc-1036-463c-816a-c561c5386642:1c9e9903-c3d3-4324-a6ea-4a6f3d20f27c:1\",\"refDigest\":\"8d9ffc1034a0c569e9bdb3943b9d071d2ae2b03c51303e2839c30c00aa3dfa41\"}],\"originalCaseUnchanged\":true,\"originalUnitsReadbackMatched\":true,\"acquisition\":\"original-register-canonical-resolve-then-controls-units-and-version\"}"
+    },
+    {
+      "line": 1154,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-compare\",\"phase\":\"source-request\",\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1156,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-compare\",\"http\":200,\"status\":\"ok\",\"elapsedMs\":45094}"
+    },
+    {
+      "line": 1158,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"portfolio-selection-fixture-basis\",\"initialVersion\":0,\"basis\":\"new-isolated-fixture-with-no-prior-registration\",\"caseVersion\":6,\"criteriaCount\":1}"
+    },
+    {
+      "line": 1160,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-select-portfolio\",\"phase\":\"source-request\",\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1162,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-select-portfolio\",\"http\":200,\"status\":\"ok\",\"elapsedMs\":28661}"
+    },
+    {
+      "line": 1164,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-controls\",\"http\":200,\"status\":\"ok\"}"
+    },
+    {
+      "line": 1166,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-compare\",\"phase\":\"source-request\",\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1168,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-compare\",\"http\":200,\"status\":\"ok\",\"elapsedMs\":47666}"
+    },
+    {
+      "line": 1170,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"portfolio-selection-registered-readback\",\"status\":\"ok\",\"selectionVersion\":1,\"caseVersion\":6,\"originalAlternativePairMatched\":true,\"originalCriteriaMatched\":true,\"currentComparisonUnchanged\":true,\"acquisition\":\"original-register-canonical-read-then-controls-and-comparison\"}"
+    },
+    {
+      "line": 1174,
+      "body": "SF_ANALYTICS_CONTEXT {\"stage\":\"UI42-list\",\"http\":200,\"status\":\"ok\",\"acquisition\":\"authenticated-original-readback\",\"ownerBinding\":\"exact\",\"resources\":[{\"family\":\"decisions\",\"resource\":\"case-intent\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"decisions.controls.read\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]},{\"family\":\"decisions\",\"resource\":\"assumptions\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"decisions.controls.read\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]},{\"family\":\"portfolio\",\"resource\":\"campaign\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"portfolio.decision-portfolio-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-preview\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-reconcile\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-portfolio-results\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-prepare-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-promote-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"}]},{\"family\":\"portfolio\",\"resource\":\"results\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"portfolio.decision-portfolio-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-preview\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-reconcile\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-portfolio-results\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-prepare-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-promote-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"}]},{\"family\":\"portfolio\",\"resource\":\"sensitivity\",\"state\":\"ready\",\"operations\":[{\"operationId\":\"portfolio.decision-sensitivity-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-sensitivity-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-sensitivity-units\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]}]}"
+    },
+    {
+      "line": 1186,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-list-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI42\",\"stage\":\"list\"}"
+    },
+    {
+      "line": 1198,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-list-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI42\",\"stage\":\"list\"}"
+    },
+    {
+      "line": 1204,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-list-dark-390-test-data\",\"width\":390,\"surface\":\"UI42\",\"stage\":\"list\"}"
+    },
+    {
+      "line": 1210,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-list-light-320-test-data\",\"width\":320,\"surface\":\"UI42\",\"stage\":\"list\"}"
+    },
+    {
+      "line": 1212,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":1,\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1214,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request-failed\",\"sequence\":1,\"ownerBinding\":\"exact\",\"elapsedMs\":350}"
+    },
+    {
+      "line": 1216,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":1,\"ownerBinding\":\"exact\",\"elapsedMs\":347,\"http\":200,\"acquisitionFailure\":\"response-body-unavailable\"}"
+    },
+    {
+      "line": 1218,
+      "body": "SF_ANALYTICS_CONTEXT {\"stage\":\"UI42-empty-case\",\"http\":200,\"status\":\"ok\",\"acquisition\":\"authenticated-original-readback\",\"ownerBinding\":\"exact\",\"resources\":[{\"family\":\"decisions\",\"resource\":\"case-intent\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"decisions.controls.read\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]},{\"family\":\"decisions\",\"resource\":\"assumptions\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"decisions.controls.read\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]},{\"family\":\"portfolio\",\"resource\":\"campaign\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"portfolio.decision-portfolio-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-preview\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-reconcile\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-portfolio-results\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-prepare-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-promote-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"}]},{\"family\":\"portfolio\",\"resource\":\"results\",\"state\":\"partial\",\"operations\":[{\"operationId\":\"portfolio.decision-portfolio-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-preview\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-portfolio-reconcile\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-portfolio-results\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-prepare-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"},{\"operationId\":\"portfolio.decision-promote-portfolio\",\"state\":\"unavailable\",\"operational\":false,\"reason\":\"operational-source-unavailable\"}]},{\"family\":\"portfolio\",\"resource\":\"sensitivity\",\"state\":\"ready\",\"operations\":[{\"operationId\":\"portfolio.decision-sensitivity-evaluate\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-sensitivity-read\",\"state\":\"ready\",\"operational\":true,\"reason\":null},{\"operationId\":\"portfolio.decision-sensitivity-units\",\"state\":\"ready\",\"operational\":true,\"reason\":null}]}]}"
+    },
+    {
+      "line": 1232,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-empty-authorized-case-test-data\",\"width\":1440,\"surface\":\"UI42\",\"stage\":\"configure\"}"
+    },
+    {
+      "line": 1234,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-results\",\"phase\":\"native-request\",\"sequence\":2,\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1236,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-results\",\"phase\":\"native-response\",\"sequence\":2,\"ownerBinding\":\"exact\",\"elapsedMs\":769,\"http\":200,\"status\":\"ok\",\"reason\":null,\"valueShape\":\"array\"}"
+    },
+    {
+      "line": 1252,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI42-configure-focused-candidate-test-data\",\"width\":1440,\"surface\":\"UI42\",\"stage\":\"configure\"}"
+    },
+    {
+      "line": 1254,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"decision-portfolio-preview\",\"phase\":\"native-request\",\"sequence\":3,\"method\":\"POST\",\"ownerBinding\":\"exact\"}"
+    },
+    {
+      "line": 1256,
+      "body": "SF_DESIGN_DIAGNOSTICS {\"kind\":\"wave-three-failure\",\"consoleErrors\":[],\"pageErrors\":[]}"
+    },
+    {
+      "line": 1258,
+      "body": "SF_DESIGN_DIAGNOSTICS {\"kind\":\"native-view\",\"state\":{\"discovery\":\"ready\",\"provider\":\"ready\",\"view\":\"ready\",\"text\":\"Context and access⁨127.0.0.1:40877⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.0cb62081-cf73-4b3e-8a66-cd3aaa8f9349 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case.\"}}"
+    },
+    {
+      "line": 1274,
+      "body": "SF_DESIGN_DIAGNOSTICS {\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}"
+    },
+    {
+      "line": 1276,
+      "body": "  1) [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity "
+    },
+    {
+      "line": 1278,
+      "body": "    TimeoutError: page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\""
+    },
+    {
+      "line": 1282,
+      "body": "    > 72 |   const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })"
+    },
+    {
+      "line": 1289,
+      "body": "    attachment #1: UI42-list-dark-desktop-test-data (image/png) ────────────────────────────────────"
+    },
+    {
+      "line": 1290,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-list-dark-desktop-test-data-51120dc177a65b070c5140b68a940000db83ac2c.png"
+    },
+    {
+      "line": 1293,
+      "body": "    attachment #2: UI42-list-light-desktop-test-data (image/png) ───────────────────────────────────"
+    },
+    {
+      "line": 1294,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-list-light-desktop-test-data-32b8df69ad2b2ebb65965be886573f135e5696d0.png"
+    },
+    {
+      "line": 1297,
+      "body": "    attachment #3: UI42-list-dark-390-test-data (image/png) ────────────────────────────────────────"
+    },
+    {
+      "line": 1298,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-list-dark-390-test-data-986333fd78239d48e49613cdccf4b112911e3657.png"
+    },
+    {
+      "line": 1301,
+      "body": "    attachment #4: UI42-list-light-320-test-data (image/png) ───────────────────────────────────────"
+    },
+    {
+      "line": 1302,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-list-light-320-test-data-b5238feed8b9849ed120175840ec17ff344dc1a7.png"
+    },
+    {
+      "line": 1305,
+      "body": "    attachment #5: UI42-empty-authorized-case-test-data (image/png) ────────────────────────────────"
+    },
+    {
+      "line": 1306,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-empty-authorized-case-test-data-84af5c446bd6658287ff2734d3452f8b2c383ed8.png"
+    },
+    {
+      "line": 1309,
+      "body": "    attachment #6: UI42-configure-focused-candidate-test-data (image/png) ──────────────────────────"
+    },
+    {
+      "line": 1310,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/UI42-configure-focused-candidate-test-data-1c9f4d355a4677cb07df0260b3c049bf303a79d7.png"
+    },
+    {
+      "line": 1313,
+      "body": "    attachment #7: screenshot (image/png) ──────────────────────────────────────────────────────────"
+    },
+    {
+      "line": 1314,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/test-failed-1.png"
+    },
+    {
+      "line": 1317,
+      "body": "    attachment #8: FAILED-native-wave-three-test-data (image/png) ──────────────────────────────────"
+    },
+    {
+      "line": 1318,
+      "body": "    e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/attachments/FAILED-native-wave-three-test-data-f57e87cdcdc1dabce37faf5f9bf3df8f45877743.png"
+    },
+    {
+      "line": 1321,
+      "body": "    Error Context: e2e/test-results/sucafina-design-wave-five--fbb78-ded-results-and-sensitivity-chromium/error-context.md"
+    },
+    {
+      "line": 1324,
+      "body": "[2/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:443:1 › wave five analytics: question catalog and original contextual BI"
+    },
+    {
+      "line": 1325,
+      "body": "[chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:443:1 › wave five analytics: question catalog and original contextual BI"
+    },
+    {
+      "line": 1434,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-question-catalog-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI45\",\"stage\":\"catalog\"}"
+    },
+    {
+      "line": 1448,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-question-catalog-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI45\",\"stage\":\"catalog\"}"
+    },
+    {
+      "line": 1454,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-question-catalog-dark-390-test-data\",\"width\":390,\"surface\":\"UI45\",\"stage\":\"catalog\"}"
+    },
+    {
+      "line": 1460,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-question-catalog-light-320-test-data\",\"width\":320,\"surface\":\"UI45\",\"stage\":\"catalog\"}"
+    },
+    {
+      "line": 1472,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-authorized-financial-context-test-data\",\"width\":1440,\"surface\":\"UI45\",\"stage\":\"context\"}"
+    },
+    {
+      "line": 1486,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-financial-source-values-test-data\",\"width\":1440,\"surface\":\"UI45\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1490,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-binding-readback\",\"view\":\"BI01\",\"selectedValueId\":\"budget:2026-01:effective\",\"referenceId\":\"sf-source:c66e3f9d-b86f-4cbb-9c88-e20239dcb146:1\",\"valueBindingCount\":48,\"distinctReferenceDigests\":1,\"bindings\":[{\"valueId\":\"budget:2026-01:basis\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-01-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-01:effective\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-01-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-01:actual\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-01-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-01:forecast\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-01-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-02:basis\",\"period\":{\"start\":\"2026-02-01\",\"end\":\"2026-02-28\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-02:effective\",\"period\":{\"start\":\"2026-02-01\",\"end\":\"2026-02-28\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-02:actual\",\"period\":{\"start\":\"2026-02-01\",\"end\":\"2026-02-28\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-02:forecast\",\"period\":{\"start\":\"2026-02-01\",\"end\":\"2026-02-28\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-03:basis\",\"period\":{\"start\":\"2026-03-01\",\"end\":\"2026-03-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-03:effective\",\"period\":{\"start\":\"2026-03-01\",\"end\":\"2026-03-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-03:actual\",\"period\":{\"start\":\"2026-03-01\",\"end\":\"2026-03-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-03:forecast\",\"period\":{\"start\":\"2026-03-01\",\"end\":\"2026-03-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-04:basis\",\"period\":{\"start\":\"2026-04-01\",\"end\":\"2026-04-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-04:effective\",\"period\":{\"start\":\"2026-04-01\",\"end\":\"2026-04-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-04:actual\",\"period\":{\"start\":\"2026-04-01\",\"end\":\"2026-04-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-04:forecast\",\"period\":{\"start\":\"2026-04-01\",\"end\":\"2026-04-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-05:basis\",\"period\":{\"start\":\"2026-05-01\",\"end\":\"2026-05-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-05:effective\",\"period\":{\"start\":\"2026-05-01\",\"end\":\"2026-05-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-05:actual\",\"period\":{\"start\":\"2026-05-01\",\"end\":\"2026-05-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-05:forecast\",\"period\":{\"start\":\"2026-05-01\",\"end\":\"2026-05-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-06:basis\",\"period\":{\"start\":\"2026-06-01\",\"end\":\"2026-06-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-06:effective\",\"period\":{\"start\":\"2026-06-01\",\"end\":\"2026-06-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-06:actual\",\"period\":{\"start\":\"2026-06-01\",\"end\":\"2026-06-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-06:forecast\",\"period\":{\"start\":\"2026-06-01\",\"end\":\"2026-06-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-07:basis\",\"period\":{\"start\":\"2026-07-01\",\"end\":\"2026-07-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-07:effective\",\"period\":{\"start\":\"2026-07-01\",\"end\":\"2026-07-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-07:actual\",\"period\":{\"start\":\"2026-07-01\",\"end\":\"2026-07-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-07:forecast\",\"period\":{\"start\":\"2026-07-01\",\"end\":\"2026-07-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-08:basis\",\"period\":{\"start\":\"2026-08-01\",\"end\":\"2026-08-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-08:effective\",\"period\":{\"start\":\"2026-08-01\",\"end\":\"2026-08-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-08:actual\",\"period\":{\"start\":\"2026-08-01\",\"end\":\"2026-08-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-08:forecast\",\"period\":{\"start\":\"2026-08-01\",\"end\":\"2026-08-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-09:basis\",\"period\":{\"start\":\"2026-09-01\",\"end\":\"2026-09-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-09:effective\",\"period\":{\"start\":\"2026-09-01\",\"end\":\"2026-09-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-09:actual\",\"period\":{\"start\":\"2026-09-01\",\"end\":\"2026-09-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-09:forecast\",\"period\":{\"start\":\"2026-09-01\",\"end\":\"2026-09-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-10:basis\",\"period\":{\"start\":\"2026-10-01\",\"end\":\"2026-10-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-10:effective\",\"period\":{\"start\":\"2026-10-01\",\"end\":\"2026-10-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-10:actual\",\"period\":{\"start\":\"2026-10-01\",\"end\":\"2026-10-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-10:forecast\",\"period\":{\"start\":\"2026-10-01\",\"end\":\"2026-10-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-11:basis\",\"period\":{\"start\":\"2026-11-01\",\"end\":\"2026-11-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-11:effective\",\"period\":{\"start\":\"2026-11-01\",\"end\":\"2026-11-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-11:actual\",\"period\":{\"start\":\"2026-11-01\",\"end\":\"2026-11-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-11:forecast\",\"period\":{\"start\":\"2026-11-01\",\"end\":\"2026-11-30\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-12:basis\",\"period\":{\"start\":\"2026-12-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-12:effective\",\"period\":{\"start\":\"2026-12-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-12:actual\",\"period\":{\"start\":\"2026-12-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"budget:2026-12:forecast\",\"period\":{\"start\":\"2026-12-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]}]}"
+    },
+    {
+      "line": 1492,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-original-scalar-dom\",\"locale\":\"en-US\",\"observations\":[]}"
+    },
+    {
+      "line": 1494,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-readback\",\"view\":\"BI01\",\"http\":200,\"rows\":36,\"numericValues\":14,\"missing\":22}"
+    },
+    {
+      "line": 1508,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-selected-context-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1524,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1540,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1548,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-dark-390-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1554,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-dark-390-scrolled-values-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1560,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-light-320-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1566,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-original-values-light-320-scrolled-values-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1584,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-source-table-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1602,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-source-table-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1608,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-source-table-dark-390-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1614,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-financial-source-table-light-320-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1616,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-body-acquisition\",\"selectedValueId\":\"budget:2026-01:effective\",\"http\":200,\"acquisition\":\"native-response\"}"
+    },
+    {
+      "line": 1618,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-original-destinations\",\"selectedValueId\":\"budget:2026-01:effective\",\"installedOrigin\":\"http://127.0.0.1:44351\",\"installedMount\":\"/sucafina\",\"links\":[{\"label\":\"dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31\",\"url\":\"http://127.0.0.1:44351/orchestra/sf-dashboard/budget?year=2026\"}]}"
+    },
+    {
+      "line": 1636,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-resolved-original-source-1-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1638,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-body-acquisition\",\"selectedValueId\":\"budget:2026-01:actual\",\"http\":200,\"acquisition\":\"native-response\"}"
+    },
+    {
+      "line": 1640,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-original-destinations\",\"selectedValueId\":\"budget:2026-01:actual\",\"installedOrigin\":\"http://127.0.0.1:44351\",\"installedMount\":\"/sucafina\",\"links\":[{\"label\":\"dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31\",\"url\":\"http://127.0.0.1:44351/orchestra/sf-dashboard/budget?year=2026\"}]}"
+    },
+    {
+      "line": 1658,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-resolved-original-source-2-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1660,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-identity-regression\",\"selectedValues\":[\"budget:2026-01:effective\",\"budget:2026-01:actual\"],\"samePublishedReference\":true,\"exactValueAndDigestQueries\":2,\"originalProjectionRetained\":true}"
+    },
+    {
+      "line": 1664,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-original-acquisition\",\"view\":\"BI06\",\"acquisition\":\"native-response-cdp\",\"phase\":\"original-request-completed\",\"http\":200,\"sameNativeRequest\":true,\"nativeRequestFinished\":true,\"observer\":\"Network\"}"
+    },
+    {
+      "line": 1666,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-original-acquisition\",\"view\":\"BI06\",\"http\":200,\"acquisition\":\"native-response-cdp\"}"
+    },
+    {
+      "line": 1668,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-binding-readback\",\"view\":\"BI06\",\"selectedValueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"referenceId\":\"9de6f387-2b1f-4e5d-9ca5-4b5caad22aff\",\"valueBindingCount\":17,\"distinctReferenceDigests\":1,\"bindings\":[{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:status\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:holder\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:approvalStage\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:stageEnteredAt\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:baseAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedCurrency\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedFxRate\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:originalAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:originalCurrency\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:fxRate\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:fxSource\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:monetaryState\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:subject\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:reason\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:nextStep\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]}]}"
+    },
+    {
+      "line": 1670,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-original-scalar-dom\",\"locale\":\"en-US\",\"observations\":[{\"id\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.0016979513888888888,\"table\":0.00169795,\"plot\":0.00169795,\"unit\":\"days\"},{\"id\":\"PR-2026-0005:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.0016979513888888888,\"table\":0.00169795,\"plot\":0.00169795,\"unit\":\"days\"},{\"id\":\"PR-2026-0006:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.0016979513888888888,\"table\":0.00169795,\"plot\":0.00169795,\"unit\":\"days\"}]}"
+    },
+    {
+      "line": 1672,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-readback\",\"view\":\"BI06\",\"http\":200,\"rows\":3,\"numericValues\":3,\"missing\":1}"
+    },
+    {
+      "line": 1674,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi06-original-ages\",\"request\":{\"viewId\":\"BI06\",\"selectionRef\":\"c597c64f-70b8-4c11-96b4-81e28e5f7ab2\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"}},\"ages\":[{\"id\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"value\":0.0016979513888888888,\"unit\":\"days\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"evidenceState\":\"confirmed\"},{\"id\":\"PR-2026-0005:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"value\":0.0016979513888888888,\"unit\":\"days\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"evidenceState\":\"confirmed\"},{\"id\":\"PR-2026-0006:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"value\":0.0016979513888888888,\"unit\":\"days\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"evidenceState\":\"confirmed\"}]}"
+    },
+    {
+      "line": 1688,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-coverage-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1702,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1716,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1722,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-dark-390-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1728,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-dark-390-scrolled-values-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1734,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-light-320-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1740,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-values-light-320-scrolled-values-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1756,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-table-dark-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1772,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-table-light-desktop-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1778,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-table-dark-390-test-data\",\"width\":390,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1784,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-original-table-light-320-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1790,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-dark-320-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1806,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-operations-resolved-original-source-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1808,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi06-original-source-resolution\",\"http\":200,\"acquisition\":\"native-response\",\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"links\":[{\"label\":\"procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31\",\"url\":\"http://127.0.0.1:44351/orchestra/sf-procurement/requests?request=PR-2026-0003\"}],\"negativeHttp\":403,\"negative\":{\"status\":\"denied\",\"reason\":\"bi-source-outside-selected-value\"}}"
+    },
+    {
+      "line": 1824,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-source-empty-sensitivity-catalog-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"context\"}"
+    },
+    {
+      "line": 1840,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI45-pt-BR-dark-desktop-catalog-test-data\",\"width\":1440,\"surface\":\"UI45\",\"stage\":\"catalog\"}"
+    },
+    {
+      "line": 1858,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-desktop-values-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1864,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-320-values-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1868,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-original-acquisition\",\"view\":\"BI06\",\"acquisition\":\"native-response-cdp\",\"phase\":\"original-request-completed\",\"http\":200,\"sameNativeRequest\":true,\"nativeRequestFinished\":true,\"observer\":\"Network\"}"
+    },
+    {
+      "line": 1870,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-original-acquisition\",\"view\":\"BI06\",\"locale\":\"pt-BR\",\"http\":200,\"acquisition\":\"native-response-cdp\"}"
+    },
+    {
+      "line": 1872,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-source-binding-readback\",\"view\":\"BI06\",\"selectedValueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"referenceId\":\"2fe66731-d788-41b3-8ee9-ac1105dd01f1\",\"valueBindingCount\":17,\"distinctReferenceDigests\":1,\"bindings\":[{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:status\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:holder\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:approvalStage\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:stageEnteredAt\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:baseAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedCurrency\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:submittedFxRate\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:originalAmount\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:originalCurrency\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:fxRate\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:fxSource\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:monetaryState\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:subject\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:reason\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]},{\"valueId\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:nextStep\",\"period\":{\"start\":\"2026-01-01\",\"end\":\"2026-12-31\"},\"sourceKeys\":[\"evidenceLevel\",\"installationId\",\"kind\",\"projectId\",\"refDigest\",\"refId\",\"schema\",\"target\"]}]}"
+    },
+    {
+      "line": 1874,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-original-scalar-dom\",\"locale\":\"pt-BR\",\"observations\":[{\"id\":\"PR-2026-0003:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.002094097222222222,\"table\":0.0020941,\"plot\":0.0020941,\"unit\":\"days\"},{\"id\":\"PR-2026-0005:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.002094097222222222,\"table\":0.0020941,\"plot\":0.0020941,\"unit\":\"days\"},{\"id\":\"PR-2026-0006:eca32382-b3a5-478b-a7fa-5b5ba1cc8dce:ageDays\",\"original\":0.002094097222222222,\"table\":0.0020941,\"plot\":0.0020941,\"unit\":\"days\"}]}"
+    },
+    {
+      "line": 1876,
+      "body": "SF_ANALYTICS_SOURCE {\"operation\":\"bi-data-readback\",\"view\":\"BI06\",\"http\":200,\"rows\":3,\"numericValues\":3,\"missing\":1}"
+    },
+    {
+      "line": 1890,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-desktop-operations-test-data\",\"width\":1440,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1896,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-320-operations-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1902,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-320-operations-scrolled-values-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1908,
+      "body": "SF_ANALYTICS_CAPTURE {\"name\":\"UI46-pt-BR-dark-320-operations-scrolled-units-test-data\",\"width\":320,\"surface\":\"UI46\",\"stage\":\"result\"}"
+    },
+    {
+      "line": 1910,
+      "body": "SF_DESIGN_DIAGNOSTICS {\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}"
+    },
+    {
+      "line": 1912,
+      "body": "SF_ANALYTICS_SCOPE {\"surfaces\":[\"UI45\",\"UI46\"],\"catalogViews\":11,\"originalFinancialRead\":true,\"originalOperationalRead\":true,\"originalSourceResolution\":true,\"originalOperationalSourceResolution\":true,\"originalOperationalSourceNegative\":\"bi-source-outside-selected-value\",\"originalSensitivityChoices\":0,\"invalidatedOnPeriodChange\":true,\"fabricatedResult\":false}"
+    },
+    {
+      "line": 1914,
+      "body": "SF_DESIGN_DIAGNOSTICS {\"kind\":\"wave-three-page-closed\",\"consoleErrors\":[],\"pageErrors\":[]}"
+    },
+    {
+      "line": 1916,
+      "body": "  1 failed"
+    },
+    {
+      "line": 1917,
+      "body": "    [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity "
+    },
+    {
+      "line": 1918,
+      "body": "  1 passed (10.5m)"
+    }
+  ],
+  "captures": [
+    {
+      "line": 1186,
+      "name": "UI42-list-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "line": 1198,
+      "name": "UI42-list-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "line": 1204,
+      "name": "UI42-list-dark-390-test-data",
+      "width": 390,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "line": 1210,
+      "name": "UI42-list-light-320-test-data",
+      "width": 320,
+      "surface": "UI42",
+      "stage": "list"
+    },
+    {
+      "line": 1232,
+      "name": "UI42-empty-authorized-case-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "configure"
+    },
+    {
+      "line": 1252,
+      "name": "UI42-configure-focused-candidate-test-data",
+      "width": 1440,
+      "surface": "UI42",
+      "stage": "configure"
+    },
+    {
+      "line": 1434,
+      "name": "UI45-question-catalog-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog"
+    },
+    {
+      "line": 1448,
+      "name": "UI45-question-catalog-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog"
+    },
+    {
+      "line": 1454,
+      "name": "UI45-question-catalog-dark-390-test-data",
+      "width": 390,
+      "surface": "UI45",
+      "stage": "catalog"
+    },
+    {
+      "line": 1460,
+      "name": "UI45-question-catalog-light-320-test-data",
+      "width": 320,
+      "surface": "UI45",
+      "stage": "catalog"
+    },
+    {
+      "line": 1472,
+      "name": "UI45-authorized-financial-context-test-data",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "context"
+    },
+    {
+      "line": 1486,
+      "name": "UI45-financial-source-values-test-data",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "result"
+    },
+    {
+      "line": 1508,
+      "name": "UI46-financial-selected-context-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1524,
+      "name": "UI46-financial-original-values-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1540,
+      "name": "UI46-financial-original-values-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1548,
+      "name": "UI46-financial-original-values-dark-390-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1554,
+      "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1560,
+      "name": "UI46-financial-original-values-light-320-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1566,
+      "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1584,
+      "name": "UI46-financial-source-table-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1602,
+      "name": "UI46-financial-source-table-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1608,
+      "name": "UI46-financial-source-table-dark-390-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1614,
+      "name": "UI46-financial-source-table-light-320-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1636,
+      "name": "UI46-resolved-original-source-1-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1658,
+      "name": "UI46-resolved-original-source-2-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1688,
+      "name": "UI46-operations-original-coverage-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1702,
+      "name": "UI46-operations-original-values-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1716,
+      "name": "UI46-operations-original-values-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1722,
+      "name": "UI46-operations-original-values-dark-390-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1728,
+      "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1734,
+      "name": "UI46-operations-original-values-light-320-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1740,
+      "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1756,
+      "name": "UI46-operations-original-table-dark-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1772,
+      "name": "UI46-operations-original-table-light-desktop-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1778,
+      "name": "UI46-operations-original-table-dark-390-test-data",
+      "width": 390,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1784,
+      "name": "UI46-operations-original-table-light-320-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1790,
+      "name": "UI46-operations-dark-320-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1806,
+      "name": "UI46-operations-resolved-original-source-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1824,
+      "name": "UI46-source-empty-sensitivity-catalog-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "context"
+    },
+    {
+      "line": 1840,
+      "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+      "width": 1440,
+      "surface": "UI45",
+      "stage": "catalog"
+    },
+    {
+      "line": 1858,
+      "name": "UI46-pt-BR-dark-desktop-values-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1864,
+      "name": "UI46-pt-BR-dark-320-values-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1890,
+      "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+      "width": 1440,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1896,
+      "name": "UI46-pt-BR-dark-320-operations-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1902,
+      "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    },
+    {
+      "line": 1908,
+      "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+      "width": 320,
+      "surface": "UI46",
+      "stage": "result"
+    }
+  ],
+  "findings": {
+    "pass": 1,
+    "fail": 1,
+    "previewWaitMs": 60000,
+    "UI42Captures": 6,
+    "UI43Captures": 0,
+    "UI44Captures": 0,
+    "BIOriginalCase": "passed",
+    "acceptedAreas": 0,
+    "finalQualification": false
+  },
+  "interpretationLimits": [
+    "Derived display strips ANSI, does not alter preserved original.",
+    "Preview timeout identifies response not received within original budget, not an exclusive backend cause.",
+    "No ZIP obtained or original PNG pixel inspection.",
+    "Historical twelve accepted areas preserved without transfer to this source."
+  ]
+}

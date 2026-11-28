@@ -1,0 +1,206 @@
+{
+  "schema": "sf613-c22-root-intake-review-v1",
+  "status": "COMPLETE_RECEIPT_OF_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "at": "2026-11-28 11:08:15 UTC",
+  "run": 46137780758,
+  "attempt": 1,
+  "source": "a0afd32f76c5c6e959ce36de6515a7f0b444e0ad",
+  "sourceTree": "265136023d2ea1ae51c7edd5d0808fd793e45db7",
+  "snapshot": "ed4dbb032a317be35e46835d27197a9aa60d6766",
+  "snapshotTree": "3ddfa87f2f314ae0f8a1b098bfb23042c48fccc5",
+  "context": {
+    "gitBlob": "e5815b6f4c87e4f658625378df1198e5420880d0",
+    "bytes": 26073,
+    "sha256": "48a6e5055db0927fa5a578944d2dc1522e1abeaa601fca3c28011bc5070939e7",
+    "lf": 562,
+    "endsWithLF": true
+  },
+  "main": {
+    "gitBlob": "169c499140ed78eb46eeca16a92c368a2c769941",
+    "bytes": 125340,
+    "sha256": "ece4adaa6374a349e96b310219781b7d97049ca2c4ebd6a641b0ac95cce4af74",
+    "lf": 1032,
+    "endsWithLF": true
+  },
+  "cleanup": {
+    "gitBlob": "b2003851773f83dbd9f1eb30c723c06648edd6c7",
+    "bytes": 2281,
+    "sha256": "61927e2ff91a6d93a9ed6f75e2f0a84037aed363bbfc2d624504b10dd032ac41",
+    "lf": 39,
+    "endsWithLF": true
+  },
+  "mainManifest": {
+    "gitBlob": "e07c953b96030b07d34fce3b8a5e469901fb1468",
+    "bytes": 1691,
+    "sha256": "75c91338292d2897c49ad6b0e6728d1902b09d832c3b8e58b790a200f0eedadc",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "cleanupManifest": {
+    "gitBlob": "23ca06ec90ee91ca7266cb16f1ae08e3e8734f61",
+    "bytes": 1678,
+    "sha256": "89c54c66bdf5b7c9ee01f27fd85dc43acd61c03343ee01588b42f64e1c571f41",
+    "lf": 60,
+    "endsWithLF": true
+  },
+  "extraction": {
+    "gitBlob": "65147fe9313e6d0c4678c1cac70a82fa5e09e5a4",
+    "bytes": 117885,
+    "sha256": "5087ac00c693b060816cd0408241a493a3383f6d3496e2be8edf46047ca091cb",
+    "lf": 2035,
+    "endsWithLF": true
+  },
+  "checks": [
+    {
+      "name": "Intake closed after exact original preservation",
+      "passed": true
+    },
+    {
+      "name": "Exactly one run attempt bound",
+      "passed": true
+    },
+    {
+      "name": "Terminal conclusion negative and cleanup succeeded",
+      "passed": true
+    },
+    {
+      "name": "No artifact and no branch remain",
+      "passed": true
+    },
+    {
+      "name": "Exactly 16 command records",
+      "passed": true
+    },
+    {
+      "name": "All command identities bind source/tree/snapshot/run",
+      "passed": true
+    },
+    {
+      "name": "All 32 truncation flags false",
+      "passed": true
+    },
+    {
+      "name": "Exactly two nonzero command exits",
+      "passed": true
+    },
+    {
+      "name": "CLI types passed",
+      "passed": true
+    },
+    {
+      "name": "Sucafina typecheck exited 2",
+      "passed": true
+    },
+    {
+      "name": "New comparison control exited 1",
+      "passed": true
+    },
+    {
+      "name": "Ten hosted group identity records",
+      "passed": true
+    },
+    {
+      "name": "One actual pin report with twenty-five unique paths",
+      "passed": true
+    },
+    {
+      "name": "All actual working pins match prepared source",
+      "passed": true
+    },
+    {
+      "name": "Six functional footers plus outer footer received",
+      "passed": true
+    },
+    {
+      "name": "Functional totals are 19 pass,1 fail,2626 assertions",
+      "passed": true
+    },
+    {
+      "name": "Inherited five processes retained 17 pass,2407 assertions",
+      "passed": true
+    },
+    {
+      "name": "New file retained two old passes and one new failure",
+      "passed": true
+    },
+    {
+      "name": "Outer footer is 8 pass,2 fail,49 assertions",
+      "passed": true
+    },
+    {
+      "name": "Eight inherited reports literal to C21",
+      "passed": true
+    },
+    {
+      "name": "New C22 report absent",
+      "passed": true
+    },
+    {
+      "name": "Phase records distinct from control reports",
+      "passed": true
+    },
+    {
+      "name": "Canonical guards evaluated current dev merge base",
+      "passed": true
+    },
+    {
+      "name": "Guards passed with bounded historical findings",
+      "passed": true
+    },
+    {
+      "name": "Readonly push type error is present",
+      "passed": true
+    },
+    {
+      "name": "Concrete native control denied before completion",
+      "passed": true
+    }
+  ],
+  "counts": {
+    "checks": 26,
+    "functionalProcesses": 6,
+    "functionalPass": 19,
+    "functionalFail": 1,
+    "functionalAssertions": 2626,
+    "outerPass": 8,
+    "outerFail": 2,
+    "outerAssertions": 49,
+    "commands": 16,
+    "truncationFlagsFalse": 32,
+    "hostRecords": 10,
+    "workingPins": 25,
+    "inheritedReports": 8,
+    "newC22Reports": 0,
+    "separatePhaseRecords": 2
+  },
+  "failures": [
+    {
+      "kind": "typecheck",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+      "line": 641,
+      "column": 25,
+      "code": "TS2339",
+      "reason": "push does not exist on readonly criterion array"
+    },
+    {
+      "kind": "new-control",
+      "reason": "case-selection-unavailable",
+      "observedAt": "ok helper line49; caller578; operation610",
+      "runtime": "new test failed in7.05s before native oracles/report completed; no timeout increase indicated"
+    }
+  ],
+  "limits": {
+    "staticReviewsDidNotGuaranteeRuntime": true,
+    "noInstalledAdmissionAcceptance": true,
+    "noUIQualification": true,
+    "oldEvidenceRemainsHistorical": true,
+    "analyticsActivationBlocked": true,
+    "originalIntakePermanentlyClosed": true,
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "zipGets": 0,
+    "productionAuthorized": false
+  }
+}

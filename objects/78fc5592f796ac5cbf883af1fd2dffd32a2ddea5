@@ -1,0 +1,212 @@
+{
+  "schema": "sf613-c22a5-original-analytics-diagnostic-authority-v1",
+  "status": "ROOT_AUTHORIZED_DIAGNOSTIC_ONLY_ONE_CREATE_AFTER_PREFLIGHT",
+  "at": "2026-11-28 12:49:05 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "/root",
+  "userMandate": "Diagnose and complete existing #613 through reviewed PRs and retain source-specific evidence; no production cutover without explicit user approval.",
+  "explicitDecision": "Authorize one observational execution of the two original Analytics tests on reviewed clean R5 to diagnose UI42–UI44 in parallel with the separately blocked unsupported control. Preserve the original focal qualification prerequisite: this diagnostic does not accept that focal, any installed area, final C613 or go-live.",
+  "basis": {
+    "negativeFocal": {
+      "gitBlob": "632793b5fa7981d62d867e7de5a47d551f70acc2",
+      "bytes": 8121,
+      "sha256": "cccc8a8cd2e01159aa7d2024ef55065edb2f1d14100e25ea163e822bbb5d1a03",
+      "lf": 288,
+      "endsWithLF": true
+    },
+    "separatePurposePeer": {
+      "gitBlob": "7e7c73c6b31b938515912474ab584a60a7fa3a69",
+      "bytes": 8690,
+      "sha256": "422a19e590fd50488ff47157bdcf4980b9edccb168bebca0f367f19db377ba0e",
+      "lf": 216,
+      "endsWithLF": true
+    },
+    "selectionPeerPreserved": {
+      "gitBlob": "692a4ec466259fd1321a714d8e97f9570d004234",
+      "bytes": 7889,
+      "sha256": "643492ce4db40c59baa0a4b3a1dc798639c6588ffe8f3b02158e79a67ea1e524",
+      "lf": 244,
+      "endsWithLF": true
+    },
+    "selection": {
+      "gitBlob": "cd8c39ada8002d81eb4f567180ac796ac2567149",
+      "bytes": 5746,
+      "sha256": "ff379ed1a15446d989c068d9eb91e62d7806a80da1748ec8c238941fe1eef880",
+      "lf": 165,
+      "endsWithLF": true
+    },
+    "sourceProductBytesLiteralSinceC22R2": true,
+    "knownPartialResults": "21 functional pass/1unsupported deadline; both typechecks and guards pass. Partial evidence is not complete qualification."
+  },
+  "source": {
+    "sha": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+    "tree": "3666601c7e03036e4573d724394b8dfc254cb30a"
+  },
+  "snapshot": {
+    "sha": "d2a5920f1b79d4660932ab6d9024199af9ff3ea9",
+    "tree": "fcec47ed77217b70a76a1b6a98321910ffd15f7b",
+    "soleParent": "9c2800360497e4cd037e06b43cc3b6ee3fee5ca7",
+    "delta": "1A request only",
+    "treePairs": 1,
+    "literalSiblings": 45
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "selectionPins": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "mode": "100644",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "mode": "100644",
+      "bytes": 4384,
+      "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "mode": "100644",
+      "bytes": 1892,
+      "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "mode": "100644",
+      "bytes": 21102,
+      "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+      "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+      "mode": "100644",
+      "bytes": 719,
+      "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "mode": "100644",
+      "bytes": 12321,
+      "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+      "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+      "mode": "100644",
+      "bytes": 15525,
+      "sha256": "c4e921a271e7a39669b9c962c0aa3601dd589ef5f43d928f733aa6f5b963b653"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "mode": "100644",
+      "bytes": 5823,
+      "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "mode": "100644",
+      "bytes": 13217,
+      "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "mode": "100644",
+      "bytes": 4225,
+      "sha256": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "mode": "100644",
+      "bytes": 17001,
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "mode": "100644",
+      "bytes": 19419,
+      "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "mode": "100644",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44"
+    }
+  ],
+  "execution": {
+    "branch": "ci-run-sf613c22a5",
+    "createOnly": true,
+    "force": false,
+    "oneActivationOnly": true,
+    "automaticRerunAllowed": false,
+    "expectedEvent": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "runner": "ubuntu-24.04",
+    "jobTimeoutMs": 2700000,
+    "originalSpec": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "originalCases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "testDeadlinesMs": [
+      780000,
+      660000
+    ],
+    "previewWaitMs": 60000,
+    "sensitivityWaitMs": 120000,
+    "fixtureOverlayCount": 0,
+    "alterOriginalOracles": false,
+    "prodChannelIsTestConfiguration": true
+  },
+  "preflight": {
+    "at": "2026-11-28 12:49:05 UTC",
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "8d383d5e1b1eb5a745940ab57603df6dce3bfa8d"
+    },
+    "branchAbsent": true,
+    "headRuns": 0,
+    "branchRuns": 0
+  },
+  "intake": {
+    "receiver": "/root only",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "when": "One exact run/attempt1 and main+cleanup terminal metadata complete.",
+    "preservation": "Preserve decoded originals as actual Git parts, verify literal readbacks/full recomposition before interpretation; then close permanently.",
+    "rawHtmlOrBase64InSnippets": false,
+    "artifactMetadata": true,
+    "artifactZip": "No ZIP acquired by this activation; any acquisition requires concrete exact artifact/size/digest and separately reviewed original-byte reader."
+  },
+  "limits": {
+    "diagnosticOnly": true,
+    "acceptSourceForMerge": false,
+    "newInstalledAcceptances": 0,
+    "fallbackBlockerStillOpen": true,
+    "finalUI6StillRequired": true,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false,
+    "oldOriginalsThroughR5PermanentlyClosed": true
+  }
+}

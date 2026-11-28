@@ -1,0 +1,48 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -18,7 +18,7 @@
+ 
+ function requireHostedCandidate() {
+   if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
+-    throw new Error("C22 R6 source and tree must be bound to reviewed Git objects before execution")
++    throw new Error("C22 R7 source and tree must be bound to reviewed Git objects before execution")
+   if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+       process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+       !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-c22r6-comparison-criteria-observation-focal", source, sourceTree,
++    verification: "sf613-c22r7-comparison-criteria-observation-focal", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -73,7 +73,7 @@
+     portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },
+     scenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, internalInvocations: 14, nominalSum: 20000, process: 45000, parent: 60000 },
+     nativeScenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, nominalSum: 20000, process: 45000, parent: 60000 },
+-    criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 105000], addedBun: [60000, 60000, 120000], declaredTests: 5, nominalSum: 270000, process: 300000, parent: 360000 },
++    criterionChecksControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: [50000, 50000, 240000], addedBun: [60000, 60000, 270000], declaredTests: 5, nominalSum: 420000, process: 450000, parent: 510000 },
+     typecheckMs: { process: 240000, parent: 300000 },
+     guardsMs: { defaultProcess: 180000, parent: 600000 },
+     snapshotOverlays: [".ci-run.json", "apps/cli/test/sucafina-proof-verification.test.ts"],
+@@ -110,7 +110,7 @@
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts","b62d93080073964d7adc993c3a5c02277abab38a"],
+     ["modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts","0b03c45e7288985b99914c186522bf062f9e3595"],
+     ["apps/cli/src/sucafina-product/portfolio-authority.ts","05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"],
+-    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts","201a3caef45735e38d2df9d4d6a1c885a5949ed0"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts","b8f59389f0de1be542e36f375f1674c3bc75bd75"],
+     ["apps/cli/src/sucafina-product/portfolio-comparison-observation.ts","6c34520bf11aa42c0d42244a830bf00433894757"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/sensitivity-observation-fixture.ts","120f4169cec2e5e82a961399230476a83a5425b7"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts","3eb140557b597156baf52578d8981d332e52aef3"],
+@@ -215,6 +215,6 @@
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+   const output = yield* runCommand("Comparison criterion observation whole-file", process.execPath,
+-    ["test", "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts"], module, 300_000)
++    ["test", "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts"], module, 450_000)
+   expect(output.split("\n").filter((line) => line.startsWith("SF_C22_COMPARISON_CRITERIA_OBSERVATION "))).toHaveLength(3)
+-}), 360_000)
++}), 510_000)

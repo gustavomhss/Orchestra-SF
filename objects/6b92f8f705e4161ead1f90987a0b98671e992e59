@@ -1,0 +1,122 @@
+{
+  "schema": "sf613-c22r3-root-intake-review-v1",
+  "status": "RECEIVED_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "at": "2026-11-28 11:36:10 UTC",
+  "run": 46139531712,
+  "source": "c05fb0bbd7182c669d4905155e1ff0b0aa201840",
+  "tree": "e1bea29e74eedfbe1c6847da257f358e4ef6d45d",
+  "snapshot": "f1d88805abdfc27e5fe0dbbf55bd3d4aa164aa46",
+  "context": {
+    "gitBlob": "6da9f68c9fc2ba095a7f5a63972f48a055cbf59d",
+    "bytes": 26050,
+    "sha256": "2f77a8eda939b686522ae5c6feb8266ae537ccf453e0ef9f7090de31fae66029",
+    "lf": 562,
+    "endsWithLF": true
+  },
+  "main": {
+    "gitBlob": "2f541ec777aed7403eecf6cb5dea211576912430",
+    "bytes": 120864,
+    "sha256": "d56e2db24e3208a856889ebb6449e8c7d31f5934ef8dda2d59ae8f97a14f2d91",
+    "lf": 977,
+    "endsWithLF": true
+  },
+  "cleanup": {
+    "gitBlob": "5f75420b2ea1df378281103bbec3ab0aed51a975",
+    "bytes": 2282,
+    "sha256": "c127f517da2e61d377a1cbd860fd178ed390cbef3f3409103e2fab6a235c55a6",
+    "lf": 39,
+    "endsWithLF": true
+  },
+  "extraction": {
+    "gitBlob": "d67308439dc594bbef7874ea8ef6e0306f59a9e2",
+    "bytes": 119342,
+    "sha256": "6fc1870e14baada8d07d0eb9a45889012a5c30feb7cf0f15612e4f97fe675617",
+    "lf": 2076,
+    "endsWithLF": true
+  },
+  "checks": {
+    "closed": true,
+    "oneTerminalRun": true,
+    "twoTerminalJobs": true,
+    "cleanupSucceeded": true,
+    "branchAbsent": true,
+    "artifactsZero": true,
+    "commands16": true,
+    "oneCommandFailed": true,
+    "noTruncation": true,
+    "bothTypesPassed": true,
+    "host10": true,
+    "tuple": true,
+    "pins25": true,
+    "functional6": true,
+    "functional19_1_2652": true,
+    "outer9_1_49": true,
+    "oldReportsLiteral": true,
+    "C22Absent": true,
+    "phases8": true,
+    "guards": true,
+    "cooperativeDeadlineObserved": true
+  },
+  "checkCount": 21,
+  "observedPhases": [
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "single-criterion-data",
+      "state": "started",
+      "elapsedMs": 5364
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "single-criterion-data",
+      "state": "returned",
+      "phaseMs": 2716,
+      "elapsedMs": 8080,
+      "aborted": false
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "native-bind",
+      "state": "started",
+      "elapsedMs": 8080
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "native-bind",
+      "state": "returned",
+      "phaseMs": 10232,
+      "elapsedMs": 18312,
+      "aborted": false
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "native-read",
+      "state": "started",
+      "elapsedMs": 18312
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "native-read",
+      "state": "returned",
+      "phaseMs": 6719,
+      "elapsedMs": 25032,
+      "aborted": false
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "multiple-criterion-data",
+      "state": "started",
+      "elapsedMs": 28703
+    },
+    {
+      "fixture": "comparison-criteria-observation",
+      "phase": "multiple-criterion-data",
+      "state": "returned",
+      "phaseMs": 3507,
+      "elapsedMs": 32209,
+      "aborted": false
+    }
+  ],
+  "limit": "The last phase returns at32209ms. The subsequent cooperative deadline does not locate a single blocked operation; remaining bind/read/revocation/fallback steps lack individual phase records.",
+  "qualification": false,
+  "productionAuthorized": false
+}

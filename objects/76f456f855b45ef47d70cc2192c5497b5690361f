@@ -1,0 +1,196 @@
+{
+  "schema": "sf613-c22-r7-control-derivation-v1",
+  "status": "PROPOSED_UNBOUND_NO_RUNTIME_RESULT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+  "base": {
+    "source": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+    "tree": "b4c4e1e3b819edb414ed7defcc5f5a3d738c4f7d",
+    "test": {
+      "git": "201a3caef45735e38d2df9d4d6a1c885a5949ed0",
+      "bytes": 46204,
+      "sha256": "668bbe4c5a57982fcfbadba93667ec0ad1f0e5bbd1be5c8ac6c226e501337e14",
+      "lf": 803,
+      "endsWithLF": true
+    },
+    "package": {
+      "git": "cd2e9572a5038401ae7bf98d8ed4ef0b2ae678ee",
+      "bytes": 21751,
+      "sha256": "7dedd3f98a9f67d963ba6ba09a0ab2c40ccaba6da28c1604b8eaf2f46a82414f",
+      "lf": 621,
+      "endsWithLF": true
+    }
+  },
+  "baselineRestored": {
+    "test": {
+      "git": "4f462dc4cad977366d6a861d138878186a5d003f",
+      "bytes": 44338,
+      "sha256": "90e1f11a4e8e3afd17c13ae6a55e6e5c44fcbb784a617fb4f8d318be6f4f736c",
+      "lf": 766,
+      "endsWithLF": true
+    },
+    "package": {
+      "git": "23fe5500297968e7f5effd8d3d5f5a8fecd63e5b",
+      "bytes": 12984,
+      "sha256": "66e58a26462b6001f300762301676ef4f9a6d138c099f94d60f9ca5150057817",
+      "lf": 369,
+      "endsWithLF": true
+    },
+    "meaning": "Complete R5 test bytes restored by reversing the two R6 tracing operations; then only unsupported cooperative105000→240000 and Bun120000→270000."
+  },
+  "postimage": {
+    "git": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+    "bytes": 44338,
+    "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+    "lf": 766,
+    "endsWithLF": true
+  },
+  "operations": [
+    {
+      "id": "remove-r6-tracing-1",
+      "before": "  const deadline = compositionTestDeadline(\"comparison-criteria-unsupported\", 105_000)\n  const outcomes: string[] = []\n  try {\n    const { native, portfolio, measurement, request, prepare, bindNative, readNative, begin, outside } =\n      await nativeComparisonObservationFixture(deadline, true)",
+      "after": "  const deadline = compositionTestDeadline(\"comparison-criteria-unsupported\", 105_000)\n  const outcomes: string[] = []\n  try {\n    const { native, portfolio, measurement, request, prepare, bindNative, readNative, begin, outside } =\n      await nativeComparisonObservationFixture(deadline)",
+      "offset": 43295,
+      "occurrences": 1,
+      "preimage": {
+        "git": "201a3caef45735e38d2df9d4d6a1c885a5949ed0",
+        "bytes": 46204,
+        "sha256": "668bbe4c5a57982fcfbadba93667ec0ad1f0e5bbd1be5c8ac6c226e501337e14",
+        "lf": 803,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "968add4b97fdfbd1df3ed4671738adf60d403be0",
+        "bytes": 46198,
+        "sha256": "23ebc23fb4593b082cd0d7e27405f03c406348003adf5ee474d0770cef82af8b",
+        "lf": 803,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "remove-r6-tracing-2",
+      "before": "async function nativeComparisonObservationFixture(deadline: Deadline, traceUnsupported = false) {\n  const progressState = (() => {\n    if (!traceUnsupported) return undefined\n    try { return { started: performance.now(), measurement: 0, records: 0, stopped: false } }\n    catch { return undefined }\n  })()\n  // Native C08/Source/Finance/Planner composition. Only fixture data and the\n  // factory seam are supplied; no LocalStore method or evaluator is replaced.\n  const native = await deadline.phase(\"native-setup\", () =>\n    sensitivityObservationFixture(deadline, \"all\", \"lte\", { plannerRecordProof: true }))\n  const proofPhase = new AsyncLocalStorage<boolean>()\n  // Diagnostic-only progress. The clock starts at this native fixture entry,\n  // independently of the deadline's clock. Reserve record 32 for suppression.\n  const progress = (point: \"bind-action-enter\" | \"proof-enter\" | \"observer-post-proof-enter\" |\n    \"work-enter\" | \"work-await-returned\", proofOrdinal: number) => {\n    if (!progressState || progressState.stopped) return\n    try {\n      if (point === \"observer-post-proof-enter\" && proofPhase.getStore()) return\n      const sequence = ++progressState.records\n      const suppressed = sequence === 32\n      if (suppressed) progressState.stopped = true\n      console.info(\"SF_COMPOSITION_PROGRESS\", JSON.stringify({\n        schema: \"sf-composition-progress-v1\", fixture: \"comparison-criteria-unsupported\",\n        clock: \"performance.now\", origin: \"native-fixture-entry\",\n        sequence, measurement: progressState.measurement,\n        point: suppressed ? \"suppressed\" : point,\n        ...(suppressed ? { reason: \"record-limit\", limit: 32 } : { proofOrdinal }),\n        elapsedMs: Math.round(performance.now() - progressState.started),\n      }))\n    } catch { progressState.stopped = true }\n  }\n  type Batch = { owned: boolean; planner: boolean; same: boolean; currentAfter: boolean; booleanOnly: boolean }\n  const measurement: { active: boolean; batches: Batch[]; proofs: number; afterBatch?: () => void } = {\n    active: false, batches: [], proofs: 0,\n  }\n  const makeObservation = native.business.createPlannerCriteriaObservation\n  native.business.createPlannerCriteriaObservation = (criteria) => {\n    const original = makeObservation.call(native.business, criteria)\n    return <Value>(request: ScenarioCompareRequest, incoming: TrustedDomainContext,\n      work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {\n      if (measurement.active) progress(\"observer-post-proof-enter\", measurement.proofs)\n      return original(request, incoming, async () => {\n        if (!measurement.active || proofPhase.getStore()) return work()\n        const before = currentSfReadonlySnapshotScope(native.persistence)\n        const planner = currentSfPlannerReadonlySnapshotScope(native.persistence)\n        const batch: Batch = { owned: !!before && before.current(),\n          planner: !!before && !!planner && planner.identity === before.identity &&\n            planner.bytesIdentity === before.bytesIdentity && planner.current(),\n          same: false, currentAfter: false, booleanOnly: false }\n        measurement.batches.push(batch)\n        const proofOrdinal = measurement.proofs\n        progress(\"work-enter\", proofOrdinal)\n        const result = await work()\n        progress(\"work-await-returned\", proofOrdinal)\n        const after = currentSfReadonlySnapshotScope(native.persistence)\n        batch.same = !!before && !!after && before.identity === after.identity && before.bytesIdentity === after.bytesIdentity\n        batch.currentAfter = !!after && after.current()\n        batch.booleanOnly = result.status === \"ok\" && Object.is(result.value, true)\n        const afterBatch = measurement.afterBatch\n        measurement.afterBatch = undefined\n        afterBatch?.()\n        return result\n      })\n    }\n  }\n  const portfolio = (() => {\n    try { return createSfPortfolioServices({ authority: native.authority, business: native.business, proposalCoverageWrites: native.writes }) }\n    finally { native.business.createPlannerCriteriaObservation = makeObservation }\n  })()\n  deadline.own(() => portfolio.dispose())\n  const proof = portfolio.proof\n  if (!proof) throw new Error(\"The real Portfolio verifier was not composed\")\n  const verify = proof.verifyComparison\n  proof.verifyComparison = (...args) => {\n    if (measurement.active) {\n      measurement.proofs++\n      progress(\"proof-enter\", measurement.proofs)\n    }\n    return proofPhase.run(true, () => verify.call(proof, ...args))\n  }\n  deadline.own(() => { proof.verifyComparison = verify })\n  const request = () => new Request(native.transport.url, { method: \"POST\", signal: deadline.signal,\n    headers: { origin: new URL(native.transport.url).origin } })\n  const admitComparison = async (pair: ScenarioCompareRequest) => {\n    const admitted = ok(await native.authority.ui.admit(request(), \"sf_scenario_compare\", digestSfValue(pair)))\n    deadline.own(() => native.authority.ui.finish(admitted))\n    expect(await native.authority.ui.validate(admitted, \"sf_scenario_compare\", digestSfValue(pair))).toBe(true)\n    return admitted\n  }\n  const prepare = async (selected: typeof native.caseRef, references: string[], criteria: string[]) => {\n    const pair: ScenarioCompareRequest = { scenarioRefs: references, criteria }\n    const admitted = await admitComparison(pair)\n    const stored = ok(await native.business.withCase(admitted, selected, {}, async () => {\n      const comparison = ok(await portfolio.planner.compareScenarios(pair, admitted))\n      return native.business.results.write({ kind: \"comparison\", result: comparison, caseRef: selected,\n        requestDigest: digestSfValue(pair), sourceRefs: native.sources, idempotencyKey: randomUUID() }, admitted)\n    }))\n    if (stored.kind !== \"comparison\") throw new Error(\"The real comparison was not stored\")\n    const proofs = ok(await native.business.withCase(admitted, selected, {}, () =>\n      portfolio.comparisonBindings.proofs(selected, criteria, admitted)))\n    return { selected, pair, admitted, stored, proofs }\n  }\n  type Prepared = Awaited<ReturnType<typeof prepare>>\n  const bindNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () => {\n    progress(\"bind-action-enter\", measurement.proofs)\n    return portfolio.comparisonBindings.bind({ caseRef: data.selected, resultRef: data.stored.resultRef,\n      request: data.pair, expectedRules: data.proofs }, data.admitted)\n  })\n  const readNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>\n    portfolio.comparisonBindings.read({ caseRef: data.selected, resultRef: data.stored.resultRef }, data.admitted))\n  const begin = (afterBatch?: () => void) => {\n    deadline.check(); measurement.batches = []; measurement.proofs = 0\n    measurement.afterBatch = afterBatch; measurement.active = true\n    if (progressState) progressState.measurement++\n  }\n  const outside = () => {\n    measurement.active = false; measurement.afterBatch = undefined\n    expect(currentSfReadonlySnapshotScope(native.persistence)).toBeUndefined()\n  }\n  const owned = (count: number) => {\n    expect(measurement.batches).toHaveLength(count)\n    expect(measurement.proofs).toBe(count)\n    for (const batch of measurement.batches) expect(batch).toEqual({\n      owned: true, planner: true, same: true, currentAfter: true, booleanOnly: true,\n    })\n    outside()\n  }\n  return { native, portfolio, measurement, request, admitComparison, prepare, bindNative, readNative, begin, outside, owned }\n}\n",
+      "after": "async function nativeComparisonObservationFixture(deadline: Deadline) {\n  // Native C08/Source/Finance/Planner composition. Only fixture data and the\n  // factory seam are supplied; no LocalStore method or evaluator is replaced.\n  const native = await deadline.phase(\"native-setup\", () =>\n    sensitivityObservationFixture(deadline, \"all\", \"lte\", { plannerRecordProof: true }))\n  const proofPhase = new AsyncLocalStorage<boolean>()\n  type Batch = { owned: boolean; planner: boolean; same: boolean; currentAfter: boolean; booleanOnly: boolean }\n  const measurement: { active: boolean; batches: Batch[]; proofs: number; afterBatch?: () => void } = {\n    active: false, batches: [], proofs: 0,\n  }\n  const makeObservation = native.business.createPlannerCriteriaObservation\n  native.business.createPlannerCriteriaObservation = (criteria) => {\n    const original = makeObservation.call(native.business, criteria)\n    return <Value>(request: ScenarioCompareRequest, incoming: TrustedDomainContext,\n      work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => original(request, incoming, async () => {\n      if (!measurement.active || proofPhase.getStore()) return work()\n      const before = currentSfReadonlySnapshotScope(native.persistence)\n      const planner = currentSfPlannerReadonlySnapshotScope(native.persistence)\n      const batch: Batch = { owned: !!before && before.current(),\n        planner: !!before && !!planner && planner.identity === before.identity &&\n          planner.bytesIdentity === before.bytesIdentity && planner.current(),\n        same: false, currentAfter: false, booleanOnly: false }\n      measurement.batches.push(batch)\n      const result = await work()\n      const after = currentSfReadonlySnapshotScope(native.persistence)\n      batch.same = !!before && !!after && before.identity === after.identity && before.bytesIdentity === after.bytesIdentity\n      batch.currentAfter = !!after && after.current()\n      batch.booleanOnly = result.status === \"ok\" && Object.is(result.value, true)\n      const afterBatch = measurement.afterBatch\n      measurement.afterBatch = undefined\n      afterBatch?.()\n      return result\n    })\n  }\n  const portfolio = (() => {\n    try { return createSfPortfolioServices({ authority: native.authority, business: native.business, proposalCoverageWrites: native.writes }) }\n    finally { native.business.createPlannerCriteriaObservation = makeObservation }\n  })()\n  deadline.own(() => portfolio.dispose())\n  const proof = portfolio.proof\n  if (!proof) throw new Error(\"The real Portfolio verifier was not composed\")\n  const verify = proof.verifyComparison\n  proof.verifyComparison = (...args) => {\n    if (measurement.active) measurement.proofs++\n    return proofPhase.run(true, () => verify.call(proof, ...args))\n  }\n  deadline.own(() => { proof.verifyComparison = verify })\n  const request = () => new Request(native.transport.url, { method: \"POST\", signal: deadline.signal,\n    headers: { origin: new URL(native.transport.url).origin } })\n  const admitComparison = async (pair: ScenarioCompareRequest) => {\n    const admitted = ok(await native.authority.ui.admit(request(), \"sf_scenario_compare\", digestSfValue(pair)))\n    deadline.own(() => native.authority.ui.finish(admitted))\n    expect(await native.authority.ui.validate(admitted, \"sf_scenario_compare\", digestSfValue(pair))).toBe(true)\n    return admitted\n  }\n  const prepare = async (selected: typeof native.caseRef, references: string[], criteria: string[]) => {\n    const pair: ScenarioCompareRequest = { scenarioRefs: references, criteria }\n    const admitted = await admitComparison(pair)\n    const stored = ok(await native.business.withCase(admitted, selected, {}, async () => {\n      const comparison = ok(await portfolio.planner.compareScenarios(pair, admitted))\n      return native.business.results.write({ kind: \"comparison\", result: comparison, caseRef: selected,\n        requestDigest: digestSfValue(pair), sourceRefs: native.sources, idempotencyKey: randomUUID() }, admitted)\n    }))\n    if (stored.kind !== \"comparison\") throw new Error(\"The real comparison was not stored\")\n    const proofs = ok(await native.business.withCase(admitted, selected, {}, () =>\n      portfolio.comparisonBindings.proofs(selected, criteria, admitted)))\n    return { selected, pair, admitted, stored, proofs }\n  }\n  type Prepared = Awaited<ReturnType<typeof prepare>>\n  const bindNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>\n    portfolio.comparisonBindings.bind({ caseRef: data.selected, resultRef: data.stored.resultRef,\n      request: data.pair, expectedRules: data.proofs }, data.admitted))\n  const readNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>\n    portfolio.comparisonBindings.read({ caseRef: data.selected, resultRef: data.stored.resultRef }, data.admitted))\n  const begin = (afterBatch?: () => void) => {\n    deadline.check(); measurement.batches = []; measurement.proofs = 0\n    measurement.afterBatch = afterBatch; measurement.active = true\n  }\n  const outside = () => {\n    measurement.active = false; measurement.afterBatch = undefined\n    expect(currentSfReadonlySnapshotScope(native.persistence)).toBeUndefined()\n  }\n  const owned = (count: number) => {\n    expect(measurement.batches).toHaveLength(count)\n    expect(measurement.proofs).toBe(count)\n    for (const batch of measurement.batches) expect(batch).toEqual({\n      owned: true, planner: true, same: true, currentAfter: true, booleanOnly: true,\n    })\n    outside()\n  }\n  return { native, portfolio, measurement, request, admitComparison, prepare, bindNative, readNative, begin, outside, owned }\n}\n",
+      "offset": 22346,
+      "occurrences": 1,
+      "preimage": {
+        "git": "968add4b97fdfbd1df3ed4671738adf60d403be0",
+        "bytes": 46198,
+        "sha256": "23ebc23fb4593b082cd0d7e27405f03c406348003adf5ee474d0770cef82af8b",
+        "lf": 803,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "4f462dc4cad977366d6a861d138878186a5d003f",
+        "bytes": 44338,
+        "sha256": "90e1f11a4e8e3afd17c13ae6a55e6e5c44fcbb784a617fb4f8d318be6f4f736c",
+        "lf": 766,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "unsupported-cooperative-budget",
+      "before": "compositionTestDeadline(\"comparison-criteria-unsupported\", 105_000)",
+      "after": "compositionTestDeadline(\"comparison-criteria-unsupported\", 240_000)",
+      "offset": 41454,
+      "occurrences": 1,
+      "preimage": {
+        "git": "4f462dc4cad977366d6a861d138878186a5d003f",
+        "bytes": 44338,
+        "sha256": "90e1f11a4e8e3afd17c13ae6a55e6e5c44fcbb784a617fb4f8d318be6f4f736c",
+        "lf": 766,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "a4ebb284c1bb603b94814a02ff7ef67b68e68bf5",
+        "bytes": 44338,
+        "sha256": "e3cde15cb40e61f9b272a64172c3b188eee32b76e67b3559d33e475695fade02",
+        "lf": 766,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "unsupported-bun-budget",
+      "before": "  } finally { await deadline.close() }\n}, 120_000)\n",
+      "after": "  } finally { await deadline.close() }\n}, 270_000)\n",
+      "offset": 44287,
+      "occurrences": 1,
+      "preimage": {
+        "git": "a4ebb284c1bb603b94814a02ff7ef67b68e68bf5",
+        "bytes": 44338,
+        "sha256": "e3cde15cb40e61f9b272a64172c3b188eee32b76e67b3559d33e475695fade02",
+        "lf": 766,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "git": "b8f59389f0de1be542e36f375f1674c3bc75bd75",
+        "bytes": 44338,
+        "sha256": "8abbc98505500c8f2f4e1400da27af1183b48ce4c811082bc5d8200c708ef3f5",
+        "lf": 766,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "directPatch": {
+    "git": "8357b194b658d6399b06f22363068db7d232acaa",
+    "bytes": 8557,
+    "sha256": "54f1253b51d4cf0fb33493406b65782d009eba25bef93d2e7131bfa2b12bb0b4",
+    "lf": 146,
+    "endsWithLF": true,
+    "hunks": 6,
+    "add": 27,
+    "del": 64,
+    "forwardAndInverseLiteral": true
+  },
+  "R5Comparison": {
+    "patch": "diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\n--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\n+++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts\n@@ -717,7 +717,7 @@\n }, 60_000)\n \n test(\"Comparison criteria observation preserves the complete fallback for unsupported Planner replacements\", async () => {\n-  const deadline = compositionTestDeadline(\"comparison-criteria-unsupported\", 105_000)\n+  const deadline = compositionTestDeadline(\"comparison-criteria-unsupported\", 240_000)\n   const outcomes: string[] = []\n   try {\n     const { native, portfolio, measurement, request, prepare, bindNative, readNative, begin, outside } =\n@@ -763,4 +763,4 @@\n       outcomes,\n     }))\n   } finally { await deadline.close() }\n-}, 120_000)\n+}, 270_000)\n",
+    "hunks": 2,
+    "add": 2,
+    "del": 2,
+    "deltaBytes": 0,
+    "deltaLF": 0,
+    "forwardAndInverseLiteral": true
+  },
+  "deltaFromExecutedR6": {
+    "files": 1,
+    "status": "M",
+    "bytes": -1866,
+    "lf": -37,
+    "traceRemoved": true
+  },
+  "preservation": {
+    "exactlyR5TwoConstants": true,
+    "unchangedByteLength": true,
+    "noProgressPrefix": true,
+    "originalPrefix403LF": true,
+    "testDeclarations": 5,
+    "expectSites": 125,
+    "awaitTokens": 73,
+    "reportEmissions": 3,
+    "outcomes": 17,
+    "outcomesByScenario": [
+      15,
+      1,
+      1
+    ],
+    "productsUnchanged": [
+      "0b03c45e7288985b99914c186522bf062f9e3595",
+      "05f6f4fd963dd2746220a44ec8115ea4c0a40e1a"
+    ],
+    "fenceMs": 30000,
+    "analyticsWaitersMs": [
+      60000,
+      120000
+    ]
+  },
+  "qualification": {
+    "executed": false,
+    "runtimeAccepted": false,
+    "source": null,
+    "sourceTree": null,
+    "snapshot": null,
+    "run": null,
+    "onlyBlobsCreated": true
+  }
+}

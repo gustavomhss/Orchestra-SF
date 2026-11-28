@@ -1,0 +1,245 @@
+{
+  "schema": "sf-c22r7-independent-actual-objects-binding-review-v1",
+  "status": "ACK_ACTUAL_SOURCE_SNAPSHOT_AND_BINDING_NO_RUNTIME_RESULT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "at": {
+    "current_time": "2026-11-28 13:56:42 UTC"
+  },
+  "scope": "Final independent audit of the actual R7 source/snapshot objects and exact final carrier binding, reusing the completed static code/package review. No product semantics or tests are reopened.",
+  "basis": {
+    "independentStaticSourceAndCarrier": {
+      "gitBlob": "1c8621c058cf5a2de72a6a92424e51da51dad03c",
+      "bytes": 19832,
+      "sha256": "bb9304e2b7de08fa255911a2dfe7d2d85479982ea8b94a049dbc1c9c1b1e9d41",
+      "lf": 595,
+      "endsWithLF": true
+    },
+    "rootObjectReview": {
+      "gitBlob": "5d59502a2e0ce41411e9c4a642d2b4d3fbf0b835",
+      "bytes": 29089,
+      "sha256": "1a31f61d4163f6e28ee8bc362ea9acd6ac198978a5eb571433b5789fa960df9b",
+      "lf": 786,
+      "endsWithLF": true
+    },
+    "binding": {
+      "gitBlob": "f416ad0d93a70c346132cc3df8686283159e79d2",
+      "bytes": 3590,
+      "sha256": "8fffa9020a97e7bdae64242cc11e06d3da86ffedf4429b7f31586ee83e7df053",
+      "lf": 102,
+      "endsWithLF": true
+    }
+  },
+  "actual": {
+    "source": {
+      "sha": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c",
+      "tree": "11bf210f469be26630c39db586bcfcce87e0de1b",
+      "soleParent": "c4bd85e5d2683cc116993788269bb6869e8552ac",
+      "sourceDirectDelta": "1M existing control",
+      "sourceAccumulatedS21Delta": "3M, two product files plus existing control"
+    },
+    "snapshot": {
+      "sha": "867df3c67f75eacd0912e172c108777477024967",
+      "tree": "4c3a823e9e8f96a802c82d8298ba185f1377271b",
+      "soleParent": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c"
+    },
+    "driver": {
+      "gitBlob": "c2fc68c0d49400fc2c909bb5f38c8539cea26f89",
+      "bytes": 15634,
+      "sha256": "a1d90b4a6e24427d732e3c0eeb6e6caab6d712eb21919f72195aaf56dfabe180",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "template": {
+      "gitBlob": "2705049e8e729678e24054ac2dacf4c844e8ba71",
+      "bytes": 15595,
+      "sha256": "966d79719108ce39feb1c72657bf8664ab61acd01b48b90b9c7fbfcb8a79193d",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "request": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    }
+  },
+  "independentAudit": {
+    "bindingExactForwardInverse": true,
+    "deltaBytes": 39,
+    "deltaLF": 0,
+    "snapshotParentCardinality": 1,
+    "sourceParentCardinality": 1,
+    "treePairs": 4,
+    "literalSiblings": 124,
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "kind": "A",
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "kind": "A",
+        "sha": "c2fc68c0d49400fc2c909bb5f38c8539cea26f89",
+        "bytes": 15634,
+        "mode": "100644"
+      }
+    ],
+    "snapshotPins": 25,
+    "bindingMetadataReferences": 9,
+    "treeHashesVerified": true,
+    "rawCommitBodyHashClaimed": false
+  },
+  "sourceReuse": {
+    "immutableSourceAndTreeMatchPriorReview": true,
+    "sourceDirectTreePairs": 8,
+    "sourceDirectLiteralSiblings": 180,
+    "accumulatedTreePairs": 14,
+    "accumulatedLiteralSiblings": 446,
+    "sourcePinsVerified": 25,
+    "sourceWithoutRequestOrDiagnosticDriver": true,
+    "productsLiteralToC22": true
+  },
+  "binding": {
+    "replacements": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "value": "ad3a4a7527baf1e092e87b5478626b2f0a3be57c"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "value": "11bf210f469be26630c39db586bcfcce87e0de1b"
+      }
+    ],
+    "onlyTheseTwoSubstitutions": true,
+    "forwardWholeDriverLiteral": true,
+    "inverseWholeTemplateLiteral": true,
+    "deltaBytes": 39,
+    "deltaLF": 0,
+    "codeAndDocumentPins": 9,
+    "carrierManifest": {
+      "gitBlob": "9ea3c3b16ec95d1f4fdeed6d053cb58550bd5017",
+      "bytes": 9572,
+      "sha256": "9b6f37fe02c8c902ed55a58b0f22f2e348f90b44418386a40b3719bf77036502",
+      "lf": 326,
+      "endsWithLF": true
+    },
+    "carrierBounds": {
+      "gitBlob": "8bde245faf5ec1753ae4b57b226a4da379147d8e",
+      "bytes": 15288,
+      "sha256": "e1df4abd35eb2c8234d65e0463730f3d5d366bc7a8b85855f8e2f1e0e32c8279",
+      "lf": 498,
+      "endsWithLF": true
+    },
+    "carrierDerivation": {
+      "gitBlob": "f330320e757ee076fc91110f216733ba85c760a4",
+      "bytes": 11613,
+      "sha256": "3f12cedaa0f26603173a59a683323463c53e64bd0cf2a5fbe06458524661a864",
+      "lf": 299,
+      "endsWithLF": true
+    },
+    "controlManifest": {
+      "gitBlob": "5539193ef804a6e5b700d9e3da9e40067cb59880",
+      "bytes": 13474,
+      "sha256": "bf8c25ecda834e6debd6b441a32a688fa46e6c806ec5e8935ad58799f93f4343",
+      "lf": 430,
+      "endsWithLF": true
+    },
+    "controlBounds": {
+      "gitBlob": "cb4dd2981c5431c5de7a57e965ff0437ad990ace",
+      "bytes": 18228,
+      "sha256": "75d5211c4dba8cd37ca8d079dd0c3389ca71721b5f102284da36cc0d5af06fba",
+      "lf": 517,
+      "endsWithLF": true
+    },
+    "clockCorrection": {
+      "gitBlob": "95791c0aac594632d1f6a18579537b0a8485730c",
+      "bytes": 6346,
+      "sha256": "399288df35fb609381d751a782bc31c3e5c3846b85a00d38db95f0b3564c93fe",
+      "lf": 131,
+      "endsWithLF": true
+    }
+  },
+  "snapshotPins": {
+    "verified": 25,
+    "allSameAsIndependentlyVerifiedSourcePins": true,
+    "inventoryReference": {
+      "gitBlob": "1c8621c058cf5a2de72a6a92424e51da51dad03c",
+      "bytes": 19832,
+      "sha256": "bb9304e2b7de08fa255911a2dfe7d2d85479982ea8b94a049dbc1c9c1b1e9d41",
+      "lf": 595,
+      "endsWithLF": true
+    },
+    "basis": "Resolve each of the25 literal sourceFiles paths in the actual final snapshot tree and compare type, mode and blobSHA with the source audit; no source bodies were rehashed."
+  },
+  "treeIntegrity": {
+    "completeGitTreeEntriesHashed": true,
+    "truncationRejected": true,
+    "sourceAndSnapshotParentCardinalityOne": true,
+    "commitMetadataActuallyRead": true,
+    "commitRawSerializationHashClaimed": false,
+    "limitation": "Git commit API metadata does not supply an authenticated raw serialized commit body; this review checks actual sha/tree/parent/message metadata and independently hashes the complete trees."
+  },
+  "superseded": {
+    "snapshot": "214097757329b78f66520b46c874bfcefcc51b37",
+    "reason": "Preliminary snapshot carried stale G1 budget telemetry; final snapshot uses reviewed2705049e. This preliminary object is not accepted by this receipt.",
+    "unactivatedStatus": "Reported by root and preserved in actual binding; this reviewer did not query or mutate refs/runs."
+  },
+  "runtimeRequirements": {
+    "observedResult": null,
+    "groups": 10,
+    "commands": 16,
+    "truncationFlagsRequiredFalse": 32,
+    "workingPins": 25,
+    "functionalProcesses": 6,
+    "staticFunctionalDeclarations": 22,
+    "expectedReports": 11,
+    "requiredC22Scenarios": [
+      "single-criterion-and-protocol",
+      "multiple-criteria-shared-source",
+      "unsupported-planner-closure"
+    ],
+    "actualAssertions": null,
+    "required": "Only terminal full success plus complete original-output reception can accept this focal. Root retains authority for fresh activation preflight and any single execution."
+  },
+  "limits": {
+    "unsupportedCooperativeMs": 240000,
+    "unsupportedBunMs": 270000,
+    "controlProcessMs": 450000,
+    "controlParentMs": 510000,
+    "configuredCommandSumMs": 2070000,
+    "configuredParentSumMs": 2730000,
+    "jobMs": 2700000,
+    "noCompletionGuarantee": true,
+    "noFinalizerWindowGuarantee": true,
+    "productProofFenceMs": 30000,
+    "AnalyticsWaitersMs": [
+      60000,
+      120000
+    ],
+    "unchangedProductAndAnalyticsDeadlines": true
+  },
+  "qualification": {
+    "runtimeAccepted": false,
+    "installedAreasAdded": 0,
+    "UI6Accepted": false,
+    "finalC613Selected": false,
+    "D33Bound": false,
+    "productionAuthorized": false
+  },
+  "findings": [],
+  "actions": {
+    "onlyThisReviewBlobCreated": true,
+    "originalLogGets": 0,
+    "ZIPGets": 0,
+    "repositoryCodeExecutions": 0,
+    "treeCreations": 0,
+    "commitCreations": 0,
+    "refMutations": 0,
+    "runsCreated": 0
+  }
+}

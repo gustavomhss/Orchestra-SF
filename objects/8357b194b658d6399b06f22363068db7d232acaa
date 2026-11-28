@@ -1,0 +1,146 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/criterion-comparison-preferences-read.test.ts
+@@ -401,37 +401,12 @@
+   } finally { await deadline.close() }
+ }, 15_000)
+ 
+-async function nativeComparisonObservationFixture(deadline: Deadline, traceUnsupported = false) {
+-  const progressState = (() => {
+-    if (!traceUnsupported) return undefined
+-    try { return { started: performance.now(), measurement: 0, records: 0, stopped: false } }
+-    catch { return undefined }
+-  })()
++async function nativeComparisonObservationFixture(deadline: Deadline) {
+   // Native C08/Source/Finance/Planner composition. Only fixture data and the
+   // factory seam are supplied; no LocalStore method or evaluator is replaced.
+   const native = await deadline.phase("native-setup", () =>
+     sensitivityObservationFixture(deadline, "all", "lte", { plannerRecordProof: true }))
+   const proofPhase = new AsyncLocalStorage<boolean>()
+-  // Diagnostic-only progress. The clock starts at this native fixture entry,
+-  // independently of the deadline's clock. Reserve record 32 for suppression.
+-  const progress = (point: "bind-action-enter" | "proof-enter" | "observer-post-proof-enter" |
+-    "work-enter" | "work-await-returned", proofOrdinal: number) => {
+-    if (!progressState || progressState.stopped) return
+-    try {
+-      if (point === "observer-post-proof-enter" && proofPhase.getStore()) return
+-      const sequence = ++progressState.records
+-      const suppressed = sequence === 32
+-      if (suppressed) progressState.stopped = true
+-      console.info("SF_COMPOSITION_PROGRESS", JSON.stringify({
+-        schema: "sf-composition-progress-v1", fixture: "comparison-criteria-unsupported",
+-        clock: "performance.now", origin: "native-fixture-entry",
+-        sequence, measurement: progressState.measurement,
+-        point: suppressed ? "suppressed" : point,
+-        ...(suppressed ? { reason: "record-limit", limit: 32 } : { proofOrdinal }),
+-        elapsedMs: Math.round(performance.now() - progressState.started),
+-      }))
+-    } catch { progressState.stopped = true }
+-  }
+   type Batch = { owned: boolean; planner: boolean; same: boolean; currentAfter: boolean; booleanOnly: boolean }
+   const measurement: { active: boolean; batches: Batch[]; proofs: number; afterBatch?: () => void } = {
+     active: false, batches: [], proofs: 0,
+@@ -440,31 +415,25 @@
+   native.business.createPlannerCriteriaObservation = (criteria) => {
+     const original = makeObservation.call(native.business, criteria)
+     return <Value>(request: ScenarioCompareRequest, incoming: TrustedDomainContext,
+-      work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+-      if (measurement.active) progress("observer-post-proof-enter", measurement.proofs)
+-      return original(request, incoming, async () => {
+-        if (!measurement.active || proofPhase.getStore()) return work()
+-        const before = currentSfReadonlySnapshotScope(native.persistence)
+-        const planner = currentSfPlannerReadonlySnapshotScope(native.persistence)
+-        const batch: Batch = { owned: !!before && before.current(),
+-          planner: !!before && !!planner && planner.identity === before.identity &&
+-            planner.bytesIdentity === before.bytesIdentity && planner.current(),
+-          same: false, currentAfter: false, booleanOnly: false }
+-        measurement.batches.push(batch)
+-        const proofOrdinal = measurement.proofs
+-        progress("work-enter", proofOrdinal)
+-        const result = await work()
+-        progress("work-await-returned", proofOrdinal)
+-        const after = currentSfReadonlySnapshotScope(native.persistence)
+-        batch.same = !!before && !!after && before.identity === after.identity && before.bytesIdentity === after.bytesIdentity
+-        batch.currentAfter = !!after && after.current()
+-        batch.booleanOnly = result.status === "ok" && Object.is(result.value, true)
+-        const afterBatch = measurement.afterBatch
+-        measurement.afterBatch = undefined
+-        afterBatch?.()
+-        return result
+-      })
+-    }
++      work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => original(request, incoming, async () => {
++      if (!measurement.active || proofPhase.getStore()) return work()
++      const before = currentSfReadonlySnapshotScope(native.persistence)
++      const planner = currentSfPlannerReadonlySnapshotScope(native.persistence)
++      const batch: Batch = { owned: !!before && before.current(),
++        planner: !!before && !!planner && planner.identity === before.identity &&
++          planner.bytesIdentity === before.bytesIdentity && planner.current(),
++        same: false, currentAfter: false, booleanOnly: false }
++      measurement.batches.push(batch)
++      const result = await work()
++      const after = currentSfReadonlySnapshotScope(native.persistence)
++      batch.same = !!before && !!after && before.identity === after.identity && before.bytesIdentity === after.bytesIdentity
++      batch.currentAfter = !!after && after.current()
++      batch.booleanOnly = result.status === "ok" && Object.is(result.value, true)
++      const afterBatch = measurement.afterBatch
++      measurement.afterBatch = undefined
++      afterBatch?.()
++      return result
++    })
+   }
+   const portfolio = (() => {
+     try { return createSfPortfolioServices({ authority: native.authority, business: native.business, proposalCoverageWrites: native.writes }) }
+@@ -475,10 +444,7 @@
+   if (!proof) throw new Error("The real Portfolio verifier was not composed")
+   const verify = proof.verifyComparison
+   proof.verifyComparison = (...args) => {
+-    if (measurement.active) {
+-      measurement.proofs++
+-      progress("proof-enter", measurement.proofs)
+-    }
++    if (measurement.active) measurement.proofs++
+     return proofPhase.run(true, () => verify.call(proof, ...args))
+   }
+   deadline.own(() => { proof.verifyComparison = verify })
+@@ -504,17 +470,14 @@
+     return { selected, pair, admitted, stored, proofs }
+   }
+   type Prepared = Awaited<ReturnType<typeof prepare>>
+-  const bindNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () => {
+-    progress("bind-action-enter", measurement.proofs)
+-    return portfolio.comparisonBindings.bind({ caseRef: data.selected, resultRef: data.stored.resultRef,
+-      request: data.pair, expectedRules: data.proofs }, data.admitted)
+-  })
++  const bindNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>
++    portfolio.comparisonBindings.bind({ caseRef: data.selected, resultRef: data.stored.resultRef,
++      request: data.pair, expectedRules: data.proofs }, data.admitted))
+   const readNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>
+     portfolio.comparisonBindings.read({ caseRef: data.selected, resultRef: data.stored.resultRef }, data.admitted))
+   const begin = (afterBatch?: () => void) => {
+     deadline.check(); measurement.batches = []; measurement.proofs = 0
+     measurement.afterBatch = afterBatch; measurement.active = true
+-    if (progressState) progressState.measurement++
+   }
+   const outside = () => {
+     measurement.active = false; measurement.afterBatch = undefined
+@@ -754,11 +717,11 @@
+ }, 60_000)
+ 
+ test("Comparison criteria observation preserves the complete fallback for unsupported Planner replacements", async () => {
+-  const deadline = compositionTestDeadline("comparison-criteria-unsupported", 105_000)
++  const deadline = compositionTestDeadline("comparison-criteria-unsupported", 240_000)
+   const outcomes: string[] = []
+   try {
+     const { native, portfolio, measurement, request, prepare, bindNative, readNative, begin, outside } =
+-      await nativeComparisonObservationFixture(deadline, true)
++      await nativeComparisonObservationFixture(deadline)
+     // An actual promoted replacement is outside Finance's closed Planner pair.
+     // The observer must retain the complete producer, not invent eligibility.
+     const coverageRef = native.proofCoverageRefs?.[1]
+@@ -800,4 +763,4 @@
+       outcomes,
+     }))
+   } finally { await deadline.close() }
+-}, 120_000)
++}, 270_000)

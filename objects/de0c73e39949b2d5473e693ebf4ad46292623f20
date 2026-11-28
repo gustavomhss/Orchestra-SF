@@ -1,0 +1,196 @@
+{
+  "schema": "sf613-c22r4-focal-final-receipt-v1",
+  "status": "RECEIVED_FAILURE_NOT_ACCEPTED_FOR_ANALYTICS",
+  "closedAt": "2026-11-28 12:04:49 UTC",
+  "at": "2026-11-28 12:17:44 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "ae22c9b79d72b90b0420f729ba73dbf53158fe0e",
+  "sourceTree": "e80f5bb2f21611402d71b5487e1673c163f27ccc",
+  "snapshot": "a9c21083502063e9afe8b9c3cd2700638aebbd32",
+  "snapshotTree": "a22945a7cef3f298f123ded3fa0d017a01ac128e",
+  "run": {
+    "id": 46142400841,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46142400841",
+    "main": {
+      "id": 140971028303,
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "id": 140972286494,
+      "conclusion": "success"
+    }
+  },
+  "authority": {
+    "gitBlob": "0a306919e8cdbb4bdc2f94101f457e0c594d3c04",
+    "bytes": 11171,
+    "sha256": "7651cfc4099485d08b40f01d48036c54ddd60feda03e2c13680005ed6ee89d03",
+    "lf": 294,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "5db424440106d6a6481e2f68aa33211bf683ed92",
+    "bytes": 1783,
+    "sha256": "9c672cce875bb714fc4a3eedfd6f52a34f1c35d9067ca4ebb0fc0817b3270334",
+    "lf": 51,
+    "endsWithLF": true
+  },
+  "runBinding": {
+    "gitBlob": "2cc1d2385ef8384619287776abad3f48c8fdfe77",
+    "bytes": 1231,
+    "sha256": "d7323e817cca6ef473923f1982da9490ca4fcf136f6c29705d86660d69af9e39",
+    "lf": 38,
+    "endsWithLF": true
+  },
+  "context": {
+    "gitBlob": "c79c53e2c3d59edb6ba43ede53a8e786d58f4eeb",
+    "bytes": 25770,
+    "sha256": "e704ef01ebde26255568b2a57991e4a36dba852e978b34e69ae85720e2073733",
+    "lf": 562,
+    "endsWithLF": true
+  },
+  "copies": {
+    "main": {
+      "gitBlob": "f2d42064b60f5e588151ddc6cc3525de951e7692",
+      "bytes": 132716,
+      "sha256": "c5d99b7942852a7e478a9a032b6941a7274283d64a68fd168eb1bb6d728a4174",
+      "lf": 1053,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "d2f626b600c8f8d016da2172bbe168e4eb6bcfb1",
+      "bytes": 1695,
+      "sha256": "ac6e61599e8568bbb6273b0569021e88760f776f9b3c194bf20fc34070e47735",
+      "lf": 60,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "gitBlob": "5a213a3c3746d6f3b681c67c21f78a5dff61871f",
+      "bytes": 2282,
+      "sha256": "d2d433ac8d7a00c1848a1da4fe7c4e4ece3413cc969be112588a4627e30edb66",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "17c3cfb233338e2c4d05af57ba316c4d0b745ee1",
+      "bytes": 1682,
+      "sha256": "0ec467a01e249d1f1ba70056592f091084c2a22d8a5579623889c3f07bd1c1b2",
+      "lf": 60,
+      "endsWithLF": true
+    }
+  },
+  "reviews": {
+    "root": {
+      "gitBlob": "bc487c1b120b8797af227cc0e06d3c31f32d50f9",
+      "bytes": 5936,
+      "sha256": "40f163c57aef5d52fc15bd698ad5a3a790344922fb1458bcbbd91c51b4116059",
+      "lf": 230,
+      "endsWithLF": true
+    },
+    "independent": {
+      "gitBlob": "ec67786b1a8113c154e87e1ce9bf890af64b76e3",
+      "bytes": 17161,
+      "sha256": "17f1d2c784949c4b6963bdd1b5f4cc27f8b18de487097b108d1159c9efaf4a04",
+      "lf": 485,
+      "endsWithLF": true
+    },
+    "extraction": {
+      "gitBlob": "99983e16c71f0449daefee15cf0ccceffbd1bad1",
+      "bytes": 147053,
+      "sha256": "7c8bf0395a611bbfe71f129e152427459ee821460c1e6c77c136aa7ea99cd1d1",
+      "lf": 2806,
+      "endsWithLF": true
+    }
+  },
+  "capture": {
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "zipGets": 0,
+    "artifacts": 0,
+    "headRuns": 1,
+    "branchRemoved": true,
+    "allCopiesLiteralReadback": true,
+    "reacquisitionAllowed": false
+  },
+  "results": {
+    "commands": 16,
+    "exitZero": 15,
+    "exitOne": 1,
+    "truncationFlagsFalse": 32,
+    "workingPins": 25,
+    "hostRecords": 10,
+    "functional": {
+      "pass": 21,
+      "fail": 1,
+      "assertions": 2682
+    },
+    "outer": {
+      "line": 952,
+      "pass": 9,
+      "fail": 1,
+      "assertions": 49,
+      "tests": 10,
+      "files": 1,
+      "text": "Ran 10 tests across 1 file. [251.18s]"
+    },
+    "CLITypecheck": "PASS",
+    "SucafinaTypecheck": "PASS",
+    "guards": {
+      "rules": 78,
+      "files": 860,
+      "findings": 40,
+      "errors": 0,
+      "approved": 0,
+      "literalC21": true
+    },
+    "inheritedReportsLiteral": 8,
+    "C22Reports": [
+      {
+        "scenario": "single-criterion-and-protocol",
+        "line": 967,
+        "literalModel": true
+      },
+      {
+        "scenario": "multiple-criteria-shared-source",
+        "line": 984,
+        "literalModel": true
+      }
+    ],
+    "phaseRecords": 64,
+    "omni": {
+      "declarations": 10,
+      "spawns": 16,
+      "delegated": 0
+    }
+  },
+  "negative": {
+    "scenario": "unsupported-planner-closure",
+    "cooperativeDeadlineMs": 50000,
+    "observedBunMs": 50020.36,
+    "nativeSetupMs": 6903,
+    "promotionMs": 1677,
+    "criterionDataMs": 28277,
+    "bindBracket": {
+      "startElapsedMs": 36859,
+      "exitElapsedMs": 50014,
+      "aborted": true,
+      "successEstablished": false
+    },
+    "readReached": false,
+    "finalReportPresent": false,
+    "exclusiveInternalCauseEstablished": false
+  },
+  "scope": {
+    "singleAndMultipleTestsPass": true,
+    "completeC22ControlAccepted": false,
+    "originalAnalyticsR4PreparedNeverActivated": true,
+    "newInstalledAcceptances": 0,
+    "productMerge": false,
+    "finalCandidate": null,
+    "tar": null,
+    "productionAuthorized": false
+  },
+  "next": "R5 budget-only proposal for unsupported control can be reviewed. Any new source/snapshot needs own accepted focal; original Analytics60s/120s remains unchanged."
+}
