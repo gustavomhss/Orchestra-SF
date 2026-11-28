@@ -1,0 +1,964 @@
+{
+  "schema": "sf613-d30-independent-static-review-v1",
+  "status": "ACK_UNBOUND_STATIC_PROPOSAL_NO_FINDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "focal_migration",
+  "atUtc": "2026-11-28 07:31:41 UTC",
+  "authority": {
+    "scope": "Independent review of the concrete D30 Git proposal and its accepted D29 bases; persist this review blob only.",
+    "executionAuthority": false,
+    "rootSoleOperator": true,
+    "rootSoleOriginalReceiver": true
+  },
+  "package": {
+    "manifest": {
+      "git": "a5f40832125658cbae2b58b565c266750fa0b125",
+      "bytes": 26839,
+      "sha256": "ebe088ef5ebae4fa3be39f0c29fd75ebe6773cfbf5b435093c41dc2e1d8941e9",
+      "lf": 670,
+      "endsWithLF": true
+    },
+    "wrapper": {
+      "git": "74cec078755a98d3e9fa3922d517f6933883515f",
+      "bytes": 19332,
+      "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+      "lf": 360,
+      "endsWithLF": true
+    },
+    "envelope": {
+      "git": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+      "bytes": 43811,
+      "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "finalizer": {
+      "git": "3865560d88636917d080015e91a714537cfa35af",
+      "bytes": 15782,
+      "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "git": "50cfa806e399238a8730bf1c4c58203932c8676b",
+      "bytes": 80067,
+      "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+      "lf": 1154,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "git": "e63e19506a7bc8fd7520a64432a93ea6969c14ab",
+      "bytes": 57788,
+      "sha256": "c4b69ed373078943d0f7ea8be8abdcf4bae5f00b3c655483d208f7f329befb44",
+      "lf": 1658,
+      "endsWithLF": true
+    },
+    "diff": {
+      "git": "cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+      "bytes": 14496,
+      "sha256": "801c33ba3d95f7175786671fb88bfcda66aaf7ebdefc805f5687bececd6b1f0d",
+      "lf": 190,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "4a4aa6ddfdecad1442d7060b1567fc9495f6b15e",
+      "bytes": 29213,
+      "sha256": "daa54040239cf41caa1c0f6abec2b5352399b42e244f6ee42da054b336828785",
+      "lf": 846,
+      "endsWithLF": true
+    }
+  },
+  "bases": {
+    "D29manifest": {
+      "git": "3e037217b0477aeacafe4bad193469c76e54ee81",
+      "bytes": 23923,
+      "sha256": "2ab417a42ce8d5bb794a83b75a14303f953cd35cf47e987d000df6111217d5d0",
+      "lf": 616,
+      "endsWithLF": true
+    },
+    "D29bounds": {
+      "git": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+      "bytes": 15757,
+      "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6",
+      "lf": 464,
+      "endsWithLF": true
+    },
+    "D29wrapper": {
+      "git": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+      "bytes": 18854,
+      "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+      "lf": 352,
+      "endsWithLF": true
+    },
+    "D29envelope": {
+      "git": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+      "bytes": 43811,
+      "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "D29finalizer": {
+      "git": "42e098a611b4275e27962f3a342eb0f0892885d0",
+      "bytes": 15782,
+      "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "D29workflow": {
+      "git": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+      "bytes": 80067,
+      "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+      "lf": 1154,
+      "endsWithLF": true
+    },
+    "D29peer": {
+      "git": "39c328efe12ceaf4ed4a20d76cb3da9779677195",
+      "bytes": 21042,
+      "sha256": "59e8845209e5db71681f2ef42247347c3808bea7e22f25f15af63f390162ce37",
+      "lf": 710,
+      "endsWithLF": true
+    }
+  },
+  "method": {
+    "allEightProposalBlobsFetchedAndRehashed": true,
+    "allSixD29BaseBlobsFetchedAndRehashed": true,
+    "D29IndependentReviewFetchedAndAuthenticated": true,
+    "hashes": "UTF8 byte count, Git blob SHA1, SHA256, LF and final-LF recomputed as pure data; no repository code execution.",
+    "priorC21AuthenticatedBodiesReused": true,
+    "priorC21BodyScope": "The final C21 four source/control bodies, source manifest, bound focal wrapper/manifest and actual S21 commit/tree metadata were already authenticated during our completed C21 review and intake; their cached literal bytes were rehashed here. No C21 original log or ZIP was acquired.",
+    "treeOrCommitForD30CreatedOrAssumed": false
+  },
+  "review": {
+    "findings": [],
+    "independentChecks": [
+      {
+        "id": "28-groups-and-host-and-spawn",
+        "pass": true,
+        "detail": {
+          "groups": 28
+        }
+      },
+      {
+        "id": "prior-groups-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "parents-in-bounds",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "engine-runCommand-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "G28-literal-focal-C21",
+        "pass": true,
+        "detail": {
+          "focal": "50df11d4be37f2990bc7d26095f2515292db959b"
+        }
+      },
+      {
+        "id": "G28-single-wholefile-no-filter",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "34-command-sites-bounds",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "six-English-loop",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "39-effective-78-flags",
+        "pass": true,
+        "detail": {
+          "effective": 39,
+          "flags": 78
+        }
+      },
+      {
+        "id": "arithmetic-deadline-sums",
+        "pass": true,
+        "detail": {
+          "commandMs": 5580000,
+          "parentMs": 7320000
+        }
+      },
+      {
+        "id": "old-budgets-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "six-proof-children-separate",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "global-functional-totals-null",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "guard-actualdev-mergebase-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "runCommand-caps-and-fail-truncation",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "C21-source-body-reference-retained",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "C21-report-model-876",
+        "pass": true,
+        "detail": {
+          "git": "9481d5fcafe4b140fa923b330841de80df005c2c",
+          "bytes": 876,
+          "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+          "lf": 1,
+          "endsWithLF": true,
+          "gitCalculatedOnly": true
+        }
+      },
+      {
+        "id": "C21-outcomes-and-limits",
+        "pass": true,
+        "detail": true
+      },
+      {
+        "id": "full-envelope-embedding",
+        "pass": true,
+        "detail": {
+          "bytes": 43811
+        }
+      },
+      {
+        "id": "full-finalizer-embedding",
+        "pass": true,
+        "detail": {
+          "bytes": 15782
+        }
+      },
+      {
+        "id": "loader-literal-and-hash",
+        "pass": true,
+        "detail": {
+          "git": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+          "bytes": 3638,
+          "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+          "lf": 57,
+          "endsWithLF": true,
+          "calculatedSegmentOnly": true
+        }
+      },
+      {
+        "id": "other-workflow-runs-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "envelope-derived-digest",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "run-block-size-model-draft",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "four-binding-occurrences-wrapper",
+        "pass": true,
+        "detail": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 0,
+          "__SF613_WRAPPER_SHA256__": 0
+        }
+      },
+      {
+        "id": "no-extra-binding-wrapper",
+        "pass": true,
+        "detail": [
+          "__SF613_SOURCE_SHA__",
+          "__SF613_SOURCE_TREE__"
+        ]
+      },
+      {
+        "id": "width-model-wrapper",
+        "pass": true,
+        "detail": {
+          "draftBytes": 19332,
+          "concreteWidthBytes": 19371
+        }
+      },
+      {
+        "id": "four-binding-occurrences-envelope",
+        "pass": true,
+        "detail": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 1,
+          "__SF613_WRAPPER_SHA256__": 1
+        }
+      },
+      {
+        "id": "no-extra-binding-envelope",
+        "pass": true,
+        "detail": [
+          "__SF613_SOURCE_SHA__",
+          "__SF613_SOURCE_TREE__",
+          "__SF613_WRAPPER_BLOB__",
+          "__SF613_WRAPPER_SHA256__"
+        ]
+      },
+      {
+        "id": "width-model-envelope",
+        "pass": true,
+        "detail": {
+          "draftBytes": 43811,
+          "concreteWidthBytes": 43908
+        }
+      },
+      {
+        "id": "four-binding-occurrences-finalizer",
+        "pass": true,
+        "detail": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 1,
+          "__SF613_WRAPPER_SHA256__": 1
+        }
+      },
+      {
+        "id": "no-extra-binding-finalizer",
+        "pass": true,
+        "detail": [
+          "__SF613_SOURCE_SHA__",
+          "__SF613_SOURCE_TREE__",
+          "__SF613_WRAPPER_BLOB__",
+          "__SF613_WRAPPER_SHA256__"
+        ]
+      },
+      {
+        "id": "width-model-finalizer",
+        "pass": true,
+        "detail": {
+          "draftBytes": 15782,
+          "concreteWidthBytes": 15879
+        }
+      },
+      {
+        "id": "four-binding-occurrences-workflow",
+        "pass": true,
+        "detail": {
+          "__SF613_SOURCE_SHA__": 3,
+          "__SF613_SOURCE_TREE__": 2,
+          "__SF613_WRAPPER_BLOB__": 2,
+          "__SF613_WRAPPER_SHA256__": 2
+        }
+      },
+      {
+        "id": "no-extra-binding-workflow",
+        "pass": true,
+        "detail": [
+          "__SF613_SOURCE_SHA__",
+          "__SF613_SOURCE_TREE__",
+          "__SF613_WRAPPER_BLOB__",
+          "__SF613_WRAPPER_SHA256__"
+        ]
+      },
+      {
+        "id": "width-model-workflow",
+        "pass": true,
+        "detail": {
+          "draftBytes": 80067,
+          "concreteWidthBytes": 80281
+        }
+      },
+      {
+        "id": "run-block-size-width-model",
+        "pass": true,
+        "detail": {
+          "maximumCharacters": 15930,
+          "limit": 21000,
+          "headroom": 5070
+        }
+      },
+      {
+        "id": "source-wrapper-pin-guard-before-work",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "source-and-driver-exact2A-gates",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "G1-source-driver-and-parent-checks",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "new-verification-label-not-protocol-input",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "receipt-schemas-retained",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "count-update-only-receiver",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "receiver-finalizer-no-old27",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "no-go-live-qualification-transfer",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "all-global-deadlines-unchanged",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "preflight-and-outer-Bun-deadlines",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "capture-inode-cleanup-mechanics-literal",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "complete-capture-required",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "canonical-original-verdict-and-current-nonce",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "UI6-retained-required-source-only",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "only-workflow-and-wrapper-paths",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "report-cap-is-reception-only",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-artifact-wrapper",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "D29-accepted-base-wrapper",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-artifact-envelope",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "D29-accepted-base-envelope",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-artifact-finalizer",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "D29-accepted-base-finalizer",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-artifact-workflow",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "D29-accepted-base-workflow",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-support-links",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "D29-metadata-links",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "C21-final-four-leaves-metadata",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "C21-static-carrier-metadata",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "C21-source-manifest-metadata",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "S21-reference-exact-actual-tuple",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-bounds-selections",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "manifest-bounds-protocol-bindings",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "historical-prerequisite-cut-not-rewritten",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "source-binding-and-no-runtime-authority",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "bounds-future-current-reception",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "bounds-one-scenario-not-global-count",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "pure-data-width-only-no-object-claim",
+        "pass": true,
+        "detail": null
+      },
+      {
+        "id": "static-proof-not-performance-claim",
+        "pass": true,
+        "detail": null
+      }
+    ],
+    "independentCheckCount": 75,
+    "allIndependentChecksPassed": true,
+    "anchorOperationsIndependentlyAppliedAndInverted": 29,
+    "anchorPreAndPostHashesRecomputed": true,
+    "allAnchorOccurrencesUniqueInDirection": true,
+    "patch": {
+      "files": [
+        {
+          "artifact": "wrapper",
+          "path": "apps/cli/test/sf613-final-verification.test.ts",
+          "hunks": 3,
+          "forwardExact": true,
+          "inverseExact": true
+        },
+        {
+          "artifact": "envelope",
+          "path": "review-artifacts/sf613-final-envelope.mjs",
+          "hunks": 3,
+          "forwardExact": true,
+          "inverseExact": true
+        },
+        {
+          "artifact": "finalizer",
+          "path": "review-artifacts/sf613-final-finalizer.mjs",
+          "hunks": 1,
+          "forwardExact": true,
+          "inverseExact": true
+        },
+        {
+          "artifact": "workflow",
+          "path": ".github/workflows/sf613-final-qualification.yml",
+          "hunks": 6,
+          "forwardExact": true,
+          "inverseExact": true
+        }
+      ],
+      "totalFiles": 4,
+      "hunks": 13,
+      "added": 36,
+      "removed": 28
+    },
+    "authorSelfCheckCountNotAdoptedAsOurChecks": true,
+    "noRuntimeTestAssertionCountClaimed": true
+  },
+  "derivation": {
+    "operationCounts": {
+      "wrapper": 3,
+      "envelope": 9,
+      "finalizer": 3,
+      "workflow": 14,
+      "total": 29
+    },
+    "files": 4,
+    "hunks": 13,
+    "added": 36,
+    "removed": 28,
+    "allFourFullForwardResultsEqualActualPostimages": true,
+    "allFourFullInverseResultsEqualActualPreimages": true,
+    "indexHeadersPathsModesAndHunkCountsValidated": true,
+    "onlyChanges": "Wrapper comment/verification label and appended G28; nine count lines in envelope; three count lines in finalizer; matching workflow comment, derived envelope digest and twelve embedded count lines.",
+    "intermediateHashesAreCalculatedDataOnly": true,
+    "noIntermediateObjectClaim": true
+  },
+  "mechanism": {
+    "G1ThroughG27Literal": true,
+    "runCommandLiteral": true,
+    "allPriorArgvCwdAndDeadlinesLiteral": true,
+    "G28LiteralFromC21Focal": {
+      "git": "50df11d4be37f2990bc7d26095f2515292db959b",
+      "originGroup": 9,
+      "destinationGroup": 28
+    },
+    "G28": {
+      "title": "Native scenario candidates retain complete results and refuse changed authority",
+      "commandLabel": "Native scenario candidates selection whole-file",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "argv": [
+        "test",
+        "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "executable": "process.execPath",
+      "processMs": 45000,
+      "parentMs": 60000,
+      "wholeFile": true,
+      "nameFilter": null,
+      "retriesAdded": 0,
+      "newParser": false,
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION "
+    },
+    "allSourceAndControlFilesUnchangedByD30": true,
+    "G6G25G26G27Literal": true,
+    "loadingElevenModesAndC18LazyMetadataLiteral": true,
+    "proofChildren": 6,
+    "proofChildrenRemainSeparateFromOuterOmni": true,
+    "guard": "G9 retains fresh origin/dev fetch, actual merge-base and original guard command; bootstrap false, errors[] and approved[] required.",
+    "canonicalRequestAndOmni": "Envelope retains original source request validator/locator/controlVerdict, isolated current nonce and original complete stdout/stderr adapter. No chronology reconstructed.",
+    "receiptAndFinalizer": "Count requirements change together from27 to28. PASS still requires source/tree/driver/run/attempt, successful technical step, original Omni verdict, complete capture, own-slot cleanup and literal final checkout.",
+    "spawnsBoundary": "Inherited envelope/finalizer parser accepts a positive integral own spawn count with zero delegation; exact39 own commands/spawns and78 false flags remain explicit mandatory independent-intake requirements. No stronger runtime equality check was invented.",
+    "noNewReportParser": true,
+    "newWrapperVerificationLabelHasNoConsumerInEnvelopeFinalizerWorkflow": true,
+    "retainedSchemas": {
+      "envelope": "sf613-final-technical-literal-c-d26-r1",
+      "finalizer": "sf613-final-technical-finalizer-v1"
+    }
+  },
+  "counts": {
+    "groups": 28,
+    "expectSpawnSites": 28,
+    "syntacticCommandSites": 34,
+    "englishLoopExecutions": 6,
+    "effectiveCommands": 39,
+    "truncationFlagsRequiredFalse": 78,
+    "proofChildrenSeparately": 6,
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "currentC21ReferenceDeclarations": 1,
+    "currentC21ReferenceReports": 1,
+    "currentC21InternalOutcomes": 19,
+    "newOwnSubprocessesInsideG28": 0,
+    "currentFooterAndCompletePayloadIntakeRequired": true,
+    "priorC21FocalCountsNotTransferredToD30": true
+  },
+  "bounds": {
+    "commandSumMs": 5580000,
+    "parentSumMs": 7320000,
+    "D29CommandSumMs": 5535000,
+    "D29ParentSumMs": 7260000,
+    "addedCommandMs": 45000,
+    "addedParentMs": 60000,
+    "globalProcessMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "preflightMaximumMs": 180000,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "outerBunTimeoutArgumentMs": 600000,
+    "priorCeilingsLiteral": true,
+    "aggregateFitClaim": false,
+    "deadlineMeaning": "93min command maxima and122min parent maxima exceed the unchanged35min process ceiling. These are configured upper-bound sums, not measured runtime; no promise all groups or always-finalization finish under runner/job interruption.",
+    "perOwnCommandStreamMaxBytes": 1048576,
+    "truncateFails": true,
+    "arithmetic39CommandsTwoStreamsBytes": 81788928,
+    "arithmeticTotalIsNotOriginalMainLogCap": true,
+    "envelopeCaptureCompleteAndHashEqualityStillRequired": true,
+    "noCaptureBudgetIncrease": true,
+    "C21": {
+      "cooperativeMs": 18000,
+      "bunMs": 20000,
+      "processMs": 45000,
+      "parentMs": 60000,
+      "nominalProcessMarginMs": 25000,
+      "nominalParentMarginMs": 15000
+    }
+  },
+  "transport": {
+    "fullEnvelopeEmbeddingLiteral": true,
+    "fullFinalizerEmbeddingLiteral": true,
+    "envelopeDerivedSHA256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+    "loader": {
+      "git": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "lf": 57,
+      "endsWithLF": true,
+      "objectCreated": false,
+      "calculatedSegmentOnly": true,
+      "literalToD29": true
+    },
+    "workflowRuns": [
+      {
+        "line": 25,
+        "characters": 1300,
+        "bytes": 1300,
+        "sha256": "60e8bcea6edeca5ca65a14ff808d2a878fe46f75601d6f3e29b1e252d4a30c7b"
+      },
+      {
+        "line": 70,
+        "characters": 716,
+        "bytes": 716,
+        "sha256": "1726b0c628b94250596079284c06b6fd9f962f898cf2dabb9dc1563adbd32ff4"
+      },
+      {
+        "line": 88,
+        "characters": 139,
+        "bytes": 139,
+        "sha256": "33b5e1e86a8cd3ae4b7cdd0cfe62e99696dbd0b51eb442d78b1f6738c9712293"
+      },
+      {
+        "line": 826,
+        "characters": 3689,
+        "bytes": 3689,
+        "sha256": "9d7bd0451fd7c0bc60b3b794ae0d1bfc6360388a11aa8d46189f525f18ab7a31"
+      },
+      {
+        "line": 893,
+        "characters": 15833,
+        "bytes": 15833,
+        "sha256": "a58d172204f0048d383c15c9c69a7736ad2530e97e02b40d4231e2903a3432a9"
+      }
+    ],
+    "maximumDraftRunCharacters": 15833,
+    "maximumWidthRunCharacters": 15930,
+    "runLimit": 21000,
+    "widthHeadroom": 5070,
+    "widthOnlyBindingModel": [
+      {
+        "artifact": "wrapper",
+        "bytes": 19371
+      },
+      {
+        "artifact": "envelope",
+        "bytes": 43908
+      },
+      {
+        "artifact": "finalizer",
+        "bytes": 15879
+      },
+      {
+        "artifact": "workflow",
+        "bytes": 80281
+      }
+    ],
+    "widthModelObjectsCreated": false,
+    "wrapperEmbeddedInWorkflow": false,
+    "workflowPermissionsAndTriggerLiteral": true,
+    "workflowOwnTreePathsOnly": [
+      ".github/workflows/sf613-final-qualification.yml",
+      "apps/cli/test/sf613-final-verification.test.ts"
+    ],
+    "companionsAreReviewBlobsOnly": true
+  },
+  "binding": {
+    "state": "FOUR_FINAL_BINDINGS_UNBOUND",
+    "tokens": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "unresolvedPinsRejectedByEnvelopeBeforeObservedActionsOrCommands": true,
+    "futureSource": "Actual accepted composed final C613, not S21 by assumption",
+    "futureDriver": "Sole child of actual final source; exact2A workflow+wrapper, both absent in source",
+    "wrapperBoundFirstThenBlobAndSHA256": false,
+    "bindingProcedure": "First bind source SHA/tree in wrapper and create/read back it; then bind same source and actual wrapper blob/SHA256 in envelope/finalizer; regenerate embeddings and derived envelope digest; root audits actual D/exact2A.",
+    "derivedEnvelopeDigestIsNotIndependentFifthBinding": true,
+    "noSelfHashInsideWrapper": true
+  },
+  "referenceScope": {
+    "sourceCommit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "sourceManifest": {
+      "gitSha": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "bytes": 21170,
+      "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+      "lf": 460,
+      "endsWithLF": true
+    },
+    "control": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "controlFinalC613Pin": "UNBOUND",
+    "C21Report": {
+      "modelBytesIncludingPrefixLF": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "acceptanceCapBytes": 1024,
+      "headroomBytes": 148,
+      "modelRecomputed": true,
+      "standaloneGitCalculatedOnly": "9481d5fcafe4b140fa923b330841de80df005c2c",
+      "standaloneBlobCreated": false,
+      "outcomes": [
+        "native-whole-collection-readonly",
+        "composed-fresh-candidates-readonly",
+        "native-whole-collection-preimage",
+        "composed-fresh-candidates-preimage",
+        "request-key-after-first-authorize",
+        "composed-prototype-first",
+        "composed-declaration-first",
+        "composed-prototype-second",
+        "composed-declaration-second",
+        "full-fallback-mutable-context",
+        "full-fallback-wrapped-callback",
+        "full-fallback-concurrent-declaration",
+        "full-fallback-namespace",
+        "full-fallback-top-level",
+        "full-fallback-CurrentChoice-scoped",
+        "full-shape-fallback-absent",
+        "full-shape-fallback-own-undefined",
+        "full-shape-fallback-array",
+        "empty-collection-is-a-real-selection"
+      ]
+    },
+    "fallbackPrecision": "The six fallback labels mean no narrow selection or preserved dispatch precedence; several may retain broader C14 product projection. Only CurrentChoice-scoped explicitly demonstrates complete Snapshot/c14DomainOnly after changed work identity.",
+    "physicalAndC08OraclesDistinct": true,
+    "noInstalledLatencyOrCausalImprovementClaim": true,
+    "authoringHistoricalCut": "Proposal intentionally retains closedReceiptAdopted:null and the authorization-time SUCCESS/intake-pending statement. Later C21 focal closure is known but does not require rewriting that historical cut or qualify the future D30 composition.",
+    "UI6": {
+      "bytes": 390,
+      "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+      "requiredInsideFinalC613": true,
+      "changedByD30": false,
+      "separateQualificationRequired": true
+    }
+  },
+  "limits": [
+    "This ACK covers the static UNBOUND proposal only, not a source/driver object, activation, runtime result or final technical acceptance.",
+    "All earlier group bodies are literal; future source/control pins must be reconciled in the actual composed final C613. Historical pin metadata is not authority to revert files.",
+    "Report model876/cap1024 applies only to the one expected C21 report line. It is not a main-log or full-suite bound.",
+    "Proof/loading/lazy children and other nested processes remain separate populations from39 outer wrapper commands and28 outer declared groups.",
+    "Original Analytics, UI6, Migration/Release and environment/access/reservation gates remain independent. No go-live acceptance is granted."
+  ],
+  "effects": {
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "originalLogsAcquired": false,
+    "zipAcquired": false,
+    "treeCreated": false,
+    "commitCreated": false,
+    "refChanged": false,
+    "runTriggered": false,
+    "commentsChanged": false,
+    "onlyReviewBlobPersisted": true
+  }
+}

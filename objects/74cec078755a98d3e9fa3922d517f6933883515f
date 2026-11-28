@@ -1,0 +1,360 @@
+// D30 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
+import { expect } from "bun:test"
+import path from "node:path"
+import { readFile } from "node:fs/promises"
+import { AppProcess } from "@orchestra/core/process"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { testEffect } from "@orchestra/core/test/lib/effect"
+import { Effect } from "effect"
+import { ChildProcess } from "effect/unstable/process"
+
+const repository = path.resolve(import.meta.dir, "../../..")
+const module = path.join(repository, "modules/sucafina/Sucafinav1")
+const source = "__SF613_SOURCE_SHA__"
+const sourceTree = "__SF613_SOURCE_TREE__"
+const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+const dev = "346af44f4aac7bf1eb9821d4c5482bacf233a706"
+const app = path.join(repository, "packages/app-shell")
+const checks = testEffect(LayerNode.compile(AppProcess.node))
+
+function requireHostedCandidate() {
+  if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+      process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+      !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+      !/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA ?? "")) {
+    throw new Error("This verification requires Linux GitHub Actions with the actual driver SHA in GITHUB_SHA")
+  }
+  process.stdout.write(JSON.stringify({
+    verification: "sf613-final-composition-literal-c-d30-r1", source, sourceTree,
+    snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+    historicalCompositionBase,
+  }) + "\n")
+}
+
+function runCommand(label: string, executable: string, args: readonly string[], cwd: string, timeout = 180_000, printOutput = true) {
+  return Effect.gen(function* () {
+    const processes = yield* AppProcess.Service
+    const started = performance.now()
+    const result = yield* processes.run(ChildProcess.make(executable, [...args], {
+      cwd, env: { GUARDRAIL_APPROVED: "" }, extendEnv: true,
+      stdin: "ignore", stdout: "pipe", stderr: "pipe",
+      killSignal: "SIGTERM", forceKillAfter: "5 seconds",
+    }), { timeout, maxOutputBytes: 1_048_576, maxErrorBytes: 1_048_576 })
+    const output = result.stdout.toString("utf8")
+    const error = result.stderr.toString("utf8")
+    process.stdout.write(JSON.stringify({
+      gate: label, source, sourceTree, snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+      command: [executable, ...args], cwd: path.relative(repository, cwd) || ".",
+      exitCode: result.exitCode, durationMs: Math.round(performance.now() - started),
+      stdoutTruncated: result.stdoutTruncated, stderrTruncated: result.stderrTruncated,
+    }) + "\n" + (printOutput ? output : "") + error + "\n")
+    if (result.stdoutTruncated || result.stderrTruncated)
+      throw new Error(label + " exceeded the bounded evidence capture")
+    expect(result.exitCode, label).toBe(0)
+    return output
+  })
+}
+
+checks.live("literal checkout identifies the reviewed source and the separate driver child", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  process.stdout.write(JSON.stringify({ loadingControlManifest: {
+    source, sourceTree, captureCases: 27, originalCanonicalCases: 2,
+    modes: ["clean", "object-tojson", "array-tojson", "stateful-map", "stateful-keys",
+      "copy-descriptors", "reflection-descriptor", "proxy-checker", "stateful-hasher",
+      "bootstrap-api-absent", "bootstrap-api-accessor"],
+    receiptOwner: "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+    assertions: "distinct child PID; canonical before hook before helper; one own Omni spawn; zero delegations; intact output; positive and cold negative comparisons",
+    outerOmniDoesNotCountLoadingChildren: true,
+  }, lazyCaptureControlManifest: {
+    source, sourceTree, cases: 1, childProcesses: 1,
+    fixture: "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+    report: "SF_C18_CAPTURE_LAZY", reports: 1, syntheticBootstrap: true,
+    oracles: ["deferred", "primitiveUndefined", "allocationFailure", "undefinedFailure",
+      "hashRetry", "prebuildDrift", "constructionDrift", "setterIsolation"],
+    outerOmniDoesNotCountLazyChild: true,
+  } }) + "\n")
+  const snapshot = process.env.GITHUB_SHA
+  if (typeof snapshot !== "string" || snapshot === source)
+    throw new Error("The actual driver SHA must remain distinct from the literal source checkout")
+  yield* runCommand("fetch driver parent", "git", [
+    "fetch", "--no-tags", "--depth=2", "origin", snapshot,
+  ], repository, 60_000)
+  const candidate = yield* runCommand("literal source identity", "git", [
+    "show", "-s", "--format=%H%n%T", "HEAD",
+  ], repository, 30_000)
+  expect(candidate.trim().split("\n")).toEqual([source, sourceTree])
+  const driver = yield* runCommand("driver identity and sole parent", "git", [
+    "show", "-s", "--format=%H%n%P", snapshot,
+  ], repository, 30_000)
+  expect(driver.trim().split("\n")).toEqual([snapshot, source])
+}), 180_000)
+
+checks.live("captured context preparation and original canonical bytes preserve admission", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("27 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls", process.execPath, [
+    "test", "./test/product/wp10/integration/captured-context-identity.test.ts", "./test/canonical-native.test.ts",
+    "./test/product/wp10/integration/canonical-clone.test.ts", "./test/canonical-clone-bytes.test.ts", "./test/product/wp10/integration/planner-source-preparation.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("planner projection references preserve canonical bytes and original effects", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("8 synchronous planner byte controls and 4 isolated loading controls", process.execPath, [
+    "test", "./test/product/wp10/integration/planner-projection-source-refs.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("coverage C08 selection and original proof order preserve their controls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("14 C08 selection and 1 original coverage proof controls", process.execPath, [
+    "test", "./test/product/wp10/integration/coverage-case-selection.test.ts", "./test/product/wp10/integration/coverage-proof-order.test.ts",
+  ], module, 150_000)
+}), 180_000)
+
+checks.live("UI authority and context integrity remain canonical", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("original UI authority and context integrity", process.execPath, ["test","./test/product/wp10/integration/ui-authority.test.ts","./test/product/wp10/integration/ui-context-integrity.test.ts"], module, 120000)
+}), 180000)
+
+checks.live("CurrentChoice readonly composition preserves real LocalStore and calculation authority", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("CurrentChoice readonly storage and nested calculation composition", process.execPath, [
+    "test", "./test/local-store.test.ts",
+    "./test/product/wp10/integration/current-choice-readonly.test.ts",
+    "./test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "./test/product/wp10/integration/finance-pair-observation.test.ts",
+  ], path.join(repository, "modules/sucafina/Sucafinav1"), 300_000)
+}), 360_000)
+
+checks.live("the CLI package preserves its original types", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("CLI package typecheck", process.execPath, ["run", "typecheck"], path.join(repository, "apps/cli"), 240_000)
+}), 300_000)
+
+checks.live("the Sucafina package preserves its original types", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("Sucafina package typecheck", process.execPath, ["run", "typecheck"], module, 240_000)
+}), 300_000)
+
+checks.live("canonical guards use current origin dev and its actual merge base", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const shallow = yield* runCommand("inspect history completeness", "git", [
+    "rev-parse", "--is-shallow-repository",
+  ], repository, 30_000)
+  yield* runCommand("fetch current dev and source ancestry", "git", [
+    "fetch", "--no-tags", ...(shallow.trim() === "true" ? ["--unshallow"] : []),
+    "origin", "+refs/heads/dev:refs/remotes/origin/dev", process.env.GITHUB_SHA!,
+  ], repository, 120_000)
+  const dev = (yield* runCommand("current dev identity", "git", [
+    "rev-parse", "--verify", "refs/remotes/origin/dev^{commit}",
+  ], repository, 30_000)).trim()
+  const mergeBase = (yield* runCommand("actual guard merge base", "git", [
+    "merge-base", "HEAD", "origin/dev",
+  ], repository, 30_000)).trim()
+  expect(dev).toMatch(/^[a-f0-9]{40}$/)
+  expect(mergeBase).toMatch(/^[a-f0-9]{40}$/)
+  process.stdout.write(JSON.stringify({ gate: "guard ancestry", source, sourceTree, dev, mergeBase,
+    historicalCompositionBase, command: "bun run check:guards --base origin/dev --json" }) + "\n")
+  const output = yield* runCommand("canonical guardrails", process.execPath, [
+    "run", "check:guards", "--base", "origin/dev", "--json",
+  ], repository)
+  const report: unknown = JSON.parse(output)
+  expect(report).toMatchObject({ base: mergeBase, bootstrap: false, errors: [], approved: [] })
+  if (!report || typeof report !== "object" || !("rules" in report) ||
+      typeof report.rules !== "number" || report.rules < 1)
+    throw new Error("Canonical guards did not evaluate rules from the actual merge base")
+}), 600_000)
+
+
+function copyLiterals(source: string) {
+  const blocks = source.split(/export const SF_[A-Z0-9_]+_COPY_BR/)
+  if (blocks.length !== 2) throw new Error("Expected explicit English and pt-BR dictionaries")
+  return blocks.map((block) => Object.fromEntries(
+    [...block.matchAll(/^\s*"([^"]+)"\s*:\s*("(?:\\.|[^"\\])*")\s*,?\s*$/gm)]
+      .map((match) => [match[1]!, match[2]!]),
+  ))
+}
+
+
+
+checks.live("the composed app-shell passes its package typecheck", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("app-shell typecheck", process.execPath, ["typecheck"], app, 240_000)
+}), 300_000)
+
+checks.live("the native design capture passes the permanent e2e typecheck", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("app-shell e2e typecheck", process.execPath, ["run", "typecheck:e2e"], app, 240_000)
+}), 300_000)
+
+checks.live("existing English copy is byte-preserved and new keys have explicit pt-BR", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  for (const name of ["sf-u23", "sf-u25", "sf-u32", "sf-u33", "sf-u38", "sf-u44"]) {
+    const file = "packages/app-shell/src/i18n/orchestra-chapters/" + name + ".ts"
+    const original = yield* runCommand("read pinned English source " + name, "git", [
+      "show", dev + ":" + file,
+    ], repository, 30_000, false)
+    const current = yield* Effect.promise(() => readFile(path.join(repository, file), "utf8"))
+    const [before] = copyLiterals(original)
+    const [english, portuguese] = copyLiterals(current)
+    if (!before || !english || !portuguese || Object.keys(before).length < 1)
+      throw new Error("No bilingual source keys decoded")
+    for (const [key, literal] of Object.entries(before)) expect(english[key], name + " / " + key).toBe(literal)
+    const added = Object.keys(english).filter((key) => !(key in before))
+    for (const key of added) {
+      expect(portuguese[key], name + " / " + key).toBeDefined()
+      expect(portuguese[key], name + " / " + key).not.toBe(english[key])
+    }
+    expect(Object.keys(portuguese).toSorted()).toEqual(Object.keys(english).toSorted())
+    process.stdout.write(JSON.stringify({ gate: "bilingual parity", file, preserved: Object.keys(before).length, added: added.length }) + "\n")
+  }
+}), 300_000)
+
+checks.live("reconciled authority storage and source contracts preserve current dev regressions", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("reconciled authority storage and source contracts", process.execPath, [
+    "test", "./test/product/wp10/integration/ui-authority.test.ts",
+    "./test/teams-profile/policy-store.test.ts",
+    "./test/teams-profile/private-connection-store.test.ts",
+    "./test/procurement-answer-source.test.ts",
+    "./test/po-operational-health.test.ts",
+    "./test/product/wp10/integration/confirmation-selection-sqlite.test.ts",
+  ], path.join(repository, "modules/sucafina/Sucafinav1"), 240_000)
+}), 300_000)
+
+checks.live("reconciled confirmation and imports preserve original DOM payload and copy", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("reconciled confirmation and imports DOM regressions", process.execPath, [
+    "test", "--conditions=browser", "--preload", "./happydom.ts",
+    "./test-browser/sucafina-confirmation-payload.test.ts",
+    "./test-browser/sucafina-imports-copy.test.ts",
+  ], app, 120_000)
+}), 180_000)
+
+checks.live("process and filesystem platform nodes preserve original runtime controls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("core process filesystem and layer-node regressions", process.execPath, [
+    "test", "./test/process/process.test.ts", "./test/fs-util-temp.test.ts",
+    "./test/effect/layer-node/layer-node.test.ts",
+  ], path.join(repository, "packages/core"), 180_000)
+}), 240_000)
+
+checks.live("fresh tuple digests preserve original bytes and observations", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("6 original tuple and 13 isolated loading controls", process.execPath, [
+    "test", "./test/product/wp10/integration/fresh-tuple-digest.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("Portfolio criteria composition preserves its original controls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("4 original Portfolio criteria and sibling controls", process.execPath, [
+    "test", "./test/product/wp10/integration/portfolio-criteria-invocation.test.ts",
+  ], module, 600_000)
+}), 660_000)
+
+checks.live("Planner record proof preserves scope wiring and admission controls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("10 Planner proof parent controls; six isolated children declared", process.execPath, [
+    "test", "./test/product/wp10/integration/planner-record-proof-scope.test.ts",
+    "./test/product/wp10/integration/planner-record-proof-wiring.test.ts",
+    "./test/product/wp10/integration/planner-record-proof-admission.test.ts",
+  ], module, 600_000)
+}), 660_000)
+
+checks.live("complete preferences projection preserves fresh read-set and opaque fallback", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("6 preferences projection controls", process.execPath, [
+    "test", "./test/product/wp10/integration/preferences-projection.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("criterion preferences preserve the original authority gate and two fresh rule reads", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("5 criterion preference selection controls", process.execPath, [
+    "test", "./test/product/wp10/integration/criterion-preferences-selection.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("baseline preferences retain the original callback and repeated getter order", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("2 baseline original callback controls", process.execPath, [
+    "test", "./test/product/wp10/integration/baseline-preferences-read-contract.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("complete cases read-set preserves original guards and late case lookups", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("7 complete cases read-set contract controls", process.execPath, [
+    "test", "./test/product/wp10/integration/cases-read-contract.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("Portfolio selection cases and preferences preserve original guards and fresh revocation", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("Portfolio selection cases and preferences read controls", process.execPath, [
+    "test", "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("comparison binding preferences preserve both validations and fresh revocation", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("2 comparison binding preference read controls", process.execPath, [
+    "test", "./test/product/wp10/integration/criterion-comparison-preferences-read.test.ts",
+  ], module, 120_000)
+}), 180_000)
+
+checks.live("comparison proof observes the real Finance owner and its complete publication controls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("comparison proof observation", process.execPath,
+    ["test", "./test/product/wp10/integration/comparison-proof-observation.test.ts"], module, 150_000)
+}), 180_000)
+
+checks.live("C14 C08 snapshot projection preserves fresh authorization and full-path equivalence", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("C14 snapshot projection", process.execPath,
+    ["test", "./test/product/wp10/integration/c08-snapshot-projection.test.ts"], module, 300_000)
+}), 360_000)
+
+checks.live("Scenario lookup preserves complete candidate reads, fallback and fresh authority", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const output = yield* runCommand("Scenario lookup complete candidates whole-file", process.execPath,
+    ["test", "./test/product/wp10/integration/scenario-lookup-selection.test.ts"], module, 45_000)
+  expect(output).toContain("SF_C20_SCENARIO_LOOKUP ")
+}), 60_000)
+
+checks.live("Native scenario candidates retain complete results and refuse changed authority", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const output = yield* runCommand("Native scenario candidates selection whole-file", process.execPath,
+    ["test", "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"], module, 45_000)
+  expect(output).toContain("SF_C21_NATIVE_SCENARIO_SELECTION ")
+}), 60_000)

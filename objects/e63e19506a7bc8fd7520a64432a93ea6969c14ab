@@ -1,0 +1,1658 @@
+{
+  "schema": "sf613-d30-unique-anchor-derivation-v1",
+  "status": "STATIC_PARAMETRIC_PROPOSAL_UNBOUND_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "preparedAtUtc": "2026-11-28 07:15:00 UTC",
+  "authority": {
+    "writer": "teams_product",
+    "operator": "root",
+    "scope": "Only Git blobs of a static D30 proposal; no tree, commit, ref, run, original log or ZIP acquisition."
+  },
+  "basis": {
+    "manifest": {
+      "gitSha": "3e037217b0477aeacafe4bad193469c76e54ee81",
+      "bytes": 23923,
+      "sha256": "2ab417a42ce8d5bb794a83b75a14303f953cd35cf47e987d000df6111217d5d0",
+      "lf": 616,
+      "endsWithLF": true
+    },
+    "artifacts": {
+      "wrapper": {
+        "gitSha": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+        "bytes": 18854,
+        "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+        "lf": 352,
+        "endsWithLF": true
+      },
+      "envelope": {
+        "gitSha": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+        "bytes": 43811,
+        "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "finalizer": {
+        "gitSha": "42e098a611b4275e27962f3a342eb0f0892885d0",
+        "bytes": 15782,
+        "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "workflow": {
+        "gitSha": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+        "bytes": 80067,
+        "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+        "lf": 1154,
+        "endsWithLF": true
+      }
+    }
+  },
+  "operationCounts": {
+    "wrapper": 3,
+    "envelope": 9,
+    "finalizer": 3,
+    "workflow": 14,
+    "total": 29
+  },
+  "operationRules": {
+    "uniqueExactLiteralReplacements": true,
+    "applySequentiallyInListedOrder": true,
+    "inverseUsesAfterBeforeInReverseOrder": true,
+    "intermediateGitHashesCalculatedOnly": true,
+    "intermediateObjectsNotCreated": true,
+    "terminalPostimagesAreActualReadBackBlobs": true,
+    "noSourceCodeWasExecuted": true
+  },
+  "files": [
+    {
+      "artifact": "wrapper",
+      "logicalDiffPath": "apps/cli/test/sf613-final-verification.test.ts",
+      "actualDriverPath": "apps/cli/test/sf613-final-verification.test.ts",
+      "companionIsReviewArtifact": false,
+      "base": {
+        "bytes": 18854,
+        "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+        "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+        "lf": 352,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "order": 1,
+          "id": "D30-draft-label",
+          "before": "// D29 parametric draft: driver-only verification at literal C613; final source and pins remain pending.\n",
+          "after": "// D30 parametric draft: driver-only verification at literal C613; final source and pins remain pending.\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 18854,
+            "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+            "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748"
+          },
+          "postimageCalculated": {
+            "bytes": 18854,
+            "sha256": "ed86ab892977a6bf3ff0f0f5a7435d0ac717b3d93dfdd229921159b6265f97e8",
+            "gitBlob": "8a58d78d7c61427481a25e75d4960fa5932fe909"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 2,
+          "id": "D30-verification-label",
+          "before": "    verification: \"sf613-final-composition-literal-c-d29-r1\", source, sourceTree,\n",
+          "after": "    verification: \"sf613-final-composition-literal-c-d30-r1\", source, sourceTree,\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 18854,
+            "sha256": "ed86ab892977a6bf3ff0f0f5a7435d0ac717b3d93dfdd229921159b6265f97e8",
+            "gitBlob": "8a58d78d7c61427481a25e75d4960fa5932fe909"
+          },
+          "postimageCalculated": {
+            "bytes": 18854,
+            "sha256": "a556235786367588316935e46b82e35f1cbc2a2ff07d36bd59a6c581f4749230",
+            "gitBlob": "9e9cfa8b6388c1fa6a262386ae61aab80d8c86e4"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 3,
+          "id": "append-G28-literal-C21-group",
+          "before": "checks.live(\"Scenario lookup preserves complete candidate reads, fallback and fresh authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Scenario lookup complete candidates whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C20_SCENARIO_LOOKUP \")\n}), 60_000)\n",
+          "after": "checks.live(\"Scenario lookup preserves complete candidate reads, fallback and fresh authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Scenario lookup complete candidates whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C20_SCENARIO_LOOKUP \")\n}), 60_000)\n\nchecks.live(\"Native scenario candidates retain complete results and refuse changed authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Native scenario candidates selection whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C21_NATIVE_SCENARIO_SELECTION \")\n}), 60_000)\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 18854,
+            "sha256": "a556235786367588316935e46b82e35f1cbc2a2ff07d36bd59a6c581f4749230",
+            "gitBlob": "9e9cfa8b6388c1fa6a262386ae61aab80d8c86e4"
+          },
+          "postimageCalculated": {
+            "bytes": 19332,
+            "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+            "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f"
+          },
+          "intermediateHashesAreDataOnly": true
+        }
+      ],
+      "operationCount": 3,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postimage": {
+        "gitSha": "74cec078755a98d3e9fa3922d517f6933883515f",
+        "bytes": 19332,
+        "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+        "lf": 360,
+        "endsWithLF": true
+      },
+      "postimageCreatedAndReadBack": true
+    },
+    {
+      "artifact": "envelope",
+      "logicalDiffPath": "review-artifacts/sf613-final-envelope.mjs",
+      "actualDriverPath": null,
+      "companionIsReviewArtifact": true,
+      "base": {
+        "bytes": 43811,
+        "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+        "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "order": 1,
+          "id": "outer-count-1",
+          "before": "  need(passes.length === 1 && Number(passes[0][1]) === 27 &&\n",
+          "after": "  need(passes.length === 1 && Number(passes[0][1]) === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+            "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "2cea19d8bc3be5c70bbdc41ff69843633b6350226ac3122201602510f67747b5",
+            "gitBlob": "47c39f4a4126e59904d9105b6725848b9a81f6a7"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 2,
+          "id": "outer-count-2",
+          "before": "    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 27 PASS/0 FAIL/0 SKIP\")\n",
+          "after": "    skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 28 PASS/0 FAIL/0 SKIP\")\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "2cea19d8bc3be5c70bbdc41ff69843633b6350226ac3122201602510f67747b5",
+            "gitBlob": "47c39f4a4126e59904d9105b6725848b9a81f6a7"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "ed4e4f89ed6551d6f054d2d5f0b8b06d119df8fbcc6eb154e42e1eab20929dfe",
+            "gitBlob": "d45ceff9fed6309beaf222d6642fdc62708ac8a1"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 3,
+          "id": "outer-count-3",
+          "before": "  need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 27 &&\n",
+          "after": "  need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "ed4e4f89ed6551d6f054d2d5f0b8b06d119df8fbcc6eb154e42e1eab20929dfe",
+            "gitBlob": "d45ceff9fed6309beaf222d6642fdc62708ac8a1"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "9390feabb835aaa7a4c53ff7c11e07cb2e2239adb142e439ede44fc747abd07e",
+            "gitBlob": "ca4f9eb557b6d3727e457f0a380a13743da7cdc3"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 4,
+          "id": "outer-count-4",
+          "before": "  const ran = summaries(/^Ran 27 tests across 1 file\\./)\n",
+          "after": "  const ran = summaries(/^Ran 28 tests across 1 file\\./)\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "9390feabb835aaa7a4c53ff7c11e07cb2e2239adb142e439ede44fc747abd07e",
+            "gitBlob": "ca4f9eb557b6d3727e457f0a380a13743da7cdc3"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "26c3f28393b9ef48121c1116d8106fa028d1c03dcc2bd91ead2f7f0de2fd700f",
+            "gitBlob": "5280cf05c0177b98f6fbecb2e832b0685da9be8f"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 5,
+          "id": "outer-count-5",
+          "before": "  const prefix = tag + \" pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "after": "  const prefix = tag + \" pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "26c3f28393b9ef48121c1116d8106fa028d1c03dcc2bd91ead2f7f0de2fd700f",
+            "gitBlob": "5280cf05c0177b98f6fbecb2e832b0685da9be8f"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "7d2c5f10353b13b284948d05e7db717636d369ac91b7f9e5887084b5c34a3da8",
+            "gitBlob": "7ea647cef378c80238f61615479185705720bee4"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 6,
+          "id": "outer-count-6",
+          "before": "  return { pass: 27, fail: 0, skip: 0, declarations: 27, actualHeader: headers[0],\n",
+          "after": "  return { pass: 28, fail: 0, skip: 0, declarations: 28, actualHeader: headers[0],\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "7d2c5f10353b13b284948d05e7db717636d369ac91b7f9e5887084b5c34a3da8",
+            "gitBlob": "7ea647cef378c80238f61615479185705720bee4"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "04e0340ae646f829c3a69fc56bcdf4838ae4877b17325d185f56236cb6f0abb5",
+            "gitBlob": "8b7e0e6d96922b0533e7eee609d13a4e19b2f6a3"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 7,
+          "id": "outer-count-7",
+          "before": "    omni: { nonce, declared: 27, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "after": "    omni: { nonce, declared: 28, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "04e0340ae646f829c3a69fc56bcdf4838ae4877b17325d185f56236cb6f0abb5",
+            "gitBlob": "8b7e0e6d96922b0533e7eee609d13a4e19b2f6a3"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "e6c2d68f2b8895557aa8e6b91b3406f722205aac5b1fe2c7c0d5145a2009dd10",
+            "gitBlob": "64728f0c7cc4ab5c2dbff891d7ec6f96de1b4b29"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 8,
+          "id": "outer-count-8",
+          "before": "  need(originalVerdict.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "after": "  need(originalVerdict.startsWith(\"omni positive control: pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "e6c2d68f2b8895557aa8e6b91b3406f722205aac5b1fe2c7c0d5145a2009dd10",
+            "gitBlob": "64728f0c7cc4ab5c2dbff891d7ec6f96de1b4b29"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "8655f77f9d22d294f70310c02821d80b1d69d5b4cb58c2eaeb39807466ed396f",
+            "gitBlob": "39deca9d82e35891a9f96a587c1611a52fc55201"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 9,
+          "id": "outer-count-9",
+          "before": "  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 27 &&\n",
+          "after": "  const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 43811,
+            "sha256": "8655f77f9d22d294f70310c02821d80b1d69d5b4cb58c2eaeb39807466ed396f",
+            "gitBlob": "39deca9d82e35891a9f96a587c1611a52fc55201"
+          },
+          "postimageCalculated": {
+            "bytes": 43811,
+            "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+            "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa"
+          },
+          "intermediateHashesAreDataOnly": true
+        }
+      ],
+      "operationCount": 9,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postimage": {
+        "gitSha": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+        "bytes": 43811,
+        "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+        "lf": 723,
+        "endsWithLF": true
+      },
+      "postimageCreatedAndReadBack": true
+    },
+    {
+      "artifact": "finalizer",
+      "logicalDiffPath": "review-artifacts/sf613-final-finalizer.mjs",
+      "actualDriverPath": null,
+      "companionIsReviewArtifact": true,
+      "base": {
+        "bytes": 15782,
+        "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+        "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "order": 1,
+          "id": "outer-count-1",
+          "before": "    main.run === run && main.attempt === attempt && main.result?.pass === 27 &&\n",
+          "after": "    main.run === run && main.attempt === attempt && main.result?.pass === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 15782,
+            "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+            "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0"
+          },
+          "postimageCalculated": {
+            "bytes": 15782,
+            "sha256": "39bf43d11f0473036f37d95a30c507ac2d2db3b65c213cdec6e709fc76ca5c30",
+            "gitBlob": "5f54593cac0b2e6f3b261600ab9284659e71059e"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 2,
+          "id": "outer-count-2",
+          "before": "    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 27 &&\n",
+          "after": "    main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 15782,
+            "sha256": "39bf43d11f0473036f37d95a30c507ac2d2db3b65c213cdec6e709fc76ca5c30",
+            "gitBlob": "5f54593cac0b2e6f3b261600ab9284659e71059e"
+          },
+          "postimageCalculated": {
+            "bytes": 15782,
+            "sha256": "9511e98462cebe1e02cc5199a606d432d8a62ed5f618f57c81a70169ae6ef819",
+            "gitBlob": "b4193cf6801389f708fabf75f15cd2d9b0ebfbf5"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 3,
+          "id": "outer-count-3",
+          "before": "    main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "after": "    main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 15782,
+            "sha256": "9511e98462cebe1e02cc5199a606d432d8a62ed5f618f57c81a70169ae6ef819",
+            "gitBlob": "b4193cf6801389f708fabf75f15cd2d9b0ebfbf5"
+          },
+          "postimageCalculated": {
+            "bytes": 15782,
+            "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+            "gitBlob": "3865560d88636917d080015e91a714537cfa35af"
+          },
+          "intermediateHashesAreDataOnly": true
+        }
+      ],
+      "operationCount": 3,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postimage": {
+        "gitSha": "3865560d88636917d080015e91a714537cfa35af",
+        "bytes": 15782,
+        "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+        "lf": 250,
+        "endsWithLF": true
+      },
+      "postimageCreatedAndReadBack": true
+    },
+    {
+      "artifact": "workflow",
+      "logicalDiffPath": ".github/workflows/sf613-final-qualification.yml",
+      "actualDriverPath": ".github/workflows/sf613-final-qualification.yml",
+      "companionIsReviewArtifact": false,
+      "base": {
+        "bytes": 80067,
+        "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+        "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+        "lf": 1154,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "order": 1,
+          "id": "D30-workflow-label",
+          "before": "# D29 parametric draft, not a frozen candidate. D adds only this workflow and the wrapper; checkout remains literal C613.\n",
+          "after": "# D30 parametric draft, not a frozen candidate. D adds only this workflow and the wrapper; checkout remains literal C613.\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+            "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "d84682a4028f4157c01e2011485cad343f87bc08e790896d515031b84f450634",
+            "gitBlob": "befeaf16372c50255d708c286df35d58a5570a48"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 2,
+          "id": "derived-envelope-digest",
+          "before": "          SF613_ENVELOPE_SHA256: \"d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955\"\n",
+          "after": "          SF613_ENVELOPE_SHA256: \"f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b\"\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "d84682a4028f4157c01e2011485cad343f87bc08e790896d515031b84f450634",
+            "gitBlob": "befeaf16372c50255d708c286df35d58a5570a48"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "6fe4b0afb4817b1a5d8315b0547b8c15f7248f96b047ee10746e48e941945af4",
+            "gitBlob": "a4ffebfc54ccab9d196e0ba8614d455d9ffe642b"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 3,
+          "id": "embedded-envelope-outer-count-1",
+          "before": "              need(passes.length === 1 && Number(passes[0][1]) === 27 &&\n",
+          "after": "              need(passes.length === 1 && Number(passes[0][1]) === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "6fe4b0afb4817b1a5d8315b0547b8c15f7248f96b047ee10746e48e941945af4",
+            "gitBlob": "a4ffebfc54ccab9d196e0ba8614d455d9ffe642b"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "78cfd405fb26b593eb7623f6bc288d096932ac9130847a8b59669219ede9fc9b",
+            "gitBlob": "ab3aa813cf1ac4aa2fb321c3c8b34a6c77798ac2"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 4,
+          "id": "embedded-envelope-outer-count-2",
+          "before": "                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 27 PASS/0 FAIL/0 SKIP\")\n",
+          "after": "                skips.length <= 1 && skips.every(match => Number(match[1]) === 0), \"Outer Bun summary is not 28 PASS/0 FAIL/0 SKIP\")\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "78cfd405fb26b593eb7623f6bc288d096932ac9130847a8b59669219ede9fc9b",
+            "gitBlob": "ab3aa813cf1ac4aa2fb321c3c8b34a6c77798ac2"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "9a311bf76b797c0403725bec60fbdf2c8642d6bb552a38d9ba457518fa141f0c",
+            "gitBlob": "cb6f17f23300a0ac3e5785bcfc55023be6ae8184"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 5,
+          "id": "embedded-envelope-outer-count-3",
+          "before": "              need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 27 &&\n",
+          "after": "              need(errLines.filter(line => /^\\(pass\\) /.test(line)).length === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "9a311bf76b797c0403725bec60fbdf2c8642d6bb552a38d9ba457518fa141f0c",
+            "gitBlob": "cb6f17f23300a0ac3e5785bcfc55023be6ae8184"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "b64a6fcc1a09af0caf2f17e3c1a8e236837771612d231477d469efb9c4fb9884",
+            "gitBlob": "e54649eb3660ca4d23724b308c6e902beedb073e"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 6,
+          "id": "embedded-envelope-outer-count-4",
+          "before": "              const ran = summaries(/^Ran 27 tests across 1 file\\./)\n",
+          "after": "              const ran = summaries(/^Ran 28 tests across 1 file\\./)\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "b64a6fcc1a09af0caf2f17e3c1a8e236837771612d231477d469efb9c4fb9884",
+            "gitBlob": "e54649eb3660ca4d23724b308c6e902beedb073e"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "f95bb70334cbffc0e6ccfc3190b464e550775661f8441c3251b3cc4a5952ef68",
+            "gitBlob": "105981658c9406ab8cb2f71693906218339c493d"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 7,
+          "id": "embedded-envelope-outer-count-5",
+          "before": "              const prefix = tag + \" pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "after": "              const prefix = tag + \" pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \"\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "f95bb70334cbffc0e6ccfc3190b464e550775661f8441c3251b3cc4a5952ef68",
+            "gitBlob": "105981658c9406ab8cb2f71693906218339c493d"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "40c89e20e62fafe795144579dc0ffe13dcc9789489964004ab26898dc256eb5a",
+            "gitBlob": "25695a6575f78eaf2d212ecd2008751a9d36267c"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 8,
+          "id": "embedded-envelope-outer-count-6",
+          "before": "              return { pass: 27, fail: 0, skip: 0, declarations: 27, actualHeader: headers[0],\n",
+          "after": "              return { pass: 28, fail: 0, skip: 0, declarations: 28, actualHeader: headers[0],\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "40c89e20e62fafe795144579dc0ffe13dcc9789489964004ab26898dc256eb5a",
+            "gitBlob": "25695a6575f78eaf2d212ecd2008751a9d36267c"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "323403d3bb6aaa6074c9c653e8f310dbd0aabaf1bb7f2beb7ffb6e90b2036cab",
+            "gitBlob": "036c7d0044cca09c0dad3a2ebb989fb5e61b9d93"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 9,
+          "id": "embedded-envelope-outer-count-7",
+          "before": "                omni: { nonce, declared: 27, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "after": "                omni: { nonce, declared: 28, spawns: Number(counts[1]), delegated: 0, footer: footers[0],\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "323403d3bb6aaa6074c9c653e8f310dbd0aabaf1bb7f2beb7ffb6e90b2036cab",
+            "gitBlob": "036c7d0044cca09c0dad3a2ebb989fb5e61b9d93"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "e5f19d5bed2a77efaa2fa4e312f405f20488220137751ece7a73bcb61e961794",
+            "gitBlob": "35f5b71589876ac440d05e76ccafc2469f6d81e2"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 10,
+          "id": "embedded-envelope-outer-count-8",
+          "before": "              need(originalVerdict.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "after": "              need(originalVerdict.startsWith(\"omni positive control: pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \"),\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "e5f19d5bed2a77efaa2fa4e312f405f20488220137751ece7a73bcb61e961794",
+            "gitBlob": "35f5b71589876ac440d05e76ccafc2469f6d81e2"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "0e707b38330cce18124b56886bc1b94e50d1cb61c74def142c8d67c8b10f2878",
+            "gitBlob": "7ccbb70e89cd8a58f21dd5c859919a0f77cf9c30"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 11,
+          "id": "embedded-envelope-outer-count-9",
+          "before": "              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 27 &&\n",
+          "after": "              const passed = errors.length === 0 && !interrupted && receipt.result?.pass === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "0e707b38330cce18124b56886bc1b94e50d1cb61c74def142c8d67c8b10f2878",
+            "gitBlob": "7ccbb70e89cd8a58f21dd5c859919a0f77cf9c30"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "b7b5cb0d3093a6bf046c0386df05a824c5dfa685033e68085a7ea042a412b13e",
+            "gitBlob": "c3b3b9437d6305788db286d201107acedbfdae5b"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 12,
+          "id": "embedded-finalizer-outer-count-1",
+          "before": "              main.run === run && main.attempt === attempt && main.result?.pass === 27 &&\n",
+          "after": "              main.run === run && main.attempt === attempt && main.result?.pass === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "b7b5cb0d3093a6bf046c0386df05a824c5dfa685033e68085a7ea042a412b13e",
+            "gitBlob": "c3b3b9437d6305788db286d201107acedbfdae5b"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "2c1c0ab142070387e3435046754823f6dbabb83901d641237205210f7abcfcf3",
+            "gitBlob": "2fff4dcef60f71ac4be07fceb1eb0f9477c108d9"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 13,
+          "id": "embedded-finalizer-outer-count-2",
+          "before": "              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 27 &&\n",
+          "after": "              main.result?.fail === 0 && main.result?.skip === 0 && main.result?.omni?.declared === 28 &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "2c1c0ab142070387e3435046754823f6dbabb83901d641237205210f7abcfcf3",
+            "gitBlob": "2fff4dcef60f71ac4be07fceb1eb0f9477c108d9"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "34290011ecc4e9ea7b546ec02c3e84efe0a3d0f726d44a4908b5a8ecb19728a3",
+            "gitBlob": "47a1546af989f48a65c8fe2d2deea1afb6fbba3d"
+          },
+          "intermediateHashesAreDataOnly": true
+        },
+        {
+          "order": 14,
+          "id": "embedded-finalizer-outer-count-3",
+          "before": "              main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 27 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "after": "              main.originalOmniVerdict?.verdict?.startsWith(\"omni positive control: pass (declared: 28 test(s) in test/sf613-final-verification.test.ts); \") &&\n",
+          "occurrences": 1,
+          "preimageCalculated": {
+            "bytes": 80067,
+            "sha256": "34290011ecc4e9ea7b546ec02c3e84efe0a3d0f726d44a4908b5a8ecb19728a3",
+            "gitBlob": "47a1546af989f48a65c8fe2d2deea1afb6fbba3d"
+          },
+          "postimageCalculated": {
+            "bytes": 80067,
+            "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+            "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b"
+          },
+          "intermediateHashesAreDataOnly": true
+        }
+      ],
+      "operationCount": 14,
+      "forwardExact": true,
+      "inverseExact": true,
+      "postimage": {
+        "gitSha": "50cfa806e399238a8730bf1c4c58203932c8676b",
+        "bytes": 80067,
+        "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+        "lf": 1154,
+        "endsWithLF": true
+      },
+      "postimageCreatedAndReadBack": true
+    }
+  ],
+  "diff": {
+    "gitSha": "cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+    "bytes": 14496,
+    "sha256": "801c33ba3d95f7175786671fb88bfcda66aaf7ebdefc805f5687bececd6b1f0d",
+    "lf": 190,
+    "endsWithLF": true,
+    "fileCount": 4,
+    "hunks": 13,
+    "addedLines": 36,
+    "removedLines": 28,
+    "sections": [
+      {
+        "artifact": "wrapper",
+        "hunks": 3,
+        "add": 10,
+        "remove": 2
+      },
+      {
+        "artifact": "envelope",
+        "hunks": 3,
+        "add": 9,
+        "remove": 9
+      },
+      {
+        "artifact": "finalizer",
+        "hunks": 1,
+        "add": 3,
+        "remove": 3
+      },
+      {
+        "artifact": "workflow",
+        "hunks": 6,
+        "add": 14,
+        "remove": 14
+      }
+    ],
+    "forwardInverse": [
+      {
+        "artifact": "wrapper",
+        "forwardExact": true,
+        "inverseExact": true,
+        "hunks": 3
+      },
+      {
+        "artifact": "envelope",
+        "forwardExact": true,
+        "inverseExact": true,
+        "hunks": 3
+      },
+      {
+        "artifact": "finalizer",
+        "forwardExact": true,
+        "inverseExact": true,
+        "hunks": 1
+      },
+      {
+        "artifact": "workflow",
+        "forwardExact": true,
+        "inverseExact": true,
+        "hunks": 6
+      }
+    ],
+    "logicalCompanionPathsAreNotAdditionalDriverTreeLeaves": true
+  },
+  "preserved": {
+    "G1ThroughG27Literal": true,
+    "engineLiteral": true,
+    "prior33CommandSitesLiteral": true,
+    "prior27ParentBudgetsLiteral": true,
+    "workflowBootstrapAndLoaderLiteral": true,
+    "fullEnvelopeAndFinalizerEmbeddingsExact": true,
+    "onlyCountValidation27To28": true,
+    "noNewProtocolFamilyOrRuntimeReportParser": true
+  },
+  "C21Group": {
+    "originFocalWrapper": {
+      "gitSha": "50df11d4be37f2990bc7d26095f2515292db959b",
+      "bytes": 13830,
+      "sha256": "abd510b7d5c03090b2695e9628cdc274b75a6f21349c996411bc27a46fda81de",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "originGroup": 9,
+    "destinationGroup": 28,
+    "literalText": "checks.live(\"Native scenario candidates retain complete results and refuse changed authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Native scenario candidates selection whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C21_NATIVE_SCENARIO_SELECTION \")\n}), 60_000)\n",
+    "literalGroupFingerprint": {
+      "bytes": 477,
+      "sha256": "bb12a55a48fccca9de4fe5face0c19153f732c41db62f7cc8417996cb23ff20a",
+      "gitBlob": "905896099e8adb4ab3552c7d9b0b4b0c63aa40cf"
+    },
+    "fingerprintIsDataOnly": true,
+    "selectedControl": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "wholeFile": true,
+    "processMs": 45000,
+    "parentMs": 60000
+  },
+  "finalBindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "sourceReferenceIsNotFinalC613": true
+  },
+  "staticSelfChecks": {
+    "count": 110,
+    "allPassed": true,
+    "checks": [
+      {
+        "id": "wrapper-actual-auth",
+        "actual": {
+          "bytes": 19332,
+          "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+          "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f"
+        },
+        "expected": {
+          "bytes": 19332,
+          "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+          "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f"
+        },
+        "pass": true
+      },
+      {
+        "id": "wrapper-literal-readback",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "wrapper-1-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-2-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-3-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-forward-hash",
+        "actual": {
+          "bytes": 19332,
+          "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+          "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f"
+        },
+        "expected": {
+          "bytes": 19332,
+          "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+          "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f"
+        },
+        "pass": true
+      },
+      {
+        "id": "wrapper-inverse-hash",
+        "actual": {
+          "bytes": 18854,
+          "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+          "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748"
+        },
+        "expected": {
+          "bytes": 18854,
+          "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+          "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748"
+        },
+        "pass": true
+      },
+      {
+        "id": "wrapper-diff-forward-inverse",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "envelope-actual-auth",
+        "actual": {
+          "bytes": 43811,
+          "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+          "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa"
+        },
+        "expected": {
+          "bytes": 43811,
+          "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+          "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa"
+        },
+        "pass": true
+      },
+      {
+        "id": "envelope-literal-readback",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "envelope-1-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-2-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-3-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-4-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-5-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-6-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-7-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-8-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-9-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-forward-hash",
+        "actual": {
+          "bytes": 43811,
+          "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+          "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa"
+        },
+        "expected": {
+          "bytes": 43811,
+          "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+          "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa"
+        },
+        "pass": true
+      },
+      {
+        "id": "envelope-inverse-hash",
+        "actual": {
+          "bytes": 43811,
+          "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+          "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900"
+        },
+        "expected": {
+          "bytes": 43811,
+          "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+          "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900"
+        },
+        "pass": true
+      },
+      {
+        "id": "envelope-diff-forward-inverse",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "finalizer-actual-auth",
+        "actual": {
+          "bytes": 15782,
+          "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+          "gitBlob": "3865560d88636917d080015e91a714537cfa35af"
+        },
+        "expected": {
+          "bytes": 15782,
+          "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+          "gitBlob": "3865560d88636917d080015e91a714537cfa35af"
+        },
+        "pass": true
+      },
+      {
+        "id": "finalizer-literal-readback",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "finalizer-1-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-2-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-3-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-forward-hash",
+        "actual": {
+          "bytes": 15782,
+          "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+          "gitBlob": "3865560d88636917d080015e91a714537cfa35af"
+        },
+        "expected": {
+          "bytes": 15782,
+          "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+          "gitBlob": "3865560d88636917d080015e91a714537cfa35af"
+        },
+        "pass": true
+      },
+      {
+        "id": "finalizer-inverse-hash",
+        "actual": {
+          "bytes": 15782,
+          "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+          "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0"
+        },
+        "expected": {
+          "bytes": 15782,
+          "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+          "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0"
+        },
+        "pass": true
+      },
+      {
+        "id": "finalizer-diff-forward-inverse",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "workflow-actual-auth",
+        "actual": {
+          "bytes": 80067,
+          "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+          "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b"
+        },
+        "expected": {
+          "bytes": 80067,
+          "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+          "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b"
+        },
+        "pass": true
+      },
+      {
+        "id": "workflow-literal-readback",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "workflow-1-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-2-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-3-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-4-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-5-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-6-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-7-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-8-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-9-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-10-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-11-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-12-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-13-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-14-anchor-unique",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-forward-hash",
+        "actual": {
+          "bytes": 80067,
+          "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+          "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b"
+        },
+        "expected": {
+          "bytes": 80067,
+          "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+          "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b"
+        },
+        "pass": true
+      },
+      {
+        "id": "workflow-inverse-hash",
+        "actual": {
+          "bytes": 80067,
+          "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+          "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc"
+        },
+        "expected": {
+          "bytes": 80067,
+          "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+          "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc"
+        },
+        "pass": true
+      },
+      {
+        "id": "workflow-diff-forward-inverse",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "G1-G27-entire-literal",
+        "actual": {
+          "valueFingerprint": {
+            "bytes": 16614,
+            "sha256": "bef6da04a6a5cd9ba1992463ab8e1478480e75c5a5e4c40c47d59bc159eca4c9",
+            "gitBlob": "ad62ed11039fbd297d78b75bcab6eb92cb2ab47d"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "expected": {
+          "valueFingerprint": {
+            "bytes": 16614,
+            "sha256": "bef6da04a6a5cd9ba1992463ab8e1478480e75c5a5e4c40c47d59bc159eca4c9",
+            "gitBlob": "ad62ed11039fbd297d78b75bcab6eb92cb2ab47d"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "pass": true
+      },
+      {
+        "id": "engine-and-other-preamble-except-two-labels",
+        "actual": {
+          "valueFingerprint": {
+            "bytes": 3144,
+            "sha256": "68b2786016455a1f5cd99cd8ad687cc3968e33455003e6c40d2d8c9d8ff53510",
+            "gitBlob": "ff3f48f4dc07ddc41339955b0aa1b0e9f86a5af7"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "expected": {
+          "valueFingerprint": {
+            "bytes": 3144,
+            "sha256": "68b2786016455a1f5cd99cd8ad687cc3968e33455003e6c40d2d8c9d8ff53510",
+            "gitBlob": "ff3f48f4dc07ddc41339955b0aa1b0e9f86a5af7"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "pass": true
+      },
+      {
+        "id": "C21-group-source-literal",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "C21-carrier-contains-exact-group",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "old-command-table",
+        "actual": {
+          "valueFingerprint": {
+            "bytes": 3682,
+            "sha256": "12cd076b22b19ab9b316642e15b0d50a246d1e8e8cc2262a9e4bf310f3d22907",
+            "gitBlob": "151cb1270f81eebab918397f8e62f0f6696c7010"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "expected": {
+          "valueFingerprint": {
+            "bytes": 3682,
+            "sha256": "12cd076b22b19ab9b316642e15b0d50a246d1e8e8cc2262a9e4bf310f3d22907",
+            "gitBlob": "151cb1270f81eebab918397f8e62f0f6696c7010"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "pass": true
+      },
+      {
+        "id": "old-parent-table",
+        "actual": {
+          "valueFingerprint": {
+            "bytes": 2856,
+            "sha256": "1eaa35eaf0e20ff9c09a0ffa692ff155aabe681dbcf3a5d6aaf64d5e57008565",
+            "gitBlob": "305e7d31410d1672a3c3fccbe8c759c2182c7cbf"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "expected": {
+          "valueFingerprint": {
+            "bytes": 2856,
+            "sha256": "1eaa35eaf0e20ff9c09a0ffa692ff155aabe681dbcf3a5d6aaf64d5e57008565",
+            "gitBlob": "305e7d31410d1672a3c3fccbe8c759c2182c7cbf"
+          },
+          "fingerprintIsDataOnly": true
+        },
+        "pass": true
+      },
+      {
+        "id": "count-groups",
+        "actual": 28,
+        "expected": 28,
+        "pass": true
+      },
+      {
+        "id": "count-expectSpawn",
+        "actual": 28,
+        "expected": 28,
+        "pass": true
+      },
+      {
+        "id": "count-sites",
+        "actual": 34,
+        "expected": 34,
+        "pass": true
+      },
+      {
+        "id": "count-commands",
+        "actual": 39,
+        "expected": 39,
+        "pass": true
+      },
+      {
+        "id": "count-truncationFlags",
+        "actual": 78,
+        "expected": 78,
+        "pass": true
+      },
+      {
+        "id": "count-commandSumMs",
+        "actual": 5580000,
+        "expected": 5580000,
+        "pass": true
+      },
+      {
+        "id": "count-parentSumMs",
+        "actual": 7320000,
+        "expected": 7320000,
+        "pass": true
+      },
+      {
+        "id": "command-delta",
+        "actual": 45000,
+        "expected": 45000,
+        "pass": true
+      },
+      {
+        "id": "parent-delta",
+        "actual": 60000,
+        "expected": 60000,
+        "pass": true
+      },
+      {
+        "id": "source-test-declarations",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "C21-outcomes",
+        "actual": 19,
+        "expected": 19,
+        "pass": true
+      },
+      {
+        "id": "C21-report-model-bytes",
+        "actual": 876,
+        "expected": 876,
+        "pass": true
+      },
+      {
+        "id": "C21-report-model-hash",
+        "actual": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+        "expected": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+        "pass": true
+      },
+      {
+        "id": "C21-report-under-cap",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "envelope-complete-embedding",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "finalizer-complete-embedding",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "envelope-transport-digest",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "loader-unchanged",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "run-maximum-draft",
+        "actual": 15833,
+        "expected": 15833,
+        "pass": true
+      },
+      {
+        "id": "run-maximum-width",
+        "actual": 15930,
+        "expected": 15930,
+        "pass": true
+      },
+      {
+        "id": "run-character-limit",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "global-process",
+        "actual": true,
+        "expected": true,
+        "pass": true
+      },
+      {
+        "id": "global-workflow-timeouts",
+        "actual": [
+          "timeout-minutes: 45",
+          "timeout-minutes: 40",
+          "timeout-minutes: 3"
+        ],
+        "expected": [
+          "timeout-minutes: 45",
+          "timeout-minutes: 40",
+          "timeout-minutes: 3"
+        ],
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-count-preserved-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-count-preserved-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-__SF613_WRAPPER_BLOB__",
+        "actual": 0,
+        "expected": 0,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-count-preserved-__SF613_WRAPPER_BLOB__",
+        "actual": 0,
+        "expected": 0,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-__SF613_WRAPPER_SHA256__",
+        "actual": 0,
+        "expected": 0,
+        "pass": true
+      },
+      {
+        "id": "wrapper-token-count-preserved-__SF613_WRAPPER_SHA256__",
+        "actual": 0,
+        "expected": 0,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-count-preserved-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-count-preserved-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-__SF613_WRAPPER_BLOB__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-count-preserved-__SF613_WRAPPER_BLOB__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-__SF613_WRAPPER_SHA256__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "envelope-token-count-preserved-__SF613_WRAPPER_SHA256__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-count-preserved-__SF613_SOURCE_SHA__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-count-preserved-__SF613_SOURCE_TREE__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-__SF613_WRAPPER_BLOB__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-count-preserved-__SF613_WRAPPER_BLOB__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-__SF613_WRAPPER_SHA256__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "finalizer-token-count-preserved-__SF613_WRAPPER_SHA256__",
+        "actual": 1,
+        "expected": 1,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-__SF613_SOURCE_SHA__",
+        "actual": 3,
+        "expected": 3,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-count-preserved-__SF613_SOURCE_SHA__",
+        "actual": 3,
+        "expected": 3,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-__SF613_SOURCE_TREE__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-count-preserved-__SF613_SOURCE_TREE__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-__SF613_WRAPPER_BLOB__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-count-preserved-__SF613_WRAPPER_BLOB__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-__SF613_WRAPPER_SHA256__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      },
+      {
+        "id": "workflow-token-count-preserved-__SF613_WRAPPER_SHA256__",
+        "actual": 2,
+        "expected": 2,
+        "pass": true
+      }
+    ],
+    "scope": "Pure transformations, string comparisons and hashing of preserved Git copies. Not repository execution or runtime test results."
+  },
+  "noNewQualification": {
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "finalSource": null,
+    "finalDriver": null,
+    "run": null,
+    "installedAcceptance": false
+  }
+}

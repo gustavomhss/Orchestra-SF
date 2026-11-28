@@ -1,0 +1,12 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts
+@@ -200,7 +200,7 @@
+ test("C21 native scenario candidates retain the whole result graph and installed selection fences", async () => bounded(async (deadline) => {
+   const outcomes: string[] = []
+   await withFixture(deadline, false, async (fixture) => {
+-    expect(isLocalSnapshotAuthorityReader(fixture.store)).toBe(true)
++    expect(isLocalSnapshotAuthorityReader(fixture.store, fixture.store.observeAuthority)).toBe(true)
+     expect(currentChoiceOwnsSnapshotTransactions(fixture.choice, fixture.store)).toBe(true)
+     expect(isSfProductStateReader(fixture.authority.state, fixture.persistence)).toBe(true)
+     expect(isSfAclStateAuthorize(fixture.canonicalAuthorize)).toBe(true)

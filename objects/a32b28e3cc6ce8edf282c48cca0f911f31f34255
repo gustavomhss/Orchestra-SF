@@ -1,0 +1,180 @@
+{
+  "schema": "sf613-final-composition-static-review-v1",
+  "observedAtUtc": "2026-11-25T23:10:17Z",
+  "scope": "Read-only reconciliation map; no product/docs buffer, object, ref, run or test created",
+  "source": {
+    "privateC5": "f29e974d4833e1ae488f905e336cfce5497388fb",
+    "privateTree": "9f205159b5d03adc4d06cee1d698c14e32205b3b",
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "devTree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "commonAncestor": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+    "devRefReadbackExact": true
+  },
+  "comparison": {
+    "status": "diverged",
+    "devAhead": 3,
+    "privateAhead": 163,
+    "devSidePathsOnly": [
+      "docs/qa/sucafina/go-live/status.json",
+      "docs/qa/sucafina/go-live/README.md",
+      "docs/qa/sucafina/go-live/execution-2026-11-22.md"
+    ],
+    "commits": [
+      "f485ca4ecf3e5844667878e9d6fc5fa4e2a660c4",
+      "54b6e5aba31376e9954764bd2ad5d91bb58dfbba",
+      "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+    ],
+    "meaning": "GitHub compare lists incoming dev-side changes from the common ancestor, not equality of the whole C5 and dev trees."
+  },
+  "documents": [
+    {
+      "path": "docs/qa/sucafina/go-live/status.json",
+      "C5": {
+        "ref": "C5",
+        "name": "status.json",
+        "bytes": 399168,
+        "sha256": "3e916d30ab65e91a719d9bdef6d7048eb2c317f4fe23742f798bdf3d5e3f4843",
+        "gitSha": "a84d6314611e22b72cbfc59152779747a22a04b9",
+        "pin": "a84d6314611e22b72cbfc59152779747a22a04b9"
+      },
+      "dev": {
+        "ref": "dev",
+        "name": "status.json",
+        "bytes": 470378,
+        "sha256": "c1b16b5f9a596d07253b9f740f34f9e44c103e2f4d392024a9abdb8eff1d1ea0",
+        "gitSha": "3b87252042526f65ea363b0e0c83522061b049de",
+        "pin": "3b87252042526f65ea363b0e0c83522061b049de"
+      }
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/README.md",
+      "C5": {
+        "ref": "C5",
+        "name": "README.md",
+        "bytes": 37610,
+        "sha256": "4a0a6cc832a79f64af0cb9f1fcef3d1237e9426e139b4950cad76cd8f9ca1906",
+        "gitSha": "e1d2737ba91cb6d0bdd38462087e5cc55d9f2a03",
+        "pin": "e1d2737ba91cb6d0bdd38462087e5cc55d9f2a03"
+      },
+      "dev": {
+        "ref": "dev",
+        "name": "README.md",
+        "bytes": 47700,
+        "sha256": "c50e4d421f39dbb8b7d15981b090bd1da727fac943bafc5bf81c6d3836a04a57",
+        "gitSha": "300b149a033dc978b85af57023ddab7d23b4af09",
+        "pin": "300b149a033dc978b85af57023ddab7d23b4af09"
+      }
+    },
+    {
+      "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+      "C5": {
+        "ref": "C5",
+        "name": "execution-2026-11-22.md",
+        "bytes": 130010,
+        "sha256": "d2253388723970d012c0b556bcabbe90f4fc4544476ee72cf250dfd8cda66116",
+        "gitSha": "1146627d16bc4d327477435d8721aa9b273d93a5",
+        "pin": "1146627d16bc4d327477435d8721aa9b273d93a5"
+      },
+      "dev": {
+        "ref": "dev",
+        "name": "execution-2026-11-22.md",
+        "bytes": 139131,
+        "sha256": "5a61f479d0d9ab62f0e0e615928d69988ddf344145fe0acbde880c0959f13ee3",
+        "gitSha": "5bcef21547c90bd62fbd2f720c1db0cd2127385a",
+        "pin": "5bcef21547c90bd62fbd2f720c1db0cd2127385a"
+      }
+    }
+  ],
+  "preservation": {
+    "status": {
+      "C5Cut": "2026-11-23T03:38:53Z",
+      "devCut": "2026-11-25T00:53:53Z",
+      "oldEvidence": 62,
+      "devEvidence": 70,
+      "all62ObjectValuesAndOrderPreserved": true,
+      "integrationHistoryPrefix": [
+        9,
+        10
+      ],
+      "publicationHistoryPrefix": [
+        7,
+        8
+      ],
+      "designObservationHistoryPrefix": [
+        5,
+        6
+      ],
+      "migrationObservations": 10,
+      "migrationObservationsLiteralValuesUnchanged": true,
+      "authorizationUnchanged": true,
+      "finalCandidateUnchangedAndNull": true,
+      "designQualifiedAreas": 12,
+      "total": 15,
+      "pendingAreas": [
+        "UI42",
+        "UI43",
+        "UI44"
+      ],
+      "gatesQualified": 0,
+      "totalFinalGates": 5,
+      "goNoGo": "NOT_READY"
+    },
+    "README": "Complete C5 README text occurs unchanged inside the dev historical details section; latest dev synthesis precedes it.",
+    "execution": "Entire C5 execution text is an exact prefix of dev; dev adds61lines/9121UTF8bytes."
+  },
+  "requestUI6": {
+    "bytes": 390,
+    "ascii": true,
+    "hasFinalLF": false,
+    "sha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+    "gitBlob": "2bd57a54180a099bbf904d188fe6e0eb22362cea",
+    "json": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "e2e/sucafina/design-wave-five-collab.spec.ts",
+        "e2e/sucafina/design-wave-five-reviews.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "objectLookup": "404 at supplied Git blob locator",
+    "currentC5Path": ".ci-run.json absent404",
+    "primary": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7086231426",
+    "primaryPublishedAt": "2026-11-22T21:40:44Z",
+    "meaning": "Primary explicitly defines future normalized bytes, not a published C blob; exact content was extracted and rehashed without mutation."
+  },
+  "selectedPins": {
+    "analytics": "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "collab": "756732ed624aefc40345b896005cc7f5a781a247",
+    "reviews": "7cda60f820508ac4123693a97cd9ffe2e0eeee56",
+    "productionConfig": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+    "testCiWorkflow": "8cdc9485b3c26b75b6157981ca5c3300b1847151"
+  },
+  "requiredReconciliation": [
+    "Use the three current dev blobs as the documentation base. Preserve their complete historical record and eight additions rather than replacing them with older private C5 docs.",
+    "Before freeze re-read actual dev and product/C6 refs; this three-path incoming-delta conclusion is specific to the fixed C5/dev pair. Compose through the single #613 writer; do not import #718 wholesale or materialize #673 early.",
+    "Advance a new documentary cut explicitly: observed dev #719, actual private source/role, current writer and routes. Keep the old snapshots, failures, overlays, partial/runtime-specific proofs and historical observations intact.",
+    "Update current designObservation and README summary only from completed source-bound receipts. C5's18functionalPASS withSFtypesFAIL remains negative; C6 buffers or a later focal green are not installed UI qualification.",
+    "Append future verified receipts with C/T, S or D if any, overlays, runtime/selection/budgets, actual verdict and intake limits. Do not pre-fill results, reservations, Migration/Release ACKs or G07 tar.",
+    "Preserve qualifiedAreas12 as historical acceptance and its basis. Any future UI42/43/44 acceptance must cite installed evidence on the effective reviewed candidate; no promotion from diagnostic or selective functional counts.",
+    "Materialize the exact390-byteUI request in C613 itself, as add-only relative to current C5, and verify blob2bd57 and SHA7361 after publication. The UI ci-run-* ref points literally to C613, no request-bearing child snapshot.",
+    "Use existing workflow8cdc, production config and all3originalspecs/six declarations, worker1/retries0/repeat1 and original deadlines. Prefer ci-run-sf613ui if free, without treating a Linux suffix as required; fallback matrix is ubuntu24.04. Keep45min originaljob.",
+    "The workflow normalizes .ci-run.json (line71). Intake must prove normalized bytes and request.json.sha==C613, actual checkout/tree/spec/config, six results, original streams and artifact/cleanup; the commit relation alone does not attest whole-worktree immutability.",
+    "Keep technical D separated from C and reconcile through accepted D21 planf154 on the effective candidate; no driver is created here. UI6 and technical qualification must name the sameC613.",
+    "Do not embed a resulting commit's own SHA or future qualification in its pre-freeze docs. Record final C/T and its run receipts externally after freeze; subsequent source/doc edits create a new identity requiring explicit applicability/review.",
+    "C613 is distinct from the future go-live composition after #673. finalCandidate/ACKs/tar and G05–G10 remain unset/0of5 until their own original contracts are satisfied."
+  ],
+  "preservedReceipts": {
+    "ui44": "3295d22a2cf7b4f6c5a6704207b795c9aaa0ef6a",
+    "migrationOverlap": "5a19e8add720f6f2a97a9dcc96fd8c4148a1a5d5",
+    "futureD21Release23Proposal": "f15411650304bb429e1f9d20d62d17c44300c5e0"
+  },
+  "noNewCampaign": true
+}

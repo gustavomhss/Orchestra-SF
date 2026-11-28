@@ -1,0 +1,3301 @@
+{
+  "schema": "sf613-c21-original-analytics-decoded-extraction-v1",
+  "status": "PRESERVED_CURRENT_NEGATIVE_SUITE_ROOT_INTAKE_IN_PROGRESS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "snapshot": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+  "snapshotTree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+  "run": 46120824548,
+  "attempt": 1,
+  "mainManifest": {
+    "gitBlob": "164c699a321e6c15eac16ca8a8634ac7833c49e2",
+    "bytes": 7995,
+    "sha256": "03985ef2928c64139bc347fe91d7ade7b65775478d5caf12bb16f58ec78cf21b",
+    "lf": 274,
+    "endsWithLF": true
+  },
+  "cleanup": {
+    "gitBlob": "5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+    "bytes": 2280,
+    "sha256": "aa45ccc75fe8e047038edeb4065db6244f08e674ecb254eef0f4d6dffe5cc9b0",
+    "lf": 39,
+    "endsWithLF": true
+  },
+  "terminalContext": {
+    "gitBlob": "473bb8e8ec349e7f6d1a01352dbb3616087b2320",
+    "bytes": 27017,
+    "sha256": "c04d5111ec4cd0679784a2efa9365aba6c47baa2bb900d721dbdd879b7eb4f32",
+    "lf": 583,
+    "endsWithLF": true
+  },
+  "unions": {
+    "core": {
+      "gitBlob": "5eeda9b322b13033cf254de2645a2e64bf64db16",
+      "bytes": 34315,
+      "sha256": "b1c4a1ed95989c318bad1df2bc1b859e8675e4ef760af43f7113e863b6d402f5",
+      "lf": 97,
+      "endsWithLF": true
+    },
+    "contexts": {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true
+    },
+    "discoveryOwner": {
+      "gitBlob": "5597d480277d6e2d114abea53a1eb6212e67cf82",
+      "bytes": 1458,
+      "sha256": "1fcee9d73f2ec30be4213d683a4046dcb498a10b257373d79f1bfa67d665da09",
+      "lf": 10,
+      "endsWithLF": true
+    }
+  },
+  "coreCounts": {
+    "SF_ANALYTICS_SOURCE": 45,
+    "SF_ANALYTICS_CAPTURE": 46,
+    "SF_DESIGN_DIAGNOSTICS": 5,
+    "SF_ANALYTICS_SCOPE": 1
+  },
+  "sections": [
+    {
+      "journey": "scenarios-results-sensitivity",
+      "records": 34,
+      "computedOnly": {
+        "gitBlob": "8e5f28dc8856e4770cadde6158ba0d3dab690397",
+        "bytes": 6003,
+        "sha256": "09d566426c8eb9fd1762d519a104cc6e7fd9c2e6640064242c530f76ebfbcf36",
+        "lf": 34,
+        "endsWithLF": true
+      },
+      "from": 1112,
+      "to": 1252
+    },
+    {
+      "journey": "BI",
+      "records": 63,
+      "computedOnly": {
+        "gitBlob": "ed6b28b0ae4417ee172d4feea891f720b5653301",
+        "bytes": 28312,
+        "sha256": "242fd67421635d356f6c6187220dcdbacabc16ba9f0c4a5d5c713fa8102d8fa2",
+        "lf": 63,
+        "endsWithLF": true
+      },
+      "from": 1412,
+      "to": 1892
+    }
+  ],
+  "allNonPreviewCount": 109,
+  "captureCounts": {
+    "UI42": 6,
+    "UI45": 7,
+    "UI46": 33
+  },
+  "captureStages": {
+    "UI42:list": 4,
+    "UI42:configure": 2,
+    "UI45:catalog": 5,
+    "UI45:context": 1,
+    "UI45:result": 1,
+    "UI46:result": 32,
+    "UI46:context": 1
+  },
+  "recordIndex": [
+    {
+      "line": 1110,
+      "prefix": "SF_DESIGN_DISCOVERY",
+      "value": {
+        "selector": "native-workspace",
+        "count": 1,
+        "installations": [
+          {
+            "installationId": "6e1354ff-9867-46c2-8a34-01e3083b1dc3",
+            "projectId": "global",
+            "hostId": "9bb049e0-7e7f-467f-a024-0826e35c7108"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1112,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1114,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1116,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "parameter-source-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1118,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-promote-parameter",
+        "http": 200,
+        "status": "ok",
+        "parameterPeriod": {
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "parameterUnit": "USD"
+      }
+    },
+    {
+      "line": 1120,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1122,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1124,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-criteria",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1126,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-criteria",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 745
+      }
+    },
+    {
+      "line": 1128,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1130,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "sensitivity-rule-fixture-registered-readback",
+        "status": "ok",
+        "caseVersion": 6,
+        "criterionId": "68bbd3d7-d172-49e2-8962-6caec4743a17",
+        "ruleRef": "criterion-rule:6fbd68875539524feac4cf5cc03610063239e11409486928cca9aa750ea5e099",
+        "previousVersion": 1,
+        "ruleVersion": 2,
+        "baselineRef": "decision-result:a2629bb8cc6761825d92b54e271f873de626ffec84be40a47d1e2913df4467bd",
+        "scenarioRef": "decision-result:42b361be0124ca4393194fd80553e87e513232558d5479e93ba2c96c95eab117",
+        "parameterRef": "e158b420-8e84-41fb-a8a7-b520263632a7:2",
+        "parameterUnit": "USD",
+        "resultUnit": "USD",
+        "engineVersion": "planner-runtime-v1",
+        "sourceReferences": [
+          {
+            "refId": "planner-version:b001d52d-4d3c-4f08-a296-601065efec61:812f2f4c-2e87-41b5-851c-565a37b2a4fc:1",
+            "refDigest": "c02b18e2a02f0149d07887b9e5502367dac96ecb92ecebda95ef007b18d80bbf"
+          },
+          {
+            "refId": "planner-version:3fc4b354-e5a6-4e18-a63f-d400fe4e1173:84a31d9d-aeee-4867-8b8b-01d830787383:1",
+            "refDigest": "c4721bc7dc6758b41bb7380dab79696cb8952b5eb30214c18201ee947f7ed10a"
+          }
+        ],
+        "originalCaseUnchanged": true,
+        "originalUnitsReadbackMatched": true,
+        "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+      }
+    },
+    {
+      "line": 1132,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1134,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 27110
+      }
+    },
+    {
+      "line": 1136,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "portfolio-selection-fixture-basis",
+        "initialVersion": 0,
+        "basis": "new-isolated-fixture-with-no-prior-registration",
+        "caseVersion": 6,
+        "criteriaCount": 1
+      }
+    },
+    {
+      "line": 1138,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-select-portfolio",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1140,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-select-portfolio",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 18018
+      }
+    },
+    {
+      "line": 1142,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      }
+    },
+    {
+      "line": 1144,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1146,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 30682
+      }
+    },
+    {
+      "line": 1148,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "portfolio-selection-registered-readback",
+        "status": "ok",
+        "selectionVersion": 1,
+        "caseVersion": 6,
+        "originalAlternativePairMatched": true,
+        "originalCriteriaMatched": true,
+        "currentComparisonUnchanged": true,
+        "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+      }
+    },
+    {
+      "line": 1150,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 3912.8202089999977
+          },
+          {
+            "status": 200,
+            "elapsedMs": 5642.78938100001
+          }
+        ]
+      }
+    },
+    {
+      "line": 1152,
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "value": {
+        "stage": "UI42-list",
+        "http": 200,
+        "status": "ok",
+        "acquisition": "authenticated-original-readback",
+        "ownerBinding": "exact",
+        "resources": [
+          {
+            "family": "decisions",
+            "resource": "case-intent",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "decisions",
+            "resource": "assumptions",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "campaign",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "results",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "sensitivity",
+            "state": "ready",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-sensitivity-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-units",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1164,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1176,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1182,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1188,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      }
+    },
+    {
+      "line": 1190,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1192,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 397,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    },
+    {
+      "line": 1194,
+      "prefix": "SF_ANALYTICS_CONTEXT",
+      "value": {
+        "stage": "UI42-empty-case",
+        "http": 200,
+        "status": "ok",
+        "acquisition": "authenticated-original-readback",
+        "ownerBinding": "exact",
+        "resources": [
+          {
+            "family": "decisions",
+            "resource": "case-intent",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "decisions",
+            "resource": "assumptions",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "decisions.controls.read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "campaign",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "results",
+            "state": "partial",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-portfolio-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-preview",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-reconcile",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-portfolio-results",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-prepare-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              },
+              {
+                "operationId": "portfolio.decision-promote-portfolio",
+                "state": "unavailable",
+                "operational": false,
+                "reason": "operational-source-unavailable"
+              }
+            ]
+          },
+          {
+            "family": "portfolio",
+            "resource": "sensitivity",
+            "state": "ready",
+            "operations": [
+              {
+                "operationId": "portfolio.decision-sensitivity-evaluate",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-read",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              },
+              {
+                "operationId": "portfolio.decision-sensitivity-units",
+                "state": "ready",
+                "operational": true,
+                "reason": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1208,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "line": 1210,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1212,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-request-failed",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 366
+      }
+    },
+    {
+      "line": 1214,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 364,
+        "http": 200,
+        "acquisitionFailure": "response-body-unavailable"
+      }
+    },
+    {
+      "line": 1230,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    },
+    {
+      "line": 1232,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    {
+      "line": 1234,
+      "prefix": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-failure",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1236,
+      "prefix": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "native-view",
+        "state": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "text": "Context and access⁨127.0.0.1:34655⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.68bbd3d7-d172-49e2-8962-6caec4743a17 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+        }
+      }
+    },
+    {
+      "line": 1252,
+      "prefix": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1396,
+      "prefix": "SF_DESIGN_DISCOVERY",
+      "value": {
+        "selector": "native-workspace",
+        "count": 1,
+        "installations": [
+          {
+            "installationId": "6c0c6145-b415-4098-afac-8d29ee7f9551",
+            "projectId": "global",
+            "hostId": "66f9fbb2-694e-4092-bcaa-fe0eeaaee324"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1398,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 3138.2510619999957
+          },
+          {
+            "status": 200,
+            "elapsedMs": 5898.190984000001
+          }
+        ]
+      }
+    },
+    {
+      "line": 1412,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1426,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1432,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "width": 390,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1438,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-question-catalog-light-320-test-data",
+        "width": 320,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1450,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-authorized-financial-context-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "context"
+      }
+    },
+    {
+      "line": 1464,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-financial-source-values-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1466,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2061.505833000003
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3644.9812359999924
+          }
+        ]
+      }
+    },
+    {
+      "line": 1468,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-binding-readback",
+        "view": "BI01",
+        "selectedValueId": "budget:2026-01:effective",
+        "referenceId": "sf-source:9c7859bd-167e-4788-8120-b3f20950576c:1",
+        "valueBindingCount": 48,
+        "distinctReferenceDigests": 1,
+        "bindings": [
+          {
+            "valueId": "budget:2026-01:basis",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:effective",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:actual",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-01:forecast",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:basis",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:effective",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:actual",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-02:forecast",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:basis",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:effective",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:actual",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-03:forecast",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:basis",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:effective",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:actual",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-04:forecast",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:basis",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:effective",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:actual",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-05:forecast",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:basis",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:effective",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:actual",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-06:forecast",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:basis",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:effective",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:actual",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-07:forecast",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:basis",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:effective",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:actual",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-08:forecast",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:basis",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:effective",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:actual",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-09:forecast",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:basis",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:effective",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:actual",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-10:forecast",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:basis",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:effective",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:actual",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-11:forecast",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:basis",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:effective",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:actual",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "budget:2026-12:forecast",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1470,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-original-scalar-dom",
+        "locale": "en-US",
+        "observations": []
+      }
+    },
+    {
+      "line": 1472,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-readback",
+        "view": "BI01",
+        "http": 200,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22
+      }
+    },
+    {
+      "line": 1486,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-selected-context-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1502,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1518,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1526,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1532,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1538,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1544,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1562,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1580,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1586,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1592,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1594,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-body-acquisition",
+        "selectedValueId": "budget:2026-01:effective",
+        "http": 200,
+        "acquisition": "native-response"
+      }
+    },
+    {
+      "line": 1596,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-original-destinations",
+        "selectedValueId": "budget:2026-01:effective",
+        "installedOrigin": "http://127.0.0.1:32815",
+        "installedMount": "/sucafina",
+        "links": [
+          {
+            "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:32815/orchestra/sf-dashboard/budget?year=2026"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1614,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-resolved-original-source-1-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1616,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-body-acquisition",
+        "selectedValueId": "budget:2026-01:actual",
+        "http": 200,
+        "acquisition": "native-response"
+      }
+    },
+    {
+      "line": 1618,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-original-destinations",
+        "selectedValueId": "budget:2026-01:actual",
+        "installedOrigin": "http://127.0.0.1:32815",
+        "installedMount": "/sucafina",
+        "links": [
+          {
+            "label": "dashboard · Budget Overview · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:32815/orchestra/sf-dashboard/budget?year=2026"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1636,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-resolved-original-source-2-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1638,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-identity-regression",
+        "selectedValues": [
+          "budget:2026-01:effective",
+          "budget:2026-01:actual"
+        ],
+        "samePublishedReference": true,
+        "exactValueAndDigestQueries": 2,
+        "originalProjectionRetained": true
+      }
+    },
+    {
+      "line": 1640,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 1990.080713000003
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3607.6990030000015
+          }
+        ]
+      }
+    },
+    {
+      "line": 1642,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      }
+    },
+    {
+      "line": 1644,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "http": 200,
+        "acquisition": "native-response-cdp"
+      }
+    },
+    {
+      "line": 1646,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-binding-readback",
+        "view": "BI06",
+        "selectedValueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "referenceId": "50a73208-61e4-46ff-897a-d8439a1a2afc",
+        "valueBindingCount": 17,
+        "distinctReferenceDigests": 1,
+        "bindings": [
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:status",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:holder",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:approvalStage",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:stageEnteredAt",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:baseAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedCurrency",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedFxRate",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:originalAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:originalCurrency",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:fxRate",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:fxSource",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:monetaryState",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:subject",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:reason",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:nextStep",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1648,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-original-scalar-dom",
+        "locale": "en-US",
+        "observations": [
+          {
+            "id": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0012162268518518518,
+            "table": 0.00121623,
+            "plot": 0.00121623,
+            "unit": "days"
+          },
+          {
+            "id": "PR-2026-0005:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0012162268518518518,
+            "table": 0.00121623,
+            "plot": 0.00121623,
+            "unit": "days"
+          },
+          {
+            "id": "PR-2026-0006:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0012162268518518518,
+            "table": 0.00121623,
+            "plot": 0.00121623,
+            "unit": "days"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1650,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-readback",
+        "view": "BI06",
+        "http": 200,
+        "rows": 3,
+        "numericValues": 3,
+        "missing": 1
+      }
+    },
+    {
+      "line": 1652,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi06-original-ages",
+        "request": {
+          "viewId": "BI06",
+          "selectionRef": "a394ded8-1df6-40e3-b07d-cdb44f7f1ee7",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          }
+        },
+        "ages": [
+          {
+            "id": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "value": 0.0012162268518518518,
+            "unit": "days",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "PR-2026-0005:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "value": 0.0012162268518518518,
+            "unit": "days",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "PR-2026-0006:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "value": 0.0012162268518518518,
+            "unit": "days",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "evidenceState": "confirmed"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1666,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-coverage-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1680,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1694,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1700,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1706,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1712,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1718,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1734,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1750,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1756,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1762,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-original-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1768,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-dark-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1784,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-operations-resolved-original-source-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1786,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi06-original-source-resolution",
+        "http": 200,
+        "acquisition": "native-response",
+        "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "links": [
+          {
+            "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:32815/orchestra/sf-procurement/requests?request=PR-2026-0003"
+          }
+        ],
+        "negativeHttp": 403,
+        "negative": {
+          "status": "denied",
+          "reason": "bi-source-outside-selected-value"
+        }
+      }
+    },
+    {
+      "line": 1788,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2046.782917000004
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3602.696794000003
+          }
+        ]
+      }
+    },
+    {
+      "line": 1802,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-source-empty-sensitivity-catalog-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "context"
+      }
+    },
+    {
+      "line": 1804,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2205.927619000009
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3873.9727180000045
+          }
+        ]
+      }
+    },
+    {
+      "line": 1818,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      }
+    },
+    {
+      "line": 1820,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2064.782871999996
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3664.330270000006
+          }
+        ]
+      }
+    },
+    {
+      "line": 1836,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-desktop-values-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1842,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-320-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1844,
+      "prefix": "SF_OWNER_ADMISSION_READS",
+      "value": {
+        "contexts": [
+          {
+            "status": 200,
+            "elapsedMs": 2233.260123999993
+          },
+          {
+            "status": 200,
+            "elapsedMs": 3739.960168999998
+          }
+        ]
+      }
+    },
+    {
+      "line": 1846,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "acquisition": "native-response-cdp",
+        "phase": "original-request-completed",
+        "http": 200,
+        "sameNativeRequest": true,
+        "nativeRequestFinished": true,
+        "observer": "Network"
+      }
+    },
+    {
+      "line": 1848,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-original-acquisition",
+        "view": "BI06",
+        "locale": "pt-BR",
+        "http": 200,
+        "acquisition": "native-response-cdp"
+      }
+    },
+    {
+      "line": 1850,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-source-binding-readback",
+        "view": "BI06",
+        "selectedValueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "referenceId": "c7b5e7b7-c6a0-425a-b917-fb197f883af0",
+        "valueBindingCount": 17,
+        "distinctReferenceDigests": 1,
+        "bindings": [
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:status",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:holder",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:approvalStage",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:stageEnteredAt",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:baseAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedCurrency",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:submittedFxRate",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:originalAmount",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:originalCurrency",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:fxRate",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:fxSource",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:monetaryState",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:subject",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:reason",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          },
+          {
+            "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:nextStep",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "sourceKeys": [
+              "evidenceLevel",
+              "installationId",
+              "kind",
+              "projectId",
+              "refDigest",
+              "refId",
+              "schema",
+              "target"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "line": 1852,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-original-scalar-dom",
+        "locale": "pt-BR",
+        "observations": [
+          {
+            "id": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0014888310185185185,
+            "table": 0.00148883,
+            "plot": 0.00148883,
+            "unit": "days"
+          },
+          {
+            "id": "PR-2026-0005:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0014888310185185185,
+            "table": 0.00148883,
+            "plot": 0.00148883,
+            "unit": "days"
+          },
+          {
+            "id": "PR-2026-0006:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+            "original": 0.0014888310185185185,
+            "table": 0.00148883,
+            "plot": 0.00148883,
+            "unit": "days"
+          }
+        ]
+      }
+    },
+    {
+      "line": 1854,
+      "prefix": "SF_ANALYTICS_SOURCE",
+      "value": {
+        "operation": "bi-data-readback",
+        "view": "BI06",
+        "http": 200,
+        "rows": 3,
+        "numericValues": 3,
+        "missing": 1
+      }
+    },
+    {
+      "line": 1868,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1874,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-320-operations-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1880,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1886,
+      "prefix": "SF_ANALYTICS_CAPTURE",
+      "value": {
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    },
+    {
+      "line": 1888,
+      "prefix": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    },
+    {
+      "line": 1890,
+      "prefix": "SF_ANALYTICS_SCOPE",
+      "value": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      }
+    },
+    {
+      "line": 1892,
+      "prefix": "SF_DESIGN_DIAGNOSTICS",
+      "value": {
+        "kind": "wave-three-page-closed",
+        "consoleErrors": [],
+        "pageErrors": []
+      }
+    }
+  ],
+  "selection": {
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "originalBiCdpObserver": true,
+    "diagnosticOverlay": false,
+    "profiler": false
+  },
+  "outcome": {
+    "failed": 1,
+    "passed": 1,
+    "footerLineFailed": 1894,
+    "footerLinePassed": 1896,
+    "reportedDuration": "7.5m",
+    "exitOneLine": 1897,
+    "firstFailure": {
+      "line": 1256,
+      "kind": "page.waitForResponse timeout",
+      "timeoutMs": 60000,
+      "source": "spec:72:32",
+      "previewRecords": [
+        {
+          "line": 1232,
+          "operation": "decision-portfolio-preview",
+          "phase": "native-request",
+          "sequence": 3,
+          "method": "POST",
+          "ownerBinding": "exact"
+        }
+      ],
+      "UI43Reached": false,
+      "UI44Reached": false
+    },
+    "secondJourney": "PASSED_CURRENT_ORIGINAL_BI"
+  },
+  "history": [
+    {
+      "line": 1190,
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 1,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1192,
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 1,
+      "ownerBinding": "exact",
+      "elapsedMs": 397,
+      "http": 200,
+      "status": "ok",
+      "reason": null,
+      "valueShape": "array"
+    },
+    {
+      "line": 1210,
+      "operation": "decision-portfolio-results",
+      "phase": "native-request",
+      "sequence": 2,
+      "method": "POST",
+      "ownerBinding": "exact"
+    },
+    {
+      "line": 1212,
+      "operation": "decision-portfolio-results",
+      "phase": "native-request-failed",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 366
+    },
+    {
+      "line": 1214,
+      "operation": "decision-portfolio-results",
+      "phase": "native-response",
+      "sequence": 2,
+      "ownerBinding": "exact",
+      "elapsedMs": 364,
+      "http": 200,
+      "acquisitionFailure": "response-body-unavailable"
+    }
+  ],
+  "scope": {
+    "line": 1890,
+    "surfaces": [
+      "UI45",
+      "UI46"
+    ],
+    "catalogViews": 11,
+    "originalFinancialRead": true,
+    "originalOperationalRead": true,
+    "originalSourceResolution": true,
+    "originalOperationalSourceResolution": true,
+    "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+    "originalSensitivityChoices": 0,
+    "invalidatedOnPeriodChange": true,
+    "fabricatedResult": false
+  },
+  "diagnostics": [
+    {
+      "line": 1234,
+      "kind": "wave-three-failure",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "line": 1236,
+      "kind": "native-view",
+      "state": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "text": "Context and access⁨127.0.0.1:34655⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.68bbd3d7-d172-49e2-8962-6caec4743a17 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+      }
+    },
+    {
+      "line": 1252,
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "line": 1888,
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    {
+      "line": 1892,
+      "kind": "wave-three-page-closed",
+      "consoleErrors": [],
+      "pageErrors": []
+    }
+  ],
+  "artifactMetadata": {
+    "total_count": 1,
+    "artifacts": [
+      {
+        "id": 15253108726,
+        "node_id": "MDg6QXJ0aWZhY3QxNTI1MzEwODcyNg==",
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 45864938,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15253108726",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15253108726/zip",
+        "expired": false,
+        "digest": "sha256:9685c61ddd7ee4f262e3e1e01b53248eba96b15cc6a939b1630b3d55787464d5",
+        "created_at": "2026-11-28T07:29:55Z",
+        "updated_at": "2026-11-28T07:29:55Z",
+        "expires_at": "2026-12-05T07:29:53Z",
+        "workflow_run": {
+          "id": 46120824548,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf613a21",
+          "head_sha": "241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+        }
+      }
+    ]
+  },
+  "limits": {
+    "currentWholeSuiteNegative": true,
+    "newQualifiedAreas": 0,
+    "historical12Of15Retained": true,
+    "previewCauseNotEstablished": true,
+    "nativeProjectionAdmissionNotObserved": true,
+    "performanceImprovementNotInferred": true,
+    "originalsClosed": true,
+    "zipGets": 0,
+    "productionAuthorized": false
+  }
+}

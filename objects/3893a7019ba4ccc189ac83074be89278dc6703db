@@ -1,0 +1,116 @@
+{
+  "schema": "sf613-c21-original-analytics-activation-v1",
+  "status": "ACTIVATED_ONCE_RUN_DISCOVERY_PENDING",
+  "atUtc": "2026-11-28 07:21:23 UTC",
+  "authority": {
+    "gitBlob": "2e8289b6fcd9f445c21ed2099c65425f976d8a0a",
+    "bytes": 8742,
+    "sha256": "db0d45d392417a0ad653ed56896e7f55462689129723c90f9d91dc1d29b02e13",
+    "lf": 233,
+    "endsWithLF": true
+  },
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "snapshot": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+  "snapshotTree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+  "branch": "ci-run-sf613a21",
+  "preflight": {
+    "atUtc": "2026-11-28 07:21:22 UTC",
+    "values": {
+      "ref:dev": {
+        "ref": "refs/heads/dev",
+        "node_id": "REF_kwDOVsSYpq5yZWZzL2hlYWRzL2Rldg",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/dev",
+        "object": {
+          "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+          "type": "commit",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+        }
+      },
+      "ref:sf-design-next": {
+        "ref": "refs/heads/sf-design-next",
+        "node_id": "REF_kwDOVsSYprlyZWZzL2hlYWRzL3NmLWRlc2lnbi1uZXh0",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf-design-next",
+        "object": {
+          "sha": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+          "type": "commit",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/0a1247db9a16f9eead04788a76d25723672c7e6a"
+        }
+      },
+      "ref:sf613-astra-finish": {
+        "ref": "refs/heads/sf613-astra-finish",
+        "node_id": "REF_kwDOVsSYpr1yZWZzL2hlYWRzL3NmNjEzLWFzdHJhLWZpbmlzaA",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-astra-finish",
+        "object": {
+          "sha": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+          "type": "commit",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+        }
+      },
+      "ref:sf613-ledger": {
+        "ref": "refs/heads/sf613-ledger",
+        "node_id": "REF_kwDOVsSYprdyZWZzL2hlYWRzL3NmNjEzLWxlZGdlcg",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-ledger",
+        "object": {
+          "sha": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+          "type": "commit",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/b6278bcd02c544a5583d978a8b48583798bf6ebe"
+        }
+      },
+      "ref:sf613-evidence": {
+        "ref": "refs/heads/sf613-evidence",
+        "node_id": "REF_kwDOVsSYprlyZWZzL2hlYWRzL3NmNjEzLWV2aWRlbmNl",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf613-evidence",
+        "object": {
+          "sha": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+          "type": "commit",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/ecc10cbe01a71a0da1f9cac1a999c16915eebc78"
+        }
+      },
+      "matching": [],
+      "headRuns": {
+        "total_count": 0,
+        "workflow_runs": []
+      },
+      "branchRuns": {
+        "total_count": 0,
+        "workflow_runs": []
+      }
+    },
+    "expected": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "sf-design-next": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "sf613-astra-finish": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "sf613-ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "sf613-evidence": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78"
+    },
+    "passed": true
+  },
+  "createResponse": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "branch": "ci-run-sf613a21"
+    },
+    "isError": false
+  },
+  "refReadback": {
+    "ref": "refs/heads/ci-run-sf613a21",
+    "node_id": "REF_kwDOVsSYprpyZWZzL2hlYWRzL2NpLXJ1bi1zZjYxM2EyMQ",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/ci-run-sf613a21",
+    "object": {
+      "sha": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+    }
+  },
+  "activationCount": 1,
+  "run": null,
+  "originalGets": 0,
+  "zipGets": 0,
+  "productionAuthorized": false
+}

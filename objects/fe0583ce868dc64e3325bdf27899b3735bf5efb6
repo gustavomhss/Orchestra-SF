@@ -1,0 +1,1510 @@
+{
+  "schema": "sf613-c21-independent-focal-reception-v1",
+  "status": "CLOSED_FOCAL_PASS_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/focal_migration",
+  "receivedAtUtc": "2026-11-28 07:16:04 UTC",
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+  "snapshotTree": "0dae9eb8d10924150e0418be355be0ee5a6c504f",
+  "run": 46119613404,
+  "attempt": 1,
+  "priorReviews": {
+    "static": "86195b9ba4261fdb38013da7c121f931170e0fef",
+    "actualObjects": "9f087dbd1e4451d5479101e85a0f62f689a0d05a",
+    "effectiveManifest": "3644bd66eb49cc52956e2c5d96c45061d007431d"
+  },
+  "inputs": {
+    "main": {
+      "gitBlob": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+      "bytes": 112586,
+      "sha256": "43ee43db92077281068da30bc060be89329c6c789425e790d5bd423df11ceca2",
+      "lf": 922,
+      "endsWithLF": true,
+      "bomByteOffsets": [
+        0
+      ]
+    },
+    "mainManifest": {
+      "gitBlob": "29f7d0bd9066d4478d78a26d0e4d584077c01358",
+      "bytes": 1824,
+      "sha256": "9a386f05733f3aa46dd0d8f99c6cba843c9ed62d34eefe75e0eb1d42ba101a4e",
+      "lf": 62,
+      "endsWithLF": true,
+      "bomByteOffsets": []
+    },
+    "cleanup": {
+      "gitBlob": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+      "bytes": 2280,
+      "sha256": "2e4def2cd3446322f08537e8648c105a31ce82920621e62530f0c1ef9981a544",
+      "lf": 39,
+      "endsWithLF": true,
+      "bomByteOffsets": [
+        0
+      ]
+    },
+    "cleanupManifest": {
+      "gitBlob": "34040d4018e5b2b2434511770cf712c736092d01",
+      "bytes": 1814,
+      "sha256": "34a563c5a6648c27c8d5bf99499dc38939636c529579ff9be89fde10668a56de",
+      "lf": 62,
+      "endsWithLF": true,
+      "bomByteOffsets": []
+    },
+    "terminal": {
+      "gitBlob": "8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+      "bytes": 25911,
+      "sha256": "7e3fa1ca2299b7ba0ccb6f0e2db6f88158cee422df69ac9fbc9b523d22a6d297",
+      "lf": 554,
+      "endsWithLF": true,
+      "bomByteOffsets": []
+    },
+    "allAuthenticatedBeforeParse": true,
+    "representation": "Literal decoded original strings preserved by root; reviewer read only Git copies and verified UTF-8 Git/SHA256/length/LF/BOM before parsing.",
+    "originalAcquisition": {
+      "rootOnly": true,
+      "mainGets": 1,
+      "cleanupGets": 1,
+      "zipGets": 0,
+      "closedAtUtc": "2026-11-28T07:10:06Z",
+      "reacquisitionAllowed": false,
+      "closureSource": "Root closure instruction plus preservation manifests; terminal context predates once-only acquisition."
+    }
+  },
+  "terminal": {
+    "event": "push",
+    "path": ".github/workflows/test-ci.yml",
+    "branch": "ci-run-sf613c21",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAtUtc": "2026-11-28T07:05:52Z",
+    "updatedAtUtc": "2026-11-28T07:08:19Z",
+    "jobs": [
+      {
+        "id": 140901000269,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAtUtc": "2026-11-28T07:05:55Z",
+        "completedAtUtc": "2026-11-28T07:08:08Z"
+      },
+      {
+        "id": 140901542389,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAtUtc": "2026-11-28T07:08:11Z",
+        "completedAtUtc": "2026-11-28T07:08:19Z"
+      }
+    ],
+    "artifacts": 0,
+    "matchingRefs": [],
+    "headRunIds": [
+      46119613404
+    ]
+  },
+  "checks": [
+    {
+      "name": "15 complete command receipts",
+      "pass": true,
+      "observed": 15
+    },
+    {
+      "name": "15 successful exits",
+      "pass": true
+    },
+    {
+      "name": "30 explicit false truncation flags",
+      "pass": true
+    },
+    {
+      "name": "current tuple on every command",
+      "pass": true
+    },
+    {
+      "name": "durations finite nonnegative",
+      "pass": true
+    },
+    {
+      "name": "argv/cwd 1",
+      "pass": true,
+      "observed": {
+        "ordinal": 759,
+        "gate": "fetch source parent"
+      }
+    },
+    {
+      "name": "argv/cwd 2",
+      "pass": true,
+      "observed": {
+        "ordinal": 763,
+        "gate": "snapshot identity"
+      }
+    },
+    {
+      "name": "argv/cwd 3",
+      "pass": true,
+      "observed": {
+        "ordinal": 766,
+        "gate": "source identity"
+      }
+    },
+    {
+      "name": "argv/cwd 4",
+      "pass": true,
+      "observed": {
+        "ordinal": 773,
+        "gate": "complete cases read-set contract whole-file"
+      }
+    },
+    {
+      "name": "argv/cwd 5",
+      "pass": true,
+      "observed": {
+        "ordinal": 792,
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection"
+      }
+    },
+    {
+      "name": "argv/cwd 6",
+      "pass": true,
+      "observed": {
+        "ordinal": 815,
+        "gate": "CLI package typecheck"
+      }
+    },
+    {
+      "name": "argv/cwd 7",
+      "pass": true,
+      "observed": {
+        "ordinal": 819,
+        "gate": "Sucafina package typecheck"
+      }
+    },
+    {
+      "name": "argv/cwd 8",
+      "pass": true,
+      "observed": {
+        "ordinal": 824,
+        "gate": "inspect history completeness"
+      }
+    },
+    {
+      "name": "argv/cwd 9",
+      "pass": true,
+      "observed": {
+        "ordinal": 827,
+        "gate": "fetch current dev and source ancestry"
+      }
+    },
+    {
+      "name": "argv/cwd 10",
+      "pass": true,
+      "observed": {
+        "ordinal": 832,
+        "gate": "current dev identity"
+      }
+    },
+    {
+      "name": "argv/cwd 11",
+      "pass": true,
+      "observed": {
+        "ordinal": 835,
+        "gate": "actual guard merge base"
+      }
+    },
+    {
+      "name": "argv/cwd 12",
+      "pass": true,
+      "observed": {
+        "ordinal": 839,
+        "gate": "canonical guardrails"
+      }
+    },
+    {
+      "name": "argv/cwd 13",
+      "pass": true,
+      "observed": {
+        "ordinal": 845,
+        "gate": "Portfolio selection cases and preferences whole-file"
+      }
+    },
+    {
+      "name": "argv/cwd 14",
+      "pass": true,
+      "observed": {
+        "ordinal": 861,
+        "gate": "Scenario lookup complete candidates whole-file"
+      }
+    },
+    {
+      "name": "argv/cwd 15",
+      "pass": true,
+      "observed": {
+        "ordinal": 875,
+        "gate": "Native scenario candidates selection whole-file"
+      }
+    },
+    {
+      "name": "nine hosted identity records",
+      "pass": true,
+      "observed": 9
+    },
+    {
+      "name": "18 observed hashes equal reviewed actual tree pins",
+      "pass": true,
+      "observed": 18
+    },
+    {
+      "name": "snapshot printed exact",
+      "pass": true
+    },
+    {
+      "name": "source/tree printed exact",
+      "pass": true
+    },
+    {
+      "name": "shallow branch observed true",
+      "pass": true
+    },
+    {
+      "name": "actual dev and merge base agree",
+      "pass": true,
+      "observed": {
+        "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+        "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+      }
+    },
+    {
+      "name": "eight complete JSON reports",
+      "pass": true
+    },
+    {
+      "name": "exact report family multiplicities",
+      "pass": true,
+      "observed": {
+        "SF_C14_SNAPSHOT_CONTROL": 2,
+        "SF_C15_SELECTION_CONTROL": 2,
+        "SF_C16_SELECTION_CONTROL": 1,
+        "SF_C19_PORTFOLIO_CASES": 1,
+        "SF_C20_SCENARIO_LOOKUP": 1,
+        "SF_C21_NATIVE_SCENARIO_SELECTION": 1
+      }
+    },
+    {
+      "name": "C21 complete wire equals reviewed data model",
+      "pass": true,
+      "observed": {
+        "bytes": 876,
+        "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5"
+      }
+    },
+    {
+      "name": "C21 19 unique ordered outcomes",
+      "pass": true
+    },
+    {
+      "name": "C20 14 ordered checks",
+      "pass": true
+    },
+    {
+      "name": "C19 exact finite payload",
+      "pass": true
+    },
+    {
+      "name": "C16 31 outcomes plus 9 identity cases",
+      "pass": true,
+      "observed": {
+        "outcomes": 31,
+        "identity": {
+          "cases": [
+            "mixed-map-and-detached-readonly",
+            "mixed-map-and-detached-preimage",
+            "composed-identity-first-authorization-drift",
+            "composed-identity-second-authorization-drift",
+            "restored-codec-birth-keeps-complete-case",
+            "restored-codec-exposure-keeps-complete-case",
+            "cold-plan-birth-survives-restore-and-memo",
+            "owner-weakmap-escape-latches-across-roots",
+            "owner-als-escape-latches-across-roots"
+          ],
+          "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+        }
+      }
+    },
+    {
+      "name": "six footers actual complete",
+      "pass": true
+    },
+    {
+      "name": "actual inner selection7/5/3/1/1",
+      "pass": true
+    },
+    {
+      "name": "all inner pass and failzero",
+      "pass": true
+    },
+    {
+      "name": "outer nine groups pass",
+      "pass": true
+    },
+    {
+      "name": "all nine outer titles observed once",
+      "pass": true
+    },
+    {
+      "name": "26 pass lines equal17inner+9outer",
+      "pass": true,
+      "observed": 26
+    },
+    {
+      "name": "unique current Omni verdict",
+      "pass": true,
+      "observed": [
+        "omni positive control [7997a3730d13b88a36aad6089f7aae7b]: pass (declared: 9 test(s) in test/sucafina-proof-verification.test.ts); 15 omni spawn(s), 0 delegated."
+      ]
+    },
+    {
+      "name": "Omni9/15/0 wrapper population",
+      "pass": true
+    },
+    {
+      "name": "Omni nonce matches current setup",
+      "pass": true
+    },
+    {
+      "name": "declared Omni scope observed",
+      "pass": true
+    },
+    {
+      "name": "two current package typechecks exit0",
+      "pass": true,
+      "observed": [
+        {
+          "label": "CLI package typecheck",
+          "durationMs": 30714
+        },
+        {
+          "label": "Sucafina package typecheck",
+          "durationMs": 32535
+        }
+      ]
+    },
+    {
+      "name": "guard required negative fields",
+      "pass": true
+    },
+    {
+      "name": "full findings all accounted warn",
+      "pass": true,
+      "observed": 40
+    },
+    {
+      "name": "guard findings40 finite classifications",
+      "pass": true,
+      "observed": {
+        "rules": 78,
+        "files": 860,
+        "warnings": 40
+      }
+    },
+    {
+      "name": "no C21 source or control finding",
+      "pass": true
+    },
+    {
+      "name": "terminal current run success tuple",
+      "pass": true
+    },
+    {
+      "name": "two jobs success proper IDs",
+      "pass": true
+    },
+    {
+      "name": "root metadata artifact0 matchingrefs0",
+      "pass": true
+    },
+    {
+      "name": "main preservation identity and acquisition count",
+      "pass": true
+    },
+    {
+      "name": "cleanup preservation identity and acquisition count",
+      "pass": true
+    },
+    {
+      "name": "seven inherited current report lines literal to preserved C20 union",
+      "pass": true,
+      "observed": {
+        "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878",
+        "bytes": 9815,
+        "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901"
+      }
+    },
+    {
+      "name": "complete current guard findings literal to preserved C20 findings",
+      "pass": true,
+      "observed": {
+        "oldFiles": 859,
+        "currentFiles": 860,
+        "findings": 40
+      }
+    }
+  ],
+  "checkCount": 55,
+  "allIndependentChecksPassed": true,
+  "observed": {
+    "functional": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "assertions": 2407,
+      "footers": [
+        {
+          "ordinal": 789,
+          "pass": 7,
+          "fail": 0,
+          "assertions": 843,
+          "tests": 7,
+          "files": 1,
+          "duration": "294.00ms"
+        },
+        {
+          "ordinal": 811,
+          "pass": 5,
+          "fail": 0,
+          "assertions": 757,
+          "tests": 5,
+          "files": 1,
+          "duration": "702.00ms"
+        },
+        {
+          "ordinal": 858,
+          "pass": 3,
+          "fail": 0,
+          "assertions": 503,
+          "tests": 3,
+          "files": 1,
+          "duration": "259.00ms"
+        },
+        {
+          "ordinal": 872,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 147,
+          "tests": 1,
+          "files": 1,
+          "duration": "178.00ms"
+        },
+        {
+          "ordinal": 886,
+          "pass": 1,
+          "fail": 0,
+          "assertions": 157,
+          "tests": 1,
+          "files": 1,
+          "duration": "467.00ms"
+        }
+      ]
+    },
+    "outer": {
+      "ordinal": 892,
+      "pass": 9,
+      "fail": 0,
+      "assertions": 41,
+      "tests": 9,
+      "files": 1,
+      "duration": "91.93s"
+    },
+    "types": [
+      {
+        "gate": "CLI package typecheck",
+        "exit": 0,
+        "durationMs": 30714
+      },
+      {
+        "gate": "Sucafina package typecheck",
+        "exit": 0,
+        "durationMs": 32535
+      }
+    ],
+    "guard": {
+      "rules": 78,
+      "files": 860,
+      "warnings": 40,
+      "errors": [],
+      "approved": [],
+      "bootstrap": false,
+      "touchesGuards": false,
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "omni": {
+      "nonce": "7997a3730d13b88a36aad6089f7aae7b",
+      "declared": 9,
+      "spawn": 15,
+      "delegated": 0,
+      "scope": "wrapper only",
+      "ordinal": 893
+    },
+    "runtime": {
+      "bunVersion": "1.3.14",
+      "revisionPrefix": "0d9b296af",
+      "observedText": "1.3.14+0d9b296af",
+      "fullRevisionObserved": false
+    },
+    "commands": 15,
+    "zeroExitCommands": 15,
+    "truncationFlagsFalse": 30,
+    "sourceWorkingPins": 18,
+    "hostIdentityRecords": 9,
+    "reports": 8,
+    "guardAncestry": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "requestedBase": "origin/dev",
+      "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+    },
+    "guardWarnings": {
+      "count": 40,
+      "testTimeoutRaised": 38,
+      "testGlobalThis": 2,
+      "findingsLiteralToC20": true,
+      "newC21FileFindings": 0
+    },
+    "C21": {
+      "orderedOutcomes": 19,
+      "wireBytesIncludingPrefixAndLF": 876,
+      "wireSha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "completeLineEqualsReviewedModel": true,
+      "actualStandaloneReportBlobCreatedByReviewer": false,
+      "actualStandaloneReportBlobReportedByRoot": false
+    }
+  },
+  "commands": [
+    {
+      "ordinal": 759,
+      "time": "2026-11-28T07:06:34.6540862Z",
+      "gate": "fetch source parent",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--depth=2",
+        "origin",
+        "98174738fea48b3fe75e8d6684e2edd35574e75e"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 305,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 763,
+      "time": "2026-11-28T07:06:34.6577050Z",
+      "gate": "snapshot identity",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 4,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 766,
+      "time": "2026-11-28T07:06:34.6756965Z",
+      "gate": "source identity",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "show",
+        "-s",
+        "--format=%H%n%T",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 18,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 773,
+      "time": "2026-11-28T07:06:34.9834334Z",
+      "gate": "complete cases read-set contract whole-file",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/cases-read-contract.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 303,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 792,
+      "time": "2026-11-28T07:06:35.6995367Z",
+      "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 715,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 815,
+      "time": "2026-11-28T07:07:06.4158329Z",
+      "gate": "CLI package typecheck",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "exitCode": 0,
+      "durationMs": 30714,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 819,
+      "time": "2026-11-28T07:07:38.9517565Z",
+      "gate": "Sucafina package typecheck",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 32535,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 824,
+      "time": "2026-11-28T07:07:38.9600150Z",
+      "gate": "inspect history completeness",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 6,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 827,
+      "time": "2026-11-28T07:08:03.0498932Z",
+      "gate": "fetch current dev and source ancestry",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "fetch",
+        "--no-tags",
+        "--unshallow",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "98174738fea48b3fe75e8d6684e2edd35574e75e"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 24090,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 832,
+      "time": "2026-11-28T07:08:03.0533857Z",
+      "gate": "current dev identity",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 4,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 835,
+      "time": "2026-11-28T07:08:03.0615477Z",
+      "gate": "actual guard merge base",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "git",
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 8,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 839,
+      "time": "2026-11-28T07:08:05.0701587Z",
+      "gate": "canonical guardrails",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "durationMs": 2008,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 845,
+      "time": "2026-11-28T07:08:05.3406550Z",
+      "gate": "Portfolio selection cases and preferences whole-file",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 269,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 861,
+      "time": "2026-11-28T07:08:05.5275467Z",
+      "gate": "Scenario lookup complete candidates whole-file",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 185,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    },
+    {
+      "ordinal": 875,
+      "time": "2026-11-28T07:08:06.0098434Z",
+      "gate": "Native scenario candidates selection whole-file",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "run": "46119613404",
+      "command": [
+        "/home/runner/.bun/bin/bun",
+        "test",
+        "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "exitCode": 0,
+      "durationMs": 481,
+      "stdoutTruncated": false,
+      "stderrTruncated": false
+    }
+  ],
+  "reports": [
+    {
+      "ordinal": 794,
+      "time": "2026-11-28T07:06:35.6999456Z",
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "payload": {
+        "scenario": "complete-product-and-fresh-authorization",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "preimage",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "top-level",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          }
+        ],
+        "subsequentPreferenceVersion": 2,
+        "createIdReceiver": "original mutable C08 input",
+        "projector": "installed original",
+        "limit": "top-level stays full; no parse count, domain-size ratio or performance qualification"
+      },
+      "bytesIncludingPrefixAndLF": 585,
+      "sha256": "4b26dc61cc6f0f0f33fcc2727faad9ec7e9b9dc5608954658ef210a2ab04c977"
+    },
+    {
+      "ordinal": 796,
+      "time": "2026-11-28T07:06:35.7009150Z",
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "payload": {
+        "scenario": "opaque-equivalence-and-live-refusal",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "preimage-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "preimage-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "readonly-source-checks-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-source-checks-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "source-accessor-full-fallback",
+            "callbacks": 1
+          },
+          {
+            "scenario": "driver-drift-before-body",
+            "callbacks": 0,
+            "authentication": 0
+          },
+          {
+            "scenario": "CurrentChoice-scoped-full-fallback",
+            "callbacks": 2,
+            "authentication": 18
+          },
+          {
+            "scenario": "real-authority-revoked-after-body",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "callback-error-without-replay-or-poison",
+            "callbacks": 1
+          },
+          {
+            "scenario": "request-abort-after-body",
+            "callbacks": 1,
+            "authentication": 3
+          },
+          {
+            "scenario": "caught-nested-write-still-poisons-owner",
+            "callbacks": 1
+          },
+          {
+            "scenario": "early-prototype-full",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "late-prototype-projected",
+            "callbacks": 0,
+            "authentication": 3
+          },
+          {
+            "scenario": "late-prototype-opaque",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "opaque-native-driver-full-fallback",
+            "callbacks": 2
+          }
+        ],
+        "limit": "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"
+      },
+      "bytesIncludingPrefixAndLF": 1581,
+      "sha256": "178661688acccc8be65a0fc0d435ad070b2487d82a4f491d108d10b133aef9a3"
+    },
+    {
+      "ordinal": 797,
+      "time": "2026-11-28T07:06:35.7015939Z",
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "payload": {
+        "scenario": "whole-graphs-and-shape",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "readonly",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          }
+        ],
+        "aliases": "custom full path retained; each selected callback receives its own graph",
+        "limit": "native structural copy and functional composition; no latency or current Analytics result"
+      },
+      "bytesIncludingPrefixAndLF": 591,
+      "sha256": "e6a13b7deddc596bc7eb7bbaaf642fc593cc90c46ef96fee0cff162ff823517a"
+    },
+    {
+      "ordinal": 798,
+      "time": "2026-11-28T07:06:35.7024851Z",
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "payload": {
+        "scenario": "shape-precedence-and-drift",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "readonly-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "active-source-checks-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "narrow-second-authorization-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "returned body withheld"
+          },
+          {
+            "scenario": "case-precedence",
+            "callbacks": null,
+            "authentication": 6,
+            "outcome": "factory callback returned; not wrapped to count"
+          },
+          {
+            "scenario": "namespace-mismatch",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "late-registration",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "invalid-map",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-version",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-additive",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "legacy",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original legacy normalization"
+          },
+          {
+            "scenario": "throw-sentinel",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          },
+          {
+            "scenario": "throw-undefined",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          }
+        ],
+        "limit": "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"
+      },
+      "bytesIncludingPrefixAndLF": 1937,
+      "sha256": "59a3294a3386606a3153a9798a80ad576eec21b1fb9cf2c2b3dc5fbf69674c22"
+    },
+    {
+      "ordinal": 799,
+      "time": "2026-11-28T07:06:35.7049551Z",
+      "prefix": "SF_C16_SELECTION_CONTROL",
+      "payload": {
+        "scenario": "closed-case-factories",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "case-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-key-observed-after-first-authorization",
+            "authentication": 6,
+            "outcome": "no key read at registration, native selection or reauthorization"
+          },
+          {
+            "scenario": "identity-throw-sentinel",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-throw-undefined",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-request-abort",
+            "authentication": 3,
+            "outcome": "original abort refuses the root"
+          },
+          {
+            "scenario": "poisoned-native-root",
+            "authentication": 0,
+            "outcome": "no child result or root accepted after caught commit:true"
+          }
+        ],
+        "identityProjection": {
+          "cases": [
+            "mixed-map-and-detached-readonly",
+            "mixed-map-and-detached-preimage",
+            "composed-identity-first-authorization-drift",
+            "composed-identity-second-authorization-drift",
+            "restored-codec-birth-keeps-complete-case",
+            "restored-codec-exposure-keeps-complete-case",
+            "cold-plan-birth-survives-restore-and-memo",
+            "owner-weakmap-escape-latches-across-roots",
+            "owner-als-escape-latches-across-roots"
+          ],
+          "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+        },
+        "limits": "composed functional and refusal oracles; no latency or current Analytics qualification"
+      },
+      "bytesIncludingPrefixAndLF": 4407,
+      "sha256": "28ae0d25800202dcb4b9ba32a2c25b305ca3df65591a1a2f5df3793a9c3a82c0"
+    },
+    {
+      "ordinal": 848,
+      "time": "2026-11-28T07:08:05.3410576Z",
+      "prefix": "SF_C19_PORTFOLIO_CASES",
+      "payload": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      },
+      "bytesIncludingPrefixAndLF": 150,
+      "sha256": "361f33924b2654e03c112c3fa163165b67c1983ab3b2c058cf12f81270f1bc2c"
+    },
+    {
+      "ordinal": 864,
+      "time": "2026-11-28T07:08:05.5282142Z",
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "payload": {
+        "schema": "sf-c20-scenario-lookup-v1",
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ]
+      },
+      "bytesIncludingPrefixAndLF": 564,
+      "sha256": "4a1128cbf4c9ba67274aee658012244e8cebab175d7dd559a4bea519322dd913"
+    },
+    {
+      "ordinal": 878,
+      "time": "2026-11-28T07:08:06.0106619Z",
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+      "payload": {
+        "schema": "sf-c21-native-scenario-selection-v1",
+        "outcomes": [
+          "native-whole-collection-readonly",
+          "composed-fresh-candidates-readonly",
+          "native-whole-collection-preimage",
+          "composed-fresh-candidates-preimage",
+          "request-key-after-first-authorize",
+          "composed-prototype-first",
+          "composed-declaration-first",
+          "composed-prototype-second",
+          "composed-declaration-second",
+          "full-fallback-mutable-context",
+          "full-fallback-wrapped-callback",
+          "full-fallback-concurrent-declaration",
+          "full-fallback-namespace",
+          "full-fallback-top-level",
+          "full-fallback-CurrentChoice-scoped",
+          "full-shape-fallback-absent",
+          "full-shape-fallback-own-undefined",
+          "full-shape-fallback-array",
+          "empty-collection-is-a-real-selection"
+        ],
+        "contexts": [
+          "readonly",
+          "preimage"
+        ],
+        "originalProjectionControlsPreserved": 5,
+        "claim": "physical child selection and fallback only; no installed latency measurement"
+      },
+      "bytesIncludingPrefixAndLF": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5"
+    }
+  ],
+  "preservedDerivatives": {
+    "rootIntake": {
+      "gitBlob": "f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+      "bytes": 13969,
+      "sha256": "2035e9902d138ad403176d290452e0e28064aee4aa534e6cc0ee09d63c7b317e",
+      "lf": 616,
+      "endsWithLF": true
+    },
+    "rootExtraction": {
+      "gitBlob": "a33016cbd4fb1d95bea1e31c59ead5244d490dbb",
+      "bytes": 71216,
+      "sha256": "8d3038b1a92802c4646cdc8e5266e17b6cd85535aa1d14bd6e355247c89626ab",
+      "lf": 1600,
+      "endsWithLF": true
+    },
+    "reportsUnion": {
+      "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+      "bytes": 10691,
+      "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+      "lf": 8,
+      "endsWithLF": true,
+      "literalToIndependentExtraction": true,
+      "actuallyCreatedAndReadBackByRoot": true,
+      "independentlyFetchedAndAuthenticated": true
+    },
+    "guard": {
+      "gitBlob": "3864ebf7ee0bccce857264832e4731da685e3fb6",
+      "bytes": 14082,
+      "sha256": "f451b20f7b419f65e62c9e97a539574b85399ab368c84d33e8aab40387874665",
+      "lf": 1,
+      "endsWithLF": true,
+      "parsedEqualityToIndependentExtraction": true,
+      "actuallyCreatedAndReadBackByRoot": true,
+      "independentlyFetchedAndAuthenticated": true
+    },
+    "comparisonWithPriorBodies": {
+      "currentFirstSevenReportsLiteralTo": "8053a3b3549290836fba6c88cb3b813c18b85878",
+      "all40CurrentGuardFindingsLiteralTo": "9811b76037aa9ca98c4b9962c783acd0896ca375",
+      "oldResultCountsNotTransferred": true
+    }
+  },
+  "rootAgreement": {
+    "rootIntake": {
+      "gitBlob": "f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+      "bytes": 13969,
+      "sha256": "2035e9902d138ad403176d290452e0e28064aee4aa534e6cc0ee09d63c7b317e",
+      "lf": 616,
+      "endsWithLF": true
+    },
+    "rootCheckCount": 92,
+    "allRootChecksPassed": true,
+    "observedTupleAndFootersAgree": true,
+    "scope": "Reference to root's independent intake; these 92 checks are not added to the peer's 55 or runtime assertion totals."
+  },
+  "findings": [],
+  "qualification": {
+    "accepted": "The reviewed C21 focal selection on this exact source/snapshot and current run.",
+    "installedAnalyticsAccepted": false,
+    "performanceImprovementEstablished": false,
+    "finalCompositionAccepted": false,
+    "migrationAccepted": false,
+    "goLiveAuthorized": false
+  },
+  "limits": [
+    "The17functionalPASS/2407assertions and9outerPASS/41assertions are derived exclusively from six current footers; no C20 totals were carried forward.",
+    "The five current functional selections are7cases-contract,5projection,3portfolio,1scenario-lookup and1native-scenario. Nineteen C21 outcomes are not nineteen separate Bun tests.",
+    "C21 proves its finite local physical and composed selection/refusal scenarios. Only scoped CurrentChoice explicitly proves complete Snapshot fallback; other fallbacks can preserve the broader C14 product view.",
+    "The complete decisionResults collection remains cloned before filtering. No arbitrary whole-graph equivalence, native installed admission or latency benefit is inferred.",
+    "The actual new report is byte-equal to the reviewed data model; equality does not turn the model's standalone calculated Git identity into an actual separately created blob.",
+    "Current guard warnings remain visible:38test-timeout-raised and2test-globalthis; errors[]/approved[]/bootstrapfalse are separate fields. Files860 is current, not inherited859.",
+    "Omni9/15/0 and nonce refer only to the wrapper's declared population, not all descendants. Runtime revision0d9b296af is the observed setup prefix; no40-character revision was present.",
+    "Main/cleanup originals are closed after root's single acquisition each. Reviewer fetched only Git copies; no logs endpoints, ZIP, tests, code execution, refs or run mutations."
+  ],
+  "effects": {
+    "reviewBlobCreationOnly": true,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsTriggered": 0,
+    "repositoryCodeExecuted": 0,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

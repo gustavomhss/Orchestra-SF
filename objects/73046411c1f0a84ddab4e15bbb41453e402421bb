@@ -1,0 +1,460 @@
+{
+  "schema": "sf613-c21-native-scenario-selection-proposal-v1",
+  "status": "PROPOSED_C21_CI_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 613,
+  "sourceBase": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "cleanProductSource": true
+  },
+  "futureSourceBinding": {
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "expectedSoleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "createdByThisAuthor": false
+  },
+  "delta": {
+    "modified": 3,
+    "added": 1,
+    "files": 4,
+    "hunks": 11,
+    "addedLines": 471,
+    "removedLines": 11
+  },
+  "files": [
+    {
+      "role": "provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "lf": 898,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "runtimeContract",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "localStore",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "control",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "mode": "100644",
+      "change": "A",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "bytes": 27916,
+        "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+        "lf": 450,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    }
+  ],
+  "supports": [
+    {
+      "role": "sourceSupport",
+      "gitSha": "52951b9a107deb880285a24d3ed7ea81bfb3f26a",
+      "bytes": 17618,
+      "sha256": "28647a3dbfc1f56527e7da8cefd9f388bc0be4cbbec7a1cde62f053e2bbdc8d4",
+      "lf": 374,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "sourcePatch",
+      "gitSha": "5c922015a1b475249500015c52c69c1d6e7dc7f8",
+      "bytes": 9361,
+      "sha256": "ab344f6b588ec0789d10e8646f36b5fd710450065e4f7249f4675c0580ab79ce",
+      "lf": 120,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlSupport",
+      "gitSha": "087cc6348a6d987910544c150ea70c8189db580b",
+      "bytes": 36905,
+      "sha256": "0a6894b87c5af4d11aed2bf97c114d8166b33fcf618742858c5c65829f3e4059",
+      "lf": 161,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlPatch",
+      "gitSha": "a1656109e5822e785e95f4695cab01a9258b2216",
+      "bytes": 28731,
+      "sha256": "113f6e8fded75638bc083a623b3e9b8a14f707ffa8099414c9f5c69cd8df159a",
+      "lf": 454,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlHistoryPatch",
+      "gitSha": "96a4cb561fd2df562ffd1464f2cd45abc6628550",
+      "bytes": 1130,
+      "sha256": "e2b7a7189694d3a1506d42b8bf79ed31718157625cdc8f69969b9293025e7951",
+      "lf": 12,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "fullPatch",
+      "gitSha": "a52880bc314b3159aaf768457f2ab34e38837a11",
+      "bytes": 38092,
+      "sha256": "63366ee47c33dc5dfb547de847a0a3cdd21c319d43b7f1c866dd94659f2a73cc",
+      "lf": 574,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "bounds",
+      "gitSha": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+      "bytes": 12947,
+      "sha256": "ab496d6a1e00448fe0b41e779a802ceecd4e0e650dda635d8a678bebd2203bbf",
+      "lf": 231,
+      "endsWithLF": true,
+      "literalReadback": true
+    }
+  ],
+  "motivation": {
+    "staticGap": "selectSfScenarioCandidates is already a private whole-decisionResults read-set. In S20 the Provider selects that collection only after the native child has copied the broader product state. The fixed native transport has no decisionResults tag.",
+    "mechanism": "Extend the existing finite selection union, private Provider query/predispatch and LocalStore map-retention decision. SourcePersistence and CurrentChoice transport the tag through their existing exact-work protocol.",
+    "benefitBoundary": "Avoid deep cloning known unselected map contents in eligible native child copies when those contents are not reachable from retained data. All whole-collection reads, filters, clone isolation and live authority checks remain. There is no measured C21 latency benefit yet."
+  },
+  "protocol": [
+    "The registered scenario-candidate callback is unchanged. Factory registration and native selection do not read request.caseRef, IDs, collection entries or the predicate.",
+    "Only namespace cases with the scenarioReads private mark and no earlier/conflicting read classes can request decisionResults. The namespace, cases authorization and reported cases storageVersion are unchanged.",
+    "The Provider's C08 body remains the query owner. Source places its own closed execute callback in dashboardProductRead.work; CurrentChoice's unscoped/no-authorizeCommit branch forwards exactly that callback/options. LocalStore compares that exact callback before projecting.",
+    "LocalStore preserves all existing shallow envelope/map validation. Its existing additive loop already proves a present non-undefined decisionResults value plain; the new guard rejects undefined without a redundant second getPrototypeOf call.",
+    "The entire decisionResults collection is retained in the existing native clone(view), with ACL, top-level metadata, sfSources/audit and unknown product fields. Known other maps are reduced only under the existing read-set contract. This is not universal full-state clone equivalence.",
+    "The Provider revalidates the actual materialized tag, current authority/persistence/driver and callback precedence. A tagged decisionResults result must still have its private scenario route and a valid collection; it cannot reach the opaque callback branch.",
+    "The existing scenarioSelection.project(structuredClone(scenarioResults), authority), binding guard, Object.values/filter predicate, abort branch, second authorize, final rechecks and return metadata are literal.",
+    "Missing/own-undefined/nonplain collections, legacy/invalid envelope, uncertain codec/pins, opaque authorizer/context/callback, wrong namespace, precedence conflicts and CurrentChoice's wrapped callback keep the prior fallback. Late drift refuses delivery; no replay or alternate authority path is added.",
+    "Fresh detached graphs, reachable alias/cycle semantics and complete-collection clone failures remain governed by the original clones. The change adds no result/grant cache, native result sharing, new await, production observer or timeout."
+  ],
+  "unchangedTransport": [
+    {
+      "role": "sourcePersistence",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+      "bytes": 60735,
+      "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+      "lf": 891,
+      "endsWithLF": true,
+      "reason": "The existing selection query, options.work binding and before/after checks already transport any admitted finite tag."
+    },
+    {
+      "role": "currentChoice",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "gitSha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "bytes": 46151,
+      "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+      "lf": 533,
+      "endsWithLF": true,
+      "reason": "Unscoped/no-authorizeCommit preserves work/options; scoped or authorizeCommit route wraps work and keeps the full native fallback."
+    }
+  ],
+  "installedApplicability": {
+    "status": "STATIC_CONDITIONAL_PATH_PLUS_REAL_COMPOSITION_CONTROL_NOT_RUN_ADMISSION_PROOF",
+    "noInevitableCurrentChoiceWrapper": "localEntry:87–96 does not supply authorizeCommit. hostContext:1315 dispatches currentChoiceHttp before portfolioHttp, but currentChoiceHttp:10/17 returns undefined for decision-portfolio-preview before opening a scope. business.withCase and portfolio withComparisonObservation use their own bindings/scopes.",
+    "readonlyPath": "portfolioAuthority:149–150 wraps originalCompare in observation.alternatives. comparisonObservation:96–100 calls it inside observe; Finance's prepared.run at137–155 and calculationRoot:130/171–175 keep work in an admitted readonly root. original comparison:19/32/41 creates/calls its own scenario lookup four times inside that work.",
+    "limits": "The two preparatory lookups at comparisonObservation:83–90 are outside this owned root. Unsupported Finance branches, top-level reads and CC scoped/wrapped branches retain their costs. No specific C20 run admission, current profile frequency or elapsed saving is inferred.",
+    "evidence": [
+      {
+        "role": "localEntry",
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "gitSha": "ee287d491a217113298e51af20dfe2a77f60aa38",
+        "bytes": 35725,
+        "sha256": "fa2adb2a7367b81afbc76bdd1e091839cb58b15cd5d67f4fed9375084fa5e2ad",
+        "lf": 494,
+        "endsWithLF": true
+      },
+      {
+        "role": "hostContext",
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "gitSha": "81a6d274e054bc1b97dbbd603ad49752eeb03f48",
+        "bytes": 115463,
+        "sha256": "28663c11eb9faebcb03a89d9c889712ae3cb33fd2327baa6cb357712abe7f49a",
+        "lf": 1351,
+        "endsWithLF": true
+      },
+      {
+        "role": "currentChoiceHttp",
+        "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+        "gitSha": "369c71b4505360a9742b4b9a64585438f63cec47",
+        "bytes": 15693,
+        "sha256": "f596a63299c16eb39bfdf2e4abb5f9a4a97698b7cc1271abd62e30213692571e",
+        "lf": 154,
+        "endsWithLF": true
+      },
+      {
+        "role": "portfolioHttp",
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134,
+        "endsWithLF": true
+      },
+      {
+        "role": "businessServices",
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "gitSha": "3be682e658192bd3fe9c14805fb9e15591f7cc80",
+        "bytes": 80982,
+        "sha256": "176cbd4105a73e90d22d10de3b19443a14de6206001e9a2b4a5f6dcefc3d0688",
+        "lf": 820,
+        "endsWithLF": true
+      },
+      {
+        "role": "portfolioServices",
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "gitSha": "ee6a5c7a9476ce1786d3532985571f7097becc35",
+        "bytes": 13137,
+        "sha256": "4b2869a229a01a3d1ecb43ffe0fe98e155f46db2b60f30a10ec274f2dd121025",
+        "lf": 137,
+        "endsWithLF": true
+      },
+      {
+        "role": "portfolioAuthority",
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "gitSha": "d377cfef3ea9e49178b1054da4cd26b0a4feea6c",
+        "bytes": 14879,
+        "sha256": "e15a2ec96303dc7194e68f21f72d00aaa4b42f9a9be5761b87c96434284ebda0",
+        "lf": 178,
+        "endsWithLF": true
+      },
+      {
+        "role": "comparisonObservation",
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-observation.ts",
+        "gitSha": "6c34520bf11aa42c0d42244a830bf00433894757",
+        "bytes": 7129,
+        "sha256": "3fe3f4f2e98d7e37a90164f80cdaf4d69a163ac92cff697053ebf351a44ff46a",
+        "lf": 107,
+        "endsWithLF": true
+      },
+      {
+        "role": "decisionComparison",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+        "gitSha": "948dcf99765e9e668bd999018f1fcba6c575bb10",
+        "bytes": 4474,
+        "sha256": "ac10d83fbcb7ed24c5c389d69592279da66edeb35c184b504196a6b1a840a988",
+        "lf": 48,
+        "endsWithLF": true
+      },
+      {
+        "role": "financePair",
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "gitSha": "baef3e2fe2169bc556d0358eac8cc74419a4b697",
+        "bytes": 16776,
+        "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+        "lf": 229,
+        "endsWithLF": true
+      },
+      {
+        "role": "calculationRoot",
+        "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+        "gitSha": "244d46ee41e9ce288a7260938174a57161137bab",
+        "bytes": 12451,
+        "sha256": "11b611014da00ba0192527dc79ded7a97d65a2a01e37f5d3305e7845def15a28",
+        "lf": 204,
+        "endsWithLF": true
+      }
+    ]
+  },
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+    "blob": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "title": "C21 native scenario candidates retain the whole result graph and installed selection fences",
+    "declarations": 1,
+    "expectSitesStatic": 74,
+    "awaitTokensStatic": 49,
+    "outcomesExpected": 19,
+    "reportPrefix": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+    "reportSchema": "sf-c21-native-scenario-selection-v1",
+    "modelBytesIncludingPrefixAndLF": 876,
+    "cooperativeDeadlineMs": 18000,
+    "bunDeadlineMs": 20000,
+    "scope": "Installed LocalStore -> CurrentChoice -> SourcePersistence -> canonical ProductAuthority. Physical probe and C08 drift oracle are separate; the positive path does not replace a store method/clone or authorizer to spy on projection.",
+    "outcomes": [
+      "native-whole-collection-readonly",
+      "composed-fresh-candidates-readonly",
+      "native-whole-collection-preimage",
+      "composed-fresh-candidates-preimage",
+      "request-key-after-first-authorize",
+      "composed-prototype-first",
+      "composed-declaration-first",
+      "composed-prototype-second",
+      "composed-declaration-second",
+      "full-fallback-mutable-context",
+      "full-fallback-wrapped-callback",
+      "full-fallback-concurrent-declaration",
+      "full-fallback-namespace",
+      "full-fallback-top-level",
+      "full-fallback-CurrentChoice-scoped",
+      "full-shape-fallback-absent",
+      "full-shape-fallback-own-undefined",
+      "full-shape-fallback-array",
+      "empty-collection-is-a-real-selection"
+    ],
+    "nonDuplication": "No existing test is edited. The new test does not repeat the existing alias/getter/abort/poison matrix. C14–C20 keep that contract coverage; only the new physical boundary, late key, drift and fallback distinctions are added.",
+    "fallbackPrecision": "The six full-fallback labels mean no narrow selection or unchanged dispatch precedence. Several may still use broad C14 product projection. Only CurrentChoice-scoped explicitly proves the complete Snapshot and c14DomainOnly after work identity changes.",
+    "unchangedProjectionControl": {
+      "gitSha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+      "lf": 1462,
+      "endsWithLF": true
+    },
+    "unchangedScenarioConsumerControl": {
+      "gitSha": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+      "bytes": 16889,
+      "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+      "lf": 260,
+      "endsWithLF": true
+    }
+  },
+  "focalMinimum": {
+    "owner": "root",
+    "baseCarrier": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "selection": "Preserve existing C20 functional groups/whole-file selections, CLI/SF type gates and guards; add this one whole-file control as G9.",
+    "previousGroups": 8,
+    "previousCommands": 14,
+    "previousWorkingPins": 17,
+    "expectedGroups": 9,
+    "expectedCommands": 15,
+    "expectedTruncationFlagsFalse": 30,
+    "expectedWorkingPins": 18,
+    "expectedFunctionalProcesses": 5,
+    "expectedFunctionalDeclarations": 17,
+    "expectedReports": 8,
+    "newProcessTimeoutMs": 45000,
+    "newParentTimeoutMs": 60000,
+    "oldCommandArgvRunnerAndDeadlinesUnchanged": true,
+    "futureExecutionAndOutcomes": "UNBOUND"
+  },
+  "sourceControlReviewHistory": {
+    "sourceR2": "Root and Focal found no remaining static source blocker after the comment-only correction. The final R3 guard refinement is separately recorded in the source derivation for limited recheck.",
+    "controlR2": "Focal authenticated/read the full new control; its missing observer argument finding was repaired by one +32 B substitution, with no further static blocker reported. Root read all 450 lines and requested the precise fallback qualification recorded here.",
+    "noTestsOrRepositoryCodeExecutedByThisAuthor": true,
+    "noTreeCommitRefRunOrOriginalZipAcquisitionByThisAuthor": true
+  },
+  "revisionHistory": {
+    "localStoreR1": {
+      "gitSha": "37a35af5ebdab98f046f395e8cf777fb41b20aeb",
+      "status": "SUPERSEDED_COMMENT_ESCAPE"
+    },
+    "localStoreR2": {
+      "gitSha": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+      "bytes": 96626,
+      "sha256": "454e67392ea1868e7d911b311a277395581889c873ad705053c835561c16dfa2",
+      "lf": 1688,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_REDUNDANT_PLAIN_CHECK"
+    },
+    "localStoreFinal": {
+      "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+      "bytes": 96632,
+      "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+      "lf": 1688,
+      "endsWithLF": true
+    },
+    "controlR1": {
+      "gitSha": "86535669bc169d67e12857bfc4eb9de893851099",
+      "bytes": 27884,
+      "sha256": "a5a900605d96a9d3c26439a0cc593f8e4e5835e3cbbc2002f0b92039c96756bd",
+      "lf": 450,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_MISSING_OBSERVER_ARGUMENT"
+    },
+    "controlFinal": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "historicalBodiesAreNotExecutionEvidence": true
+  },
+  "repositoryInstructions": {
+    "rootAgents": {
+      "path": "AGENTS.md",
+      "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223,
+      "endsWithLF": true
+    },
+    "checkedNoNestedAgentsOnChangedPaths": true,
+    "noImportAliasesAnyOrNewProcessSpawning": true,
+    "validationPerformed": "Pure JavaScript data hashing, literal source derivation, diff forward/inverse and Git blob readback only. CI/typecheck/guards are root-operated future gates."
+  },
+  "acceptanceLimits": [
+    "C21 is a proposed clean product change over S20, not an accepted final #613 candidate.",
+    "No previous focal or Analytics result is transferred to these bytes.",
+    "The original two-journey Analytics, 1 worker, retry0, repeat1, preview60 s and sensitivity120 s remain unchanged; this package does not run or acquire them.",
+    "resolveCase and all source/persistence/authorization phases remain in place.",
+    "R8 archival work is a separate owner/task and contains no unreviewed C21 result."
+  ]
+}

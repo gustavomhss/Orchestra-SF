@@ -1,0 +1,539 @@
+{
+  "schema": "sf613-r8-independent-documentary-review-v1",
+  "status": "STATIC_ACK_NO_FINDING_R8_BLOBS_ONLY",
+  "atUtc": "2026-11-28 07:05:06 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/close_pr613",
+  "authorOfProposal": "/root/teams_product",
+  "authority": "Root requested independent read-only review and preservation of a real ACK. Only this receipt is created; root remains sole tree/commit/ref/publication operator.",
+  "scope": "R8 documentary archive proposal over published R7. No product implementation, test execution, Actions original, artifact ZIP, tree, commit, ref or run.",
+  "package": {
+    "catalog": {
+      "gitBlob": "9633d582aee61965f206353adf8734bb9f1ea151",
+      "bytes": 140226,
+      "sha256": "9cc5e36fc4a9baced1638f29601548d5ea9a49f1a2471bc417f3027e69b1bc41",
+      "lf": 4413,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+      "bytes": 1165347,
+      "sha256": "9e711efcd23303012322e39a8a87b78361e13d7cfd0b1e6cd30f9a9fa019037f",
+      "lf": 34774,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+      "bytes": 63369,
+      "sha256": "24eca7da2b7d777b5d8c150f83e58d34ff039b3e751b7eafd429a95680769b07",
+      "lf": 535,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "e621eba542908c977cb9abbcdec7eb5ae3492b24",
+      "bytes": 320012,
+      "sha256": "98235b45e311a54748585280df60120b3c73738656c7da423c04ee4dac588637",
+      "lf": 7049,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "41ab14ff94b8f9a0f5201f333eaaf2cf735ba6f5",
+      "bytes": 32574,
+      "sha256": "9a23ed401665df67e8ee773d7629d2693fb23234b146171fafd51f2c9ca4c18c",
+      "lf": 881,
+      "endsWithLF": true
+    }
+  },
+  "publishedBase": {
+    "commit": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+    "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+    "objectsTree": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+    "index": {
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298",
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "lf": 30299,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a",
+      "bytes": 52301,
+      "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+      "lf": 443,
+      "endsWithLF": true
+    },
+    "independentlyReadCommitAndTrees": true,
+    "rawGitTreeHashesRecomputed": [
+      {
+        "sha": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+        "computed": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+        "entries": 3,
+        "match": true
+      },
+      {
+        "sha": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+        "computed": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+        "entries": 727,
+        "match": true
+      }
+    ],
+    "rootEntries": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "rootMetadataAnd727ObjectEntriesAgreeWithBaseIndex": true
+  },
+  "authentication": {
+    "fiveProposalBodiesGitShaBytesSha256LfAndTailMatched": true,
+    "actualCatalogInputs": 121,
+    "newActualInputBodiesFetchedAndRehashed": 89,
+    "newActualInputBytes": 5760074,
+    "reusedInputMetadataMatchedToR7": 32,
+    "reusedBodiesFetchedForStreamRecomposition": [
+      {
+        "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "bytes": 5428,
+        "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897"
+      }
+    ],
+    "old727BodiesReacquired": false,
+    "exactCatalogClassificationAndDeduplication": true,
+    "packageLocatorRecordsChecked": 181,
+    "packageLocatorMismatches": 0,
+    "onlyUnmatchedPackageLocatorRecords": "Two documentary references to the same calculated-only C20 Analytics main whole; correctly excluded, not fetched."
+  },
+  "derivation": {
+    "exactOperations": 125,
+    "replace": 47,
+    "append": 39,
+    "add": 39,
+    "forwardReconstructedIndexLiteral": true,
+    "inverseReconstructedR7IndexLiteral": true,
+    "beforeAfterValueFingerprintsAndLengthsChecked": true,
+    "everyAppendSuffixAndOrderChecked": true,
+    "serializer": "JSON.stringify(value, null, 2) + \"\\n\"; original key order retained. Complete replacement records preserve any deliberately changed current-record key order.",
+    "readme": {
+      "construction": "prefix + complete literal R7 README + suffix",
+      "prefixBytes": 11005,
+      "baseBytes": 52301,
+      "suffixBytes": 63,
+      "baseOccurrences": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "currentRecordUpdatesAreExplicit": true,
+    "noRewriteOfHistoricalBodies": true
+  },
+  "preservation": {
+    "inheritedObjects": 727,
+    "inheritedObjectBytes": 73074593,
+    "inheritedMembershipPrefixes": 825,
+    "inheritedGroups": 47,
+    "inheritedStreams": 69,
+    "inheritedPartReferences": 231,
+    "oldObjectOrderAndEveryMetadataFieldLiteral": true,
+    "oldMembershipsOrderedLiteralPrefixes": true,
+    "oldGroupsStreamsRevisionHistoryResolvedReferencesPreserved": true,
+    "oldUnresolvedReferencesLiteral": true,
+    "historicalDocumentarySnapshotsDerivedEvidenceAndExcludedRecordsLiteral": true,
+    "fullPriorIndexAndReadmeRetainedAsActualObjects": true,
+    "allNewMembershipLinksResolveToExactCatalogPointers": true,
+    "allNewGroupItemsMatchCatalogMemberships": true
+  },
+  "proposedCounts": {
+    "actualObjects": 817,
+    "objectBytes": 78974893,
+    "memberships": 967,
+    "groups": 52,
+    "streams": 77,
+    "partReferences": 249,
+    "inheritedObjects": 727,
+    "inheritedObjectBytes": 73074593,
+    "inheritedMembershipPrefixes": 825,
+    "inheritedGroups": 47,
+    "inheritedStreams": 69,
+    "inheritedPartReferences": 231,
+    "newObjects": 90,
+    "newObjectBytes": 5900300,
+    "newMemberships": 142,
+    "newGroups": 5,
+    "newStreams": 8,
+    "newPartReferences": 18,
+    "inheritedObjectsReceivingMemberships": 32,
+    "newMembershipsOnInheritedObjects": 34,
+    "membershipsOnNewObjects": 108
+  },
+  "plannedOwnTreeDelta": {
+    "addedObjectFiles": 90,
+    "modifiedRootDocuments": 2,
+    "removedFiles": 0,
+    "objectFiles": 817,
+    "filesIncludingRootDocuments": 819,
+    "objectBytes": 78974893,
+    "totalTreeFileBytes": 80203609,
+    "paths": "README.md, index.json, objects/<actual Git blob SHA40>; files 100644",
+    "wrappersAndWorkflowsStoredAsData": true,
+    "actualR8TreeOrCommitCreatedByReviewer": false
+  },
+  "streams": {
+    "newStreams": 8,
+    "newPartReferences": 18,
+    "allPartsActualGitCopies": true,
+    "orderedConcatenationLiteral": true,
+    "gitShaUtf8BytesSha256LfEndsWithLfAndBomOffsetsRecomputed": true,
+    "rangesCodeUnitsAndBytesContiguous": true,
+    "noNormalizationOrSeparatorsAdded": true,
+    "results": [
+      {
+        "id": "C20-focal-main",
+        "bytes": 109188,
+        "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+        "lf": 900,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [
+          0
+        ],
+        "wholeGitShaCalculated": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-focal-cleanup",
+        "bytes": 2280,
+        "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+        "lf": 39,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [
+          0
+        ],
+        "wholeGitShaCalculated": "264bc691b48cd33a090ff03781993466478f3d00",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-focal-reports",
+        "bytes": 9815,
+        "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+        "lf": 7,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [],
+        "wholeGitShaCalculated": "8053a3b3549290836fba6c88cb3b813c18b85878",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-Analytics-main",
+        "bytes": 3089836,
+        "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+        "lf": 1843,
+        "endsWithLF": true,
+        "parts": 11,
+        "bom": [
+          0,
+          2104525
+        ],
+        "wholeGitShaCalculated": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+        "wholeGitBlobPersisted": false
+      },
+      {
+        "id": "C20-Analytics-cleanup",
+        "bytes": 2281,
+        "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+        "lf": 39,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [
+          0
+        ],
+        "wholeGitShaCalculated": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-Analytics-markers",
+        "bytes": 22526,
+        "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+        "lf": 65,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [],
+        "wholeGitShaCalculated": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-Analytics-contexts",
+        "bytes": 5428,
+        "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+        "lf": 2,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [],
+        "wholeGitShaCalculated": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "wholeGitBlobPersisted": true
+      },
+      {
+        "id": "C20-Analytics-discovery-owner",
+        "bytes": 938,
+        "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+        "lf": 6,
+        "endsWithLF": true,
+        "parts": 1,
+        "bom": [],
+        "wholeGitShaCalculated": "29898c93968c0de965f8524338db48e52f7c9505",
+        "wholeGitBlobPersisted": true
+      }
+    ],
+    "derivedUnions": [
+      {
+        "union": "C20-focal-reports",
+        "main": "C20-focal-main",
+        "records": 7,
+        "allPayloadsLiteralInOrder": true,
+        "allImmediatelyFollowedByLF": true
+      },
+      {
+        "union": "C20-Analytics-markers",
+        "main": "C20-Analytics-main",
+        "records": 65,
+        "allPayloadsLiteralInOrder": true,
+        "allImmediatelyFollowedByLF": true
+      },
+      {
+        "union": "C20-Analytics-contexts",
+        "main": "C20-Analytics-main",
+        "records": 2,
+        "allPayloadsLiteralInOrder": true,
+        "allImmediatelyFollowedByLF": true
+      },
+      {
+        "union": "C20-Analytics-discovery-owner",
+        "main": "C20-Analytics-main",
+        "records": 6,
+        "allPayloadsLiteralInOrder": true,
+        "allImmediatelyFollowedByLF": true
+      }
+    ],
+    "mainCalculatedWholeNeverFetched": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c"
+  },
+  "retention": {
+    "proposedOrderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+        "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+        "role": "published R7 archive"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+        "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+        "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+        "role": "executed C20 focal; retains clean S20"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+        "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+        "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+        "role": "executed C20 Analytics recovery snapshot; retains original A20 and clean S20"
+      }
+    ],
+    "allThreeCommitsAndExpectedTreesReadIndependently": true,
+    "focalSoleParentS20Verified": true,
+    "analyticsRecoverySoleParentA20Verified": true,
+    "A20SoleParentS20Verified": true,
+    "A20rAndA20SameContentTreeVerified": true,
+    "S20SoleParentS19Verified": true,
+    "commitAndTreeObjectsNotMisclassifiedAsBlobs": true,
+    "futurePublicationRequiresRootObjectAuditAndFreshLease": true
+  },
+  "semanticCotejo": {
+    "focal": {
+      "run": 46110276545,
+      "attempt": 1,
+      "status": "CLOSED_PASS_FOCAL_ONLY",
+      "functionalTests": 16,
+      "functionalAssertions": 2250,
+      "outerTests": 8,
+      "outerAssertions": 38,
+      "commands": 14,
+      "falseTruncationFlags": 28,
+      "sourcePins": 17,
+      "reports": 7,
+      "currentPerformanceOrInstalledAcceptance": false
+    },
+    "Analytics": {
+      "run": 46113463330,
+      "attempt": 1,
+      "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "effectiveSnapshot": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "failed": 2,
+      "passed": 0,
+      "rawMainFailureFooterAndBothFailureLocationsChecked": true,
+      "first": "Original 60000 ms page.waitForResponse timeout at spec72:32.",
+      "second": "Initial BI06 original acquisition failed at spec611:38 with net::ERR_ABORTED.",
+      "observed": {
+        "captureCounts": {
+          "UI42": 6,
+          "UI43": 0,
+          "UI44": 0,
+          "UI45": 6,
+          "UI46": 13
+        },
+        "preview": [
+          {
+            "operation": "decision-portfolio-preview",
+            "phase": "native-request",
+            "sequence": 3,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        ],
+        "BI06": [
+          {
+            "phase": "native-request-failed",
+            "errorText": "net::ERR_ABORTED",
+            "http": null,
+            "bodyObserved": false
+          },
+          {
+            "phase": "network-loading-failed",
+            "errorText": "net::ERR_ABORTED"
+          }
+        ],
+        "noScope": true
+      },
+      "markerCounts": {
+        "SOURCE": 34,
+        "CAPTURE": 25,
+        "DIAGNOSTICS": 6,
+        "totalCore": 65,
+        "contexts": 2,
+        "discoveryOwner": 6
+      },
+      "currentBIPass": false,
+      "PortugueseCompletion": false,
+      "completeScope": false,
+      "diagnosticOverlay": false,
+      "originalBiCdpAcquisitionObserver": true,
+      "profiler": false,
+      "finalReceipt": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+      "effectivePeer": "447d9112daa7df012afa9cdc854d963037e9e219",
+      "supersededPeer": "24265cc83696687b97cb5e28ed2734ffb1e47e4e",
+      "peerObserverFieldClarificationReconstructedLiteral": true,
+      "previousBIPassNeverTransferred": true,
+      "noNativeProjectionOrSpeedupInferred": true
+    },
+    "BI06Audit": {
+      "receipt": "54454e1309bbc0235d8850e58edfc7a52a8a421e",
+      "state": "CLOSED_READONLY_ORIGIN_OF_CANCELLATION_NOT_DEMONSTRATED",
+      "failedAcquisitionNotQualifiedByLaterRenderedData": true,
+      "noClaimOfDifferentRequestOrNoHttpFromFalseFalseNull": true,
+      "cancellationInitiatorUnknown": true,
+      "noObserverOnlyHarmlessRaceOrProductRegressionConclusion": true
+    },
+    "D29": {
+      "manifest": "3e037217b0477aeacafe4bad193469c76e54ee81",
+      "state": "STATIC_REVIEWED_FOUR_FINAL_BINDINGS_UNBOUND",
+      "finalBindings": [
+        "__SF613_SOURCE_SHA__",
+        "__SF613_SOURCE_TREE__",
+        "__SF613_WRAPPER_BLOB__",
+        "__SF613_WRAPPER_SHA256__"
+      ],
+      "actualOccurrences": {
+        "wrapper": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 0,
+          "__SF613_WRAPPER_SHA256__": 0
+        },
+        "envelope": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 1,
+          "__SF613_WRAPPER_SHA256__": 1
+        },
+        "finalizer": {
+          "__SF613_SOURCE_SHA__": 1,
+          "__SF613_SOURCE_TREE__": 1,
+          "__SF613_WRAPPER_BLOB__": 1,
+          "__SF613_WRAPPER_SHA256__": 1
+        },
+        "workflow": {
+          "__SF613_SOURCE_SHA__": 3,
+          "__SF613_SOURCE_TREE__": 2,
+          "__SF613_WRAPPER_BLOB__": 2,
+          "__SF613_WRAPPER_SHA256__": 2
+        }
+      },
+      "occurrencesMatchAllFourExecutableBuffers": true,
+      "groups": 27,
+      "commandSites": 33,
+      "commands": 38,
+      "flags": 76,
+      "globalFunctionalTotal": null,
+      "execution": null,
+      "finalC613": null,
+      "oldNullFocalLocatorPreservedHistorically": true,
+      "closedFocalReceiptAddedSeparately": true
+    },
+    "acceptedAreas": {
+      "historical": 12,
+      "total": 15,
+      "new": 0
+    },
+    "productionAuthorized": false
+  },
+  "exclusions": {
+    "calculatedWholeModelsAndLoaderNotPromoted": true,
+    "explicitExcludedHashes": [
+      "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "d97707a2a5a6f9199161a35931bd0e7fedc93b44",
+      "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "8b011095695974a619f29f38a871eab3b4263b54",
+      "6287eedc5387f5e7495963a12364bc31157a7789",
+      "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+      "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+      "b62d93080073964d7adc993c3a5c02277abab38a",
+      "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "451a79b8c3aa04b0bd67f301931f9e61c05efe94"
+    ],
+    "allListedExcludedHashesAbsentFromObjectCorpus": true,
+    "C21Excluded": true,
+    "artifact15250367884": "Metadata only; no ZIP bytes received or reviewed.",
+    "currentIndexReadmeDerivationManifestNotRecursivelyIncluded": true,
+    "actualCatalogIncludedOnce": true,
+    "checkpoint8b011095Excluded": true,
+    "noClaimOfTransitiveClosureForEveryCitedSourceSha": true,
+    "historicalPendingAndSupersededRecordsRemainLiteralWithoutCurrentQualification": true
+  },
+  "verificationSummary": {
+    "derivationDataAssertions": 757,
+    "structuralDataAssertions": 2690,
+    "streamDataAssertions": 68,
+    "linkageAndBaseTreeDataAssertions": 894,
+    "failures": 0,
+    "countsAreDocumentaryPureDataChecksNotRuntimeTests": true
+  },
+  "findings": [],
+  "conclusion": "ACK of the exact R8 documentary proposal. No blocker found. This does not approve product performance, D29 execution, final C613, migration, release or production, and does not itself publish the archive.",
+  "reviewerEffects": {
+    "gitCopyReadsOnly": true,
+    "ownAckBlobOnly": true,
+    "repositoryCodeExecutions": 0,
+    "testsOrCompilersRun": 0,
+    "originalActionsLogGets": 0,
+    "artifactZipGets": 0,
+    "auditZipGets": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsCreated": 0,
+    "productEdits": 0,
+    "archiveProposalEdits": 0
+  }
+}

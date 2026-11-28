@@ -1,0 +1,340 @@
+{
+  "schema": "sf613-c21-original-analytics-independent-object-ack-v1",
+  "status": "ACK_STATIC_SELECTION_AND_ACTUAL_A21_OBJECT_NO_RUN_RESULT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/focal_migration",
+  "reviewedAtUtc": "2026-11-28 07:19:55 UTC",
+  "source": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+  },
+  "analytics": {
+    "commit": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+    "tree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+    "parents": [
+      "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
+    ],
+    "branchIntended": "ci-run-sf613a21",
+    "run": null
+  },
+  "rootObjectReceipt": {
+    "gitBlob": "29cc3314e9bda9eebcbcacba8890f6ea856a985a",
+    "bytes": 8637,
+    "sha256": "7a85905c22e444645ddecad6fa0cc1779fa31dba7230153a5cb0d3e9c2f0408c"
+  },
+  "audit": {
+    "pairs": 1,
+    "literalSiblings": 45,
+    "treeHashes": [
+      {
+        "expected": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "calculated": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+      },
+      {
+        "expected": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+        "calculated": "7076a79663700b540e24f79c378fb8b90f5d7e5e"
+      }
+    ],
+    "exactDelta": "1A .ci-run.json",
+    "requestMode": "100644",
+    "requestPreviouslyAbsent": true,
+    "otherRootEntriesLiteral": true
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false,
+    "content": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "@orchestra/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/design-wave-five-analytics.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    }
+  },
+  "selectionPins": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "mode": "100644",
+      "bytes": 56661
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "mode": "100644",
+      "bytes": 4384
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "mode": "100644",
+      "bytes": 1892
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "mode": "100644",
+      "bytes": 21102
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+      "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+      "mode": "100644",
+      "bytes": 719
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "mode": "100644",
+      "bytes": 12321
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+      "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+      "mode": "100644",
+      "bytes": 15525
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "mode": "100644",
+      "bytes": 5823
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "mode": "100644",
+      "bytes": 13217
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "mode": "100644",
+      "bytes": 4225
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "mode": "100644",
+      "bytes": 17001
+    },
+    {
+      "path": "script/test-ci.ts",
+      "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "mode": "100644",
+      "bytes": 19419
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "mode": "100644",
+      "bytes": 18476
+    }
+  ],
+  "readReuse": {
+    "thirteenBodyReadsRepeated": false,
+    "scope": "Reused the 13 complete UTF-8 bodies and their Git/SHA256/length authentication from the immediately preceding S21 selection preparation. Those paths were already independently resolved through 15 source trees. This review read the actual A21 commit and root tree, recomputed both root hashes, then resolved retained paths through the unchanged cached subtrees.",
+    "currentActualTreeRead": true,
+    "earlierReferenceCatalog": {
+      "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+      "bytes": 15090,
+      "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae"
+    },
+    "requestBodyAlsoReused": true
+  },
+  "focalPrerequisite": {
+    "finalReceipt": {
+      "gitBlob": "509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+      "bytes": 10209,
+      "sha256": "d9aee72816d879a4d224b8f56944c83b2a8b421a0ff62b461f788601aa8aeaec"
+    },
+    "status": "CLOSED_FOCAL_PASS_ONLY",
+    "run": 46119613404,
+    "attempt": 1,
+    "head": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+    "peerReceipt": "fe0583ce868dc64e3325bdf27899b3735bf5efb6",
+    "rootReceipt": "f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+    "functional": {
+      "pass": 17,
+      "fail": 0,
+      "assertions": 2407
+    },
+    "outer": {
+      "pass": 9,
+      "fail": 0,
+      "assertions": 41
+    },
+    "rootChecks": 92,
+    "peerChecks": 55,
+    "notAnAnalyticsResult": true
+  },
+  "selection": {
+    "journeys": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ],
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "configurationNote": "The unchanged request builder supplies CLI workers1/retries0/repeat1; the base config's CI retries2 does not become the effective retry count.",
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "previewTimeoutMs": 60000,
+    "repreviewTimeoutMs": 60000,
+    "sensitivityTimeoutMs": 120000,
+    "jobTimeoutMs": 2700000,
+    "originalWaitersArmedBeforeClicks": true,
+    "testOwnedInstallations": 2,
+    "onePerJourney": true,
+    "portugueseContextReusesItsJourneyInstallation": true,
+    "originalBiCdpAcquisitionObserver": true,
+    "noAdditionalFilterRetryOrDeadlineExtension": true,
+    "diagnosticOverlay": false,
+    "profiler": false
+  },
+  "checks": [
+    {
+      "id": "actual commit",
+      "pass": true
+    },
+    {
+      "id": "actual tree",
+      "pass": true
+    },
+    {
+      "id": "single source parent",
+      "pass": true
+    },
+    {
+      "id": "complete root trees",
+      "pass": true
+    },
+    {
+      "id": "source root hash",
+      "pass": true
+    },
+    {
+      "id": "actual A21 root hash",
+      "pass": true
+    },
+    {
+      "id": "one addition only",
+      "pass": true
+    },
+    {
+      "id": "45 literal siblings",
+      "pass": true,
+      "observed": 45
+    },
+    {
+      "id": "request exact mode type identity length",
+      "pass": true
+    },
+    {
+      "id": "reused request authenticated295/noLF",
+      "pass": true
+    },
+    {
+      "id": "13 reused source pins retained",
+      "pass": true,
+      "observed": 13
+    },
+    {
+      "id": "receipt source snapshot match",
+      "pass": true
+    },
+    {
+      "id": "receipt exactdelta and childrequest",
+      "pass": true
+    },
+    {
+      "id": "focal actual closed source",
+      "pass": true
+    },
+    {
+      "id": "focal actual run and peerlink",
+      "pass": true
+    },
+    {
+      "id": "focal current observations agree",
+      "pass": true
+    },
+    {
+      "id": "focal originals remain closed",
+      "pass": true
+    },
+    {
+      "id": "focal-only scope preserved",
+      "pass": true
+    },
+    {
+      "id": "two original test declarations",
+      "pass": true,
+      "observed": [
+        "wave five analytics: native scenarios, recorded results and sensitivity",
+        "wave five analytics: question catalog and original contextual BI"
+      ]
+    },
+    {
+      "id": "unchanged case budgets",
+      "pass": true
+    },
+    {
+      "id": "original preview and sensitivity waiters",
+      "pass": true
+    },
+    {
+      "id": "worker retry repeat flags retained",
+      "pass": true
+    },
+    {
+      "id": "original45minjob",
+      "pass": true
+    },
+    {
+      "id": "original BI CDP acquisition retained",
+      "pass": true
+    },
+    {
+      "id": "one installation pertest original",
+      "pass": true
+    },
+    {
+      "id": "no diagnostic overlay introduced",
+      "pass": true
+    }
+  ],
+  "checkCount": 26,
+  "allChecksPass": true,
+  "findings": [],
+  "limits": [
+    "This ACK verifies the actual immutable A21 object, retained original selection and the closed focal prerequisite. It does not accept installed Analytics or infer performance improvement.",
+    "A21 adds only the original295B request. It does not copy the focal wrapper/control carrier into source or add any E10–E14 observation overlay.",
+    "The two original journeys must supply their own current outcomes; no prior Analytics success/failure or C21 focal result is substituted.",
+    "The intended branch's live absence and workflow-event preflight are for the root immediately before its single activation. This review did not query or mutate refs/runs.",
+    "Only this review blob may be created by the reviewer. No tree/commit/ref/run, repository execution, original-log or ZIP access."
+  ],
+  "effects": {
+    "reviewBlobCreationOnly": true,
+    "treeCreates": 0,
+    "commitCreates": 0,
+    "refMutations": 0,
+    "runTriggers": 0,
+    "repositoryExecutions": 0,
+    "originalLogGets": 0,
+    "zipGets": 0
+  }
+}

@@ -1,0 +1,1600 @@
+{
+  "schema": "sf613-c21-focal-decoded-extraction-v1",
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+  "run": 46119613404,
+  "attempt": 1,
+  "originalMain": {
+    "gitBlob": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+    "bytes": 112586,
+    "sha256": "43ee43db92077281068da30bc060be89329c6c789425e790d5bd423df11ceca2",
+    "lf": 922,
+    "endsWithLF": true
+  },
+  "originalCleanup": {
+    "gitBlob": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+    "bytes": 2280,
+    "sha256": "2e4def2cd3446322f08537e8648c105a31ce82920621e62530f0c1ef9981a544",
+    "lf": 39,
+    "endsWithLF": true
+  },
+  "terminalContext": {
+    "gitBlob": "8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+    "bytes": 25911,
+    "sha256": "7e3fa1ca2299b7ba0ccb6f0e2db6f88158cee422df69ac9fbc9b523d22a6d297",
+    "lf": 554,
+    "endsWithLF": true
+  },
+  "commandReceipts": [
+    {
+      "from": 759,
+      "to": 759,
+      "value": {
+        "gate": "fetch source parent",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=2",
+          "origin",
+          "98174738fea48b3fe75e8d6684e2edd35574e75e"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 305,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"fetch source parent\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--depth=2\",\"origin\",\"98174738fea48b3fe75e8d6684e2edd35574e75e\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":305,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 763,
+      "to": 763,
+      "value": {
+        "gate": "snapshot identity",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 4,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"snapshot identity\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"rev-parse\",\"HEAD\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 766,
+      "to": 766,
+      "value": {
+        "gate": "source identity",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "show",
+          "-s",
+          "--format=%H%n%T",
+          "HEAD^"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 18,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"source identity\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"show\",\"-s\",\"--format=%H%n%T\",\"HEAD^\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":18,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 773,
+      "to": 773,
+      "value": {
+        "gate": "complete cases read-set contract whole-file",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/cases-read-contract.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 303,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"complete cases read-set contract whole-file\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/cases-read-contract.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":303,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 792,
+      "to": 792,
+      "value": {
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 715,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"C14/C15/C16/C17 snapshot projection and closed case selection\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/c08-snapshot-projection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":715,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 815,
+      "to": 815,
+      "value": {
+        "gate": "CLI package typecheck",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 30714,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"CLI package typecheck\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"apps/cli\",\"exitCode\":0,\"durationMs\":30714,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 819,
+      "to": 819,
+      "value": {
+        "gate": "Sucafina package typecheck",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 32535,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"Sucafina package typecheck\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"typecheck\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":32535,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 824,
+      "to": 824,
+      "value": {
+        "gate": "inspect history completeness",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "rev-parse",
+          "--is-shallow-repository"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 6,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"inspect history completeness\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"rev-parse\",\"--is-shallow-repository\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":6,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 827,
+      "to": 827,
+      "value": {
+        "gate": "fetch current dev and source ancestry",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--unshallow",
+          "origin",
+          "+refs/heads/dev:refs/remotes/origin/dev",
+          "98174738fea48b3fe75e8d6684e2edd35574e75e"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 24090,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"fetch current dev and source ancestry\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"fetch\",\"--no-tags\",\"--unshallow\",\"origin\",\"+refs/heads/dev:refs/remotes/origin/dev\",\"98174738fea48b3fe75e8d6684e2edd35574e75e\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":24090,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 832,
+      "to": 832,
+      "value": {
+        "gate": "current dev identity",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 4,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"current dev identity\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"rev-parse\",\"--verify\",\"refs/remotes/origin/dev^{commit}\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":4,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 835,
+      "to": 835,
+      "value": {
+        "gate": "actual guard merge base",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "git",
+          "merge-base",
+          "HEAD",
+          "origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 8,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"actual guard merge base\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"git\",\"merge-base\",\"HEAD\",\"origin/dev\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":8,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 839,
+      "to": 839,
+      "value": {
+        "gate": "canonical guardrails",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev",
+          "--json"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 2008,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"canonical guardrails\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"run\",\"check:guards\",\"--base\",\"origin/dev\",\"--json\"],\"cwd\":\".\",\"exitCode\":0,\"durationMs\":2008,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 845,
+      "to": 845,
+      "value": {
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 269,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"Portfolio selection cases and preferences whole-file\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":269,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 861,
+      "to": 861,
+      "value": {
+        "gate": "Scenario lookup complete candidates whole-file",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 185,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"Scenario lookup complete candidates whole-file\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/scenario-lookup-selection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":185,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    },
+    {
+      "from": 875,
+      "to": 875,
+      "value": {
+        "gate": "Native scenario candidates selection whole-file",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 481,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      },
+      "body": "{\"gate\":\"Native scenario candidates selection whole-file\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"command\":[\"/home/runner/.bun/bin/bun\",\"test\",\"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"],\"cwd\":\"modules/sucafina/Sucafinav1\",\"exitCode\":0,\"durationMs\":481,\"stdoutTruncated\":false,\"stderrTruncated\":false}"
+    }
+  ],
+  "hostIdentityRecords": [
+    {
+      "from": 757,
+      "to": 757,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 772,
+      "to": 772,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 791,
+      "to": 791,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 813,
+      "to": 813,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 818,
+      "to": 818,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 823,
+      "to": 823,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 844,
+      "to": 844,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 860,
+      "to": 860,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    },
+    {
+      "from": 874,
+      "to": 874,
+      "value": {
+        "verification": "sf613-c21-native-scenario-candidates-focal",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+        "run": "46119613404",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      },
+      "body": "{\"verification\":\"sf613-c21-native-scenario-candidates-focal\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"run\":\"46119613404\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\"}"
+    }
+  ],
+  "sourcePins": {
+    "from": 770,
+    "to": 770,
+    "value": {
+      "gate": "reviewed source blobs",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sha": "b7de9404461591ce0162d496ec917a47fb72a479"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "sha": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+          "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+          "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+          "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "sha": "6287eedc5387f5e7495963a12364bc31157a7789"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "sha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+          "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+          "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+          "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+          "sha": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+          "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "sha": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+          "sha": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+          "sha": "b62d93080073964d7adc993c3a5c02277abab38a"
+        }
+      ],
+      "expectedGroups": 9,
+      "expectedCommands": 15,
+      "functionalProcessesLaunched": 5,
+      "staticDeclarationSites": {
+        "casesContract": 7,
+        "projection": 5,
+        "portfolioSelection": 3,
+        "scenarioLookup": 1,
+        "nativeScenarioSelection": 1
+      },
+      "expectedControlReports": 8
+    },
+    "body": "{\"gate\":\"reviewed source blobs\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"98174738fea48b3fe75e8d6684e2edd35574e75e\",\"files\":[{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"sha\":\"1017609000bdbdb39fc0510b045dc6dfde371faf\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"sha\":\"b7de9404461591ce0162d496ec917a47fb72a479\"},{\"path\":\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"sha\":\"91413a24723c27cc5102368c3fe9a6090d9cdcea\"},{\"path\":\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"sha\":\"244d46ee41e9ce288a7260938174a57161137bab\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"sha\":\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"sha\":\"ccc5ea87046144843e1751b1288e907974d24ca5\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"sha\":\"f183dd1049ef205c38395bda99c83efa8eddc80a\"},{\"path\":\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"sha\":\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"sha\":\"6287eedc5387f5e7495963a12364bc31157a7789\"},{\"path\":\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"sha\":\"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"sha\":\"6bef21db9129db064b018f5f0bf632306e3a16ec\"},{\"path\":\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"sha\":\"11661b32f4dc782558b39902c0f396145cbe8a4a\"},{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts\",\"sha\":\"44cff7d70fca11ca022f863d7811b9a2610186fd\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts\",\"sha\":\"b6938565cb8b468a454178688ea88a4ec88da9fa\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"sha\":\"68ae48f9a039180824f5471a1de27c0ca34be088\"},{\"path\":\"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts\",\"sha\":\"c8dd1c26b46ea7c287db80d0ca5746205e45f1ef\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"sha\":\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"},{\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts\",\"sha\":\"b62d93080073964d7adc993c3a5c02277abab38a\"}],\"expectedGroups\":9,\"expectedCommands\":15,\"functionalProcessesLaunched\":5,\"staticDeclarationSites\":{\"casesContract\":7,\"projection\":5,\"portfolioSelection\":3,\"scenarioLookup\":1,\"nativeScenarioSelection\":1},\"expectedControlReports\":8}"
+  },
+  "guardAncestry": {
+    "from": 838,
+    "to": 838,
+    "value": {
+      "gate": "guard ancestry",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+      "command": "bun run check:guards --base origin/dev --json"
+    },
+    "body": "{\"gate\":\"guard ancestry\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"dev\":\"c0bc0f22a4f2f5a2bdfa64407cd35769fd877886\",\"mergeBase\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\",\"command\":\"bun run check:guards --base origin/dev --json\"}"
+  },
+  "guard": {
+    "gitBlob": "3864ebf7ee0bccce857264832e4731da685e3fb6",
+    "bytes": 14082,
+    "sha256": "f451b20f7b419f65e62c9e97a539574b85399ab368c84d33e8aab40387874665",
+    "lf": 1,
+    "endsWithLF": true
+  },
+  "reportUnion": {
+    "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+    "bytes": 10691,
+    "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+    "lf": 8,
+    "endsWithLF": true
+  },
+  "reportRecords": [
+    {
+      "line": 794,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL ",
+      "payload": "SF_C14_SNAPSHOT_CONTROL {\"scenario\":\"complete-product-and-fresh-authorization\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"preimage\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"top-level\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2}],\"subsequentPreferenceVersion\":2,\"createIdReceiver\":\"original mutable C08 input\",\"projector\":\"installed original\",\"limit\":\"top-level stays full; no parse count, domain-size ratio or performance qualification\"}",
+      "value": {
+        "scenario": "complete-product-and-fresh-authorization",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "preimage",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "top-level",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          }
+        ],
+        "subsequentPreferenceVersion": 2,
+        "createIdReceiver": "original mutable C08 input",
+        "projector": "installed original",
+        "limit": "top-level stays full; no parse count, domain-size ratio or performance qualification"
+      }
+    },
+    {
+      "line": 796,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL ",
+      "payload": "SF_C14_SNAPSHOT_CONTROL {\"scenario\":\"opaque-equivalence-and-live-refusal\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"preimage-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"preimage-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"readonly-source-checks-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-source-checks-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"source-accessor-full-fallback\",\"callbacks\":1},{\"scenario\":\"driver-drift-before-body\",\"callbacks\":0,\"authentication\":0},{\"scenario\":\"CurrentChoice-scoped-full-fallback\",\"callbacks\":2,\"authentication\":18},{\"scenario\":\"real-authority-revoked-after-body\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"callback-error-without-replay-or-poison\",\"callbacks\":1},{\"scenario\":\"request-abort-after-body\",\"callbacks\":1,\"authentication\":3},{\"scenario\":\"caught-nested-write-still-poisons-owner\",\"callbacks\":1},{\"scenario\":\"early-prototype-full\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"late-prototype-projected\",\"callbacks\":0,\"authentication\":3},{\"scenario\":\"late-prototype-opaque\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"opaque-native-driver-full-fallback\",\"callbacks\":2}],\"limit\":\"functional route and refusal evidence only; no latency, parse-count or clean Analytics claim\"}",
+      "value": {
+        "scenario": "opaque-equivalence-and-live-refusal",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "preimage-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "preimage-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "readonly-source-checks-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-source-checks-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "source-accessor-full-fallback",
+            "callbacks": 1
+          },
+          {
+            "scenario": "driver-drift-before-body",
+            "callbacks": 0,
+            "authentication": 0
+          },
+          {
+            "scenario": "CurrentChoice-scoped-full-fallback",
+            "callbacks": 2,
+            "authentication": 18
+          },
+          {
+            "scenario": "real-authority-revoked-after-body",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "callback-error-without-replay-or-poison",
+            "callbacks": 1
+          },
+          {
+            "scenario": "request-abort-after-body",
+            "callbacks": 1,
+            "authentication": 3
+          },
+          {
+            "scenario": "caught-nested-write-still-poisons-owner",
+            "callbacks": 1
+          },
+          {
+            "scenario": "early-prototype-full",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "late-prototype-projected",
+            "callbacks": 0,
+            "authentication": 3
+          },
+          {
+            "scenario": "late-prototype-opaque",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "opaque-native-driver-full-fallback",
+            "callbacks": 2
+          }
+        ],
+        "limit": "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"
+      }
+    },
+    {
+      "line": 797,
+      "prefix": "SF_C15_SELECTION_CONTROL ",
+      "payload": "SF_C15_SELECTION_CONTROL {\"scenario\":\"whole-graphs-and-shape\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"readonly\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18}],\"aliases\":\"custom full path retained; each selected callback receives its own graph\",\"limit\":\"native structural copy and functional composition; no latency or current Analytics result\"}",
+      "value": {
+        "scenario": "whole-graphs-and-shape",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "readonly",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          }
+        ],
+        "aliases": "custom full path retained; each selected callback receives its own graph",
+        "limit": "native structural copy and functional composition; no latency or current Analytics result"
+      }
+    },
+    {
+      "line": 798,
+      "prefix": "SF_C15_SELECTION_CONTROL ",
+      "payload": "SF_C15_SELECTION_CONTROL {\"scenario\":\"shape-precedence-and-drift\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"readonly-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"active-source-checks-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"narrow-second-authorization-drift\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"returned body withheld\"},{\"scenario\":\"case-precedence\",\"callbacks\":null,\"authentication\":6,\"outcome\":\"factory callback returned; not wrapped to count\"},{\"scenario\":\"namespace-mismatch\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"late-registration\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"invalid-map\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-version\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-additive\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"legacy\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original legacy normalization\"},{\"scenario\":\"throw-sentinel\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"},{\"scenario\":\"throw-undefined\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"}],\"limit\":\"narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores\"}",
+      "value": {
+        "scenario": "shape-precedence-and-drift",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "readonly-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "active-source-checks-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "narrow-second-authorization-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "returned body withheld"
+          },
+          {
+            "scenario": "case-precedence",
+            "callbacks": null,
+            "authentication": 6,
+            "outcome": "factory callback returned; not wrapped to count"
+          },
+          {
+            "scenario": "namespace-mismatch",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "late-registration",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "invalid-map",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-version",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-additive",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "legacy",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original legacy normalization"
+          },
+          {
+            "scenario": "throw-sentinel",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          },
+          {
+            "scenario": "throw-undefined",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          }
+        ],
+        "limit": "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"
+      }
+    },
+    {
+      "line": 799,
+      "prefix": "SF_C16_SELECTION_CONTROL ",
+      "payload": "SF_C16_SELECTION_CONTROL {\"scenario\":\"closed-case-factories\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"case-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-key-observed-after-first-authorization\",\"authentication\":6,\"outcome\":\"no key read at registration, native selection or reauthorization\"},{\"scenario\":\"identity-throw-sentinel\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-throw-undefined\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-request-abort\",\"authentication\":3,\"outcome\":\"original abort refuses the root\"},{\"scenario\":\"poisoned-native-root\",\"authentication\":0,\"outcome\":\"no child result or root accepted after caught commit:true\"}],\"identityProjection\":{\"cases\":[\"mixed-map-and-detached-readonly\",\"mixed-map-and-detached-preimage\",\"composed-identity-first-authorization-drift\",\"composed-identity-second-authorization-drift\",\"restored-codec-birth-keeps-complete-case\",\"restored-codec-exposure-keeps-complete-case\",\"cold-plan-birth-survives-restore-and-memo\",\"owner-weakmap-escape-latches-across-roots\",\"owner-als-escape-latches-across-roots\"],\"limit\":\"readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases\"},\"limits\":\"composed functional and refusal oracles; no latency or current Analytics qualification\"}",
+      "value": {
+        "scenario": "closed-case-factories",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "case-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-key-observed-after-first-authorization",
+            "authentication": 6,
+            "outcome": "no key read at registration, native selection or reauthorization"
+          },
+          {
+            "scenario": "identity-throw-sentinel",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-throw-undefined",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-request-abort",
+            "authentication": 3,
+            "outcome": "original abort refuses the root"
+          },
+          {
+            "scenario": "poisoned-native-root",
+            "authentication": 0,
+            "outcome": "no child result or root accepted after caught commit:true"
+          }
+        ],
+        "identityProjection": {
+          "cases": [
+            "mixed-map-and-detached-readonly",
+            "mixed-map-and-detached-preimage",
+            "composed-identity-first-authorization-drift",
+            "composed-identity-second-authorization-drift",
+            "restored-codec-birth-keeps-complete-case",
+            "restored-codec-exposure-keeps-complete-case",
+            "cold-plan-birth-survives-restore-and-memo",
+            "owner-weakmap-escape-latches-across-roots",
+            "owner-als-escape-latches-across-roots"
+          ],
+          "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+        },
+        "limits": "composed functional and refusal oracles; no latency or current Analytics qualification"
+      }
+    },
+    {
+      "line": 848,
+      "prefix": "SF_C19_PORTFOLIO_CASES ",
+      "payload": "SF_C19_PORTFOLIO_CASES {\"schema\":\"sf-c19-portfolio-cases-v1\",\"customCaptures\":6,\"nativeReads\":9,\"reachableFailures\":6,\"revocations\":3,\"mixedReads\":1}",
+      "value": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      }
+    },
+    {
+      "line": 864,
+      "prefix": "SF_C20_SCENARIO_LOOKUP ",
+      "payload": "SF_C20_SCENARIO_LOOKUP {\"schema\":\"sf-c20-scenario-lookup-v1\",\"checks\":[\"consumer-selects-complete-detached-results\",\"opaque-wrapper-keeps-full-state\",\"mutable-context-uses-opaque-fallback\",\"proxy-context-uses-opaque-fallback\",\"map-prototype-uses-opaque-fallback\",\"request-key-remains-late-after-admission\",\"mutable-binding-is-observed-after-admission\",\"admission-denied-does-not-disclose\",\"egress-revoked-does-not-disclose\",\"abort-does-not-disclose\",\"unmatched-getter-selected\",\"unmatched-getter-opaque\",\"unmatched-function-selected\",\"unmatched-function-opaque\"]}",
+      "value": {
+        "schema": "sf-c20-scenario-lookup-v1",
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ]
+      }
+    },
+    {
+      "line": 878,
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+      "payload": "SF_C21_NATIVE_SCENARIO_SELECTION {\"schema\":\"sf-c21-native-scenario-selection-v1\",\"outcomes\":[\"native-whole-collection-readonly\",\"composed-fresh-candidates-readonly\",\"native-whole-collection-preimage\",\"composed-fresh-candidates-preimage\",\"request-key-after-first-authorize\",\"composed-prototype-first\",\"composed-declaration-first\",\"composed-prototype-second\",\"composed-declaration-second\",\"full-fallback-mutable-context\",\"full-fallback-wrapped-callback\",\"full-fallback-concurrent-declaration\",\"full-fallback-namespace\",\"full-fallback-top-level\",\"full-fallback-CurrentChoice-scoped\",\"full-shape-fallback-absent\",\"full-shape-fallback-own-undefined\",\"full-shape-fallback-array\",\"empty-collection-is-a-real-selection\"],\"contexts\":[\"readonly\",\"preimage\"],\"originalProjectionControlsPreserved\":5,\"claim\":\"physical child selection and fallback only; no installed latency measurement\"}",
+      "value": {
+        "schema": "sf-c21-native-scenario-selection-v1",
+        "outcomes": [
+          "native-whole-collection-readonly",
+          "composed-fresh-candidates-readonly",
+          "native-whole-collection-preimage",
+          "composed-fresh-candidates-preimage",
+          "request-key-after-first-authorize",
+          "composed-prototype-first",
+          "composed-declaration-first",
+          "composed-prototype-second",
+          "composed-declaration-second",
+          "full-fallback-mutable-context",
+          "full-fallback-wrapped-callback",
+          "full-fallback-concurrent-declaration",
+          "full-fallback-namespace",
+          "full-fallback-top-level",
+          "full-fallback-CurrentChoice-scoped",
+          "full-shape-fallback-absent",
+          "full-shape-fallback-own-undefined",
+          "full-shape-fallback-array",
+          "empty-collection-is-a-real-selection"
+        ],
+        "contexts": [
+          "readonly",
+          "preimage"
+        ],
+        "originalProjectionControlsPreserved": 5,
+        "claim": "physical child selection and fallback only; no installed latency measurement"
+      }
+    }
+  ],
+  "footers": {
+    "functional": [
+      {
+        "line": 789,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "duration": "294.00ms"
+      },
+      {
+        "line": 811,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "duration": "702.00ms"
+      },
+      {
+        "line": 858,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "duration": "259.00ms"
+      },
+      {
+        "line": 872,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "duration": "178.00ms"
+      },
+      {
+        "line": 886,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "duration": "467.00ms"
+      }
+    ],
+    "outer": {
+      "line": 892,
+      "pass": 9,
+      "fail": 0,
+      "assertions": 41,
+      "tests": 9,
+      "files": 1,
+      "duration": "91.93s"
+    }
+  },
+  "omni": {
+    "line": 893,
+    "nonce": "7997a3730d13b88a36aad6089f7aae7b",
+    "declared": 9,
+    "spawn": 15,
+    "delegated": 0,
+    "scope": "Wrapper only"
+  },
+  "actualFunctionalTotals": {
+    "passed": 17,
+    "failed": 0,
+    "assertions": 2407
+  },
+  "actualOuterTotals": {
+    "passed": 9,
+    "failed": 0,
+    "assertions": 41,
+    "duration": "91.93s"
+  },
+  "checksPassed": 92,
+  "checks": [
+    {
+      "name": "terminal-source-and-snapshot",
+      "passed": true
+    },
+    {
+      "name": "both-terminal-jobs-success",
+      "passed": true
+    },
+    {
+      "name": "originals-closed-exactly-once",
+      "passed": true
+    },
+    {
+      "name": "commands-15",
+      "passed": true
+    },
+    {
+      "name": "host-identities-9",
+      "passed": true
+    },
+    {
+      "name": "identity-line-759",
+      "passed": true
+    },
+    {
+      "name": "identity-line-763",
+      "passed": true
+    },
+    {
+      "name": "identity-line-766",
+      "passed": true
+    },
+    {
+      "name": "identity-line-773",
+      "passed": true
+    },
+    {
+      "name": "identity-line-792",
+      "passed": true
+    },
+    {
+      "name": "identity-line-815",
+      "passed": true
+    },
+    {
+      "name": "identity-line-819",
+      "passed": true
+    },
+    {
+      "name": "identity-line-824",
+      "passed": true
+    },
+    {
+      "name": "identity-line-827",
+      "passed": true
+    },
+    {
+      "name": "identity-line-832",
+      "passed": true
+    },
+    {
+      "name": "identity-line-835",
+      "passed": true
+    },
+    {
+      "name": "identity-line-839",
+      "passed": true
+    },
+    {
+      "name": "identity-line-845",
+      "passed": true
+    },
+    {
+      "name": "identity-line-861",
+      "passed": true
+    },
+    {
+      "name": "identity-line-875",
+      "passed": true
+    },
+    {
+      "name": "identity-line-757",
+      "passed": true
+    },
+    {
+      "name": "identity-line-772",
+      "passed": true
+    },
+    {
+      "name": "identity-line-791",
+      "passed": true
+    },
+    {
+      "name": "identity-line-813",
+      "passed": true
+    },
+    {
+      "name": "identity-line-818",
+      "passed": true
+    },
+    {
+      "name": "identity-line-823",
+      "passed": true
+    },
+    {
+      "name": "identity-line-844",
+      "passed": true
+    },
+    {
+      "name": "identity-line-860",
+      "passed": true
+    },
+    {
+      "name": "identity-line-874",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-759",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-763",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-766",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-773",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-792",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-815",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-819",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-824",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-827",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-832",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-835",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-839",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-845",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-861",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-875",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-0",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-1",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-2",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-3",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-4",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-5",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-6",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-7",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-8",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-9",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-10",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-11",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-12",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-13",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-14",
+      "passed": true
+    },
+    {
+      "name": "pins-18",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-envelope-identity",
+      "passed": true
+    },
+    {
+      "name": "complete-six-footers",
+      "passed": true
+    },
+    {
+      "name": "functional-counts-from-current-footers",
+      "passed": true
+    },
+    {
+      "name": "outer-separate",
+      "passed": true
+    },
+    {
+      "name": "eight-complete-reports",
+      "passed": true
+    },
+    {
+      "name": "previous-seven-payloads-literal",
+      "passed": true
+    },
+    {
+      "name": "c21-report-exact-modeled-payload",
+      "passed": true
+    },
+    {
+      "name": "c21-report-bounds",
+      "passed": true
+    },
+    {
+      "name": "new-model-not-fetched-as-object",
+      "passed": true
+    },
+    {
+      "name": "guard-base",
+      "passed": true
+    },
+    {
+      "name": "canonical-guard-positive",
+      "passed": true
+    },
+    {
+      "name": "guard-warnings-kept",
+      "passed": true
+    },
+    {
+      "name": "omni-current-nonce-counts",
+      "passed": true
+    },
+    {
+      "name": "no-artifact-and-branch-absent",
+      "passed": true
+    }
+  ],
+  "limits": {
+    "focalOnly": true,
+    "installedAcceptance": false,
+    "performanceInference": false,
+    "originalsClosed": true,
+    "zipGets": 0,
+    "productionAuthorized": false
+  }
+}

@@ -1,0 +1,691 @@
+{
+  "schema": "sf613-c21-root-source-review-v1",
+  "status": "STATIC_SOURCE_CONTROL_ACCEPTED_FOR_OBJECT_CREATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "root/Astra",
+  "reviewedAtUtc": "2026-11-28 06:57:15 UTC",
+  "sourceBase": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "cleanProductSource": true
+  },
+  "manifest": {
+    "gitBlob": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+    "bytes": 21170,
+    "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+    "lf": 460,
+    "endsWithLF": true
+  },
+  "independentReview": {
+    "gitBlob": "86195b9ba4261fdb38013da7c121f931170e0fef",
+    "bytes": 21736,
+    "sha256": "76329e15dee2ab484b357460c05a0e60e59bc51b1a993bd0dae2386adf257c4c",
+    "lf": 530,
+    "endsWithLF": true
+  },
+  "finalFiles": [
+    {
+      "role": "provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "lf": 898,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "runtimeContract",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "localStore",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "change": "M",
+      "preimage": {
+        "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    },
+    {
+      "role": "control",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "mode": "100644",
+      "change": "A",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "bytes": 27916,
+        "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+        "lf": 450,
+        "endsWithLF": true
+      },
+      "parentPreimageOrAbsenceVerifiedAtS20": true,
+      "literalReadback": true
+    }
+  ],
+  "supports": [
+    {
+      "role": "sourceSupport",
+      "gitSha": "52951b9a107deb880285a24d3ed7ea81bfb3f26a",
+      "bytes": 17618,
+      "sha256": "28647a3dbfc1f56527e7da8cefd9f388bc0be4cbbec7a1cde62f053e2bbdc8d4",
+      "lf": 374,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "sourcePatch",
+      "gitSha": "5c922015a1b475249500015c52c69c1d6e7dc7f8",
+      "bytes": 9361,
+      "sha256": "ab344f6b588ec0789d10e8646f36b5fd710450065e4f7249f4675c0580ab79ce",
+      "lf": 120,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlSupport",
+      "gitSha": "087cc6348a6d987910544c150ea70c8189db580b",
+      "bytes": 36905,
+      "sha256": "0a6894b87c5af4d11aed2bf97c114d8166b33fcf618742858c5c65829f3e4059",
+      "lf": 161,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlPatch",
+      "gitSha": "a1656109e5822e785e95f4695cab01a9258b2216",
+      "bytes": 28731,
+      "sha256": "113f6e8fded75638bc083a623b3e9b8a14f707ffa8099414c9f5c69cd8df159a",
+      "lf": 454,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "controlHistoryPatch",
+      "gitSha": "96a4cb561fd2df562ffd1464f2cd45abc6628550",
+      "bytes": 1130,
+      "sha256": "e2b7a7189694d3a1506d42b8bf79ed31718157625cdc8f69969b9293025e7951",
+      "lf": 12,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "fullPatch",
+      "gitSha": "a52880bc314b3159aaf768457f2ab34e38837a11",
+      "bytes": 38092,
+      "sha256": "63366ee47c33dc5dfb547de847a0a3cdd21c319d43b7f1c866dd94659f2a73cc",
+      "lf": 574,
+      "endsWithLF": true,
+      "literalReadback": true
+    },
+    {
+      "role": "bounds",
+      "gitSha": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+      "bytes": 12947,
+      "sha256": "ab496d6a1e00448fe0b41e779a802ceecd4e0e650dda635d8a678bebd2203bbf",
+      "lf": 231,
+      "endsWithLF": true,
+      "literalReadback": true
+    }
+  ],
+  "checks": {
+    "manifestFinalPins": [
+      {
+        "check": "manifestFinalPin",
+        "role": "provider",
+        "field": "bytes",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "provider",
+        "field": "sha256",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "provider",
+        "field": "lf",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "provider",
+        "field": "endsWithLF",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "provider",
+        "field": "gitSha",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "runtimeContract",
+        "field": "bytes",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "runtimeContract",
+        "field": "sha256",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "runtimeContract",
+        "field": "lf",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "runtimeContract",
+        "field": "endsWithLF",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "runtimeContract",
+        "field": "gitSha",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "localStore",
+        "field": "bytes",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "localStore",
+        "field": "sha256",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "localStore",
+        "field": "lf",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "localStore",
+        "field": "endsWithLF",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "localStore",
+        "field": "gitSha",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "control",
+        "field": "bytes",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "control",
+        "field": "sha256",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "control",
+        "field": "lf",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "control",
+        "field": "endsWithLF",
+        "passed": true
+      },
+      {
+        "check": "manifestFinalPin",
+        "role": "control",
+        "field": "gitSha",
+        "passed": true
+      }
+    ],
+    "productInitialDerivation": [
+      {
+        "name": "Exactly three product files",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts anchor forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts anchor inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 1 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 2 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 3 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 4 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 5 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 6 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 7 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 8 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 9 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts fragment 10 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts anchor forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts anchor inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts fragment 11 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts fragment 12 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts anchor forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts anchor inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 13 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 14 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 15 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 16 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 17 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 18 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 19 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 20 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 21 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 22 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 23 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 24 after",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 25 before",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts fragment 26 after",
+        "pass": true
+      },
+      {
+        "name": "Provider original callback dispatch, clones, abort and egress literally preserved",
+        "pass": true
+      },
+      {
+        "name": "Provider await occurrences preserved",
+        "pass": true
+      },
+      {
+        "name": "LocalStore await occurrences preserved",
+        "pass": true
+      },
+      {
+        "name": "No source or test execution",
+        "pass": true
+      }
+    ],
+    "controlDerivation": [
+      {
+        "name": "Scaffold source fragment metadata",
+        "pass": true
+      },
+      {
+        "name": "Scaffold target fragment metadata",
+        "pass": true
+      },
+      {
+        "name": "Three scaffold replacements forward",
+        "pass": true
+      },
+      {
+        "name": "Three scaffold replacements inverse",
+        "pass": true
+      },
+      {
+        "name": "Exact new imports",
+        "pass": true
+      },
+      {
+        "name": "Complete inline control body",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment before 6",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment after 7",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment before 8",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment after 9",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment before 10",
+        "pass": true
+      },
+      {
+        "name": "Scaffold fragment after 11",
+        "pass": true
+      },
+      {
+        "name": "Single new-file addition",
+        "pass": true
+      },
+      {
+        "name": "Addition reconstructs complete control",
+        "pass": true
+      },
+      {
+        "name": "Addition inverse is empty",
+        "pass": true
+      },
+      {
+        "name": "R1 to R2 patch exact",
+        "pass": true
+      },
+      {
+        "name": "R2 to R1 patch exact",
+        "pass": true
+      },
+      {
+        "name": "Complete package four files",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts full patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts full patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts full patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts full patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts full patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/local-store.ts full patch inverse",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts full patch forward",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts full patch inverse",
+        "pass": true
+      },
+      {
+        "name": "Original single declaration and deadlines",
+        "pass": true
+      },
+      {
+        "name": "New path absent in actual S20 tree",
+        "pass": true
+      }
+    ],
+    "productR2Delta": true,
+    "productR3Delta": true,
+    "testR2Delta": true,
+    "finalFourFilePatchForwardInverse": true,
+    "testStaticCounts": {
+      "testDeclarations": 1,
+      "expectSites": 74,
+      "awaitOccurrences": 49,
+      "reportOccurrences": 1,
+      "bodyLF": 450
+    },
+    "actualS20Preimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "git": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "trees": [
+          "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+          "5efee20f3fcda894999789bc4501681cd2453b88",
+          "2437e4cc15be85b319c1057fc776ab6e53991af1",
+          "1635c7cd7c3f50ecde28adf0fe735c69a92e9b6b",
+          "e7dcf93f5eaad61e037e40cea886bc59cc5aca2b",
+          "9602d7d0a3bda6d1837b0bebb63baf1d9769ca87"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "git": "39e6da84a3dd815721484affaf8315731ded073b",
+        "trees": [
+          "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+          "5efee20f3fcda894999789bc4501681cd2453b88",
+          "2437e4cc15be85b319c1057fc776ab6e53991af1",
+          "1635c7cd7c3f50ecde28adf0fe735c69a92e9b6b",
+          "8057ba3633b379c8a4dfa7674121da1ded0bd5e2"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "git": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "trees": [
+          "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+          "5efee20f3fcda894999789bc4501681cd2453b88",
+          "2437e4cc15be85b319c1057fc776ab6e53991af1",
+          "1635c7cd7c3f50ecde28adf0fe735c69a92e9b6b",
+          "8057ba3633b379c8a4dfa7674121da1ded0bd5e2"
+        ]
+      }
+    ],
+    "newControlAbsent": {
+      "present": false,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "trees": [
+        "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+        "5efee20f3fcda894999789bc4501681cd2453b88",
+        "2437e4cc15be85b319c1057fc776ab6e53991af1",
+        "1635c7cd7c3f50ecde28adf0fe735c69a92e9b6b",
+        "e6055d086beadb457b531da2ab882a7b878759d2",
+        "6750774166ef6340acfe0610830980cbecbedd6f",
+        "34e230d45209ef2e971fc5d2f885f267d1c4e1f9",
+        "08e7702c3a0fccd8097d761c79dcff47ea0feda6"
+      ]
+    }
+  },
+  "sourceRecipe": {
+    "calculatedOnly": true,
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "changedTreeNodes": 11,
+    "delta": {
+      "modified": 3,
+      "added": 1,
+      "files": 4,
+      "hunks": 11,
+      "addedLines": 471,
+      "removedLines": 11
+    }
+  },
+  "reviewConclusions": [
+    "Private scenario-read factory carries only the finite decisionResults physical selection. Entire collection is cloned before the unchanged predicate dispatch.",
+    "Canonical authorization, owner/callback identities, readonly/preimage admission, namespace cases, two authorizations and all rechecks remain; opaque/mutable/conflicting requests fall back.",
+    "LocalStore R3 removes only the redundant second plain/prototype observation after existing additive validation; absent or own undefined collection falls back.",
+    "The new control distinguishes physical selection from composed value equivalence and authorization/declaration drift. Only CurrentChoice-scoped case explicitly claims complete Snapshot fallback.",
+    "SourcePersistence, CurrentChoice and C14-C20 controls remain literal. Installed callgraph applicability is conditional; no runtime admission or latency has been inferred.",
+    "One new control declaration, 74 static expect sites, 19 modeled outcomes, 18-second cooperative and 20-second Bun limits. Report model is not evidence."
+  ],
+  "resolvedFindings": [
+    {
+      "finding": "Missing required observer argument to isLocalSnapshotAuthorityReader in control",
+      "resolution": "Single R1-to-R2 +32-byte replacement; b62d93080073964d7adc993c3a5c02277abab38a"
+    },
+    {
+      "finding": "Redundant LocalStore second prototype observation",
+      "resolution": "Single R2-to-R3 +6-byte replacement; 91413a24723c27cc5102368c3fe9a6090d9cdcea"
+    }
+  ],
+  "blockers": [],
+  "limits": {
+    "sourceObjectNotYetCreated": true,
+    "referenceNotMoved": true,
+    "runNotStarted": true,
+    "testsNotExecutedLocally": true,
+    "previousResultsNotTransferred": true,
+    "installedAreasQualified": 0,
+    "productionAuthorized": false,
+    "originalAnalyticsRequiredAfterPositiveFocal": true
+  }
+}

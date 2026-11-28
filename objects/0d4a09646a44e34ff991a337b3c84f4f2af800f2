@@ -1,0 +1,124 @@
+{
+  "schema": "sf613-c21-focal-template-derivation-v1",
+  "status": "SOURCE_AND_TREE_UNBOUND_NO_EXECUTION",
+  "base": {
+    "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "bytes": 12927,
+    "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "operations": [
+    {
+      "label": "unbound source",
+      "before": "const source = \"2228172b29080b411850ec98a4cdaa66020db5e6\"",
+      "after": "const source = \"__SF613_SOURCE_SHA__\""
+    },
+    {
+      "label": "unbound tree",
+      "before": "const sourceTree = \"2fe9f134f907b771104f75ef1442cb24c5beb72a\"",
+      "after": "const sourceTree = \"__SF613_SOURCE_TREE__\""
+    },
+    {
+      "label": "focal error identity",
+      "before": "throw new Error(\"C20 source and tree must be bound to reviewed Git objects before execution\")",
+      "after": "throw new Error(\"C21 source and tree must be bound to reviewed Git objects before execution\")"
+    },
+    {
+      "label": "focal receipt identity",
+      "before": "verification: \"sf613-c20-scenario-candidates-focal\", source, sourceTree,",
+      "after": "verification: \"sf613-c21-native-scenario-candidates-focal\", source, sourceTree,"
+    },
+    {
+      "label": "source delta",
+      "before": "source, sourceTree, qualification: false, sourcePaths: 17, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"7393cd010086f4a12d61ae9bb5db13534bd18aa0\",",
+      "after": "source, sourceTree, qualification: false, sourcePaths: 18, productDeltaPaths: 3, candidateDeltaPaths: 4,\n    deltaBase: \"2228172b29080b411850ec98a4cdaa66020db5e6\","
+    },
+    {
+      "label": "manifest counts",
+      "before": "expectedGroups: 8, expectedCommands: 14, functionalProcessesLaunched: 4,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1 },\n    expectedControlReports: 7, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,",
+      "after": "expectedGroups: 9, expectedCommands: 15, functionalProcessesLaunched: 5,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1 },\n    expectedControlReports: 8, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,"
+    },
+    {
+      "label": "current mechanism",
+      "before": "mechanism: \"existing closed scenario-candidates factory clones the complete decisionResults graph before filtering; original lookup predicate, late request key and guards preserved\",",
+      "after": "mechanism: \"closed scenario-candidates factory admits a native decisionResults selection only for its exact authorized read path; the complete collection is still cloned before filtering, with opaque and wrapped fallbacks preserved\","
+    },
+    {
+      "label": "current callback scope",
+      "before": "callbackIdentity: \"factory creates a new callback; no identity, name or toString equivalence with the prior inline arrow\",",
+      "after": "callbackIdentity: \"existing C20 factory and consumer callbacks remain unchanged; native admission requires the exact forwarded transaction callback\","
+    },
+    {
+      "label": "assertion scope",
+      "before": "assertions: \"whole-file cases contract, C08 projection, Portfolio and scenario lookup consumers; explicit read-set effects only; observed test and assertion totals require actual footers\",",
+      "after": "assertions: \"whole-file cases contract, C08 projection, Portfolio, scenario lookup and native scenario selection controls; observed test and assertion totals require actual footers\","
+    },
+    {
+      "label": "native budget",
+      "before": "    typecheckMs: { process: 240000, parent: 300000 },",
+      "after": "    nativeScenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, nominalSum: 20000, process: 45000, parent: 60000 },\n    typecheckMs: { process: 240000, parent: 300000 },"
+    },
+    {
+      "label": "LS final pin",
+      "before": "[\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"5fc0028474aa52c148a30c093d39bc9a471f9a24\"],",
+      "after": "[\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"1dd07dded36b3211c7457f814c49e2f203d6a259\"],"
+    },
+    {
+      "label": "Provider final pin",
+      "before": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"5b453e1672aa98616e814ac64900517d1ae4f60a\"],",
+      "after": "[\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"6287eedc5387f5e7495963a12364bc31157a7789\"],"
+    },
+    {
+      "label": "contract final pin",
+      "before": "[\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"39e6da84a3dd815721484affaf8315731ded073b\"],",
+      "after": "[\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149\"],"
+    },
+    {
+      "label": "native test pin",
+      "before": "    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"],\n  ] as const",
+      "after": "    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts\",\"__SF613_NATIVE_TEST_BLOB__\"],\n  ] as const"
+    },
+    {
+      "label": "pins receipt counts",
+      "before": "snapshot, files: observed, expectedGroups: 8, expectedCommands: 14,\n    functionalProcessesLaunched: 4, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1 },\n    expectedControlReports: 7 })",
+      "after": "snapshot, files: observed, expectedGroups: 9, expectedCommands: 15,\n    functionalProcessesLaunched: 5, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1 },\n    expectedControlReports: 8 })"
+    }
+  ],
+  "newGroupSuffix": "\nchecks.live(\"Native scenario candidates retain complete results and refuse changed authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Native scenario candidates selection whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C21_NATIVE_SCENARIO_SELECTION \")\n}), 60_000)\n",
+  "testPinBinding": {
+    "before": "__SF613_NATIVE_TEST_BLOB__",
+    "after": "b62d93080073964d7adc993c3a5c02277abab38a"
+  },
+  "test": {
+    "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a",
+    "bytes": 27916,
+    "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+    "lf": 450,
+    "endsWithLF": true
+  },
+  "post": {
+    "gitBlob": "fee74fdcf2bc850ce23d899980b9fac21d324f55",
+    "bytes": 13791,
+    "sha256": "71e4296022a19099fdcccea2f67c1cb84257cb17242d461f1a67fb5c528ee5fc",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "verification": {
+    "anchorsForwardInverse": true,
+    "originalEngineAndGroups2Through8": "literal",
+    "oldCommandArgvCwdLimitsUnchanged": true,
+    "newWholeFileGroup": 9,
+    "fullAdditionContentAvailable": true
+  },
+  "bindings": {
+    "source": "__SF613_SOURCE_SHA__",
+    "tree": "__SF613_SOURCE_TREE__"
+  },
+  "limits": {
+    "sourceNotYetCreated": true,
+    "actualRun": null,
+    "qualification": false,
+    "productionAuthorized": false
+  }
+}

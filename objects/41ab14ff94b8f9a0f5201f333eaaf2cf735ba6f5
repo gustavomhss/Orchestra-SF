@@ -1,0 +1,881 @@
+{
+  "schema": "sf613-evidence-r8-proposal-manifest-v1",
+  "status": "PROPOSAL_BLOBS_READBACK_ROOT_INDEPENDENT_REVIEW_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/teams_product",
+  "documentaryCutUtc": "2026-11-28 06:33:25 UTC",
+  "requestScope": "Root-authorized R8 documentary archive increment only; C20 source/focal/D29/R7 controls plus closed C20 Analytics and one BI06 negative audit. Five blobs; no tree/commit/ref/run/PR/comment or original/ZIP acquisition by author.",
+  "files": {
+    "catalog": {
+      "gitBlob": "9633d582aee61965f206353adf8734bb9f1ea151",
+      "bytes": 140226,
+      "sha256": "9cc5e36fc4a9baced1638f29601548d5ea9a49f1a2471bc417f3027e69b1bc41",
+      "lf": 4413,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+      "bytes": 1165347,
+      "sha256": "9e711efcd23303012322e39a8a87b78361e13d7cfd0b1e6cd30f9a9fa019037f",
+      "lf": 34774,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+      "bytes": 63369,
+      "sha256": "24eca7da2b7d777b5d8c150f83e58d34ff039b3e751b7eafd429a95680769b07",
+      "lf": 535,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "e621eba542908c977cb9abbcdec7eb5ae3492b24",
+      "bytes": 320012,
+      "sha256": "98235b45e311a54748585280df60120b3c73738656c7da423c04ee4dac588637",
+      "lf": 7049,
+      "endsWithLF": true
+    }
+  },
+  "packageFileCount": 5,
+  "currentManifestSelfReference": "This manifest is the fifth proposal blob. Its actual Git SHA/bytes/SHA256 are supplied by create/readback, not embedded recursively here.",
+  "publishedBase": {
+    "commit": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+    "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+    "objectsTree": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+    "index": {
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298",
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "lf": 30299,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a",
+      "bytes": 52301,
+      "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+      "lf": 443,
+      "endsWithLF": true
+    },
+    "catalog": {
+      "gitBlob": "85f7f805e9d4fd0f785dbb3ed55281e1709728ec",
+      "bytes": 130823,
+      "sha256": "7c39d4ac5f0d491c435637a797e7062f49e2b653e737f86dff1000b065c1d186",
+      "lf": 4190,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "031e2f510036d68ea1e5e31470a13dc9772c161e",
+      "bytes": 23236,
+      "sha256": "9dbe2d5489b9af6a1f377f3bfff0dc74dc924ba38386579d300cd886fea3c44c",
+      "lf": 623,
+      "endsWithLF": true
+    },
+    "publication": {
+      "gitBlob": "5fd024d632b7937c9f708944ca99847bff28feb7",
+      "bytes": 5214,
+      "sha256": "4c3a2a00193cd3d477c9258d6d2135abc6d2bb2aab41387ccd6ee95b3c2c6ef1",
+      "lf": 152,
+      "endsWithLF": true
+    },
+    "rootReview": {
+      "gitBlob": "e9354a13ee2c134be84813af889637a6fb0918e6",
+      "bytes": 16036,
+      "sha256": "1bedcbdf0861b7c38f075bcaee38ba442ac1cc328bcbcd86a34ae843d91232d0",
+      "lf": 489,
+      "endsWithLF": true
+    },
+    "peerReview": {
+      "gitBlob": "da40e81f7d1e1b868442c901732990169305b0ff",
+      "bytes": 18802,
+      "sha256": "aa741c1760e73301772e37c400374a88341e99649a61a066c1cd279f81e2e614",
+      "lf": 638,
+      "endsWithLF": true
+    },
+    "completeDerivation": {
+      "gitBlob": "dfcd4cf10f41badec9b12fa37e5d3d4d080e62e3",
+      "bytes": 318153,
+      "sha256": "d162014adf99a9a819ab818dd69aed78dd887fd9ada892ffc07dddc102a24300",
+      "lf": 8636,
+      "endsWithLF": true
+    }
+  },
+  "proposal": {
+    "ref": "refs/heads/sf613-evidence",
+    "branch": "sf613-evidence",
+    "expectedRefBeforeRootPublication": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+    "currentTree": null,
+    "currentCommit": null,
+    "refPublished": false,
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+        "tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+        "role": "published R7 archive"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+        "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+        "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+        "role": "executed C20 focal; retains clean S20"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+        "tree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+        "soleParent": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+        "role": "executed C20 Analytics recovery snapshot; retains original A20 and clean S20"
+      }
+    ],
+    "ownTree": true,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "fileMode": "100644",
+    "rootDocumentPins": {
+      "README": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+      "index": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330"
+    },
+    "objectPathContract": "Each of 817 actual indexed blobs is written exactly once at objects/<40-character Git SHA>, mode100644,typeblob. No original executable paths are projected into the root.",
+    "prohibitedRootLayouts": [
+      ".github",
+      ".ci-run.json",
+      "apps",
+      "modules",
+      "packages"
+    ],
+    "delta": {
+      "add": 90,
+      "modify": 2,
+      "delete": 0,
+      "addedPaths": "90 actual objects/<sha>, including this increment's actual input catalog",
+      "modifiedPaths": [
+        "index.json",
+        "README.md"
+      ]
+    },
+    "futureFiles": 819,
+    "futureLogicalFileBytes": 80203609,
+    "sourceRefsProductRefsAndHistoricalLedgerUnchanged": true,
+    "rootPublicationOnly": "Root independently reviews the exact package and tree, audits ordered parents, renews the expected R7 branch lease, and publishes nonforce.",
+    "retentionLimit": "Proposal blobs and textual SHA references do not themselves prove durable ref reachability. Planned parent commits retain the executed snapshots only after actual root publication; no garbage-collection deadline or universal absence claim is made."
+  },
+  "inputCatalog": {
+    "actualBlob": {
+      "gitBlob": "9633d582aee61965f206353adf8734bb9f1ea151",
+      "bytes": 140226,
+      "sha256": "9cc5e36fc4a9baced1638f29601548d5ea9a49f1a2471bc417f3027e69b1bc41",
+      "lf": 4413,
+      "endsWithLF": true
+    },
+    "uniqueInputs": 121,
+    "memberships": 141,
+    "newInputsVsR7": 89,
+    "newInputBytes": 5760074,
+    "reusedInputsVsR7": 32,
+    "inputLogicalBlobBytes": 6698973,
+    "newGroups": [
+      {
+        "id": "C20-source",
+        "uniqueBlobs": 18,
+        "memberships": 18
+      },
+      {
+        "id": "C20-focal",
+        "uniqueBlobs": 55,
+        "memberships": 55
+      },
+      {
+        "id": "D29-final-qualification",
+        "uniqueBlobs": 25,
+        "memberships": 25
+      },
+      {
+        "id": "R7-archive-control",
+        "uniqueBlobs": 8,
+        "memberships": 8
+      },
+      {
+        "id": "C20-Analytics",
+        "uniqueBlobs": 35,
+        "memberships": 35
+      }
+    ],
+    "newStreams": 8,
+    "newPartReferences": 18,
+    "newStreamLogicalBytes": 3242292,
+    "previousMemoryInventory": {
+      "priorMemoryInventory": "Close's preliminary 93-object inventory had no durable catalog and was lost; it is not treated as an authenticated input.",
+      "currentCoreUnique": 88,
+      "currentCoreNew": 58,
+      "currentCoreNewBytes": 2401842,
+      "currentCoreReused": 30,
+      "note": "The 58 actual new core blobs and their byte sum agree with the prior summary; reused inputs are included only when supported by the preserved documents. No five presumed reused entries were invented to force the former total."
+    },
+    "authentication": {
+      "newBodiesRehashedAndGitReadback": 89,
+      "reusedMetadataMatchedToPublishedR7": 32,
+      "catalogCreatedAndReadback": true,
+      "byteOrHashMismatches": 0,
+      "bodyRehashDoesNotRepeatSemanticTests": true
+    },
+    "finiteScope": "All newly added source documents, logs and parts are actual authenticated Git blobs. Metadata-only artifact digests and calculated whole/model/intermediate hashes are not treated as actual inputs.",
+    "referencesPolicy": "Finite enumerated actual inputs only. Referenced source pins, computed intermediates and historical transitive references are not silently promoted to new objects. The prior archive remains intact."
+  },
+  "finalIndexCounts": {
+    "actualObjects": 817,
+    "objectBytes": 78974893,
+    "memberships": 967,
+    "groups": 52,
+    "streams": 77,
+    "partReferences": 249,
+    "inheritedObjects": 727,
+    "inheritedObjectBytes": 73074593,
+    "inheritedMembershipPrefixes": 825,
+    "inheritedGroups": 47,
+    "inheritedStreams": 69,
+    "inheritedPartReferences": 231,
+    "newObjects": 90,
+    "newObjectBytes": 5900300,
+    "newMemberships": 142,
+    "newGroups": 5,
+    "newStreams": 8,
+    "newPartReferences": 18,
+    "inheritedObjectsReceivingMemberships": 32,
+    "newMembershipsOnInheritedObjects": 34,
+    "membershipsOnNewObjects": 108,
+    "physicalBlobDeduplication": "Count by actual Git SHA; no byte multiplication for repeated logical memberships. The reused C20 context union has one stored blob and a separately scoped C20 stream."
+  },
+  "derivation": {
+    "receipt": {
+      "gitBlob": "e621eba542908c977cb9abbcdec7eb5ae3492b24",
+      "bytes": 320012,
+      "sha256": "98235b45e311a54748585280df60120b3c73738656c7da423c04ee4dac588637",
+      "lf": 7049,
+      "endsWithLF": true
+    },
+    "indexPreimage": {
+      "gitBlob": "4f6f057cedd70af85393d29b33ff5bad88aeb298",
+      "bytes": 1016331,
+      "sha256": "ca43d32389fec282049f73bf2a844d5ed1259c4cc2d3d5d61488b285e426056d",
+      "lf": 30299,
+      "endsWithLF": true
+    },
+    "indexPostimage": {
+      "gitBlob": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+      "bytes": 1165347,
+      "sha256": "9e711efcd23303012322e39a8a87b78361e13d7cfd0b1e6cd30f9a9fa019037f",
+      "lf": 34774,
+      "endsWithLF": true
+    },
+    "indexOperations": 125,
+    "types": {
+      "replace": 47,
+      "add": 39,
+      "append": 39
+    },
+    "operationFingerprints": "Compact JSON.stringify(value) UTF-8 size/SHA256 in the actual intermediate state; these are calculations, not extra Git blobs.",
+    "completeForwardLiteral": true,
+    "completeInverseLiteral": true,
+    "allOperationAfterAndBeforeFingerprintsVerified": true,
+    "serializer": "JSON.stringify(value, null, 2) + \"\\n\"",
+    "replaceRationale": "Changed current status/parent/header records are replaced with complete old/new values when needed to preserve literal key order; no old object metadata, group, stream, history prefix or documentary snapshot is rewritten.",
+    "README": {
+      "preimage": {
+        "gitBlob": "7e307b341cbdbe11bc02a8375bdc618ed8ad8d8a",
+        "bytes": 52301,
+        "sha256": "4530aa4d132d0253225ec9ab1846aef5d3e5fc9c4e461fc9fb63770c6af90ae2",
+        "lf": 443,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitBlob": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+        "bytes": 63369,
+        "sha256": "24eca7da2b7d777b5d8c150f83e58d34ff039b3e751b7eafd429a95680769b07",
+        "lf": 535,
+        "endsWithLF": true
+      },
+      "prefixBytes": 11005,
+      "baseBytes": 52301,
+      "suffixBytes": 63,
+      "entireR7LiteralOccurrences": 1,
+      "forwardLiteral": true,
+      "inverseLiteral": true
+    },
+    "currentSelfReferenceBoundary": "Catalog is included in the proposed objects; the current index, README, derivation and manifesto are root/support deliverables and are not recursively indexed as object inputs."
+  },
+  "verification": {
+    "structuralAssertions": 1485,
+    "passed": 1485,
+    "failed": 0,
+    "batches": {
+      "oldMetadataExact": 727,
+      "oldMembershipPrefixExact": 727,
+      "otherFiniteStructureAndScope": 31
+    },
+    "otherChecks": [
+      "old-prefix:groups",
+      "old-prefix:streams",
+      "old-prefix:revisionHistory",
+      "old-prefix:unresolvedReferences",
+      "old-prefix:resolvedReferences",
+      "old-members-literal:documentarySnapshots",
+      "old-members-literal:derivedEvidence",
+      "old-members-literal:excluded",
+      "unique-object-paths",
+      "all-new-actual",
+      "excluded:d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "excluded:d97707a2a5a6f9199161a35931bd0e7fedc93b44",
+      "excluded:9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "excluded:8b011095695974a619f29f38a871eab3b4263b54",
+      "excluded:643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "only-finite-plus-catalog",
+      "stream-ids-unique",
+      "stream-parts-actual",
+      "two-failures",
+      "observer-distinction",
+      "D29-unbound",
+      "qualification-preserved",
+      "operational-cut-literal",
+      "E14-observation-literal",
+      "parent-order",
+      "no-tree-ref-run",
+      "group-items-have-memberships",
+      "memberships-have-group-items",
+      "counts",
+      "README-base-literal-once",
+      "index-literal"
+    ],
+    "baseObjectTreeAudit": {
+      "rootExact": true,
+      "objectsEntriesExact": true,
+      "objectEntries": 727,
+      "completeTreeResponses": true,
+      "bodyReadsForInherited727": false,
+      "commitAndPlannedParentsRead": true
+    },
+    "actualMetadataReads": {
+      "R7Commit": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+      "R7Tree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+      "R7ObjectsTree": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+      "D20": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+      "A20r": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "A20": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "S20": "2228172b29080b411850ec98a4cdaa66020db5e6"
+    },
+    "parentAudit": {
+      "D20SoleS20": true,
+      "A20rSoleA20": true,
+      "A20SoleS20": true,
+      "S20SoleS19": true,
+      "A20rAndA20TreeIdentical": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+      "commitsAreNotBlobEntries": true
+    },
+    "allInheritedGroupsStreamsAndSnapshotsLiteral": true,
+    "allPriorDerivedEvidenceAndExclusionsLiteral": true,
+    "oldHistoryResolvedAndUnresolvedEntriesPreservedAsPrefixes": true,
+    "newStreamsRecomposed": 8,
+    "newActualPartReferences": 18,
+    "orderedUnions": [
+      {
+        "id": "C20-focal-reports",
+        "gitBlob": "8053a3b3549290836fba6c88cb3b813c18b85878",
+        "lines": 7,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 7,
+        "firstStart": 70919,
+        "lastEnd": 104622
+      },
+      {
+        "id": "C20-Analytics-markers",
+        "gitBlob": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+        "lines": 65,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 65,
+        "firstStart": 93348,
+        "lastEnd": 3060371
+      },
+      {
+        "id": "C20-Analytics-contexts",
+        "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "lines": 2,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 2,
+        "firstStart": 98089,
+        "lastEnd": 405321
+      },
+      {
+        "id": "C20-Analytics-discovery-owner",
+        "gitBlob": "29898c93968c0de965f8524338db48e52f7c9505",
+        "lines": 6,
+        "literalOrderedSubstrings": true,
+        "carrierOnlyPrefixRemoved": true,
+        "rangeCount": 6,
+        "firstStart": 93074,
+        "lastEnd": 2914801
+      }
+    ],
+    "inheritedBodyAndStreamAuditScope": "The actual R7 objects tree was checked against all 727 index entries, but the author did not refetch 727 bodies or recompose the 69 inherited streams. Their metadata and structures remain literal. The 89 current new bodies, the new catalog and eight new streams are this increment's authentication work.",
+    "pureDataOnly": true,
+    "repositoryExecution": false,
+    "originalGets": 0,
+    "zipGets": 0,
+    "networkArtifactsDownloaded": false
+  },
+  "newStreams": [
+    {
+      "id": "C20-focal-main",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "job": 140872033935,
+      "kind": "original-log",
+      "bytes": 109188,
+      "sha256": "3d8eb6332d4a3852e207ec6fd785c19ce15ca7f6730d7f2d37ba9ee689b27b27",
+      "lf": 900,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "8a8a586e4397c5995b5068f9d5df7e217c7ec4f8",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "C20-focal-cleanup",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "job": 140872674275,
+      "kind": "original-log",
+      "bytes": 2280,
+      "sha256": "881d3eed6bc92e0e2b5ca7e50d4b252241840cdd13d77fb60f5f782aa3d5d72a",
+      "lf": 39,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "264bc691b48cd33a090ff03781993466478f3d00",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "C20-focal-reports",
+      "group": "C20-focal",
+      "run": 46110276545,
+      "kind": "derived-union",
+      "bytes": 9815,
+      "sha256": "7271362a36559274378e6bda1fae967fc6de66cf3887eb36d91ecf26ab30c901",
+      "lf": 7,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "8053a3b3549290836fba6c88cb3b813c18b85878",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "C20-Analytics-main",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "job": 140881932116,
+      "kind": "original-log",
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "lf": 1843,
+      "actualParts": 11,
+      "wholeGitBlobCalculated": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "wholeGitBlobPersisted": false,
+      "byteOrderMarkByteOffsets": [
+        0,
+        2104525
+      ]
+    },
+    {
+      "id": "C20-Analytics-cleanup",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "job": 140884025044,
+      "kind": "original-log",
+      "bytes": 2281,
+      "sha256": "042bad29fd650f4c33f7b50b53830de6ceaa18afefbe18a46b4a760a2851f748",
+      "lf": 39,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "af180bae350c5daddb38f1a9a21da9ee5c9495ba",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": [
+        0
+      ]
+    },
+    {
+      "id": "C20-Analytics-markers",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "kind": "derived-union",
+      "bytes": 22526,
+      "sha256": "5194f4a5618e640770a7951dcb2bc9368818debadd7065fe45c767024708b8ce",
+      "lf": 65,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "5e6269802b3a28ecc1d15b0a88cc81218aa9ad6c",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "C20-Analytics-contexts",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "kind": "derived-union",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    },
+    {
+      "id": "C20-Analytics-discovery-owner",
+      "group": "C20-Analytics",
+      "run": 46113463330,
+      "kind": "derived-union",
+      "bytes": 938,
+      "sha256": "3aa2f490ce08be51d36c29ddcbcf8de5558b49fa8bbafe276ce85f3f35cbed63",
+      "lf": 6,
+      "actualParts": 1,
+      "wholeGitBlobCalculated": "29898c93968c0de965f8524338db48e52f7c9505",
+      "wholeGitBlobPersisted": true,
+      "byteOrderMarkByteOffsets": []
+    }
+  ],
+  "closedEvidence": {
+    "source": {
+      "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+      "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "delta": "1M lookup opt-in +1A consumer test",
+      "manifest": {
+        "gitBlob": "bd715ad354cf1ff557e5d8e277978ab5db3bec20",
+        "bytes": 11676,
+        "sha256": "8c8c89f6b347be8f1919354e7941c8ce277e67b7736311165f1761f8f86ae3e0",
+        "lf": 290,
+        "endsWithLF": true
+      },
+      "objectReceipt": {
+        "gitBlob": "dd18243713f7e713f9e544b7569b53550b64fde7",
+        "bytes": 7142,
+        "sha256": "a490ce9909b3ddb54ffb274a58ab866b7aae38fc3e234561eeac281f70ded0bd",
+        "lf": 212,
+        "endsWithLF": true
+      },
+      "rootStatic": {
+        "gitBlob": "77840e3a92ca4078d0e7328bf1cf0b34beb37188",
+        "bytes": 7320,
+        "sha256": "91c1dc3b6adb82a21ab10218ea13b623371984f81a1444b47c7924f158b3393b",
+        "lf": 201,
+        "endsWithLF": true
+      },
+      "peerStatic": {
+        "gitBlob": "9be18f9b64be4de7fb44c0aa762f4042a26a5df2",
+        "bytes": 9824,
+        "sha256": "5cfd910dbfacaac277daf12eb101e07b0d2c033526a877a25f77a8794a81c401",
+        "lf": 296,
+        "endsWithLF": true
+      },
+      "limits": "No native physical narrowing or measured benefit asserted; whole decisionResults clone before filtering and existing fences/awaits unchanged."
+    },
+    "focal": {
+      "run": 46110276545,
+      "attempt": 1,
+      "snapshot": "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+      "tree": "dceea7764dbc87e11e4d6f2347c1926d556bd22b",
+      "receipt": {
+        "gitBlob": "f128f06b68304d3075054b6d27c5c5884dd382f1",
+        "bytes": 9782,
+        "sha256": "7401a044afe296feb43ec5a3a3ace6dd0486152451449b64d52c5e01dd29ea48",
+        "lf": 285,
+        "endsWithLF": true
+      },
+      "status": "CLOSED_PASS_FOCAL_ONLY",
+      "functional": 16,
+      "assertions": 2250,
+      "outer": 8,
+      "outerAssertions": 38,
+      "commands": 14,
+      "flagsFalse": 28,
+      "pins": 17,
+      "reports": 7,
+      "C20InternalInvocations": 14,
+      "C20InternalInvocationCountsAreNotExtraTests": true
+    },
+    "Analytics": {
+      "finalReceipt": {
+        "gitBlob": "4fb8fd4244785f3d5804d59eb5e8a5941850dcf6",
+        "bytes": 17645,
+        "sha256": "41920631bbef0bfeabc6480f976bd185da46211aaba6af7c3aee3836559e8742",
+        "lf": 487,
+        "endsWithLF": true
+      },
+      "source": "2228172b29080b411850ec98a4cdaa66020db5e6",
+      "sourceTree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+      "originalSnapshot": "63cdfbec5b19ec107921163e82a661c242d82c4e",
+      "effectiveSnapshot": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+      "contentTree": "97e5c83f6096fe1654e87b7d4f054842512c7bdc",
+      "run": 46113463330,
+      "attempt": 1,
+      "mainJob": 140881932116,
+      "cleanupJob": 140884025044,
+      "originalTriggerThenSingleRecovery": true,
+      "originalHeadObservedRunsBeforeRecovery": 0,
+      "initialMissingEventCause": "unknown",
+      "anotherAutomaticRecovery": false,
+      "outcomes": {
+        "failed": 2,
+        "passed": 0,
+        "preview": "timeout at original 60-second waiter",
+        "BI": "initial BI06 original acquisition failed; no current BI PASS"
+      },
+      "selection": {
+        "actualTests": 2,
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "config": "e2e/playwright.production.config.ts",
+        "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "titles": [
+          "wave five analytics: native scenarios, recorded results and sensitivity",
+          "wave five analytics: question catalog and original contextual BI"
+        ],
+        "testOwnedInstallations": 2,
+        "distinctDiscoveredInstallations": true,
+        "diagnosticOverlay": false,
+        "originalBiCdpAcquisitionObserver": true,
+        "profiler": false,
+        "sourceSelectionProofPreviouslyClosed": true,
+        "caseTimeoutMs": [
+          780000,
+          660000
+        ],
+        "previewTimeoutMs": 60000,
+        "sensitivityTimeoutMs": 120000,
+        "jobMinutes": 45,
+        "sourceSelectionReceipt": {
+          "gitBlob": "4b5862c54ec2fdcb7afc028b51cb727ecfdc35b6",
+          "bytes": 15090,
+          "sha256": "54096210191e5354155232033199ea80dde001777843b3c7bcd72c03969758ae",
+          "lf": 473,
+          "endsWithLF": true
+        },
+        "originalRequest": {
+          "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "bytes": 295,
+          "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+          "lf": 0,
+          "endsWithLF": false
+        }
+      },
+      "observations": {
+        "coreMarkers": 65,
+        "source": 34,
+        "captures": 25,
+        "diagnostics": 6,
+        "contexts": 2,
+        "discoveryAndOwner": 6,
+        "UI42": 6,
+        "UI43": 0,
+        "UI44": 0,
+        "BI45": 6,
+        "BI46": 13,
+        "BI06CompletedAcquisitions": 0,
+        "PortugueseCompleted": false,
+        "scopeMarkerPresent": false
+      },
+      "artifact": {
+        "id": 15250367884,
+        "name": "playwright-ubuntu-24.04-1",
+        "bytes": 30531866,
+        "reportedDigest": "sha256:94a6b83eefccbeffc862fad7fe86c8aad82bdd0724dcbb4f456215e02bd227da",
+        "head": "4e1d12142119d4b2f508cf880563373d11d1b9e8",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46113463330/artifacts/15250367884",
+        "reportedUploadedFiles": 91,
+        "zipAcquisitions": 0,
+        "metadataOnly": true,
+        "bytesNotIndependentlyVerified": true
+      },
+      "rootOriginalGets": {
+        "main": 1,
+        "cleanup": 1,
+        "closedAt": "2026-11-28 05:56:05 UTC"
+      },
+      "archiveAuthorOriginalGets": 0,
+      "archiveAuthorZipGets": 0,
+      "limits": [
+        "No C20 native projection admission or speedup inferred.",
+        "Original BI CDP acquisition observer was active; no diagnostic overlay or profiler.",
+        "False/false/null observation fields do not prove a different Request or absence of HTTP.",
+        "Later rendered BI06 data is not joined to the failed original acquisition.",
+        "No result from an earlier BI PASS is transferred to C20."
+      ]
+    },
+    "D29": {
+      "manifest": {
+        "gitBlob": "3e037217b0477aeacafe4bad193469c76e54ee81",
+        "bytes": 23923,
+        "sha256": "2ab417a42ce8d5bb794a83b75a14303f953cd35cf47e987d000df6111217d5d0",
+        "lf": 616,
+        "endsWithLF": true
+      },
+      "bounds": {
+        "gitBlob": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+        "bytes": 15757,
+        "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6",
+        "lf": 464,
+        "endsWithLF": true
+      },
+      "rootReview": {
+        "gitBlob": "7e0925ab79ca0ae81da46decf756f7138df3db3f",
+        "bytes": 18196,
+        "sha256": "d0231911165ba973c00d8a7b0c383d6807d5a9ab949ab9c4cf23e4a5984914b5",
+        "lf": 514,
+        "endsWithLF": true
+      },
+      "peerReview": {
+        "gitBlob": "39c328efe12ceaf4ed4a20d76cb3da9779677195",
+        "bytes": 21042,
+        "sha256": "59e8845209e5db71681f2ef42247347c3808bea7e22f25f15af63f390162ce37",
+        "lf": 710,
+        "endsWithLF": true
+      },
+      "groups": 27,
+      "commandSites": 33,
+      "commands": 38,
+      "flags": 76,
+      "finalBindings": 4,
+      "bindingState": "UNBOUND",
+      "execution": null,
+      "globalFunctionalTotal": null
+    },
+    "BI06": {
+      "receipt": {
+        "gitBlob": "54454e1309bbc0235d8850e58edfc7a52a8a421e",
+        "bytes": 20477,
+        "sha256": "15e40825bf29163110ea7a87d34f68e70dc59533e14d299cd21c5981f3e1f85b",
+        "lf": 416,
+        "endsWithLF": true
+      },
+      "status": "CLOSED_READONLY_ORIGIN_OF_CANCELLATION_NOT_DEMONSTRATED",
+      "effectOnAcceptance": "none; C20 remains negative",
+      "unresolved": [
+        "No original-body/status/Request proof joins the rendered BI06 projection to the failed acquisition.",
+        "The cancellation initiator and its relation to UI controller/route/fence state are not recorded.",
+        "The failed acquisition cannot be classified as a harmless cancellation race, a product regression or a mere observer failure from this evidence.",
+        "C20 remains a negative original-suite result. A future candidate must pass the complete original suite with unchanged waiters and no retry/readback substitute."
+      ],
+      "sourceCitationPolicy": "The 11 pins remain explicit inside this audit. Only already enumerated actual blobs are separately copied under objects; other citations are not claimed as separate new archived bodies or as independently re-reviewed here."
+    }
+  },
+  "supersededAndHistorical": {
+    "effectivePeerR2": {
+      "gitBlob": "447d9112daa7df012afa9cdc854d963037e9e219",
+      "bytes": 20646,
+      "sha256": "3d4cbb7f4442edb74e60ede0f9ed6bb42170d3166bbd95ad25bc70976f1b4ad9",
+      "lf": 724,
+      "endsWithLF": true
+    },
+    "supersededPeerR1": {
+      "gitBlob": "24265cc83696687b97cb5e28ed2734ffb1e47e4e",
+      "bytes": 20591,
+      "sha256": "8542ab6853e06977980889210074e6260d9b2900e12c382dd14ab77ce9884fb0",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "oneFieldClarification": "R1 selection.observer:false removed; R2 diagnosticOverlay:false and originalBiCdpAcquisitionObserver:true added. All44+5 checks and remaining data stay unchanged.",
+    "D29ReceiptLocator": "Earlier D29 manifest's null is a historical serialization cut. Its body is untouched; current archive links f128f06b separately.",
+    "R7PendingPublication": "Old R7 pending entry is literal historical data, resolved by appended R7 publication reference. R8's own publication remains pending."
+  },
+  "exclusions": {
+    "calculatedWholeMain": {
+      "gitBlob": "d0faaddfc84ea8e3f73c8e08513fe4622d60115c",
+      "bytes": 3089836,
+      "sha256": "9c56b24c19e1ba579374b324fc7a0ea788f3f9ad08c8cdf958c7c1c6f254e592",
+      "actualBlob": false,
+      "representedBy": "11 real ordered parts"
+    },
+    "calculatedModels": [
+      {
+        "sha": "d97707a2a5a6f9199161a35931bd0e7fedc93b44",
+        "role": "C20 modeled report, not a persisted input"
+      },
+      {
+        "sha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+        "role": "D29 embedded loader hash, not a persisted standalone input"
+      }
+    ],
+    "derivationIntermediateHashes": "Retained as metadata inside the actual derivation documents, not promoted to objects/<sha> without a distinct actual input.",
+    "discoveryCheckpoint": "8b011095695974a619f29f38a871eab3b4263b54; read for discovery only and excluded from objects.",
+    "instructionsOnly": "Root AGENTS was read for instructions and is not added merely because it was consulted.",
+    "excludedLaterWork": "C21; no blobs from that work are enumerated.",
+    "artifactZip": "C20 artifact15250367884 is metadata only. ZERO ZIP acquisitions.",
+    "currentProposalSelfReference": "Current index, README, derivation and manifesto are not recursively included. The catalog will be an actual object in the proposed index after literal readback."
+  },
+  "unresolvedReferences": [
+    {
+      "id": "D29-FINAL-BINDING",
+      "state": "Four UNBOUND; no execution or total functional assertion"
+    },
+    {
+      "id": "C20-BI06-CANCELLATION-CAUSE",
+      "state": "Not demonstrated; no aliasing of rendered UI to failed original acquisition"
+    },
+    {
+      "id": "R8-PUBLICATION",
+      "state": "Root review/tree/commit/ref pending"
+    },
+    {
+      "id": "HISTORICAL-TRANSITIVE-CLOSURE",
+      "state": "Only enumerated actual inputs are closed; a missing list entry is not a claim of universal object absence"
+    },
+    {
+      "id": "BI06-CITED-SOURCE-BODIES",
+      "state": "The audit keeps 11 pins; not all are copied as separate new objects, and no new semantic review is claimed."
+    }
+  ],
+  "acceptance": {
+    "historicalAcceptedAreas": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "currentInstalledSuiteFailed": 2,
+    "currentInstalledSuitePassed": 0,
+    "currentBIPass": false,
+    "finalC613": false,
+    "UI6": false,
+    "migrationQualified": false,
+    "releaseQualified": false,
+    "productionAuthorized": false
+  },
+  "authorEffects": {
+    "createdBlobProposalKinds": [
+      "catalog",
+      "index",
+      "README",
+      "derivation",
+      "manifesto"
+    ],
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "pullRequests": 0,
+    "comments": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0,
+    "C21Included": false
+  },
+  "rootReview": {
+    "status": "PENDING",
+    "independentReviewLocator": null,
+    "noPeerAckFabricated": true
+  }
+}

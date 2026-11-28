@@ -1,0 +1,454 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts
+@@ -0,0 +1,450 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { Location } from "@orchestra/core/location"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { createCurrentChoiceFence, currentChoiceOwnsSnapshotTransactions } from "../../../../product/decisions/current-choice-preview.ts"
++import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
++import { createSfProductState, isSfProductStateReader, selectSfScenarioCandidates, selectSfCasesRead } from "../../../../product/host-binding/state-provider.ts"
++import { isSfAclStateAuthorize } from "../../../../product/host-binding/acl-state-authorize.ts"
++import { digestSfValue } from "../../../../product/contracts/canonical.ts"
++import type { PortResult } from "../../../../product/contracts/ports.ts"
++import type { SfStateResult, SfStoredDecisionResult } from "../../../../product/contracts/state.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
++import { roleMap } from "../../../../runtime/admin.ts"
++import { isLocalSnapshotAuthorityReader, observeLocalProductRead, openLocalStore } from "../../../../runtime/local-store.ts"
++import { object } from "../../../../runtime/contract.ts"
++import type { Persistence, Snapshot } from "../../../../runtime/contract.ts"
++import type { Surface } from "../../../../src/identity.ts"
++
++const at = "2027-02-02T00:00:00Z"
++const origin = "https://c08-projection.example.test"
++const period = { start: "2027-01-01", end: "2027-12-31" }
++const caseRef = { id: "c14-case", incarnation: "c14-incarnation", version: 1 }
++const preference = { selected: ["alpha", "beta"], nested: { version: 1, enabled: true }, nullable: null }
++const domain = { records: [{ id: "domain-a", amounts: [120, 110] }, { id: "domain-b", amounts: [80, 75] }] }
++type StateInput = Parameters<typeof createSfProductState>[0]
++type Fixture = Awaited<ReturnType<typeof createFixture>>
++type ReadMode = "readonly" | "preimage" | "top-level"
++
++function ok<T>(result: PortResult<T>): T {
++  if (result.status !== "ok") throw new Error(result.status + ": " + result.reason)
++  return result.value
++}
++function stateValue<T>(result: SfStateResult<T>): T {
++  if (result.status !== "ok") throw new Error("Original C08 refused: " + result.status)
++  return result.value
++}
++function required<T>(value: T | undefined, name: string): T {
++  if (value === undefined) throw new Error(name + " was not observed")
++  return value
++}
++function stateInput(value: unknown, persistence: Persistence, createId: () => string): value is StateInput {
++  if (!value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) return false
++  return Object.getOwnPropertyDescriptor(value, "persistence")?.value === persistence &&
++    Object.getOwnPropertyDescriptor(value, "createId")?.value === createId &&
++    typeof Object.getOwnPropertyDescriptor(value, "authorize")?.value === "function" &&
++    typeof Object.getOwnPropertyDescriptor(value, "resolveTarget")?.value === "function"
++}
++async function bounded<T>(work: (signal: AbortSignal) => Promise<T>): Promise<T> {
++  const controller = new AbortController()
++  const timer = setTimeout(() => controller.abort(new Error("C21 control cooperative deadline")), 18_000)
++  try { return await work(controller.signal) } finally { clearTimeout(timer) }
++}
++
++// Reuse C14's installed LocalStore -> CurrentChoice -> Source -> ProductAuthority
++// composition and fixture data. No positive-path method or authorizer is wrapped;
++// the older file and its five declarations/deadlines remain unchanged.
++async function withFixture<T>(signal: AbortSignal, opaque: boolean, work: (fixture: Fixture) => Promise<T>): Promise<T> {
++  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-c21-native-scenario-"))
++  const store = await openLocalStore(path.join(directory, "store"))
++  try { return await work(await createFixture(store, directory, signal, opaque)) }
++  finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
++}
++async function createFixture(store: Awaited<ReturnType<typeof openLocalStore>>, directory: string, deadline: AbortSignal, opaque: boolean) {
++  if (!store.readSnapshotRoot || !store.currentSnapshotScope || !store.transactionAll || !store.holdTargetPreimage || !store.observeAuthority)
++    throw new Error("Original LocalStore snapshot capabilities required")
++  let authority: ReturnType<typeof createSfProductAuthority> | undefined
++  const identity = { installationId: "c14-installation", hostId: "c14-host", projectId: "c14-project",
++    location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
++  const choiceInput = {
++    persistence: opaque ? { ...store } : store,
++    host: () => {
++      if (!authority) throw new Error("Original authority is not composed")
++      return authority.host
++    },
++    identity: () => identity,
++    operationIdentity: (call: TrustedDomainContext) => call.kind === "ui" ? authority?.ui.operationIdentity(call) : undefined,
++  }
++  const choice = createCurrentChoiceFence(choiceInput)
++  const project = createSfSourceScopeProjector(() => at)
++  const sourceInput = { persistence: choice.persistence, createId: randomUUID, enumerate: enumerateSfSources,
++    projectScope: project, installedDashboardProjector: project, observeAuthority: store.observeAuthority,
++    holdTargetPreimage: store.holdTargetPreimage, hasSnapshotRoot: store.hasSnapshotRoot }
++  const sources = createSfSourcePersistence(sourceInput)
++  const persistence = { ...store, ...choice.persistence, ...sources,
++    ...(sources.transactionAll ? { dashboardSourceFence: Object.freeze({
++      transaction: sources.transaction, transactionAll: sources.transactionAll,
++      currentSnapshots: sources.currentSnapshots, currentSnapshot: sources.currentSnapshot,
++      observeAuthority: sources.observeAuthority, readSealed: sources.readSealed,
++      hasSnapshotRoot: sources.hasSnapshotRoot, readDashboardAuthority: sources.readDashboardAuthority,
++      holdTargetPreimage: store.holdTargetPreimage,
++      current: () => currentChoiceOwnsSnapshotTransactions(choice, choiceInput.persistence),
++    }) } : {}),
++  }
++  for (const surface of ["dashboard", "planner", "procurement"] as const) {
++    deadline.throwIfAborted()
++    await persistence.initializeSources(surface)
++  }
++  await persistence.transaction("dashboard", async (snapshot) => {
++    snapshot.data.roleMap = roleMap(snapshot, "dashboard")
++    snapshot.data.access = { person: { assigned: ["c14-assigned"], domains: ["c14-domain"] } }
++    snapshot.data.c14DomainOnly = structuredClone(domain)
++    snapshot.versions["c14-domain"] = { version: 2, by: "person" }
++    snapshot.sequences.c14 = 3
++    snapshot.audit.push({ who: "person", at, record: "c14-prefix", was: null, became: "present" })
++    return { commit: true, value: undefined }
++  }, { signal: deadline })
++  const requests = new WeakSet<Request>()
++  const request = (extra?: AbortSignal) => {
++    const signal = extra ? AbortSignal.any([deadline, extra]) : deadline
++    const incoming = new Request(origin + "/cases", { method: "POST", headers: { origin }, signal })
++    requests.add(incoming)
++    return incoming
++  }
++  const authentication: { surface: Surface; roles: unknown }[] = []
++  const control: { active: boolean; afterDashboard?: () => void | Promise<void> } = { active: true }
++  const receivers: StateInput[] = []
++  function createId(this: unknown): string {
++    if (stateInput(this, persistence, createId)) {
++      receivers.push(this)
++      // Public createId has always received the mutable C08 factory input.
++      // Freezing that receiver would fail here before any positive assertion.
++      Object.defineProperty(this, "c14ReceiverProbe", { value: "receiver preserved", configurable: true })
++    }
++    return randomUUID()
++  }
++  const composed = createSfProductAuthority({
++    identity: () => identity, installationId: identity.installationId, origin, policyVersion: "c14-policy",
++    persistence, grants: [{ principalRef: "person", namespaces: ["cases", "preferences"],
++      operations: ["sf_case_read"], humanActions: [] }],
++    authenticate: async (incoming, scope) => {
++      if (scope) authentication.push({ surface: scope.surface, roles: structuredClone(scope.roleMap) })
++      if (scope?.surface === "dashboard") {
++        const hook = control.afterDashboard
++        control.afterDashboard = undefined
++        await hook?.()
++      }
++      return requests.has(incoming) && control.active && scope ? { id: "person", canWrite: true,
++        roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null
++    },
++    environment: async () => ({ at, id: randomUUID, directory: [] }), createId, now: Date.now,
++    commandIdentity: async () => randomUUID(), inspectSession: async () => undefined, verifySelection: async () => false,
++    verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined,
++  })
++  authority = composed
++  stateValue(await composed.state.transaction(request(), {
++    namespace: "cases", expectedStorageVersion: 0,
++    additionalNamespaces: [{ namespace: "preferences", expectedStorageVersion: 0 }],
++    targetRef: composed.creationTarget.ref, targetIncarnation: composed.creationTarget.incarnation,
++    idempotencyKey: "c14-initialize", commandDigest: digestSfValue({ caseRef, preference }),
++  }, async (state) => {
++    state.cases[caseRef.id] = { ...caseRef, state: "investigating", objective: "C08 complete product graph",
++      horizon: period, currency: "USD", criteria: [], participants: ["person"], sourceRefs: [], alternatives: [],
++      costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    state.preferences.c14 = structuredClone(preference)
++    return { commit: true, value: true }
++  }))
++  const captured = required(receivers[0], "C08 createId receiver")
++  const canonicalAuthorize = captured.authorize
++  const opaqueSnapshots: Snapshot[] = []
++  const opaqueAuthorize: StateInput["authorize"] = (incoming, snapshot, namespace, mode) => {
++    opaqueSnapshots.push(snapshot)
++    return canonicalAuthorize.call(captured, incoming, snapshot, namespace, mode)
++  }
++  const customInput: StateInput = { ...captured, authorize: opaqueAuthorize }
++  const custom = createSfProductState(customInput)
++  const ui = async <T>(work: (call: TrustedUiContext, incoming: Request) => Promise<T>) => {
++    const incoming = request(), digest = digestSfValue({})
++    const call = ok(await composed.ui.admit(incoming, "sf_case_read", digest))
++    try {
++      if (!await composed.ui.validate(call, "sf_case_read", digest)) throw new Error("Original UI lease refused")
++      return await work(call, incoming)
++    } finally { composed.ui.finish(call) }
++  }
++  const durable = () => store.transaction("dashboard", async (snapshot) =>
++    ({ commit: false, value: structuredClone(snapshot) }), { signal: deadline })
++  return { store, choice, choiceInput, sourceInput, sources, persistence, authority: composed, request, ui,
++    receivers, captured, createId, canonicalAuthorize, custom, customInput, opaqueAuthorize, opaqueSnapshots, authentication, control, durable }
++}
++
++async function inContext<T>(fixture: Fixture, mode: ReadMode, signal: AbortSignal, work: () => Promise<T>): Promise<T> {
++  if (mode === "readonly") return fixture.persistence.readSnapshotRoot!(work, { signal })
++  if (mode === "preimage") {
++    const held = fixture.store.holdTargetPreimage!()
++    try {
++      return await fixture.store.transaction("dashboard", async () => ({ commit: false, value: await work() }),
++        { signal, targetPreimageCurrent: held.current, sealedRead: true })
++    } finally { held.release() }
++  }
++  // Top-level C08 has no pre-existing root: its first full materialization is
++  // deliberately preserved and is not evidence of the new child projection.
++  return work()
++}
++
++test("C21 native scenario candidates retain the whole result graph and installed selection fences", async () => bounded(async (deadline) => {
++  const outcomes: string[] = []
++  await withFixture(deadline, false, async (fixture) => {
++    expect(isLocalSnapshotAuthorityReader(fixture.store, fixture.store.observeAuthority)).toBe(true)
++    expect(currentChoiceOwnsSnapshotTransactions(fixture.choice, fixture.store)).toBe(true)
++    expect(isSfProductStateReader(fixture.authority.state, fixture.persistence)).toBe(true)
++    expect(isSfAclStateAuthorize(fixture.canonicalAuthorize)).toBe(true)
++    await fixture.ui(async (call, incoming) => {
++      const requestDigest = digestSfValue({ source: "C21" }), resultDigest = digestSfValue({ result: "C21" })
++      const stored = (resultRef: string, id = caseRef.id): SfStoredDecisionResult => ({
++        schema: "sf-decision-result-v1", kind: "scenario", resultRef, caseRef: { ...caseRef, id },
++        principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision,
++        requestDigest, resultDigest, sourceRefs: [], createdAt: at,
++        result: { id: resultRef, version: 1, components: [], currency: "USD", horizon: period, sourceRefs: [],
++          unresolvedConditions: ["Controlled C21 source"], restrictions: [], comparisonStatus: "conditioned",
++          costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1,
++            currency: "USD", horizon: period, coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"],
++            evaluatedSourceRefs: [], issues: ["Controlled C21 source"] }, knownSubtotal: null, total: null },
++      })
++      await fixture.store.transaction("dashboard", async (snapshot) => {
++        const state = object(snapshot.data.__sfProductV1)
++        state.decisionResults = { first: stored("c21-first"), second: stored("c21-second"), foreign: stored("c21-foreign", "other") }
++        Object.defineProperty(object(state.decisionResults), "__proto__", { value: stored("c21-prototype", "other"),
++          enumerable: true, configurable: true, writable: true })
++        object(object(state.decisionResults).foreign).ownUndefined = undefined
++        object(state.reviews).c21 = { unselected: ["complete native copy would retain this payload"] }
++        state.c21Unknown = { keep: ["unknown fields are not narrowed"] }
++        state.claimBindings = undefined
++        Reflect.deleteProperty(state, "nativeRuns")
++        return { commit: true, value: undefined }
++      }, { signal: deadline })
++      const before = await fixture.durable(), product = object(before.data.__sfProductV1)
++      const originalResults = object(product.decisionResults), expected = [originalResults.first, originalResults.second]
++      const factory = (selected = caseRef, context: TrustedDomainContext = call) =>
++        selectSfScenarioCandidates({ caseRef: selected }, requestDigest, resultDigest, context)
++      const physical = async (choice = false) => {
++        const owner = required(fixture.store.observeAuthority!([]), "C21 native owner")
++        const probe = async (snapshot: Snapshot) => {
++          const observed = observeLocalProductRead(snapshot)
++          return { commit: false, value: { snapshot, selection: observed?.selection, current: observed?.current() } }
++        }
++        return (choice ? fixture.choice.persistence : fixture.store).transaction("dashboard", probe, { signal: incoming.signal,
++          dashboardProductRead: { identity: owner.identity, work: probe, selection: "decisionResults" } })
++      }
++      for (const mode of ["readonly", "preimage"] as const) {
++        await inContext(fixture, mode, incoming.signal, async () => {
++          const first = await physical(), second = await physical()
++          expect(first.selection).toBe("decisionResults")
++          expect(first.current).toBe(true)
++          expect(second.selection).toBe("decisionResults")
++          const selected = object(first.snapshot.data.__sfProductV1), next = object(second.snapshot.data.__sfProductV1)
++          expect(selected.decisionResults).toEqual(product.decisionResults)
++          expect(Object.keys(object(selected.decisionResults))).toEqual(Object.keys(originalResults))
++          expect(Object.hasOwn(object(selected.decisionResults), "__proto__")).toBe(true)
++          expect(Object.hasOwn(object(object(selected.decisionResults).foreign), "ownUndefined")).toBe(true)
++          expect(object(object(selected.decisionResults).foreign).ownUndefined).toBeUndefined()
++          expect(selected.cases).toEqual({})
++          expect(selected.preferences).toEqual({})
++          expect(selected.reviews).toEqual({})
++          expect(selected.schemaVersion).toBe(product.schemaVersion)
++          expect(selected.versions).toEqual(product.versions)
++          expect(selected.revision).toBe(product.revision)
++          expect(selected.incarnation).toBe(product.incarnation)
++          expect(selected.c21Unknown).toEqual(product.c21Unknown)
++          expect(Object.hasOwn(selected, "claimBindings")).toBe(true)
++          expect(selected.claimBindings).toBeUndefined()
++          expect(Object.hasOwn(selected, "nativeRuns")).toBe(false)
++          expect(first.snapshot.data.roleMap).toEqual(before.data.roleMap)
++          expect(first.snapshot.data.access).toEqual(before.data.access)
++          expect({ ...first.snapshot, data: before.data }).toEqual(before)
++          expect(first.snapshot.data.c14DomainOnly).toBeUndefined()
++          expect(second.snapshot).not.toBe(first.snapshot)
++          expect(next.decisionResults).not.toBe(selected.decisionResults)
++          object(object(selected.decisionResults).first).c21Mutation = "first child only"
++          expect(object(object(next.decisionResults).first).c21Mutation).toBeUndefined()
++        })
++        outcomes.push("native-whole-collection-" + mode)
++        await inContext(fixture, mode, incoming.signal, async () => {
++          const callback = factory(), start = fixture.authentication.length
++          const first = await fixture.authority.state.read(incoming, "cases", callback)
++          const second = await fixture.authority.state.read(incoming, "cases", callback)
++          const opaqueStart = fixture.opaqueSnapshots.length
++          const opaque = await fixture.custom.read(incoming, "cases", callback)
++          const value = required(stateValue(first), "first candidate values"), next = required(stateValue(second), "next candidate values")
++          expect<unknown>(value).toEqual(expected)
++          expect(second).toEqual(first)
++          expect(opaque).toEqual(second)
++          expect(value).not.toBe(next)
++          expect(value[0]).not.toBe(next[0])
++          expect(stateValue(opaque)).not.toBe(next)
++          expect(first).toMatchObject({ status: "ok", storageVersion: object(product.versions).cases,
++            aggregateRevision: product.revision, incarnation: product.incarnation })
++          object(value[0]).c21Mutation = "first result only"
++          expect(object(next[0]).c21Mutation).toBeUndefined()
++          expect(fixture.authentication.length - start).toBe(18)
++          const snapshots = fixture.opaqueSnapshots.slice(opaqueStart)
++          expect(snapshots).toHaveLength(2)
++          for (const snapshot of snapshots) {
++            expect(observeLocalProductRead(snapshot)).toBeUndefined()
++            expect(snapshot).toEqual(before)
++          }
++        })
++        outcomes.push("composed-fresh-candidates-" + mode)
++      }
++
++      let idReads = 0, selectedId = "missing", atFirst = -1, atSecond = -1
++      const late = factory({ get id() { idReads++; return selectedId }, incarnation: caseRef.incarnation, version: caseRef.version })
++      expect(idReads).toBe(0)
++      const lateStart = fixture.authentication.length
++      await inContext(fixture, "readonly", incoming.signal, async () => {
++        fixture.control.afterDashboard = () => {
++          atFirst = idReads
++          selectedId = caseRef.id
++          fixture.control.afterDashboard = () => { atSecond = idReads; selectedId = "missing" }
++        }
++        try { expect<unknown>(stateValue(await fixture.authority.state.read(incoming, "cases", late))).toEqual(expected) }
++        finally { fixture.control.afterDashboard = undefined }
++      })
++      expect(atFirst).toBe(0)
++      expect(atSecond).toBe(4)
++      expect(idReads).toBe(4)
++      expect(fixture.authentication.length - lateStart).toBe(6)
++      outcomes.push("request-key-after-first-authorize")
++
++      // The additive prototype gate affects only an actual native selection.
++      // The competing declaration also invalidates the fixed private dispatch.
++      for (const phase of ["first", "second"] as const) for (const change of ["prototype", "declaration"] as const) {
++        let reads = 0, hooks = 0, inherited = 0, failure: unknown, result: SfStateResult<unknown> | undefined
++        const callback = factory({ get id() { reads++; return caseRef.id }, incarnation: caseRef.incarnation, version: caseRef.version })
++        const start = fixture.authentication.length
++        const mutate = () => {
++          if (change === "declaration") Reflect.apply(selectSfCasesRead, undefined, [call, callback])
++          else Object.defineProperty(Object.prototype, "commandProposals", {
++            configurable: true, get: () => { inherited++; throw new Error("C21 inherited payload must not be read") },
++          })
++        }
++        await inContext(fixture, "readonly", incoming.signal, async () => {
++          fixture.control.afterDashboard = () => {
++            hooks++
++            if (phase === "first") mutate()
++            else fixture.control.afterDashboard = () => { hooks++; mutate() }
++          }
++          try { result = await fixture.authority.state.read(incoming, "cases", callback) }
++          catch (error) { failure = error }
++          finally {
++            fixture.control.afterDashboard = undefined
++            Reflect.deleteProperty(Object.prototype, "commandProposals")
++          }
++        })
++        expect(result).toBeUndefined()
++        expect(failure instanceof Error ? failure.message : undefined).toBe("SF_PRODUCT_READ_PROJECTION_CHANGED")
++        expect(reads).toBe(phase === "first" ? 0 : 4)
++        expect(hooks).toBe(phase === "first" ? 1 : 2)
++        expect(inherited).toBe(0)
++        expect(fixture.authentication.length - start).toBe(phase === "first" ? 3 : 6)
++        outcomes.push("composed-" + change + "-" + phase)
++      }
++
++      for (const reason of ["mutable-context", "wrapped-callback", "concurrent-declaration", "namespace", "top-level", "CurrentChoice-scoped"] as const) {
++        const callback = factory(caseRef, reason === "mutable-context" ? { ...call } : call)
++        // Deliberately exercise simultaneous declarations of this same function,
++        // including the higher-priority cases route. No replacement factory is used.
++        if (reason === "concurrent-declaration") Reflect.apply(selectSfCasesRead, undefined, [call, callback])
++        let hooks = 0
++        const perform = async () => {
++          fixture.control.afterDashboard = () => {
++            hooks++
++            Object.defineProperty(Object.prototype, "commandProposals", { configurable: true, value: "complete fallback" })
++          }
++          try {
++            const result = await fixture.authority.state.read(incoming, reason === "namespace" ? "preferences" : "cases",
++              reason === "wrapped-callback" ? (state, authority) => callback(state, authority) : callback)
++            expect<unknown>(stateValue(result)).toEqual(reason === "concurrent-declaration" ? [] : expected)
++          } finally {
++            fixture.control.afterDashboard = undefined
++            Reflect.deleteProperty(Object.prototype, "commandProposals")
++          }
++        }
++        if (reason === "CurrentChoice-scoped") await inContext(fixture, "readonly", incoming.signal, () => fixture.choice.run(call, async () => {
++          await perform()
++          const copy = await physical(true)
++          expect(copy.selection).toBeUndefined()
++          expect(copy.current).toBeUndefined()
++          expect(copy.snapshot).toEqual(before)
++          expect(copy.snapshot.data.c14DomainOnly).toEqual(before.data.c14DomainOnly)
++        }))
++        else await inContext(fixture, reason === "top-level" ? "top-level" : "readonly", incoming.signal, perform)
++        expect(hooks).toBe(1)
++        outcomes.push("full-fallback-" + reason)
++      }
++
++      for (const shape of ["absent", "own-undefined", "array"] as const) {
++        await fixture.store.transaction("dashboard", async (snapshot) => {
++          const state = object(snapshot.data.__sfProductV1)
++          if (shape === "absent") Reflect.deleteProperty(state, "decisionResults")
++          if (shape === "own-undefined") state.decisionResults = undefined
++          if (shape === "array") state.decisionResults = []
++          return { commit: true, value: undefined }
++        }, { signal: deadline })
++        try {
++          const invalid = object((await fixture.durable()).data.__sfProductV1)
++          await inContext(fixture, "readonly", incoming.signal, async () => {
++            const copy = await physical(), state = object(copy.snapshot.data.__sfProductV1)
++            expect(copy.selection).toBeUndefined()
++            expect(copy.current).toBe(true)
++            expect(state).toEqual(invalid)
++            expect(state.cases).toEqual(product.cases)
++            expect(state.reviews).toEqual(product.reviews)
++            expect(Object.hasOwn(state, "decisionResults")).toBe(Object.hasOwn(invalid, "decisionResults"))
++            if (shape === "absent" || shape === "own-undefined")
++              expect(stateValue(await fixture.authority.state.read(incoming, "cases", factory()))).toEqual([])
++          })
++        } finally {
++          await fixture.store.transaction("dashboard", async (snapshot) => {
++            snapshot.data.__sfProductV1 = structuredClone(product)
++            return { commit: true, value: undefined }
++          }, { signal: deadline })
++        }
++        outcomes.push("full-shape-fallback-" + shape)
++      }
++      await fixture.store.transaction("dashboard", async (snapshot) => {
++        object(snapshot.data.__sfProductV1).decisionResults = {}
++        return { commit: true, value: undefined }
++      }, { signal: deadline })
++      try {
++        await inContext(fixture, "readonly", incoming.signal, async () => {
++          const copy = await physical()
++          expect(copy.selection).toBe("decisionResults")
++          expect(object(copy.snapshot.data.__sfProductV1).decisionResults).toEqual({})
++          expect(stateValue(await fixture.authority.state.read(incoming, "cases", factory()))).toEqual([])
++        })
++      } finally {
++        await fixture.store.transaction("dashboard", async (snapshot) => {
++          snapshot.data.__sfProductV1 = structuredClone(product)
++          return { commit: true, value: undefined }
++        }, { signal: deadline })
++      }
++      outcomes.push("empty-collection-is-a-real-selection")
++
++      expect<unknown>((await fixture.durable()).data.__sfProductV1).toEqual(product)
++      expect(fixture.control.afterDashboard).toBeUndefined()
++    })
++  })
++  expect(outcomes).toHaveLength(19)
++  expect(new Set(outcomes).size).toBe(19)
++  console.log("SF_C21_NATIVE_SCENARIO_SELECTION " + JSON.stringify({
++    schema: "sf-c21-native-scenario-selection-v1", outcomes,
++    contexts: ["readonly", "preimage"], originalProjectionControlsPreserved: 5,
++    claim: "physical child selection and fallback only; no installed latency measurement",
++  }))
++}), 20_000)

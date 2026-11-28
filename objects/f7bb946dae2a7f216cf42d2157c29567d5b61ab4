@@ -1,0 +1,616 @@
+{
+  "schema": "sf613-c21-focal-root-intake-v1",
+  "status": "ROOT_RECEPTION_PASS_PEER_CLOSURE_PENDING",
+  "repository": "gustavomhss/Orchestra-SF",
+  "receiver": "root/Astra",
+  "receivedAtUtc": "2026-11-28 07:14:33 UTC",
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "snapshot": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+  "snapshotTree": "0dae9eb8d10924150e0418be355be0ee5a6c504f",
+  "run": 46119613404,
+  "attempt": 1,
+  "authority": {
+    "gitBlob": "46fe9d126f0a64c328e1b98dca0c1cf1b2214680",
+    "bytes": 6890,
+    "sha256": "6ddec805989a67c34b38f57c4ae719c0993b5ee12fb57aa26a9a6b39bf592839",
+    "lf": 185,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "9741a440e3fc172cf56a738ae11789c2aed1ebf1",
+    "bytes": 4585,
+    "sha256": "a5894f97cfe94d4185dbcaf322baf17f1c85cbcdb759ab3b1d9e8e3a8ebad08d",
+    "lf": 117,
+    "endsWithLF": true
+  },
+  "runBinding": {
+    "gitBlob": "0d35a47010791fec0ccd17a2a140d7233635ad84",
+    "bytes": 1388,
+    "sha256": "a8f894e7ede4f747ecf3325f4774794657b30c1f35923c02f8dfe4c8228d4bea",
+    "lf": 44,
+    "endsWithLF": true
+  },
+  "terminal": {
+    "gitBlob": "8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+    "bytes": 25911,
+    "sha256": "7e3fa1ca2299b7ba0ccb6f0e2db6f88158cee422df69ac9fbc9b523d22a6d297",
+    "lf": 554,
+    "endsWithLF": true
+  },
+  "main": {
+    "job": 140901000269,
+    "blob": {
+      "gitBlob": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+      "bytes": 112586,
+      "sha256": "43ee43db92077281068da30bc060be89329c6c789425e790d5bd423df11ceca2",
+      "lf": 922,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "29f7d0bd9066d4478d78a26d0e4d584077c01358",
+      "bytes": 1824,
+      "sha256": "9a386f05733f3aa46dd0d8f99c6cba843c9ed62d34eefe75e0eb1d42ba101a4e",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "originalGets": 1
+  },
+  "cleanup": {
+    "job": 140901542389,
+    "blob": {
+      "gitBlob": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+      "bytes": 2280,
+      "sha256": "2e4def2cd3446322f08537e8648c105a31ce82920621e62530f0c1ef9981a544",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "34040d4018e5b2b2434511770cf712c736092d01",
+      "bytes": 1814,
+      "sha256": "34a563c5a6648c27c8d5bf99499dc38939636c529579ff9be89fde10668a56de",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "originalGets": 1,
+    "branchAbsent": true
+  },
+  "extraction": {
+    "gitBlob": "a33016cbd4fb1d95bea1e31c59ead5244d490dbb",
+    "bytes": 71216,
+    "sha256": "8d3038b1a92802c4646cdc8e5266e17b6cd85535aa1d14bd6e355247c89626ab",
+    "lf": 1600,
+    "endsWithLF": true
+  },
+  "reportUnion": {
+    "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+    "bytes": 10691,
+    "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+    "lf": 8,
+    "endsWithLF": true
+  },
+  "guardReport": {
+    "gitBlob": "3864ebf7ee0bccce857264832e4731da685e3fb6",
+    "bytes": 14082,
+    "sha256": "f451b20f7b419f65e62c9e97a539574b85399ab368c84d33e8aab40387874665",
+    "lf": 1,
+    "endsWithLF": true
+  },
+  "checks": [
+    {
+      "name": "terminal-source-and-snapshot",
+      "passed": true
+    },
+    {
+      "name": "both-terminal-jobs-success",
+      "passed": true
+    },
+    {
+      "name": "originals-closed-exactly-once",
+      "passed": true
+    },
+    {
+      "name": "commands-15",
+      "passed": true
+    },
+    {
+      "name": "host-identities-9",
+      "passed": true
+    },
+    {
+      "name": "identity-line-759",
+      "passed": true
+    },
+    {
+      "name": "identity-line-763",
+      "passed": true
+    },
+    {
+      "name": "identity-line-766",
+      "passed": true
+    },
+    {
+      "name": "identity-line-773",
+      "passed": true
+    },
+    {
+      "name": "identity-line-792",
+      "passed": true
+    },
+    {
+      "name": "identity-line-815",
+      "passed": true
+    },
+    {
+      "name": "identity-line-819",
+      "passed": true
+    },
+    {
+      "name": "identity-line-824",
+      "passed": true
+    },
+    {
+      "name": "identity-line-827",
+      "passed": true
+    },
+    {
+      "name": "identity-line-832",
+      "passed": true
+    },
+    {
+      "name": "identity-line-835",
+      "passed": true
+    },
+    {
+      "name": "identity-line-839",
+      "passed": true
+    },
+    {
+      "name": "identity-line-845",
+      "passed": true
+    },
+    {
+      "name": "identity-line-861",
+      "passed": true
+    },
+    {
+      "name": "identity-line-875",
+      "passed": true
+    },
+    {
+      "name": "identity-line-757",
+      "passed": true
+    },
+    {
+      "name": "identity-line-772",
+      "passed": true
+    },
+    {
+      "name": "identity-line-791",
+      "passed": true
+    },
+    {
+      "name": "identity-line-813",
+      "passed": true
+    },
+    {
+      "name": "identity-line-818",
+      "passed": true
+    },
+    {
+      "name": "identity-line-823",
+      "passed": true
+    },
+    {
+      "name": "identity-line-844",
+      "passed": true
+    },
+    {
+      "name": "identity-line-860",
+      "passed": true
+    },
+    {
+      "name": "identity-line-874",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-759",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-763",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-766",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-773",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-792",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-815",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-819",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-824",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-827",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-832",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-835",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-839",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-845",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-861",
+      "passed": true
+    },
+    {
+      "name": "exit-flags-line-875",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-0",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-1",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-2",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-3",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-4",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-5",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-6",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-7",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-8",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-9",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-10",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-11",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-12",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-13",
+      "passed": true
+    },
+    {
+      "name": "argv-cwd-14",
+      "passed": true
+    },
+    {
+      "name": "pins-18",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "passed": true
+    },
+    {
+      "name": "pin-envelope-identity",
+      "passed": true
+    },
+    {
+      "name": "complete-six-footers",
+      "passed": true
+    },
+    {
+      "name": "functional-counts-from-current-footers",
+      "passed": true
+    },
+    {
+      "name": "outer-separate",
+      "passed": true
+    },
+    {
+      "name": "eight-complete-reports",
+      "passed": true
+    },
+    {
+      "name": "previous-seven-payloads-literal",
+      "passed": true
+    },
+    {
+      "name": "c21-report-exact-modeled-payload",
+      "passed": true
+    },
+    {
+      "name": "c21-report-bounds",
+      "passed": true
+    },
+    {
+      "name": "new-model-not-fetched-as-object",
+      "passed": true
+    },
+    {
+      "name": "guard-base",
+      "passed": true
+    },
+    {
+      "name": "canonical-guard-positive",
+      "passed": true
+    },
+    {
+      "name": "guard-warnings-kept",
+      "passed": true
+    },
+    {
+      "name": "omni-current-nonce-counts",
+      "passed": true
+    },
+    {
+      "name": "no-artifact-and-branch-absent",
+      "passed": true
+    }
+  ],
+  "observed": {
+    "functional": {
+      "passed": 17,
+      "failed": 0,
+      "assertions": 2407
+    },
+    "functionalFooters": [
+      {
+        "line": 789,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "duration": "294.00ms"
+      },
+      {
+        "line": 811,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "duration": "702.00ms"
+      },
+      {
+        "line": 858,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "duration": "259.00ms"
+      },
+      {
+        "line": 872,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "duration": "178.00ms"
+      },
+      {
+        "line": 886,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "duration": "467.00ms"
+      }
+    ],
+    "outer": {
+      "passed": 9,
+      "failed": 0,
+      "assertions": 41,
+      "duration": "91.93s"
+    },
+    "outerFooter": {
+      "line": 892,
+      "pass": 9,
+      "fail": 0,
+      "assertions": 41,
+      "tests": 9,
+      "files": 1,
+      "duration": "91.93s"
+    },
+    "commands": 15,
+    "zeroExits": 15,
+    "truncationFlagsFalse": 30,
+    "sourceWorkingPins": 18,
+    "hostIdentityRecords": 9,
+    "reports": 8,
+    "oldSevenPayloadsLiteral": true,
+    "newC21Report": {
+      "bytesWithPrefixAndLF": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "orderedOutcomes": 19,
+      "contexts": [
+        "readonly",
+        "preimage"
+      ],
+      "modelEqualityObserved": true,
+      "standaloneModelBlobCreated": false
+    },
+    "typechecks": [
+      {
+        "package": "CLI",
+        "exit": 0,
+        "durationMs": 30714
+      },
+      {
+        "package": "Sucafina",
+        "exit": 0,
+        "durationMs": 32535
+      }
+    ],
+    "guards": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "rules": 78,
+      "files": 860,
+      "warnings": 40,
+      "errors": [],
+      "approved": [],
+      "bootstrap": false
+    },
+    "omni": {
+      "line": 893,
+      "nonce": "7997a3730d13b88a36aad6089f7aae7b",
+      "declared": 9,
+      "spawn": 15,
+      "delegated": 0,
+      "scope": "Wrapper only"
+    },
+    "bun": {
+      "version": "1.3.14",
+      "observedSetupRevision": "0d9b296af",
+      "observedTestRevision": "0d9b296a",
+      "full40CharacterRevisionObserved": false,
+      "setupLine": 261
+    },
+    "artifacts": 0,
+    "zipGets": 0
+  },
+  "originalsClosed": {
+    "at": {
+      "current_time": "2026-11-28 07:10:06 UTC"
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "reacquisitionAllowed": false,
+    "source": "Exact decoded originals preserved with literal Git readback and reassembly before interpretation"
+  },
+  "limits": {
+    "focalOnly": true,
+    "source17TestsNotGlobalSuite": true,
+    "outerAssertionsSeparate": true,
+    "installedPerformanceMeasured": false,
+    "UI42UI43UI44Accepted": false,
+    "UI6Accepted": false,
+    "migrationQualified": false,
+    "releaseQualified": false,
+    "productionAuthorized": false,
+    "originalAnalyticsStillRequired": true
+  }
+}

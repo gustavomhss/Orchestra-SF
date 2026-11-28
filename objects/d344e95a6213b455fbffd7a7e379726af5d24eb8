@@ -1,0 +1,141 @@
+{
+  "schema": "sf613-r8-independent-real-objects-supplement-v1",
+  "status": "OBJECTS_ACK_NO_FINDING",
+  "atUtc": "2026-11-28 07:09:09 UTC",
+  "reviewer": "/root/close_pr613",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Supplement only for the root-created actual R8 commit and two trees, before root publication. The previous data review is preserved unchanged.",
+  "previousDataAck": {
+    "gitBlob": "19f8c37a616afd0c2285652d1778b9b4d1510f7a",
+    "bytes": 18453,
+    "sha256": "d5f7e408c95b06ce0acefec3d30bab938cefc2966b43a9751241bfe9f8c9831c",
+    "lf": 539,
+    "endsWithLF": true
+  },
+  "rootReviews": {
+    "data": {
+      "gitBlob": "23f1dc7a71271ded2ccf6d7e0d73d84ef201390f",
+      "bytes": 33421,
+      "sha256": "73e3af6a84e15c10a87ed6871b2839cd7d92abad3c1fcaa3171facd59f823e24",
+      "lf": 1042,
+      "endsWithLF": true
+    },
+    "objects": {
+      "gitBlob": "b6c0b5d81683e96607ae22629e84f88f3c916628",
+      "bytes": 47650,
+      "sha256": "cabe3729400743e1c6e28ea23eeb039d787af6cd319a12b0f347d3abe79446ed",
+      "lf": 1294,
+      "endsWithLF": true
+    },
+    "bothBodiesAuthenticatedThisSupplement": true
+  },
+  "actualCommit": {
+    "sha": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "tree": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+    "orderedParents": [
+      "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+      "d0d0b01f08b070213bd67b46af40a92fb516eca8",
+      "4e1d12142119d4b2f508cf880563373d11d1b9e8"
+    ],
+    "independentlyFetchedByGitObjectApi": true,
+    "exactParentOrderMatchesReviewedProposal": true,
+    "actualMessageReferencesRootDataReviewAndPreviousIndependentAck": true
+  },
+  "actualTrees": [
+    {
+      "sha": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+      "recomputed": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+      "entries": 3,
+      "rawGitTreeHashRecomputed": true,
+      "completeNonrecursiveListing": true
+    },
+    {
+      "sha": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+      "recomputed": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+      "entries": 817,
+      "rawGitTreeHashRecomputed": true,
+      "completeNonrecursiveListing": true
+    }
+  ],
+  "reviewedLeaves": {
+    "README.md": {
+      "sha": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+      "mode": "100644",
+      "type": "blob",
+      "bytes": 63369
+    },
+    "index.json": {
+      "sha": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+      "mode": "100644",
+      "type": "blob",
+      "bytes": 1165347
+    },
+    "objects": {
+      "sha": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+      "mode": "040000",
+      "type": "tree",
+      "children": 817
+    },
+    "rootHasOnlyTheseThreeEntries": true,
+    "eachObjectLeafMatchesExactReviewedIndexShaModeTypeAndSize": true,
+    "allObjectNamesEqualTheirActualSha40": true,
+    "objectsAllMode100644": true
+  },
+  "baseComparison": {
+    "baseCommit": "292ec4b43dadd3470a55782eb560bf1c6b05f7ba",
+    "baseTree": "6b44bb5103daa375103fedf94bfeb8b184e18ae9",
+    "baseObjectsTree": "3e77a7e1c3a330b0cbbb5a6509475a4b60718d1f",
+    "baseline": "Previously fetched and hash-verified immutable Git trees from the preserved data ACK.",
+    "treePairs": 2,
+    "literalObjectSiblings": 727,
+    "addedObjects": 90,
+    "modifiedRootFiles": 2,
+    "removedFiles": 0,
+    "objectFiles": 817,
+    "ownFiles": 819,
+    "objectBytes": 78974893,
+    "newObjectBytes": 5900300,
+    "treeFileBytes": 80203609,
+    "exactDelta": "90A2M",
+    "modifiedRootPaths": [
+      "README.md",
+      "index.json"
+    ],
+    "everyInheritedObjectSiblingLiteral": true,
+    "noOldObjectChangedOrRemoved": true,
+    "noExtraRootPathOrExecutableRepositoryLayout": true
+  },
+  "checks": {
+    "pureDataAssertions": 831,
+    "failures": 0,
+    "noFinding": true,
+    "notRuntimeTests": true
+  },
+  "unchangedReviewScope": {
+    "bodies89AndStreams8NotReacquiredOrRecomputed": true,
+    "priorDataAckNotRewritten": true,
+    "C20Analytics": "Two failed tests and zero passed; BI06 cancellation origin not demonstrated.",
+    "D29": "Four final bindings remain UNBOUND; no final execution or qualification.",
+    "C21": "Excluded from this archive increment.",
+    "noProductAcceptanceTransferred": true
+  },
+  "limits": [
+    "Commit identity, tree and parents were read from the actual Git commit API object; only the two tree hashes were reconstructed from raw Git tree serialization here.",
+    "This is a documentary object ACK. It does not claim that an R8 ref has been published or that a live publication lease has been obtained.",
+    "Root remains the sole publisher and must use its fresh lease and nonforce update authority.",
+    "The previous ACK supplies body, stream and historical preservation evidence; this supplement does not repeat those acquisitions."
+  ],
+  "findings": [],
+  "reviewerEffects": {
+    "newAckBlobOnly": true,
+    "archiveProposalEdits": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsCreated": 0,
+    "repositoryExecutions": 0,
+    "originalActionsLogGets": 0,
+    "artifactZipGets": 0,
+    "auditZipGets": 0
+  }
+}

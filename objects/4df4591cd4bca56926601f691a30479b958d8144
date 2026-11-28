@@ -1,0 +1,99 @@
+{
+  "schema": "sf613-c21-focal-source-binding-v1",
+  "status": "BOUND_SOURCE_UNEXECUTED_SNAPSHOT_UNBOUND",
+  "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+  "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+  "baseCarrier": {
+    "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+    "bytes": 12927,
+    "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+    "lf": 194,
+    "endsWithLF": true
+  },
+  "baseTemplate": {
+    "gitBlob": "fee74fdcf2bc850ce23d899980b9fac21d324f55",
+    "bytes": 13791,
+    "sha256": "71e4296022a19099fdcccea2f67c1cb84257cb17242d461f1a67fb5c528ee5fc",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "templateDerivation": {
+    "gitBlob": "0d4a09646a44e34ff991a337b3c84f4f2af800f2",
+    "bytes": 7586,
+    "sha256": "4a5cb6aa74404d748bd026b4901680cbcf7ec00678f503bf695267588af911ad",
+    "lf": 124,
+    "endsWithLF": true
+  },
+  "effectiveTemplate": {
+    "gitBlob": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+    "bytes": 13791,
+    "sha256": "71dfb151e2dbebb14d27b496b23a04eb9f8c16ea5e31ac363cd186f72f3d91ef",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "effectiveTemplatePinDelta": {
+    "before": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+    "after": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+  },
+  "operations": [
+    {
+      "before": "__SF613_SOURCE_SHA__",
+      "after": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
+    },
+    {
+      "before": "__SF613_SOURCE_TREE__",
+      "after": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+    }
+  ],
+  "post": {
+    "gitBlob": "50df11d4be37f2990bc7d26095f2515292db959b",
+    "bytes": 13830,
+    "sha256": "abd510b7d5c03090b2695e9628cdc274b75a6f21349c996411bc27a46fda81de",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "addition": {
+    "gitBlob": "1d7be69f56b9992c91cdc0c468ad0ea1efcc8ae0",
+    "bytes": 14258,
+    "sha256": "29cd4965e2be7371e72ce7ee0de4d7ea92cb9573db98bed2b1e7794f5b8468b0",
+    "lf": 209,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "checks": {
+    "bindingsUnique": true,
+    "forwardInverseLiteral": true,
+    "noUnboundTokens": true,
+    "additionForwardInverse": true,
+    "sourceActual": true,
+    "all18PinsAtSourceTree": true,
+    "driverPathsAbsentAtSourceTree": true,
+    "runCommandAndG2ThroughG8Literal": true
+  },
+  "sourceObjectReceipt": {
+    "gitBlob": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+    "bytes": 6597,
+    "sha256": "15983232827dfe1d579b8ac6edbd858680256cf8daafb2a047c8f63305ffe31c",
+    "lf": 186,
+    "endsWithLF": true
+  },
+  "staticIndependentReview": {
+    "gitBlob": "86195b9ba4261fdb38013da7c121f931170e0fef",
+    "bytes": 21736,
+    "sha256": "76329e15dee2ab484b357460c05a0e60e59bc51b1a993bd0dae2386adf257c4c",
+    "lf": 530,
+    "endsWithLF": true
+  },
+  "limits": {
+    "snapshot": "UNBOUND",
+    "run": "UNBOUND",
+    "previousResultsNotTransferred": true,
+    "productionAuthorized": false
+  }
+}

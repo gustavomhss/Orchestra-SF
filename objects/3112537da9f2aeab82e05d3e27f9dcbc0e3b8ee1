@@ -1,0 +1,175 @@
+{
+  "schema": "sf613-public-pr-compose-route-review-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "mode": "READ_ONLY",
+  "completedAtUtc": "2026-11-25T23:30:26Z",
+  "observationCut": "GitHub metadata observed during 2026-11-25T23:24Z–23:30Z; no subsequent operational refresh.",
+  "publicPr": {
+    "number": 613,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/613",
+    "state": "open",
+    "draft": true,
+    "author": "gustavomhss",
+    "headRef": "sf-design-next",
+    "head": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+    "baseRef": "dev",
+    "baseShaInPrPayload": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+    "mergeable": false,
+    "mergeableState": "dirty",
+    "rebaseable": false,
+    "autoMerge": null,
+    "requestedReviewers": [],
+    "requestedTeams": [],
+    "updatedAt": "2026-11-25T23:24:40Z",
+    "reviews": {
+      "total": 17,
+      "COMMENTED": 17,
+      "APPROVED": 0,
+      "CHANGES_REQUESTED": 0,
+      "accounts": [
+        "gustavomhss"
+      ],
+      "independentHumanApprovalObserved": false
+    },
+    "checks": {
+      "checkRuns": 0,
+      "combinedStatus": "pending",
+      "statusTotalCount": 0,
+      "statuses": [],
+      "interpretation": "No reported statuses, not evidence of an executing job."
+    }
+  },
+  "currentDev": {
+    "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "tree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "source": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/dev",
+    "protected": false,
+    "protectionEnabled": false,
+    "requiredStatusChecks": {
+      "enforcement": "off",
+      "contexts": [],
+      "checks": []
+    },
+    "rulesetsCollection": [],
+    "effectiveRulesEndpoint": {
+      "result": "connector 400 before GitHub API",
+      "interpretation": "Not a provider 404 or an independently read effective-rule payload."
+    },
+    "prBaseDiscrepancy": "The PR payload base.sha differs from the separately observed live dev branch. No cause is inferred. Composition uses the live branch/ref, rechecked at freeze."
+  },
+  "candidateC6": {
+    "sha": "b25b05f195d414e7b39ed9a5f49439276ce75cb1",
+    "tree": "aca2b141099d182f9364bdcfe1d070b9d1ae5951",
+    "parent": "f29e974d4833e1ae488f905e336cfce5497388fb",
+    "privateRef": "sf613-astra-finish",
+    "privateRefMatches": true,
+    "checkRuns": 0,
+    "changeScope": "Two fixture typing changes; C5 product blobs remain unchanged."
+  },
+  "ancestry": {
+    "publicHeadToC6": {
+      "status": "ahead",
+      "ahead": 583,
+      "behind": 0,
+      "mergeBase": "0a1247db9a16f9eead04788a76d25723672c7e6a"
+    },
+    "C6ToDev": {
+      "status": "diverged",
+      "devSideAhead": 3,
+      "C6Side": 164,
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "devSidePaths": [
+      {
+        "path": "docs/qa/sucafina/go-live/README.md",
+        "blob": "300b149a033dc978b85af57023ddab7d23b4af09"
+      },
+      {
+        "path": "docs/qa/sucafina/go-live/execution-2026-11-22.md",
+        "blob": "5bcef21547c90bd62fbd2f720c1db0cd2127385a"
+      },
+      {
+        "path": "docs/qa/sucafina/go-live/status.json",
+        "blob": "3b87252042526f65ea363b0e0c83522061b049de"
+      }
+    ],
+    "conclusion": "A new composition commit with parents [C6, current dev] is a descendant of both live feature refs and current dev. This proves a no-force path; it does not materialize or validate the proposed tree."
+  },
+  "mandates": {
+    "prBody": "Eventual candidate must compose current dev, retain historical evidence/contracts, receive independent review, pass final CI, and complete UI42–UI44 before reviewed integration. Production cutover remains unauthorized.",
+    "primary": "https://github.com/gustavomhss/Orchestra-SF/pull/613#issuecomment-7086231426",
+    "order": "#613 first; #673 composes the resulting dev afterward.",
+    "historyRewriteRequired": false,
+    "explicitTwoParentCommitMandateObserved": false,
+    "evaluation": "The two-parent composition is compatible with the mandate; the primary requires final literal C and preservation of dev, not a rebase or a force update.",
+    "previousDocumentReview": {
+      "blob": "a32b28e3cc6ce8edf282c48cca0f911f31f34255",
+      "bytes": 8795,
+      "sha256": "177d443e4ac9a7c878d6120f25514b4ae8b971a092b55e26b0d8a2a4f9639f4c",
+      "reopened": false
+    }
+  },
+  "proposedSequence": [
+    "At freeze, recheck exact public head, private C6 and live dev; do not overwrite concurrent work. Finish required candidate evidence first, preserving negative results.",
+    "Review one composition tree based on C6 product, the already verified current-dev document histories plus a new honest observation cut, and the exact canonical UI6 request. Do not import temporary diagnostic or driver files.",
+    "Create the final source commit C613 with ordered parents [C6, devc0bc] if those remain current. Read back parents, tree and exact delta. Review the exact C613 tree and source bindings.",
+    "Qualify UI on a ci-run-* ref pointing literally to C613, and technical D as a separate sole child of that same C613 checking out C613. Review concrete driver bytes first. Source C613 must stay frozen throughout evidence collection.",
+    "After qualification and independent review, fast-forward the existing sf-design-next to that exact C613 with force:false under the coordinator/writer's authorization and a fresh head comparison; verify the ref readback. Retain the existing PR and dev base.",
+    "Re-read PR mergeability, draft state, checks and any actual protection on the promoted head; mark ready and merge only under the existing project authorization. Do not update dev directly to bypass the PR.",
+    "If dev advances before merge, evaluate the actual delta and reconcile into a new reviewed source when necessary. Do not claim the older C/T qualifies new bytes. Record the resulting dev merge commit/tree for #673."
+  ],
+  "finalQualification": {
+    "source": "C613 is future; C6 and disposable S focal/Analytics children are not substitutes for literal-head qualification.",
+    "ui": {
+      "requestBytes": 390,
+      "requestGitShaExpected": "2bd57a54180a099bbf904d188fe6e0eb22362cea",
+      "requestSha256": "7361e2eb04f385dd34977c8b599ea62fb5d52103f8655603426b1a20b8b6dbe2",
+      "requestState": "Reconstructible exactly from the primary; previous fetch found no published object. No new materialization here.",
+      "workflowBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "branchPreference": "ci-run-sf613ui if available",
+      "selection": "Original Analytics, Collab and Reviews: six declarations; one worker, zero retries, repeat=1; unchanged per-case assertions and deadlines; job45min.",
+      "intake": "Exact C/ref/event/request.sha, effective specs/config, request bytes after normalization, original complete results/artifact receipts. Existing UI route is not a whole-worktree immutability proof."
+    },
+    "technical": {
+      "planBlob": "f15411650304bb429e1f9d20d62d17c44300c5e0",
+      "selection": "D21 reconciles the 18 preserved groups plus preferences6, criterion selection5 and baseline contract2 in separate added groups; 21 outer groups /32 wrapper command executions. Coverage group remains present once; historical duplicated commands remain intentional.",
+      "driver": "External D sole child of final C; exact two driver paths; checkout C/T, real GITHUB_SHA=D, immutable pinned wrapper in owned temporary slot, original request preserved, complete streams and Omni, integrity finalizer/artifact.",
+      "limits": "Existing 35/40/45-minute limits and individual command/case budgets remain; D21 concrete bytes and final pins still require review.",
+      "scope": "Technical and installed #613 qualification only, not G08, Release tar or go-live acceptance."
+    },
+    "post673": "Future Cgo-live and Release23/Bun1.4.1/tar qualification remain distinct after #673; no transfer of 1.3.14 source results."
+  },
+  "approvals": {
+    "currentObservedGithubRequirement": "No approving-human requirement observed: dev protected=false, requirements off, rulesets collection empty.",
+    "projectRequirement": "Independent technical source/driver review and complete final qualification remain required by the explicit #613 mandate despite absence of branch protection.",
+    "conditionalFutureHumanRule": "If configured later, required approval must come from another eligible account with the permissions/code-owner role required by the actual rule. The PR author gustavomhss cannot approve his own PR; assistant COMMENTs from that same account do not provide such an approval.",
+    "eligibleSecondPersonNamed": false,
+    "docs": "https://docs.github.com/en/pull-requests/how-tos/review-pull-requests/reviewing-proposed-changes-in-a-pull-request",
+    "repoMergeOptions": {
+      "mergeCommit": true,
+      "squash": true,
+      "rebase": true,
+      "autoMerge": false
+    },
+    "routePreference": "A normal reviewed PR merge commit preserves the demonstrated ancestry. Repository availability of squash/rebase is not a mandate to use them."
+  },
+  "limits": [
+    "The observed dirty/rebaseable state belongs only to the old public head; no future composition conflict is inferred.",
+    "Ancestry alone does not prove composition-tree correctness or final qualification.",
+    "No forced update, rebase, ref movement, document/request buffer, commit, CI, operational/QA refresh or product execution was performed.",
+    "No new human approval gate or named reviewer is invented."
+  ],
+  "sources": [
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls/613",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls/613/reviews?per_page=100&page=1",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches/dev",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf613-astra-finish",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/0a1247db9a16f9eead04788a76d25723672c7e6a...b25b05f195d414e7b39ed9a5f49439276ce75cb1?per_page=1&page=2",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/b25b05f195d414e7b39ed9a5f49439276ce75cb1...c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/0a1247db9a16f9eead04788a76d25723672c7e6a/check-runs",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/0a1247db9a16f9eead04788a76d25723672c7e6a/status",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/b25b05f195d414e7b39ed9a5f49439276ce75cb1/check-runs",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF/rulesets?includes_parents=true&per_page=100",
+    "https://api.github.com/repos/gustavomhss/Orchestra-SF"
+  ]
+}

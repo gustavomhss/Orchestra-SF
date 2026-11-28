@@ -1,3 +1,122 @@
+# sf613-evidence — R9 documentary proposal
+
+**C21's focal qualification is closed PASS within its tested scope. Its original installed Analytics suite is closed negative: one failed preview journey and one passed BI journey.** R9 proposes retention of those distinct results, D30's unbound static package and the composition preparation map. It does not qualify a final C613 candidate, UI6, Migration, Release or production.
+
+Documentary cut: **2026-11-28 08:10:20 UTC**. Clean source S21 is `29374ab6a0f38dd9ff8848a083c61ea35dcecdfb`, tree `fe8221e56daf5fd7de8a79b29d2d485055b8c45a`, sole child of S20. Root alone may create and publish the archive tree/commit/ref after independent review and a fresh lease.
+
+## What this increment retains
+
+| Scope | Current closed or proposed state | Authoritative receipt |
+|---|---|---|
+| C21 source | Reviewed clean source, three modifications and one added control; not final C613 | `73046411c1f0a84ddab4e15bbb41453e402421bb` |
+| C21 focal | PASS: 17 functional tests / 2,407 assertions; outer 9 / 41 | `509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb` |
+| C21 original Analytics | NEGATIVE: one failed first-preview journey, one passed current BI journey | `15b1365f2326ec75ba905664687ed1ba81811a02` |
+| D30 | Static package and two reviews; four final bindings UNBOUND | `a5f40832125658cbae2b58b565c266750fa0b125` |
+| Composition map | Preparation only; no final candidate, final-gate acceptance or runtime equivalence | `63ca6b9c3b9b502942d185ee9e2c866530f51255` |
+| Published R8 | Complete historical archive retained | `10a9013919d425b9b914c67d24cc2ac1c25a7b05` |
+
+The finite input catalog is `06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd` (159,675 bytes; SHA256 `77776c9611784f10c12dd1ab1ad116e6b88693fd8f01e586d0546efb2969f537`). It enumerates 143 actual inputs and 152 logical memberships: 107 new bodies totaling 10,153,094 bytes and 36 already represented in R8. The catalog itself becomes the 108th new object only after its actual creation and literal Git readback. The current index, README, derivation and manifest do not recursively list themselves.
+
+## Retention and exact proposed totals
+
+R8's **817 object metadata records, 967 ordered membership prefixes, 52 groups, 77 streams and 249 part references** remain literal. The full R8 index, README, catalog, derivation, manifest, data/object reviews and publication receipt remain available as actual objects. Historical statements keep their original documentary cuts.
+
+| Quantity | Published R8 | Proposed R9 | Added |
+|---|---:|---:|---:|
+| Actual object files | 817 | 925 | 108 |
+| Object bytes, deduplicated by Git blob | 78,974,893 | 89,287,662 | 10,312,769 |
+| Logical memberships | 967 | 1,120 | 153 |
+| Groups | 52 | 58 | 6 |
+| Typed streams | 77 | 85 | 8 |
+| Ordered part references | 249 | 273 | 24 |
+
+Thirty-six inherited objects receive 38 new memberships; the 108 new objects carry 115 memberships. A repeated logical use never multiplies stored blob bytes. In particular, the reused context union is one actual blob with a separately scoped C21 stream.
+
+The proposed tree delta is **108 added object files and two modified root documents**, with no deletion. The resulting tree would contain 927 files: 925 `objects/<actual-sha>` files, `index.json` and `README.md`. All modes are 100644. No executable repository layout is installed at the archive root: no `.github`, `.ci-run.json`, `apps`, `modules` or `packages`. Original paths in manifests are metadata; their archived contents remain data under `objects`.
+
+The ordered future commit parents are:
+
+1. Published R8 `ecc10cbe01a71a0da1f9cac1a999c16915eebc78`, tree `7bbf02b20da74af54277f1e1f2e24d05b307be06`.
+2. Executed focal D21 `98174738fea48b3fe75e8d6684e2edd35574e75e`, tree `0dae9eb8d10924150e0418be355be0ee5a6c504f`, sole parent S21.
+3. Executed original Analytics A21 `241c8db64c355756d15ec4b7b456ff1bcf30d51a`, tree `7076a79663700b540e24f79c378fb8b90f5d7e5e`, sole parent S21.
+
+Those exact immutable commit identities and parent/tree metadata were read independently. They are planned retention parents, not blob entries. A SHA written in a document does not establish Git reachability. This proposal has no archive tree, commit or published ref of its own; root must audit and publish it. No garbage-collection deadline is assumed. The historical `sf613-ledger` ref and source/product refs are outside this author's mutation scope.
+
+## Closed focal result
+
+Run **46119613404 / attempt 1** executed D21. Main job 140901000269 and cleanup job 140901542389 both completed successfully. Root acquired each original once, preserved the exact decoded bytes with literal readback before interpretation, and closed originals at **2026-11-28 07:10:06 UTC**. The final focal receipt closed at **07:16:50 UTC**.
+
+Observed evidence contains 18 working pins, nine host-identity records, 15 commands with zero exits and 30 false truncation flags. Five functional footers total **17 passed, zero failed and 2,407 assertions**; the outer footer is separately **nine passed, zero failed and 41 assertions**. Eight report payloads are present. The C21 report has 19 ordered internal outcomes and 876 bytes including prefix/LF; its outcomes are not 19 additional test declarations or subprocesses.
+
+CLI and Sucafina type checks exited zero. Guards reported 78 rules, 860 files, 40 warnings, zero errors and zero approved exceptions against the recorded dev/merge-base identities. Wrapper Omni reported 9 declarations / 15 spawns / 0 delegated; that scope is not a universal count of all internal processes. Bun 1.3.14 and short revisions are observed; no full 40-character runtime revision is inferred. There were zero artifacts and no ZIP acquisition.
+
+The focal PASS remains local to these source/control checks. It does not establish that installed Analytics admitted the native projection or that the preview became faster.
+
+## Closed original Analytics result
+
+Run **46120824548 / attempt 1** executed A21. Main job 140904724628 failed; cleanup job 140906751190 succeeded. Root closed the two originals after one acquisition each at **2026-11-28 07:32:26 UTC**. The final receipt closed at **07:56:06 UTC**.
+
+The unchanged original selection remains two journeys, one worker, zero retries and one repeat. The two tests own two installations. The first-preview waiter remains 60 seconds; the sensitivity waiter remains 120 seconds; test budgets remain 780 and 660 seconds and the job 45 minutes. No diagnostic overlay or profiler is present. The original BI CDP acquisition observer remains active.
+
+The first journey failed at the original `page.waitForResponse` timeout, **60,000 ms at spec 72:32**. Preview sequence 3 emitted one POST native-request at **07:26:38.8611911Z**, with exact owner binding. No native-response, body or preview terminal was observed. UI42 reached six partial captures—four list and two configure—while UI43 and UI44 were not reached. This observation does not prove what the backend did after the timeout.
+
+Historical-results sequence 1 returned HTTP 200, status ok and an array in 397 ms. Sequence 2 separately recorded request-failed at 366 ms and an HTTP 200 response with acquisitionFailure `response-body-unavailable` at 364 ms. That response has no validated body or status property and is not a response to preview sequence 3. The preparatory whole-HTTP durations are not internal phase profiles or evidence of a causal speedup.
+
+The second journey passed the current original BI case: 40 captures, comprising seven UI45 and 33 UI46 captures; two complete original BI06 acquisitions; the current source-negative HTTP 403; and the scoped 11-view result with fabricatedResult false. This current BI pass does not explain the previous C20 cancellation and does not erase that earlier negative receipt.
+
+The current union contains **97 core markers: 45 source, 46 capture, five diagnostics and one scope**, plus two context records and ten discovery/owner records in their separate unions. Four console/page-error pairs are empty. The reported suite duration is 7.5 minutes. Exact Playwright assertion counts are not inferred from these logs.
+
+Artifact **15253108726** remains metadata only: reported 45,864,938 bytes and SHA256 `9685c61ddd7ee4f262e3e1e01b53248eba96b15cc6a939b1630b3d55787464d5`. Its 147 uploaded files are a reported upload count, not independently verified ZIP entries. **No artifact ZIP was acquired.**
+
+Historical accepted areas remain **12/15**, with **zero new accepted areas**. No final C613, UI6, Migration/Release final result, go-live or production approval is supplied.
+
+## Exact streams and byte preservation
+
+Eight new typed streams use 24 references to real blobs. Each reconstruction preserves UTF-8 order, BOM bytes, line endings and tails; no separator is inserted.
+
+| Stream | Actual parts | Bytes | LF |
+|---|---:|---:|---:|
+| C21 focal main | 1 | 112,586 | 922 |
+| C21 focal cleanup | 1 | 2,280 | 39 |
+| C21 focal report union | 1 | 10,691 | 8 |
+| C21 Analytics main | 17 | 4,867,187 | 1,961 |
+| C21 Analytics cleanup | 1 | 2,280 | 39 |
+| C21 Analytics core markers | 1 | 34,315 | 97 |
+| C21 Analytics contexts | 1 | 5,428 | 2 |
+| C21 Analytics discovery/owner | 1 | 1,458 | 10 |
+
+The full Analytics main's calculated Git SHA `0e7e5bdf937c63b23913ab8230cf5e6526d601da` is not a fetched or persisted whole blob. Its 17 actual parts are enumerated and contiguous in manifest `164c699a321e6c15eac16ca8a8634ac7833c49e2`; recomposition matches 4,867,187 bytes and SHA256 `02abf885d905d2a6219939d25c3d65ea5d51f050ef23209980d4b578f94b0689`. BOM byte positions are 0, 2,104,805 and 4,223,348. The calculated whole is excluded from `objects`.
+
+The four derived unions—eight focal reports, 97 Analytics core markers, two contexts and ten discovery/owner lines—occur literally in the preserved mains and in the same order. Their carrier-prefix removal does not rewrite payloads. This archive assembly is data verification, not a new semantic intake or execution.
+
+## D30 remains a static package with four unbound inputs
+
+D30 adds only G28, the whole-file C21 native-scenario control at 45 seconds process / 60 seconds parent. G1–G27, the engine, existing commands and deadlines remain literal. Its verified derivation has 29 anchors and four reversible patches, 13 hunks with +36/−28. Root review `43ae6aab50a63fc4dbc349c6fef5071a42fbc954` and independent review `4a35518647080e174e5f5acf455ace003cf8937d` remain separate actual documents.
+
+Static expected counts are **28 groups, 34 syntactic command sites, 39 effective commands and 78 truncation flags**. The global functional, report and assertion totals remain null. The C21 reference report model is 876 bytes under its 1,024-byte cap; physical native probes and composed fallback checks keep their documented limits. The modeled line is not promoted to a separate blob merely because it matches the observed focal line.
+
+The four parameters remain `__SF613_SOURCE_SHA__`, `__SF613_SOURCE_TREE__`, `__SF613_WRAPPER_BLOB__` and `__SF613_WRAPPER_SHA256__`, all **UNBOUND**. Existing global deadlines remain process 35 minutes, step 40 minutes, job 45 minutes and finalizer three minutes. Sums of individual ceilings are not a scheduling guarantee. The D30 manifest's earlier focal-pending cut is retained literally; the later focal and Analytics receipts are linked separately and do not bind a final candidate or authorize D30 execution.
+
+## Composition map and unresolved decisions
+
+The composition map is fixed at **2026-11-28 07:22:11 UTC** and remains preparation only. Its ten explicit immutable inputs are retained, including the original recipe/route, C21 object review and source/dev status, README, execution and inventory documents. The static 857-path comparison and zero changed-path overlap are reported within that preserved map; they do not prove runtime equivalence, a current lease, an environment session or a reservation. Other citations and compared tree entries are not silently expanded into this finite archive.
+
+The map's earlier pending Analytics state remains historical. The later final C21 receipt supplies the negative result without rewriting the map. Final gates remain 0/5 and readiness NOT_READY; G08 and G10 retain their documented blocks. There is no new environment readback, final C/T, UI6 execution or production authorization.
+
+The embedded 390-byte UI6 request has only a calculated standalone SHA `2bd57a54180a099bbf904d188fe6e0eb22362cea`; that identity is excluded as a separate object. Checkpoints, tool helpers, calculated model/loader/intermediate hashes, unacquired ZIPs and future diagnostic proposals are likewise excluded. Superseded actual C21 LocalStore/control drafts and the earlier focal manifest are retained explicitly as history, not as executed final evidence.
+
+## Verification and publication boundary
+
+The author authenticated the 107 actual new input bodies and the new catalog; the 36 reused input metadata records match the published R8 index. R8's full 817-body audit is not repeated or attributed to this increment. Its root/peer data and object reviews and publication receipt remain available.
+
+The complete data-only derivation will carry exact before/after values, array suffixes and compact value fingerprints. Forward application must reproduce the entire proposed index, and inverse application must restore the full R8 index. This README is a new prefix, the entire R8 README exactly once, and a documentary suffix. No source or test code is executed to perform these checks.
+
+Root must independently verify the proposal, the exact `objects` tree and ordered parents, then check the live R8 archive lease before any nonforce publication. Prior workflow-event and protected-ref observations remain historical; this proposal creates no run or fresh environment claim. All prior evidence remains reachable through the published base while this new increment awaits publication.
+
+## Historical R8 README — literal preserved text
+
+The following complete R8 README is retained exactly once. Its cut, statuses, totals, pending statements and instructions are historical; the R9 sections above define this proposed increment.
+
 # sf613-evidence — R8 documentary proposal
 
 **R8 is a proposed documentary increment. C20's original Analytics suite is closed negative: two failed tests and zero passed tests.** This proposal does not qualify the product, D29, migration, release, or production. Root alone may review and publish the archive ref.
@@ -533,3 +652,5 @@ Native monotonic intervals, launcher wall time, Playwright time and Actions time
 The JSON derivation supplied separately records every index operation, exact pre/post values and array lengths, plus this README's literal prefix/base/suffix composition. Forward application reproduces the proposed bytes; inverse application reproduces both R6 documents exactly. The current derivation, manifest and documents remain proposal artifacts outside their own self-referential object list.
 
 <!-- R7 literal README ends; R8 documentary wrapper only. -->
+
+<!-- R8 literal README ends; R9 documentary wrapper only. -->

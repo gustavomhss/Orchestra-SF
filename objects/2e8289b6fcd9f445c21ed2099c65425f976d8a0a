@@ -1,0 +1,233 @@
+{
+  "schema": "sf613-c21-original-analytics-execution-authority-v1",
+  "status": "AUTHORIZED_ONE_CREATE_ONLY_BRANCH_ACTIVATION_AFTER_IMMEDIATE_PREFLIGHT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "root/Astra",
+  "atUtc": "2026-11-28 07:21:20 UTC",
+  "userMandate": "Complete remaining #613 work and reviewed integration; nonproduction CI and installed test work authorized.",
+  "source": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "receipt": {
+      "gitBlob": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+      "bytes": 6597,
+      "sha256": "15983232827dfe1d579b8ac6edbd858680256cf8daafb2a047c8f63305ffe31c",
+      "lf": 186,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+    "tree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "delta": "1A .ci-run.json"
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "objectReceipt": {
+    "gitBlob": "29cc3314e9bda9eebcbcacba8890f6ea856a985a",
+    "bytes": 8637,
+    "sha256": "7a85905c22e444645ddecad6fa0cc1779fa31dba7230153a5cb0d3e9c2f0408c",
+    "lf": 257,
+    "endsWithLF": true
+  },
+  "independentReview": {
+    "gitBlob": "068a1f2777031757b3acbb1ab8845ba80a3e670d",
+    "bytes": 10123,
+    "sha256": "97f8d5e341ed6398165dbb90d60c57af66468e1348740f61fcc8a4b19e260847",
+    "lf": 340,
+    "endsWithLF": true
+  },
+  "focalPrerequisite": {
+    "gitBlob": "509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+    "bytes": 10209,
+    "sha256": "d9aee72816d879a4d224b8f56944c83b2a8b421a0ff62b461f788601aa8aeaec",
+    "lf": 362,
+    "endsWithLF": true
+  },
+  "selection": {
+    "pins": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "mode": "100644",
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "bytes": 56661,
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "mode": "100644",
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "bytes": 4384,
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/playwright.config.ts",
+        "mode": "100644",
+        "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "bytes": 1892,
+        "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "mode": "100644",
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "bytes": 21102,
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "mode": "100644",
+        "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "bytes": 719,
+        "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "mode": "100644",
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "mode": "100644",
+        "gitBlob": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "bytes": 15525,
+        "sha256": "c4e921a271e7a39669b9c962c0aa3601dd589ef5f43d928f733aa6f5b963b653",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "mode": "100644",
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "mode": "100644",
+        "gitBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "packages/app-shell/package.json",
+        "mode": "100644",
+        "gitBlob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "bytes": 4225,
+        "sha256": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "mode": "100644",
+        "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "bytes": 17001,
+        "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": "script/test-ci.ts",
+        "mode": "100644",
+        "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "bytes": 19419,
+        "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "mode": "100644",
+        "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476,
+        "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+        "resolvedInActualS21": true,
+        "retainedInSnapshotByLiteralSubtree": true
+      }
+    ],
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "previewTimeoutMs": 60000,
+    "repreviewTimeoutMs": 60000,
+    "sensitivityTimeoutMs": 120000,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "jobTimeoutMs": 2700000,
+    "oneTestOwnedInstallationPerJourney": true,
+    "originalBiCdpAcquisitionObserver": true,
+    "diagnosticOverlay": false,
+    "profiler": false,
+    "originalSpecAndConfigurationLiteral": true,
+    "configuration": "e2e/playwright.production.config.ts",
+    "spec": "e2e/sucafina/design-wave-five-analytics.spec.ts"
+  },
+  "activation": {
+    "branch": "ci-run-sf613a21",
+    "createOnly": true,
+    "forceAllowed": false,
+    "preconditions": [
+      "Fresh matching ref list empty",
+      "Fresh exact-head run list empty",
+      "Fresh intended-branch run list empty",
+      "Reviewed source and snapshot immutable identities match",
+      "Public source/product/ledger/evidence refs unchanged at the publication cut"
+    ],
+    "expectedWorkflow": ".github/workflows/test-ci.yml",
+    "expectedEvent": "push",
+    "expectedLinuxRunner": "ubuntu-24.04",
+    "discoveryWindowMs": 180000,
+    "automaticRetryOrRecoveryAllowed": false,
+    "missingEventCauseNotInferred": true
+  },
+  "originalReception": {
+    "owner": "root",
+    "when": "After one matching run/attempt and both jobs are terminal",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "preserveBeforeInterpretation": true,
+    "GitCopiesOnlyForReviewers": true,
+    "artifactMetadataOnly": true,
+    "artifactZipGets": 0,
+    "closeAfterPreservation": true,
+    "reacquisitionAllowed": false
+  },
+  "limits": {
+    "originalC20FailureRetained": true,
+    "onlyChangedReviewedSourceJustifiesNewRun": true,
+    "originalWaitersNoRetryReadbackSubstitute": true,
+    "localRepositoryCodeExecution": false,
+    "productMerge": false,
+    "installedAcceptanceNotYetGranted": true,
+    "productionAuthorized": false,
+    "prodBuildChannelIsNotProductionCutover": true
+  }
+}

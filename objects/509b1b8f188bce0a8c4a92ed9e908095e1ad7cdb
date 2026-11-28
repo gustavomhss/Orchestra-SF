@@ -1,0 +1,362 @@
+{
+  "schema": "sf613-c21-focal-final-receipt-v1",
+  "status": "CLOSED_FOCAL_PASS_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "root/Astra",
+  "closedAtUtc": "2026-11-28 07:16:50 UTC",
+  "source": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "receipt": {
+      "gitBlob": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+      "bytes": 6597,
+      "sha256": "15983232827dfe1d579b8ac6edbd858680256cf8daafb2a047c8f63305ffe31c",
+      "lf": 186,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "bytes": 21170,
+      "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+      "lf": 460,
+      "endsWithLF": true
+    },
+    "rootReview": {
+      "gitBlob": "ecf9e78377de9b23da3cffadfe3af4e613d4f860",
+      "bytes": 21310,
+      "sha256": "9cb21833fa2a58b0487767a1c399c783d080d50ed7ec11b145be2fc775455d7d",
+      "lf": 691,
+      "endsWithLF": true
+    },
+    "independentStaticReview": {
+      "gitBlob": "86195b9ba4261fdb38013da7c121f931170e0fef",
+      "bytes": 21736,
+      "sha256": "76329e15dee2ab484b357460c05a0e60e59bc51b1a993bd0dae2386adf257c4c",
+      "lf": 530,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+    "tree": "0dae9eb8d10924150e0418be355be0ee5a6c504f",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "delta": "2A",
+    "receipt": {
+      "gitBlob": "4e0cf472a09e6d72ddded366ce24865bdcc89b87",
+      "bytes": 7207,
+      "sha256": "b738b060a457886e18fb598908b11bba701f75b63edc10fda3cad69692a5a73f",
+      "lf": 211,
+      "endsWithLF": true
+    },
+    "independentObjectReview": {
+      "gitBlob": "9f087dbd1e4451d5479101e85a0f62f689a0d05a",
+      "bytes": 17630,
+      "sha256": "32293d646e861308a75f8dcc8a5158ab70201d6ddcfffaacad15742cfebfaf47",
+      "lf": 566,
+      "endsWithLF": true
+    }
+  },
+  "run": {
+    "id": 46119613404,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46119613404",
+    "event": "push",
+    "path": ".github/workflows/test-ci.yml",
+    "head": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+    "branch": "ci-run-sf613c21",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-28T07:05:52Z",
+    "jobs": [
+      {
+        "id": 140901000269,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-28T07:05:55Z",
+        "completedAt": "2026-11-28T07:08:08Z"
+      },
+      {
+        "id": 140901542389,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-28T07:08:11Z",
+        "completedAt": "2026-11-28T07:08:19Z"
+      }
+    ]
+  },
+  "authority": {
+    "gitBlob": "46fe9d126f0a64c328e1b98dca0c1cf1b2214680",
+    "bytes": 6890,
+    "sha256": "6ddec805989a67c34b38f57c4ae719c0993b5ee12fb57aa26a9a6b39bf592839",
+    "lf": 185,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "9741a440e3fc172cf56a738ae11789c2aed1ebf1",
+    "bytes": 4585,
+    "sha256": "a5894f97cfe94d4185dbcaf322baf17f1c85cbcdb759ab3b1d9e8e3a8ebad08d",
+    "lf": 117,
+    "endsWithLF": true
+  },
+  "binding": {
+    "gitBlob": "0d35a47010791fec0ccd17a2a140d7233635ad84",
+    "bytes": 1388,
+    "sha256": "a8f894e7ede4f747ecf3325f4774794657b30c1f35923c02f8dfe4c8228d4bea",
+    "lf": 44,
+    "endsWithLF": true
+  },
+  "terminalContext": {
+    "gitBlob": "8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+    "bytes": 25911,
+    "sha256": "7e3fa1ca2299b7ba0ccb6f0e2db6f88158cee422df69ac9fbc9b523d22a6d297",
+    "lf": 554,
+    "endsWithLF": true
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "wrapper": {
+    "gitBlob": "50df11d4be37f2990bc7d26095f2515292db959b",
+    "bytes": 13830,
+    "sha256": "abd510b7d5c03090b2695e9628cdc274b75a6f21349c996411bc27a46fda81de",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "3644bd66eb49cc52956e2c5d96c45061d007431d",
+    "bytes": 18110,
+    "sha256": "e16563876eda6b35f5b5078845ebfc9a5e83915e0972accaeecc4ee59733c768",
+    "lf": 476,
+    "endsWithLF": true
+  },
+  "rootIntake": {
+    "gitBlob": "f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+    "bytes": 13969,
+    "sha256": "2035e9902d138ad403176d290452e0e28064aee4aa534e6cc0ee09d63c7b317e",
+    "lf": 616,
+    "endsWithLF": true
+  },
+  "peerIntake": {
+    "gitBlob": "fe0583ce868dc64e3325bdf27899b3735bf5efb6",
+    "bytes": 46520,
+    "sha256": "ae9463f864fc0e6205b01c9526224456100bbc06fc0a4cc0f456006e514c1686",
+    "lf": 1510,
+    "endsWithLF": true
+  },
+  "extraction": {
+    "gitBlob": "a33016cbd4fb1d95bea1e31c59ead5244d490dbb",
+    "bytes": 71216,
+    "sha256": "8d3038b1a92802c4646cdc8e5266e17b6cd85535aa1d14bd6e355247c89626ab",
+    "lf": 1600,
+    "endsWithLF": true
+  },
+  "rootChecks": 92,
+  "independentChecks": 55,
+  "main": {
+    "job": 140901000269,
+    "blob": {
+      "gitBlob": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+      "bytes": 112586,
+      "sha256": "43ee43db92077281068da30bc060be89329c6c789425e790d5bd423df11ceca2",
+      "lf": 922,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "29f7d0bd9066d4478d78a26d0e4d584077c01358",
+      "bytes": 1824,
+      "sha256": "9a386f05733f3aa46dd0d8f99c6cba843c9ed62d34eefe75e0eb1d42ba101a4e",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "originalGets": 1
+  },
+  "cleanup": {
+    "job": 140901542389,
+    "blob": {
+      "gitBlob": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+      "bytes": 2280,
+      "sha256": "2e4def2cd3446322f08537e8648c105a31ce82920621e62530f0c1ef9981a544",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "34040d4018e5b2b2434511770cf712c736092d01",
+      "bytes": 1814,
+      "sha256": "34a563c5a6648c27c8d5bf99499dc38939636c529579ff9be89fde10668a56de",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "originalGets": 1,
+    "branchAbsent": true
+  },
+  "reports": {
+    "gitBlob": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+    "bytes": 10691,
+    "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+    "lf": 8,
+    "endsWithLF": true
+  },
+  "guard": {
+    "gitBlob": "3864ebf7ee0bccce857264832e4731da685e3fb6",
+    "bytes": 14082,
+    "sha256": "f451b20f7b419f65e62c9e97a539574b85399ab368c84d33e8aab40387874665",
+    "lf": 1,
+    "endsWithLF": true
+  },
+  "observed": {
+    "functional": {
+      "passed": 17,
+      "failed": 0,
+      "assertions": 2407
+    },
+    "functionalFooters": [
+      {
+        "line": 789,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 843,
+        "tests": 7,
+        "files": 1,
+        "duration": "294.00ms"
+      },
+      {
+        "line": 811,
+        "pass": 5,
+        "fail": 0,
+        "assertions": 757,
+        "tests": 5,
+        "files": 1,
+        "duration": "702.00ms"
+      },
+      {
+        "line": 858,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 503,
+        "tests": 3,
+        "files": 1,
+        "duration": "259.00ms"
+      },
+      {
+        "line": 872,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 147,
+        "tests": 1,
+        "files": 1,
+        "duration": "178.00ms"
+      },
+      {
+        "line": 886,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 157,
+        "tests": 1,
+        "files": 1,
+        "duration": "467.00ms"
+      }
+    ],
+    "outer": {
+      "passed": 9,
+      "failed": 0,
+      "assertions": 41,
+      "duration": "91.93s"
+    },
+    "outerFooter": {
+      "line": 892,
+      "pass": 9,
+      "fail": 0,
+      "assertions": 41,
+      "tests": 9,
+      "files": 1,
+      "duration": "91.93s"
+    },
+    "commands": 15,
+    "zeroExits": 15,
+    "truncationFlagsFalse": 30,
+    "sourceWorkingPins": 18,
+    "hostIdentityRecords": 9,
+    "reports": 8,
+    "oldSevenPayloadsLiteral": true,
+    "newC21Report": {
+      "bytesWithPrefixAndLF": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "orderedOutcomes": 19,
+      "contexts": [
+        "readonly",
+        "preimage"
+      ],
+      "modelEqualityObserved": true,
+      "standaloneModelBlobCreated": false
+    },
+    "typechecks": [
+      {
+        "package": "CLI",
+        "exit": 0,
+        "durationMs": 30714
+      },
+      {
+        "package": "Sucafina",
+        "exit": 0,
+        "durationMs": 32535
+      }
+    ],
+    "guards": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "rules": 78,
+      "files": 860,
+      "warnings": 40,
+      "errors": [],
+      "approved": [],
+      "bootstrap": false
+    },
+    "omni": {
+      "line": 893,
+      "nonce": "7997a3730d13b88a36aad6089f7aae7b",
+      "declared": 9,
+      "spawn": 15,
+      "delegated": 0,
+      "scope": "Wrapper only"
+    },
+    "bun": {
+      "version": "1.3.14",
+      "observedSetupRevision": "0d9b296af",
+      "observedTestRevision": "0d9b296a",
+      "full40CharacterRevisionObserved": false,
+      "setupLine": 261
+    },
+    "artifacts": 0,
+    "zipGets": 0
+  },
+  "originalsClosed": {
+    "at": {
+      "current_time": "2026-11-28 07:10:06 UTC"
+    },
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "reacquisitionAllowed": false,
+    "source": "Exact decoded originals preserved with literal Git readback and reassembly before interpretation"
+  },
+  "artifacts": [],
+  "limits": {
+    "scope": "Only the actual C21 source and this focal selection on D21; not the final integrated candidate",
+    "previousResultsNotTransferred": true,
+    "physicalSelectionPerformanceNotMeasured": true,
+    "installedAreasNewlyAccepted": 0,
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "originalAnalyticsRequired": true,
+    "UI6Required": true,
+    "finalReviewedHeadCIRequired": true,
+    "migrationAndReleaseSameFinalSourceRequired": true,
+    "productionAuthorized": false
+  }
+}

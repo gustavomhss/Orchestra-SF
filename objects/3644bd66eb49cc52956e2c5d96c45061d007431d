@@ -1,0 +1,476 @@
+{
+  "schema": "sf613-c21-bound-focal-manifest-v1",
+  "status": "SOURCE_BOUND_SNAPSHOT_UNBOUND_UNEXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "#613 C21 native scenario selection focal",
+  "author": "root/Astra",
+  "preparedAtUtc": "2026-11-28 06:59:32 UTC",
+  "source": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "parents": [
+      "2228172b29080b411850ec98a4cdaa66020db5e6"
+    ],
+    "delta": {
+      "modified": 3,
+      "added": 1,
+      "files": 4,
+      "hunks": 11,
+      "addedLines": 471,
+      "removedLines": 11
+    },
+    "objectReceipt": {
+      "gitBlob": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+      "bytes": 6597,
+      "sha256": "15983232827dfe1d579b8ac6edbd858680256cf8daafb2a047c8f63305ffe31c",
+      "lf": 186,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "bytes": 21170,
+      "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+      "lf": 460,
+      "endsWithLF": true
+    },
+    "rootReview": {
+      "gitBlob": "ecf9e78377de9b23da3cffadfe3af4e613d4f860",
+      "bytes": 21310,
+      "sha256": "9cb21833fa2a58b0487767a1c399c783d080d50ed7ec11b145be2fc775455d7d",
+      "lf": 691,
+      "endsWithLF": true
+    },
+    "independentStaticReview": {
+      "gitBlob": "86195b9ba4261fdb38013da7c121f931170e0fef",
+      "bytes": 21736,
+      "sha256": "76329e15dee2ab484b357460c05a0e60e59bc51b1a993bd0dae2386adf257c4c",
+      "lf": 530,
+      "endsWithLF": true
+    },
+    "treeAudit": {
+      "pairs": 11,
+      "literalSiblings": 267,
+      "exactDelta": "3M1A"
+    }
+  },
+  "carrier": {
+    "base": {
+      "gitBlob": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+      "bytes": 12927,
+      "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+      "lf": 194,
+      "endsWithLF": true
+    },
+    "template": {
+      "gitBlob": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+      "bytes": 13791,
+      "sha256": "71dfb151e2dbebb14d27b496b23a04eb9f8c16ea5e31ac363cd186f72f3d91ef",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "boundWrapper": {
+      "gitBlob": "50df11d4be37f2990bc7d26095f2515292db959b",
+      "bytes": 13830,
+      "sha256": "abd510b7d5c03090b2695e9628cdc274b75a6f21349c996411bc27a46fda81de",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+  },
+  "proposedSnapshot": {
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "branch": "ci-run-sf613c21",
+    "exactDelta": "2A",
+    "changes": [
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "operation": "A",
+        "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "mode": "100644",
+        "operation": "A",
+        "gitBlob": "50df11d4be37f2990bc7d26095f2515292db959b",
+        "bytes": 13830,
+        "sha256": "abd510b7d5c03090b2695e9628cdc274b75a6f21349c996411bc27a46fda81de",
+        "lf": 204,
+        "endsWithLF": true
+      }
+    ],
+    "bothPathsAbsentInActualSource": true,
+    "noExecutableSelfPin": true
+  },
+  "derivation": {
+    "originalTemplate": {
+      "gitBlob": "0d4a09646a44e34ff991a337b3c84f4f2af800f2",
+      "bytes": 7586,
+      "sha256": "4a5cb6aa74404d748bd026b4901680cbcf7ec00678f503bf695267588af911ad",
+      "lf": 124,
+      "endsWithLF": true
+    },
+    "finalBinding": {
+      "gitBlob": "4df4591cd4bca56926601f691a30479b958d8144",
+      "bytes": 3083,
+      "sha256": "bb4e2651d1eba86feb160e66f3d2df65795716558d99fb04eaac4972b7808e93",
+      "lf": 99,
+      "endsWithLF": true
+    },
+    "literalBoundAddition": {
+      "gitBlob": "1d7be69f56b9992c91cdc0c468ad0ea1efcc8ae0",
+      "bytes": 14258,
+      "sha256": "29cd4965e2be7371e72ce7ee0de4d7ea92cb9573db98bed2b1e7794f5b8468b0",
+      "lf": 209,
+      "endsWithLF": true
+    },
+    "bindingOperations": [
+      {
+        "before": "__SF613_SOURCE_SHA__",
+        "after": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
+      },
+      {
+        "before": "__SF613_SOURCE_TREE__",
+        "after": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+      }
+    ],
+    "forwardInverseVerified": true
+  },
+  "preservation": {
+    "runCommandLiteral": true,
+    "G2ThroughG8Literal": true,
+    "all14ExistingCommandCallTextsLiteral": true,
+    "oldArgvCwdTimeoutsOutputFlagsAndCapsLiteral": true,
+    "threeChangedPinsMatchFinalSource": true,
+    "newControlPinMatchesFinalSource": true,
+    "G1FetchDepth": 2,
+    "G1SourceRef": "HEAD^",
+    "G1SourceFormat": "%H%n%T",
+    "guardCommand": "bun run check:guards --base origin/dev --json",
+    "guardOriginDevAndMergeBaseObservedAtRun": true,
+    "guardBootstrap": false,
+    "guardApprovedEmptyRequired": true,
+    "guardErrorsEmptyRequired": true,
+    "noRetryOrNameFilter": true,
+    "noNewParserOrEmitter": true,
+    "existing14UnchangedSourcePinsLiteral": true
+  },
+  "workingPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "git": "1017609000bdbdb39fc0510b045dc6dfde371faf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "git": "b7de9404461591ce0162d496ec917a47fb72a479"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "git": "91413a24723c27cc5102368c3fe9a6090d9cdcea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "git": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "git": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "git": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "git": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "git": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "git": "6287eedc5387f5e7495963a12364bc31157a7789"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "git": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "git": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "git": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "git": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "git": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "git": "68ae48f9a039180824f5471a1de27c0ca34be088"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "git": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "git": "b62d93080073964d7adc993c3a5c02277abab38a"
+    }
+  ],
+  "selection": {
+    "groups": 9,
+    "commandReceiptsExpected": 15,
+    "truncationFlagsRequiredFalse": 30,
+    "sourceWorkingPins": 18,
+    "functionalProcesses": 5,
+    "declarationCountFromFiles": 17,
+    "controlReportsExpected": 8,
+    "files": [
+      {
+        "group": "G2",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "git": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+        "declarations": 7,
+        "reports": 0,
+        "processMs": 120000,
+        "parentMs": 180000,
+        "change": "Literal C19 selection and source leaf"
+      },
+      {
+        "group": "G3",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "declarations": 5,
+        "reports": 5,
+        "processMs": 300000,
+        "parentMs": 360000,
+        "change": "Literal C19 selection and source leaf, including 31 C16 outcomes and nine nested C17 identityProjection cases"
+      },
+      {
+        "group": "G7",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "git": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "declarations": 3,
+        "reports": 1,
+        "processMs": 120000,
+        "parentMs": 180000,
+        "change": "Literal C19 selection and source leaf"
+      },
+      {
+        "group": "G8",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "declarations": 1,
+        "reports": 1,
+        "processMs": 45000,
+        "parentMs": 60000,
+        "bunMs": 20000,
+        "cooperativeMs": 18000,
+        "internalConsumerInvocations": 14,
+        "change": "One new whole-file command; existing test deadlines are not changed"
+      },
+      {
+        "group": "G9",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+        "git": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "declarations": 1,
+        "reports": 1,
+        "processMs": 45000,
+        "parentMs": 60000,
+        "bunMs": 20000,
+        "cooperativeMs": 18000,
+        "change": "New native selection control whole file; earlier groups and deadlines literal"
+      }
+    ],
+    "reportMap": [
+      {
+        "group": "G2",
+        "prefix": null,
+        "expected": 0
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C14_SNAPSHOT_CONTROL",
+        "expected": 2
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C15_SELECTION_CONTROL",
+        "expected": 2
+      },
+      {
+        "group": "G3",
+        "prefix": "SF_C16_SELECTION_CONTROL",
+        "expected": 1,
+        "preservedC16Outcomes": 31,
+        "identityProjectionCases": 9
+      },
+      {
+        "group": "G7",
+        "prefix": "SF_C19_PORTFOLIO_CASES",
+        "expected": 1
+      },
+      {
+        "group": "G8",
+        "prefix": "SF_C20_SCENARIO_LOOKUP",
+        "expected": 1,
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ],
+        "modelBytesWithPrefixAndLF": 564
+      },
+      {
+        "group": "G9",
+        "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+        "expected": 1,
+        "schema": "sf-c21-native-scenario-selection-v1",
+        "outcomes": [
+          "native-whole-collection-readonly",
+          "composed-fresh-candidates-readonly",
+          "native-whole-collection-preimage",
+          "composed-fresh-candidates-preimage",
+          "request-key-after-first-authorize",
+          "composed-prototype-first",
+          "composed-declaration-first",
+          "composed-prototype-second",
+          "composed-declaration-second",
+          "full-fallback-mutable-context",
+          "full-fallback-wrapped-callback",
+          "full-fallback-concurrent-declaration",
+          "full-fallback-namespace",
+          "full-fallback-top-level",
+          "full-fallback-CurrentChoice-scoped",
+          "full-shape-fallback-absent",
+          "full-shape-fallback-own-undefined",
+          "full-shape-fallback-array",
+          "empty-collection-is-a-real-selection"
+        ],
+        "modelBytesWithPrefixAndLF": 876,
+        "modeledSha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+        "modelCalculatedOnly": true,
+        "acceptanceCapBytes": 1024
+      }
+    ],
+    "C20InternalInvocationsAreNotExtraTestsOrSubprocesses": true,
+    "assertionTotal": null,
+    "observedFunctionalTotal": null,
+    "observedReportTotal": null,
+    "actualDurations": null,
+    "countScope": "Static selected declarations and own control-report emissions only. Actual PASS/fail/assertions require future complete command output and footers."
+  },
+  "budgets": {
+    "sourceBounds": {
+      "gitBlob": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+      "bytes": 12947,
+      "sha256": "ab496d6a1e00448fe0b41e779a802ceecd4e0e650dda635d8a678bebd2203bbf",
+      "lf": 231,
+      "endsWithLF": true
+    },
+    "commandBudgetSumMs": 1620000,
+    "parentBudgetSumMs": 2220000,
+    "mainJobTimeoutMs": 2700000,
+    "nominalSharedOverheadMs": 480000,
+    "nominalSharedOverheadGuaranteed": false,
+    "inherited14CommandBudgetsSumMs": 1575000,
+    "inherited8ParentBudgetsSumMs": 2160000,
+    "newGroupProcessMs": 45000,
+    "newGroupParentMs": 60000,
+    "newBunDeadlineMs": 20000,
+    "newCooperativeDeadlineMs": 18000,
+    "oldDeadlinesAndWorkflowAndRunnerUnchanged": true,
+    "workflow": {
+      "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "bytes": 18476,
+      "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+      "lf": 337,
+      "endsWithLF": true
+    },
+    "runner": {
+      "git": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "bytes": 19419,
+      "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+      "lf": 391,
+      "endsWithLF": true
+    },
+    "output": {
+      "stdoutPerCommandBytes": 1048576,
+      "stderrPerCommandBytes": 1048576,
+      "arithmetic15CommandStreamsMaxBytes": 31457280,
+      "aggregateMainCap": null,
+      "anyTruncationThrows": true,
+      "killSignal": "SIGTERM",
+      "forceKillAfterMs": 5000
+    },
+    "originalOuterRequestTimeoutMs": 600000,
+    "interpretation": "Parent budgets total 37 minutes. Eight nominal minutes remain within the 45-minute main job, shared with setup, scheduling, teardown and receipts; not a guarantee. Cleanup remains a separate job."
+  },
+  "intake": {
+    "beforeAnalysis": "Root acquires each actual original main/cleanup exactly once after terminal job receipts, preserves decoded UTF-8 evidence and supplies Git copies only to peers.",
+    "sourceAndSnapshot": "Require actual D head, source/tree pair, 18 working hashes, nine host identity records and current run/attempt. G1 proves D/HEAD^; root and peer audit source ancestry and exact 2A independently.",
+    "commands": "All 15 effective command receipts, correct argv/cwd, exit zero and 30 truncation flags false.",
+    "reports": "Eight complete reports across C14(2), C15(2), C16(1), C19(1), C20(1), C21(1). Match deterministic C21 outcomes against source; a prefix alone is insufficient.",
+    "footers": "Five whole-file footers, separate from nine outer groups. Actual assertions/durations must come from complete outputs.",
+    "guards": "Use actual fetched origin/dev identity and merge-base; inspect full canonical report, warnings as well as errors/approved/bootstrap and rule/file counts.",
+    "omni": {
+      "declaredExpected": 9,
+      "spawnExpected": 15,
+      "delegatedExpected": 0,
+      "actualNonce": null,
+      "scope": "Wrapper population only; not all descendants."
+    },
+    "runtime": "Report Bun version/revision only from actual current observations and retain any missing detail.",
+    "zipAuthorized": false
+  },
+  "limitations": [
+    "This focal qualifies only its effective source and selection; no previous focal/Analytics result transfers.",
+    "Whole decisionResults collection remains cloned before filtering, with the original authorization, unknown graphs, failures and fallbacks.",
+    "Physical selection and composed drifts are distinct oracles; only scoped CurrentChoice explicitly proves complete Snapshot fallback.",
+    "No installed performance claim, UI42–UI44 acceptance, UI6 completion, migration acceptance, final tar or go-live follows from a focal alone.",
+    "Original two-journey Analytics remains required after a positive focal; preview60s/sensitivity120s/worker1/retry0/repeat1 unchanged.",
+    "No local repository code or tests have been executed. No original log or ZIP has been acquired for this unexecuted snapshot.",
+    "Production cutover remains subject to explicit user approval."
+  ],
+  "actualResults": null,
+  "documentaryCorrection": {
+    "supersedes": {
+      "gitBlob": "8324bfb9a293824fe3d0661ecb6833c9ab924ad6",
+      "bytes": 17646,
+      "sha256": "8cecb9cb6464cdccc9ec9f55892834df31c06948f6baed1718420ff05517be0d",
+      "lf": 465,
+      "endsWithLF": true
+    },
+    "reason": "Correct unchanged working-pin count: 17 inherited pins minus three modified pins equals 14 literal pins; the eighteenth pin is newly added.",
+    "executableBytesUnchanged": true
+  }
+}

@@ -1,0 +1,3352 @@
+{
+  "schema": "sf613-c21-analytics-independent-intake-v1",
+  "status": "ACK_CURRENT_ORIGINAL_NEGATIVE_INTAKE",
+  "atUtc": "2026-11-28 07:44:09 UTC",
+  "reviewer": "focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "verdict": {
+    "dataChecks": "PASS",
+    "positiveChecks": 56,
+    "findings": [],
+    "originalAnalyticsConclusion": "FAILURE",
+    "journeys": {
+      "failed": 1,
+      "passed": 1,
+      "footerElapsed": "7.5m",
+      "assertions": null
+    },
+    "installedQualificationGranted": false,
+    "causalConclusionGranted": false,
+    "newRunAuthorized": false
+  },
+  "scope": {
+    "gitCopiesOnly": true,
+    "rootSoleOriginalReceiver": true,
+    "rootOriginalAcquisitions": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "rootOriginalAcquisitionClosedAt": "2026-11-28 07:32:26 UTC",
+    "agentOriginalGets": 0,
+    "agentZipGets": 0,
+    "allZipGets": 0,
+    "repositoryCodeExecution": false,
+    "treeCommitRefRunMutations": false,
+    "actionsEndpointsReadByThisReview": false,
+    "permittedWrite": "This documentary peer review blob only; literal Git readback after creation.",
+    "previewPayloadsWithheldFromPrintedOutput": 212
+  },
+  "tuple": {
+    "runId": 46120824548,
+    "attempt": 1,
+    "branch": "ci-run-sf613a21",
+    "event": "push",
+    "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "snapshot": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+    "snapshotTree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+    "mainJobId": 140904724628,
+    "cleanupJobId": 140906751190,
+    "authority": "2e8289b6fcd9f445c21ed2099c65425f976d8a0a",
+    "runBinding": {
+      "gitBlob": "0573492f51f7f09daec14b91a6bca05c3639c6ea",
+      "bytes": 1618,
+      "sha256": "ec3bdde36fa53161b9f4bbc9057505248b6d108f6cf51d262b7886a126f81aef",
+      "lf": 51,
+      "endsWithLF": true
+    },
+    "originalRequest": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    }
+  },
+  "inputs": {
+    "terminalContext": {
+      "git": "473bb8e8ec349e7f6d1a01352dbb3616087b2320",
+      "bytes": 27017,
+      "sha256": "c04d5111ec4cd0679784a2efa9365aba6c47baa2bb900d721dbdd879b7eb4f32",
+      "lf": 583,
+      "endsWithLF": true,
+      "cut": "2026-11-28 07:31:27 UTC"
+    },
+    "mainManifest": {
+      "git": "164c699a321e6c15eac16ca8a8634ac7833c49e2",
+      "bytes": 7995,
+      "sha256": "03985ef2928c64139bc347fe91d7ade7b65775478d5caf12bb16f58ec78cf21b",
+      "lf": 274,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "git": "1c79f46bc4e74d2e76a3f7e2ab69fb3c99258dd9",
+      "bytes": 1822,
+      "sha256": "2ee42a957e9aad1ef7fd648026b07f04e9e293a15b892f2c6b3fbc40ba79ebca",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "main": {
+      "git": "0e7e5bdf937c63b23913ab8230cf5e6526d601da",
+      "bytes": 4867187,
+      "sha256": "02abf885d905d2a6219939d25c3d65ea5d51f050ef23209980d4b578f94b0689",
+      "lf": 1961,
+      "endsWithLF": true,
+      "gitObjectActuallyCreated": false,
+      "gitWholeFetched": false,
+      "bomByteOffsets": [
+        0,
+        2104805,
+        4223348
+      ],
+      "partCount": 17,
+      "parts": [
+        {
+          "ordinal": 1,
+          "git": "14aba0efe34816b2a8333e0a94768e82556185d1",
+          "bytes": 300000,
+          "sha256": "0dc344eb247e8ea798f9d1075b366ec310128fc748f27294ff37ae4ae136dbd7",
+          "lf": 1171,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 2,
+          "git": "2486a067c3846afd008c3ece8a1a04654943c585",
+          "bytes": 300000,
+          "sha256": "99d42b2073d08f46bc4c950b3bec81d2e193639f3dae3326f70de6e8012a28a1",
+          "lf": 48,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 3,
+          "git": "d171a6bf6ed7f358f07fcbfced94fb62d37b11b6",
+          "bytes": 300000,
+          "sha256": "500c751109669b4a83f31b18563df47c7af2420f3d3a3dc18b06112d89f89f89",
+          "lf": 182,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 4,
+          "git": "dbe69ca2c14d3aa3b386611aef0b2b8ac49d6085",
+          "bytes": 300000,
+          "sha256": "1ef07b6f7afacd3310eb8d3af615f165096033cfa8c11232fb282f82d800cf86",
+          "lf": 34,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 5,
+          "git": "803ec37a6c2cc4789b2aa9b7bf95a9d154029f01",
+          "bytes": 300000,
+          "sha256": "66db7a9bf0e7559a21d11ed939aa3722da0a51278b7d61a9ffab965e234470fd",
+          "lf": 38,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 6,
+          "git": "22c491cc73b170c884948149aa0d78e97290ef38",
+          "bytes": 300000,
+          "sha256": "8ade0b1c33789e7cba76bb8b6f1b023d7009c2eb9f7a7120e2dca1875dd1ed79",
+          "lf": 32,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 7,
+          "git": "56ebab415ec5f9a4bb119129b9c2234a7d41270e",
+          "bytes": 300000,
+          "sha256": "b352eac4c9d5d986ad0d2f791816629e7faba55ce063e1e10253721f6f2d4b78",
+          "lf": 36,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 8,
+          "git": "ff5de7ee99aba36456b0b872bfca48dffea9b984",
+          "bytes": 300000,
+          "sha256": "5d5b1b6e8d7a797875df30fe0f99c9fb531868106ae0587d69055e08da2739f8",
+          "lf": 30,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 9,
+          "git": "34059e0d4f9bfc66edfa4ab4bec5e2ef31a56e82",
+          "bytes": 300000,
+          "sha256": "87ce3a6dcb81622d2782e153d825d89e425b3cf2cd005f093630f818349a0dce",
+          "lf": 38,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 10,
+          "git": "18869d2df316b4ff89fd2a47d7b02fb4a8381fab",
+          "bytes": 300000,
+          "sha256": "a4bfc080a89f1b244c37229e2bf300fbf3ca477d134dc71b60acf22b766f5567",
+          "lf": 50,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 11,
+          "git": "5acebf5c8578b66b04ffd6f44b221b1eb102cf23",
+          "bytes": 300000,
+          "sha256": "137d799ebf43d75deef81895c528b3c35bb8f0750a3a290391d2d3160ff439fb",
+          "lf": 30,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 12,
+          "git": "118e5def28c27edf5420fa2c89f8b4a936cc3ecc",
+          "bytes": 300000,
+          "sha256": "d2f335ed2fdc7f0cb3e2418f6d1ac47da13781860010fb474fc1d45ebbdb0c84",
+          "lf": 36,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 13,
+          "git": "fb80649ecd264545446a1d809ff7b220d6845b69",
+          "bytes": 300000,
+          "sha256": "029cb027c941dfc6e739c59c2ff32208186968644a606cfa551c12bf8ae37c30",
+          "lf": 32,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 14,
+          "git": "19852650b4ea9b4ac4e94a72ed835456fbbf579c",
+          "bytes": 300000,
+          "sha256": "930c4537c5045e20615dc9ca517cda27568dc1181d6def013de598300acdb7e4",
+          "lf": 38,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 15,
+          "git": "feb407aa1a827fbdefda8c8358ca8734f1f25c4d",
+          "bytes": 300000,
+          "sha256": "675e28f7037f060d203dc21f29154807422a2a5c52b8707fd2d07daaaa646af1",
+          "lf": 34,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 16,
+          "git": "bfc3b69edaf4b2ff4023a25389b8a1bda040bd46",
+          "bytes": 300000,
+          "sha256": "aa9e478dc76f32ca035b96fa8647197e9dbbe76311f4f6d880b069d39f5a1216",
+          "lf": 46,
+          "endsWithLF": false
+        },
+        {
+          "ordinal": 17,
+          "git": "cbaa61929c7c1100f8976690f44316fca3092283",
+          "bytes": 67187,
+          "sha256": "c60da2075345f023581118bc87a8f451b1545c3313fb76d416243448fc113c53",
+          "lf": 86,
+          "endsWithLF": true
+        }
+      ],
+      "contiguousByteAndUtf16Offsets": true,
+      "completeBeforeInterpretation": true
+    },
+    "cleanup": {
+      "git": "5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+      "bytes": 2280,
+      "sha256": "aa45ccc75fe8e047038edeb4065db6244f08e674ecb254eef0f4d6dffe5cc9b0",
+      "lf": 39,
+      "endsWithLF": true,
+      "gitObjectActuallyCreated": true,
+      "bomByteOffsets": [
+        0
+      ]
+    },
+    "representation": "Original decoded GitHub job-log strings re-encoded as UTF-8; no original normalization, no fabricated whole-object GET."
+  },
+  "previouslyClosedStaticEvidence": {
+    "actualA21Review": {
+      "git": "068a1f2777031757b3acbb1ab8845ba80a3e670d",
+      "bytes": 10123,
+      "sha256": "97f8d5e341ed6398165dbb90d60c57af66468e1348740f61fcc8a4b19e260847",
+      "lf": 340,
+      "endsWithLF": true
+    },
+    "focalPrerequisite": {
+      "gitBlob": "509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+      "bytes": 10209,
+      "sha256": "d9aee72816d879a4d224b8f56944c83b2a8b421a0ff62b461f788601aa8aeaec",
+      "scope": "CLOSED_FOCAL_PASS_ONLY"
+    },
+    "originalSelectionBodyReadsReused": 13,
+    "originalSelectionBodyReadsRepeated": 0,
+    "selectionPins": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "git": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "bytes": 56661,
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "git": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "bytes": 4384,
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac",
+        "lf": 75,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/playwright.config.ts",
+        "git": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "bytes": 1892,
+        "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5",
+        "lf": 53,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "git": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "bytes": 21102,
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+        "lf": 364,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "git": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "bytes": 719,
+        "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9",
+        "lf": 13,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "git": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/native-host.ts",
+        "git": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "bytes": 15525,
+        "sha256": "c4e921a271e7a39669b9c962c0aa3601dd589ef5f43d928f733aa6f5b963b653",
+        "lf": 267,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "git": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "git": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/package.json",
+        "git": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "bytes": 4225,
+        "sha256": "b2e1fa57886983bc308f37db40c401afd2fcdecc09a6abbe68db2897f611f155",
+        "lf": 109,
+        "endsWithLF": true
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "git": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "bytes": 17001,
+        "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+        "lf": 280,
+        "endsWithLF": true
+      },
+      {
+        "path": "script/test-ci.ts",
+        "git": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "bytes": 19419,
+        "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+        "lf": 391,
+        "endsWithLF": true
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476,
+        "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+        "lf": 337,
+        "endsWithLF": true
+      }
+    ],
+    "staticBudget": {
+      "firstCaseMs": 780000,
+      "secondCaseMs": 660000,
+      "previewResponseMs": 60000,
+      "sensitivityResponseMs": 120000,
+      "workflowJobMs": 2700000
+    },
+    "noDiagnosticOverlay": true,
+    "currentOutcomeNotInferredFromStaticReviewOrFocal": true
+  },
+  "observedExecution": {
+    "main": {
+      "startedAt": "2026-11-28T07:21:26Z",
+      "completedAt": "2026-11-28T07:29:57Z",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    "cleanup": {
+      "startedAt": "2026-11-28T07:30:00Z",
+      "completedAt": "2026-11-28T07:30:06Z",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "runCreatedAt": "2026-11-28T07:21:24Z",
+    "runUpdatedAt": "2026-11-28T07:30:07Z",
+    "observedArgs": "$ playwright test --config \"e2e/playwright.production.config.ts\" --workers \"1\" --retries \"0\" --repeat-each \"1\" \"(^|[\\\\\\\\/])e2e[\\\\\\\\/]sucafina[\\\\\\\\/]design-wave-five-analytics\\\\.spec\\\\.ts\\$\" --trace retain-on-failure \"--reporter=html,line,json,/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts\"",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "channel": "prod",
+    "omniMode": "strict",
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "testHeaders": [
+      {
+        "ordinal": 1016,
+        "timestamp": "2026-11-28T07:23:08.6895841Z",
+        "text": "[1/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity"
+      },
+      {
+        "ordinal": 1302,
+        "timestamp": "2026-11-28T07:27:42.4400106Z",
+        "text": "[2/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:443:1 › wave five analytics: question catalog and original contextual BI"
+      }
+    ],
+    "footers": [
+      {
+        "ordinal": 1894,
+        "timestamp": "2026-11-28T07:29:53.5348772Z",
+        "text": "  1 failed"
+      },
+      {
+        "ordinal": 1895,
+        "timestamp": "2026-11-28T07:29:53.5349706Z",
+        "text": "    [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity "
+      },
+      {
+        "ordinal": 1896,
+        "timestamp": "2026-11-28T07:29:53.5350303Z",
+        "text": "  1 passed (7.5m)"
+      },
+      {
+        "ordinal": 1898,
+        "timestamp": "2026-11-28T07:29:53.5902212Z",
+        "text": "##[error]Process completed with exit code 1."
+      }
+    ],
+    "bun": {
+      "observed": "1.3.14+0d9b296af",
+      "fullRevisionObserved": false
+    },
+    "omni": {
+      "nonce": "994e6fdc41822ff412dc4541bb7b35cc",
+      "control": "suite",
+      "focalDeclared": null,
+      "focalSpawned": null,
+      "focalDelegated": null,
+      "note": "The original main does not emit the focal wrapper's declared/spawned/delegated verdict. No focal totals transferred."
+    }
+  },
+  "extraction": {
+    "rawOriginalUnchanged": true,
+    "analysisNormalization": "For analysis only: strip leading BOM per line, all ECMA-48 CSI ANSI sequences (ESC [ and C1 CSI), then separate Actions timestamps; preserve marker JSON spelling and line order; append exactly one LF per selected marker.",
+    "allNonPreviewSfJsonLinesParsed": 109,
+    "malformedJsonLines": 0,
+    "unknownNonPreviewMarkerFamilies": [],
+    "core": {
+      "lineCount": 97,
+      "bytes": 34315,
+      "sha256": "b1c4a1ed95989c318bad1df2bc1b859e8675e4ef760af43f7113e863b6d402f5",
+      "lf": 97,
+      "endsWithLF": true,
+      "gitCalculatedOnly": "5eeda9b322b13033cf254de2645a2e64bf64db16",
+      "gitObjectCreatedByThisReview": false
+    },
+    "allNonPreview": {
+      "lineCount": 109,
+      "bytes": 41201,
+      "sha256": "4fea78c65c4ca6c9a3539e101da0a9009d7a0f4b317e6b3aac6c1020f0ff6c66",
+      "lf": 109,
+      "endsWithLF": true,
+      "gitCalculatedOnly": "c2a39902b494663947a03a02fb6c3f59582b5702",
+      "gitObjectCreatedByThisReview": false
+    },
+    "families": {
+      "SF_DESIGN_DISCOVERY": {
+        "lineCount": 2,
+        "bytes": 414,
+        "sha256": "78f954d510a426bda2b3f73c90f280beabe27da42581688b23de959ab1090130",
+        "lf": 2,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "e346f7f0abd1040117d6b80ee8d7d1cd2b4d47ba",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_ANALYTICS_SOURCE": {
+        "lineCount": 45,
+        "bytes": 26880,
+        "sha256": "031ebdb38613923eab9cb35119467cf39a8751f8d2889e65ad64f0c0205047cd",
+        "lf": 45,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "5b7e009f26b97b8829526afc3d373682a9b852d6",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_OWNER_ADMISSION_READS": {
+        "lineCount": 8,
+        "bytes": 1044,
+        "sha256": "573574ccac48cc0c9eb1d3d8bd3bcb2115157604036fa8ddc76b4ce6eee408f0",
+        "lf": 8,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "0220d8d281d923c350bdacddbd21abed4a2d0f0a",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_ANALYTICS_CONTEXT": {
+        "lineCount": 2,
+        "bytes": 5428,
+        "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+        "lf": 2,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_ANALYTICS_CAPTURE": {
+        "lineCount": 46,
+        "bytes": 5804,
+        "sha256": "c5d1293b32efe0477ed4d5ca2d110d46456a81133f4a24cc7e8be66dd429a164",
+        "lf": 46,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "ff26209d4b3874ecf0e836e5811a4ae535aee8f5",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_DESIGN_DIAGNOSTICS": {
+        "lineCount": 5,
+        "bytes": 1270,
+        "sha256": "0a1f76cacbc594a63d6be1ac053c10f25621a9ee9d4d190fce04ba9a4a282b70",
+        "lf": 5,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "ad2f5cff2093879f291043a7879ab6ff4dbc3230",
+        "gitObjectCreatedByThisReview": false
+      },
+      "SF_ANALYTICS_SCOPE": {
+        "lineCount": 1,
+        "bytes": 361,
+        "sha256": "e75e67c231619fec2c13c5d0d63898875bc44f8fca6cc696cf5f9444114d134f",
+        "lf": 1,
+        "endsWithLF": true,
+        "gitCalculatedOnly": "caf9dcacb66ae9804ed0353d5d47ef15306c63b8",
+        "gitObjectCreatedByThisReview": false
+      }
+    },
+    "sections": [
+      {
+        "case": 1,
+        "headerOrdinal": 1016,
+        "core": {
+          "lineCount": 34,
+          "bytes": 6003,
+          "sha256": "09d566426c8eb9fd1762d519a104cc6e7fd9c2e6640064242c530f76ebfbcf36",
+          "lf": 34,
+          "endsWithLF": true,
+          "gitCalculatedOnly": "8e5f28dc8856e4770cadde6158ba0d3dab690397",
+          "gitObjectCreatedByThisReview": false
+        },
+        "allNonPreview": {
+          "lineCount": 38,
+          "bytes": 11768,
+          "sha256": "af0b36514ac06f48df5b78a6928b08cc80eb223b343dc67059dcec821abb3b11",
+          "lf": 38,
+          "endsWithLF": true,
+          "gitCalculatedOnly": "dad7f6b6673edbfda63d39edf0c94755c5a0c554",
+          "gitObjectCreatedByThisReview": false
+        },
+        "familyCounts": {
+          "SF_DESIGN_DISCOVERY": 1,
+          "SF_ANALYTICS_SOURCE": 25,
+          "SF_OWNER_ADMISSION_READS": 1,
+          "SF_ANALYTICS_CONTEXT": 2,
+          "SF_ANALYTICS_CAPTURE": 6,
+          "SF_DESIGN_DIAGNOSTICS": 3
+        }
+      },
+      {
+        "case": 2,
+        "headerOrdinal": 1302,
+        "core": {
+          "lineCount": 63,
+          "bytes": 28312,
+          "sha256": "242fd67421635d356f6c6187220dcdbacabc16ba9f0c4a5d5c713fa8102d8fa2",
+          "lf": 63,
+          "endsWithLF": true,
+          "gitCalculatedOnly": "ed6b28b0ae4417ee172d4feea891f720b5653301",
+          "gitObjectCreatedByThisReview": false
+        },
+        "allNonPreview": {
+          "lineCount": 71,
+          "bytes": 29433,
+          "sha256": "a864f224f07bc3bda7c83ca9ed38571f876173d3cb8fddea32796d48c03d8569",
+          "lf": 71,
+          "endsWithLF": true,
+          "gitCalculatedOnly": "4119ae1480e01de07cec202f4454d337fd3b7e30",
+          "gitObjectCreatedByThisReview": false
+        },
+        "familyCounts": {
+          "SF_DESIGN_DISCOVERY": 1,
+          "SF_OWNER_ADMISSION_READS": 7,
+          "SF_ANALYTICS_CAPTURE": 40,
+          "SF_ANALYTICS_SOURCE": 20,
+          "SF_DESIGN_DIAGNOSTICS": 2,
+          "SF_ANALYTICS_SCOPE": 1
+        }
+      }
+    ],
+    "caseAssignment": "By actual sequential test headers and original line ordinals; no join inferred from unrelated clocks.",
+    "noDerivedUnionObjectsCreatedByThisReview": true
+  },
+  "currentFirstJourney": {
+    "status": "FAILED",
+    "failure": {
+      "kind": "TimeoutError",
+      "message": "page.waitForResponse: Timeout 60000ms exceeded while waiting for event \"response\"",
+      "diagnosticOrdinal": 1234,
+      "diagnosticTime": "2026-11-28T07:27:38.9098763Z",
+      "failurePrintOrdinal": 1256,
+      "failurePrintTime": "2026-11-28T07:27:41.7887757Z",
+      "stackOrdinal": 1265,
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "line": 72,
+      "column": 32
+    },
+    "preview": {
+      "ordinal": 1232,
+      "timestamp": "2026-11-28T07:26:38.8611911Z",
+      "family": "SF_ANALYTICS_SOURCE",
+      "payload": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    },
+    "previewFollowupRecords": [],
+    "portfolioResults": {
+      "sequence1": [
+        {
+          "ordinal": 1190,
+          "timestamp": "2026-11-28T07:26:26.0863833Z",
+          "family": "SF_ANALYTICS_SOURCE",
+          "payload": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 1,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        {
+          "ordinal": 1192,
+          "timestamp": "2026-11-28T07:26:26.4792855Z",
+          "family": "SF_ANALYTICS_SOURCE",
+          "payload": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 397,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        }
+      ],
+      "sequence2": [
+        {
+          "ordinal": 1210,
+          "timestamp": "2026-11-28T07:26:37.2683864Z",
+          "family": "SF_ANALYTICS_SOURCE",
+          "payload": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        {
+          "ordinal": 1212,
+          "timestamp": "2026-11-28T07:26:37.6337734Z",
+          "family": "SF_ANALYTICS_SOURCE",
+          "payload": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request-failed",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 366
+          }
+        },
+        {
+          "ordinal": 1214,
+          "timestamp": "2026-11-28T07:26:37.6339162Z",
+          "family": "SF_ANALYTICS_SOURCE",
+          "payload": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 364,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          }
+        }
+      ],
+      "sequence2Interpretation": "The same declared sequence 2 has a failed marker and HTTP 200 with acquisitionFailure=response-body-unavailable and absent status. HTTP 200 does not authenticate its body. No causal link to the later preview is established."
+    },
+    "ui42Captures": [
+      {
+        "ordinal": 1164,
+        "timestamp": "2026-11-28T07:26:19.8452069Z",
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1176,
+        "timestamp": "2026-11-28T07:26:20.3605396Z",
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1182,
+        "timestamp": "2026-11-28T07:26:20.4765043Z",
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1188,
+        "timestamp": "2026-11-28T07:26:20.7894686Z",
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1208,
+        "timestamp": "2026-11-28T07:26:29.1594419Z",
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "ordinal": 1230,
+        "timestamp": "2026-11-28T07:26:38.8610708Z",
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      }
+    ],
+    "ui43Captures": 0,
+    "ui44Captures": 0,
+    "contextReadbacks": [
+      {
+        "ordinal": 1152,
+        "timestamp": "2026-11-28T07:26:19.4628164Z",
+        "payload": {
+          "stage": "UI42-list",
+          "http": 200,
+          "status": "ok",
+          "acquisition": "authenticated-original-readback",
+          "ownerBinding": "exact",
+          "resources": [
+            {
+              "family": "decisions",
+              "resource": "case-intent",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "decisions",
+              "resource": "assumptions",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "campaign",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "results",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "sensitivity",
+              "state": "ready",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-sensitivity-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-units",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1194,
+        "timestamp": "2026-11-28T07:26:28.6482971Z",
+        "payload": {
+          "stage": "UI42-empty-case",
+          "http": 200,
+          "status": "ok",
+          "acquisition": "authenticated-original-readback",
+          "ownerBinding": "exact",
+          "resources": [
+            {
+              "family": "decisions",
+              "resource": "case-intent",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "decisions",
+              "resource": "assumptions",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "decisions.controls.read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "campaign",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "results",
+              "state": "partial",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-portfolio-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-preview",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-reconcile",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-portfolio-results",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-prepare-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                },
+                {
+                  "operationId": "portfolio.decision-promote-portfolio",
+                  "state": "unavailable",
+                  "operational": false,
+                  "reason": "operational-source-unavailable"
+                }
+              ]
+            },
+            {
+              "family": "portfolio",
+              "resource": "sensitivity",
+              "state": "ready",
+              "operations": [
+                {
+                  "operationId": "portfolio.decision-sensitivity-evaluate",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-read",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                },
+                {
+                  "operationId": "portfolio.decision-sensitivity-units",
+                  "state": "ready",
+                  "operational": true,
+                  "reason": null
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "nativeView": {
+      "ordinal": 1236,
+      "timestamp": "2026-11-28T07:27:38.9186403Z",
+      "family": "SF_DESIGN_DIAGNOSTICS",
+      "payload": {
+        "kind": "native-view",
+        "state": {
+          "discovery": "ready",
+          "provider": "ready",
+          "view": "ready",
+          "text": "Context and access⁨127.0.0.1:34655⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.68bbd3d7-d172-49e2-8962-6caec4743a17 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+        }
+      }
+    },
+    "fixtureReadbacks": [
+      {
+        "ordinal": 1130,
+        "timestamp": "2026-11-28T07:24:51.6149182Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "sensitivity-rule-fixture-registered-readback",
+          "status": "ok",
+          "caseVersion": 6,
+          "criterionId": "68bbd3d7-d172-49e2-8962-6caec4743a17",
+          "ruleRef": "criterion-rule:6fbd68875539524feac4cf5cc03610063239e11409486928cca9aa750ea5e099",
+          "previousVersion": 1,
+          "ruleVersion": 2,
+          "baselineRef": "decision-result:a2629bb8cc6761825d92b54e271f873de626ffec84be40a47d1e2913df4467bd",
+          "scenarioRef": "decision-result:42b361be0124ca4393194fd80553e87e513232558d5479e93ba2c96c95eab117",
+          "parameterRef": "e158b420-8e84-41fb-a8a7-b520263632a7:2",
+          "parameterUnit": "USD",
+          "resultUnit": "USD",
+          "engineVersion": "planner-runtime-v1",
+          "sourceReferences": [
+            {
+              "refId": "planner-version:b001d52d-4d3c-4f08-a296-601065efec61:812f2f4c-2e87-41b5-851c-565a37b2a4fc:1",
+              "refDigest": "c02b18e2a02f0149d07887b9e5502367dac96ecb92ecebda95ef007b18d80bbf"
+            },
+            {
+              "refId": "planner-version:3fc4b354-e5a6-4e18-a63f-d400fe4e1173:84a31d9d-aeee-4867-8b8b-01d830787383:1",
+              "refDigest": "c4721bc7dc6758b41bb7380dab79696cb8952b5eb30214c18201ee947f7ed10a"
+            }
+          ],
+          "originalCaseUnchanged": true,
+          "originalUnitsReadbackMatched": true,
+          "acquisition": "original-register-canonical-resolve-then-controls-units-and-version"
+        }
+      },
+      {
+        "ordinal": 1136,
+        "timestamp": "2026-11-28T07:25:18.7279906Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "portfolio-selection-fixture-basis",
+          "initialVersion": 0,
+          "basis": "new-isolated-fixture-with-no-prior-registration",
+          "caseVersion": 6,
+          "criteriaCount": 1
+        }
+      },
+      {
+        "ordinal": 1148,
+        "timestamp": "2026-11-28T07:26:11.7715703Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "portfolio-selection-registered-readback",
+          "status": "ok",
+          "selectionVersion": 1,
+          "caseVersion": 6,
+          "originalAlternativePairMatched": true,
+          "originalCriteriaMatched": true,
+          "currentComparisonUnchanged": true,
+          "acquisition": "original-register-canonical-read-then-controls-and-comparison"
+        }
+      }
+    ],
+    "limits": [
+      "Six UI42 captures are preparatory/partial, and the failed original await prevents the subsequent UI43/UI44 path from being reached.",
+      "Ready discovery/provider/view and ready preview operation describe admission/readiness, not successful preview completion.",
+      "The sole preview request marker does not identify persist, compare, revalidation, selected-route admission, a running server operation at 60 seconds, or the cause of the timeout.",
+      "No performance improvement, regression magnitude, C21 physical-route admission, internal deadlock, or product defect location is inferred from these original markers."
+    ]
+  },
+  "currentBiJourney": {
+    "status": "PASSED_CURRENT_CANDIDATE_ONLY",
+    "ui45Captures": 7,
+    "ui46Captures": 33,
+    "bi01": {
+      "bindingOrdinal": 1468,
+      "bindingCount": 48,
+      "distinctReferenceDigests": 1,
+      "readback": {
+        "ordinal": 1472,
+        "timestamp": "2026-11-28T07:29:17.6411092Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-readback",
+          "view": "BI01",
+          "http": 200,
+          "rows": 36,
+          "numericValues": 14,
+          "missing": 22
+        }
+      }
+    },
+    "financialAcquisitions": [
+      {
+        "ordinal": 1594,
+        "timestamp": "2026-11-28T07:29:22.6995228Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:effective",
+          "http": 200,
+          "acquisition": "native-response"
+        }
+      },
+      {
+        "ordinal": 1616,
+        "timestamp": "2026-11-28T07:29:23.8192001Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-source-body-acquisition",
+          "selectedValueId": "budget:2026-01:actual",
+          "http": 200,
+          "acquisition": "native-response"
+        }
+      }
+    ],
+    "financialIdentityRegression": {
+      "ordinal": 1638,
+      "timestamp": "2026-11-28T07:29:24.3715622Z",
+      "family": "SF_ANALYTICS_SOURCE",
+      "payload": {
+        "operation": "bi-source-identity-regression",
+        "selectedValues": [
+          "budget:2026-01:effective",
+          "budget:2026-01:actual"
+        ],
+        "samePublishedReference": true,
+        "exactValueAndDigestQueries": 2,
+        "originalProjectionRetained": true
+      }
+    },
+    "bi06NativeCompletions": [
+      {
+        "ordinal": 1642,
+        "timestamp": "2026-11-28T07:29:28.3209288Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        }
+      },
+      {
+        "ordinal": 1846,
+        "timestamp": "2026-11-28T07:29:51.8781508Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        }
+      }
+    ],
+    "bi06AcquisitionReadbacks": [
+      {
+        "ordinal": 1644,
+        "timestamp": "2026-11-28T07:29:28.3367284Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "http": 200,
+          "acquisition": "native-response-cdp"
+        }
+      },
+      {
+        "ordinal": 1848,
+        "timestamp": "2026-11-28T07:29:51.8914201Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "locale": "pt-BR",
+          "http": 200,
+          "acquisition": "native-response-cdp"
+        }
+      }
+    ],
+    "localeAssociation": "The first BI06 native completion is in the English path and is followed by the en-US scalar marker at 1648; the second completion is followed by explicit pt-BR acquisition at 1848 and scalar marker at 1852. Completion records themselves omit locale; association uses the fixed spec path and native line order.",
+    "bi06BodyReadbacks": [
+      {
+        "ordinal": 1650,
+        "timestamp": "2026-11-28T07:29:28.3974260Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        }
+      },
+      {
+        "ordinal": 1854,
+        "timestamp": "2026-11-28T07:29:51.9458668Z",
+        "family": "SF_ANALYTICS_SOURCE",
+        "payload": {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        }
+      }
+    ],
+    "bi06Bindings": [
+      {
+        "ordinal": 1646,
+        "timestamp": "2026-11-28T07:29:28.3423328Z",
+        "view": "BI06",
+        "selectedValueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "referenceId": "50a73208-61e4-46ff-897a-d8439a1a2afc",
+        "valueBindingCount": 17,
+        "distinctReferenceDigests": 1,
+        "actualArrayLength": 17
+      },
+      {
+        "ordinal": 1850,
+        "timestamp": "2026-11-28T07:29:51.8969840Z",
+        "view": "BI06",
+        "selectedValueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "referenceId": "c7b5e7b7-c6a0-425a-b917-fb197f883af0",
+        "valueBindingCount": 17,
+        "distinctReferenceDigests": 1,
+        "actualArrayLength": 17
+      }
+    ],
+    "scalarObservationCounts": [
+      {
+        "ordinal": 1648,
+        "locale": "en-US",
+        "count": 3
+      },
+      {
+        "ordinal": 1852,
+        "locale": "pt-BR",
+        "count": 3
+      }
+    ],
+    "originalAges": {
+      "ordinal": 1652,
+      "count": 3,
+      "evidenceState": "confirmed",
+      "requestView": "BI06"
+    },
+    "sourceResolution": {
+      "ordinal": 1786,
+      "timestamp": "2026-11-28T07:29:33.1048866Z",
+      "family": "SF_ANALYTICS_SOURCE",
+      "payload": {
+        "operation": "bi06-original-source-resolution",
+        "http": 200,
+        "acquisition": "native-response",
+        "valueId": "PR-2026-0003:e2315055-2807-487e-9fee-40493ae1c80f:ageDays",
+        "links": [
+          {
+            "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:32815/orchestra/sf-procurement/requests?request=PR-2026-0003"
+          }
+        ],
+        "negativeHttp": 403,
+        "negative": {
+          "status": "denied",
+          "reason": "bi-source-outside-selected-value"
+        }
+      }
+    },
+    "scope": {
+      "ordinal": 1890,
+      "timestamp": "2026-11-28T07:29:52.6569052Z",
+      "family": "SF_ANALYTICS_SCOPE",
+      "payload": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      }
+    },
+    "noCurrentBi06FailedOrCanceledMarker": true,
+    "limits": [
+      "BI passage belongs only to this candidate/run and these two original BI06 paths.",
+      "It neither establishes C21 as the cause of passage nor proves the cause of the historical BI06 cancellation has been resolved.",
+      "The two locale references are distinct; no cross-context request/reference identity is fabricated.",
+      "Original sensitivity choices are explicitly zero; BI scope does not qualify UI43/UI44 or the failed first journey."
+    ]
+  },
+  "otherMarkers": {
+    "discoveries": [
+      {
+        "ordinal": 1110,
+        "timestamp": "2026-11-28T07:24:20.5818467Z",
+        "payload": {
+          "selector": "native-workspace",
+          "count": 1,
+          "installations": [
+            {
+              "installationId": "6e1354ff-9867-46c2-8a34-01e3083b1dc3",
+              "projectId": "global",
+              "hostId": "9bb049e0-7e7f-467f-a024-0826e35c7108"
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1396,
+        "timestamp": "2026-11-28T07:28:58.2965354Z",
+        "payload": {
+          "selector": "native-workspace",
+          "count": 1,
+          "installations": [
+            {
+              "installationId": "6c0c6145-b415-4098-afac-8d29ee7f9551",
+              "projectId": "global",
+              "hostId": "66f9fbb2-694e-4092-bcaa-fe0eeaaee324"
+            }
+          ]
+        }
+      }
+    ],
+    "ownerAdmissions": [
+      {
+        "ordinal": 1150,
+        "timestamp": "2026-11-28T07:26:17.4156098Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 3912.8202089999977
+            },
+            {
+              "status": 200,
+              "elapsedMs": 5642.78938100001
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1398,
+        "timestamp": "2026-11-28T07:29:07.3797431Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 3138.2510619999957
+            },
+            {
+              "status": 200,
+              "elapsedMs": 5898.190984000001
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1466,
+        "timestamp": "2026-11-28T07:29:15.1342666Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2061.505833000003
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3644.9812359999924
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1640,
+        "timestamp": "2026-11-28T07:29:27.7914023Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 1990.080713000003
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3607.6990030000015
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1788,
+        "timestamp": "2026-11-28T07:29:36.5709969Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2046.782917000004
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3602.696794000003
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1804,
+        "timestamp": "2026-11-28T07:29:41.5343381Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2205.927619000009
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3873.9727180000045
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1820,
+        "timestamp": "2026-11-28T07:29:45.5620411Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2064.782871999996
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3664.330270000006
+            }
+          ]
+        }
+      },
+      {
+        "ordinal": 1844,
+        "timestamp": "2026-11-28T07:29:51.3422151Z",
+        "payload": {
+          "contexts": [
+            {
+              "status": 200,
+              "elapsedMs": 2233.260123999993
+            },
+            {
+              "status": 200,
+              "elapsedMs": 3739.960168999998
+            }
+          ]
+        }
+      }
+    ],
+    "ownerLimits": "Eight records contain sixteen HTTP 200 admissions. Identity is not inferred from status codes alone; explicit ownerBinding values are retained only where the original record supplies them.",
+    "diagnostics": [
+      {
+        "ordinal": 1234,
+        "timestamp": "2026-11-28T07:27:38.9098763Z",
+        "payload": {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "ordinal": 1236,
+        "timestamp": "2026-11-28T07:27:38.9186403Z",
+        "payload": {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:34655⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.68bbd3d7-d172-49e2-8962-6caec4743a17 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      },
+      {
+        "ordinal": 1252,
+        "timestamp": "2026-11-28T07:27:39.5028608Z",
+        "payload": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "ordinal": 1888,
+        "timestamp": "2026-11-28T07:29:52.6524736Z",
+        "payload": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      },
+      {
+        "ordinal": 1892,
+        "timestamp": "2026-11-28T07:29:52.8483873Z",
+        "payload": {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      }
+    ],
+    "allCaptureIndex": [
+      {
+        "ordinal": 1164,
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1176,
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1182,
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1188,
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "ordinal": 1208,
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "ordinal": 1230,
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "ordinal": 1412,
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "ordinal": 1426,
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "ordinal": 1432,
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "width": 390,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "ordinal": 1438,
+        "name": "UI45-question-catalog-light-320-test-data",
+        "width": 320,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "ordinal": 1450,
+        "name": "UI45-authorized-financial-context-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "context"
+      },
+      {
+        "ordinal": 1464,
+        "name": "UI45-financial-source-values-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1486,
+        "name": "UI46-financial-selected-context-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1502,
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1518,
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1526,
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1532,
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1538,
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1544,
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1562,
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1580,
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1586,
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1592,
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1614,
+        "name": "UI46-resolved-original-source-1-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1636,
+        "name": "UI46-resolved-original-source-2-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1666,
+        "name": "UI46-operations-original-coverage-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1680,
+        "name": "UI46-operations-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1694,
+        "name": "UI46-operations-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1700,
+        "name": "UI46-operations-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1706,
+        "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1712,
+        "name": "UI46-operations-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1718,
+        "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1734,
+        "name": "UI46-operations-original-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1750,
+        "name": "UI46-operations-original-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1756,
+        "name": "UI46-operations-original-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1762,
+        "name": "UI46-operations-original-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1768,
+        "name": "UI46-operations-dark-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1784,
+        "name": "UI46-operations-resolved-original-source-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1802,
+        "name": "UI46-source-empty-sensitivity-catalog-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "context"
+      },
+      {
+        "ordinal": 1818,
+        "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "ordinal": 1836,
+        "name": "UI46-pt-BR-dark-desktop-values-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1842,
+        "name": "UI46-pt-BR-dark-320-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1868,
+        "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1874,
+        "name": "UI46-pt-BR-dark-320-operations-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1880,
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "ordinal": 1886,
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    ],
+    "allSourceIndex": [
+      {
+        "ordinal": 1112,
+        "timestamp": "2026-11-28T07:24:24.3452171Z",
+        "operation": "decision-controls",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1114,
+        "timestamp": "2026-11-28T07:24:27.4454478Z",
+        "operation": "decision-controls",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1116,
+        "timestamp": "2026-11-28T07:24:31.0679734Z",
+        "operation": "parameter-source-read",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1118,
+        "timestamp": "2026-11-28T07:24:32.2425250Z",
+        "operation": "decision-promote-parameter",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1120,
+        "timestamp": "2026-11-28T07:24:36.3354729Z",
+        "operation": "decision-controls",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1122,
+        "timestamp": "2026-11-28T07:24:43.4793886Z",
+        "operation": "sensitivity-controls-units-read",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1124,
+        "timestamp": "2026-11-28T07:24:43.4974533Z",
+        "operation": "decision-criteria",
+        "phase": "source-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1126,
+        "timestamp": "2026-11-28T07:24:44.2425669Z",
+        "operation": "decision-criteria",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1128,
+        "timestamp": "2026-11-28T07:24:51.6072174Z",
+        "operation": "sensitivity-controls-units-read",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1130,
+        "timestamp": "2026-11-28T07:24:51.6149182Z",
+        "operation": "sensitivity-rule-fixture-registered-readback",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": "original-register-canonical-resolve-then-controls-units-and-version",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1132,
+        "timestamp": "2026-11-28T07:24:51.6155358Z",
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1134,
+        "timestamp": "2026-11-28T07:25:18.7248483Z",
+        "operation": "decision-compare",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1136,
+        "timestamp": "2026-11-28T07:25:18.7279906Z",
+        "operation": "portfolio-selection-fixture-basis",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1138,
+        "timestamp": "2026-11-28T07:25:18.7281243Z",
+        "operation": "decision-select-portfolio",
+        "phase": "source-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1140,
+        "timestamp": "2026-11-28T07:25:36.7464868Z",
+        "operation": "decision-select-portfolio",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1142,
+        "timestamp": "2026-11-28T07:25:41.0800688Z",
+        "operation": "decision-controls",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1144,
+        "timestamp": "2026-11-28T07:25:41.0860865Z",
+        "operation": "decision-compare",
+        "phase": "source-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1146,
+        "timestamp": "2026-11-28T07:26:11.7685548Z",
+        "operation": "decision-compare",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1148,
+        "timestamp": "2026-11-28T07:26:11.7715703Z",
+        "operation": "portfolio-selection-registered-readback",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": null,
+        "acquisition": "original-register-canonical-read-then-controls-and-comparison",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1190,
+        "timestamp": "2026-11-28T07:26:26.0863833Z",
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": 1,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1192,
+        "timestamp": "2026-11-28T07:26:26.4792855Z",
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": true,
+        "status": "ok",
+        "sequence": 1,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1210,
+        "timestamp": "2026-11-28T07:26:37.2683864Z",
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": 2,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1212,
+        "timestamp": "2026-11-28T07:26:37.6337734Z",
+        "operation": "decision-portfolio-results",
+        "phase": "native-request-failed",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": 2,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1214,
+        "timestamp": "2026-11-28T07:26:37.6339162Z",
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": 2,
+        "acquisition": null,
+        "acquisitionFailure": "response-body-unavailable"
+      },
+      {
+        "ordinal": 1232,
+        "timestamp": "2026-11-28T07:26:38.8611911Z",
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": 3,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1468,
+        "timestamp": "2026-11-28T07:29:17.6169029Z",
+        "operation": "bi-source-binding-readback",
+        "phase": null,
+        "view": "BI01",
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1470,
+        "timestamp": "2026-11-28T07:29:17.6243177Z",
+        "operation": "bi-original-scalar-dom",
+        "phase": null,
+        "view": null,
+        "locale": "en-US",
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1472,
+        "timestamp": "2026-11-28T07:29:17.6411092Z",
+        "operation": "bi-data-readback",
+        "phase": null,
+        "view": "BI01",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1594,
+        "timestamp": "2026-11-28T07:29:22.6995228Z",
+        "operation": "bi-source-body-acquisition",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1596,
+        "timestamp": "2026-11-28T07:29:22.7003969Z",
+        "operation": "bi-source-original-destinations",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1616,
+        "timestamp": "2026-11-28T07:29:23.8192001Z",
+        "operation": "bi-source-body-acquisition",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1618,
+        "timestamp": "2026-11-28T07:29:23.8203021Z",
+        "operation": "bi-source-original-destinations",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1638,
+        "timestamp": "2026-11-28T07:29:24.3715622Z",
+        "operation": "bi-source-identity-regression",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1642,
+        "timestamp": "2026-11-28T07:29:28.3209288Z",
+        "operation": "bi-data-original-acquisition",
+        "phase": "original-request-completed",
+        "view": "BI06",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response-cdp",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1644,
+        "timestamp": "2026-11-28T07:29:28.3367284Z",
+        "operation": "bi-data-original-acquisition",
+        "phase": null,
+        "view": "BI06",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response-cdp",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1646,
+        "timestamp": "2026-11-28T07:29:28.3423328Z",
+        "operation": "bi-source-binding-readback",
+        "phase": null,
+        "view": "BI06",
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1648,
+        "timestamp": "2026-11-28T07:29:28.3946134Z",
+        "operation": "bi-original-scalar-dom",
+        "phase": null,
+        "view": null,
+        "locale": "en-US",
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1650,
+        "timestamp": "2026-11-28T07:29:28.3974260Z",
+        "operation": "bi-data-readback",
+        "phase": null,
+        "view": "BI06",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1652,
+        "timestamp": "2026-11-28T07:29:28.3979277Z",
+        "operation": "bi06-original-ages",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1786,
+        "timestamp": "2026-11-28T07:29:33.1048866Z",
+        "operation": "bi06-original-source-resolution",
+        "phase": null,
+        "view": null,
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1846,
+        "timestamp": "2026-11-28T07:29:51.8781508Z",
+        "operation": "bi-data-original-acquisition",
+        "phase": "original-request-completed",
+        "view": "BI06",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response-cdp",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1848,
+        "timestamp": "2026-11-28T07:29:51.8914201Z",
+        "operation": "bi-data-original-acquisition",
+        "phase": null,
+        "view": "BI06",
+        "locale": "pt-BR",
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": "native-response-cdp",
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1850,
+        "timestamp": "2026-11-28T07:29:51.8969840Z",
+        "operation": "bi-source-binding-readback",
+        "phase": null,
+        "view": "BI06",
+        "locale": null,
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1852,
+        "timestamp": "2026-11-28T07:29:51.9429391Z",
+        "operation": "bi-original-scalar-dom",
+        "phase": null,
+        "view": null,
+        "locale": "pt-BR",
+        "http": null,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      },
+      {
+        "ordinal": 1854,
+        "timestamp": "2026-11-28T07:29:51.9458668Z",
+        "operation": "bi-data-readback",
+        "phase": null,
+        "view": "BI06",
+        "locale": null,
+        "http": 200,
+        "statusPropertyPresent": false,
+        "status": null,
+        "sequence": null,
+        "acquisition": null,
+        "acquisitionFailure": null
+      }
+    ]
+  },
+  "artifactAndCleanup": {
+    "artifact": {
+      "id": 15253108726,
+      "name": "playwright-ubuntu-24.04-1",
+      "bytes": 45864938,
+      "digest": "sha256:9685c61ddd7ee4f262e3e1e01b53248eba96b15cc6a939b1630b3d55787464d5",
+      "createdAt": "2026-11-28T07:29:55Z",
+      "metadataOnly": true,
+      "zipGets": 0,
+      "contentUnknown": true
+    },
+    "matchingRefsAtContextCut": [],
+    "headRunIdsAtContextCut": [
+      46120824548
+    ],
+    "cleanupCommandMasksDeleteFailure": true,
+    "absenceSource": "Retained matchingRefs API result in context, not the masked gh delete command alone.",
+    "noNewActionAuthorized": true
+  },
+  "checks": [
+    {
+      "id": "A21-P01",
+      "name": "Preserved context authenticated",
+      "pass": true,
+      "evidence": {
+        "git": "473bb8e8ec349e7f6d1a01352dbb3616087b2320",
+        "bytes": 27017,
+        "sha256": "c04d5111ec4cd0679784a2efa9365aba6c47baa2bb900d721dbdd879b7eb4f32",
+        "lf": 583,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "A21-P02",
+      "name": "Both preservation manifests authenticated",
+      "pass": true,
+      "evidence": [
+        {
+          "git": "164c699a321e6c15eac16ca8a8634ac7833c49e2",
+          "bytes": 7995,
+          "sha256": "03985ef2928c64139bc347fe91d7ade7b65775478d5caf12bb16f58ec78cf21b",
+          "lf": 274,
+          "endsWithLF": true
+        },
+        {
+          "git": "1c79f46bc4e74d2e76a3f7e2ab69fb3c99258dd9",
+          "bytes": 1822,
+          "sha256": "2ee42a957e9aad1ef7fd648026b07f04e9e293a15b892f2c6b3fbc40ba79ebca",
+          "lf": 62,
+          "endsWithLF": true
+        }
+      ]
+    },
+    {
+      "id": "A21-P03",
+      "name": "All 17 actual main parts independently authenticated",
+      "pass": true,
+      "evidence": {
+        "partCount": 17,
+        "algorithm": "UTF8 bytes, Git blob SHA1, SHA256, LF and trailing LF"
+      }
+    },
+    {
+      "id": "A21-P04",
+      "name": "Part ordinals and byte/UTF16 offsets contiguous",
+      "pass": true,
+      "evidence": {
+        "first": 0,
+        "last": 4867187,
+        "parts": 17
+      }
+    },
+    {
+      "id": "A21-P05",
+      "name": "Whole main authenticated before interpretation",
+      "pass": true,
+      "evidence": {
+        "git": "0e7e5bdf937c63b23913ab8230cf5e6526d601da",
+        "bytes": 4867187,
+        "sha256": "02abf885d905d2a6219939d25c3d65ea5d51f050ef23209980d4b578f94b0689",
+        "lf": 1961,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "A21-P06",
+      "name": "Main calculated whole is not an acquired Git object",
+      "pass": true,
+      "evidence": {
+        "calculatedOnly": "0e7e5bdf937c63b23913ab8230cf5e6526d601da",
+        "neverFetched": true
+      }
+    },
+    {
+      "id": "A21-P07",
+      "name": "All original main BOM bytes retained",
+      "pass": true,
+      "evidence": [
+        0,
+        2104805,
+        4223348
+      ]
+    },
+    {
+      "id": "A21-P08",
+      "name": "Cleanup actual bytes and BOM authenticated",
+      "pass": true,
+      "evidence": {
+        "git": "5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+        "bytes": 2280,
+        "sha256": "aa45ccc75fe8e047038edeb4065db6244f08e674ecb254eef0f4d6dffe5cc9b0",
+        "lf": 39,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "A21-P09",
+      "name": "Acquisition manifest enforces one root GET per original and no ZIP",
+      "pass": true,
+      "evidence": {
+        "rootMainGets": 1,
+        "rootCleanupGets": 1,
+        "agentOriginalGets": 0,
+        "allZipGets": 0
+      }
+    },
+    {
+      "id": "A21-P10",
+      "name": "Current run, snapshot and clean source tuple exact",
+      "pass": true,
+      "evidence": {
+        "run": 46120824548,
+        "attempt": 1,
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "snapshot": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+        "snapshotTree": "7076a79663700b540e24f79c378fb8b90f5d7e5e"
+      }
+    },
+    {
+      "id": "A21-P11",
+      "name": "Main checkout prints the actual A21 head",
+      "pass": true,
+      "evidence": {
+        "ordinal": 134,
+        "snapshot": "241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+      }
+    },
+    {
+      "id": "A21-P12",
+      "name": "Both jobs terminal with distinct current outcomes",
+      "pass": true,
+      "evidence": [
+        {
+          "id": 140904724628,
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-28T07:21:26Z",
+          "completedAt": "2026-11-28T07:29:57Z"
+        },
+        {
+          "id": 140906751190,
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-28T07:30:00Z",
+          "completedAt": "2026-11-28T07:30:06Z"
+        }
+      ]
+    },
+    {
+      "id": "A21-P13",
+      "name": "Current run concludes failure and test step exit 1",
+      "pass": true,
+      "evidence": {
+        "runConclusion": "failure",
+        "exitLine": 1898
+      }
+    },
+    {
+      "id": "A21-P14",
+      "name": "The original production selector and runtime arguments are observed",
+      "pass": true,
+      "evidence": {
+        "ordinal": 986,
+        "command": "$ playwright test --config \"e2e/playwright.production.config.ts\" --workers \"1\" --retries \"0\" --repeat-each \"1\" \"(^|[\\\\\\\\/])e2e[\\\\\\\\/]sucafina[\\\\\\\\/]design-wave-five-analytics\\\\.spec\\\\.ts\\$\" --trace retain-on-failure \"--reporter=html,line,json,/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts\""
+      }
+    },
+    {
+      "id": "A21-P15",
+      "name": "Original app directory and prod strict environment observed",
+      "pass": true,
+      "evidence": {
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "channel": "prod",
+        "omniMode": "strict"
+      }
+    },
+    {
+      "id": "A21-P16",
+      "name": "Exactly two journey headers and one worker observed",
+      "pass": true,
+      "evidence": {
+        "headers": [
+          {
+            "ordinal": 1016,
+            "text": "[1/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:12:1 › wave five analytics: native scenarios, recorded results and sensitivity"
+          },
+          {
+            "ordinal": 1302,
+            "text": "[2/2] [chromium] › e2e/sucafina/design-wave-five-analytics.spec.ts:443:1 › wave five analytics: question catalog and original contextual BI"
+          }
+        ]
+      }
+    },
+    {
+      "id": "A21-P17",
+      "name": "Current footers are one failed and one passed, 7.5m",
+      "pass": true,
+      "evidence": {
+        "failed": 1,
+        "passed": 1,
+        "elapsedFooter": "7.5m",
+        "assertionCount": null
+      }
+    },
+    {
+      "id": "A21-P18",
+      "name": "First failure is the original preview response waiter",
+      "pass": true,
+      "evidence": {
+        "failureLine": 1256,
+        "stackLine": 1265,
+        "specLine": 72,
+        "column": 32,
+        "waiterMs": 60000
+      }
+    },
+    {
+      "id": "A21-P19",
+      "name": "No second journey failure header",
+      "pass": true,
+      "evidence": {
+        "failedJourney": "native scenarios, recorded results and sensitivity",
+        "passedJourney": "question catalog and original contextual BI"
+      }
+    },
+    {
+      "id": "A21-P20",
+      "name": "Runtime version is observed in abbreviated form only",
+      "pass": true,
+      "evidence": {
+        "bunObserved": "1.3.14+0d9b296af",
+        "fullRevisionObserved": false
+      }
+    },
+    {
+      "id": "A21-P21",
+      "name": "Omni nonce is consistent; no focal verdict imported",
+      "pass": true,
+      "evidence": {
+        "nonce": "994e6fdc41822ff412dc4541bb7b35cc",
+        "control": "suite",
+        "declared": null,
+        "spawned": null,
+        "delegated": null
+      }
+    },
+    {
+      "id": "A21-P22",
+      "name": "All non-preview standalone SF JSON records parsed",
+      "pass": true,
+      "evidence": {
+        "count": 109,
+        "jsonErrors": 0
+      }
+    },
+    {
+      "id": "A21-P23",
+      "name": "Preview payloads withheld from printed analysis",
+      "pass": true,
+      "evidence": {
+        "filteredLines": 212,
+        "rawOriginalPreserved": true
+      }
+    },
+    {
+      "id": "A21-P24",
+      "name": "Seven expected non-preview marker families only",
+      "pass": true,
+      "evidence": {
+        "families": [
+          "SF_DESIGN_DISCOVERY",
+          "SF_ANALYTICS_SOURCE",
+          "SF_OWNER_ADMISSION_READS",
+          "SF_ANALYTICS_CONTEXT",
+          "SF_ANALYTICS_CAPTURE",
+          "SF_DESIGN_DIAGNOSTICS",
+          "SF_ANALYTICS_SCOPE"
+        ],
+        "cpuOrDiagnosticOverlayMarkers": 0
+      }
+    },
+    {
+      "id": "A21-P25",
+      "name": "Core family counts are 45/46/5/1",
+      "pass": true,
+      "evidence": {
+        "source": 45,
+        "capture": 46,
+        "diagnostics": 5,
+        "scope": 1
+      }
+    },
+    {
+      "id": "A21-P26",
+      "name": "Core ordered union literal hash and partition",
+      "pass": true,
+      "evidence": {
+        "stats": {
+          "git": "5eeda9b322b13033cf254de2645a2e64bf64db16",
+          "bytes": 34315,
+          "sha256": "b1c4a1ed95989c318bad1df2bc1b859e8675e4ef760af43f7113e863b6d402f5",
+          "lf": 97,
+          "endsWithLF": true
+        },
+        "partitions": [
+          34,
+          63
+        ],
+        "gitCalculatedOnly": true
+      }
+    },
+    {
+      "id": "A21-P27",
+      "name": "All-marker union preserves 109 lines in native order",
+      "pass": true,
+      "evidence": {
+        "stats": {
+          "git": "c2a39902b494663947a03a02fb6c3f59582b5702",
+          "bytes": 41201,
+          "sha256": "4fea78c65c4ca6c9a3539e101da0a9009d7a0f4b317e6b3aac6c1020f0ff6c66",
+          "lf": 109,
+          "endsWithLF": true
+        },
+        "gitCalculatedOnly": true
+      }
+    },
+    {
+      "id": "A21-P28",
+      "name": "Sections bound by actual journey headers, not wall-clock join",
+      "pass": true,
+      "evidence": {
+        "case1Header": 1016,
+        "case2Header": 1302,
+        "nonPreview": [
+          38,
+          71
+        ],
+        "core": [
+          34,
+          63
+        ]
+      }
+    },
+    {
+      "id": "A21-P29",
+      "name": "Two separate native installation discoveries",
+      "pass": true,
+      "evidence": {
+        "discoveries": [
+          {
+            "ordinal": 1110,
+            "selector": "native-workspace",
+            "count": 1,
+            "installations": [
+              {
+                "installationId": "6e1354ff-9867-46c2-8a34-01e3083b1dc3",
+                "projectId": "global",
+                "hostId": "9bb049e0-7e7f-467f-a024-0826e35c7108"
+              }
+            ]
+          },
+          {
+            "ordinal": 1396,
+            "selector": "native-workspace",
+            "count": 1,
+            "installations": [
+              {
+                "installationId": "6c0c6145-b415-4098-afac-8d29ee7f9551",
+                "projectId": "global",
+                "hostId": "66f9fbb2-694e-4092-bcaa-fe0eeaaee324"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "A21-P30",
+      "name": "Eight owner admission records, sixteen HTTP 200 reads",
+      "pass": true,
+      "evidence": {
+        "records": 8,
+        "reads": 16,
+        "case1": 1,
+        "case2": 7,
+        "identityInferenceFromStatusAlone": false
+      }
+    },
+    {
+      "id": "A21-P31",
+      "name": "Two UI42 original context readbacks exact and successful",
+      "pass": true,
+      "evidence": [
+        {
+          "ordinal": 1152,
+          "stage": "UI42-list",
+          "http": 200,
+          "ownerBinding": "exact"
+        },
+        {
+          "ordinal": 1194,
+          "stage": "UI42-empty-case",
+          "http": 200,
+          "ownerBinding": "exact"
+        }
+      ]
+    },
+    {
+      "id": "A21-P32",
+      "name": "Readiness is observed without claiming preview completion",
+      "pass": true,
+      "evidence": {
+        "previewReady": true,
+        "aggregateResourceState": "partial",
+        "reconcilePreparePromote": "unavailable",
+        "completionClaim": false
+      }
+    },
+    {
+      "id": "A21-P33",
+      "name": "All explicit source request owner bindings remain exact",
+      "pass": true,
+      "evidence": {
+        "explicitOwnerBindingRecords": 10
+      }
+    },
+    {
+      "id": "A21-P34",
+      "name": "Initial fixture readbacks retain their explicit guards",
+      "pass": true,
+      "evidence": {
+        "ruleReadbackLine": 1130,
+        "selectionReadbackLine": 1148,
+        "qualificationTransferred": false
+      }
+    },
+    {
+      "id": "A21-P35",
+      "name": "First results request has a body-backed success marker",
+      "pass": true,
+      "evidence": {
+        "requestLine": 1190,
+        "responseLine": 1192
+      }
+    },
+    {
+      "id": "A21-P36",
+      "name": "Second results request preserves failure and unavailable body together",
+      "pass": true,
+      "evidence": {
+        "requestLine": 1210,
+        "failedLine": 1212,
+        "responseLine": 1214,
+        "statusPropertyPresent": false,
+        "causeAttributed": false
+      }
+    },
+    {
+      "id": "A21-P37",
+      "name": "Preview sequence 3 records only the request",
+      "pass": true,
+      "evidence": {
+        "ordinal": 1232,
+        "timestamp": "2026-11-28T07:26:38.8611911Z",
+        "responseMarker": false,
+        "bodyMarker": false
+      }
+    },
+    {
+      "id": "A21-P38",
+      "name": "UI42 is partial with six captures, UI43/UI44 absent",
+      "pass": true,
+      "evidence": {
+        "UI42": 6,
+        "UI43": 0,
+        "UI44": 0
+      }
+    },
+    {
+      "id": "A21-P39",
+      "name": "UI42 captures precede preview request and timeout",
+      "pass": true,
+      "evidence": {
+        "lastCaptureLine": 1230,
+        "previewLine": 1232,
+        "failureDiagnosticLine": 1234,
+        "uiStateLine": 1236,
+        "serverPhaseKnown": false
+      }
+    },
+    {
+      "id": "A21-P40",
+      "name": "Diagnostics contain no reported console/page errors",
+      "pass": true,
+      "evidence": {
+        "diagnostics": 5,
+        "nativeViewRecords": 1,
+        "errorArrayRecords": 4,
+        "errorArraysEmpty": true
+      }
+    },
+    {
+      "id": "A21-P41",
+      "name": "BI capture coverage is seven UI45 and thirty-three UI46",
+      "pass": true,
+      "evidence": {
+        "UI45": 7,
+        "UI46": 33
+      }
+    },
+    {
+      "id": "A21-P42",
+      "name": "BI01 readback and original binding cardinalities observed",
+      "pass": true,
+      "evidence": {
+        "bindings": 48,
+        "distinctDigests": 1,
+        "rows": 36,
+        "numericValues": 14,
+        "missing": 22,
+        "http": 200
+      }
+    },
+    {
+      "id": "A21-P43",
+      "name": "Both budget source bodies independently acquired",
+      "pass": true,
+      "evidence": {
+        "lines": [
+          1594,
+          1616
+        ],
+        "notBI06": true
+      }
+    },
+    {
+      "id": "A21-P44",
+      "name": "Budget source identity regression is explicit",
+      "pass": true,
+      "evidence": {
+        "line": 1638,
+        "payload": {
+          "operation": "bi-source-identity-regression",
+          "selectedValues": [
+            "budget:2026-01:effective",
+            "budget:2026-01:actual"
+          ],
+          "samePublishedReference": true,
+          "exactValueAndDigestQueries": 2,
+          "originalProjectionRetained": true
+        }
+      }
+    },
+    {
+      "id": "A21-P45",
+      "name": "Two BI06 CDP completions attest same native request and finish",
+      "pass": true,
+      "evidence": [
+        {
+          "ordinal": 1642,
+          "timestamp": "2026-11-28T07:29:28.3209288Z",
+          "payload": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        },
+        {
+          "ordinal": 1846,
+          "timestamp": "2026-11-28T07:29:51.8781508Z",
+          "payload": {
+            "operation": "bi-data-original-acquisition",
+            "view": "BI06",
+            "acquisition": "native-response-cdp",
+            "phase": "original-request-completed",
+            "http": 200,
+            "sameNativeRequest": true,
+            "nativeRequestFinished": true,
+            "observer": "Network"
+          }
+        }
+      ]
+    },
+    {
+      "id": "A21-P46",
+      "name": "BI06 English and Portuguese readbacks complete with three numeric values",
+      "pass": true,
+      "evidence": {
+        "englishAcquisition": 1644,
+        "portugueseAcquisition": 1848,
+        "readbackLines": [
+          1650,
+          1854
+        ],
+        "rows": 3,
+        "numericValues": 3,
+        "missing": 1
+      }
+    },
+    {
+      "id": "A21-P47",
+      "name": "Both BI06 binding payload arrays have seventeen entries",
+      "pass": true,
+      "evidence": {
+        "lines": [
+          1646,
+          1850
+        ],
+        "counts": [
+          17,
+          17
+        ],
+        "references": [
+          "50a73208-61e4-46ff-897a-d8439a1a2afc",
+          "c7b5e7b7-c6a0-425a-b917-fb197f883af0"
+        ],
+        "referencesNotMerged": true
+      }
+    },
+    {
+      "id": "A21-P48",
+      "name": "Locale-specific scalar observations are retained",
+      "pass": true,
+      "evidence": {
+        "lines": [
+          1648,
+          1852
+        ],
+        "localeCounts": {
+          "en-US": 3,
+          "pt-BR": 3
+        },
+        "valuesNotComparedAsSameTime": true
+      }
+    },
+    {
+      "id": "A21-P49",
+      "name": "BI06 original ages are tied to BI06 request with evidence confirmed",
+      "pass": true,
+      "evidence": {
+        "line": 1652,
+        "selectionRef": "a394ded8-1df6-40e3-b07d-cdb44f7f1ee7",
+        "count": 3
+      }
+    },
+    {
+      "id": "A21-P50",
+      "name": "BI06 source resolution success and authorization negative preserved",
+      "pass": true,
+      "evidence": {
+        "line": 1786,
+        "http": 200,
+        "negativeHttp": 403,
+        "reason": "bi-source-outside-selected-value"
+      }
+    },
+    {
+      "id": "A21-P51",
+      "name": "No current BI06 failed/canceled acquisition marker",
+      "pass": true,
+      "evidence": {
+        "currentRunOnly": true,
+        "priorBI06CancellationCauseStillUnresolved": true
+      }
+    },
+    {
+      "id": "A21-P52",
+      "name": "Scope closes only the BI surfaces with explicit bounded claims",
+      "pass": true,
+      "evidence": {
+        "ordinal": 1890,
+        "payload": {
+          "surfaces": [
+            "UI45",
+            "UI46"
+          ],
+          "catalogViews": 11,
+          "originalFinancialRead": true,
+          "originalOperationalRead": true,
+          "originalSourceResolution": true,
+          "originalOperationalSourceResolution": true,
+          "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+          "originalSensitivityChoices": 0,
+          "invalidatedOnPeriodChange": true,
+          "fabricatedResult": false
+        }
+      }
+    },
+    {
+      "id": "A21-P53",
+      "name": "Artifact metadata matches the current run/head and exact declared digest",
+      "pass": true,
+      "evidence": {
+        "id": 15253108726,
+        "bytes": 45864938,
+        "digest": "sha256:9685c61ddd7ee4f262e3e1e01b53248eba96b15cc6a939b1630b3d55787464d5",
+        "metadataOnly": true,
+        "zipGets": 0
+      }
+    },
+    {
+      "id": "A21-P54",
+      "name": "Cleanup command is masked and absence relies on retained ref query",
+      "pass": true,
+      "evidence": {
+        "cleanupCommandMasksFailure": true,
+        "matchingRefs": [],
+        "queryCut": "2026-11-28 07:31:27 UTC"
+      }
+    },
+    {
+      "id": "A21-P55",
+      "name": "Only this current head run is listed in the retained context",
+      "pass": true,
+      "evidence": {
+        "headRunIds": [
+          46120824548
+        ],
+        "atUtc": "2026-11-28 07:31:27 UTC"
+      }
+    },
+    {
+      "id": "A21-P56",
+      "name": "Previously checked original selection remains a distinct static proof",
+      "pass": true,
+      "evidence": {
+        "staticReview": "068a1f2777031757b3acbb1ab8845ba80a3e670d",
+        "bodyReadsReused": 13,
+        "repeatedBodyReads": 0,
+        "qualificationTransferred": false
+      }
+    }
+  ],
+  "limitations": [
+    "Positive reception checks are data verification, not product acceptance.",
+    "The current original Analytics suite remains negative: one failed and one passed. Focal C21 stays a separate positive gate.",
+    "Historical E13/E14 profiles, prefixes, timings, counters, and previous candidate outcomes were not imported into this current result.",
+    "No installed decisionResults projection admission or physical benefit is measured by this main.",
+    "Actions wall-clock timestamps and reported elapsed values are retained without cross-clock causal joins.",
+    "No assertion count is reported by these Playwright footers, so assertions remain null.",
+    "Artifact ZIP, trace, report attachment and image contents are not acquired or assumed from metadata.",
+    "All existing original acquisitions are closed; no retry, run, code change, commit, ref or additional original acquisition is authorized by this review."
+  ]
+}

@@ -1,0 +1,846 @@
+{
+  "schema": "sf613-d30-static-bounds-v1",
+  "status": "STATIC_PARAMETRIC_UNBOUND_NO_RUNTIME_QUALIFICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "preparedAtUtc": "2026-11-28 07:15:00 UTC",
+  "inherits": {
+    "manifest": {
+      "gitSha": "3e037217b0477aeacafe4bad193469c76e54ee81",
+      "bytes": 23923,
+      "sha256": "2ab417a42ce8d5bb794a83b75a14303f953cd35cf47e987d000df6111217d5d0",
+      "lf": 616,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitSha": "78a9b35e47e2160cff0acc4b0fdb52540527de48",
+      "bytes": 15757,
+      "sha256": "dad3ef4c66a9b9c2ffd0006a8723489b0ae3db82094faf9f58ed6974b9dfddb6"
+    },
+    "policy": "D29 and all prior documents remain literal historical blobs. This bound adds G28 and overrides active outer counts; it does not requalify any source, CI, UI or environment."
+  },
+  "artifacts": {
+    "wrapper": {
+      "gitSha": "74cec078755a98d3e9fa3922d517f6933883515f",
+      "bytes": 19332,
+      "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+      "lf": 360,
+      "endsWithLF": true
+    },
+    "envelope": {
+      "gitSha": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+      "bytes": 43811,
+      "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "finalizer": {
+      "gitSha": "3865560d88636917d080015e91a714537cfa35af",
+      "bytes": 15782,
+      "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitSha": "50cfa806e399238a8730bf1c4c58203932c8676b",
+      "bytes": 80067,
+      "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+      "lf": 1154,
+      "endsWithLF": true
+    }
+  },
+  "derivation": {
+    "gitSha": "e63e19506a7bc8fd7520a64432a93ea6969c14ab",
+    "bytes": 57788,
+    "sha256": "c4b69ed373078943d0f7ea8be8abdcf4bae5f00b3c655483d208f7f329befb44",
+    "lf": 1658,
+    "endsWithLF": true
+  },
+  "fullDiff": {
+    "gitSha": "cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+    "bytes": 14496,
+    "sha256": "801c33ba3d95f7175786671fb88bfcda66aaf7ebdefc805f5687bececd6b1f0d",
+    "lf": 190,
+    "endsWithLF": true
+  },
+  "counts": {
+    "before": {
+      "groups": 27,
+      "expectSpawn": 27,
+      "syntacticCommandSites": 33,
+      "effectiveCommands": 38,
+      "truncationFlags": 76
+    },
+    "after": {
+      "groups": 28,
+      "expectSpawn": 28,
+      "syntacticCommandSites": 34,
+      "effectiveCommands": 39,
+      "truncationFlags": 78
+    },
+    "englishLoopExecutions": 6,
+    "englishLoopAddsFiveBeyondOneSyntacticSite": true,
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "actualRunResults": null,
+    "proofChildrenSeparately": 6,
+    "noUniversalSubprocessTotalClaimed": true
+  },
+  "G28": {
+    "title": "Native scenario candidates retain complete results and refuse changed authority",
+    "commandLabel": "Native scenario candidates selection whole-file",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+    "referenceControl": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "finalC613Blob": "UNBOUND",
+    "wholeFile": true,
+    "nameFilter": null,
+    "argv": [
+      "test",
+      "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+    ],
+    "executable": "process.execPath",
+    "cwd": "modules/sucafina/Sucafinav1",
+    "cooperativeMs": 18000,
+    "bunMs": 20000,
+    "processMs": 45000,
+    "parentMs": 60000,
+    "referenceDeclarations": 1,
+    "referenceReports": 1,
+    "referenceInternalOutcomes": 19,
+    "expectSitesStatic": 74,
+    "awaitTokensStatic": 49,
+    "internalOutcomesAreNotTestsOrSubprocesses": true,
+    "newOwnSubprocessesInsideControl": 0,
+    "prefixCheckOnly": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+    "newRuntimeParser": false,
+    "newRetries": 0,
+    "newGlobalTimeout": false,
+    "nominalProcessMarginAboveBunMs": 25000,
+    "nominalParentMarginAboveProcessMs": 15000,
+    "nominalMarginsNotObservedDurationOrSchedulingGuarantee": true
+  },
+  "inheritedSelections": {
+    "allG1ThroughG27Literal": true,
+    "engineLiteral": true,
+    "prior33CommandSitesLiteral": true,
+    "prior27ParentsLiteral": true,
+    "G27C20Unchanged": {
+      "group": 27,
+      "title": "Scenario lookup preserves complete candidate reads, fallback and fresh authority",
+      "commandLabel": "Scenario lookup complete candidates whole-file",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "currentReference": {
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "bytes": 16889,
+        "sha256": "98dbad92e90529c2f14ac84ef71ef9979e550bcd356c186ac96e79766ca8a098",
+        "lf": 260,
+        "endsWithLF": true
+      },
+      "finalC613Blob": "UNBOUND",
+      "cwd": "modules/sucafina/Sucafinav1",
+      "executable": "process.execPath",
+      "argv": [
+        "test",
+        "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+      ],
+      "processMs": 45000,
+      "parentMs": 60000,
+      "cooperativeMs": 18000,
+      "bunMs": 20000,
+      "currentReferenceDeclarations": 1,
+      "currentReferencePublicReports": 1,
+      "currentReferenceInternalInvocations": 14,
+      "internalInvocationsAreNotTestsOrSubprocesses": true,
+      "addedOwnSubprocesses": 0,
+      "wholeFile": true,
+      "nameFilter": null,
+      "retries": 0,
+      "newGlobalTimeout": false,
+      "prefixCheckOnly": "SF_C20_SCENARIO_LOOKUP ",
+      "newRuntimeParser": false,
+      "nominalProcessMarginAboveBunMs": 25000,
+      "nominalParentMarginAboveProcessMs": 15000,
+      "marginMeaning": "Arithmetic only, with setup/disposal/scheduling shared; no runtime duration or complete-job fit is promised."
+    },
+    "priorLoadingAndLazyFamiliesLiteral": true,
+    "proofChildren": 6,
+    "nestedOmniPopulationsRemainSeparate": true
+  },
+  "duration": {
+    "commandSites": [
+      {
+        "label": "\"fetch driver parent\"",
+        "cwd": "repository",
+        "timeoutMs": 60000,
+        "executions": 1
+      },
+      {
+        "label": "\"literal source identity\"",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 1
+      },
+      {
+        "label": "\"driver identity and sole parent\"",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 1
+      },
+      {
+        "label": "\"27 captured context, 2 original canonical, 13 native clone, 3 clone byte and 3 Planner preparation controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"8 synchronous planner byte controls and 4 isolated loading controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"14 C08 selection and 1 original coverage proof controls\"",
+        "cwd": "module",
+        "timeoutMs": 150000,
+        "executions": 1
+      },
+      {
+        "label": "\"original UI authority and context integrity\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"CurrentChoice readonly storage and nested calculation composition\"",
+        "cwd": "path.join(repository, \"modules/sucafina/Sucafinav1\")",
+        "timeoutMs": 300000,
+        "executions": 1
+      },
+      {
+        "label": "\"CLI package typecheck\"",
+        "cwd": "path.join(repository, \"apps/cli\")",
+        "timeoutMs": 240000,
+        "executions": 1
+      },
+      {
+        "label": "\"Sucafina package typecheck\"",
+        "cwd": "module",
+        "timeoutMs": 240000,
+        "executions": 1
+      },
+      {
+        "label": "\"inspect history completeness\"",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 1
+      },
+      {
+        "label": "\"fetch current dev and source ancestry\"",
+        "cwd": "repository",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"current dev identity\"",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 1
+      },
+      {
+        "label": "\"actual guard merge base\"",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 1
+      },
+      {
+        "label": "\"canonical guardrails\"",
+        "cwd": "repository",
+        "timeoutMs": 180000,
+        "executions": 1
+      },
+      {
+        "label": "\"app-shell typecheck\"",
+        "cwd": "app",
+        "timeoutMs": 240000,
+        "executions": 1
+      },
+      {
+        "label": "\"app-shell e2e typecheck\"",
+        "cwd": "app",
+        "timeoutMs": 240000,
+        "executions": 1
+      },
+      {
+        "label": "\"read pinned English source \" + name",
+        "cwd": "repository",
+        "timeoutMs": 30000,
+        "executions": 6
+      },
+      {
+        "label": "\"reconciled authority storage and source contracts\"",
+        "cwd": "path.join(repository, \"modules/sucafina/Sucafinav1\")",
+        "timeoutMs": 240000,
+        "executions": 1
+      },
+      {
+        "label": "\"reconciled confirmation and imports DOM regressions\"",
+        "cwd": "app",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"core process filesystem and layer-node regressions\"",
+        "cwd": "path.join(repository, \"packages/core\")",
+        "timeoutMs": 180000,
+        "executions": 1
+      },
+      {
+        "label": "\"6 original tuple and 13 isolated loading controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"4 original Portfolio criteria and sibling controls\"",
+        "cwd": "module",
+        "timeoutMs": 600000,
+        "executions": 1
+      },
+      {
+        "label": "\"10 Planner proof parent controls; six isolated children declared\"",
+        "cwd": "module",
+        "timeoutMs": 600000,
+        "executions": 1
+      },
+      {
+        "label": "\"6 preferences projection controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"5 criterion preference selection controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"2 baseline original callback controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"7 complete cases read-set contract controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"Portfolio selection cases and preferences read controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"2 comparison binding preference read controls\"",
+        "cwd": "module",
+        "timeoutMs": 120000,
+        "executions": 1
+      },
+      {
+        "label": "\"comparison proof observation\"",
+        "cwd": "module",
+        "timeoutMs": 150000,
+        "executions": 1
+      },
+      {
+        "label": "\"C14 snapshot projection\"",
+        "cwd": "module",
+        "timeoutMs": 300000,
+        "executions": 1
+      },
+      {
+        "label": "\"Scenario lookup complete candidates whole-file\"",
+        "cwd": "module",
+        "timeoutMs": 45000,
+        "executions": 1
+      },
+      {
+        "label": "\"Native scenario candidates selection whole-file\"",
+        "cwd": "module",
+        "timeoutMs": 45000,
+        "executions": 1
+      }
+    ],
+    "parentGroups": [
+      {
+        "title": "\"literal checkout identifies the reviewed source and the separate driver child\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"captured context preparation and original canonical bytes preserve admission\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"planner projection references preserve canonical bytes and original effects\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"coverage C08 selection and original proof order preserve their controls\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"UI authority and context integrity remain canonical\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"CurrentChoice readonly composition preserves real LocalStore and calculation authority\"",
+        "parentMs": 360000
+      },
+      {
+        "title": "\"the CLI package preserves its original types\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"the Sucafina package preserves its original types\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"canonical guards use current origin dev and its actual merge base\"",
+        "parentMs": 600000
+      },
+      {
+        "title": "\"the composed app-shell passes its package typecheck\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"the native design capture passes the permanent e2e typecheck\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"existing English copy is byte-preserved and new keys have explicit pt-BR\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"reconciled authority storage and source contracts preserve current dev regressions\"",
+        "parentMs": 300000
+      },
+      {
+        "title": "\"reconciled confirmation and imports preserve original DOM payload and copy\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"process and filesystem platform nodes preserve original runtime controls\"",
+        "parentMs": 240000
+      },
+      {
+        "title": "\"fresh tuple digests preserve original bytes and observations\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"Portfolio criteria composition preserves its original controls\"",
+        "parentMs": 660000
+      },
+      {
+        "title": "\"Planner record proof preserves scope wiring and admission controls\"",
+        "parentMs": 660000
+      },
+      {
+        "title": "\"complete preferences projection preserves fresh read-set and opaque fallback\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"criterion preferences preserve the original authority gate and two fresh rule reads\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"baseline preferences retain the original callback and repeated getter order\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"complete cases read-set preserves original guards and late case lookups\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"Portfolio selection cases and preferences preserve original guards and fresh revocation\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"comparison binding preferences preserve both validations and fresh revocation\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"comparison proof observes the real Finance owner and its complete publication controls\"",
+        "parentMs": 180000
+      },
+      {
+        "title": "\"C14 C08 snapshot projection preserves fresh authorization and full-path equivalence\"",
+        "parentMs": 360000
+      },
+      {
+        "title": "\"Scenario lookup preserves complete candidate reads, fallback and fresh authority\"",
+        "parentMs": 60000
+      },
+      {
+        "title": "\"Native scenario candidates retain complete results and refuse changed authority\"",
+        "parentMs": 60000
+      }
+    ],
+    "arithmeticSums": {
+      "D29CommandMs": 5535000,
+      "D30CommandMs": 5580000,
+      "addedCommandMs": 45000,
+      "D29ParentMs": 7260000,
+      "D30ParentMs": 7320000,
+      "addedParentMs": 60000
+    },
+    "global": {
+      "processMs": 2100000,
+      "technicalStepMinutes": 40,
+      "jobMinutes": 45,
+      "alwaysFinalizerMinutes": 3,
+      "termGraceMs": 5000,
+      "killGraceMs": 5000,
+      "stdioDrainMs": 10000,
+      "outerBunTimeoutArgumentMs": 600000,
+      "unchanged": true
+    },
+    "interpretation": "Sums of individual configured ceilings are not runtimes or a scheduling guarantee. The D30 parent sum is 122 minutes and command sum is 93 minutes, both above the unchanged 35-minute test-process budget. This was already true for D29; no cap is raised and no aggregate-fit claim is made."
+  },
+  "commandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "requiredFalseFlags": 78,
+    "arithmetic39CommandsTwoStreamsMaxBytes": 81788928,
+    "arithmeticAllStreamsIsNotMainLogCap": true,
+    "inheritedEnvelopeCaptureLimitsLiteral": true,
+    "noCaptureBudgetIncrease": true,
+    "scope": "Own runCommand streams only. Nested children and envelope/bootstrap/finalizer operations are separate populations. Truncation flags are distinct from timeout, termination, or cleanup status."
+  },
+  "workflowTransport": {
+    "fullEnvelopeEmbeddingLiteral": true,
+    "fullFinalizerEmbeddingLiteral": true,
+    "envelopeDigest": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+    "loader": {
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "gitBlob": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "literal": true,
+      "calculatedCodeSegmentOnly": true,
+      "objectCreated": false
+    },
+    "workflowRunLimits": {
+      "draft": [
+        {
+          "line": 25,
+          "characters": 1300,
+          "bytes": 1300,
+          "sha256": "60e8bcea6edeca5ca65a14ff808d2a878fe46f75601d6f3e29b1e252d4a30c7b",
+          "gitBlob": "1717169f9dbe9cba91a73c75e94358dee90fce0e"
+        },
+        {
+          "line": 70,
+          "characters": 716,
+          "bytes": 716,
+          "sha256": "1726b0c628b94250596079284c06b6fd9f962f898cf2dabb9dc1563adbd32ff4",
+          "gitBlob": "8518c9705a9f03b87fe48533bc4f54102a7eebac"
+        },
+        {
+          "line": 88,
+          "characters": 139,
+          "bytes": 139,
+          "sha256": "33b5e1e86a8cd3ae4b7cdd0cfe62e99696dbd0b51eb442d78b1f6738c9712293",
+          "gitBlob": "e2abe078526d617bb499d728adf7964a1223bafd"
+        },
+        {
+          "line": 826,
+          "characters": 3689,
+          "bytes": 3689,
+          "sha256": "9d7bd0451fd7c0bc60b3b794ae0d1bfc6360388a11aa8d46189f525f18ab7a31",
+          "gitBlob": "9ffbde5086603e2f80a4e7f28f455689f35743c0"
+        },
+        {
+          "line": 893,
+          "characters": 15833,
+          "bytes": 15833,
+          "sha256": "a58d172204f0048d383c15c9c69a7736ad2530e97e02b40d4231e2903a3432a9",
+          "gitBlob": "f137879889cafda34ab97fbb08ec1698f2930d1f"
+        }
+      ],
+      "widthModel": [
+        {
+          "line": 25,
+          "characters": 1300,
+          "bytes": 1300,
+          "sha256": "60e8bcea6edeca5ca65a14ff808d2a878fe46f75601d6f3e29b1e252d4a30c7b",
+          "gitBlob": "1717169f9dbe9cba91a73c75e94358dee90fce0e"
+        },
+        {
+          "line": 70,
+          "characters": 716,
+          "bytes": 716,
+          "sha256": "1726b0c628b94250596079284c06b6fd9f962f898cf2dabb9dc1563adbd32ff4",
+          "gitBlob": "8518c9705a9f03b87fe48533bc4f54102a7eebac"
+        },
+        {
+          "line": 88,
+          "characters": 139,
+          "bytes": 139,
+          "sha256": "33b5e1e86a8cd3ae4b7cdd0cfe62e99696dbd0b51eb442d78b1f6738c9712293",
+          "gitBlob": "e2abe078526d617bb499d728adf7964a1223bafd"
+        },
+        {
+          "line": 826,
+          "characters": 3689,
+          "bytes": 3689,
+          "sha256": "9d7bd0451fd7c0bc60b3b794ae0d1bfc6360388a11aa8d46189f525f18ab7a31",
+          "gitBlob": "9ffbde5086603e2f80a4e7f28f455689f35743c0"
+        },
+        {
+          "line": 893,
+          "characters": 15930,
+          "bytes": 15930,
+          "sha256": "26e5a7bc5a7298ffd38d5cb62f721e451b0bd9909c40bf4bd003817f3dd6d199",
+          "gitBlob": "4ff1512f0051e3b0115d926575616d00950aeff9"
+        }
+      ],
+      "limit": 21000,
+      "maxDraftCharacters": 15833,
+      "maxWidthCharacters": 15930,
+      "allWithinLimit": true
+    },
+    "widthOnlyBindingModel": [
+      {
+        "artifact": "wrapper",
+        "draftBytes": 19332,
+        "concreteWidthBytes": 19371
+      },
+      {
+        "artifact": "envelope",
+        "draftBytes": 43811,
+        "concreteWidthBytes": 43908
+      },
+      {
+        "artifact": "finalizer",
+        "draftBytes": 15782,
+        "concreteWidthBytes": 15879
+      },
+      {
+        "artifact": "workflow",
+        "draftBytes": 80067,
+        "concreteWidthBytes": 80281
+      }
+    ],
+    "widthModelsOnly": true,
+    "widthModelObjectsCreated": false,
+    "wrapperNotEmbeddedInWorkflow": true,
+    "companionBuffersNotAdditionalTreePaths": true,
+    "unchangedWorkflowPermissionAndTriggerText": true
+  },
+  "protocol": {
+    "wrapperVerification": "sf613-final-composition-literal-c-d30-r1",
+    "retainedEnvelopeSchema": "sf613-final-technical-literal-c-d26-r1",
+    "retainedFinalizerSchema": "sf613-final-technical-finalizer-v1",
+    "wrapperVerificationConsumedByCompanions": false,
+    "outerValueBefore": 27,
+    "outerValueAfter": 28,
+    "envelopeOuterCountLines": 9,
+    "envelopeOuterCountOccurrences": 10,
+    "finalizerOuterCountLines": 3,
+    "noNewParserOrReceiptFamily": true
+  },
+  "finalBindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFour": true,
+    "S21IsReferenceNotFinalC613": true,
+    "derivedEnvelopeDigestIsNotAFifthBinding": true
+  },
+  "C21ReportModel": {
+    "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+    "schema": "sf-c21-native-scenario-selection-v1",
+    "payload": {
+      "schema": "sf-c21-native-scenario-selection-v1",
+      "outcomes": [
+        "native-whole-collection-readonly",
+        "composed-fresh-candidates-readonly",
+        "native-whole-collection-preimage",
+        "composed-fresh-candidates-preimage",
+        "request-key-after-first-authorize",
+        "composed-prototype-first",
+        "composed-declaration-first",
+        "composed-prototype-second",
+        "composed-declaration-second",
+        "full-fallback-mutable-context",
+        "full-fallback-wrapped-callback",
+        "full-fallback-concurrent-declaration",
+        "full-fallback-namespace",
+        "full-fallback-top-level",
+        "full-fallback-CurrentChoice-scoped",
+        "full-shape-fallback-absent",
+        "full-shape-fallback-own-undefined",
+        "full-shape-fallback-array",
+        "empty-collection-is-a-real-selection"
+      ],
+      "contexts": [
+        "readonly",
+        "preimage"
+      ],
+      "originalProjectionControlsPreserved": 5,
+      "claim": "physical child selection and fallback only; no installed latency measurement"
+    },
+    "bytesIncludingPrefixAndLF": 876,
+    "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+    "acceptanceCapBytes": 1024,
+    "headroomBytes": 148,
+    "syntheticModelOnly": true,
+    "reportBlobCreated": false,
+    "capScope": "Only the one expected C21 line. This is not a bound on Bun output, other reports, complete workflow evidence or original job logs."
+  },
+  "physicalAndComposedOraclePrecision": {
+    "scope": "Installed LocalStore -> CurrentChoice -> SourcePersistence -> canonical ProductAuthority. Physical probe and C08 drift oracle are separate; the positive path does not replace a store method/clone or authorizer to spy on projection.",
+    "fallbackPrecision": "The six full-fallback labels mean no narrow selection or unchanged dispatch precedence. Several may still use broad C14 product projection. Only CurrentChoice-scoped explicitly proves the complete Snapshot and c14DomainOnly after work identity changes.",
+    "nonDuplication": "No existing test is edited. The new test does not repeat the existing alias/getter/abort/poison matrix. C14–C20 keep that contract coverage; only the new physical boundary, late key, drift and fallback distinctions are added.",
+    "fullFallbackLabelsDoNotAllProveCompleteSnapshot": true,
+    "onlyCurrentChoiceScopedExplicitlyChecksCompleteSnapshotAndC14DomainOnlyAfterWorkIdentityChange": true,
+    "noInstalledLatencyMeasurement": true
+  },
+  "futureIntake": {
+    "outerPassRequired": 28,
+    "failRequired": 0,
+    "skipRequired": 0,
+    "plannedCommands": 39,
+    "truncationFlagsRequiredFalse": 78,
+    "omni": {
+      "declared": 28,
+      "ownSpawns": 39,
+      "delegated": 0,
+      "nonce": "CURRENT_RUN_REQUIRED"
+    },
+    "allCurrentFooterAndPayloadReceptionRequired": true,
+    "C21ExpectedDeclarations": 1,
+    "C21ExpectedReportCount": 1,
+    "C21Outcomes": [
+      "native-whole-collection-readonly",
+      "composed-fresh-candidates-readonly",
+      "native-whole-collection-preimage",
+      "composed-fresh-candidates-preimage",
+      "request-key-after-first-authorize",
+      "composed-prototype-first",
+      "composed-declaration-first",
+      "composed-prototype-second",
+      "composed-declaration-second",
+      "full-fallback-mutable-context",
+      "full-fallback-wrapped-callback",
+      "full-fallback-concurrent-declaration",
+      "full-fallback-namespace",
+      "full-fallback-top-level",
+      "full-fallback-CurrentChoice-scoped",
+      "full-shape-fallback-absent",
+      "full-shape-fallback-own-undefined",
+      "full-shape-fallback-array",
+      "empty-collection-is-a-real-selection"
+    ],
+    "globalFunctionalTotal": null,
+    "globalReportTotal": null,
+    "globalAssertionTotal": null,
+    "previousFocalResultsNotTransferred": true
+  },
+  "sourceReference": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "soleParent": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "manifest": {
+      "gitSha": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "bytes": 21170,
+      "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+      "lf": 460,
+      "endsWithLF": true
+    },
+    "control": {
+      "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "referenceOnly": true,
+    "finalC613Binding": false,
+    "focalClosedReceiptAdopted": null,
+    "cutStatement": "The root reported focal metadata SUCCESS with intake still in progress at authoring authorization. No C21 installed or final qualification is adopted in this proposal."
+  },
+  "limits": [
+    "This package is static and parametric. No final source, driver, tree, ref, run, nonce, report or assertion total is supplied.",
+    "The one added group selects the existing C21 whole-file control, without editing its code or widening its matrix.",
+    "All previously selected source/control files, including C20 G27 and the current projection controls, remain byte-literal within the driver selection.",
+    "Physical selection and composed fallback assertions remain separate. Several full-fallback labels may use broad C14 product projection; no blanket full-Snapshot claim is made.",
+    "The original final UI6 request must remain inside the actual final C613 and be separately qualified. Analytics, UI6, composition, Release/Migration and environment requirements are not replaced by this proposal.",
+    "Calculated fingerprints of segments, intermediate transformations and width/report models are data only; they are not claimed as persisted Git blobs."
+  ],
+  "actions": {
+    "gitBlobsCreatedAndReadBackOnly": true,
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "treeCreated": false,
+    "commitCreated": false,
+    "refChanged": false,
+    "runTriggered": false,
+    "originalLogAcquired": false,
+    "zipAcquired": false
+  }
+}

@@ -1,0 +1,704 @@
+{
+  "schema": "sf613-d30-root-static-review-v1",
+  "status": "STATIC_REVIEW_ACCEPTED_FOUR_FINAL_BINDINGS_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "atUtc": "2026-11-28 07:56:06 UTC",
+  "reviewer": "Astra integration root",
+  "package": {
+    "wrapper": {
+      "gitBlob": "74cec078755a98d3e9fa3922d517f6933883515f",
+      "bytes": 19332,
+      "sha256": "804604fc78e6f7fea75ef8f9653593086509b9a4f67c922887bca9ba45610404",
+      "lf": 360,
+      "endsWithLF": true
+    },
+    "envelope": {
+      "gitBlob": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+      "bytes": 43811,
+      "sha256": "f07e4cd7a85ed29a2f8498fa767ba69c386e432e3c88bb8ad0915b5ed819e45b",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "finalizer": {
+      "gitBlob": "3865560d88636917d080015e91a714537cfa35af",
+      "bytes": 15782,
+      "sha256": "ff334066dffbbb86fd072191fc21917dead061395132e3d15de0a3bc782d9507",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "50cfa806e399238a8730bf1c4c58203932c8676b",
+      "bytes": 80067,
+      "sha256": "79e13710cc69ccfbb2bac86a89d53b174fd9e06ff9c42fbe6a6e7ebd64e281eb",
+      "lf": 1154,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "e63e19506a7bc8fd7520a64432a93ea6969c14ab",
+      "bytes": 57788,
+      "sha256": "c4b69ed373078943d0f7ea8be8abdcf4bae5f00b3c655483d208f7f329befb44",
+      "lf": 1658,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+      "bytes": 14496,
+      "sha256": "801c33ba3d95f7175786671fb88bfcda66aaf7ebdefc805f5687bececd6b1f0d",
+      "lf": 190,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "4a4aa6ddfdecad1442d7060b1567fc9495f6b15e",
+      "bytes": 29213,
+      "sha256": "daa54040239cf41caa1c0f6abec2b5352399b42e244f6ee42da054b336828785",
+      "lf": 846,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "a5f40832125658cbae2b58b565c266750fa0b125",
+      "bytes": 26839,
+      "sha256": "ebe088ef5ebae4fa3be39f0c29fd75ebe6773cfbf5b435093c41dc2e1d8941e9",
+      "lf": 670,
+      "endsWithLF": true
+    }
+  },
+  "peer": {
+    "gitBlob": "4a35518647080e174e5f5acf455ace003cf8937d",
+    "bytes": 29406,
+    "sha256": "c3098f7896222edfbdcfc7c128903b3753ed13c4fe1ea4aad2972377bb5bfc11",
+    "lf": 964,
+    "endsWithLF": true
+  },
+  "bases": {
+    "wrapper": {
+      "gitBlob": "859b092f6cd56884cd6ff35b6002dcc2ddacb748",
+      "bytes": 18854,
+      "sha256": "22e97eae118348b8eefb01dd3da194a82c956c7e453b58f854ab640092e85a82",
+      "lf": 352,
+      "endsWithLF": true
+    },
+    "envelope": {
+      "gitBlob": "5f192aedcdebdc505ddebf8cb48c2d7a5373a900",
+      "bytes": 43811,
+      "sha256": "d44e9199cb69eb9766a453eef5648eb00d77c43d98fff2e847f96e3c9286d955",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "finalizer": {
+      "gitBlob": "42e098a611b4275e27962f3a342eb0f0892885d0",
+      "bytes": 15782,
+      "sha256": "62dd649ad3d1154dde2859b3389d0476f0a9ffd05347e7249cba45c082876022",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "526c3893a085cbc359dab98fcb7dd31fc299c8dc",
+      "bytes": 80067,
+      "sha256": "5628a157949e8ba0adecf5931daa9042faf89517268b3c8363e0d9e9319849d1",
+      "lf": 1154,
+      "endsWithLF": true
+    }
+  },
+  "checks": [
+    {
+      "name": "diff-four-files",
+      "passed": true
+    },
+    {
+      "name": "wrapper-forward",
+      "passed": true
+    },
+    {
+      "name": "wrapper-inverse",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-before-1",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-after-1",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-before-2",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-after-2",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-before-3",
+      "passed": true
+    },
+    {
+      "name": "wrapper-state-after-3",
+      "passed": true
+    },
+    {
+      "name": "wrapper-diff-path",
+      "passed": true
+    },
+    {
+      "name": "wrapper-full-patch-forward",
+      "passed": true
+    },
+    {
+      "name": "wrapper-full-patch-inverse",
+      "passed": true
+    },
+    {
+      "name": "envelope-forward",
+      "passed": true
+    },
+    {
+      "name": "envelope-inverse",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-1",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-1",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-2",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-2",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-3",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-3",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-4",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-4",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-5",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-5",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-6",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-6",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-7",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-7",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-8",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-8",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-before-9",
+      "passed": true
+    },
+    {
+      "name": "envelope-state-after-9",
+      "passed": true
+    },
+    {
+      "name": "envelope-diff-path",
+      "passed": true
+    },
+    {
+      "name": "envelope-full-patch-forward",
+      "passed": true
+    },
+    {
+      "name": "envelope-full-patch-inverse",
+      "passed": true
+    },
+    {
+      "name": "finalizer-forward",
+      "passed": true
+    },
+    {
+      "name": "finalizer-inverse",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-before-1",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-after-1",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-before-2",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-after-2",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-before-3",
+      "passed": true
+    },
+    {
+      "name": "finalizer-state-after-3",
+      "passed": true
+    },
+    {
+      "name": "finalizer-diff-path",
+      "passed": true
+    },
+    {
+      "name": "finalizer-full-patch-forward",
+      "passed": true
+    },
+    {
+      "name": "finalizer-full-patch-inverse",
+      "passed": true
+    },
+    {
+      "name": "workflow-forward",
+      "passed": true
+    },
+    {
+      "name": "workflow-inverse",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-1",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-1",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-2",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-2",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-3",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-3",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-4",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-4",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-5",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-5",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-6",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-6",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-7",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-7",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-8",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-8",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-9",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-9",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-10",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-10",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-11",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-11",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-12",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-12",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-13",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-13",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-before-14",
+      "passed": true
+    },
+    {
+      "name": "workflow-state-after-14",
+      "passed": true
+    },
+    {
+      "name": "workflow-diff-path",
+      "passed": true
+    },
+    {
+      "name": "workflow-full-patch-forward",
+      "passed": true
+    },
+    {
+      "name": "workflow-full-patch-inverse",
+      "passed": true
+    },
+    {
+      "name": "G28-literal-from-focal",
+      "passed": true
+    },
+    {
+      "name": "G1-G27-literal",
+      "passed": true
+    },
+    {
+      "name": "runCommand-engine-literal",
+      "passed": true
+    },
+    {
+      "name": "static-counts",
+      "passed": true
+    },
+    {
+      "name": "unbound-wrapper-__SF613_SOURCE_SHA__",
+      "passed": true
+    },
+    {
+      "name": "unbound-wrapper-__SF613_SOURCE_TREE__",
+      "passed": true
+    },
+    {
+      "name": "unbound-wrapper-__SF613_WRAPPER_BLOB__",
+      "passed": true
+    },
+    {
+      "name": "unbound-wrapper-__SF613_WRAPPER_SHA256__",
+      "passed": true
+    },
+    {
+      "name": "unbound-envelope-__SF613_SOURCE_SHA__",
+      "passed": true
+    },
+    {
+      "name": "unbound-envelope-__SF613_SOURCE_TREE__",
+      "passed": true
+    },
+    {
+      "name": "unbound-envelope-__SF613_WRAPPER_BLOB__",
+      "passed": true
+    },
+    {
+      "name": "unbound-envelope-__SF613_WRAPPER_SHA256__",
+      "passed": true
+    },
+    {
+      "name": "unbound-finalizer-__SF613_SOURCE_SHA__",
+      "passed": true
+    },
+    {
+      "name": "unbound-finalizer-__SF613_SOURCE_TREE__",
+      "passed": true
+    },
+    {
+      "name": "unbound-finalizer-__SF613_WRAPPER_BLOB__",
+      "passed": true
+    },
+    {
+      "name": "unbound-finalizer-__SF613_WRAPPER_SHA256__",
+      "passed": true
+    },
+    {
+      "name": "unbound-workflow-__SF613_SOURCE_SHA__",
+      "passed": true
+    },
+    {
+      "name": "unbound-workflow-__SF613_SOURCE_TREE__",
+      "passed": true
+    },
+    {
+      "name": "unbound-workflow-__SF613_WRAPPER_BLOB__",
+      "passed": true
+    },
+    {
+      "name": "unbound-workflow-__SF613_WRAPPER_SHA256__",
+      "passed": true
+    },
+    {
+      "name": "whole-envelope-unique-embedding",
+      "passed": true
+    },
+    {
+      "name": "whole-finalizer-unique-embedding",
+      "passed": true
+    },
+    {
+      "name": "envelope-transport-digest",
+      "passed": true
+    },
+    {
+      "name": "six-English-loop-literal",
+      "passed": true
+    },
+    {
+      "name": "effective-command-count",
+      "passed": true
+    },
+    {
+      "name": "false-flag-count",
+      "passed": true
+    },
+    {
+      "name": "budget-commands",
+      "passed": true
+    },
+    {
+      "name": "budget-parents",
+      "passed": true
+    },
+    {
+      "name": "new-command-budget",
+      "passed": true
+    },
+    {
+      "name": "new-parent-budget",
+      "passed": true
+    },
+    {
+      "name": "five-YAML-run-blocks",
+      "passed": true
+    },
+    {
+      "name": "YAML-run-0",
+      "passed": true
+    },
+    {
+      "name": "YAML-run-1",
+      "passed": true
+    },
+    {
+      "name": "YAML-run-2",
+      "passed": true
+    },
+    {
+      "name": "YAML-run-3",
+      "passed": true
+    },
+    {
+      "name": "YAML-run-4",
+      "passed": true
+    },
+    {
+      "name": "YAML-max-limit",
+      "passed": true
+    },
+    {
+      "name": "width-only-wrapper",
+      "passed": true
+    },
+    {
+      "name": "width-only-envelope",
+      "passed": true
+    },
+    {
+      "name": "width-only-finalizer",
+      "passed": true
+    },
+    {
+      "name": "width-only-workflow",
+      "passed": true
+    },
+    {
+      "name": "global-budgets-unchanged",
+      "passed": true
+    },
+    {
+      "name": "full-suite-totals-null",
+      "passed": true
+    },
+    {
+      "name": "prior-command-sum-from-D29",
+      "passed": true
+    },
+    {
+      "name": "prior-parent-sum-from-D29",
+      "passed": true
+    },
+    {
+      "name": "prior-global-processMs",
+      "passed": true
+    },
+    {
+      "name": "prior-global-technicalStepMinutes",
+      "passed": true
+    },
+    {
+      "name": "prior-global-jobMinutes",
+      "passed": true
+    },
+    {
+      "name": "prior-global-alwaysFinalizerMinutes",
+      "passed": true
+    },
+    {
+      "name": "prior-global-termGraceMs",
+      "passed": true
+    },
+    {
+      "name": "prior-global-killGraceMs",
+      "passed": true
+    },
+    {
+      "name": "prior-global-stdioDrainMs",
+      "passed": true
+    },
+    {
+      "name": "loader-fingerprint-literal",
+      "passed": true
+    },
+    {
+      "name": "c21-report-model-bytes-sha",
+      "passed": true
+    },
+    {
+      "name": "c21-report-model-cap",
+      "passed": true
+    }
+  ],
+  "checkCount": 134,
+  "findings": [],
+  "verification": {
+    "uniqueAnchors": 29,
+    "files": 4,
+    "hunks": 13,
+    "added": 36,
+    "removed": 28,
+    "completeForwardAndInverse": true,
+    "priorG1ToG27Literal": true,
+    "priorEngineArgvCwdAndDeadlinesLiteral": true,
+    "loaderLiteral": true,
+    "embeddedBodiesLiteral": true,
+    "groups": 28,
+    "syntacticCommandSites": 34,
+    "executedCommandModel": 39,
+    "timeoutFlagModel": 78,
+    "englishLoopExpansion": 6,
+    "proofChildrenSeparate": 6,
+    "globalFunctionalAssertions": null,
+    "globalReportTotal": null,
+    "globalRuntimeAssertionTotal": null,
+    "C21ReportModel": {
+      "bytes": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "capBytes": 1024,
+      "standaloneBlobCreated": false
+    }
+  },
+  "duration": {
+    "processMinutes": 35,
+    "stepMinutes": 40,
+    "jobMinutes": 45,
+    "finalizerMinutes": 3,
+    "globalCapsUnchanged": true,
+    "individualCommandCeilingSumMs": 5580000,
+    "individualParentCeilingSumMs": 7320000,
+    "individualSumsDoNotGuaranteeGlobalFit": true
+  },
+  "binding": {
+    "status": "FOUR_UNBOUND",
+    "source": null,
+    "tree": null,
+    "wrapperBlob": null,
+    "wrapperSha256": null,
+    "finalCandidateChosen": false,
+    "finalC613Qualified": false,
+    "currentA21NegativeReceipt": {
+      "gitBlob": "15b1365f2326ec75ba905664687ed1ba81811a02",
+      "bytes": 10301,
+      "sha256": "3a29c0ab7d2b2c49701f56eaa4afb6d99019cd043d689e8d5321f9673b4ce0d8",
+      "lf": 345,
+      "endsWithLF": true
+    },
+    "workflowRunAuthorized": false
+  },
+  "effects": {
+    "repositoryCodeExecuted": false,
+    "treeCreated": false,
+    "commitCreated": false,
+    "refChanged": false,
+    "runDispatched": false,
+    "productionAuthorized": false
+  }
+}

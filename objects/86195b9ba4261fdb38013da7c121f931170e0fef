@@ -1,0 +1,530 @@
+{
+  "schema": "sf613-c21-independent-static-review-v1",
+  "status": "ACK_STATIC_PRODUCT_CONTROL_AND_FOCAL_TEMPLATE_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/focal_migration",
+  "reviewedAtUtc": "2026-11-28T06:43:51Z",
+  "scope": "Independent read-only review of C21 product 3M, one added finite consumer control, exact derivations/bounds/manifest, and root-authored UNBOUND focal template. The only mutation performed for this review is this documentary Git blob and its readback.",
+  "sourceBase": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a",
+    "filePinsResolvedAtCommit": true
+  },
+  "finalPackage": {
+    "manifest": {
+      "git": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+      "bytes": 21170,
+      "sha256": "106e761e53aaa4bd66dfee0ea873c0e8ecfadcb451b62f02f9da8a2289f1a2c9",
+      "lf": 460,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "git": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+      "bytes": 12947,
+      "sha256": "ab496d6a1e00448fe0b41e779a802ceecd4e0e650dda635d8a678bebd2203bbf",
+      "lf": 231,
+      "endsWithLF": true
+    },
+    "delta": {
+      "modified": 3,
+      "added": 1,
+      "files": 4,
+      "hunks": 11,
+      "addedLines": 471,
+      "removedLines": 11
+    }
+  },
+  "reviewedFiles": [
+    {
+      "role": "provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "change": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "lf": 898,
+        "endsWithLF": true
+      }
+    },
+    {
+      "role": "runtimeContract",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "change": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "lf": 187,
+        "endsWithLF": true
+      }
+    },
+    {
+      "role": "localStore",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "change": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      }
+    },
+    {
+      "role": "control",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "change": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "bytes": 27916,
+        "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+        "lf": 450,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "supports": [
+    {
+      "role": "sourceSupport",
+      "git": "52951b9a107deb880285a24d3ed7ea81bfb3f26a",
+      "bytes": 17618,
+      "sha256": "28647a3dbfc1f56527e7da8cefd9f388bc0be4cbbec7a1cde62f053e2bbdc8d4",
+      "lf": 374,
+      "endsWithLF": true
+    },
+    {
+      "role": "sourcePatch",
+      "git": "5c922015a1b475249500015c52c69c1d6e7dc7f8",
+      "bytes": 9361,
+      "sha256": "ab344f6b588ec0789d10e8646f36b5fd710450065e4f7249f4675c0580ab79ce",
+      "lf": 120,
+      "endsWithLF": true
+    },
+    {
+      "role": "controlSupport",
+      "git": "087cc6348a6d987910544c150ea70c8189db580b",
+      "bytes": 36905,
+      "sha256": "0a6894b87c5af4d11aed2bf97c114d8166b33fcf618742858c5c65829f3e4059",
+      "lf": 161,
+      "endsWithLF": true
+    },
+    {
+      "role": "controlPatch",
+      "git": "a1656109e5822e785e95f4695cab01a9258b2216",
+      "bytes": 28731,
+      "sha256": "113f6e8fded75638bc083a623b3e9b8a14f707ffa8099414c9f5c69cd8df159a",
+      "lf": 454,
+      "endsWithLF": true
+    },
+    {
+      "role": "controlHistoryPatch",
+      "git": "96a4cb561fd2df562ffd1464f2cd45abc6628550",
+      "bytes": 1130,
+      "sha256": "e2b7a7189694d3a1506d42b8bf79ed31718157625cdc8f69969b9293025e7951",
+      "lf": 12,
+      "endsWithLF": true
+    },
+    {
+      "role": "fullPatch",
+      "git": "a52880bc314b3159aaf768457f2ab34e38837a11",
+      "bytes": 38092,
+      "sha256": "63366ee47c33dc5dfb547de847a0a3cdd21c319d43b7f1c866dd94659f2a73cc",
+      "lf": 574,
+      "endsWithLF": true
+    },
+    {
+      "role": "bounds",
+      "git": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+      "bytes": 12947,
+      "sha256": "ab496d6a1e00448fe0b41e779a802ceecd4e0e650dda635d8a678bebd2203bbf",
+      "lf": 231,
+      "endsWithLF": true
+    }
+  ],
+  "literalVerification": {
+    "sourceFinalAnchors": 13,
+    "finalProductPatch": {
+      "hunks": 10,
+      "addedLines": 21,
+      "removedLines": 11,
+      "fullForward": true,
+      "fullInverse": true
+    },
+    "controlAddition": {
+      "hunks": 1,
+      "addedLines": 450,
+      "removedLines": 0,
+      "fullForward": true,
+      "fullInverse": true,
+      "embeddedTextEqualsControl": true,
+      "absentPathAtS20Observed404": true
+    },
+    "completePatch": {
+      "hunks": 11,
+      "addedLines": 471,
+      "removedLines": 11,
+      "fullForward": true,
+      "fullInverse": true
+    },
+    "scaffold": {
+      "source": {
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "bytes": 87176,
+        "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+        "lf": 1462,
+        "endsWithLF": true
+      },
+      "sliceAndThreeReplacementsVerified": true,
+      "createFixtureLiteral": true,
+      "inContextLiteral": true,
+      "originalFileUnedited": true
+    },
+    "controlHistory": {
+      "r1": {
+        "git": "86535669bc169d67e12857bfc4eb9de893851099",
+        "bytes": 27884,
+        "sha256": "a5a900605d96a9d3c26439a0cc593f8e4e5835e3cbbc2002f0b92039c96756bd",
+        "lf": 450,
+        "endsWithLF": true
+      },
+      "r2": {
+        "git": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "bytes": 27916,
+        "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+        "lf": 450,
+        "endsWithLF": true
+      },
+      "uniqueReplacement": "isLocalSnapshotAuthorityReader(fixture.store) -> isLocalSnapshotAuthorityReader(fixture.store, fixture.store.observeAuthority)",
+      "bytesDelta": 32,
+      "lfDelta": 0,
+      "fullForward": true,
+      "fullInverse": true
+    },
+    "localStoreHistory": {
+      "r2": {
+        "git": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+        "bytes": 96626,
+        "sha256": "454e67392ea1868e7d911b311a277395581889c873ad705053c835561c16dfa2",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "finalR3": {
+        "git": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "uniqueReplacement": "selection === \"decisionResults\" && !plain(field(\"decisionResults\")) -> selection === \"decisionResults\" && field(\"decisionResults\") === undefined",
+      "bytesDelta": 6,
+      "lfDelta": 0,
+      "fullForward": true,
+      "fullInverse": true,
+      "reason": "The unchanged additive loop already validates every defined decisionResults value as plain; the final guard refuses absent/own-undefined without a redundant prototype observation."
+    },
+    "preservedProviderSegments": [
+      "selectSfScenarioCandidates factory and complete predicate",
+      "scenarioResultMap shape gate",
+      "entire callback dispatch from const value through second authorization, abort and return metadata",
+      "transaction methods and readSfState validation"
+    ],
+    "awaits": {
+      "providerBefore": 36,
+      "providerAfter": 36,
+      "localStoreBefore": 21,
+      "localStoreAfter": 21,
+      "runtimeContractBefore": 0,
+      "runtimeContractAfter": 0
+    },
+    "addedThenCalls": 0,
+    "unchangedTransport": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "git": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "git": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+        "bytes": 46151,
+        "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+        "lf": 533,
+        "endsWithLF": true
+      }
+    ],
+    "checkGroups": {
+      "finalSourcePatchBoundsAndSelection": 76,
+      "controlDerivationAndPatches": 34,
+      "focalTemplateDerivationAndStructure": 46,
+      "finalManifestMetadataAndLimits": 34
+    },
+    "checkCountMeaning": "Numbers identify the retained pure-data check groups. They are not test cases/assertions observed from CI and are not presented as a globally deduplicated runtime total."
+  },
+  "productConclusions": [
+    "The finite decisionResults native tag requires cases namespace plus the private scenarioReads factory registration without earlier/conflicting read classes. Native admission does not execute the predicate or observe a request key.",
+    "LocalStore preserves the entire decisionResults reachable graph in its existing detached clone, including unmatched envelopes; it retains envelope/ACL/top metadata and unknown fields. Only known unselected map contents outside retained reachability are omitted.",
+    "The Provider still clones the whole result collection before Object.values/filter. The two canonical authority checks, late request/context observations, abort handling and fresh result separation remain.",
+    "Absent or own-undefined decisionResults, invalid/legacy shape or nonplain maps retain the prior broad/full fallback. After an actual reduction, the private-route/precedence/collection checks refuse delivery before an opaque callback could receive a reduced graph.",
+    "Changing a declaration, authority/persistence/driver or relevant projection intrinsics after admission is checked before delivery. The new tag confers no ACL authority and caches neither results nor grants.",
+    "Source forwards the admitted tag through its existing exact-work protocol. CurrentChoice's unscoped/no-authorizeCommit branch preserves work/options; wrapped/scoped work changes identity and retains the complete native path. LocalStore projection still needs an eligible existing readonly or sealed-preimage child owner.",
+    "The first root materialization, retained collection clones, filtering, metadata/source guards and authorization work remain. No current run admission, physical amount saved, or latency improvement is established by this static review."
+  ],
+  "control": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+    "pin": {
+      "git": "b62d93080073964d7adc993c3a5c02277abab38a",
+      "bytes": 27916,
+      "sha256": "a6821d3443fbba0c79d3c352b1683ad0262f11f1a8524e0501bf5ddbb316ccea",
+      "lf": 450,
+      "endsWithLF": true
+    },
+    "title": "C21 native scenario candidates retain the whole result graph and installed selection fences",
+    "declarations": 1,
+    "expectSitesStatic": 74,
+    "awaitTokensStatic": 49,
+    "outcomesExpected": 19,
+    "reportsExpected": 1,
+    "deadlinesMs": {
+      "cooperative": 18000,
+      "bun": 20000,
+      "proposedProcess": 45000,
+      "proposedParent": 60000
+    },
+    "outcomes": [
+      "native-whole-collection-readonly",
+      "composed-fresh-candidates-readonly",
+      "native-whole-collection-preimage",
+      "composed-fresh-candidates-preimage",
+      "request-key-after-first-authorize",
+      "composed-prototype-first",
+      "composed-declaration-first",
+      "composed-prototype-second",
+      "composed-declaration-second",
+      "full-fallback-mutable-context",
+      "full-fallback-wrapped-callback",
+      "full-fallback-concurrent-declaration",
+      "full-fallback-namespace",
+      "full-fallback-top-level",
+      "full-fallback-CurrentChoice-scoped",
+      "full-shape-fallback-absent",
+      "full-shape-fallback-own-undefined",
+      "full-shape-fallback-array",
+      "empty-collection-is-a-real-selection"
+    ],
+    "proofBoundary": [
+      "Two physical native probes per readonly/preimage mode directly request the finite native tag and inspect the actual marked snapshot; these probes independently show complete retained results, preserved metadata/own-property shape and detached copies.",
+      "The canonical ProductAuthority/Provider/Source/CurrentChoice/LocalStore composition uses the real methods and original canonical authorizer. Four first/second-authorization drift cases distinguish the actual native selection from an unselected C08 fallback without wrapping a positive-path method to spy on it.",
+      "Four late ID getter reads follow from the four scenario envelopes, including unmatched envelopes and the own __proto__ key; registration/selection reads zero IDs. The second authorization does not repeat the predicate.",
+      "Three successful C08 reads yield eighteen authentication observations; one read yields six; first/second-authorize drift yields three/six. These counts are local to the explicitly bracketed reads and are not global installation counts.",
+      "CurrentChoice.run is real. Its wrapped transaction probe has no local product projection mark and receives the complete Snapshot including the domain-only field. Other full-fallback labels mean no narrow product-map selection or unchanged Provider precedence; broad C14 product projection may still occur.",
+      "The control separately covers missing, own-undefined and array decisionResults plus an eligible empty map. The array scenario is a physical fallback check, not a claimed successful C08 read.",
+      "Twenty explicit C08 read attempts and nine explicit physical probes occur if all paths complete; initialization, source/ACL transactions, durable-copy helpers and SQL operations are separate populations.",
+      "Existing C14-C20 controls remain literal. This new control does not repeat or claim new execution coverage of every alias/cycle/getter/abort/poison case."
+    ],
+    "cleanup": "Prototype changes and authentication hooks are restored in finally; held preimages are released; UI leases finish; the cooperative timer is cleared; LocalStore is disposed and its temporary directory removed. Cleanup does not guarantee cancellation latency.",
+    "report": {
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+      "schema": "sf-c21-native-scenario-selection-v1",
+      "modelBytesIncludingPrefixAndLF": 876,
+      "sha256": "461277e50e6f2c7efde533e40738040a2c3f5ae56629b4575dc3848f314e2ab5",
+      "modelGitCalculatedOnly": "9481d5fcafe4b140fa923b330841de80df005c2c",
+      "modelGitBlobCreated": false,
+      "observedRuntime": false,
+      "acceptanceCapBytes": 1024
+    }
+  },
+  "focalTemplate": {
+    "owner": "root",
+    "carrier": {
+      "git": "2d8f34c52677e7fd641851693ab4b6f0f6b1cfc4",
+      "bytes": 12927,
+      "sha256": "dc138c56a04d4f43edb1ad93a1239ec19c6d7f46a8d164ab5f690af9bb8f031b",
+      "lf": 194,
+      "endsWithLF": true
+    },
+    "historicalIntermediateTemplate": {
+      "git": "fee74fdcf2bc850ce23d899980b9fac21d324f55",
+      "bytes": 13791,
+      "sha256": "71e4296022a19099fdcccea2f67c1cb84257cb17242d461f1a67fb5c528ee5fc",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "currentTemplate": {
+      "git": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+      "bytes": 13791,
+      "sha256": "71dfb151e2dbebb14d27b496b23a04eb9f8c16ea5e31ac363cd186f72f3d91ef",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "historicalDerivation": {
+      "git": "0d4a09646a44e34ff991a337b3c84f4f2af800f2",
+      "bytes": 7586,
+      "sha256": "4a5cb6aa74404d748bd026b4901680cbcf7ec00678f503bf695267588af911ad",
+      "lf": 124,
+      "endsWithLF": true
+    },
+    "historicalAdditionPatch": {
+      "git": "948b007580a35a3602b357affc19d8fbf710b76d",
+      "bytes": 14198,
+      "sha256": "5892a1d820a2ef938cadaa7e2d08c155966d3aaa469e0cde6224be90469bfc17",
+      "lf": 208,
+      "endsWithLF": true
+    },
+    "finalPinDelta": {
+      "before": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+      "after": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+      "occurrences": 1,
+      "fullForward": true,
+      "fullInverse": true,
+      "otherBytesLiteral": true
+    },
+    "historyBoundary": "The original 15-anchor derivation and addition patch reconstruct fee74. The single explicit LocalStore pin substitution then reconstructs current 1530ab; the historical addition is not falsely described as the current template's literal bytes.",
+    "invariants": {
+      "runCommandLiteral": true,
+      "groups2Through8Literal": true,
+      "oldArgvCwdTimeoutsLiteral": true,
+      "currentDevAndActualMergeBaseGuardLiteral": true,
+      "appProcessOmniCarrierLiteral": true,
+      "truncationFailureChecksLiteral": true,
+      "streamCapBytesEach": 1048576
+    },
+    "newGroup": {
+      "number": 9,
+      "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "processMs": 45000,
+      "parentMs": 60000,
+      "prefixOnlyAssertion": "SF_C21_NATIVE_SCENARIO_SELECTION ",
+      "nameFilter": null,
+      "retryAdded": false,
+      "reportParserAdded": false
+    },
+    "expected": {
+      "groups": 9,
+      "commands": 15,
+      "truncationFlagsRequiredFalse": 30,
+      "workingPins": 18,
+      "functionalProcesses": 5,
+      "functionalDeclarations": 17,
+      "controlReports": 8
+    },
+    "selection": [
+      {
+        "name": "cases",
+        "git": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+        "decls": 7,
+        "reports": []
+      },
+      {
+        "name": "projection",
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "decls": 5,
+        "reports": [
+          "SF_C14_SNAPSHOT_CONTROL",
+          "SF_C14_SNAPSHOT_CONTROL",
+          "SF_C15_SELECTION_CONTROL",
+          "SF_C15_SELECTION_CONTROL",
+          "SF_C16_SELECTION_CONTROL"
+        ]
+      },
+      {
+        "name": "portfolio",
+        "git": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "decls": 3,
+        "reports": [
+          "SF_C19_PORTFOLIO_CASES"
+        ]
+      },
+      {
+        "name": "scenario",
+        "git": "1c4b73e4d170a358c0065bd674817f98edd6e86f",
+        "decls": 1,
+        "reports": [
+          "SF_C20_SCENARIO_LOOKUP"
+        ]
+      },
+      {
+        "name": "native",
+        "git": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "decls": 1,
+        "reports": [
+          "SF_C21_NATIVE_SCENARIO_SELECTION"
+        ]
+      }
+    ],
+    "budgets": {
+      "sumCommandTimeoutMs": 1620000,
+      "sumParentTimeoutMs": 2220000,
+      "workflowJobMs": 2700000,
+      "nominalSharedOverheadMs": 480000,
+      "elapsedGuarantee": false
+    },
+    "binding": {
+      "source": "__SF613_SOURCE_SHA__",
+      "tree": "__SF613_SOURCE_TREE__",
+      "singletonTokens": 2,
+      "guardedBeforeCommands": true,
+      "modeledBoundBytes": 13830,
+      "modeledDeltaBytes": 39,
+      "modeledLFDelta": 0,
+      "actualSource": null,
+      "actualFocalSnapshot": null,
+      "run": null
+    },
+    "reportAndAssertionScope": "17 declarations and eight reports are static selection expectations. Actual pass/fail, assertion totals, timings, Omni receipt and flags must be received from a future root-operated run."
+  },
+  "resolvedFinding": {
+    "id": "C21-CONTROL-READ-AUTHORITY-ARITY",
+    "preimage": "86535669bc169d67e12857bfc4eb9de893851099",
+    "line": 203,
+    "issue": "Native authority query needs owner and the original observer; missing observer would fail typing/return false.",
+    "resolvedBy": "b62d93080073964d7adc993c3a5c02277abab38a",
+    "remaining": false
+  },
+  "blockers": [],
+  "approvalBoundary": {
+    "staticReviewAccepted": true,
+    "sourceObjectApprovedByThisDocument": false,
+    "executionAuthorizedByThisDocument": false,
+    "futureSourceAndExecutionBindingsRemainUnbound": true,
+    "originalAnalyticsStillRequired": true,
+    "installedAcceptance": false,
+    "performanceClaim": false,
+    "originalLogsOrZipAcquired": false,
+    "repositoryCodeExecuted": false,
+    "testsExecuted": false,
+    "typecheckExecuted": false,
+    "codeOrTestEditedByReviewer": false,
+    "treeCommitRefRunCreatedByReviewer": false,
+    "authorInstalledRouteDescription": "Read as a conditional static path with two preparatory lookups outside the readonly owner. This review confirms the unchanged Source/CC/native gating, but does not newly attest runtime Finance-branch admission or reread the entire installed callgraph."
+  }
+}

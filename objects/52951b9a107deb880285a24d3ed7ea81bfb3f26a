@@ -1,0 +1,374 @@
+{
+  "schema": "sf613-c21-source-derivation-v1",
+  "status": "PROPOSED_STATIC_ONLY_NO_EXECUTION_R3",
+  "base": {
+    "commit": "2228172b29080b411850ec98a4cdaa66020db5e6",
+    "tree": "2fe9f134f907b771104f75ef1442cb24c5beb72a"
+  },
+  "files": [
+    {
+      "role": "provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": {
+        "gitSha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+        "bytes": 67334,
+        "sha256": "977adc44f45439cbc02fe43c4b3a7719883fc34ff02987b86226783215d5d9e8",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "lf": 898,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "role": "provider",
+          "before": "const productSnapshotSelections = new WeakMap<object, (transaction: object) => \"cases\" | \"preferences\" | \"case-identities\" | undefined>()",
+          "after": "const productSnapshotSelections = new WeakMap<object, (transaction: object) => \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\" | undefined>()",
+          "beforeMeta": {
+            "gitSha": "33f96eb7cfbc7c5189361f4b5149ef75b301e1c9",
+            "bytes": 137,
+            "sha256": "e24baea8e3aad81f621841f71f476ee68366495ec64c882793b6e814ad9ca87e",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "c464a7adee9ee6a07e67a6fca6dc67c875a3b350",
+            "bytes": 157,
+            "sha256": "e97968cce30c9beedcb994668049ab2c32f9f17d7911b39bce6b77fd4b28b3ac",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "provider",
+          "before": "// Only closed cases factories and explicit whole-graph declarations may narrow\n// the native copy. Never inspect IDs or run selectors before authorization.",
+          "after": "// Only closed factories and explicit whole-graph declarations may narrow the\n// native copy. Scenario candidates retain the entire decisionResults collection;\n// never inspect IDs, filter envelopes or run selectors before authorization.",
+          "beforeMeta": {
+            "gitSha": "c86461100f13d4ef11eb68fff1270c7ec8a3174f",
+            "bytes": 156,
+            "sha256": "26e714b3663d3edde1aec0583bea5120c59ffdea7181c9d5ea389f22fef6d473",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "84bd77b087907cfdb0c386799cb80c5aa449c8f3",
+            "bytes": 237,
+            "sha256": "9b11996416d5f74ee8f857af6bca91865f59cc11b3b9e9daa86666117aa2d191",
+            "lf": 2,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "provider",
+          "before": "  if (namespace === \"preferences\" && selectionValue(preferencesReads, read) === read) return \"preferences\" as const\n",
+          "after": "  if (namespace === \"cases\" && selectionValue(scenarioReads, read) && !selectionValue(caseReads, read) &&\n    !selectionValue(resultReads, read) && !selectionValue(caseGraphReads, read) && !selectionValue(caseIdentityReads, read))\n    return \"decisionResults\" as const\n  if (namespace === \"preferences\" && selectionValue(preferencesReads, read) === read) return \"preferences\" as const\n",
+          "beforeMeta": {
+            "gitSha": "1377457302e1f728d2482fefb61480503e9b02ff",
+            "bytes": 116,
+            "sha256": "ed5c20b77225b9f678b66f26b1d28682c3208e39c8bd9a74c5261668fd3b0255",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "884734e320d799369fe5de6bac9fbcc0ed9de716",
+            "bytes": 385,
+            "sha256": "dd86130b670ea8fcd7ed2b8ec53a1b368231de35bcbe3343e5964bdd4e01f883",
+            "lf": 4,
+            "endsWithLF": true
+          }
+        },
+        {
+          "role": "provider",
+          "before": "            ? readiness || selection || resultSelection || casesSelection || scenarioSelection || !identitySelection\n            : readiness || preferencesSelection !== read))",
+          "after": "            ? readiness || selection || resultSelection || casesSelection || scenarioSelection || !identitySelection\n            : projection.selection === \"decisionResults\"\n            ? readiness || selection || resultSelection || casesSelection || !scenarioSelection || identitySelection\n            : readiness || preferencesSelection !== read))",
+          "beforeMeta": {
+            "gitSha": "463d5e41641453d06877d3d3c96ec3942f3ab3ff",
+            "bytes": 175,
+            "sha256": "a561d3f0e36cc0eb1605629f45e227694787b38b5c63d133be8a8a7cef0514d6",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "db6960f8214f20ac73a90ad634f9e68d3979ed0b",
+            "bytes": 349,
+            "sha256": "60e041ecc9771e39ff72f61d9b3d777e20279cc719c5c65461a2ca9c2f5b3973",
+            "lf": 3,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "provider",
+          "before": "            : projection.selection === \"case-identities\" ? !identityCases : !selectedPreferences)",
+          "after": "            : projection.selection === \"case-identities\" ? !identityCases\n            : projection.selection === \"decisionResults\" ? !scenarioResults : !selectedPreferences)",
+          "beforeMeta": {
+            "gitSha": "286790e8a2a57cedd67a0e7c13b00f2426e77f45",
+            "bytes": 97,
+            "sha256": "de934ff19d5077050bda616a259e2df0957f16a40db46d41c92ce2dd1992546d",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "a788d11d676f6c9840a63fe86f702762949af0d6",
+            "bytes": 173,
+            "sha256": "b38a791bc7e6c05a2ad0e7d02596faeefe669adb20a1c175aa7cc360f3afa469",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "runtimeContract",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "preimage": {
+        "gitSha": "39e6da84a3dd815721484affaf8315731ded073b",
+        "bytes": 8973,
+        "sha256": "c9f689603fbca6e3e8ccf4b02363c96112784bb08340f4dec3c2a7fc54c2733b",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "lf": 187,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "role": "runtimeContract",
+          "before": "  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: \"cases\" | \"preferences\" | \"case-identities\" }>",
+          "after": "  dashboardProductRead?: Readonly<{ identity: object; work: object; selection?: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\" }>",
+          "beforeMeta": {
+            "gitSha": "175b926b19225c389145a6edb10978a1edc3ac1d",
+            "bytes": 126,
+            "sha256": "b9b92d4cb092a65e2ed935237a8dc2bc963587113100865f46adb9a5506d5fc3",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14356535552dc335b46ba95577d2e917a36e68d6",
+            "bytes": 146,
+            "sha256": "8c054f7b6d93fe3e1d21ba6af5743e5322f2b40cd7c82db44e8d46c83354b3f8",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "localStore",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": {
+        "gitSha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+        "bytes": 96231,
+        "sha256": "66b9217592f2ae9a8e330f72e9a4251327b8db2eaedae26ee37c9ad13c283d34",
+        "lf": 1685,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "role": "localStore",
+          "before": "type LocalProductRead = Readonly<{ current: () => boolean; selection: \"cases\" | \"preferences\" | \"case-identities\" | undefined }>",
+          "after": "type LocalProductRead = Readonly<{ current: () => boolean; selection: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\" | undefined }>",
+          "beforeMeta": {
+            "gitSha": "f5b7a05af11bf6ce206753841da456d0998b360c",
+            "bytes": 128,
+            "sha256": "d48278806c24a756dd6542e37a246a2830a2d3d5662dbb4b1f0c48df3448d919",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "72898e4b3541ccfdbcc00dcb830409ab15eccf8d",
+            "bytes": 148,
+            "sha256": "30d2b104c892568aefcc571d07ce74cf364b5f23565c42586947748856ccf81a",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: \"cases\" | \"preferences\" | \"case-identities\") => {",
+          "after": "  const dashboardProductSnapshot = (scope: ReadScope, identity: object, selection?: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\") => {",
+          "beforeMeta": {
+            "gitSha": "f27c6752034d32f8e52db81a75bff225a1ffa403",
+            "bytes": 133,
+            "sha256": "853d26fbbb54d026afffb33eba9f5d8efa57fa705a92f8bdf38f4f9bb3941463",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "b8b80ac2c1e3aaf08ac5fbe0d3ebf39f6a2b64e5",
+            "bytes": 153,
+            "sha256": "881f715baaba86bc6a72f31278da2daac3da768b90eac46f7ab959f04d7191cf",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "        const selection: \"cases\" | \"preferences\" | \"case-identities\" | undefined = selected && productSnapshotView.own(selected, \"value\") &&",
+          "after": "        const selection: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\" | undefined = selected && productSnapshotView.own(selected, \"value\") &&",
+          "beforeMeta": {
+            "gitSha": "bea159cfae0b67d82851a1bf1d03e5632cbbaf76",
+            "bytes": 140,
+            "sha256": "4a52173e23e6821cb2ab0d82e722ebb211a67311ebc6a2aab3a21de3e26a04a6",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "62b5cfd3ca6321443fa545874ec0c6ab91e5aea7",
+            "bytes": 160,
+            "sha256": "9f59789b8c2879cb9fbe4d04efb4a8d3a909d0d44963d855f3c8da3437f56a42",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "  const selectedState = (value: unknown, selection: \"cases\" | \"preferences\" | \"case-identities\", normalizedIdentities: boolean) => {",
+          "after": "  const selectedState = (value: unknown, selection: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\", normalizedIdentities: boolean) => {",
+          "beforeMeta": {
+            "gitSha": "9d4dd1e8ffa6582351c70a4dc140e95dad2bf861",
+            "bytes": 132,
+            "sha256": "0db309b54ebcabe265dc8b301d8b3faa16a07db87a348a9d9db222c8645f10f1",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "7786b0e81a7a4f3fe0acd47b3b6c31014999d444",
+            "bytes": 152,
+            "sha256": "30cf26b194960514806ef8eb852548c27bfb4a4ea80f5c773cd8935db0e73d60",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "  const copy = (snapshot: Snapshot, selection?: \"cases\" | \"preferences\" | \"case-identities\", normalized = false) => {",
+          "after": "  const copy = (snapshot: Snapshot, selection?: \"cases\" | \"preferences\" | \"case-identities\" | \"decisionResults\", normalized = false) => {",
+          "beforeMeta": {
+            "gitSha": "fffa0b7ea8c2f5e93ccf679b9fd1e333d8cb30ac",
+            "bytes": 117,
+            "sha256": "ca89d8d142aa713dbc286b17c38161e391a21b7f612bcf4d3bde18d69ba30df8",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "5d90cb547bceee505a4c05ee34fb1ce453599310",
+            "bytes": 137,
+            "sha256": "4d7ccecc373d9aebec5d49b2f88445647347b21ae4f61bd114341c1b3c28f9b4",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "          (selected.value === \"cases\" || selected.value === \"preferences\" || selected.value === \"case-identities\") ? selected.value : undefined",
+          "after": "          (selected.value === \"cases\" || selected.value === \"preferences\" || selected.value === \"case-identities\" || selected.value === \"decisionResults\") ? selected.value : undefined",
+          "beforeMeta": {
+            "gitSha": "a9ed45908354690228e164721ac68807f60afcd3",
+            "bytes": 143,
+            "sha256": "7fdd6dc58e49f8bbc722097eed219ba07a1b6c7f94f39b1b9b4d8c2f12cb4a8d",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "7b8ecd0083cf3fe0e291b984203c83e00a913f8c",
+            "bytes": 183,
+            "sha256": "09941df2f9b41bd5298cec0d25ef2865ffcc433251e6c2abd37732245313037a",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "role": "localStore",
+          "before": "    if (!plain(field(\"biArtifacts\"))) return undefined\n    const selected: Record<string, unknown> = {}",
+          "after": "    if (!plain(field(\"biArtifacts\"))) return undefined\n    // An absent/undefined collection would take the Provider's opaque fallback.\n    // Keep the full view unless its original whole-collection route is usable.\n    if (selection === \"decisionResults\" && field(\"decisionResults\") === undefined) return undefined\n    const selected: Record<string, unknown> = {}",
+          "beforeMeta": {
+            "gitSha": "71ea950a56a25068a057999ad23d9e8dea022dbe",
+            "bytes": 103,
+            "sha256": "1d0e52021fad8f6618fef83309d43f7b9e635939e148fd774915e565f1ee1c0b",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "861fc76717d0b6fcfc3fa097fca74c4d9691ef2b",
+            "bytes": 364,
+            "sha256": "dc8a221d197171a880eb4f1be23a59f6c79ddf9ab0d05384bb0b3165ca252bb3",
+            "lf": 4,
+            "endsWithLF": false
+          }
+        }
+      ]
+    }
+  ],
+  "sourcePersistenceAndCurrentChoiceUnchanged": true,
+  "verification": "All 13 exact anchors occur once in each direction; whole text is restored literally. Unified patches independently reconstruct both postimages and preimages.",
+  "superseded": {
+    "localStore": "37a35af5ebdab98f046f395e8cf777fb41b20aeb",
+    "support": "11100becc6d5130ec6d31c8dece55e14b77be2fc",
+    "patch": "8f8efb8b95d6f79ce3763995c8b50298b6bf7a02",
+    "reason": "Remove one literal backslash from Provider's in a TypeScript comment; no executable change."
+  },
+  "refinementFromR2": {
+    "preimage": {
+      "gitSha": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+      "bytes": 96626,
+      "sha256": "454e67392ea1868e7d911b311a277395581889c873ad705053c835561c16dfa2",
+      "lf": 1688,
+      "endsWithLF": true
+    },
+    "postimage": {
+      "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+      "bytes": 96632,
+      "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+      "lf": 1688,
+      "endsWithLF": true
+    },
+    "operation": {
+      "before": "if (selection === \"decisionResults\" && !plain(field(\"decisionResults\"))) return undefined",
+      "after": "if (selection === \"decisionResults\" && field(\"decisionResults\") === undefined) return undefined",
+      "beforeMeta": {
+        "gitSha": "a0788ad43d9691d939d3ab5d4c2801b3401a63c1",
+        "bytes": 89,
+        "sha256": "bb2dfb738cdeedc5f08b7606d0a292c77e341ca47717db6c6ec2c6d1dde27e26",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitSha": "9074b8068199a555879d76136bf9e0286126d217",
+        "bytes": 95,
+        "sha256": "03dcb4229f03220747d3690caa85c287a97b271a9e651730870c4366e559efcb",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    "reason": "The existing additive loop already proves every present non-undefined decisionResults map plain. Refuse missing/undefined without a second getPrototypeOf call on the collection.",
+    "supportPreimage": {
+      "gitSha": "0a89c9b0626fa83ba3f276257718d1c6c387a9d1",
+      "bytes": 15698,
+      "sha256": "daa5c299f3adfa91d9563d08f62d45c7613b6851690474122e1c40ecc635e59c",
+      "lf": 325,
+      "endsWithLF": true
+    },
+    "patchPreimage": {
+      "gitSha": "dc815cb52a754a3e3807c471bdde92268a6cd7f4",
+      "bytes": 9355,
+      "sha256": "8379070a541071cefdb083efa082f6d724fb9f9d311624cc99d86ff3bffd5570",
+      "lf": 120,
+      "endsWithLF": true
+    }
+  }
+}
