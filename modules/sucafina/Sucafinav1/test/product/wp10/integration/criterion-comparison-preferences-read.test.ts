@@ -575,6 +575,7 @@ test("Comparison criteria observation owns only the post-proof single-criterion 
       const pair: ScenarioCompareRequest = { scenarioRefs: references, criteria }
       const admitted = ok(await native.authority.ui.admit(request(), "sf_scenario_compare", digestSfValue(pair)))
       deadline.own(() => native.authority.ui.finish(admitted))
+      expect(await native.authority.ui.validate(admitted, "sf_scenario_compare", digestSfValue(pair))).toBe(true)
       const stored = ok(await native.business.withCase(admitted, selected, {}, async () => {
         const comparison = ok(await portfolio.planner.compareScenarios(pair, admitted))
         return native.business.results.write({ kind: "comparison", result: comparison, caseRef: selected,
@@ -638,7 +639,7 @@ test("Comparison criteria observation owns only the post-proof single-criterion 
       const state = snapshot.data.__sfProductV1 as SfProductState
       const selected = state.cases[native.caseRef.id]
       if (!selected) throw new Error("The native fixture case disappeared")
-      selected.criteria.push({ id: "cost-peer", description: "The same Planner subtotal source", required: true })
+      selected.criteria = [...selected.criteria, { id: "cost-peer", description: "The same Planner subtotal source", required: true }]
       selected.version++; state.versions.cases++; state.revision++
       return { commit: true, value: { id: selected.id, incarnation: selected.incarnation, version: selected.version } }
     })
