@@ -1,0 +1,106 @@
+{
+  "schema": "sf613-c19-source-object-v1",
+  "status": "CREATED_REVIEWED_SOURCE_CI_PENDING",
+  "at": "2026-11-28 01:23:43 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+  "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+  "parents": [
+    "455c02a7a05a6dd3262ae15b184419897366fde4"
+  ],
+  "message": "fix(sucafina): declare portfolio selection case read sets",
+  "delta": {
+    "added": 0,
+    "modified": 2,
+    "deleted": 0
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+    }
+  ],
+  "treeAudit": {
+    "complete": true,
+    "pairs": 10,
+    "literalSiblings": 238,
+    "hashMatched": true
+  },
+  "sourceReview": {
+    "gitBlob": "f3c4154ddc93d049770b8669d68a9a53fada8653",
+    "bytes": 10234,
+    "sha256": "382a0022e5dea3de13f1e1e207ca73b0afec8417093c357e0da5f18b79e2e0ad",
+    "lf": 345,
+    "endsWithLF": true
+  },
+  "manifest": {
+    "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+    "bytes": 13382,
+    "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+    "lf": 268,
+    "endsWithLF": true
+  },
+  "peer": {
+    "reviewer": "/root/teams_product",
+    "status": "PASS_STATIC_SOURCE_PACKAGE",
+    "manifest": {
+      "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+      "bytes": 13382,
+      "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+      "lf": 268,
+      "endsWithLF": true
+    },
+    "source": {
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+      "bytes": 14108,
+      "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+      "lf": 114,
+      "endsWithLF": true
+    },
+    "consumer": {
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "bytes": 34160,
+      "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+      "lf": 587,
+      "endsWithLF": true
+    },
+    "supports": [
+      "4ba94f80c6db4dc5f57f0687e0a9f6cfdfc61316",
+      "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+      "ce71ce54a3e27b112ff3c089365bfb7404678037"
+    ],
+    "sourceDelta": "2M",
+    "hunks": 6,
+    "added": 187,
+    "removed": 5,
+    "exactAnchorsForwardInverse": 6,
+    "exactFullDiffForwardInverse": true,
+    "sourceAwaits": 30,
+    "literalConsumerPrefixLf": 407,
+    "expectedReportModelBytes": 150,
+    "findings": [],
+    "runtimeResult": null
+  },
+  "originalAnalytics": {
+    "spec": "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "waiterPreviewMs": 60000,
+    "waiterSensitivityMs": 120000,
+    "executed": false
+  },
+  "bounds": {
+    "driver": false,
+    "request": false,
+    "diagnosticOverlay": false,
+    "publicRefMoved": false,
+    "devMoved": false,
+    "productionAuthorized": false
+  }
+}

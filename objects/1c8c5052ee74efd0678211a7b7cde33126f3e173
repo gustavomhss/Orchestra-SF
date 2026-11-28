@@ -1,0 +1,160 @@
+{
+  "schema": "sf613-evidence-root-review-v5",
+  "at": "2026-11-28 01:01:26 UTC",
+  "reviewer": "/root",
+  "author": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "PASS_DOCUMENTARY_ARCHIVE_NOT_PRODUCT_QUALIFICATION",
+  "inputs": {
+    "catalog": {
+      "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+      "bytes": 48822,
+      "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+      "lf": 1452,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "bytes": 743023,
+      "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a",
+      "lf": 22006,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "bytes": 33219,
+      "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+      "lf": 282,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "c408b4f69264f9816d44d921f855263e0c816b7b",
+      "bytes": 108573,
+      "sha256": "b14453a6c6031fcd6c1fe27ea4ab7f9fbddbfd4535bf5506c9c0e656dff98bdc",
+      "lf": 2714,
+      "endsWithLF": true
+    }
+  },
+  "counts": {
+    "objects": 535,
+    "objectBytes": 56651409,
+    "memberships": 584,
+    "groups": 35,
+    "streams": 48,
+    "partReferences": 177,
+    "ownFiles": 537,
+    "ownFileBytes": 57427651,
+    "newObjects": 93,
+    "newMemberships": 93,
+    "newGroups": 6,
+    "newStreams": 7,
+    "newPartReferences": 24
+  },
+  "review": {
+    "checks": 1315,
+    "failed": 0,
+    "fullCheckListSha256": "94f1cff00a7ddab263659d1f185958db3b2934387530987a4991ded2e8b1697d",
+    "performed": [
+      "Rehashed all 92 incoming actual Git blob copies and verified SHA-1 Git, SHA256, bytes, LF and ending LF against final catalog.",
+      "Matched each new input to exact index path, mode, type and role/group membership; actual catalog is the 93rd object.",
+      "Recomposed all 7 new streams from their 24 actual parts; verified whole Git calculation, SHA256, byte counts, LF, exact UTF-16 boundaries and UTF-8 BOM offsets without normalization.",
+      "Applied all 60 manifest operations and reproduced entire 743023-byte index; inversely restored entire 608937-byte R4 index.",
+      "Reproduced README as 9103-byte prefix plus entire 24104-byte R4 README plus 12-byte suffix; checked forward/inverse and prefix/suffix hashes.",
+      "Preserved 442 R4 objects and 491 memberships, 29 groups and 41 streams literally and in original order; no duplicate object identifiers.",
+      "Matched all 442 prior published object-tree entries to retained metadata and sizes; no fresh GET of every inherited body claimed.",
+      "Audited own root and object tree hashes and readbacks, full recursive R4 delta 93A/2M, 2 tree pairs, 442 literal siblings.",
+      "Read both planned parent Git commit metadata; second parent's sole parent is diagnostic source actually executed by E13 Analytics."
+    ],
+    "peer": {
+      "at": "2026-11-28 01:01:26 UTC",
+      "reviewer": "/root/teams_product",
+      "status": "PASS_NO_FINDING",
+      "checks": 40,
+      "inputs": [
+        "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+        "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+        "c408b4f69264f9816d44d921f855263e0c816b7b",
+        "3aa1b45e76cc1341095d65beb1b25c6e295da1b6"
+      ],
+      "scope": "Full 60-operation forward/inverse index and literal README derivation; inherited corpus metadata; 92 incoming catalog entries plus catalog; 7 stream metadata / 24 references. Analytics main/cleanup and both unions compared to independently preserved Git copies. Did not reacquire all 535 bodies or recompose three focal streams; relied on closed catalog/receipts for those. No original/ZIP acquisition or mutation."
+    }
+  },
+  "proposedPublication": {
+    "branch": "sf613-evidence",
+    "expectedOldRef": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+    "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+    "objectsTree": "2684a14e7d2ea7c0ed1b4bc9b76aa6592fb6350e",
+    "parents": [
+      "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+      "43f73297c2082ed4ea3a016bb1fd7bd970a53201"
+    ],
+    "force": false,
+    "rootEntries": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "treeDelta": {
+      "A": 93,
+      "M": 2,
+      "D": 0
+    },
+    "noWorkflow": true
+  },
+  "mutationRecovery": {
+    "initialFullTreeRequest": "422 timeout; expected object was checked and returned 404 before alternate incremental creation.",
+    "incrementalRequest": "Existing R4 object tree plus exactly 93 new entries returned expected hash. First bare-path GET still returned 404; valid recursive Git tree GET authenticated the complete 535-blob tree, which has no nested subtree. No mutation was blindly retried.",
+    "objectsTreeVerified": true,
+    "rootTreeVerified": true
+  },
+  "limits": {
+    "focal": {
+      "run": 46085008328,
+      "attempt": 1,
+      "cases": 40,
+      "assertions": 1470,
+      "qualification": "diagnostic focal only"
+    },
+    "analytics": {
+      "run": 46086157237,
+      "attempt": 1,
+      "failed": 1,
+      "passed": 1,
+      "firstPreviewWaiterMs": 60000,
+      "UI42": "six partial captures",
+      "UI43": "not reached",
+      "UI44": "not reached",
+      "BI": "passed diagnostic candidate only"
+    },
+    "observation": {
+      "eventPrefix": 510,
+      "lastEventTenthMs": 421839,
+      "terminalPresent": false,
+      "exclusiveCpu": false,
+      "timeoutCauseIdentified": false
+    },
+    "artifact": {
+      "id": 15239671856,
+      "bytes": 45860595,
+      "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+      "metadataOnly": true,
+      "zipGets": 0
+    },
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "D27": "four final bindings UNBOUND",
+    "finalC613": false,
+    "finalGoLiveCandidate": false,
+    "productionAuthorized": false
+  },
+  "effects": {
+    "repositoryCodeExecuted": false,
+    "originalLogsAcquired": 0,
+    "zipGets": 0,
+    "archiveTreesCreated": true,
+    "commitCreated": false,
+    "refUpdated": false,
+    "newRunAuthorized": false
+  }
+}

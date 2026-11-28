@@ -1,0 +1,32 @@
+diff --git a/apps/cli/test/sf613-final-verification.test.ts b/apps/cli/test/sf613-final-verification.test.ts
+index c2d665753877a6ddff7aeff91b0dffd8296ca00c..30178d52800afdf6c262e792790d52351b10c5c4 100644
+--- a/apps/cli/test/sf613-final-verification.test.ts
++++ b/apps/cli/test/sf613-final-verification.test.ts
+@@ -1,4 +1,4 @@
+-// D27 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
++// D28 parametric draft: driver-only verification at literal C613; final source and pins remain pending.
+ import { expect } from "bun:test"
+ import path from "node:path"
+ import { readFile } from "node:fs/promises"
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires Linux GitHub Actions with the actual driver SHA in GITHUB_SHA")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-final-composition-literal-c-d27-r1", source, sourceTree,
++    verification: "sf613-final-composition-literal-c-d28-r1", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -313,10 +313,10 @@
+   ], module, 120_000)
+ }), 180_000)
+ 
+-checks.live("Portfolio selection preferences preserve both observations and fresh revocation", () => Effect.gen(function* () {
++checks.live("Portfolio selection cases and preferences preserve original guards and fresh revocation", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  yield* runCommand("2 Portfolio selection preference read controls", process.execPath, [
++  yield* runCommand("Portfolio selection cases and preferences read controls", process.execPath, [
+     "test", "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+   ], module, 120_000)
+ }), 180_000)

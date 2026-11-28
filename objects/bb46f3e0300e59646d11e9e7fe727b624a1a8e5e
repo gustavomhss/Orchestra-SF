@@ -1,0 +1,283 @@
+{
+  "schema": "sf613-d28-wrapper-derivation-v1",
+  "status": "STATIC_UNBOUND_PROPOSAL_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "parentPackage": {
+    "manifest": {
+      "gitSha": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+      "bytes": 18729,
+      "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1",
+      "lf": 492
+    },
+    "bounds": {
+      "gitSha": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+      "bytes": 13126,
+      "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+      "lf": 395
+    },
+    "derivation": {
+      "gitSha": "47556eb9858b70ceddb4467f71ae5e489e647864",
+      "bytes": 17079,
+      "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d",
+      "lf": 441
+    },
+    "rootReview": {
+      "gitSha": "02e39f88126bef9ed7f70f3a09eb7ee2005b752a",
+      "bytes": 7486,
+      "sha256": "4c1b3fdbcb832f0ad49ff457d89624372bb5257e4041bd8bc521a0ed802b0001",
+      "lf": 277
+    }
+  },
+  "file": {
+    "path": "apps/cli/test/sf613-final-verification.test.ts",
+    "mode": "100644",
+    "preimage": {
+      "gitSha": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "bytes": 18381,
+      "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+      "lf": 344
+    },
+    "postimage": {
+      "gitSha": "30178d52800afdf6c262e792790d52351b10c5c4",
+      "bytes": 18398,
+      "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+      "lf": 344,
+      "created": true,
+      "readback": true
+    }
+  },
+  "operations": [
+    {
+      "label": "package-comment",
+      "before": "// D27 parametric draft: driver-only verification at literal C613; final source and pins remain pending.",
+      "after": "// D28 parametric draft: driver-only verification at literal C613; final source and pins remain pending."
+    },
+    {
+      "label": "package-verification-label",
+      "before": "verification: \"sf613-final-composition-literal-c-d27-r1\", source, sourceTree,",
+      "after": "verification: \"sf613-final-composition-literal-c-d28-r1\", source, sourceTree,"
+    },
+    {
+      "label": "G23-outer-title",
+      "before": "checks.live(\"Portfolio selection preferences preserve both observations and fresh revocation\",",
+      "after": "checks.live(\"Portfolio selection cases and preferences preserve original guards and fresh revocation\","
+    },
+    {
+      "label": "G23-command-label",
+      "before": "runCommand(\"2 Portfolio selection preference read controls\",",
+      "after": "runCommand(\"Portfolio selection cases and preferences read controls\","
+    }
+  ],
+  "apply": "Replace four unique before strings in order. Invert by replacing unique after strings in reverse order; both transformations recover exact full UTF-8 bytes.",
+  "fullDiff": {
+    "gitSha": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+    "bytes": 1816,
+    "sha256": "8c04cb10767f4a76fefe7f19ec3820c301515cfa5b35c2c03e467e9c5ee26437",
+    "lf": 32,
+    "hunks": 3,
+    "added": 4,
+    "removed": 4
+  },
+  "literalProof": {
+    "forwardExact": true,
+    "inverseExact": true,
+    "uniqueBeforeAndAfter": true,
+    "deltaBytes": 17,
+    "deltaLf": 0,
+    "allOtherWrapperBytesLiteral": true,
+    "runCommandLiteral": true,
+    "allArgvCwdProcessParentLiterals": true,
+    "groups": 26,
+    "expectSpawnSites": 26,
+    "syntacticCommandSites": 32,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "englishReadExecutions": 6,
+    "proofChildren": 6
+  },
+  "companions": {
+    "envelope": {
+      "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "unchanged": true
+    },
+    "finalizer": {
+      "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "unchanged": true
+    },
+    "workflow": {
+      "gitSha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "unchanged": true
+    }
+  },
+  "protocolInspection": {
+    "wrapperVerificationBefore": "sf613-final-composition-literal-c-d27-r1",
+    "wrapperVerificationAfter": "sf613-final-composition-literal-c-d28-r1",
+    "verificationValueConsumedByCompanions": false,
+    "oldG23NumericLabelOccurrences": {
+      "wrapper": 1,
+      "envelope": 0,
+      "finalizer": 0,
+      "workflow": 0
+    },
+    "consumerFilePathOccurrences": {
+      "wrapper": 1,
+      "envelope": 0,
+      "finalizer": 0,
+      "workflow": 0
+    },
+    "envelopeOuterCountGate": {
+      "blob": "26fe67808cf872c611127a7f46838074604fe690",
+      "lines": [
+        465,
+        493
+      ],
+      "pass": 26,
+      "fail": 0,
+      "skip": 0,
+      "doesNotFixG23InnerCount": true
+    },
+    "finalizerOuterCountGate": {
+      "blob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "lines": [
+        169,
+        177
+      ],
+      "pass": 26,
+      "fail": 0,
+      "skip": 0,
+      "doesNotFixG23InnerCount": true
+    },
+    "preservedReceiptSchema": "sf613-final-technical-literal-c-d26-r1",
+    "preservedFinalizerSchema": "sf613-final-technical-finalizer-v1",
+    "noNewParser": true,
+    "expectedCommandReceiptChange": "Only G23's gate label and its outer case title change; argv/cwd/exit/truncation requirements remain literal.",
+    "newReportReceiptRule": "The documentary intake must receive one complete SF_C19_PORTFOLIO_CASES payload from G23. Existing runtime parsers are not changed."
+  },
+  "documentaryOverrideTargets": [
+    {
+      "historyBlob": "2b660b737a80526b14f9406a5934ba23681968d8",
+      "path": "selection.priorAdditionalGroups[1]",
+      "oldDeclarations": 2,
+      "oldReference": "d9db1d5a9236d35ea8512fbd73e88c4f14c728ad",
+      "override": {
+        "group": 23,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "declarations": 3,
+        "reports": 1,
+        "currentReference": {
+          "gitSha": "68ae48f9a039180824f5471a1de27c0ca34be088",
+          "bytes": 34160,
+          "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+          "lf": 587
+        },
+        "referenceIsQualification": false,
+        "finalC613Blob": "UNBOUND",
+        "outerTitle": "Portfolio selection cases and preferences preserve original guards and fresh revocation",
+        "commandLabel": "Portfolio selection cases and preferences read controls",
+        "commandArgv": [
+          "test",
+          "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "processMs": 120000,
+        "parentMs": 180000,
+        "perTestBudgets": {
+          "inheritedPreferences": {
+            "declarations": 2,
+            "cooperativeMsEach": 12000,
+            "bunMsEach": 15000
+          },
+          "addedCasesConsumer": {
+            "declarations": 1,
+            "cooperativeMs": 18000,
+            "bunMs": 20000
+          }
+        },
+        "nominalBunMs": 50000,
+        "nominalCooperativeMs": 42000,
+        "nominalProcessMarginMs": 70000,
+        "nominalMeaning": "Arithmetic only; unchanged process and parent ceilings include startup/setup/disposal/scheduling overhead, whose fit is not guaranteed by this subtraction."
+      }
+    },
+    {
+      "historyBlob": "da41241cfe00ef5e482d652e041451a30c63dfbb",
+      "path": "wrapper.groupInventory[22]",
+      "oldDeclarations": 2,
+      "override": "Use this package's G23 declaration/report/reference and mixed-budget record."
+    }
+  ],
+  "histories": "All D27/D26 blobs remain immutable. The two overrides are effective only for this new package; historical cuts retain their original two-test reference.",
+  "finalBindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFourBindingParameters": true,
+    "currentReferencePinsDoNotBindC613": true
+  },
+  "sourceStatus": "S19 is a reference source only. Actual final C613 and its four bindings remain UNBOUND.",
+  "writerActions": {
+    "blobsOnly": true,
+    "sourceOrTestEdits": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalAcquisitions": 0,
+    "repoExecution": false
+  }
+}

@@ -1,0 +1,482 @@
+{
+  "schema": "sf613-c19-independent-final-focal-and-original-preflight-ack-v1",
+  "status": "ACK_NO_FINDING_AT_PREFLIGHT_CUT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/teams_product",
+  "recordedAtUtc": "2026-11-28 01:45:34 UTC",
+  "scope": "Documentary reconciliation of closed C19 focal plus read-only preflight of the distinct original Analytics snapshot; no new runtime qualification.",
+  "inputs": {
+    "focalFinalReceipt": {
+      "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+      "bytes": 103238,
+      "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e"
+    },
+    "reportUnionActualGit": {
+      "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+      "bytes": 9251,
+      "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb"
+    },
+    "main": {
+      "gitBlob": "ca9ae3ecf71c5047c9dc89db408601b59ff37981",
+      "bytes": 105958,
+      "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de"
+    },
+    "cleanup": {
+      "gitBlob": "1a9a9a1b6f550aa492656abf04ed45d85da6245e",
+      "bytes": 2281,
+      "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0"
+    },
+    "mainManifest": {
+      "gitBlob": "5f3a8a5f5e6b1ec3c883bcb0606d3f9cc7a39f9b",
+      "bytes": 1763,
+      "sha256": "60bbc36c6fb1178958b34d0617118a60c119d3a2a497be01355b3688eeca90a4"
+    },
+    "cleanupManifest": {
+      "gitBlob": "06028991f11ac0518f4c7066a71f5257244431cc",
+      "bytes": 1753,
+      "sha256": "c4273ec1e93bfe0d8e7b39008e555c67c12f239efdccb7683c4a082fc5f0ec86"
+    },
+    "intakeContext": {
+      "gitBlob": "d745cfcf11fe40d1665268462ca9118c8137d7d0",
+      "bytes": 1543,
+      "sha256": "f8c147779f9d644a78b977ab7963aa5745bd4d1c234980992adb3fa91540ec78"
+    },
+    "sourceReceipt": {
+      "gitBlob": "d9ed0100986ff9be178d195587b50c671b2934c2",
+      "bytes": 3130,
+      "sha256": "fd21afb8d62e2eeb68180c1ffa69b598aef8f84b2f197b4f3f91d6de06706ac4"
+    },
+    "focalBinding": {
+      "gitBlob": "73d3686ce9ef0f4c2e67518681d1c4d0a5603898",
+      "bytes": 8940,
+      "sha256": "8843f73952206c65675b9d4457c76ce884282e6e8eb88f5228d09d0a35028a6c"
+    }
+  },
+  "observedFocal": {
+    "runId": 46093171031,
+    "attempt": 1,
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "snapshot": "86e365fe047f86597751c7e8222011dca4b0a0af",
+    "snapshotTree": "e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2",
+    "result": "CLOSED_FOCAL_PASS_ONLY",
+    "bothJobs": "success",
+    "functional": {
+      "tests": 15,
+      "assertions": 2103
+    },
+    "outer": {
+      "tests": 7,
+      "assertions": 34
+    },
+    "commands": 13,
+    "falseTruncationFlags": 26,
+    "sourcePins": 15,
+    "reports": 6,
+    "C19Report": {
+      "customCaptures": 6,
+      "nativeReads": 9,
+      "reachableFailures": 6,
+      "revocations": 3,
+      "mixedReads": 1
+    },
+    "inheritedC16Outcomes": 31,
+    "inheritedIdentityOracles": 9,
+    "types": {
+      "CLI": 0,
+      "Sucafina": 0
+    },
+    "guards": {
+      "rules": 78,
+      "files": 857,
+      "warnings": 40,
+      "errors": 0,
+      "approved": [],
+      "bootstrap": false,
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f"
+    },
+    "omni": {
+      "nonce": "c7cec802f1c4ea9ae2a636db8a2bed8d",
+      "declared": 7,
+      "spawned": 13,
+      "delegated": 0
+    },
+    "runtime": "1.3.14+0d9b296af",
+    "fullRuntimeRevisionObserved": false,
+    "artifacts": 0,
+    "independentIntakeChecks": 53,
+    "reportUnionLiteralMatch": true,
+    "branchAbsent": {
+      "observer": "root",
+      "mechanism": "matching-refs",
+      "at": "2026-11-28 01:35:38 UTC",
+      "value": true
+    }
+  },
+  "analyticsPreflight": {
+    "commit": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "tree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "parentTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "delta": {
+      "added": 1,
+      "modified": 0,
+      "deleted": 0
+    },
+    "treePairs": 1,
+    "literalSiblings": 45,
+    "request": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "endsWithLF": false,
+      "content": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "@orchestra/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/design-wave-five-analytics.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      }
+    },
+    "originalSubtrees": {
+      "packages": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+      "github": "7663f4b9fe0fdee867137b9e719f29058339317d"
+    },
+    "pins": [
+      {
+        "path": ".ci-run.json",
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "bytes": 56661,
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "bytes": 4384,
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/playwright.config.ts",
+        "gitBlob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+        "bytes": 1892,
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "bytes": 21102,
+        "mode": "100644"
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "gitBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+        "bytes": 18476,
+        "mode": "100644"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "bytes": 17001,
+        "mode": "100644"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "bytes": 19419,
+        "mode": "100644"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "mode": "100644"
+      }
+    ],
+    "titles": [
+      "wave five analytics: native scenarios, recorded results and sensitivity",
+      "wave five analytics: question catalog and original contextual BI"
+    ],
+    "selection": {
+      "testCases": 2,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "caseTimeoutsMs": [
+        780000,
+        660000
+      ],
+      "previewMs": 60000,
+      "sensitivityMs": 120000,
+      "mainJobMs": 2700000
+    },
+    "workerRetryRepeatAuthority": "Unchanged script/test-ci-request.ts playwrightArgs forces --workers 1 --retries 0 --repeat-each 1 for the selected production config. Base config's CI retries2 is overridden.",
+    "observer": false,
+    "profiler": false,
+    "actualRun": null,
+    "actualOutcome": null
+  },
+  "verification": {
+    "counts": {
+      "documentary": 15,
+      "objects": 24,
+      "selection": 12,
+      "total": 51
+    },
+    "checks": {
+      "documentary": [
+        [
+          "final focal status",
+          true
+        ],
+        [
+          "source/snapshot identities",
+          true
+        ],
+        [
+          "run identity",
+          true
+        ],
+        [
+          "main receipt pin",
+          true
+        ],
+        [
+          "cleanup receipt pin",
+          true
+        ],
+        [
+          "actual report blob matches calculated union",
+          true
+        ],
+        [
+          "functional/outer counts unchanged",
+          true
+        ],
+        [
+          "peer53checks preserved",
+          true
+        ],
+        [
+          "root36checks successful",
+          true
+        ],
+        [
+          "limits scope unchanged",
+          true
+        ],
+        [
+          "branch absence attributed to root",
+          true
+        ],
+        [
+          "all current report payloads literal",
+          true
+        ],
+        [
+          "receipt command payloads exact",
+          true
+        ],
+        [
+          "receipt full guards exact",
+          true
+        ],
+        [
+          "receipt Omni and runtime exact",
+          true
+        ]
+      ],
+      "objects": [
+        [
+          "Analytics actual commit/sole source",
+          true
+        ],
+        [
+          "Analytics exactly1A/45literal siblings",
+          true
+        ],
+        [
+          "original request noLF",
+          true
+        ],
+        [
+          "packages and github clean roots",
+          true
+        ],
+        [
+          "pin .ci-run.json",
+          true
+        ],
+        [
+          "mode .ci-run.json",
+          true
+        ],
+        [
+          "pin packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          true
+        ],
+        [
+          "mode packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          true
+        ],
+        [
+          "pin packages/app-shell/e2e/playwright.production.config.ts",
+          true
+        ],
+        [
+          "mode packages/app-shell/e2e/playwright.production.config.ts",
+          true
+        ],
+        [
+          "pin packages/app-shell/playwright.config.ts",
+          true
+        ],
+        [
+          "mode packages/app-shell/playwright.config.ts",
+          true
+        ],
+        [
+          "pin packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+          true
+        ],
+        [
+          "mode packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+          true
+        ],
+        [
+          "pin .github/workflows/test-ci.yml",
+          true
+        ],
+        [
+          "mode .github/workflows/test-ci.yml",
+          true
+        ],
+        [
+          "pin script/test-ci-request.ts",
+          true
+        ],
+        [
+          "mode script/test-ci-request.ts",
+          true
+        ],
+        [
+          "pin script/test-ci.ts",
+          true
+        ],
+        [
+          "mode script/test-ci.ts",
+          true
+        ],
+        [
+          "clean outer bridge",
+          true
+        ],
+        [
+          "mode packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          true
+        ],
+        [
+          "clean inner bridge",
+          true
+        ],
+        [
+          "mode apps/cli/test/fixture/sucafina-native-installation.ts",
+          true
+        ]
+      ],
+      "selection": [
+        [
+          "original app/playwright request exact",
+          true
+        ],
+        [
+          "two original unfiltered declarations",
+          true
+        ],
+        [
+          "original 780/660 timeouts",
+          true
+        ],
+        [
+          "original preview60000",
+          true
+        ],
+        [
+          "original sensitivity120000",
+          true
+        ],
+        [
+          "same helper/waveFour binding",
+          true
+        ],
+        [
+          "production repeats once",
+          true
+        ],
+        [
+          "CLI overrides worker/retry/repeat",
+          true
+        ],
+        [
+          "workflow uses same validated playwright args",
+          true
+        ],
+        [
+          "workflow main45min",
+          true
+        ],
+        [
+          "production extends original base",
+          true
+        ],
+        [
+          "base CI default retry2 is overridden not misquoted",
+          true
+        ]
+      ]
+    },
+    "distinction": "These 51 follow-up checks are separate from the already-closed 53-check focal intake; they are not runtime test/assertion counts.",
+    "failures": []
+  },
+  "limits": [
+    "Observed success is the scoped focal only. Original Analytics, preview deadline, sensitivity, UI, Release and performance outcomes remain unqualified by this ACK.",
+    "C19 consumer uses an extensible fixture authorizer/comparison port; its success does not independently establish native physical projection or installed speed.",
+    "No independent new ref lookup was made; branch absence is attributed to the root observation in the final receipt. Cleanup's || true alone is not absence proof.",
+    "Ten Git pins were resolved in the actual Analytics tree; the snapshot differs from clean S19 by only the original295B request. No E13/profiler or focal wrapper is introduced.",
+    "Runtime reports are from the current focal. Only the printed Bun short revision is reported.",
+    "This document preserves the reviewed preflight cut, not a claim about any activation performed later by root.",
+    "A standalone Git blob is not itself a reachable archive; tree/commit/ref anchoring remains a separate root action."
+  ],
+  "peerActions": {
+    "authorizedWrite": "This single ACK JSON Git blob only; subsequently fetched in full and rehashed before announcing its locator.",
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecution": false,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "activationAuthority": "Root separately creates the concrete authority and operates any original Analytics run."
+  }
+}

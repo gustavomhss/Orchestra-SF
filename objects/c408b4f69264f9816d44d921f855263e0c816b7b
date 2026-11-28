@@ -1,0 +1,2714 @@
+{
+  "schema": "sf613-evidence-package-v5",
+  "status": "PROPOSED_BLOBS_CREATED_AND_LITERAL_READBACK_ROOT_REVIEW_PENDING",
+  "revision": "FIFTH_E13_CLOSED_PREFIX_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "preparedAtUtc": "2026-11-28 00:48:32 UTC",
+  "author": "/root/focal_migration",
+  "authority": "Root authorized only this proposal's index, README and manifest Git blobs. Root alone may create/audit archive tree and commit or update the evidence ref. No original Actions/ZIP acquisition, source change, observation, test or run is authorized.",
+  "inputCatalog": {
+    "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+    "bytes": 48822,
+    "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+    "lf": 1452,
+    "endsWithLF": true,
+    "schema": "sf613-e13-r5-complete-input-catalog-v1",
+    "status": "ALL_E13_ORIGINALS_CLOSED_INPUTS_READY_FOR_ARCHIVE_AUTHORING",
+    "objects": 92,
+    "objectBytes": 7526020,
+    "groups": 6,
+    "streams": 7,
+    "partReferences": 24,
+    "onlyFinalCatalogUsed": true,
+    "catalogItselfIncluded": {
+      "path": "objects/3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+      "group": "E13-control-plane",
+      "role": "actual-input-catalog"
+    },
+    "supersededUndeliveredCatalogUsed": false
+  },
+  "preimages": {
+    "commit": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+    "tree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+    "objectsTree": "6a40acdc2a05c8085a275ae1ac9d0686c34854cc",
+    "index": {
+      "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "bytes": 608937,
+      "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36"
+    },
+    "readme": {
+      "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "bytes": 24104,
+      "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd"
+    },
+    "manifest": {
+      "gitBlob": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+      "bytes": 64403,
+      "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd"
+    },
+    "rootReview": {
+      "gitBlob": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+      "bytes": 7504,
+      "sha256": "84ba93824baecab233931c5dc745b5da09ef0c531bdd112d5683daca99704d12"
+    },
+    "publicationReceipt": {
+      "gitBlob": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+      "bytes": 4619,
+      "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57"
+    }
+  },
+  "proposedOutputs": {
+    "index": {
+      "path": "index.json",
+      "mode": "100644",
+      "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "bytes": 743023,
+      "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a",
+      "lf": 22006,
+      "endsWithLF": true,
+      "created": true,
+      "literalReadback": true
+    },
+    "readme": {
+      "path": "README.md",
+      "mode": "100644",
+      "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "bytes": 33219,
+      "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+      "lf": 282,
+      "endsWithLF": true,
+      "created": true,
+      "literalReadback": true
+    },
+    "manifest": {
+      "pathInProposedArchive": null,
+      "createdAsSeparateReviewBlob": true,
+      "reason": "Current manifest is not self-referenced in index objects or its own bytes; a later increment may preserve it."
+    }
+  },
+  "proposedArchive": {
+    "ref": "refs/heads/sf613-evidence",
+    "expectedOldRef": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+    "force": false,
+    "tree": null,
+    "commit": null,
+    "objectsTree": null,
+    "refUpdated": false,
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+        "tree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+        "role": "previous published archive R4"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+        "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+        "role": "E13 executed diagnostic focal",
+        "soleParent": "dffc62a08bdba74f1a9322d49cde095e81535f55"
+      }
+    ],
+    "ownTree": true,
+    "rootFiles": [
+      "README.md",
+      "index.json"
+    ],
+    "objectsDirectory": "objects",
+    "allFilesMode": "100644",
+    "allObjectPaths": "objects/<actual-git-blob-sha>",
+    "reservedRootsAbsent": [
+      ".github",
+      ".ci-run.json",
+      "apps",
+      "modules",
+      "packages"
+    ],
+    "sourceLayoutsAreMetadataOnly": true,
+    "plannedDiffAgainstPublishedR4": {
+      "addedActualObjectFiles": 93,
+      "modifiedRootFiles": 2,
+      "removedFiles": 0
+    },
+    "objectFiles": 535,
+    "allBlobFilesIncludingIndexAndReadme": 537,
+    "objectPayloadBytes": 56651409,
+    "allBlobBytesIncludingIndexAndReadme": 57427651,
+    "publicationOwner": "/root",
+    "noWorkflowOrRunRequested": true
+  },
+  "totals": {
+    "base": {
+      "objects": 442,
+      "memberships": 491,
+      "groups": 29,
+      "streams": 41,
+      "partReferences": 153,
+      "objectBytes": 49076567
+    },
+    "input": {
+      "objects": 92,
+      "memberships": 92,
+      "groups": 6,
+      "streams": 7,
+      "partReferences": 24,
+      "objectBytes": 7526020
+    },
+    "overlapWithBase": 0,
+    "additionalInputCatalog": {
+      "objects": 1,
+      "memberships": 1,
+      "objectBytes": 48822,
+      "newGroup": false
+    },
+    "added": {
+      "objects": 93,
+      "memberships": 93,
+      "groups": 6,
+      "streams": 7,
+      "partReferences": 24,
+      "objectBytes": 7574842
+    },
+    "result": {
+      "objects": 535,
+      "memberships": 584,
+      "groups": 35,
+      "streams": 48,
+      "partReferences": 177,
+      "objectBytes": 56651409
+    },
+    "typedStreamResult": {
+      "originalJobLogs": 26,
+      "exportFiles": 14,
+      "derivedAnalyticsMarkerUnions": 4,
+      "derivedFocalReportUnions": 3,
+      "derivedObservationEventUnions": 1,
+      "allDerivedUnions": 8
+    },
+    "newGroups": [
+      {
+        "id": "E13-source",
+        "objects": 28,
+        "memberships": 28
+      },
+      {
+        "id": "E13-control",
+        "objects": 9,
+        "memberships": 9
+      },
+      {
+        "id": "E13-focal",
+        "objects": 18,
+        "memberships": 18
+      },
+      {
+        "id": "E13-analytics",
+        "objects": 30,
+        "memberships": 30
+      },
+      {
+        "id": "E13-control-plane",
+        "objects": 3,
+        "memberships": 3
+      },
+      {
+        "id": "R4-archive-control",
+        "objects": 5,
+        "memberships": 5
+      }
+    ]
+  },
+  "derivation": {
+    "mechanism": "Pure JSON/text data transformation, not repository execution.",
+    "baseIndexCanonicalPrettyJsonLf": true,
+    "postIndexCanonicalPrettyJsonLf": true,
+    "operationCount": 60,
+    "fieldOperations": 54,
+    "arrayAppends": 6,
+    "operations": [
+      {
+        "order": 1,
+        "kind": "replace-or-add-field",
+        "path": "/revision",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/revision",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 34,
+          "sha256": "b6e787f3fe31cdb12ee24a84e0800b39b119c3fcae77995bfeca18fa3a6bee73"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/revision",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 30,
+          "sha256": "545df1d9136c499c6901c62cfee22049365e68b2b89759ed5911b133c0765b59"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 2,
+        "kind": "replace-or-add-field",
+        "path": "/preparedAtUtc",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/preparedAtUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "4f725779c6e572fda74d653d64e7a9329a834134f75f683a4b3d6e23b7cff68f"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/preparedAtUtc",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 25,
+          "sha256": "1cc1e2cb1d50cc9475f5ef12b72ed36be0e3df6b85ef9d50bea587af78b77e41"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 3,
+        "kind": "replace-or-add-field",
+        "path": "/authority",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/authority",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 262,
+          "sha256": "e3b47dbfe0be2b0d2b2762afa73bf71d4ee0bd2174391d2fc08efa89cd4f8f46"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/authority",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 334,
+          "sha256": "4c943bc25cc5554ad1cecda6ab0e1ffd94456d5d625b06533631a7f181196f97"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 4,
+        "kind": "replace-or-add-field",
+        "path": "/archiveProposal/previousPublished",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/archiveProposal/previousPublished",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 947,
+          "sha256": "e9a917e258eb8c534b4cb5b0a25299dd8fbc4bf78f9ee6f842cd3b9f76f14d80"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/previousPublished",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 946,
+          "sha256": "0ae156815bb8d13a9d51bb1575388208440615cdde2b8030b4ef55be20163b6d"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 5,
+        "kind": "replace-or-add-field",
+        "path": "/archiveProposal/expectedRefBeforeUpdate",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/archiveProposal/expectedRefBeforeUpdate",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "652d5ac06c0df06f248aaf0c26e5d638ee28d8497b79617333123a72d8cbfdff"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/expectedRefBeforeUpdate",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 42,
+          "sha256": "fed4ef010cbe6b3426bab57a8d063dd7abfaabeb9b49043bf95393f57aa3888e"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 6,
+        "kind": "replace-or-add-field",
+        "path": "/archiveProposal/priorPublicationObserved",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/archiveProposal/priorPublicationObserved",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 244,
+          "sha256": "c509ae9f29c4c1585ffa5e647135067ef715794ee36b48f88688313dc16301d2"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/priorPublicationObserved",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 275,
+          "sha256": "eeb6c22043a0a60795cc5e5ae68cd3244dd59b236b8a3bb537e387a2216891dc"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 7,
+        "kind": "replace-or-add-field",
+        "path": "/archiveProposal/orderedParents",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/archiveProposal/orderedParents",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 602,
+          "sha256": "77ab4f95c8f200c8c5c520b07c82c95e26d6e6e5375cd24ef0b609a6f35fc71d"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/orderedParents",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 389,
+          "sha256": "ddea0113d7d77216f6e8e89e2d94ab453120fac60586396d4f312aebc23e6b4e"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 8,
+        "kind": "replace-or-add-field",
+        "path": "/archiveProposal/parentReachabilityPurpose",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/archiveProposal/parentReachabilityPurpose",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 256,
+          "sha256": "91d7de498645cfe990559b8d7c0b3db3019bd2227f8d02adbc8d685b3aae2acf"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/archiveProposal/parentReachabilityPurpose",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 371,
+          "sha256": "463885262ae1ce458d584a1eb9fe80aacee7e13d70ad4206dc339473e1584d5a"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 9,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/closedScope",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/closedScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 375,
+          "sha256": "d9471b0532c42deee1b703c64985d0869f79991a7eb6b833cd6f9dcd03251e0b"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/closedScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 530,
+          "sha256": "6aceff1505477bc54b2a8723f04a0e816c38341766df47147b425adf3a1f5a70"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 10,
+        "kind": "append-array",
+        "path": "/coverage/completeOriginalStreams",
+        "baseLength": 22,
+        "appendCount": 4,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/completeOriginalStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 457,
+          "sha256": "a07327115380cc1bf9526a210fd7dc48ee2d67b7d6e116f76bb85feb51cb80be"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/completeOriginalStreams",
+          "startIndex": 22,
+          "endIndexExclusive": 26,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 83,
+          "sha256": "430c577c9c09cab1d2898839fa657ed9568630d62e682c91e6badd2e17ccc10e"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/completeOriginalStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 539,
+          "sha256": "e5318b64f50a84f796bccb854a6589ca72f3fe98da48b2c22dadae71fcc979a6"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 11,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/originalLogStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/originalLogStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/originalLogStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "5f9c4ab08cac7457e9111a30e4664920607ea2c115a1433d7be98e97e64244ca"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 12,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/derivedMarkerUnionStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/derivedMarkerUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedMarkerUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 13,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/derivedReportUnionStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/derivedReportUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedReportUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 14,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/derivedObservationEventUnionStreams",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedObservationEventUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 15,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/derivedUnionStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/derivedUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/derivedUnionStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "2c624232cdd221771294dfbb310aca000a0df6ac8b66b696d90ef06fdefb64a3"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 16,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/typedStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/typedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/typedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 17,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13Source",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13Source",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 48,
+          "sha256": "ad5c2afcebde00d243a5f8988f7ecb3225cb9353cdf73edef5ca7680f3793353"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 18,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13Focal",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13Focal",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 35,
+          "sha256": "36af5b5aa018a2d4aea1e9e95ccb56b1e0baf6747b1c4a1475a34d87d7c5d876"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 19,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13Analytics",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13Analytics",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 39,
+          "sha256": "cde9be8f9cc7b13dd95e7fa56c8e0a08253e0596c81a7f2cfaadde35ef125001"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 20,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13Observation",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13Observation",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 58,
+          "sha256": "6ebbb2e95906a1ac9acf96878534f6c7fc069517a9d40ee3b5b9d209ff432e99"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 21,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13Artifact",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13Artifact",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 29,
+          "sha256": "58f834051e39e5cc8417b709db1120ecb959ad2d0d9b92f1a975fbec19abb731"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 22,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentProofStates/E13NextAction",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentProofStates/E13NextAction",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 63,
+          "sha256": "c8f469234b1cebc4ee370835d89e076ad9f5fa7084a71f80582c22c01883be42"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 23,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/historicalReferencePolicy",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/coverage/historicalReferencePolicy",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 348,
+          "sha256": "1c02de1aa773f74b87760e3d8ca2479454d85edb5134560bd800c29442c16240"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/historicalReferencePolicy",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 473,
+          "sha256": "9933b1f1b42ecd623e69631775424b15360d8965802b049152fea940530f77f6"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 24,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/e13UnderlyingEnumeratedCorpusClosed",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/e13UnderlyingEnumeratedCorpusClosed",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 25,
+        "kind": "replace-or-add-field",
+        "path": "/coverage/currentDiagnosticObservation",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/coverage/currentDiagnosticObservation",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 510,
+          "sha256": "f16aa6973187969fc7c86c98910d8e570b3ef96bd4cc49a5c8be03aa1de986c2"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 26,
+        "kind": "append-array",
+        "path": "/objects",
+        "baseLength": 442,
+        "appendCount": 93,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/objects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 204439,
+          "sha256": "6f5babff77625d489db4fe27403df298b05db7b5e441843702341ab39bed09b7"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/objects",
+          "startIndex": 442,
+          "endIndexExclusive": 535,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 41093,
+          "sha256": "e0eb042d36bdbf4f158c215309b1d7b7c22cdb0b0388d70b77985804a4e3cc54"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/objects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 245531,
+          "sha256": "5913e38c84f0b2c01fb055eb54fb06d424fa6acf4248e177ace13d052ade1e70"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 27,
+        "kind": "append-array",
+        "path": "/groups",
+        "baseLength": 29,
+        "appendCount": 6,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/groups",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 72417,
+          "sha256": "fb53cc14d907ead961885e9c1d6723f6f4f986e1538c1fefec8013a2c2819b76"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/groups",
+          "startIndex": 29,
+          "endIndexExclusive": 35,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 18580,
+          "sha256": "f6775cf5f3e7334b0baa3746e511c8489bb58850ec44a2d0fa3a02e98b4b473e"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/groups",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 90996,
+          "sha256": "8c37f96975f91ec2d720422075f341c9eb90d30d91f7fbf73311a01f098c9f2d"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 28,
+        "kind": "append-array",
+        "path": "/streams",
+        "baseLength": 41,
+        "appendCount": 7,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/streams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 57604,
+          "sha256": "8a4c80fc365e9ecb2baeabc17c9263a2a75cabd67b5ecb6a2bb8af28867be51a"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/streams",
+          "startIndex": 41,
+          "endIndexExclusive": 48,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 12349,
+          "sha256": "02a0c7e235249e168f5690391bf7296de6136c598325693790a49b5a2de2a937"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/streams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 69952,
+          "sha256": "1ca2221fc6aba7e5d72a098d639e0719368e1db1690dd0660d87876aa7a935fe"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 29,
+        "kind": "replace-or-add-field",
+        "path": "/derivedEvidence/E13",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/derivedEvidence/E13",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 6695,
+          "sha256": "2c9662b5f459ed02eb6f9f9dd8e4595531192398c149b6f0878a55006b7d8e17"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 30,
+        "kind": "replace-or-add-field",
+        "path": "/excluded/E13",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/excluded/E13",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 810,
+          "sha256": "52139c571532d8bf0768a6e4addf53014464e3f0bd054634e8b2180407c62f49"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 31,
+        "kind": "replace-or-add-field",
+        "path": "/unresolvedReferences/3",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/unresolvedReferences/3",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 277,
+          "sha256": "8dfdb22464463d71ef537082a06bf7561658255a46c3bd9407401428555c7f54"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/unresolvedReferences/3",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 277,
+          "sha256": "be9bb085a6686da6eac677c6fcaeeab61ceea880a6e0a1c896c0b1dee4be93da"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 32,
+        "kind": "append-array",
+        "path": "/resolvedReferences",
+        "baseLength": 4,
+        "appendCount": 1,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/resolvedReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 7713,
+          "sha256": "9d38f8c3d7c237f6c2c217cf6beb5e532326270aceae8d85e7a9dc7138693d53"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/resolvedReferences",
+          "startIndex": 4,
+          "endIndexExclusive": 5,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 602,
+          "sha256": "89789ab30ea1281301c00bb41bf9d4f52cc965a87f99350ef1c253cbeff5804f"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/resolvedReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 8314,
+          "sha256": "edccfc862f9cf2e31e6700c3684383bf369e28f6757d3a50ad0acebe9dc87239"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 33,
+        "kind": "append-array",
+        "path": "/revisionHistory",
+        "baseLength": 3,
+        "appendCount": 1,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/revisionHistory",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 35503,
+          "sha256": "d1fd9194ca5439785abf5737851bf1ea69f0164b3d24c8f456e8c4082f89fbd1"
+        },
+        "appended": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/revisionHistory",
+          "startIndex": 3,
+          "endIndexExclusive": 4,
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 12288,
+          "sha256": "1a4211a4bbd23d0a7cd3d6a9c9deda7a8e4b541db5a8d81881dc1dc3e391141c"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/revisionHistory",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 47790,
+          "sha256": "7f03f0d6618e49e3a6118bfce13a21974ba7125470e63815c222810692ed8aba"
+        },
+        "rule": "Keep the entire existing array prefix literal and append only this ordered suffix. Inverse removes only that suffix."
+      },
+      {
+        "order": 34,
+        "kind": "replace-or-add-field",
+        "path": "/verification/uniqueBlobCount",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/uniqueBlobCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "5627b4a8f9efbd8fbdadaf4177824186f8c734f320935c88e926bc027af6c50f"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/uniqueBlobCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "20ca98162ba780883712eb701c84e4c06f73aba78e903935a9ad799193b4627f"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 35,
+        "kind": "replace-or-add-field",
+        "path": "/verification/logicalMembershipCount",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/logicalMembershipCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "227445a988500528d7826c6921d2e3b4a79ccf3a94cc3bcf7b667e3ae4990b36"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/logicalMembershipCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "085bcb597bbd610a7f0f955301d0fe3734b92a7144e87f68e8b5beec1a09b55b"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 36,
+        "kind": "replace-or-add-field",
+        "path": "/verification/totalBlobBytes",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/totalBlobBytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 8,
+          "sha256": "fbb7305dfbda3de43490a084969fd7eb79d1154fc2fab0574b3834c1231005c3"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalBlobBytes",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 8,
+          "sha256": "0ea86623dae2db7151e7a7739f5d240f2823cd18e1d2c5fb730156626f4c28de"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 37,
+        "kind": "replace-or-add-field",
+        "path": "/verification/previousObjects",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/previousObjects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "64c212df34c66e6fe9fccbfebc8899c10584cfa1669c42a175d65db073b13bc0"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousObjects",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "5627b4a8f9efbd8fbdadaf4177824186f8c734f320935c88e926bc027af6c50f"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 38,
+        "kind": "replace-or-add-field",
+        "path": "/verification/previousMemberships",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/previousMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "db55da3fc3098e9c42311c6013304ff36b19ef73d12ea932054b5ad51df4f49d"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "227445a988500528d7826c6921d2e3b4a79ccf3a94cc3bcf7b667e3ae4990b36"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 39,
+        "kind": "replace-or-add-field",
+        "path": "/verification/newObjectsRelativeToPreviousIndex",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/newObjectsRelativeToPreviousIndex",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "da4ea2a5506f2693eae190d9360a1f31793c98a1adade51d93533a6f520ace1c"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newObjectsRelativeToPreviousIndex",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "6e4001871c0cf27c7634ef1dc478408f642410fd3a444e2a88e301f5c4a35a4d"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 40,
+        "kind": "replace-or-add-field",
+        "path": "/verification/newMemberships",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/newMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "7f2253d7e228b22a08bda1f09c516f6fead81df6536eb02fa991a34bb38d9be8"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newMemberships",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "6e4001871c0cf27c7634ef1dc478408f642410fd3a444e2a88e301f5c4a35a4d"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 41,
+        "kind": "replace-or-add-field",
+        "path": "/verification/newStreamsVerifiedThisIncrement",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/newStreamsVerifiedThisIncrement",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newStreamsVerifiedThisIncrement",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 42,
+        "kind": "replace-or-add-field",
+        "path": "/verification/newPartReferencesVerified",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/newPartReferencesVerified",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "785f3ec7eb32f30b90cd0fcf3657d388b5ff4297f2f9716ff66e9b69c05ddd09"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/newPartReferencesVerified",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "c2356069e9d1e79ca924378153cfbbfb4d4416b1f99d41a2940bfdb66c5319db"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 43,
+        "kind": "replace-or-add-field",
+        "path": "/verification/totalTypedStreams",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/totalTypedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalTypedStreams",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "98010bd9270f9b100b6214a21754fd33bdc8d41b2bc9f9dd16ff54d3c34ffd71"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 44,
+        "kind": "replace-or-add-field",
+        "path": "/verification/totalPartReferences",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/totalPartReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "620c9c332101a5bae955c66ae72268fbcd3972766179522c8deede6a249addb7"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/totalPartReferences",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "8cd2510271575d8430c05368315a87b9c4784c7389a47496080c1e615a2a00b6"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 45,
+        "kind": "replace-or-add-field",
+        "path": "/verification/previousPublishedObjectAudit",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/previousPublishedObjectAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 338,
+          "sha256": "2d9e8e7f96c25d9bf354ee95c0f93bf64559487c060c23d0d926508b8bc29f23"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/previousPublishedObjectAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 333,
+          "sha256": "04e605f10718c2b5ba5665f90c22ca74a23d553d667267fddd2230df35261f4f"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 46,
+        "kind": "replace-or-add-field",
+        "path": "/verification/inheritedStreamAudit",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/inheritedStreamAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 208,
+          "sha256": "3ab061eb68493013ee781fed951ed33b900f4dcdb049df4396592a63445f6bb7"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/inheritedStreamAudit",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 232,
+          "sha256": "59321c3ad1ef957bbf559b3a2edb1c5e7c3ca462f4296832aff34b689f27fa07"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 47,
+        "kind": "replace-or-add-field",
+        "path": "/verification/parentContract",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/parentContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 234,
+          "sha256": "bea88953a5011c3fee5124be945f541cdb82d37cac4af21dae0bab498165b08f"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/parentContract",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 231,
+          "sha256": "b52d66e8ab6830f4113bcf0e933b731e59a444e755c5d034b0f4b48a3b9ada69"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 48,
+        "kind": "replace-or-add-field",
+        "path": "/verification/inheritedVerificationKeysScope",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/verification/inheritedVerificationKeysScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 161,
+          "sha256": "e5c73414836feb6b8b9e5f437b26d9d574cbd201b6a69b6f232e7d5c32c0bcc8"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/inheritedVerificationKeysScope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 199,
+          "sha256": "e21c4e651a8d14751400f21416f53d49e12e6db39d0747a2bf5a99e7839b84aa"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      },
+      {
+        "order": 49,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13CatalogBlobsAuthenticated",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13CatalogBlobsAuthenticated",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "8241649609f88ccd2a0a5b233a07a538ec313ff6adf695aa44a969dbca39f67d"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 50,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13CatalogItselfAuthenticated",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13CatalogItselfAuthenticated",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 51,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13ArtifactContentsAcquired",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13ArtifactContentsAcquired",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 52,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13CurrentPrefixAnalysisExecutedForThisArchive",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13CurrentPrefixAnalysisExecutedForThisArchive",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 5,
+          "sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 53,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13RootAndPeerIntakeReceiptsPreserved",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13RootAndPeerIntakeReceiptsPreserved",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 54,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13CalculatedOnlyWholeExcluded",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13CalculatedOnlyWholeExcluded",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 4,
+          "sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 55,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13ArchiveAuthorOriginalGets",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13ArchiveAuthorOriginalGets",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 56,
+        "kind": "replace-or-add-field",
+        "path": "/verification/E13ArchiveAuthorZipGets",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/E13ArchiveAuthorZipGets",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 1,
+          "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 57,
+        "kind": "replace-or-add-field",
+        "path": "/verification/oldGroupsPreservedCount",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldGroupsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "35135aaa6cc23891b40cb3f378c53a17a1127210ce60e125ccf03efcfdaec458"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 58,
+        "kind": "replace-or-add-field",
+        "path": "/verification/oldStreamsPreservedCount",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldStreamsPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 2,
+          "sha256": "3d914f9348c9cc0ff8a79716700b9fcd4d2f3e711608004eb8f138bcba7f14d9"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 59,
+        "kind": "replace-or-add-field",
+        "path": "/verification/oldPartReferencesPreservedCount",
+        "beforePresent": false,
+        "before": null,
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/verification/oldPartReferencesPreservedCount",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 3,
+          "sha256": "620c9c332101a5bae955c66ae72268fbcd3972766179522c8deede6a249addb7"
+        },
+        "rule": "Append this new object key; inverse removes it."
+      },
+      {
+        "order": 60,
+        "kind": "replace-or-add-field",
+        "path": "/authorEffects/scope",
+        "beforePresent": true,
+        "before": {
+          "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "pointer": "/authorEffects/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 147,
+          "sha256": "b6d83396a3bac73b17cf7f56b13c837c673db261a016f163fb18d27aef627137"
+        },
+        "after": {
+          "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+          "pointer": "/authorEffects/scope",
+          "serialization": "JSON.stringify(value), no LF",
+          "bytes": 231,
+          "sha256": "9f438ca38d6e731099dc7c6c12b8bca7a8a8ac65455213e6ec4e92bf21dc02d3"
+        },
+        "rule": "Replace this field only, preserving its object key position."
+      }
+    ],
+    "forward": "Parse the authenticated base index preserving object key order. Apply operations in listed order. For replace/add use the exact value at the indicated pointer in the authenticated post-index. For append use the indicated post-index array slice, requiring the original base length and prefix digest. Serialize JSON.stringify(value,null,2) plus one LF.",
+    "inverse": "Traverse operations in reverse. For replacement restore the exact authenticated base value at its pointer; delete keys whose beforePresent was false. For append require the post-index suffix and remove exactly the appendCount entries. Serialize indent2 plus LF. The restored text must equal the full base text literally.",
+    "forwardFullText": {
+      "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "bytes": 743023,
+      "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a",
+      "lf": 22006,
+      "endsWithLF": true,
+      "matched": true
+    },
+    "inverseFullText": {
+      "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "bytes": 608937,
+      "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36",
+      "lf": 18074,
+      "endsWithLF": true,
+      "matched": true
+    },
+    "noUnlistedIndexDelta": true,
+    "appendOnlyCorpus": true,
+    "metadataReplacementsScope": "Only current archive proposal, coverage/counts, current E13 summary, current verification and current pending archive anchor. Their prior-cut values remain in the complete R4 index object and the appended R4 revisionHistory record. All previous corpus metadata and memberships remain literal."
+  },
+  "literalPreservation": {
+    "objects": {
+      "count": 442,
+      "wholeEntriesUnchanged": true,
+      "originalOrder": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 204439,
+        "sha256": "6f5babff77625d489db4fe27403df298b05db7b5e441843702341ab39bed09b7"
+      }
+    },
+    "memberships": {
+      "count": 491,
+      "allOrderedPrefixesLiteral": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 101572,
+        "sha256": "1e09d8f5515aaf712f5d04e676936a9b2cefe7bf6b9f5a42ce0dbe7d7a9b9ef6"
+      }
+    },
+    "groups": {
+      "count": 29,
+      "literal": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 72417,
+        "sha256": "fb53cc14d907ead961885e9c1d6723f6f4f986e1538c1fefec8013a2c2819b76"
+      }
+    },
+    "streams": {
+      "count": 41,
+      "partReferences": 153,
+      "literal": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 57604,
+        "sha256": "8a4c80fc365e9ecb2baeabc17c9263a2a75cabd67b5ecb6a2bb8af28867be51a"
+      }
+    },
+    "revisionHistory": {
+      "previousEntries": 3,
+      "literalPrefix": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 35503,
+        "sha256": "d1fd9194ca5439785abf5737851bf1ea69f0164b3d24c8f456e8c4082f89fbd1"
+      }
+    },
+    "resolvedReferences": {
+      "previousEntries": 4,
+      "literalPrefix": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 7713,
+        "sha256": "9d38f8c3d7c237f6c2c217cf6beb5e532326270aceae8d85e7a9dc7138693d53"
+      }
+    },
+    "documentarySnapshots": {
+      "literal": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 1666,
+        "sha256": "e4d869af1ff4f9b43a7a5a565a55947c31a7728f1427d6f2a63b5ff6bfa1e5ab"
+      }
+    },
+    "currentCleanProductRecord": {
+      "literalR4": true,
+      "serialization": {
+        "serialization": "JSON.stringify(value), no LF",
+        "bytes": 417,
+        "sha256": "53d162cc5474e67e3293157887afabe87cd7c8c91563a7914f353afefb8e770d"
+      }
+    },
+    "inheritedDerivedEvidenceAndExclusionsLiteral": true,
+    "inheritedProofStatesLiteral": true,
+    "unresolvedD26D27BindingsLiteral": true,
+    "previousWholeIndexArchivedAsActualBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+    "previousWholeReadmeArchivedAsActualBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2"
+  },
+  "readmeDerivation": {
+    "formula": "newPrefix + exact entire previous README + newSuffix",
+    "base": {
+      "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "bytes": 24104,
+      "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd",
+      "lf": 206,
+      "endsWithLF": true
+    },
+    "post": {
+      "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "bytes": 33219,
+      "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+      "lf": 282,
+      "endsWithLF": true
+    },
+    "prefix": {
+      "bytes": 9103,
+      "sha256": "7a898cf1029b218ad1274f78ff1e1c43a32e725e153474a1d7f003232359e3c2",
+      "text": "# Evidências do Orchestra-SF — arquivo do #613\n\nEste quinto incremento documental preserva R4 e acrescenta o corpus E13 fechado e enumerado: fonte diagnóstica e sua revisão, controles, focal aprovado, Analytics original negativo, logs completos preservados em Git, uniões derivadas e os recibos finais de recepção. A proposta contém somente este README, o índice e os blobs em `objects/`. A raiz ainda precisa revisar e publicar os objetos Git do arquivo. Não há autorização de nova execução, alteração de produto, candidato final ou produção.\n\n## Conteúdo e preservação\n\nO [index.json](index.json) relaciona **535 blobs reais**, **56.651.409 B** em `objects/<git-sha>`, **584 memberships**, **35 grupos** e **48 streams**, com **177 referências de partes**. O incremento acrescenta **93 objetos**, **93 memberships**, **seis grupos** e **sete streams / 24 referências de partes**. Os 442 objetos, 491 memberships, 29 grupos e 41 streams de R4 permanecem literais e na mesma ordem.\n\nOs **92 objetos distintos / 7.526.020 B** do [catálogo final E13](objects/3aa1b45e76cc1341095d65beb1b25c6e295da1b6) foram autenticados por SHA-1 Git, SHA256, tamanho, LF e terminação. Não há sobreposição desses 92 objetos com R4. O próprio catálogo acrescenta 48.822 B como objeto real no grupo `E13-control-plane`, papel `actual-input-catalog`. O catálogo preparatório e as revisões anteriores do helper/controle continuam identificados como históricos; o catálogo final é o único input que governa esta proposta.\n\nOs sete streams novos foram recompostos a partir das 24 referências reais, sem separadores ou normalização de BOM/LF. Os 41 streams anteriores e suas 153 referências de partes conservam seus metadados literais e os recibos de autenticação históricos. Não se alega nova aquisição de todo o corpus anterior.\n\n| Grupo acrescentado | Objetos e memberships |\n| --- | ---: |\n| E13-source | 28 |\n| E13-control | 9 |\n| E13-focal | 18 |\n| E13-analytics | 30 |\n| E13-control-plane | 3 |\n| R4-archive-control | 5 |\n\nO grupo `R4-archive-control` preserva o [índice](objects/f4e3dfedb78c119d03a2acd4d8406a1175e7ab71), o [README](objects/05c3f2ddd758d1f6e122324620081e4594af65e2), o [pacote](objects/f0cc6f2712fa7298f6a4b8a385c5204e9989362c), a [revisão da raiz](objects/69712ea10c7c9cf5d24c8667a95023a46b65c2f9) e o [recibo de publicação](objects/3658ae015be3c1dc96535e61d444122057d4f3a6) de R4 como objetos reais. O README R4 inteiro também está preservado no bloco histórico ao final. O rótulo documental antigo `R5` existente no índice não designa esta quinta revisão do arquivo.\n\n## Resultado E13 e alcance\n\n| Evidência | Resultado recebido | Limite |\n| --- | --- | --- |\n| Focal 46085008328/1 | **40 casos / 1.470 assertions**, oito grupos externos / 45 assertions; 14 comandos, 28 flags de truncamento falsas, 24 pins e dez reports | Qualifica somente a seleção focal diagnóstica recebida. |\n| Analytics original 46086157237/1 | **Um caso falhou e um passou**; primeiro preview sem resposta correspondente no waiter original de 60.000 ms, spec 72:32; BI passou | UI42 teve seis capturas parciais. UI43 e UI44 não foram alcançadas. |\n| Observação causal E13 | **510 eventos**, último evento de overflow em **42,1839 s**, sem terminal do Request | Prefixo truncado pela quota; não identifica a operação em execução aos 60 s. |\n| Produto e pacote final | **12/15 áreas históricas**, zero novas; D27 com quatro bindings finais **UNBOUND** | Nenhum C613 final, aceite de Migração, execução D27, Release ou go-live é estabelecido. |\n\nO [recibo focal final](objects/d7c88e186e3469cb57f7673b227b4fba4cadb55c) e seu [ACK independente](objects/c6ad98dd23ddc9f906c0bfa66d60ccbb86689812) estão fechados. O teste E13 exercitou sete modos isolados e 23 rótulos. Os **19 filhos nomeados** são a soma de 11 loading, um lazy e sete E13; esse número não representa todos os subprocessos do job. Os nove reports herdados conservaram os respectivos contratos, com o PID do controle C18 observado neste run. Esses controles sintéticos não demonstram conclusão do preview instalado.\n\nO [recibo Analytics final](objects/ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26) e o [ACK independente](objects/1541b7542574ed9a522a82c864ba1c58f53e9637) preservam as duas respostas anteriores de results, ambas 200/ok, e o POST `decision-portfolio-preview` de sequência 3, sem resposta correspondente entre os marcadores recebidos. O caso BI recebeu 40 capturas, sete de UI45 e 33 de UI46, e passou somente nesta composição diagnóstica. Nenhuma causalidade ou melhora de desempenho é inferida da aprovação do BI.\n\nA fonte diagnóstica é `dffc62a08bdba74f1a9322d49cde095e81535f55`, árvore `0da48e0d15de780d981a5bce3e49e382a6e61849`, com pai único na fonte limpa S18 `455c02a7a05a6dd3262ae15b184419897366fde4`. O focal usa o snapshot `43f73297c2082ed4ea3a016bb1fd7bd970a53201`; o Analytics original executou diretamente a fonte diagnóstica. Essa fonte não constitui uma correção de produto para merge.\n\n## Prefixo causal e relógios\n\nA [união dos eventos E13](objects/88c30a2f090ce2aeae07883eb6cf44d26e271ac0) contém 510 linhas / 250.708 B e SHA256 `726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7`. O vínculo recebido é Request 1, PID 3778, parent PID 3733, nonce `sf613-e13-event-qmQKRg`, run 46086157237/1. Os campos source/sourceTree designam a base limpa S18; snapshot designa a fonte diagnóstica E13. São papéis distintos no protocolo.\n\nO [parecer causal preservado](objects/3f236afc6ff2d30c03816314dd3f20ec3734b6ff) e o recibo final mostram um port e 26 unidades de comparação no prefixo: dez comparadores diretos, dos quais nove retornaram, e 16 comparadores aninhados, todos retornados. A fase `combination-evaluate` não tem fechamento emitido no prefixo. O evento 510 é overflow; não houve terminal. Entradas sem fechamento descrevem a parte recebida, não o estado posterior ao evento descartado ou no instante do timeout.\n\nOs intervalos usam somente o relógio monotônico do servidor instrumentado, em décimos de milissegundo. Os intervalos aninhados já estão contidos nos diretos e não são somados como custo adicional. O resíduo canônico no recibo final é **182.136 décimos de ms**; o texto histórico do parecer conserva a representação IEEE `18213.600000000002 ms`. Nenhuma dessas medidas representa CPU exclusiva, espera exclusiva, custo não instrumentado ou uma causa demonstrada. Os relógios Actions, servidor e Playwright não são conciliados por inferência.\n\n## Bytes reais, inteiros calculados e artefato\n\n| Stream E13 | Partes reais | Bytes | Observação |\n| --- | ---: | ---: | --- |\n| Focal main | 1 | 122.802 | Blob inteiro real, recebido e fechado. |\n| Focal cleanup | 1 | 2.281 | Blob inteiro real, recebido e fechado. |\n| Focal reports | 1 | 19.660 | União derivada real de dez reports. |\n| Analytics main | 18 | 5.148.177 | Inteiro recomposto e autenticado; somente as 18 partes são objetos reais. |\n| Analytics cleanup | 1 | 2.283 | Blob inteiro real, recebido e fechado. |\n| Analytics markers | 1 | 34.163 | União derivada real de 96 linhas. |\n| Analytics events | 1 | 250.708 | União derivada real de 510 eventos, prefixo sem terminal. |\n\nO main Analytics tem SHA256 `89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381`, 2.986 LF e BOM nos offsets de bytes 0, 2.104.519 e 4.205.627. O SHA-1 Git `1eb15113536676c909a6de4a6294d18688d66bbf` é **calculado somente**: não foi adquirido nem inserido em `objects/`. A recomposição usa as 18 partes manifestadas, em ordem literal. A [união Analytics](objects/d6c235ba488c6f8121845bc184588937972c0b64) permanece separada do stream de eventos.\n\nO artefato **15239671856**, 45.860.595 B, digest `sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7`, é **metadata only**. Houve **zero aquisições de ZIP**. Não foram recebidos por este incremento arquivo físico de eventos, runtime JSON, PNG, trace ou membros do artefato. A existência da união de stdout não substitui esses arquivos nem prova um terminal ausente do prefixo.\n\n## Publicação proposta\n\nA raiz deve revisar uma árvore própria com apenas `README.md`, `index.json` e `objects/<sha>`, todos os arquivos em modo `100644`. Os dois pais planejados, nesta ordem, são:\n\n1. R4 publicado: `f0e031d8667f6b80dc417dbaddd39c3123b2ae52`, árvore `aaaac991b98c22035ef4d6b2749a5c8acfc96bce`.\n2. Focal E13 executado: `43f73297c2082ed4ea3a016bb1fd7bd970a53201`, árvore `6508c42f4957adefcd2de55fb9b51ceef6fe318f`.\n\nO segundo pai já alcança a fonte diagnóstica usada pelo Analytics; S18 permanece ancestral. Não há parent adicional de produto ou importação do layout executável para esta árvore. A ref esperada antes de eventual atualização nonforce é R4. Este autor produziu apenas os três blobs da proposta, sem árvore, commit, ref, workflow, run, comentário externo, GET original ou ZIP. A publicação e a auditoria final pertencem à raiz.\n\n<details>\n<summary>README R4 publicado — histórico literal</summary>\n\n"
+    },
+    "suffix": {
+      "bytes": 12,
+      "sha256": "310be9616c9388d38c33b50cb282767e95eabea403910b1052c501b733300599",
+      "text": "\n</details>\n"
+    },
+    "baseOccurrenceCount": 1,
+    "baseFullTextLiteral": true,
+    "forwardLiteral": true,
+    "inverseLiteral": true
+  },
+  "authentication": {
+    "allCatalogObjects": 92,
+    "allCatalogObjectBytes": 7526020,
+    "allGitSha1AndSha256ByteLfChecksMatched": true,
+    "verificationSources": {
+      "retained": 62,
+      "readFromGit": 30
+    },
+    "catalogAuthenticated": true,
+    "objectChecks": [
+      {
+        "gitBlob": "9fc171ad604397032997c0523f9f3deb012b9f78",
+        "bytes": 16743,
+        "sha256": "de04fc30c015958a344ccc013a32facd5c4a82558af45748fd108cc1b07ba0e6",
+        "lf": 287,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f9099fde19cc3d444da68317f5e2207561c82e06",
+        "bytes": 17097,
+        "sha256": "59758e2e2ddf4a203258c6979674f37b44cb92eb41a52184f1ae85c2327ddead",
+        "lf": 289,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "27200494b81e7394ca9034b034a735cea1b08dac",
+        "bytes": 17672,
+        "sha256": "6afe9c125150de5b3ba86f81ef86e3cd3b604c11d9a1af9e40e8698730ae6f06",
+        "lf": 302,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+        "bytes": 17964,
+        "sha256": "c41db9ba45684612c7daa2089602687b9174e033562fc71ad65c7364237ed872",
+        "lf": 303,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "85067173418a441977f377175280ba789bec85e3",
+        "bytes": 17996,
+        "sha256": "8dea0a4f99a5b536e96cb6ff1300dcd89c878f01d38bb4786372c13ebd1a1909",
+        "lf": 303,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+        "bytes": 18129,
+        "sha256": "7b0dc25080ec105ac0383971c1331f748b9641bd08ff3a42b90360d273fb02af",
+        "lf": 307,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+        "bytes": 18129,
+        "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+        "lf": 307,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "b7f6bac96c80922347517434b3ac263009a3f68b",
+        "bytes": 3109,
+        "sha256": "dab0b66c181a0c23113e56a4863878e31ee8b07540b482c7617bb33fc989dbd2",
+        "lf": 58,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "658b41be0cf80b1fb7bd9e9ea417ff6aff9173e2",
+        "bytes": 5281,
+        "sha256": "439b5a3b5f6016ca4d33131bebcb07215195947eb0310175d377abbd5b6a6fdf",
+        "lf": 50,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "4fae92cf3541b710259e4dd2b2d21123c8d10e39",
+        "bytes": 3029,
+        "sha256": "6c76eb94ee07f622b232acc7a31da8e178535e439f16463d0ab402ab794d168b",
+        "lf": 66,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "095e12f87d896200f640201ab7c1d26502e78339",
+        "bytes": 918,
+        "sha256": "120477c8773a48b6224f4a967b4d239df2e7f0febc8dde4dcad4d105b787c8b7",
+        "lf": 22,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "2d5b771c9a0b4b8b753b3c643415f12103497b15",
+        "bytes": 1035,
+        "sha256": "637e46b02a899735f01b0fe6f102600ee237711f685b43ccc9260b9397a8be89",
+        "lf": 22,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+        "bytes": 985,
+        "sha256": "7cc677c517730541b3826c28020775436fb8a286dcb385ac54c6b23bbfc92a2b",
+        "lf": 22,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+        "bytes": 14101,
+        "sha256": "2b18f550e8165a40ef7a3bfdd1d365dfc2bf0b20b98c1a1186c74d9e27cb99fb",
+        "lf": 145,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+        "bytes": 18458,
+        "sha256": "f3c90f93f0aeb73f755fe61ee1debf30ab31aae356d9caa61ced7fc99ffb71c2",
+        "lf": 135,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+        "bytes": 10047,
+        "sha256": "510b1c5f5fa77eb3b79bfefbd62bc2d7d1890bcbbe68b502f7c4d0032770c997",
+        "lf": 91,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "c977fb96b97b5c3831c1fc03a2cf655bf5fedf9a",
+        "bytes": 61580,
+        "sha256": "b98d55de3c59ff4bece0e9814155dd4173cbc21e9908ba64daeb034340ea58d2",
+        "lf": 168,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+        "bytes": 10356,
+        "sha256": "dee56ea5cd0be05e644ce5b1a152263115c17444c5c237cc23d3edab80fdb7d0",
+        "lf": 184,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "47e13f21e5d00fc8689123d7b87175960288b029",
+        "bytes": 16468,
+        "sha256": "86a93b56cf5b722d88353d4a46e92d411bbabce87d646a12d835e2cca5779d80",
+        "lf": 267,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f519247ddd71ecaf5b70d8656785b9e70ef701aa",
+        "bytes": 6621,
+        "sha256": "d9e28ec0be73ecc483754c1b97a12f7a8c426aa885c204201267943eaab1bdec",
+        "lf": 193,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "399cb934c5b13976cd8dc82fa6c567d824b3b53f",
+        "bytes": 10758,
+        "sha256": "5b5e85b5117b3e3ec4bdcdd801fa72c881c02f5d9d4e4c1ea90f6b45ab0f7e40",
+        "lf": 207,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+        "bytes": 12376,
+        "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+        "lf": 308,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+        "bytes": 21216,
+        "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+        "lf": 384,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+        "bytes": 97171,
+        "sha256": "b3e6c512a23aa2907752ad1e9f2d7e41a1a9895c0a2d6a62841bba40621576e5",
+        "lf": 381,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+        "bytes": 84455,
+        "sha256": "47f333d15ba426530d2514daa2e92c446088832a13b7cc49faaec72fc318a7be",
+        "lf": 886,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "30403ed54ead11cf277451474fb383a3c64d9903",
+        "bytes": 7700,
+        "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+        "lf": 143,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+        "bytes": 9047,
+        "sha256": "16b951fd31bc2822719aa65d5171dc91e94e14470a73d54505a6d2588de60789",
+        "lf": 288,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "485a9fccf3bc6fd5ee0139787ebd443736899664",
+        "bytes": 7946,
+        "sha256": "b093ad70aad1f6d32a649058ede72dcc633db9ab03a0b426adb6591330f479b4",
+        "lf": 221,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+        "bytes": 26559,
+        "sha256": "4d4cbd3dde8b0843aa2ba54d382a23ef0e9b9e9eda31aed05f33b7e76b609df8",
+        "lf": 443,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+        "bytes": 27928,
+        "sha256": "4ef61a9868845016fbe51f096877cf2f8d5e0c95186d258b9d40dcc8f0e0c789",
+        "lf": 440,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+        "bytes": 27903,
+        "sha256": "1f5bca8f411969dca6f74d23bf2e1a414346d2d55cde59b0a4b0dac6ce09ff74",
+        "lf": 440,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+        "bytes": 27993,
+        "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+        "lf": 442,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "00389741844e45cd1a507a7e07c370edcf891f93",
+        "bytes": 1102,
+        "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+        "lf": 24,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+        "bytes": 6453,
+        "sha256": "41899cfaacc5e767511279284979e8f0bba3549e684b1f3678391d4b78e20964",
+        "lf": 149,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "50763473ec52deacc01981e18d553c2839d274ff",
+        "bytes": 20922,
+        "sha256": "f6cefced2a20ce306fce3ef5c62c5cac15a03b901a6ba0c20f8e3dbfc2b02cd2",
+        "lf": 527,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+        "bytes": 51031,
+        "sha256": "c888df6c28dc4e0fde1c8728f45e62eb8cb8f785f5c85d530d2140fba4869c00",
+        "lf": 388,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "6013fbed858c5891a87da7e500751c9bb4f320e5",
+        "bytes": 30029,
+        "sha256": "86de01fe01578f1d37e3cf94d60ff51ec42d8698753ce9160203dd43c89cf136",
+        "lf": 476,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+        "bytes": 14109,
+        "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+        "lf": 203,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+        "bytes": 33967,
+        "sha256": "8afaae3ca18b0b5cc11dd07eba8228808b638d7c076cdfa8a3138b5c39d652fd",
+        "lf": 921,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "0ccdae38ccd7b7392820081b620e625801e5b030",
+        "bytes": 23076,
+        "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+        "lf": 731,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+        "bytes": 25529,
+        "sha256": "0822120957412f672e178981066f71f5f6588efec6925da2dc0fb0b2431c5ab9",
+        "lf": 523,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+        "bytes": 9875,
+        "sha256": "309fb2f24e5d4e216dd11c5e7fb58619d8d1206521134591d3eb7cbea7f17bb6",
+        "lf": 125,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+        "bytes": 45625,
+        "sha256": "3ade1005084cbeb825c864fe8a394817024180586bc22a89aa7c0f01f321f783",
+        "lf": 696,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+        "bytes": 27653,
+        "sha256": "7004bb216c84433c5e80bee4dcfff85e0885c6fd2c7fb4dbd1dfae8260786807",
+        "lf": 836,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+        "bytes": 14136,
+        "sha256": "5172e0f2db3181a1183efefd3e82a4da95239004e7e1fb7ef329f8d3d68cb22a",
+        "lf": 203,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+        "bytes": 6803,
+        "sha256": "da1ca7f5cd0e908e7698399a69c86b039308cde92e50713267623dd76d2a2a56",
+        "lf": 205,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "5c952a7a32a8286702801c7497a7522809d1b652",
+        "bytes": 7306,
+        "sha256": "2ec259f160bf32d696d6230da35ce95de436a269f0f1e93c601afe63a92acaad",
+        "lf": 218,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "094481bff7a51a113681ba93edd2ea91bc0ce89b",
+        "bytes": 1378,
+        "sha256": "8e61d916bf2816029d9a98d73ab886a020a4cfd3839172ae225861c05d1e7c93",
+        "lf": 48,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+        "bytes": 122802,
+        "sha256": "7ea69b7788e8db9d903953478480d2d84b00d419c8131c5a5bd913e0fe875ae6",
+        "lf": 922,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "cfb1ee8b5769c2826d3afd2d58b801a0eb9d3b4d",
+        "bytes": 1763,
+        "sha256": "57f4f0252d20d006e627b80ae6d73c8088229c9a3b2f0e76841d79255e3097c6",
+        "lf": 61,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+        "bytes": 2281,
+        "sha256": "f13599b0853dc961ba26edf602f8e62d83f604ea5e89c59255cec76beb6fabca",
+        "lf": 39,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "8816b977081e7931d90a3f13036c2eeb21a4df17",
+        "bytes": 1753,
+        "sha256": "dea6071479a38fd38919590c598284e37554f163cbf6700b0a0d5346103bfb7e",
+        "lf": 61,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+        "bytes": 19660,
+        "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69",
+        "lf": 10,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+        "bytes": 69479,
+        "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+        "lf": 2105,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+        "bytes": 8864,
+        "sha256": "d22820896234cd5f86167532e8450e70223acd8736bc40de3c0f95f1af307e0e",
+        "lf": 222,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+        "bytes": 985,
+        "sha256": "ad9207ef6ce0507b596a6fe5f8d07f840c208b62fdd1dca5331d115af7856e17",
+        "lf": 32,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+        "bytes": 24118,
+        "sha256": "afb549aa28accb490a85c1d62ac98375b777cd40f25a030ac56a9ecf7c86535c",
+        "lf": 572,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "d479ac686d0e90fd4594247cb62750d519b489a7",
+        "bytes": 1956,
+        "sha256": "40cec63be0d539e77698081c0c932cd6a7b1a29a64eb4f20ca7cadbea35d53bc",
+        "lf": 61,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "6465f63fdd5f47dc9edccebd5fd25e5b88f7735a",
+        "bytes": 24369,
+        "sha256": "46a7154d0cc71c50f6d964b89c340f1296cd21d3944915de55d241dd417e3985",
+        "lf": 745,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+        "bytes": 608937,
+        "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36",
+        "lf": 18074,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+        "bytes": 24104,
+        "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd",
+        "lf": 206,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+        "bytes": 64403,
+        "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd",
+        "lf": 2006,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "retained"
+      },
+      {
+        "gitBlob": "4d55cbecd6d44d835271b96486baab2dd664e968",
+        "bytes": 2642,
+        "sha256": "f8570caa90bcdd4dc3d65471666bf54e8c78e68457d974605910b7ea670b33d8",
+        "lf": 82,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+        "bytes": 8320,
+        "sha256": "99951e8df61a006e52a59974911f3f20d347a855f3dbbfbaedf63bffac64e448",
+        "lf": 286,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+        "bytes": 2283,
+        "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+        "lf": 39,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "70607967c9788428c229e9eca6c12fce29c236ee",
+        "bytes": 1761,
+        "sha256": "befff94a6fa8bf6322d991def6b15dc1afc9086da2be27906bd1c06443807b3f",
+        "lf": 61,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+        "bytes": 250708,
+        "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+        "lf": 510,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "d6c235ba488c6f8121845bc184588937972c0b64",
+        "bytes": 34163,
+        "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+        "lf": 96,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+        "bytes": 82554,
+        "sha256": "787c3a61f8dbfc0f9ae0b770af6742017214f159167d209caa07636ff356f5d9",
+        "lf": 3828,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+        "bytes": 30818,
+        "sha256": "9835e4c8217568f3d8838a5eb0b4cc6c7027993758d4f5147910faf2bd712d8e",
+        "lf": 979,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "1541b7542574ed9a522a82c864ba1c58f53e9637",
+        "bytes": 1389,
+        "sha256": "2171499abee57614cad79cc34709cafe8ae8e5d4f64c527dc5244e5f1e363bbf",
+        "lf": 43,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "754ad54c07f0d3fbd6d98d7565d036c68380a9a0",
+        "bytes": 19844,
+        "sha256": "d70a14d0167b48936f07e8716c6ae94ff4f4781d97c016a16b3e205521896dd6",
+        "lf": 80,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+        "bytes": 7504,
+        "sha256": "84ba93824baecab233931c5dc745b5da09ef0c531bdd112d5683daca99704d12",
+        "lf": 248,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+        "bytes": 4619,
+        "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57",
+        "lf": 137,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "4e6a2b736302101239b76128bb2cb90ae41310ac",
+        "bytes": 300000,
+        "sha256": "dee22bdc581fd025862de4129ab1917475a75eca6ca5736b219df827da904b2c",
+        "lf": 1178,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+        "bytes": 300000,
+        "sha256": "32b8428f430e052e4c0670c9befa204c4e235e486f1948888efc19db30a7593d",
+        "lf": 46,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+        "bytes": 300000,
+        "sha256": "ab8b42847327ee05b3c752c14ee6d648aed0f01429045105fd4b2197da9f990d",
+        "lf": 766,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+        "bytes": 300000,
+        "sha256": "9ffbe79df94f431a9490776dd0e62d1197795f98e2c6ebb297ade1e7c0f7c116",
+        "lf": 438,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+        "bytes": 300000,
+        "sha256": "e02a698452eceeffa295640f21a3b35cb1f044986805ca527f4be01f352099cf",
+        "lf": 36,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+        "bytes": 300000,
+        "sha256": "eb877b9554dce98a4288ab7fb722e9769dbd0514f6d6172182afa2ee735fc202",
+        "lf": 36,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+        "bytes": 300000,
+        "sha256": "761effa119e98d4f5d69f81bd20e2a6af29c97001efc2b1f004bb9cf8d2395a7",
+        "lf": 30,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "3872d581513c4a7721687bfb728cd0fdfbf403ce",
+        "bytes": 300000,
+        "sha256": "87de1ed12ba91144bfb6e9de964dbc7e9d0f816c9ac452d3850772f0a7b6b482",
+        "lf": 40,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "256e98ed81c38a9123ef0bb867c1a704063c15e3",
+        "bytes": 300000,
+        "sha256": "21cc0f6a4e1426fdd9c4fc3c96cebd08011eed3b953f5819bfb040e8a8c3f528",
+        "lf": 28,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+        "bytes": 300000,
+        "sha256": "64230f26437d6e5878e2602173db7e5462273914f75b65e2388ebca147d64524",
+        "lf": 36,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "597d921b74943bd51ab9dca0690927e20dca09de",
+        "bytes": 300000,
+        "sha256": "839bf63e710a0acc172f3f408168a1e8e97037806717d4e92ad60dfbc1391bcd",
+        "lf": 50,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "3a24f4ee324416facef0d859a57626e1720f86af",
+        "bytes": 300000,
+        "sha256": "d0864d609d7d2d65e56f138dc96c322950a74a6e2296e208e7e3c4c84ac22741",
+        "lf": 30,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "bd9e8875502dad8bff2e36224f51489fc4397c9b",
+        "bytes": 300000,
+        "sha256": "e689daa859b1839ee511cd2887be5bc14f1564b466ad184f6d6168c4f2e44a30",
+        "lf": 38,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+        "bytes": 300000,
+        "sha256": "f6e100023e42dc9229194ce8cee197e61e37b479dec3538dc9920c58c0e29928",
+        "lf": 32,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+        "bytes": 300000,
+        "sha256": "cfa454ba171a1a0acf10067fa3c5df95f0c9c0471e244707578361e280e118f8",
+        "lf": 36,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "053925d54f7876818256fc553d94c9d68a5a6688",
+        "bytes": 300000,
+        "sha256": "7096821e0eec50e8db3d4f5ee9d7be2764bd0bb4bb03dbc4a08242c88d6f557b",
+        "lf": 36,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "8e23978720ee9a98c502639e7842176f68d8c692",
+        "bytes": 300000,
+        "sha256": "63c92ed5164252437407d8437afec736822575e74d5d43a37d718ace5823574a",
+        "lf": 46,
+        "endsWithLF": false,
+        "pass": true,
+        "acquisition": "Git blob read"
+      },
+      {
+        "gitBlob": "c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+        "bytes": 48177,
+        "sha256": "496494df3fbb03ea19490a7d9023deab19260f0d2bf99b1a075e711918e11f9d",
+        "lf": 84,
+        "endsWithLF": true,
+        "pass": true,
+        "acquisition": "Git blob read"
+      }
+    ],
+    "newStreamChecks": [
+      {
+        "id": "E13-focal-main",
+        "parts": 1,
+        "git": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+        "bytes": 122802,
+        "sha256": "7ea69b7788e8db9d903953478480d2d84b00d419c8131c5a5bd913e0fe875ae6",
+        "lf": 922,
+        "endsWithLF": true,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      },
+      {
+        "id": "E13-focal-cleanup",
+        "parts": 1,
+        "git": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+        "bytes": 2281,
+        "sha256": "f13599b0853dc961ba26edf602f8e62d83f604ea5e89c59255cec76beb6fabca",
+        "lf": 39,
+        "endsWithLF": true,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      },
+      {
+        "id": "E13-focal-reports",
+        "parts": 1,
+        "git": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+        "bytes": 19660,
+        "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69",
+        "lf": 10,
+        "endsWithLF": true,
+        "bomByteOffsets": [],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      },
+      {
+        "id": "E13-analytics-main",
+        "parts": 18,
+        "git": "1eb15113536676c909a6de4a6294d18688d66bbf",
+        "bytes": 5148177,
+        "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+        "lf": 2986,
+        "endsWithLF": true,
+        "bomByteOffsets": [
+          0,
+          2104519,
+          4205627
+        ],
+        "wholeGitBlobPersisted": false,
+        "pass": true
+      },
+      {
+        "id": "E13-analytics-cleanup",
+        "parts": 1,
+        "git": "9677660309a8c4c68de3497079ba444ec84b5835",
+        "bytes": 2283,
+        "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+        "lf": 39,
+        "endsWithLF": true,
+        "bomByteOffsets": [
+          0
+        ],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      },
+      {
+        "id": "E13-analytics-markers",
+        "parts": 1,
+        "git": "d6c235ba488c6f8121845bc184588937972c0b64",
+        "bytes": 34163,
+        "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+        "lf": 96,
+        "endsWithLF": true,
+        "bomByteOffsets": [],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      },
+      {
+        "id": "E13-analytics-events",
+        "parts": 1,
+        "git": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+        "bytes": 250708,
+        "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+        "lf": 510,
+        "endsWithLF": true,
+        "bomByteOffsets": [],
+        "wholeGitBlobPersisted": true,
+        "pass": true
+      }
+    ],
+    "newStreams": 7,
+    "newPartReferences": 24,
+    "originalPartConcatenation": "Literal UTF-8 ordered parts, no separators, no BOM/LF/timestamp/ANSI normalization of the original logs.",
+    "derivedUnions": "Existing actual derived union blobs are preserved as received. This archive verifies their bytes and retains the completed semantic reviews; it does not pretend they are original native files.",
+    "previousCorpus": "Metadata and memberships retained literally from the authenticated R4 index. All prior raw streams remain unchanged with their historical audit receipts. No fresh body acquisition or recomposition of every inherited object is claimed.",
+    "totalPureStructuralChecks": 1239,
+    "allPassed": true,
+    "checkNameSerialization": {
+      "serialization": "JSON.stringify(value), no LF",
+      "bytes": 24400,
+      "sha256": "bd7cb90edc9a2047526d0998c57e1cf358c1449762bb7072997a665336315cf7",
+      "purpose": "Calculated checksum of this run's pure check-name list; not an actual Git blob locator."
+    },
+    "parentMetadataChecked": [
+      {
+        "sha": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+        "tree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+        "actualParents": [
+          "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+          "54e99dbebb37030c94c9054a2195baa186e621a9",
+          "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf"
+        ],
+        "expectedMatch": true
+      },
+      {
+        "sha": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+        "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+        "actualParents": [
+          "dffc62a08bdba74f1a9322d49cde095e81535f55"
+        ],
+        "expectedMatch": true
+      }
+    ]
+  },
+  "currentE13": {
+    "source": {
+      "sha": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "diagnosticOnly": true
+    },
+    "focal": {
+      "run": 46085008328,
+      "attempt": 1,
+      "result": "CLOSED_PASS_DIAGNOSTIC_FOCAL_ONLY",
+      "functionalCases": 40,
+      "functionalAssertions": 1470,
+      "outerPass": 8,
+      "outerAssertions": 45,
+      "groups": 8,
+      "commands": 14,
+      "truncationFlagsFalse": 28,
+      "pins": 24,
+      "reports": 10,
+      "receipt": {
+        "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+        "bytes": 69479,
+        "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+        "lf": 2105,
+        "endsWithLF": true
+      },
+      "peerAck": {
+        "gitBlob": "c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+        "bytes": 985,
+        "sha256": "ad9207ef6ce0507b596a6fe5f8d07f840c208b62fdd1dca5331d115af7856e17",
+        "lf": 32,
+        "endsWithLF": true
+      }
+    },
+    "analytics": {
+      "run": 46086157237,
+      "attempt": 1,
+      "result": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+      "failed": 1,
+      "passed": 1,
+      "firstPreviewWaiterMs": 60000,
+      "specLocation": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+      "matchingResponseObserved": false,
+      "precedingResults200Ok": 2,
+      "UI42PartialCaptures": 6,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "BIPassed": true,
+      "BIScope": "Current diagnostic E13 candidate only.",
+      "receipt": {
+        "gitBlob": "ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+        "bytes": 30818,
+        "sha256": "9835e4c8217568f3d8838a5eb0b4cc6c7027993758d4f5147910faf2bd712d8e",
+        "lf": 979,
+        "endsWithLF": true
+      },
+      "peerAck": {
+        "gitBlob": "1541b7542574ed9a522a82c864ba1c58f53e9637",
+        "bytes": 1389,
+        "sha256": "2171499abee57614cad79cc34709cafe8ae8e5d4f64c527dc5244e5f1e363bbf",
+        "lf": 43,
+        "endsWithLF": true
+      }
+    },
+    "observation": {
+      "events": 510,
+      "bytes": 250708,
+      "lastKind": "overflow",
+      "lastElapsedTenthMs": 421839,
+      "terminalPresent": false,
+      "counts": {
+        "events": 510,
+        "bytes": 250708,
+        "maxLineBytes": 507,
+        "units": 27,
+        "compareUnits": 26,
+        "portUnits": 1,
+        "phaseEntries": 227,
+        "phaseCloses": 226,
+        "unitCloses": 25,
+        "requestCloses": 0,
+        "overflow": 1
+      },
+      "graph": {
+        "portUnits": 1,
+        "comparatorUnits": 26,
+        "directComparators": 10,
+        "directReturned": 9,
+        "nestedComparators": 16,
+        "nestedReturned": 16,
+        "unclosedEntries": "port1 and comparator26/unit27; phase3 combination-evaluate lacks emitted close",
+        "meaning": "Unclosed entries describe the received prefix, not runtime state after the dropped triggering event or at60s."
+      },
+      "binding": {
+        "schema": "sf-preview-causal-e13-event-v1",
+        "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+        "sourceTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+        "qualification": false,
+        "snapshot": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+        "runId": "46086157237",
+        "attempt": "1",
+        "nonce": "sf613-e13-event-qmQKRg",
+        "pid": 3778,
+        "parentPid": 3733,
+        "request": 1
+      },
+      "intervalsInTenthMs": {
+        "combinationStart": 6615,
+        "prefixLength": 415224,
+        "closedDirectSum": 233088,
+        "nestedSumAlreadyContained": 105503,
+        "notCoveredByClosedDirect": 182136,
+        "meaning": "Disjoint direct intervals within the received prefix, instrumented server clock. Nested intervals not added. Residual not exclusive CPU or attribution to a producer."
+      },
+      "causalAnalysis": {
+        "gitBlob": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+        "bytes": 82554,
+        "sha256": "787c3a61f8dbfc0f9ae0b770af6742017214f159167d209caa07636ff356f5d9",
+        "lf": 3828,
+        "endsWithLF": true
+      },
+      "originalAnalysisDisplayPreserved": "The root causal analysis contains one IEEE floating display residual18213.600000000002ms. Canonical integer arithmetic in the final receipt is182136tenth-ms; observations and graph are unchanged."
+    },
+    "qualification": {
+      "historicalAreas": 12,
+      "totalAreas": 15,
+      "newAreas": 0,
+      "UI42": false,
+      "UI43": false,
+      "UI44": false,
+      "cleanC613Candidate": false,
+      "D27": false,
+      "goLive": false,
+      "productionAuthorized": false
+    },
+    "D27FinalBindingsUnbound": 4,
+    "newRunAuthorized": false
+  },
+  "exclusionsAndLimits": {
+    "calculatedOnlyWholeMain": {
+      "gitBlobCalculated": "1eb15113536676c909a6de4a6294d18688d66bbf",
+      "bytes": 5148177,
+      "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+      "wholePersisted": false,
+      "inObjects": false,
+      "actualParts": 18,
+      "stream": "E13-analytics-main"
+    },
+    "artifact": {
+      "id": 15239671856,
+      "bytes": 45860595,
+      "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+      "metadataOnly": true,
+      "zipGets": 0,
+      "inObjects": false
+    },
+    "noCalculatedWholeAsObject": true,
+    "noZipObject": true,
+    "physicalNativeEventFileAcquired": false,
+    "runtimeJsonAcquired": false,
+    "traceOrPngInspected": false,
+    "allE13OriginalAcquisitionsClosed": true,
+    "archiveAuthorOriginalGets": 0,
+    "archiveAuthorZipGets": 0,
+    "noCrossClockJoin": true,
+    "noCPUExclusiveOrUninstrumentedLatencyClaim": true,
+    "no60SecondLastVisibleComparatorAttribution": true,
+    "noRequestCompletionInferred": true,
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newQualifiedAreas": 0,
+    "noD27Execution": true,
+    "noFinalC613": true,
+    "noMigrationOrReleaseAcceptance": true,
+    "noGoLive": true,
+    "productionAuthorized": false,
+    "transitiveHistoricalReferenceClosure": false,
+    "retention": "Only an independently reviewed root publication creates the new retaining ref. This proposal makes no GitHub garbage-collection or universal object-absence claim."
+  },
+  "authorEffects": {
+    "proposalBlobs": 3,
+    "sourceBlobs": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0,
+    "externalComments": 0,
+    "rootOwnsPublication": true
+  }
+}

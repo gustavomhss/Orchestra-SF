@@ -1,0 +1,859 @@
+{
+  "schema": "sf613-c19-analytics-final-receipt-v1",
+  "status": "CLOSED_NEGATIVE_FIRST_PREVIEW_TIMEOUT_BI_PASS",
+  "closedAt": "2026-11-28 01:58:34 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": {
+    "id": 46094695101,
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46094695101"
+  },
+  "jobs": [
+    {
+      "id": 140823266913,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-28T01:45:38Z",
+      "completed_at": "2026-11-28T01:56:04Z"
+    },
+    {
+      "id": 140825965023,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T01:56:06Z",
+      "completed_at": "2026-11-28T01:56:12Z"
+    }
+  ],
+  "source": {
+    "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "snapshot": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "snapshotTree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+    "delta": "Original request only; clean source without E13 or profiler"
+  },
+  "authority": {
+    "gitBlob": "5e84772c4a35ff8d7adedfb62819ce42677610ac",
+    "bytes": 17301,
+    "sha256": "4320edcf03679cc204265b7f4f092eaf85f5209035cdf030b7c3e742641b2d4b",
+    "lf": 494,
+    "endsWithLF": true
+  },
+  "activation": {
+    "gitBlob": "e00158fc0832d32c05b8f2699b14bb19bb48b00f",
+    "bytes": 967,
+    "sha256": "b6b5875aa2c389229e58323c7d3eae4e46d3600c76fa112d9c6d5f6183348006",
+    "lf": 28,
+    "endsWithLF": true
+  },
+  "preflightPeer": {
+    "gitBlob": "90d7dc7699f32a1596b78d56f35228973afcfab0",
+    "bytes": 13929,
+    "sha256": "5a516ccbd4f4e3592cd5763cde57d6cb5d03c8ea6a33a59721a0d30612ef7a9c",
+    "lf": 482,
+    "endsWithLF": true
+  },
+  "focal": {
+    "run": 46093171031,
+    "receipt": {
+      "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+      "bytes": 103238,
+      "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e",
+      "lf": 1982,
+      "endsWithLF": true
+    },
+    "meaning": "Focal only; no installed acceptance transfers"
+  },
+  "originals": {
+    "mainManifest": {
+      "gitBlob": "d48e9674a25b694c17db6c770c0116ec8c2ff1bb",
+      "bytes": 7934,
+      "sha256": "858e614f903285ad5633e216c9a28737f02718b11d0dbb9e6f5c62b9b07d20e7",
+      "lf": 273,
+      "endsWithLF": true
+    },
+    "main": {
+      "schema": "sf613-c19-original-log-preservation-v1",
+      "status": "COMPLETE_LITERAL_READBACK_BEFORE_INTERPRETATION",
+      "prefix": "c19_analytics_main",
+      "acquisition": {
+        "at": {
+          "current_time": "2026-11-28 01:57:21 UTC"
+        },
+        "jobId": 140823266913,
+        "runId": 46094695101,
+        "attempt": 1,
+        "head": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+        "contextKey": "c19_analytics_intake_context"
+      },
+      "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+      "wholeCalculated": {
+        "gitBlob": "d5dacd1ea8b65419de9a47eef69134ab32c8471f",
+        "bytes": 4866399,
+        "sha256": "23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a",
+        "lf": 1976,
+        "endsWithLF": true
+      },
+      "wholeBlobActuallyCreated": false,
+      "wholeBlob": null,
+      "partCount": 17,
+      "partMaxUtf8Bytes": 300000,
+      "parts": [
+        {
+          "ordinal": 1,
+          "gitBlob": "c8d2bcc05a8f9b4b9e25873e05b05d068ce9430a",
+          "bytes": 300000,
+          "sha256": "d7d2a382455baa13ff89335cb278ea5eacd2f0226b932187958e88daabfd6d9a",
+          "lf": 1186,
+          "endsWithLF": false,
+          "byteStart": 0,
+          "byteEnd": 300000,
+          "utf16Start": 0,
+          "utf16End": 297350,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 2,
+          "gitBlob": "99748fea2e5cec2f1140319a818bdad5106f7938",
+          "bytes": 300000,
+          "sha256": "bc280e766bd26afdfab265b36bbbff7ca3e0ea000a853ecd32ec9443a9887424",
+          "lf": 48,
+          "endsWithLF": false,
+          "byteStart": 300000,
+          "byteEnd": 600000,
+          "utf16Start": 297350,
+          "utf16End": 597350,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 3,
+          "gitBlob": "225070f8c698627dbd3e5fa6064889144532e381",
+          "bytes": 300000,
+          "sha256": "a5bbea853583ef0b16fb2d7b29dfc3fd1fd6452c507c039ac83b4f40e26a2314",
+          "lf": 182,
+          "endsWithLF": false,
+          "byteStart": 600000,
+          "byteEnd": 900000,
+          "utf16Start": 597350,
+          "utf16End": 895187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 4,
+          "gitBlob": "46647af91dd94cc3595fae36d2886b1a1b2517b8",
+          "bytes": 300000,
+          "sha256": "10987d8a82abc010d26a0f4a90d05f0649caeaed8bcaec1a985a79fc13849b37",
+          "lf": 34,
+          "endsWithLF": false,
+          "byteStart": 900000,
+          "byteEnd": 1200000,
+          "utf16Start": 895187,
+          "utf16End": 1195187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 5,
+          "gitBlob": "b0d30d07a8c98c2bd08ce872ed5b83d388f36e69",
+          "bytes": 300000,
+          "sha256": "675ed222b626add0f4b56b2c97f9f47dd6a0d66850b398f56f8d4b4d2fbb58a3",
+          "lf": 38,
+          "endsWithLF": false,
+          "byteStart": 1200000,
+          "byteEnd": 1500000,
+          "utf16Start": 1195187,
+          "utf16End": 1495187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 6,
+          "gitBlob": "39c680a4508175a4c4f2e53b4d4e565738aa7d85",
+          "bytes": 300000,
+          "sha256": "85286586cd5a5528c95e87cc40214fa584f5b35c917ab0529bff28a80fd17d52",
+          "lf": 32,
+          "endsWithLF": false,
+          "byteStart": 1500000,
+          "byteEnd": 1800000,
+          "utf16Start": 1495187,
+          "utf16End": 1795187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 7,
+          "gitBlob": "ac92bb694660b1e11e405828b78861513ba474e7",
+          "bytes": 300000,
+          "sha256": "381bb517f0a5661a8c04627488ef4b11b564c8a786eeac519edc6b37137fb438",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 1800000,
+          "byteEnd": 2100000,
+          "utf16Start": 1795187,
+          "utf16End": 2095187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 8,
+          "gitBlob": "71d8c48bcd3419b83a22d58380f69daf243da856",
+          "bytes": 300000,
+          "sha256": "14873d09319eb494a077653f7881524ed4de07fb8b7a93b8c7497ad28f05e83c",
+          "lf": 30,
+          "endsWithLF": false,
+          "byteStart": 2100000,
+          "byteEnd": 2400000,
+          "utf16Start": 2095187,
+          "utf16End": 2395185,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 9,
+          "gitBlob": "8721662f7db715147c0bb6f12c42a4e7c9d622b7",
+          "bytes": 300000,
+          "sha256": "7a304bdeb865ba583180e9ab15391d3d070db1004a6360583ff043a06ebc8cbb",
+          "lf": 38,
+          "endsWithLF": false,
+          "byteStart": 2400000,
+          "byteEnd": 2700000,
+          "utf16Start": 2395185,
+          "utf16End": 2695182,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 10,
+          "gitBlob": "97dfbd93e4fb11fe9f2732574749cd4fdae99dc6",
+          "bytes": 300000,
+          "sha256": "03df6db405d51fed5084a9fa03229ee77581f6850ee4838f6314f871b4a0b744",
+          "lf": 50,
+          "endsWithLF": false,
+          "byteStart": 2700000,
+          "byteEnd": 3000000,
+          "utf16Start": 2695182,
+          "utf16End": 2995179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 11,
+          "gitBlob": "84f19b8ec8e1a0da4d2f625c5e9b088df1a60482",
+          "bytes": 300000,
+          "sha256": "cf7a07576d00259710c925bf34530f5e159a7714311636b4acfbf4614271350c",
+          "lf": 30,
+          "endsWithLF": false,
+          "byteStart": 3000000,
+          "byteEnd": 3300000,
+          "utf16Start": 2995179,
+          "utf16End": 3295179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 12,
+          "gitBlob": "bafafaf11eacd50f6921501aa62e343e9e0611fc",
+          "bytes": 300000,
+          "sha256": "c484a79ffaa6ff43a6eb3acdb9c073a48cbfc8c149ce8f2572137c6b55ba5e45",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 3300000,
+          "byteEnd": 3600000,
+          "utf16Start": 3295179,
+          "utf16End": 3595179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 13,
+          "gitBlob": "927c928c396e496602ebd816410c89e986ef5f35",
+          "bytes": 300000,
+          "sha256": "80119027eb93261b7a3398d9dbf5f4f77e529a6a17ae4418c591160a0b603dac",
+          "lf": 32,
+          "endsWithLF": false,
+          "byteStart": 3600000,
+          "byteEnd": 3900000,
+          "utf16Start": 3595179,
+          "utf16End": 3895179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 14,
+          "gitBlob": "86219a7daf45e93512bbef54013ae9e06b58b650",
+          "bytes": 300000,
+          "sha256": "9589494204a4f81249ffb432636cd05f50546e07221445e5d0fccdfc89eb59f7",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 3900000,
+          "byteEnd": 4200000,
+          "utf16Start": 3895179,
+          "utf16End": 4195176,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 15,
+          "gitBlob": "e1b1083a01c0c53d6384e4aa191f1d8b7fdb66c5",
+          "bytes": 300000,
+          "sha256": "552808a804143666e7f00282b26b9b521d3c2067f0b5f00e61ade8a288dd2be1",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 4200000,
+          "byteEnd": 4500000,
+          "utf16Start": 4195176,
+          "utf16End": 4495174,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 16,
+          "gitBlob": "4cc211e26d3a65343addf18ad01eff3cf156ce69",
+          "bytes": 300000,
+          "sha256": "e6db5943c9dde710ce294b68b141f2db69d17cdabd2d9fe04f7ad0102761ecc4",
+          "lf": 46,
+          "endsWithLF": false,
+          "byteStart": 4500000,
+          "byteEnd": 4800000,
+          "utf16Start": 4495174,
+          "utf16End": 4795174,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 17,
+          "gitBlob": "408b33408f5e995e52523000967858921b6a00ad",
+          "bytes": 66399,
+          "sha256": "c47dbd22b378fed2df8ceb6180d0e1ca944932ef263be90fe93817bd3996ed0d",
+          "lf": 86,
+          "endsWithLF": true,
+          "byteStart": 4800000,
+          "byteEnd": 4866399,
+          "utf16Start": 4795174,
+          "utf16End": 4861569,
+          "literalReadback": true
+        }
+      ],
+      "recomposed": {
+        "gitBlob": "d5dacd1ea8b65419de9a47eef69134ab32c8471f",
+        "bytes": 4866399,
+        "sha256": "23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a",
+        "lf": 1976,
+        "endsWithLF": true
+      },
+      "recomposedLiteral": true,
+      "bomCodeUnitOffsets": [
+        0,
+        2100086,
+        4219438
+      ],
+      "bomByteOffsets": [
+        0,
+        2104899,
+        4224262
+      ],
+      "originalGets": 1,
+      "zipGets": 0,
+      "at": {
+        "current_time": "2026-11-28 01:58:19 UTC"
+      }
+    },
+    "cleanupManifest": {
+      "gitBlob": "91380dc5423921989aa22b3acc8040e6bebd3ab0",
+      "bytes": 1761,
+      "sha256": "3d72bec98a4f9bb0234824d59644e2de1844b9f258c4e2d6e7e868694cd495ca",
+      "lf": 61,
+      "endsWithLF": true
+    },
+    "cleanup": {
+      "schema": "sf613-c19-original-log-preservation-v1",
+      "status": "COMPLETE_LITERAL_READBACK_BEFORE_INTERPRETATION",
+      "prefix": "c19_analytics_cleanup",
+      "acquisition": {
+        "at": {
+          "current_time": "2026-11-28 01:58:31 UTC"
+        },
+        "jobId": 140825965023,
+        "runId": 46094695101,
+        "attempt": 1,
+        "head": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+        "contextKey": "c19_analytics_intake_context"
+      },
+      "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+      "wholeCalculated": {
+        "gitBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+        "bytes": 2281,
+        "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "wholeBlobActuallyCreated": true,
+      "wholeBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+      "partCount": 1,
+      "partMaxUtf8Bytes": 300000,
+      "parts": [
+        {
+          "ordinal": 1,
+          "gitBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+          "bytes": 2281,
+          "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+          "lf": 39,
+          "endsWithLF": true,
+          "byteStart": 0,
+          "byteEnd": 2281,
+          "utf16Start": 0,
+          "utf16End": 2279,
+          "literalReadback": true
+        }
+      ],
+      "recomposed": {
+        "gitBlob": "22b6a0e8e43325cf5bc32bc3ef9b5f2f6d815fee",
+        "bytes": 2281,
+        "sha256": "73dbf9def117b47066a8d2a7863cfc62ed5ae78083950ba0b3cc5f77f840b9f1",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "recomposedLiteral": true,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "bomByteOffsets": [
+        0
+      ],
+      "originalGets": 1,
+      "zipGets": 0,
+      "at": {
+        "current_time": "2026-11-28 01:58:33 UTC"
+      }
+    },
+    "totalOriginalGets": 2,
+    "closed": true,
+    "neverReacquire": true,
+    "zipGets": 0
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "previewMs": 60000,
+    "sensitivityMs": 120000,
+    "jobMinutes": 45,
+    "diagnosticOverlay": false,
+    "CPUProfiler": false
+  },
+  "outcome": {
+    "failed": 1,
+    "passed": 1,
+    "duration": "9.3m",
+    "first": {
+      "status": "FAIL",
+      "failure": "page.waitForResponse60000ms timeout",
+      "specLocation": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+      "preview": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      "previewAt": "2026-11-28T01:52:13.6911930Z",
+      "previewResponseObserved": false,
+      "precedingHistoryObservations": [
+        {
+          "line": 1205,
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 1,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        {
+          "line": 1207,
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request-failed",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 320
+          }
+        },
+        {
+          "line": 1209,
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 318,
+            "http": 200,
+            "acquisitionFailure": "response-body-unavailable"
+          }
+        },
+        {
+          "line": 1227,
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-request",
+            "sequence": 2,
+            "method": "POST",
+            "ownerBinding": "exact"
+          }
+        },
+        {
+          "line": 1229,
+          "value": {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 577,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        }
+      ],
+      "UI42": {
+        "captures": 6,
+        "list": 4,
+        "configure": 2,
+        "qualified": false
+      },
+      "UI43": "NOT_REACHED",
+      "UI44": "NOT_REACHED",
+      "diagnostics": [
+        {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:40473⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.338eadd8-689a-4b2b-92a1-01e486e1ae17 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      ]
+    },
+    "BI": {
+      "status": "PASS_ON_C19_SNAPSHOT_ONLY",
+      "captures": 40,
+      "UI45": 7,
+      "UI46": 33,
+      "readbacks": [
+        {
+          "operation": "bi-data-readback",
+          "view": "BI01",
+          "http": 200,
+          "rows": 36,
+          "numericValues": 14,
+          "missing": 22
+        },
+        {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        },
+        {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        }
+      ],
+      "nativeCompletedRequests": [
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        },
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        }
+      ],
+      "sourceResolution": {
+        "operation": "bi06-original-source-resolution",
+        "http": 200,
+        "acquisition": "native-response",
+        "valueId": "PR-2026-0003:d9783a65-54f5-4399-96a4-f8d1031d5e93:ageDays",
+        "links": [
+          {
+            "label": "procurement · PR-2026-0003 · v1 · 2026-01-01 a 2026-12-31",
+            "url": "http://127.0.0.1:42101/orchestra/sf-procurement/requests?request=PR-2026-0003"
+          }
+        ],
+        "negativeHttp": 403,
+        "negative": {
+          "status": "denied",
+          "reason": "bi-source-outside-selected-value"
+        }
+      },
+      "scope": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      }
+    }
+  },
+  "reports": {
+    "union": {
+      "gitBlob": "fa71c102ec320dfe7baf497af583db07bd7344ac",
+      "bytes": 34316,
+      "sha256": "fc2f119f794a473199abbf33dcc4ec5b446a478e258ba4d272ad9ad7686b8cab",
+      "lf": 97,
+      "endsWithLF": true
+    },
+    "counts": {
+      "SF_ANALYTICS_SOURCE": 45,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "carrierPrefix": "8 ANSI bytes removed only for derived97-line union; original logs unchanged"
+  },
+  "runtime": {
+    "directPrintedVersion": "1.3.14+0d9b296af",
+    "completeRevisionNotPrinted": true,
+    "omniNonce": "02d5a0ccd561f851fb3e18f3d07225c6"
+  },
+  "artifact": {
+    "metadata": {
+      "id": 15242603880,
+      "node_id": "MDg6QXJ0aWZhY3QxNTI0MjYwMzg4MA==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 45814109,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15242603880",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15242603880/zip",
+      "expired": false,
+      "digest": "sha256:bccc5ec8ff3eb6c7c57f34211fa59bbf691d072af0faf115f5f1ed3857b47392",
+      "created_at": "2026-11-28T01:56:01Z",
+      "updated_at": "2026-11-28T01:56:01Z",
+      "expires_at": "2026-12-05T01:55:59Z",
+      "workflow_run": {
+        "id": 46094695101,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613c19a",
+        "head_sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b"
+      }
+    },
+    "originalUploadMatches": true,
+    "zipDownloaded": false
+  },
+  "cleanup": {
+    "status": "success",
+    "branch": "ci-run-sf613c19a",
+    "branchAbsentObservedByRoot": true,
+    "context": {
+      "gitBlob": "5f279f638d9142a998abc353bd74da2584550eb4",
+      "bytes": 2141,
+      "sha256": "d4a64221f43450853ae3390f56f54c9c1a47a7d382ca38a989d73e4e93176461",
+      "lf": 63,
+      "endsWithLF": true
+    }
+  },
+  "rootChecks": [
+    {
+      "name": "Terminal exact snapshot attempt and two jobs",
+      "pass": true
+    },
+    {
+      "name": "Main failure and cleanup success",
+      "pass": true
+    },
+    {
+      "name": "Originals each acquired once and closed before interpretation",
+      "pass": true
+    },
+    {
+      "name": "Main complete literal17part reassembly and no fictitious whole blob",
+      "pass": true
+    },
+    {
+      "name": "Cleanup whole actual blob verified before parse",
+      "pass": true
+    },
+    {
+      "name": "Raw checkout commit matches A",
+      "pass": true
+    },
+    {
+      "name": "A sole clean S19 with exact request-only delta",
+      "pass": true
+    },
+    {
+      "name": "Original two cases one worker observed",
+      "pass": true
+    },
+    {
+      "name": "Actual argv workers1 retries0 repeat1 original production config",
+      "pass": true
+    },
+    {
+      "name": "Actual result1fail1pass9.3m",
+      "pass": true
+    },
+    {
+      "name": "Original first preview60000ms timeout at72:32",
+      "pass": true
+    },
+    {
+      "name": "Only preview POST3 exact owner and no preview response",
+      "pass": true
+    },
+    {
+      "name": "History seq1 body acquisition failure distinguished from preview",
+      "pass": true
+    },
+    {
+      "name": "History seq2 native200okarray",
+      "pass": true
+    },
+    {
+      "name": "UI42 exactly6 partial captures4list2configure",
+      "pass": true
+    },
+    {
+      "name": "No UI43 or UI44 captures after first timeout",
+      "pass": true
+    },
+    {
+      "name": "BI40captures7UI45and33UI46",
+      "pass": true
+    },
+    {
+      "name": "BI two original completed native requests200",
+      "pass": true
+    },
+    {
+      "name": "BI original row summaries",
+      "pass": true
+    },
+    {
+      "name": "BI positive source resolution and bounded403 negative",
+      "pass": true
+    },
+    {
+      "name": "Four console/page diagnostic arrays empty",
+      "pass": true
+    },
+    {
+      "name": "Native view ready and preview unavailable",
+      "pass": true
+    },
+    {
+      "name": "BI11views no fabricated result or sensitivity choices",
+      "pass": true
+    },
+    {
+      "name": "97markers45source46capture5diag1scope exact union",
+      "pass": true
+    },
+    {
+      "name": "Only eight-character ANSI carrier prefixes removed",
+      "pass": true
+    },
+    {
+      "name": "Artifact metadata matches original upload bytes and digest",
+      "pass": true
+    },
+    {
+      "name": "Cleanup branch binding and separately observed absence",
+      "pass": true
+    },
+    {
+      "name": "No E13 runtime diagnostic markers in clean snapshot log",
+      "pass": true
+    }
+  ],
+  "independentInstalledReception": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_CLOSED_NEGATIVE_NO_DIVERGENCES",
+    "receipt": {
+      "gitBlob": "08328f984a266a8ebe356b4220ea7c82694bdff2",
+      "bytes": 13675,
+      "sha256": "3218b18c7768064b54c3d0355996ceb5d266e883aa3d96bb5ad66da73a0faa29",
+      "lf": 1,
+      "endsWithLF": true
+    },
+    "checks": 41,
+    "originalGets": 0,
+    "zipGets": 0,
+    "rawPartsAuthenticated": 17,
+    "markerUnionRecomposedLiteral": true,
+    "sourceSelectionVerified": true,
+    "observedResult": {
+      "failed": 1,
+      "passed": 1,
+      "firstPreviewMs": 60000,
+      "UI42PartialCaptures": 6,
+      "UI43": "NOT_REACHED",
+      "UI44": "NOT_REACHED",
+      "BICaptures": 40
+    },
+    "limits": "No gain, native projection admission, exclusive cause or final qualification inferred."
+  },
+  "qualification": {
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newlyQualifiedAreas": 0,
+    "UI42": false,
+    "UI43": false,
+    "UI44": false,
+    "finalC613": null,
+    "D28": "UNBOUND_NOT_EXECUTED",
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "next": {
+    "diagnosticOnlyProposal": "E14 bounded macro frontiers to distinguish the two analysis selections, persistence/recovery decisions and revalidation; no run authorized by this receipt",
+    "automaticRetry": false
+  },
+  "limits": [
+    "No performance improvement or exclusive bottleneck follows from this result. Clean C19 still times out at the first original preview.",
+    "The source read-set consumer controls passed focal, but runtime admission of any native projection is not established by this installed receipt.",
+    "The extra SOURCE marker records preceding history body-acquisition failure; it is not a preview response.",
+    "UI43 and UI44 were not reached, so sensitivity performance was not measured here.",
+    "The BI case passes only on the actual snapshot; final C613 UI6/technical CI and independent review remain required.",
+    "All originals through C19 are closed; use preserved Git parts only. Artifact remains metadata-only, no ZIP need has been admitted.",
+    "The initial local summarizer encountered a data-shape error after originals were fully preserved; parsing was corrected without another original GET or any raw mutation."
+  ],
+  "finalizedAt": "2026-11-28 02:08:00 UTC",
+  "operationalBlockers": {
+    "gitBlob": "8283eabd80da4413a0e3fc720ae3c8e1be281e4d",
+    "bytes": 3721,
+    "sha256": "ca7d83c0a8756539b50b7983ea730ae581615a4db0efe557c90236b3708d052b",
+    "lf": 76,
+    "endsWithLF": true
+  }
+}

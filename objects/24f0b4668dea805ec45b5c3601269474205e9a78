@@ -1,0 +1,116 @@
+diff --git a/apps/cli/test/sucafina-proof-verification.test.ts b/apps/cli/test/sucafina-proof-verification.test.ts
+--- a/apps/cli/test/sucafina-proof-verification.test.ts
++++ b/apps/cli/test/sucafina-proof-verification.test.ts
+@@ -11,14 +11,14 @@
+ 
+ const repository = path.resolve(import.meta.dir, "../../..")
+ const module = path.join(repository, "modules/sucafina/Sucafinav1")
+-const source = "455c02a7a05a6dd3262ae15b184419897366fde4"
+-const sourceTree = "ae1c0977057e45853f3dc240140e5f221057f49d"
++const source = "__C19_SOURCE_SHA__"
++const sourceTree = "__C19_SOURCE_TREE__"
+ const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+ const checks = testEffect(LayerNode.compile(AppProcess.node))
+ 
+ function requireHostedCandidate() {
+   if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
+-    throw new Error("C18 source and tree must be bound to reviewed Git objects before execution")
++    throw new Error("C19 source and tree must be bound to reviewed Git objects before execution")
+   if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+       process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+       !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+@@ -26,7 +26,7 @@
+     throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
+   }
+   process.stdout.write(JSON.stringify({
+-    verification: "sf613-c18-captured-context-identity-focal", source, sourceTree,
++    verification: "sf613-c19-portfolio-cases-focal", source, sourceTree,
+     snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+     historicalCompositionBase,
+   }) + "\n")
+@@ -59,17 +59,17 @@
+ checks.live("snapshot identifies the exact reviewed product source and tree", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  process.stdout.write(JSON.stringify({ capturedContextIdentityManifest: {
+-    source, sourceTree, qualification: false, sourcePaths: 16, productDeltaPaths: 1, candidateDeltaPaths: 3,
+-    deltaBase: "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
++  process.stdout.write(JSON.stringify({ portfolioCasesManifest: {
++    source, sourceTree, qualification: false, sourcePaths: 15, productDeltaPaths: 1, candidateDeltaPaths: 2,
++    deltaBase: "455c02a7a05a6dd3262ae15b184419897366fde4",
+     expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,
+-    expectedTestDeclarations: 39, preservedTestDeclarations: 12, newlySelectedExistingTestDeclarations: 26, addedTestDeclarations: 1,
+-    expectedControlReports: 9, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,
+-    mechanism: "reviewed captured-context identity change with preserved canonical fallback, whole-file capture regressions and an isolated lazy-capture control; clean C17 composition remains selected",
+-    assertions: "C13/C14/C15/C16/C17 controls remain literal; capture selection includes 15 original direct cases, 11 original loading modes and one C18 case with eight declared oracles; no latency or current Analytics qualification",
+-    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },
++    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },
++    expectedControlReports: 6, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,
++    mechanism: "explicit complete-cases declarations at portfolio read, inspect and register; original callback bodies, lookup order and mixed reads preserved",
++    assertions: "whole-file cases contract, C08 projection and Portfolio consumer controls; effects outside the declared cases graph are excluded by contract; observed test and assertion totals require the actual footers",
++    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },
+     projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },
+-    captureControlsMs: { preservedTests: 26, addedTests: 1, selectedTests: 27, inheritedTimeoutsUnchanged: true, addedBunPerTest: 10000, loadingChildren: 11, addedChildren: 1, childProcess: 3000, process: 180000, parent: 240000 },
++    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },
+     typecheckMs: { process: 240000, parent: 300000 },
+     guardsMs: { defaultProcess: 180000, parent: 600000 },
+     snapshotOverlays: [".ci-run.json", "apps/cli/test/sucafina-proof-verification.test.ts"],
+@@ -88,7 +88,6 @@
+   const sourceFiles = [
+     ["modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","1017609000bdbdb39fc0510b045dc6dfde371faf"],
+     ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","b7de9404461591ce0162d496ec917a47fb72a479"],
+-    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts","8b01895b0f3b1623646d14a82adb66bf13ca841b"],
+     ["modules/sucafina/Sucafinav1/runtime/local-store.ts","5fc0028474aa52c148a30c093d39bc9a471f9a24"],
+     ["apps/cli/src/sucafina-product/planner-calculation-root.ts","244d46ee41e9ce288a7260938174a57161137bab"],
+     ["modules/sucafina/Sucafinav1/product/integration/source-inventory.ts","eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"],
+@@ -99,9 +98,9 @@
+     ["modules/sucafina/Sucafinav1/runtime/contract.ts","39e6da84a3dd815721484affaf8315731ded073b"],
+     ["modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","6bef21db9129db064b018f5f0bf632306e3a16ec"],
+     ["modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts","11661b32f4dc782558b39902c0f396145cbe8a4a"],
+-    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts","0b9b7b786ab1c327104f25b9945aa79e9b857c03"],
+-    ["apps/cli/test/fixture/sucafina-captured-context-loading.ts","ecd3af6b2d0b5a41a58959855e7e93bc09522c39"],
+-    ["apps/cli/test/fixture/sucafina-captured-context-lazy.ts","b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56"],
++    ["modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts","44cff7d70fca11ca022f863d7811b9a2610186fd"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts","b6938565cb8b468a454178688ea88a4ec88da9fa"],
++    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts","68ae48f9a039180824f5471a1de27c0ca34be088"],
+   ] as const
+   const observed: { path: string; sha: string }[] = []
+   const gitBlob = (bytes: Uint8Array) => new Bun.CryptoHasher("sha1")
+@@ -114,15 +113,16 @@
+   }
+   process.stdout.write(JSON.stringify({ gate: "reviewed source blobs", source, sourceTree,
+     snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,
+-    functionalProcessesLaunched: 3, expectedTestDeclarations: 39, expectedControlReports: 9 }) + "\n")
++    functionalProcessesLaunched: 3, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },
++    expectedControlReports: 6 }) + "\n")
+ }), 180_000)
+ 
+-checks.live("CurrentChoice readonly composition preserves default and unfenced routes", () => Effect.gen(function* () {
++checks.live("complete cases read-set preserves original guards and late case lookups", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  yield* runCommand("CurrentChoice readonly composition", process.execPath,
+-    ["test", "./test/product/wp10/integration/current-choice-readonly.test.ts"], module, 360_000)
+-}), 420_000)
++  yield* runCommand("complete cases read-set contract whole-file", process.execPath,
++    ["test", "./test/product/wp10/integration/cases-read-contract.test.ts"], module, 120_000)
++}), 180_000)
+ 
+ checks.live("C14/C15/C16/C17 C08 projection and closed case selection preserve authorization and full-path equivalence", () => Effect.gen(function* () {
+   requireHostedCandidate()
+@@ -173,10 +173,10 @@
+     throw new Error("Canonical guards did not evaluate rules from the actual merge base")
+ }), 600_000)
+ 
+-checks.live("C18 whole-file captured context identity preserves canonical fallback and lazy capture", () => Effect.gen(function* () {
++checks.live("Portfolio selection preserves its cases and preferences read contracts", () => Effect.gen(function* () {
+   requireHostedCandidate()
+   expectSpawn(import.meta.path)
+-  const output = yield* runCommand("C18 captured context identity whole-file", process.execPath,
+-    ["test", "./test/product/wp10/integration/captured-context-identity.test.ts"], module, 180_000)
+-  expect(output).toContain("SF_C18_CAPTURE_LAZY ")
+-}), 240_000)
++  const output = yield* runCommand("Portfolio selection cases and preferences whole-file", process.execPath,
++    ["test", "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"], module, 120_000)
++  expect(output).toContain("SF_C19_PORTFOLIO_CASES ")
++}), 180_000)

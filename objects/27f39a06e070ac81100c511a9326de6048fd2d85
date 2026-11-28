@@ -1,0 +1,264 @@
+{
+  "schema": "sf613-d28-root-static-review-v1",
+  "status": "PASS_STATIC_ONLY_FOUR_FINAL_BINDINGS_UNBOUND",
+  "at": "2026-11-28 01:46:48 UTC",
+  "reviewer": "/root",
+  "author": "/root/close_pr613",
+  "independentReviewer": "/root/focal_migration",
+  "artifacts": {
+    "wrapper": {
+      "gitBlob": "30178d52800afdf6c262e792790d52351b10c5c4",
+      "bytes": 18398,
+      "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+      "lf": 344,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+      "bytes": 24043,
+      "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+      "lf": 628,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+      "bytes": 10514,
+      "sha256": "825ce8ccf032976f0546e45da1c9855e27f222204ce5f5caa7febe357d83b256",
+      "lf": 305,
+      "endsWithLF": true
+    },
+    "support": {
+      "gitBlob": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+      "bytes": 9618,
+      "sha256": "ad9391a1259616000eb3d91bb519c77d2d5eda18a84f4a71bc8a74c94ad5f157",
+      "lf": 283,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+      "bytes": 1816,
+      "sha256": "8c04cb10767f4a76fefe7f19ec3820c301515cfa5b35c2c03e467e9c5ee26437",
+      "lf": 32,
+      "endsWithLF": true
+    },
+    "manifest_initial": {
+      "gitBlob": "094468973ff9ff14121c424d6c7d60e01e4d6e26",
+      "bytes": 23358,
+      "sha256": "18e67d0192397a89bf655dc8a5eedb23916d4ac07eeb724e937858c144ac9d47",
+      "lf": 619,
+      "endsWithLF": true
+    },
+    "receipt_binding": {
+      "gitBlob": "6b10fc47e5df6376889be69cd93ed2297bfccace",
+      "bytes": 3561,
+      "sha256": "235b173f213fea600eea8ee35d373df4f296cc5608b22d932cd4fc60b546b2a1",
+      "lf": 71,
+      "endsWithLF": true
+    },
+    "envelope": {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723,
+      "endsWithLF": true
+    },
+    "finalizer": {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250,
+      "endsWithLF": true
+    },
+    "workflow": {
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154,
+      "endsWithLF": true
+    }
+  },
+  "checks": [
+    {
+      "name": "Four unique source anchors",
+      "pass": true
+    },
+    {
+      "name": "Complete forward anchor reconstruction",
+      "pass": true
+    },
+    {
+      "name": "Complete inverse anchor reconstruction",
+      "pass": true
+    },
+    {
+      "name": "Exactly one file in full diff",
+      "pass": true
+    },
+    {
+      "name": "Full unified diff forward",
+      "pass": true
+    },
+    {
+      "name": "Full unified diff inverse",
+      "pass": true
+    },
+    {
+      "name": "Wrapper delta plus17 bytes unchangedLF",
+      "pass": true
+    },
+    {
+      "name": "Three diff hunks",
+      "pass": true
+    },
+    {
+      "name": "Historic receipt locator only forward",
+      "pass": true
+    },
+    {
+      "name": "Historic receipt locator only inverse",
+      "pass": true
+    },
+    {
+      "name": "Historical receipt agrees with actual persisted focal",
+      "pass": true
+    },
+    {
+      "name": "Four bindings unbound",
+      "pass": true
+    },
+    {
+      "name": "wrapper token __SF613_SOURCE_SHA__",
+      "pass": true
+    },
+    {
+      "name": "wrapper token __SF613_SOURCE_TREE__",
+      "pass": true
+    },
+    {
+      "name": "wrapper token __SF613_WRAPPER_BLOB__",
+      "pass": true
+    },
+    {
+      "name": "wrapper token __SF613_WRAPPER_SHA256__",
+      "pass": true
+    },
+    {
+      "name": "envelope token __SF613_SOURCE_SHA__",
+      "pass": true
+    },
+    {
+      "name": "envelope token __SF613_SOURCE_TREE__",
+      "pass": true
+    },
+    {
+      "name": "envelope token __SF613_WRAPPER_BLOB__",
+      "pass": true
+    },
+    {
+      "name": "envelope token __SF613_WRAPPER_SHA256__",
+      "pass": true
+    },
+    {
+      "name": "finalizer token __SF613_SOURCE_SHA__",
+      "pass": true
+    },
+    {
+      "name": "finalizer token __SF613_SOURCE_TREE__",
+      "pass": true
+    },
+    {
+      "name": "finalizer token __SF613_WRAPPER_BLOB__",
+      "pass": true
+    },
+    {
+      "name": "finalizer token __SF613_WRAPPER_SHA256__",
+      "pass": true
+    },
+    {
+      "name": "workflow token __SF613_SOURCE_SHA__",
+      "pass": true
+    },
+    {
+      "name": "workflow token __SF613_SOURCE_TREE__",
+      "pass": true
+    },
+    {
+      "name": "workflow token __SF613_WRAPPER_BLOB__",
+      "pass": true
+    },
+    {
+      "name": "workflow token __SF613_WRAPPER_SHA256__",
+      "pass": true
+    },
+    {
+      "name": "Twenty six outer cases",
+      "pass": true
+    },
+    {
+      "name": "Thirty two command sites",
+      "pass": true
+    },
+    {
+      "name": "Selection counts preserved",
+      "pass": true
+    },
+    {
+      "name": "G23 exact control pin",
+      "pass": true
+    },
+    {
+      "name": "G23 original process/parent bounds",
+      "pass": true
+    },
+    {
+      "name": "G23 nominal50s",
+      "pass": true
+    },
+    {
+      "name": "Global35/40/45min unchanged",
+      "pass": true
+    },
+    {
+      "name": "Future suite actual counts remain unknown",
+      "pass": true
+    },
+    {
+      "name": "No inner numeric G23 executable gate introduced",
+      "pass": true
+    }
+  ],
+  "independent": {
+    "receipt": {
+      "gitBlob": "3f9da09feb817f8e5f3b713f2f86cc8d66a28e44",
+      "bytes": 4354,
+      "sha256": "4e19d471e1e55b3eed93fee1f613aa48d846b34061595a018e83b4859f502cd2",
+      "lf": 124,
+      "endsWithLF": true
+    },
+    "reportedChecks": 75,
+    "status": "ACK_STATIC_ONLY"
+  },
+  "invariants": {
+    "groups": 26,
+    "syntacticCommandSites": 32,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "proofChildren": 6,
+    "G23Declarations": 3,
+    "G23Control": "68ae48f9a039180824f5471a1de27c0ca34be088",
+    "processMinutes": 35,
+    "stepMinutes": 40,
+    "jobMinutes": 45
+  },
+  "bindingStatus": "UNBOUND",
+  "finalSource": null,
+  "finalSourceTree": null,
+  "execution": null,
+  "qualification": false,
+  "limits": [
+    "The package changes four labels only; executable statements are otherwise the complete literal D27 predecessor.",
+    "Historical C19 focal pass is evidence only for its actual source and snapshot; it does not qualify Analytics, UI6 or this final package.",
+    "G23 uses the original full-file selection with an appended cases control; budgets and runtime parsers are unchanged.",
+    "Concretization requires an accepted final C613 source and tree, followed by independent concrete binding review."
+  ]
+}

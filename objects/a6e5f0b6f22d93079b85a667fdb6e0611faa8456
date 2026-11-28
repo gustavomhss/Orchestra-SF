@@ -1,0 +1,145 @@
+{
+  "schema": "sf613-evidence-publication-v5",
+  "status": "PUBLISHED_DOCUMENTARY_ARCHIVE_ONLY",
+  "at": "2026-11-28 01:02:22 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf613-evidence",
+  "commit": "7685a790349b7a3b9c3e68cfe56b96fd4963b762",
+  "tree": "4cee3a5483cbeb8911d242e16b86c418a7bc0a4c",
+  "objectsTree": "2684a14e7d2ea7c0ed1b4bc9b76aa6592fb6350e",
+  "parents": [
+    "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+    "43f73297c2082ed4ea3a016bb1fd7bd970a53201"
+  ],
+  "refUpdatedAt": "2026-11-28 01:02:00 UTC",
+  "expectedOldRef": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+  "force": false,
+  "package": {
+    "gitBlob": "c408b4f69264f9816d44d921f855263e0c816b7b",
+    "bytes": 108573,
+    "sha256": "b14453a6c6031fcd6c1fe27ea4ab7f9fbddbfd4535bf5506c9c0e656dff98bdc",
+    "lf": 2714,
+    "endsWithLF": true
+  },
+  "index": {
+    "gitBlob": "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+    "bytes": 743023,
+    "sha256": "aac9c8c57bcdd163f01dfb150077530d334e13cbbf6e809cb063cfd0be65357a",
+    "lf": 22006,
+    "endsWithLF": true
+  },
+  "readme": {
+    "gitBlob": "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+    "bytes": 33219,
+    "sha256": "2816b3a18ed41000d55c7e3a8fec54137724f401aaa85ddb37c999e9c93be498",
+    "lf": 282,
+    "endsWithLF": true
+  },
+  "rootReview": {
+    "gitBlob": "1c8c5052ee74efd0678211a7b7cde33126f3e173",
+    "bytes": 6191,
+    "sha256": "31d1bffd118fc702fbf18e8ba527607eefc9e415d344b07493b5296a2830815c",
+    "lf": 160,
+    "endsWithLF": true
+  },
+  "peerReview": {
+    "at": "2026-11-28 01:01:26 UTC",
+    "reviewer": "/root/teams_product",
+    "status": "PASS_NO_FINDING",
+    "checks": 40,
+    "inputs": [
+      "2f80c037c70071b8bb756f44439047b1e5ac50d0",
+      "8e76aea8b7c6881d648ce8df6e64455c6bc692bd",
+      "c408b4f69264f9816d44d921f855263e0c816b7b",
+      "3aa1b45e76cc1341095d65beb1b25c6e295da1b6"
+    ],
+    "scope": "Full 60-operation forward/inverse index and literal README derivation; inherited corpus metadata; 92 incoming catalog entries plus catalog; 7 stream metadata / 24 references. Analytics main/cleanup and both unions compared to independently preserved Git copies. Did not reacquire all 535 bodies or recompose three focal streams; relied on closed catalog/receipts for those. No original/ZIP acquisition or mutation."
+  },
+  "sourceCatalog": {
+    "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+    "bytes": 48822,
+    "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+    "lf": 1452,
+    "endsWithLF": true
+  },
+  "counts": {
+    "objects": 535,
+    "objectBytes": 56651409,
+    "memberships": 584,
+    "groups": 35,
+    "streams": 48,
+    "partReferences": 177,
+    "ownFiles": 537,
+    "ownFileBytes": 57427651,
+    "newObjects": 93,
+    "newMemberships": 93,
+    "newGroups": 6,
+    "newStreams": 7,
+    "newPartReferences": 24
+  },
+  "treeAudit": {
+    "complete": true,
+    "pairs": 2,
+    "literalSiblings": 442,
+    "A": 93,
+    "M": 2,
+    "D": 0,
+    "ownFiles": 537,
+    "ownFileBytes": 57427651
+  },
+  "preservation": {
+    "R4ObjectsLiteral": 442,
+    "R4MembershipsLiteral": 491,
+    "R4GroupsLiteral": 29,
+    "R4StreamsLiteral": 41,
+    "R4PartReferencesLiteral": 153,
+    "newActualInputs": 92,
+    "catalogActual": true,
+    "newStreamsRecomposed": 7,
+    "newPartReferences": 24
+  },
+  "protectedRefs": [
+    {
+      "branch": "dev",
+      "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+    },
+    {
+      "branch": "sf-design-next",
+      "sha": "0a1247db9a16f9eead04788a76d25723672c7e6a"
+    },
+    {
+      "branch": "sf613-astra-finish",
+      "sha": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+    },
+    {
+      "branch": "sf613-ledger",
+      "sha": "b6278bcd02c544a5583d978a8b48583798bf6ebe"
+    }
+  ],
+  "workflowRuns": {
+    "workflowRuns": 0,
+    "currentCommitRuns": 0
+  },
+  "originalAcquisition": {
+    "originalGet": 0,
+    "zipGet": 0,
+    "closedOriginalStreamsNotReacquired": true
+  },
+  "qualification": {
+    "focal": "PASS_DIAGNOSTIC_40_CASES_1470_ASSERTIONS",
+    "analytics": "NEGATIVE_ONE_FAIL_ONE_PASS_FIRST_PREVIEW_60000MS",
+    "eventPrefix": 510,
+    "terminal": false,
+    "historicalAreas": "12/15",
+    "newAreas": 0,
+    "D27": "FOUR_BINDINGS_UNBOUND",
+    "finalCandidate": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "Archive is a retaining documentary branch with an own non-executable tree; it is not merged product code, a Release tar or a QA installation.",
+    "The original E13 Analytics artifact remains metadata-only, zero ZIP acquisition.",
+    "No attribution of exclusive CPU, no claim of observed Request termination or timeout cause.",
+    "The recorded review/package/receipt blobs are separate review objects; no self-referential index or receipt was introduced."
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "schema": "sf613-c19-bounds-v1",
+  "status": "STATIC_EXPECTATIONS_NOT_EXECUTED",
+  "base": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "label": "clean S18",
+    "sourceRequestAbsent": true
+  },
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+    "preimage": {
+      "gitSha": "4b57e77f42de37dca0c0d09b52fad8f6e309b218",
+      "bytes": 13851,
+      "sha256": "f46f6aa63f9426d8d708a167b92c077a4c12a56d6928abd8e1224c24b7ca2afa",
+      "lf": 112
+    },
+    "postimage": {
+      "gitSha": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+      "bytes": 14108,
+      "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+      "lf": 114
+    },
+    "deltaBytes": 257,
+    "deltaLf": 2,
+    "changedCallbacks": 3,
+    "awaitTokensUnchanged": 30,
+    "extraProductAwaits": 0,
+    "extraProductComparisons": 0,
+    "extraProductQueries": 0,
+    "registrationMeaning": "Existing selectSfCasesRead opt-in per callback creation; registration retains the callback and observes only its context eligibility, not Request IDs or product values.",
+    "registrationSites": 3
+  },
+  "consumer": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+    "preimage": {
+      "gitSha": "d9db1d5a9236d35ea8512fbd73e88c4f14c728ad",
+      "bytes": 23131,
+      "sha256": "18f158c1b17a9e7e7c8134b2c46c5b9297de032fc4317e98f1d8c1ef94ba41db",
+      "lf": 407
+    },
+    "postimage": {
+      "gitSha": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "bytes": 34160,
+      "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+      "lf": 587
+    },
+    "oldPrefixLiteralBytes": 23131,
+    "oldPrefixLiteralLf": 407,
+    "appendedBytes": 11029,
+    "appendedLf": 180,
+    "totalDeclarations": 3,
+    "newDeclarations": 1,
+    "newExpectSites": 40,
+    "newAwaitTokens": 14,
+    "newChildProcesses": 0,
+    "deadlines": {
+      "oldCooperativeMs": [
+        12000,
+        12000
+      ],
+      "oldBunMs": [
+        15000,
+        15000
+      ],
+      "newCooperativeMs": 18000,
+      "newBunMs": 20000,
+      "sumNominalBunMs": 50000,
+      "sumCooperativeMs": 42000,
+      "interpretation": "Nominal test budgets, not measured runtime or an overhead guarantee. Existing test limits are unchanged."
+    },
+    "boundedNewControl": {
+      "sites": [
+        "read",
+        "inspect",
+        "register"
+      ],
+      "customContexts": [
+        "frozen",
+        "mutable"
+      ],
+      "authorityChecks": [
+        "principalRef mismatch",
+        "policyVersion mismatch",
+        "accessRevision mismatch",
+        "matching authority"
+      ],
+      "customCaptures": 6,
+      "directCapturedCallbackChecks": 24,
+      "nativeModes": [
+        "marked",
+        "opaque",
+        "mutable"
+      ],
+      "nativePositiveCalls": 9,
+      "reachableCaseFailureCalls": 6,
+      "secondAuthorizeRevocationCalls": 3,
+      "mixedRegisterReplayCalls": 1,
+      "nativeRegistryCallsExcludingFixtureSetup": 19,
+      "customRegistryCalls": 6,
+      "fixtureSetupInitialRegistrations": 2,
+      "fixtureResetCalls": 19,
+      "loopInputsAllFinite": true
+    },
+    "report": {
+      "prefix": "SF_C19_PORTFOLIO_CASES ",
+      "countExpected": 1,
+      "payload": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      },
+      "modelUtf8WithLf": {
+        "gitSha": "710d80e6e4e2d5732ba4f72a67b59c3d114c09bd",
+        "bytes": 150,
+        "sha256": "361f33924b2654e03c112c3fa163165b67c1983ab3b2c058cf12f81270f1bc2c",
+        "lf": 1
+      },
+      "notAnExecutedReport": true,
+      "modelGitObjectCreated": false,
+      "modelGitShaMeaning": "Calculated only for the synthetic expected report string; it is not a Git blob locator and must not be fetched."
+    }
+  },
+  "existingCoverage": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "gitSha": "b6938565cb8b468a454178688ea88a4ec88da9fa",
+      "bytes": 42278,
+      "sha256": "8acd1b2070a9dd56b5fc31d8e170d02d9082cb3851d613b45dfe1c9db0968059",
+      "lf": 691,
+      "declarations": 7,
+      "bunMsEach": 15000,
+      "scope": "Complete cases graph aliases/cycles/fresh detached copies, mutable/proxy/opaque fallbacks, reachable clone/callback failures, admission/egress/revocation/abort and suspended callback. Literal reuse, not new consumer-specific abort injections."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "gitSha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "bytes": 87176,
+      "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+      "lf": 1462,
+      "declarations": 5,
+      "bunMs": [
+        120000,
+        120000,
+        20000,
+        20000,
+        10000
+      ],
+      "scope": "Existing C14-C17 projection/fence/identity controls remain literal."
+    }
+  ],
+  "focalRequirements": {
+    "selection": "Whole-file selection of exactly the three files above; no -t filtering.",
+    "functionalDeclarationsExpected": 15,
+    "reportsExpected": 6,
+    "projectionReports": 5,
+    "consumerReports": 1,
+    "sourceAndTree": "UNBOUND; root alone creates and activates reviewed objects",
+    "owner": "/root/focal_migration",
+    "consumerProcessBudgetProposedByOwnerMs": 120000,
+    "consumerParentBudgetProposedByOwnerMs": 180000,
+    "cliAndSfTypechecksRequired": true,
+    "guardsBase": "origin/dev",
+    "truncationFlagsMustBeFalse": true,
+    "expectationsOnly": true
+  },
+  "limitations": [
+    "The new control exercises C08 with the actual LocalStore and Provider but an extensible test authorizer/comparison port. It proves each consumer callback's selected read-set; it is not a separate oracle for native C15 physical projection admission in the installed production composition.",
+    "The custom-port register capture arms late getters on the cloned request at authorizeSelection. It does not claim incoming getters are never observed by the original structuredClone(incoming).",
+    "The register replay uses the real existing prior transaction and ten C08 authorizations, with no new write in that replay. The unchanged fixture creates the two initial registrations.",
+    "Only the second authorize revocation is newly injected per consumer. Abort/suspended-authority and general alias/cycle cases stay covered by the unchanged seven-test contract file.",
+    "There is no measured C19 performance result, no transfer of E12 sample counts to C19, and no claim that this change alone meets the original 60-second preview deadline.",
+    "No test, typecheck, guard, repo code, Actions run or original artifact acquisition was performed by the writer."
+  ]
+}

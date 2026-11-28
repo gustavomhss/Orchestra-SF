@@ -1,0 +1,76 @@
+{
+  "at": "2026-11-28 01:49:46 UTC",
+  "authorizedHost": "orchsf-vm",
+  "guestOperatorClaim": {
+    "owner": "Codex local",
+    "session": "01a1ffe5-86c4-77e1-880b-8c1bf8271c88",
+    "scope": "Single authorized guest inventory/execution operator; not a confirmed QA/recovery reservation",
+    "acknowledgementRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7089799944",
+    "handoffRef": "https://github.com/gustavomhss/Orchestra-SF/pull/657#issuecomment-7089883467"
+  },
+  "availableDeviceInventoryObservation": "Authorized host not exposed; only unrelated offline macOS device returned. This does not revoke earlier guest authorization or claim a current global outage.",
+  "qaReservation": {
+    "reservation": null,
+    "hostOperator": null,
+    "entraOwner": null,
+    "authorizationRef": null
+  },
+  "rescueReservation": {
+    "reservation": null,
+    "hostOperator": null,
+    "backupOwner": null,
+    "externalEffectObserver": null,
+    "authorizationRef": null
+  },
+  "actualCandidate": null,
+  "actualTar": null,
+  "productionAuthorized": false,
+  "schema": "sf613-c19-operational-blocker-observation-v1",
+  "recordedAt": "2026-11-28 02:05:56 UTC",
+  "sourceRegistry": {
+    "gitBlob": "3b87252042526f65ea363b0e0c83522061b049de",
+    "bytes": 470378,
+    "sha256": "c1b16b5f9a596d07253b9f740f34f9e44c103e2f4d392024a9abdb8eff1d1ea0",
+    "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "meaning": "Existing authority and recorded reservation fields; not a new guest inspection."
+  },
+  "coordinationCheck": {
+    "reviewer": "/root/focal_migration",
+    "checkedThrough": "2026-11-28T01:46:38Z",
+    "since": "2026-11-28T00:54:00Z",
+    "channels": [
+      673,
+      628,
+      657
+    ],
+    "newExternalAcknowledgements": 0,
+    "ownCoordinationContinuationExcludedFromAcknowledgements": true
+  },
+  "g08": {
+    "blocker": "Confirmed QA reservation, usable authorized guest route, four real Microsoft identity contexts/grants and admitted dispatch/review/hold decision are not received.",
+    "canUnblock": [
+      "Existing Codex local guest operator",
+      "Owner/user and responsible Microsoft Entra administrator",
+      "Responsible dispatch/review operator"
+    ],
+    "action": "Confirm the existing host window and usable guest route, identify the four contexts/grants and operational reviewers; use the final verified G07 bytes after candidate readiness."
+  },
+  "g10": {
+    "blocker": "Backup/key/cut/observer assignments, isolated rehearsal window, existing installation-root reconciliation, original private backup channel and independent restore destination are not confirmed.",
+    "canUnblock": [
+      "Existing guest operator",
+      "Backup/key owner",
+      "Cutover rehearsal owner and external observer",
+      "Owner/user for the reservation and RPO/RTO decision"
+    ],
+    "action": "Confirm those assignments, window, RPO/RTO and usable private restore destination; preserve pilot and G08 evidence before sequential G10."
+  },
+  "limits": [
+    "This read-only inventory does not revoke the existing host authorization or claim the VM is globally offline.",
+    "No additional VM, network changes, unrelated device access, production cutover or private-byte acquisition occurred.",
+    "A final candidate and verified G07 tar are still prerequisites; this is not a request to run an unqualified candidate."
+  ],
+  "originalGetsForThisAccessObservation": 0,
+  "analyticsRunAtObservation": 46094695101,
+  "cutMeaning": "Access and coordination observation at the stated historical cut. The C19 Analytics originals were subsequently received and closed at 01:58:34 UTC under their separate receipt; zero here refers only to this access observation."
+}

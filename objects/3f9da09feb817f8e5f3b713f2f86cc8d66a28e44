@@ -1,0 +1,124 @@
+{
+  "schema": "sf613-d28-independent-static-review-v1",
+  "status": "ACK_STATIC_ONLY",
+  "reviewer": "/root/focal_migration",
+  "atUtc": "2026-11-28T01:45:14Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inputs": {
+    "baseWrapper": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+    "wrapper": {
+      "git": "30178d52800afdf6c262e792790d52351b10c5c4",
+      "bytes": 18398,
+      "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c"
+    },
+    "manifest": {
+      "git": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+      "bytes": 24043,
+      "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123"
+    },
+    "bounds": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+    "anchors": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+    "diff": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+    "historicalReceiptBinding": "6b10fc47e5df6376889be69cd93ed2297bfccace",
+    "priorManifest": "094468973ff9ff14121c424d6c7d60e01e4d6e26",
+    "historicalC19Receipt": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+    "unchangedCompanions": {
+      "envelope": "26fe67808cf872c611127a7f46838074604fe690",
+      "finalizer": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "workflow": "40d2b2739f755a8865e990eef4b811d66a1e2125"
+    }
+  },
+  "verification": {
+    "authenticatedBeforeInterpretation": true,
+    "pureChecks": 75,
+    "positive": 75,
+    "findings": [],
+    "wrapper": {
+      "uniqueSubstitutions": 4,
+      "forwardExact": true,
+      "inverseExact": true,
+      "renderedPatchForwardAndInverseExact": true,
+      "hunks": 3,
+      "added": 4,
+      "removed": 4,
+      "byteDelta": 17,
+      "lfDelta": 0,
+      "allOtherBytesLiteral": true
+    },
+    "documentaryReceipt": {
+      "onlyField": "historicalC19Focal.receiptLocator",
+      "forwardExact": true,
+      "inverseExact": true,
+      "byteDelta": 685,
+      "lfDelta": 9,
+      "allOtherBytesLiteral": true
+    },
+    "protocol": "Companions do not consume the D27/D28 verification value or the old numeric G23 label. Their existing gate still requires26outer results and original nonce-bound Omni proof.",
+    "preserved": "runCommand, every argv/cwd/process/parent limit, G1/G2/G6/G25/G26, loading/lazy/proof families, original UI6 request and three companions."
+  },
+  "selection": {
+    "groups": 26,
+    "syntacticCommandSites": 32,
+    "effectiveCommands": 37,
+    "truncationFlagsRequiredFalse": 74,
+    "proofChildrenSeparate": 6,
+    "G23": {
+      "reference": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "declarationSites": 3,
+      "expectedReports": 1,
+      "report": "SF_C19_PORTFOLIO_CASES",
+      "nominalBunMs": 50000,
+      "processMs": 120000,
+      "parentMs": 180000
+    },
+    "wholeSuiteFunctionalTotal": null,
+    "wholeSuiteReportTotal": null,
+    "futureRuntimeResults": null
+  },
+  "bounds": {
+    "processMinutes": 35,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "wrapperWidthOnlyBytes": 18437,
+    "maximumDraftRunCharacters": 15833,
+    "maximumWidthOnlyRunCharacters": 15930,
+    "runCharacterLimit": 21000,
+    "allUnchangedCeilings": true,
+    "noDeadlineFitGuarantee": true
+  },
+  "finalBindings": [
+    {
+      "token": "__SF613_SOURCE_SHA__",
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_SOURCE_TREE__",
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_BLOB__",
+      "state": "UNBOUND"
+    },
+    {
+      "token": "__SF613_WRAPPER_SHA256__",
+      "state": "UNBOUND"
+    }
+  ],
+  "limits": [
+    "The authenticated C19 receipt is historical scoped focal evidence only; no result is transferred to D28, final C613, Analytics, UI6, Release or performance.",
+    "G23 current declarations/report are source-local expectations; final source reconciliation, concrete binding and execution remain pending.",
+    "The cases read-set contract and extensible C08 fixture do not independently prove installed native projection admission or latency.",
+    "Review used Git copies and pure byte/text/JSON calculations. No repository code, compiler, test, original Actions log or ZIP was executed or acquired."
+  ],
+  "actions": {
+    "newSourceOrTestEdits": 0,
+    "newTrees": 0,
+    "newCommits": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "reviewReceiptGitBlobOnly": true
+  }
+}

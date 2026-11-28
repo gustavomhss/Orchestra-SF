@@ -1,0 +1,115 @@
+{
+  "schema": "sf613-c19-source-and-consumer-derivation-v1",
+  "status": "PROPOSED_BYTES_STATIC_REVIEW_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "label": "clean S18",
+    "sourceRequestAbsent": true
+  },
+  "expectedDelta": {
+    "added": 0,
+    "modified": 2,
+    "deleted": 0
+  },
+  "application": "Apply each file's operations in listed order, with exactly one occurrence of each before string. Inverse in reverse order requires exactly one after occurrence. UTF-8 bytes and LF are literal.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "4b57e77f42de37dca0c0d09b52fad8f6e309b218",
+        "bytes": 13851,
+        "sha256": "f46f6aa63f9426d8d708a167b92c077a4c12a56d6928abd8e1224c24b7ca2afa",
+        "lf": 112
+      },
+      "postimage": {
+        "gitSha": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+        "bytes": 14108,
+        "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+        "lf": 114
+      },
+      "operations": [
+        {
+          "label": "named-import",
+          "before": "import { selectSfPreferencesRead } from \"../host-binding/state-provider.ts\"",
+          "after": "import { selectSfCasesRead, selectSfPreferencesRead } from \"../host-binding/state-provider.ts\""
+        },
+        {
+          "label": "explicit-cases-read-set",
+          "before": "/** A human selects both alternatives; no candidate is implicitly made the baseline. */",
+          "after": "/** A human selects both alternatives; no candidate is implicitly made the baseline.\n * The cases callbacks opt into the whole cases graph; effects and errors reachable\n * only through other namespaces are outside their declared read-set. */"
+        },
+        {
+          "label": "read-cases",
+          "before": "      const readState = () => input.state.read(source, \"preferences\", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined))\n      const current = await input.state.read(source, \"cases\", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)",
+          "after": "      const readState = () => input.state.read(source, \"preferences\", selectSfPreferencesRead(context, (state, authority) => sameAuthority(authority, context) ? state.preferences[selectionKey(request.caseRef)] : undefined))\n      const current = await input.state.read(source, \"cases\", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))"
+        },
+        {
+          "label": "inspect-cases",
+          "before": "      const source = input.host.requestFor(context)\n      if (!source || !await input.host.revalidate(context)) return { status: \"denied\", reason: \"selection-access-unavailable\" }\n      const current = await input.state.read(source, \"cases\", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)",
+          "after": "      const source = input.host.requestFor(context)\n      if (!source || !await input.host.revalidate(context)) return { status: \"denied\", reason: \"selection-access-unavailable\" }\n      const current = await input.state.read(source, \"cases\", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))"
+        },
+        {
+          "label": "register-cases",
+          "before": "      if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || !await input.authorizeSelection(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: \"denied\", reason: \"selection-access-unavailable\" }\n      const current = await input.state.read(source, \"cases\", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)",
+          "after": "      if (!source || !operation || !Number.isSafeInteger(request.expectedVersion) || request.expectedVersion < 0 || !await input.authorizeSelection(request, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: \"denied\", reason: \"selection-access-unavailable\" }\n      const current = await input.state.read(source, \"cases\", selectSfCasesRead(context, (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined))"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "d9db1d5a9236d35ea8512fbd73e88c4f14c728ad",
+        "bytes": 23131,
+        "sha256": "18f158c1b17a9e7e7c8134b2c46c5b9297de032fc4317e98f1d8c1ef94ba41db",
+        "lf": 407
+      },
+      "postimage": {
+        "gitSha": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "bytes": 34160,
+        "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+        "lf": 587
+      },
+      "operations": [
+        {
+          "label": "append-consumer-cases-control",
+          "before": "        expect(f.audit.errors[0]).toBe(sentinel)\n        expect(reads).toBe(1)\n        expect(f.control.calls).toEqual(expectedCalls.slice(0, 3))\n        expect(f.audit.callbacks).toHaveLength(1)\n        expect(f.audit.preferences).toEqual([])\n        expect(f.audit.comparisonCalls).toBe(0)\n      }\n    }\n  } finally { await deadline.close() }\n}, 15_000)\n",
+          "after": "        expect(f.audit.errors[0]).toBe(sentinel)\n        expect(reads).toBe(1)\n        expect(f.control.calls).toEqual(expectedCalls.slice(0, 3))\n        expect(f.audit.callbacks).toHaveLength(1)\n        expect(f.audit.preferences).toEqual([])\n        expect(f.audit.comparisonCalls).toBe(0)\n      }\n    }\n  } finally { await deadline.close() }\n}, 15_000)\n\ntest(\"Portfolio selection declares cases at read, inspect and register while preserving guards and mixed reads\", async () => {\n  const deadline = compositionTestDeadline(\"portfolio-selection-cases-read-set\", 18_000)\n  try {\n    const sites = [\"read\", \"inspect\", \"register\"] as const\n    const fields = [\"principalRef\", \"policyVersion\", \"accessRevision\"] as const\n    const observed = { customCaptures: 0, nativeReads: 0, reachableFailures: 0, revocations: 0, mixedReads: 0 }\n    for (const site of sites) {\n      for (const mode of [\"frozen\", \"mutable\"] as const) {\n        deadline.check()\n        const base = frozenContext()\n        const call = mode === \"frozen\" ? base : { ...base, binding: { ...base.binding } }\n        const source = new Request(\"https://portfolio-cases-custom.example.test\", { signal: deadline.signal })\n        const order: string[] = [], callbacks: Read[] = []\n        const seen: { request: Request; namespace: SfStateNamespace }[] = []\n        let id = \"selected\", unused = 0, selectionCalls = 0, revalidations = 0, copiedRequest = false\n        const ref = { get id() { order.push(\"request.id\"); return id }, incarnation: \"selected-inc\", version: 1 }\n        const request = { caseRef: { id: \"selected\", incarnation: \"selected-inc\", version: 1 },\n          baselineAlternativeId: \"baseline\", alternativeId: \"candidate\", criteria: [\"cost\"], expectedVersion: 0 }\n        const arm = (value: { caseRef: CaseRef }) => Object.defineProperty(value, \"caseRef\", {\n          configurable: true, enumerable: true, get: () => { order.push(\"request.caseRef\"); return ref },\n        })\n        // register first clones its incoming request. Install the late getters\n        // on that real clone at authorizeSelection, never before its clone.\n        if (site !== \"register\") arm(request)\n        const readPort: SfProductStatePort[\"read\"] = async (incoming, namespace, read) => {\n          order.push(\"call:\" + namespace)\n          seen.push({ request: incoming, namespace })\n          if (namespace === \"cases\") callbacks.push(read)\n          return { status: \"unavailable\", reason: \"callback-captured-without-invocation\" }\n        }\n        const state: SfProductStatePort = {\n          get read() { order.push(\"lookup:read\"); return readPort },\n          transaction: async () => { unused++; throw new Error(\"No write belongs to callback capture\") },\n        }\n        const registry = createDecisionPortfolioSelection({\n          state, host: { requestFor: () => source, revalidate: async () => { revalidations++; return true } },\n          compare: async () => { unused++; return { status: \"unavailable\", reason: \"capture-only\" } },\n          authorizeCase: async () => { unused++; return false },\n          authorizeSelection: async (incoming) => {\n            selectionCalls++; copiedRequest = incoming !== request; arm(incoming); return true\n          },\n          verifySnapshot: () => { unused++; return false },\n          operationIdentity: () => \"capture-selection\", proposalCoverageWrites: new WeakSet<object>(),\n          now: () => { unused++; return \"2027-02-02T00:00:00Z\" },\n        })\n        const result = site === \"register\" ? await registry.register(request, call)\n          : site === \"inspect\" ? await registry.inspect(request, call) : await registry.read(request, call)\n        expect(result).toEqual({ status: \"denied\", reason: \"selection-access-unavailable\" })\n        expect(seen).toEqual((site === \"register\" ? [\"cases\", \"preferences\"] as const : [\"cases\"] as const)\n          .map((namespace) => ({ request: source, namespace })))\n        expect(order).toEqual(site === \"register\"\n          ? [\"lookup:read\", \"call:cases\", \"lookup:read\", \"call:preferences\"] : [\"lookup:read\", \"call:cases\"])\n        expect(revalidations).toBe(1)\n        expect(selectionCalls).toBe(site === \"register\" ? 1 : 0)\n        expect(copiedRequest).toBe(site === \"register\")\n        expect(unused).toBe(0)\n        expect(callbacks).toHaveLength(1)\n        const read = callbacks[0]\n        if (!read) throw new Error(\"The actual portfolio cases callback was not delivered\")\n        id = \"later\"\n        const selected = { marker: site }\n        for (const mismatch of [...fields, \"none\"] as const) {\n          order.length = 0\n          const authorityOrder: string[] = []\n          const authority = { ...actor }\n          for (const field of fields) Object.defineProperty(authority, field, { enumerable: true,\n            get: () => { authorityOrder.push(field); return field === mismatch ? \"different\" : actor[field] } })\n          const cases = Object.defineProperty({}, \"later\", { enumerable: true,\n            get: () => { order.push(\"case.value\"); return selected } })\n          const state = Object.defineProperty({}, \"cases\", { enumerable: true,\n            get: () => { order.push(\"state.cases\"); return cases } }) as Readonly<SfProductState>\n          // Run outside the service catch so a swallowed assertion cannot pass.\n          const observedRead = await capture(() => read(state, authority))\n          const reached = mismatch === \"none\" ? fields.length : fields.indexOf(mismatch) + 1\n          expect(authorityOrder).toEqual(fields.slice(0, reached))\n          expect(observedRead.error).toBeUndefined()\n          expect(observedRead.value).toBe(mismatch === \"none\" ? selected : undefined)\n          expect(order).toEqual(mismatch === \"none\"\n            ? [\"state.cases\", \"request.caseRef\", \"request.id\", \"case.value\"] : [])\n        }\n        observed.customCaptures++\n      }\n    }\n\n    const f = await selectionFixture(deadline)\n    for (const site of sites) {\n      const invoke = (registry = f.selected, call = f.call) => site === \"register\"\n        ? registry.register({ caseRef: f.ref, baselineAlternativeId: \"baseline\", alternativeId: \"candidate\",\n          criteria: [\"cost\"], expectedVersion: 1 }, call)\n        : site === \"inspect\" ? registry.inspect({ caseRef: f.ref }, call) : registry.read({ caseRef: f.ref }, call)\n      const expected = site === \"inspect\" ? { status: \"ok\" as const, value: { version: 2, selection: f.second } }\n        : { status: \"ok\" as const, value: f.second }\n      for (const mode of [\"marked\", \"opaque\", \"mutable\"] as const) {\n        await f.reset()\n        let outsideReads = 0\n        f.control.before = (snapshot, count, namespace) => {\n          if (count !== 1 || namespace !== \"cases\") return\n          const state = snapshot.data.__sfProductV1 as SfProductState\n          Object.defineProperty(state.documents, \"outsideCases\", { enumerable: true,\n            get: () => { outsideReads++; return \"exclusively outside cases\" } })\n        }\n        const call = mode === \"mutable\" ? { ...f.call, binding: { ...f.call.binding } } : f.call\n        const result = await invoke(mode === \"opaque\" ? f.opaque : f.selected, call)\n        expect(result).toEqual(expected)\n        expect(outsideReads).toBe(mode === \"marked\" ? 0 : 1)\n        expect(f.control.calls.slice(0, 2)).toEqual([\n          { namespace: \"cases\", mode: \"read\" }, { namespace: \"cases\", mode: \"read\" },\n        ])\n        expect(f.control.calls).toHaveLength(site === \"read\" ? 6 : 10)\n        expect(f.control.calls.every((entry) => entry.mode === \"read\")).toBe(true)\n        expect(f.audit.comparisonCalls).toBe(2)\n        expect(f.audit.errors).toEqual([])\n        observed.nativeReads++\n      }\n      // A sibling is inside the complete cases graph, even when the callback\n      // returns another case. Preserve its failure and never replay the read.\n      for (const opaque of [false, true]) {\n        await f.reset()\n        const sentinel = new Error(\"Reachable portfolio cases failure\")\n        let reads = 0\n        f.control.before = (snapshot, count) => {\n          if (count !== 1) return\n          const state = snapshot.data.__sfProductV1 as SfProductState\n          Object.defineProperty(state.cases.other!, \"reachableFailure\", { enumerable: true,\n            get: () => { reads++; throw sentinel } })\n        }\n        const result = await invoke(opaque ? f.opaque : f.selected)\n        expect(result).toEqual({ status: \"unavailable\", reason: \"selection-unavailable\" })\n        expect(f.audit.errors).toEqual([sentinel])\n        expect(f.audit.errors[0]).toBe(sentinel)\n        expect(reads).toBe(1)\n        expect(f.control.calls).toEqual([{ namespace: \"cases\", mode: \"read\" }])\n        expect(f.audit.preferences).toEqual([])\n        expect(f.audit.comparisonCalls).toBe(0)\n        observed.reachableFailures++\n      }\n      await f.reset()\n      f.control.before = (_snapshot, count) => { if (count === 2) f.control.active = false }\n      const revoked = await invoke()\n      expect(revoked).toEqual({ status: \"denied\", reason: \"selection-access-unavailable\" })\n      expect(f.control.calls).toEqual((site === \"register\" ? [\"cases\", \"cases\", \"preferences\"] as const : [\"cases\", \"cases\"] as const)\n        .map((namespace) => ({ namespace, mode: \"read\" as const })))\n      expect(f.audit.comparisonCalls).toBe(0)\n      expect(f.audit.errors).toEqual([])\n      expect(f.audit.steps.some((step) => step.startsWith(\"compare:\"))).toBe(false)\n      observed.revocations++\n    }\n\n    // register's separate preferences + transactions read remains opaque.\n    // Its real idempotency branch needs the transaction and still observes\n    // unrelated namespaces; the preceding cases declaration cannot mark it.\n    await f.reset()\n    let outsideMixedReads = 0, priorReads = 0, priorFound = false\n    f.control.before = (snapshot, count, namespace) => {\n      if (count !== 3 || namespace !== \"preferences\") return\n      const state = snapshot.data.__sfProductV1 as SfProductState\n      const key = JSON.stringify([actor.principalRef, \"preferences\", f.ref.id, \"portfolio-selection:selection-registration-two\"])\n      const prior = state.transactions[key]\n      priorFound = prior !== undefined\n      Object.defineProperty(state.transactions, key, { enumerable: true,\n        get: () => { priorReads++; return prior } })\n      Object.defineProperty(state.documents, \"outsideMixed\", { enumerable: true,\n        get: () => { outsideMixedReads++; return \"outside preferences and transactions\" } })\n    }\n    const registered = await f.selected.register({ caseRef: f.ref, baselineAlternativeId: \"baseline\",\n      alternativeId: \"candidate\", criteria: [\"cost\"], expectedVersion: 1 }, f.call)\n    expect(registered).toEqual({ status: \"ok\", value: f.second })\n    expect(priorFound).toBe(true)\n    expect(priorReads).toBe(1)\n    expect(outsideMixedReads).toBe(1)\n    expect(f.control.calls).toHaveLength(10)\n    expect(f.control.calls.every((entry) => entry.mode === \"read\")).toBe(true)\n    expect(f.audit.comparisonCalls).toBe(2)\n    expect(f.audit.errors).toEqual([])\n    observed.mixedReads++\n    expect(observed).toEqual({ customCaptures: 6, nativeReads: 9, reachableFailures: 6, revocations: 3, mixedReads: 1 })\n    console.log(\"SF_C19_PORTFOLIO_CASES \" + JSON.stringify({ schema: \"sf-c19-portfolio-cases-v1\", ...observed }))\n  } finally { await deadline.close() }\n}, 20_000)\n"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "sourceAnchors": 5,
+    "testAnchors": 1,
+    "eachBeforeAndAfterUnique": true,
+    "forwardAndInverseExact": true,
+    "oldConsumerFileIsLiteralPrefix": true,
+    "oldConsumerBytes": 23131,
+    "oldConsumerLf": 407,
+    "sourceAwaitTokens": {
+      "before": 30,
+      "after": 30
+    },
+    "fullDiff": {
+      "gitSha": "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+      "bytes": 17454,
+      "sha256": "3cf3e62476a08db7c9e40475a9b9353d838bee390cc05549ca77bb6604a9cb3c",
+      "hunks": 6,
+      "added": 187,
+      "removed": 5
+    },
+    "repoExecution": false
+  },
+  "preservation": [
+    "Each original cases callback body, sameAuthority short-circuit and request.caseRef.id expression are literal.",
+    "The method lookup/receiver, all original call arguments apart from the explicit callback registration, awaits, comparison/revalidation phases, returns and catches are literal.",
+    "register's preferences + transactions callback and transaction mutation remain opaque and literal.",
+    "No changes to Provider, SourceLifecycle, LocalStore, CurrentChoice, canonical/clone helpers, product authority or the original Analytics spec.",
+    "The two prior consumer test declarations and their fixture are the exact 407-LF prefix; the only test-file change is one appended declaration.",
+    "cases-read-contract.test.ts and c08-snapshot-projection.test.ts are unchanged."
+  ]
+}

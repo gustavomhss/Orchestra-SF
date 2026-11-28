@@ -1,0 +1,63 @@
+{
+  "schema": "sf613-c19-analytics-terminal-intake-v1",
+  "status": "TERMINAL_NEW_RUN_READY_FOR_ORIGINALS",
+  "at": "2026-11-28 01:57:17 UTC",
+  "authority": "5e84772c4a35ff8d7adedfb62819ce42677610ac",
+  "run": {
+    "id": 46094695101,
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46094695101"
+  },
+  "jobs": [
+    {
+      "id": 140823266913,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-28T01:45:38Z",
+      "completed_at": "2026-11-28T01:56:04Z"
+    },
+    {
+      "id": 140825965023,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T01:56:06Z",
+      "completed_at": "2026-11-28T01:56:12Z"
+    }
+  ],
+  "mainJobId": 140823266913,
+  "cleanupJobId": 140825965023,
+  "artifactMetadata": {
+    "total_count": 1,
+    "artifacts": [
+      {
+        "id": 15242603880,
+        "node_id": "MDg6QXJ0aWZhY3QxNTI0MjYwMzg4MA==",
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 45814109,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15242603880",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15242603880/zip",
+        "expired": false,
+        "digest": "sha256:bccc5ec8ff3eb6c7c57f34211fa59bbf691d072af0faf115f5f1ed3857b47392",
+        "created_at": "2026-11-28T01:56:01Z",
+        "updated_at": "2026-11-28T01:56:01Z",
+        "expires_at": "2026-12-05T01:55:59Z",
+        "workflow_run": {
+          "id": 46094695101,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf613c19a",
+          "head_sha": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b"
+        }
+      }
+    ]
+  },
+  "branchAbsent": true,
+  "originalsAcquired": 0,
+  "zipGets": 0,
+  "interpretation": "No original log acquired or parsed yet; only terminal metadata is reported."
+}

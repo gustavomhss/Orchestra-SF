@@ -1,0 +1,345 @@
+{
+  "schema": "sf613-c19-source-root-review-v1",
+  "status": "PASS_STATIC_SOURCE_AND_CONTROL_CI_PENDING",
+  "at": "2026-11-28 01:21:53 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/close_pr613",
+  "reviewer": "/root",
+  "independentReviewer": "/root/teams_product",
+  "base": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+    "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598"
+  },
+  "proposedSource": {
+    "commit": "UNBOUND",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "delta": "2M",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      }
+    ],
+    "ciRequestAdded": false,
+    "diagnosticOverlayAdded": false
+  },
+  "inputs": {
+    "manifest": {
+      "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+      "bytes": 13382,
+      "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+      "lf": 268,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "ce71ce54a3e27b112ff3c089365bfb7404678037",
+      "bytes": 6976,
+      "sha256": "bd9d210bfb802754eb9f3da890e41f631da07cce9d388e5fb2046eccc225c382",
+      "lf": 178,
+      "endsWithLF": true
+    },
+    "support": {
+      "gitBlob": "4ba94f80c6db4dc5f57f0687e0a9f6cfdfc61316",
+      "bytes": 19122,
+      "sha256": "4044de667de70edd1ee89c19050dcbc1f609c1eb0fa35e0831c7c97c5b7ef657",
+      "lf": 115,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+      "bytes": 17454,
+      "sha256": "3cf3e62476a08db7c9e40475a9b9353d838bee390cc05549ca77bb6604a9cb3c",
+      "lf": 237,
+      "endsWithLF": true
+    },
+    "product": {
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+      "bytes": 14108,
+      "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+      "lf": 114,
+      "endsWithLF": true
+    },
+    "consumer": {
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "bytes": 34160,
+      "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+      "lf": 587,
+      "endsWithLF": true
+    }
+  },
+  "review": {
+    "checks": [
+      [
+        "import once",
+        true
+      ],
+      [
+        "comment once",
+        true
+      ],
+      [
+        "three identical callback bodies",
+        true
+      ],
+      [
+        "exact forward",
+        true
+      ],
+      [
+        "exact inverse",
+        true
+      ],
+      [
+        "thirty awaits preserved",
+        true
+      ],
+      [
+        "register preferences and transactions line literal",
+        true
+      ],
+      [
+        "frozen standard UI context construction",
+        true
+      ],
+      [
+        "entire old consumer literal prefix",
+        true
+      ],
+      [
+        "one appended declaration",
+        true
+      ],
+      [
+        "three declarations total",
+        true
+      ],
+      [
+        "append 180 LF",
+        true
+      ],
+      [
+        "append 14 awaits",
+        true
+      ],
+      [
+        "40 static expect sites",
+        true
+      ],
+      [
+        "cooperative 18s test 20s",
+        true
+      ],
+      [
+        "three exact sites",
+        true
+      ],
+      [
+        "frozen and mutable capture matrix",
+        true
+      ],
+      [
+        "native admission alternatives",
+        true
+      ],
+      [
+        "external catch sentinel checked",
+        true
+      ],
+      [
+        "native original fixture used",
+        true
+      ],
+      [
+        "real prior read key",
+        true
+      ],
+      [
+        "declared expected report populations",
+        true
+      ],
+      [
+        "no new helper import",
+        true
+      ],
+      [
+        "new control does not contain new AbortController",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts anchors forward",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts anchors inverse",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts unified forward",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts unified inverse",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts anchors forward",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts anchors inverse",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts unified forward",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts unified inverse",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts manifest preimage",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts manifest postimage",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts manifest preimage",
+        true
+      ],
+      [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts manifest postimage",
+        true
+      ],
+      [
+        "source manifest derivation pin",
+        true
+      ],
+      [
+        "source manifest fullDiff pin",
+        true
+      ],
+      [
+        "source manifest bounds pin",
+        true
+      ],
+      [
+        "source manifest clean S18 twoM",
+        true
+      ],
+      [
+        "source manifest root instructions",
+        true
+      ]
+    ],
+    "peer": {
+      "reviewer": "/root/teams_product",
+      "status": "PASS_STATIC_SOURCE_PACKAGE",
+      "manifest": {
+        "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+        "bytes": 13382,
+        "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+        "lf": 268,
+        "endsWithLF": true
+      },
+      "source": {
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+        "bytes": 14108,
+        "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+        "lf": 114,
+        "endsWithLF": true
+      },
+      "consumer": {
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "bytes": 34160,
+        "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+        "lf": 587,
+        "endsWithLF": true
+      },
+      "supports": [
+        "4ba94f80c6db4dc5f57f0687e0a9f6cfdfc61316",
+        "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+        "ce71ce54a3e27b112ff3c089365bfb7404678037"
+      ],
+      "sourceDelta": "2M",
+      "hunks": 6,
+      "added": 187,
+      "removed": 5,
+      "exactAnchorsForwardInverse": 6,
+      "exactFullDiffForwardInverse": true,
+      "sourceAwaits": 30,
+      "literalConsumerPrefixLf": 407,
+      "expectedReportModelBytes": 150,
+      "findings": [],
+      "runtimeResult": null
+    },
+    "code": "Three existing callbacks opt into the existing complete-cases contract. Same callback bodies, method lookup/receiver, late IDs, authority ordering and 30 awaits; register's mixed preferences/transactions read remains opaque.",
+    "control": "Original 23131-byte / 407-LF consumer prefix literal, one 11029-byte /180-LF append. Actual callbacks all three sites, custom frozen/mutable, native marked/opaque/mutable, reachable sibling error once with exact sentinel, second-authorize revocation and original mixed idempotent replay.",
+    "semantics": "Effects solely in unreachable namespaces are deliberately outside the explicit cases read-set. All reachable aliases/cycles/failures remain selected. No global full-state equivalence is claimed.",
+    "standardContextSource": {
+      "gitBlob": "4d657ba72e9aa7f0bd63d854e9a7fef8e3d9c8b8",
+      "bytes": 13358,
+      "sha256": "8c2cbd3561d8631dc05351b36ec919dcb9e7e9ae6f0d2e18a1ce0b4a6bb12046",
+      "lf": 220,
+      "endsWithLF": true
+    },
+    "standardContextLimit": "Factory statically constructs frozen context/binding/lease; no runtime occurrence or speedup is inferred."
+  },
+  "treeAudit": {
+    "complete": true,
+    "pairs": 10,
+    "literalSiblings": 238,
+    "modified": 2,
+    "added": 0,
+    "deleted": 0,
+    "computedHashMatched": true,
+    "readbackMatched": true
+  },
+  "instructions": {
+    "root": {
+      "gitBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "lf": 223,
+      "endsWithLF": true
+    },
+    "ancestorTrees": 10,
+    "additionalApplicableFiles": 0
+  },
+  "limits": {
+    "runtimeResults": null,
+    "performance": null,
+    "originalPreviewMs": 60000,
+    "originalSensitivityMs": 120000,
+    "conditionalCasesReads": 4,
+    "conditionalComparisonsRetained": 8,
+    "conditionalMultiplicityIsNotObservedExecution": true,
+    "consumerPhysicalLocalStoreProjectionClaim": false,
+    "newAbortProofPerSite": false,
+    "inheritedCasesMatrixUnchanged": true,
+    "inheritedProjectionMatrixUnchanged": true,
+    "originalConsumerTestsUnchanged": true,
+    "D27": "four final bindings UNBOUND",
+    "historicalQualifiedAreas": 12,
+    "newQualifiedAreas": 0,
+    "productionAuthorized": false
+  },
+  "authority": {
+    "mayCreateCleanSourceCommit": true,
+    "mayPublishProductBranch": false,
+    "mayRunFocal": false,
+    "focalAuthority": "Separate reviewed and concretely bound package required."
+  }
+}

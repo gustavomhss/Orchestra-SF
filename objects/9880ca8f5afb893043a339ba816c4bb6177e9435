@@ -1,0 +1,305 @@
+{
+  "schema": "sf613-d28-bounds-v1",
+  "status": "UNBOUND_STATIC_BOUNDS_NOT_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inherits": {
+    "manifest": {
+      "gitSha": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+      "bytes": 18729,
+      "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1",
+      "lf": 492
+    },
+    "bounds": {
+      "gitSha": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+      "bytes": 13126,
+      "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+      "lf": 395
+    },
+    "policy": "D27 and its inherited D26 bounds remain literal history. This supplement overrides only wrapper identity, G23 metadata/budgets, and future intake of the C19 consumer report; no ceiling increases."
+  },
+  "wrapper": {
+    "gitSha": "30178d52800afdf6c262e792790d52351b10c5c4",
+    "bytes": 18398,
+    "sha256": "6a4048ff996a061a038d87b41d4011f4d01655aead371f0a4f39f06f0c359f5c",
+    "lf": 344,
+    "created": true,
+    "readback": true,
+    "preimage": {
+      "gitSha": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+      "bytes": 18381,
+      "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+      "lf": 344
+    },
+    "deltaBytes": 17,
+    "deltaLf": 0,
+    "uniqueSubstitutions": 4,
+    "widthOnlyBindingModelBytes": 18437,
+    "widthOnlyMeaning": "Source/tree replaced by40-character strings as a data model; no executable binding is created."
+  },
+  "derivation": {
+    "gitSha": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+    "bytes": 9618,
+    "sha256": "ad9391a1259616000eb3d91bb519c77d2d5eda18a84f4a71bc8a74c94ad5f157",
+    "lf": 283
+  },
+  "counts": {
+    "groups": 26,
+    "expectSpawnSites": 26,
+    "syntacticCommandSites": 32,
+    "englishReadLoopExecutions": 6,
+    "effectiveCommands": 37,
+    "truncationFlags": 74,
+    "fullSuiteUniqueFunctionalCount": null,
+    "proofChildren": 6,
+    "newGroups": 0,
+    "newWrapperCommandSites": 0,
+    "newWrapperCommands": 0,
+    "newWrapperTruncationFlags": 0,
+    "wholeSuiteFunctionalTotal": null,
+    "D27MeansRevisionNot27Groups": true,
+    "newFunctionalDeclarationInAlreadySelectedG23": 1,
+    "newPublicReportInAlreadySelectedG23": 1,
+    "newWrapperGroups": 0,
+    "wholeSuiteReportTotal": null,
+    "D28MeansRevisionNot28Groups": true
+  },
+  "G23": {
+    "group": 23,
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+    "declarations": 3,
+    "reports": 1,
+    "currentReference": {
+      "gitSha": "68ae48f9a039180824f5471a1de27c0ca34be088",
+      "bytes": 34160,
+      "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+      "lf": 587
+    },
+    "referenceIsQualification": false,
+    "finalC613Blob": "UNBOUND",
+    "outerTitle": "Portfolio selection cases and preferences preserve original guards and fresh revocation",
+    "commandLabel": "Portfolio selection cases and preferences read controls",
+    "commandArgv": [
+      "test",
+      "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+    ],
+    "cwd": "modules/sucafina/Sucafinav1",
+    "processMs": 120000,
+    "parentMs": 180000,
+    "perTestBudgets": {
+      "inheritedPreferences": {
+        "declarations": 2,
+        "cooperativeMsEach": 12000,
+        "bunMsEach": 15000
+      },
+      "addedCasesConsumer": {
+        "declarations": 1,
+        "cooperativeMs": 18000,
+        "bunMs": 20000
+      }
+    },
+    "nominalBunMs": 50000,
+    "nominalCooperativeMs": 42000,
+    "nominalProcessMarginMs": 70000,
+    "nominalMeaning": "Arithmetic only; unchanged process and parent ceilings include startup/setup/disposal/scheduling overhead, whose fit is not guaranteed by this subtraction."
+  },
+  "unchangedBudgets": {
+    "G2": 120000,
+    "G2Parent": 180000,
+    "G6ProcessMs": 300000,
+    "G6ParentMs": 360000,
+    "G25ProcessMs": 150000,
+    "G25ParentMs": 180000,
+    "G26ProcessMs": 300000,
+    "G26ParentMs": 360000,
+    "G26NominalBunMs": 290000,
+    "G26NominalCooperativeMs": 264000
+  },
+  "global": {
+    "processMs": 2100000,
+    "technicalStepMinutes": 40,
+    "jobMinutes": 45,
+    "alwaysFinalizerMinutes": 3,
+    "termGraceMs": 5000,
+    "killGraceMs": 5000,
+    "stdioDrainMs": 10000,
+    "unchanged": true,
+    "noBudgetIncrease": true
+  },
+  "commandCapture": {
+    "stdoutMaxBytes": 1048576,
+    "stderrMaxBytes": 1048576,
+    "truncationFails": true,
+    "scope": "Each runCommand capture, unchanged; not a cumulative log cap.",
+    "expectedFlagCount": 74,
+    "notCumulative": true
+  },
+  "workflowTransport": {
+    "workflow": {
+      "gitBlob": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+      "bytes": 80067,
+      "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+      "lf": 1154
+    },
+    "envelope": {
+      "gitBlob": "26fe67808cf872c611127a7f46838074604fe690",
+      "bytes": 43811,
+      "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+      "lf": 723
+    },
+    "finalizer": {
+      "gitBlob": "9e423560670f8452eb95ebff92630f202df06a8f",
+      "bytes": 15782,
+      "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+      "lf": 250
+    },
+    "loader": {
+      "gitSha": "9251160a39b8fb62a87f25b0ffbe0497a2afdbda",
+      "bytes": 3638,
+      "sha256": "34c483109ab505c4c8ea79db0b5077976613896f7d16d99ef4dda0aeb9a3c201",
+      "literal": true,
+      "literalD25": true
+    },
+    "embeddedBytesLiteral": true,
+    "derivedEnvelopeDigestLiteral": true,
+    "runCharacterLimit": 21000,
+    "maximumDraftRunChars": 15833,
+    "maximumWidthModelRunChars": 15930,
+    "allDraftAndWidthModelWithinLimit": true,
+    "inheritanceReason": "The three companion blobs and all workflow run texts are byte-literal D26; wrapper is a separate fetched blob and is not inserted into a workflow run block.",
+    "companions": {
+      "envelope": {
+        "gitSha": "26fe67808cf872c611127a7f46838074604fe690",
+        "bytes": 43811,
+        "sha256": "397876b7b9dda3e8a3ebcd7045c5ab3a9e9e8826a458b16b03b31c0a2a5c94e1",
+        "lf": 723,
+        "unchanged": true
+      },
+      "finalizer": {
+        "gitSha": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "bytes": 15782,
+        "sha256": "d8a9e83097f97255a9b3d7f2be6231984a7bfc7651f59659a454b20dd72798d8",
+        "lf": 250,
+        "unchanged": true
+      },
+      "workflow": {
+        "gitSha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "bytes": 80067,
+        "sha256": "89b4924f87f155134b877711637d121c4a49023b856bdb820d916e1e42c6e979",
+        "lf": 1154,
+        "unchanged": true
+      }
+    },
+    "maximumWidthModelRunCharacters": 15930,
+    "unchanged": true,
+    "wrapperNotEmbeddedInWorkflow": true
+  },
+  "reportModel": {
+    "prefix": "SF_C19_PORTFOLIO_CASES ",
+    "expectedCount": 1,
+    "payload": {
+      "schema": "sf-c19-portfolio-cases-v1",
+      "customCaptures": 6,
+      "nativeReads": 9,
+      "reachableFailures": 6,
+      "revocations": 3,
+      "mixedReads": 1
+    },
+    "bytesIncludingLf": 150,
+    "sha256": "361f33924b2654e03c112c3fa163165b67c1983ab3b2c058cf12f81270f1bc2c",
+    "syntheticModelOnly": true,
+    "notExecuted": true,
+    "notPersistedAsAReportBlob": true,
+    "capEffect": "Captured by the existing1MiB stdout limit for G23; no new output-cap or cumulative-duration guarantee."
+  },
+  "finalBindings": {
+    "state": "UNBOUND",
+    "parameters": [
+      {
+        "token": "__SF613_SOURCE_SHA__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_SOURCE_TREE__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_BLOB__",
+        "concreteWidth": 40,
+        "state": "UNBOUND"
+      },
+      {
+        "token": "__SF613_WRAPPER_SHA256__",
+        "concreteWidth": 64,
+        "state": "UNBOUND"
+      }
+    ],
+    "occurrences": {
+      "wrapper": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 0,
+        "__SF613_WRAPPER_SHA256__": 0
+      },
+      "envelope": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "finalizer": {
+        "__SF613_SOURCE_SHA__": 1,
+        "__SF613_SOURCE_TREE__": 1,
+        "__SF613_WRAPPER_BLOB__": 1,
+        "__SF613_WRAPPER_SHA256__": 1
+      },
+      "workflow": {
+        "__SF613_SOURCE_SHA__": 3,
+        "__SF613_SOURCE_TREE__": 2,
+        "__SF613_WRAPPER_BLOB__": 2,
+        "__SF613_WRAPPER_SHA256__": 2
+      }
+    },
+    "onlyFour": true
+  },
+  "futureIntake": {
+    "inheritsAllD27Requirements": true,
+    "outerCases": 26,
+    "plannedCommands": 37,
+    "truncationFlagsRequiredFalse": 74,
+    "proofChildren": 6,
+    "G23": {
+      "declarations": 3,
+      "fail": 0,
+      "skip": 0,
+      "report": "SF_C19_PORTFOLIO_CASES",
+      "reportCount": 1,
+      "completePayloadRequired": true,
+      "payload": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      }
+    },
+    "totalReportsOrFunctionalCountForWholeSuite": null,
+    "noNewParser": true,
+    "countsArePlanningUntilExecuted": true
+  },
+  "qualifications": [
+    "Three declarations and one report are source-local G23 expectations;15functional/sixreports describes only the separate C19 focal and is not a D28 total.",
+    "The two inherited consumer tests retain12s cooperative/15s Bun. The appended test retains18s/20s. Nominal50s leaves70s arithmetically inside the unchanged120s command budget, with180s parent; it is not a runtime fit guarantee.",
+    "The new cases control uses actual C08/LocalStore with an extensible test authorizer. It does not attest installed native projection admission or preview latency.",
+    "The register subcase is a prior-transaction replay; initial writes are in the preserved fixture. Abort and asynchronous authority coverage remain in the unchanged contract file.",
+    "All C18 loading/lazy children, proof children, G26 controls, original UI request and global limits remain unchanged.",
+    "Actual final C613, final driver and runtime/Release qualification remain pending. No focal or Analytics result substitutes for them."
+  ],
+  "actions": {
+    "newTreeCommitRefRun": false,
+    "newOriginalAcquisition": false,
+    "repositoryCodeExecuted": false
+  }
+}

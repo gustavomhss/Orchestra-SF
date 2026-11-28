@@ -1,0 +1,71 @@
+{
+  "schema": "sf613-d28-historical-receipt-field-binding-v1",
+  "status": "DOCUMENTARY_ONLY_NO_EXECUTABLE_BINDING",
+  "preimage": {
+    "gitSha": "094468973ff9ff14121c424d6c7d60e01e4d6e26",
+    "bytes": 23358,
+    "sha256": "18e67d0192397a89bf655dc8a5eedb23916d4ac07eeb724e937858c144ac9d47",
+    "lf": 619
+  },
+  "postimage": {
+    "gitSha": "b980dfc157b4b5fbe8c70cf7e324beca63f7a281",
+    "bytes": 24043,
+    "sha256": "c786586834c007c956939eb07f283b9c14a3c84e51c19494d7451e4183350123",
+    "lf": 628
+  },
+  "field": "historicalC19Focal.receiptLocator",
+  "before": null,
+  "after": {
+    "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+    "bytes": 103238,
+    "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e",
+    "lf": 1982,
+    "status": "CLOSED_FOCAL_PASS_ONLY",
+    "scope": "Historical scoped focal46093171031/1 only; no final C613, D28, Analytics, UI6 or Release qualification is transferred.",
+    "availabilityNote": "The locator-unavailable sentence in provenance describes the prior094468973ff9ff14121c424d6c7d60e01e4d6e26 cut. This field supplies the current historical receipt binding.",
+    "authenticatedFrom": "Preserved Git copy; exact Git SHA, UTF-8 byte count and SHA256 checked by this writer."
+  },
+  "literalAnchor": {
+    "before": "    \"receiptLocator\": null,",
+    "after": "    \"receiptLocator\": {\n      \"gitBlob\": \"c5a95b9191392d8da949adadd44aedf8cf3f9ce1\",\n      \"bytes\": 103238,\n      \"sha256\": \"58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e\",\n      \"lf\": 1982,\n      \"status\": \"CLOSED_FOCAL_PASS_ONLY\",\n      \"scope\": \"Historical scoped focal46093171031/1 only; no final C613, D28, Analytics, UI6 or Release qualification is transferred.\",\n      \"availabilityNote\": \"The locator-unavailable sentence in provenance describes the prior094468973ff9ff14121c424d6c7d60e01e4d6e26 cut. This field supplies the current historical receipt binding.\",\n      \"authenticatedFrom\": \"Preserved Git copy; exact Git SHA, UTF-8 byte count and SHA256 checked by this writer.\"\n    },",
+    "occurrencesBefore": 1,
+    "occurrencesAfter": 1
+  },
+  "verification": {
+    "forwardExact": true,
+    "inverseExact": true,
+    "allOtherFieldsAndBytesLiteral": true,
+    "gitReceiptAuthenticated": {
+      "gitSha": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+      "bytes": 103238,
+      "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e",
+      "lf": 1982
+    },
+    "historicalRunAndSourceMatch": true,
+    "rootChecks": 36,
+    "peerChecks": 53,
+    "reportedFunctional": "15/2103",
+    "reportedOuter": "7/34"
+  },
+  "unchanged": {
+    "wrapper": "30178d52800afdf6c262e792790d52351b10c5c4",
+    "bounds": "9880ca8f5afb893043a339ba816c4bb6177e9435",
+    "wrapperDerivation": "bb46f3e0300e59646d11e9e7fe727b624a1a8e5e",
+    "wrapperDiff": "b0a96101fadce90d6bc5454ae001e4b03ae265d4",
+    "envelope": "26fe67808cf872c611127a7f46838074604fe690",
+    "finalizer": "9e423560670f8452eb95ebff92630f202df06a8f",
+    "workflow": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+    "fourFinalBindings": "UNBOUND",
+    "futureResults": "UNCHANGED_AND_PENDING"
+  },
+  "limits": "Only the historical receipt locator is filled. Its availability note treats the old provenance sentence as the original manuscript cut; no other field or previously reported result is rewritten.",
+  "actions": {
+    "newTrees": 0,
+    "newCommits": 0,
+    "newRefs": 0,
+    "newRuns": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecution": false
+  }
+}

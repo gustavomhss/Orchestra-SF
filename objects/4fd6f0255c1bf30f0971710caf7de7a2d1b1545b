@@ -1,0 +1,436 @@
+{
+  "schema": "sf613-c19-focal-carrier-derivation-v1",
+  "status": "STATIC_PROPOSAL_SOURCE_TREE_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+    "bytes": 12024,
+    "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+    "lf": 182
+  },
+  "output": {
+    "git": "27ee729c20d3d4f2bf4b5db7df05c013d25b4420",
+    "bytes": 11845,
+    "sha256": "cfb1187a86629be89fb437c156a70782e5c4125c391a0d3bd63dd9b326729e58",
+    "lf": 182,
+    "readback": true
+  },
+  "operations": [
+    {
+      "id": "source-sentinel",
+      "preimage": "const source = \"455c02a7a05a6dd3262ae15b184419897366fde4\"",
+      "postimage": "const source = \"__C19_SOURCE_SHA__\"",
+      "input": {
+        "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "822cf6a96913054c017028f2bf72d5333f5a17c1",
+        "bytes": 57,
+        "sha256": "6c0f9f635f4138b6016305827057f6cf5575200d48a2b98b473a14023c015a91",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "postimageIdentity": {
+        "git": "4d5d8321502f79adc896641a507c940959e6c895",
+        "bytes": 35,
+        "sha256": "643ce579ab969db21f9ad5b3018805367d13e2e7cd734bbf6d8059a6d1ea3ce2",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "output": {
+        "git": "b74dad6a5a0010f30bf1e21520dd470584c4bbf2",
+        "bytes": 12002,
+        "sha256": "4b44ede76800c1f46d0e23d7ac21f73de1bd7e03e4d210238f9b1903eccd6b31",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "tree-sentinel",
+      "preimage": "const sourceTree = \"ae1c0977057e45853f3dc240140e5f221057f49d\"",
+      "postimage": "const sourceTree = \"__C19_SOURCE_TREE__\"",
+      "input": {
+        "git": "b74dad6a5a0010f30bf1e21520dd470584c4bbf2",
+        "bytes": 12002,
+        "sha256": "4b44ede76800c1f46d0e23d7ac21f73de1bd7e03e4d210238f9b1903eccd6b31",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "3f7160b02cfb3ca77833b9942b1cd10e7950a39a",
+        "bytes": 61,
+        "sha256": "2f73a5d1164070dafc18f37dbb79a2cd4d603a7c9306040069be42a507a1a16c",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "postimageIdentity": {
+        "git": "cec057757c7ff1873b7c5003896f800a38f24981",
+        "bytes": 40,
+        "sha256": "8fb8a31209cfd529dfa944b0bf7ed178f3c6c4f9fdc95b93e98c13bccdd95827",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "output": {
+        "git": "34161f3c722e12263d7f666211fde176e64fc770",
+        "bytes": 11981,
+        "sha256": "f28aaf819001778eb21f6db89abdd8b5d3ef8483374364d852f2779cc22768b8",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "binding-error-label",
+      "preimage": "C18 source and tree must be bound to reviewed Git objects before execution",
+      "postimage": "C19 source and tree must be bound to reviewed Git objects before execution",
+      "input": {
+        "git": "34161f3c722e12263d7f666211fde176e64fc770",
+        "bytes": 11981,
+        "sha256": "f28aaf819001778eb21f6db89abdd8b5d3ef8483374364d852f2779cc22768b8",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "fefe529e23dbb93ddb06534ad4e2d58e90d03445",
+        "bytes": 74,
+        "sha256": "5566461a943ba2b4e19d1b07f7946457c14a53635691ae99ba6e3f1f7c87a228",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "postimageIdentity": {
+        "git": "8f0345ae6d46bcd6f77670f2babdd8c697619200",
+        "bytes": 74,
+        "sha256": "bb19b6d9b66da1d6613f76af2d95e2970206eac288295b2148cdf1d52e9dcff2",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "output": {
+        "git": "906824a8fe6355fbc20aafd51c5690337905ade1",
+        "bytes": 11981,
+        "sha256": "10f3b5d0b4adfc89e5d32ecf1d213c434d23bd714ed540f836a566d58ab6632a",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "verification-label",
+      "preimage": "sf613-c18-captured-context-identity-focal",
+      "postimage": "sf613-c19-portfolio-cases-focal",
+      "input": {
+        "git": "906824a8fe6355fbc20aafd51c5690337905ade1",
+        "bytes": 11981,
+        "sha256": "10f3b5d0b4adfc89e5d32ecf1d213c434d23bd714ed540f836a566d58ab6632a",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "c0aa3a4349740773f7cbc2b93f8966725121e736",
+        "bytes": 41,
+        "sha256": "73d12f1efe3650ab9cb0ea939a3927ba166b7b64fa23e201d6574dc8bc9d981a",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "postimageIdentity": {
+        "git": "f898369f5ae76f3ef27c6e0b77350aa12cb1d8f0",
+        "bytes": 31,
+        "sha256": "4f0ab822dec8ee074d04ed7a33dab3b568668badcbb071d591d2d51c12e13206",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "output": {
+        "git": "7057188605001301b8ac6898eecdecfa4de93165",
+        "bytes": 11971,
+        "sha256": "18b972c33f923e0a3acf1132d644957e2b4cbdca652206d8d40602fcccc24ef5",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "selection-metadata",
+      "preimage": "  process.stdout.write(JSON.stringify({ capturedContextIdentityManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 16, productDeltaPaths: 1, candidateDeltaPaths: 3,\n    deltaBase: \"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\n    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,\n    expectedTestDeclarations: 39, preservedTestDeclarations: 12, newlySelectedExistingTestDeclarations: 26, addedTestDeclarations: 1,\n    expectedControlReports: 9, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"reviewed captured-context identity change with preserved canonical fallback, whole-file capture regressions and an isolated lazy-capture control; clean C17 composition remains selected\",\n    assertions: \"C13/C14/C15/C16/C17 controls remain literal; capture selection includes 15 original direct cases, 11 original loading modes and one C18 case with eight declared oracles; no latency or current Analytics qualification\",\n    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    captureControlsMs: { preservedTests: 26, addedTests: 1, selectedTests: 27, inheritedTimeoutsUnchanged: true, addedBunPerTest: 10000, loadingChildren: 11, addedChildren: 1, childProcess: 3000, process: 180000, parent: 240000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "postimage": "  process.stdout.write(JSON.stringify({ portfolioCasesManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 15, productDeltaPaths: 1, candidateDeltaPaths: 2,\n    deltaBase: \"455c02a7a05a6dd3262ae15b184419897366fde4\",\n    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },\n    expectedControlReports: 6, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"explicit complete-cases declarations at portfolio read, inspect and register; original callback bodies, lookup order and mixed reads preserved\",\n    assertions: \"whole-file cases contract, C08 projection and Portfolio consumer controls; effects outside the declared cases graph are excluded by contract; observed test and assertion totals require the actual footers\",\n    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "input": {
+        "git": "7057188605001301b8ac6898eecdecfa4de93165",
+        "bytes": 11971,
+        "sha256": "18b972c33f923e0a3acf1132d644957e2b4cbdca652206d8d40602fcccc24ef5",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "a5e317bd5bef29ea84b72d53e47f4e3971da1f05",
+        "bytes": 1913,
+        "sha256": "2ba64769be3e031793349ae1eea83c38fe379384621e36bb059ba4770b914f42",
+        "lf": 15,
+        "endsWithLF": true
+      },
+      "postimageIdentity": {
+        "git": "849a6e1d28b4ae36cffad4efa38237dc961cf646",
+        "bytes": 1806,
+        "sha256": "287a1f7c34f9ecb5f5bb0693e55ae401b46cbe8c63421132bdabb5b7c4f7c2cf",
+        "lf": 15,
+        "endsWithLF": true
+      },
+      "output": {
+        "git": "94f629b27dbd57ec4536ee6927fd68126b15a699",
+        "bytes": 11864,
+        "sha256": "f527cb793bed07bc484d720ef8166915e57dd6610fa9d6765de1d3e600f86383",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "working-pins",
+      "preimage": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"1017609000bdbdb39fc0510b045dc6dfde371faf\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"b7de9404461591ce0162d496ec917a47fb72a479\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts\",\"8b01895b0f3b1623646d14a82adb66bf13ca841b\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"5fc0028474aa52c148a30c093d39bc9a471f9a24\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"5b453e1672aa98616e814ac64900517d1ae4f60a\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"39e6da84a3dd815721484affaf8315731ded073b\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"6bef21db9129db064b018f5f0bf632306e3a16ec\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"11661b32f4dc782558b39902c0f396145cbe8a4a\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts\",\"0b9b7b786ab1c327104f25b9945aa79e9b857c03\"],\n    [\"apps/cli/test/fixture/sucafina-captured-context-loading.ts\",\"ecd3af6b2d0b5a41a58959855e7e93bc09522c39\"],\n    [\"apps/cli/test/fixture/sucafina-captured-context-lazy.ts\",\"b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56\"],\n  ] as const\n",
+      "postimage": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"1017609000bdbdb39fc0510b045dc6dfde371faf\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"b7de9404461591ce0162d496ec917a47fb72a479\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"5fc0028474aa52c148a30c093d39bc9a471f9a24\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"5b453e1672aa98616e814ac64900517d1ae4f60a\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"39e6da84a3dd815721484affaf8315731ded073b\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"6bef21db9129db064b018f5f0bf632306e3a16ec\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"11661b32f4dc782558b39902c0f396145cbe8a4a\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts\",\"44cff7d70fca11ca022f863d7811b9a2610186fd\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts\",\"b6938565cb8b468a454178688ea88a4ec88da9fa\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"68ae48f9a039180824f5471a1de27c0ca34be088\"],\n  ] as const\n",
+      "input": {
+        "git": "94f629b27dbd57ec4536ee6927fd68126b15a699",
+        "bytes": 11864,
+        "sha256": "f527cb793bed07bc484d720ef8166915e57dd6610fa9d6765de1d3e600f86383",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "544fdb258b18828a07515e0f454933bba6b8cb29",
+        "bytes": 1977,
+        "sha256": "8404f1118dd78e4477ccbf33a912fe086a363def88d9b6ab376e7cfc368ea9e7",
+        "lf": 18,
+        "endsWithLF": true
+      },
+      "postimageIdentity": {
+        "git": "30fcffddc018920db8e44d30b2a2de6697834dfd",
+        "bytes": 1886,
+        "sha256": "43b6af162ab81bf5d9f90e0f77e5a84e50b4610c9c92b6d6d0b4595c97cc9d9b",
+        "lf": 17,
+        "endsWithLF": true
+      },
+      "output": {
+        "git": "f7dc22491fbe9c90f4ff91a079c5c7f3f10e5e15",
+        "bytes": 11773,
+        "sha256": "0fd54040966657abe381481599a7b52f32465623728c8a61d723ab9c6b5bab61",
+        "lf": 181,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "reviewed-pins-metadata",
+      "preimage": "  process.stdout.write(JSON.stringify({ gate: \"reviewed source blobs\", source, sourceTree,\n    snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,\n    functionalProcessesLaunched: 3, expectedTestDeclarations: 39, expectedControlReports: 9 }) + \"\\n\")\n",
+      "postimage": "  process.stdout.write(JSON.stringify({ gate: \"reviewed source blobs\", source, sourceTree,\n    snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,\n    functionalProcessesLaunched: 3, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3 },\n    expectedControlReports: 6 }) + \"\\n\")\n",
+      "input": {
+        "git": "f7dc22491fbe9c90f4ff91a079c5c7f3f10e5e15",
+        "bytes": 11773,
+        "sha256": "0fd54040966657abe381481599a7b52f32465623728c8a61d723ab9c6b5bab61",
+        "lf": 181,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "aa6ddd07a95833c92092a0d8d6596d7fc72c01ea",
+        "bytes": 266,
+        "sha256": "b6ce8fb919ce80013575e823e208dc0cfde1b9b80f62310c3b9100c9fb3b4534",
+        "lf": 3,
+        "endsWithLF": true
+      },
+      "postimageIdentity": {
+        "git": "85d22965d2634dc7ffa7e7507284d9cd71e155bc",
+        "bytes": 324,
+        "sha256": "3e7268c44789b7f0c867ef377daa6eaada2fc86fe1b4a57b7f4f93d8f812fc70",
+        "lf": 4,
+        "endsWithLF": true
+      },
+      "output": {
+        "git": "6df830e5c3dad17db695095ef8d0b63aa9e47ba8",
+        "bytes": 11831,
+        "sha256": "1ba929fe801dd56467dffb66ac9865b565ac369567847cb84650e871bc5992c9",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "replace-unselected-readonly-group",
+      "preimage": "checks.live(\"CurrentChoice readonly composition preserves default and unfenced routes\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"CurrentChoice readonly composition\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/current-choice-readonly.test.ts\"], module, 360_000)\n}), 420_000)\n\n",
+      "postimage": "checks.live(\"complete cases read-set preserves original guards and late case lookups\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  yield* runCommand(\"complete cases read-set contract whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/cases-read-contract.test.ts\"], module, 120_000)\n}), 180_000)\n\n",
+      "input": {
+        "git": "6df830e5c3dad17db695095ef8d0b63aa9e47ba8",
+        "bytes": 11831,
+        "sha256": "1ba929fe801dd56467dffb66ac9865b565ac369567847cb84650e871bc5992c9",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "466104ce0684c95d1df466ce9e58b732eb35fa9d",
+        "bytes": 367,
+        "sha256": "9ab7b4fd480c95ed362c856531d98ca551082db2eec5301fba854bd1d4fb83d3",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "postimageIdentity": {
+        "git": "7c8f1b03c472e401bde8fd658de3663bba212105",
+        "bytes": 371,
+        "sha256": "646fc485a6aa660bccbb2f7a840ff754a6f7842e775878a1f29dde548814cbb6",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "output": {
+        "git": "04ffcae0fb1d75aef5ac89b2f2b719e3e7475a04",
+        "bytes": 11835,
+        "sha256": "b1487b6247a27f6f3e4667cb8f4bb35fcb6fee151a8162a24cabf8a676c2236f",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    {
+      "id": "replace-unselected-capture-group",
+      "preimage": "checks.live(\"C18 whole-file captured context identity preserves canonical fallback and lazy capture\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"C18 captured context identity whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/captured-context-identity.test.ts\"], module, 180_000)\n  expect(output).toContain(\"SF_C18_CAPTURE_LAZY \")\n}), 240_000)\n",
+      "postimage": "checks.live(\"Portfolio selection preserves its cases and preferences read contracts\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Portfolio selection cases and preferences whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\"], module, 120_000)\n  expect(output).toContain(\"SF_C19_PORTFOLIO_CASES \")\n}), 180_000)\n",
+      "input": {
+        "git": "04ffcae0fb1d75aef5ac89b2f2b719e3e7475a04",
+        "bytes": 11835,
+        "sha256": "b1487b6247a27f6f3e4667cb8f4bb35fcb6fee151a8162a24cabf8a676c2236f",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "preimageIdentity": {
+        "git": "dabc21630aefe207a6cecc5b3b9b550d5a4c7238",
+        "bytes": 454,
+        "sha256": "6dee4d1ded1fe0512eb5991a2f04192f19a902fd0e0243c60d0b26c578512816",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "postimageIdentity": {
+        "git": "1b716d262128e0c754ece993df70f8e938acf122",
+        "bytes": 464,
+        "sha256": "878c6104b8e1f69ef99beac0ad2cbbbf4b479bff05ae390978800bd1c2e9fb48",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "output": {
+        "git": "27ee729c20d3d4f2bf4b5db7df05c013d25b4420",
+        "bytes": 11845,
+        "sha256": "cfb1187a86629be89fb437c156a70782e5c4125c391a0d3bd63dd9b326729e58",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "assertions": {
+    "uniquePreimages": 9,
+    "uniquePostimages": 9,
+    "forwardExact": true,
+    "inverseExact": true,
+    "allIntermediateIdentitiesComputed": true
+  },
+  "preservedLiteralRegions": [
+    "runCommand",
+    "G3 projection whole-file",
+    "G4 CLI typecheck",
+    "G5 Sucafina typecheck",
+    "G6 actual origin/dev guards",
+    "G1 Git commands, parent/source comparison and local Git blob hashing"
+  ],
+  "replacementScope": {
+    "G2": {
+      "removed": "current-choice-readonly.test.ts",
+      "added": "cases-read-contract.test.ts",
+      "commandTimeoutMs": {
+        "before": 360000,
+        "after": 120000
+      },
+      "parentTimeoutMs": {
+        "before": 420000,
+        "after": 180000
+      }
+    },
+    "G7": {
+      "removed": "captured-context-identity.test.ts and its SF_C18_CAPTURE_LAZY prefix assertion",
+      "added": "portfolio-selection-preferences-read.test.ts and SF_C19_PORTFOLIO_CASES prefix assertion",
+      "commandTimeoutMs": {
+        "before": 180000,
+        "after": 120000
+      },
+      "parentTimeoutMs": {
+        "before": 240000,
+        "after": 180000
+      }
+    },
+    "note": "These are changes to the focal selection only. No product/test/fixture files are removed from the source."
+  },
+  "pins": {
+    "before": 16,
+    "retained": 12,
+    "removedFromCarrier": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+        "git": "0b9b7b786ab1c327104f25b9945aa79e9b857c03"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+        "git": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39"
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+        "git": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56"
+      }
+    ],
+    "addedToCarrier": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+        "git": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+        "git": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+        "git": "68ae48f9a039180824f5471a1de27c0ca34be088"
+      }
+    ],
+    "after": 15
+  },
+  "selection": {
+    "groups": 7,
+    "commands": 13,
+    "truncationFlagsRequiredFalse": 26,
+    "functionalProcesses": 3,
+    "staticDeclarationSites": {
+      "casesContract": 7,
+      "projection": 5,
+      "portfolioSelection": 3
+    },
+    "expectedReports": 6,
+    "observedFunctionalTests": null,
+    "observedAssertions": null
+  },
+  "sourceBinding": {
+    "source": "__C19_SOURCE_SHA__",
+    "tree": "__C19_SOURCE_TREE__",
+    "sourceObject": null,
+    "sourceParentExpected": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "sourceParentCheckOwner": "root Git object audit; no new command in carrier"
+  },
+  "forwardInverseMethod": "Apply all nine exact unique replacements in listed order, then replace every postimage by its preimage in reverse order; compare complete strings. Recompute Git blob SHA1, UTF8 bytes and SHA256 for each intermediate buffer.",
+  "requests": {
+    "focal": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "endsWithLF": false,
+    "originalAnalyticsRequestSelected": false
+  },
+  "authorEffects": {
+    "gitBlobsOnly": true,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsStarted": 0,
+    "repositoryCodeExecuted": false,
+    "originalActionsLogsAcquired": 0,
+    "zipAcquisitions": 0
+  },
+  "limitation": "Consumer pin is the reviewed-by-author proposal 68ae48f9a039180824f5471a1de27c0ca34be088 at this cut; independent source/control acceptance and real source binding are separate requirements. No runtime result is asserted."
+}

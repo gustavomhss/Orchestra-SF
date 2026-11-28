@@ -1,0 +1,47 @@
+{
+  "schema": "sf613-c19-focal-original-intake-context-v1",
+  "status": "TERMINAL_NEW_RUN_READY_FOR_ORIGINALS",
+  "at": "2026-11-28 01:30:38 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "authority": "9108a8732dc28f95e8dd9f8a2c35efd5aa30b31d",
+  "run": {
+    "id": 46093171031,
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "86e365fe047f86597751c7e8222011dca4b0a0af",
+    "head_branch": "ci-run-sf613c19f",
+    "path": ".github/workflows/test-ci.yml",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46093171031",
+    "created_at": "2026-11-28T01:27:05Z",
+    "updated_at": "2026-11-28T01:30:05Z"
+  },
+  "jobs": [
+    {
+      "id": 140818516840,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T01:27:08Z",
+      "completed_at": "2026-11-28T01:29:20Z",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46093171031/job/140818516840"
+    },
+    {
+      "id": 140819087676,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T01:29:57Z",
+      "completed_at": "2026-11-28T01:30:04Z",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46093171031/job/140819087676"
+    }
+  ],
+  "mainJobId": 140818516840,
+  "cleanupJobId": 140819087676,
+  "artifacts": {
+    "total_count": 0,
+    "zipGets": 0
+  },
+  "originalGetsIssued": 0,
+  "preservationBeforeParseRequired": true
+}

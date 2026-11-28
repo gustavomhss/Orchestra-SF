@@ -1,0 +1,494 @@
+{
+  "schema": "sf613-c19-analytics-execution-authority-v1",
+  "status": "READY_ONE_ORIGINAL_INSTALLED_ANALYTICS_EXECUTION",
+  "at": "2026-11-28 01:45:09 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "operator": "/root",
+  "authorization": "User mandate to finish existing #613 by reviewed integration in dev. One justified original installed Analytics execution after reviewed clean product C19 and independently accepted C19 focal. Production cutover is not authorized.",
+  "purpose": "Evaluate original portfolio preview and sensitivity deadlines on clean C19; preserve the original two installed Analytics journeys. No automatic rerun of unchanged source.",
+  "source": {
+    "commit": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "objectReceipt": {
+      "gitBlob": "d9ed0100986ff9be178d195587b50c671b2934c2",
+      "bytes": 3130,
+      "sha256": "fd21afb8d62e2eeb68180c1ffa69b598aef8f84b2f197b4f3f91d6de06706ac4",
+      "lf": 106,
+      "endsWithLF": true
+    },
+    "staticReview": {
+      "gitBlob": "f3c4154ddc93d049770b8669d68a9a53fada8653",
+      "bytes": 10234,
+      "sha256": "382a0022e5dea3de13f1e1e207ca73b0afec8417093c357e0da5f18b79e2e0ad",
+      "lf": 345,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "tree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "delta": "1A100644 .ci-run.json",
+    "treeAudit": {
+      "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "after": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+          "after": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c"
+        }
+      ],
+      "literalSiblings": 45,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+            "size": 295,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+          }
+        }
+      ]
+    },
+    "readbackVerified": true
+  },
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "firstPreviewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "pins": [
+      {
+        "bytes": 56661,
+        "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6"
+      },
+      {
+        "bytes": 4384,
+        "gitBlob": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "sha256": "cccd36594aa600935e3b0ca310bdf7cbb4eaf26e66147d22aee689fb206598ac"
+      },
+      {
+        "bytes": 21102,
+        "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6"
+      }
+    ],
+    "unchangedSubtrees": [
+      {
+        "path": "packages",
+        "expected": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "actual": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+        "type": "tree",
+        "present": true,
+        "verified": true,
+        "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+      },
+      {
+        "path": ".github",
+        "expected": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "actual": "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "type": "tree",
+        "present": true,
+        "verified": true,
+        "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+      }
+    ],
+    "observer": false,
+    "profiler": false,
+    "originalTimeoutsUnchanged": true,
+    "workersRetriesAndRepeatEnforcedBy": "script/test-ci-request.ts 5007e48270b80c83eb719d35cec9e6343206a195 playwrightArgs overrides defaults"
+  },
+  "sourcePinChecks": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "expected": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "actual": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "expected": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "actual": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "expected": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "actual": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "expected": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "actual": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "expected": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "actual": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "expected": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "actual": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "expected": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "actual": "9d2351aaed9549f876a072ced264d9429924ab61",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "expected": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "actual": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "type": "blob",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": "packages",
+      "expected": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+      "actual": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+      "type": "tree",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    },
+    {
+      "path": ".github",
+      "expected": "7663f4b9fe0fdee867137b9e719f29058339317d",
+      "actual": "7663f4b9fe0fdee867137b9e719f29058339317d",
+      "type": "tree",
+      "present": true,
+      "verified": true,
+      "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+    }
+  ],
+  "snapshotPinsIndependentlyVerified": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_C19_ORIGINAL_ANALYTICS_PREFLIGHT",
+    "receivedAt": "2026-11-28 01:45:09 UTC",
+    "documentaryFocalChecks": 15,
+    "objectChecks": 24,
+    "selectionChecks": 12,
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "snapshot": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+    "snapshotTree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+    "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "treeAudit": {
+      "pairs": 1,
+      "literalSiblings": 45,
+      "delta": "1A .ci-run.json"
+    },
+    "pinsVerifiedInSnapshot": 10,
+    "originalSpecConfigHelperWorkflowRunnersAndCleanBridges": true,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutSeconds": [
+      780,
+      660
+    ],
+    "previewSeconds": 60,
+    "sensitivitySeconds": 120,
+    "jobMinutes": 45,
+    "observer": false,
+    "profiler": false,
+    "noRuntimeClaim": true,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "focalPrerequisite": {
+    "run": 46093171031,
+    "attempt": 1,
+    "snapshot": "86e365fe047f86597751c7e8222011dca4b0a0af",
+    "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+    "tree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+    "status": "CLOSED_FOCAL_PASS_ONLY",
+    "receipt": {
+      "gitBlob": "c5a95b9191392d8da949adadd44aedf8cf3f9ce1",
+      "bytes": 103238,
+      "sha256": "58dd2a5f41bee6b76cc53fcb61de59607ffd8e6953919fb9ba249e950eb7f42e",
+      "lf": 1982,
+      "endsWithLF": true
+    },
+    "reportUnion": {
+      "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+      "bytes": 9251,
+      "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+      "lf": 6,
+      "endsWithLF": true
+    },
+    "rootChecks": 36,
+    "peerChecks": 53,
+    "functional": {
+      "pass": 15,
+      "assertions": 2103
+    },
+    "outer": {
+      "pass": 7,
+      "assertions": 34
+    },
+    "originalsClosed": true
+  },
+  "review": {
+    "sourceStatic": {
+      "reviewer": "/root/teams_product",
+      "status": "PASS_STATIC_SOURCE_PACKAGE",
+      "manifest": {
+        "gitBlob": "1fe5ee9573055f405d10dc27450b3783e2275f29",
+        "bytes": 13382,
+        "sha256": "3d645391cd7a93e3864147a1bf26c6c92cd1ead37ac86627d7d323fea168082f",
+        "lf": 268,
+        "endsWithLF": true
+      },
+      "source": {
+        "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd",
+        "bytes": 14108,
+        "sha256": "eaf3eaeebe61b82c8c2771ccc1054cbdd245711b6c0a0adb3997a371603915e9",
+        "lf": 114,
+        "endsWithLF": true
+      },
+      "consumer": {
+        "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088",
+        "bytes": 34160,
+        "sha256": "2ee44ee248dc66b06f1047de4b303e5931bd87db06cca4555ca2734c7f781b5c",
+        "lf": 587,
+        "endsWithLF": true
+      },
+      "supports": [
+        "4ba94f80c6db4dc5f57f0687e0a9f6cfdfc61316",
+        "db0e0e216fed7e30a3c7464d6d2b404f4f819168",
+        "ce71ce54a3e27b112ff3c089365bfb7404678037"
+      ],
+      "sourceDelta": "2M",
+      "hunks": 6,
+      "added": 187,
+      "removed": 5,
+      "exactAnchorsForwardInverse": 6,
+      "exactFullDiffForwardInverse": true,
+      "sourceAwaits": 30,
+      "literalConsumerPrefixLf": 407,
+      "expectedReportModelBytes": 150,
+      "findings": [],
+      "runtimeResult": null
+    },
+    "focalReception": {
+      "reviewer": "/root/teams_product",
+      "status": "FOCAL_PASS_ONLY",
+      "reportedIndependentChecks": 53,
+      "findings": [],
+      "authenticatedMain": {
+        "gitBlob": "ca9ae3ecf71c5047c9dc89db408601b59ff37981",
+        "bytes": 105958,
+        "sha256": "ad44479f38ee07cfce07f8994ea37d4271d4acc8dec123950ee37ac35a0908de",
+        "lf": 880,
+        "endsWithLF": true
+      },
+      "authenticatedCleanup": {
+        "gitBlob": "1a9a9a1b6f550aa492656abf04ed45d85da6245e",
+        "bytes": 2281,
+        "sha256": "c17c07e887a6539c5d7bfd2d432c09d4e800a2510eb3e04f6c56088804f85be0",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "manifestAndContextAuthenticated": true,
+      "identity": {
+        "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+        "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+        "snapshot": "86e365fe047f86597751c7e8222011dca4b0a0af",
+        "run": 46093171031,
+        "attempt": 1
+      },
+      "counts": {
+        "functionalTests": 15,
+        "functionalAssertions": 2103,
+        "outerTests": 7,
+        "outerAssertions": 34,
+        "commands": 13,
+        "falseTruncationFlags": 26,
+        "sourcePins": 15,
+        "reports": 6
+      },
+      "reportUnionCalculated": {
+        "gitBlob": "6b59ebdc105a00b9053854139dadfd10ba4e0551",
+        "bytes": 9251,
+        "sha256": "1c6d0d556d4b46cb752095b58854dc9828f5eacf08205c2dd5b1a3f1974327bb",
+        "lf": 6,
+        "endsWithLF": true
+      },
+      "reportUnionCreatedByPeer": false,
+      "guards": {
+        "rules": 78,
+        "files": 857,
+        "warnings": 40,
+        "errors": 0,
+        "approved": [],
+        "bootstrap": false
+      },
+      "omni": {
+        "line": 851,
+        "nonce": "c7cec802f1c4ea9ae2a636db8a2bed8d",
+        "declared": 7,
+        "file": "test/sucafina-proof-verification.test.ts",
+        "spawned": 13,
+        "delegated": 0,
+        "verdict": "pass"
+      },
+      "runtime": "1.3.14+0d9b296af",
+      "limits": "Focal only; no Analytics, installed deadline, Release or performance acceptance; no original or ZIP acquired by peer."
+    },
+    "originalAnalyticsPreflight": {
+      "reviewer": "/root/teams_product",
+      "status": "ACK_C19_ORIGINAL_ANALYTICS_PREFLIGHT",
+      "receivedAt": "2026-11-28 01:45:09 UTC",
+      "documentaryFocalChecks": 15,
+      "objectChecks": 24,
+      "selectionChecks": 12,
+      "source": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "sourceTree": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+      "snapshot": "ac5274a52bed83db4c86c1cf2ea53d36b96aa84b",
+      "snapshotTree": "5c7de31ad8a10c4b41e5e0a839417eb43198fd0c",
+      "soleParent": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+      "treeAudit": {
+        "pairs": 1,
+        "literalSiblings": 45,
+        "delta": "1A .ci-run.json"
+      },
+      "pinsVerifiedInSnapshot": 10,
+      "originalSpecConfigHelperWorkflowRunnersAndCleanBridges": true,
+      "workers": 1,
+      "retries": 0,
+      "repeatEach": 1,
+      "caseTimeoutSeconds": [
+        780,
+        660
+      ],
+      "previewSeconds": 60,
+      "sensitivitySeconds": 120,
+      "jobMinutes": 45,
+      "observer": false,
+      "profiler": false,
+      "noRuntimeClaim": true,
+      "originalGets": 0,
+      "zipGets": 0
+    }
+  },
+  "preflight": {
+    "at": "2026-11-28 01:45:09 UTC",
+    "branch": "ci-run-sf613c19a",
+    "branchAbsent": true,
+    "priorRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "7685a790349b7a3b9c3e68cfe56b96fd4963b762"
+    },
+    "maximumActivations": 1,
+    "automaticReruns": false,
+    "run": null,
+    "jobs": null
+  },
+  "intake": {
+    "onlyAfterRunAndBothJobsTerminal": true,
+    "originalMainGets": 1,
+    "originalCleanupGets": 1,
+    "preserveCompleteOriginalBeforeInterpretation": true,
+    "literalReadbackBeforeParse": true,
+    "artifactsFirstAction": "metadata only",
+    "originalZip": "Only upon concrete need with a separately reviewed bounded reader for the actual artifact",
+    "auditZipDownloads": 0,
+    "automaticRetries": false,
+    "agentsAcquireOriginals": false
+  },
+  "priorNegativeAnalytics": {
+    "cleanC18Run": 46075966101,
+    "diagnosticE13Run": 46086157237,
+    "status": "First portfolio preview timed out at original 60s, second BI case passed; 12/15 historical and 0 new areas preserved."
+  },
+  "qualification": {
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "currentInstalledAnalytics": false,
+    "final613Candidate": false,
+    "finalGoLiveQualified": false,
+    "productionAuthorized": false
+  },
+  "limits": [
+    "C19 opts three portfolio selection cases callbacks into the existing explicit cases read-set contract; errors/effects solely outside the reachable cases graph are excluded, not globally full-state-clone equivalent.",
+    "Focal success establishes technical controls; no performance or installed UI acceptance transfers.",
+    "Source and snapshot contain no diagnostic E13 overlay or profiler. Original request, selection and deadlines are unchanged.",
+    "Every result is bound to the actual snapshot and clean source, not a future final candidate.",
+    "Final #613 UI6, D28, independent review, same-head green CI and dev merge remain outstanding, as do the integrated Migration/Release candidate and go-live gates."
+  ]
+}

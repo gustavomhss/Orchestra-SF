@@ -1,5 +1,90 @@
 # Evidências do Orchestra-SF — arquivo do #613
 
+Este sexto incremento documental preserva o R5 publicado e acrescenta C19, seu focal fechado, o Analytics original negativo, o pacote D28 estático e os recibos operacionais no alcance registrado. A proposta contém somente este README, `index.json` e blobs em `objects/`. A raiz ainda precisa revisar e publicar a árvore documental. Não há candidato final C613, nova qualificação de área, aceite de Release ou autorização de produção.
+
+## Conteúdo e preservação
+
+O [index.json](index.json) relaciona **607 blobs reais**, **63.318.211 B** em `objects/<git-sha>`, **683 memberships**, **40 grupos** e **54 streams**, com **199 referências a partes**. O incremento acrescenta **72 objetos / 6.666.802 B**, **99 memberships**, **cinco grupos** e **seis streams / 22 referências a partes**. Os **535 objetos, 584 memberships, 35 grupos e 48 streams** do R5 permanecem na ordem original; seus metadados e os prefixos de memberships são literais.
+
+O [catálogo R6](objects/5a51ed2d66b8f442559ef973a07ffa54064d31fc) enumera **92 blobs distintos / 7.280.964 B** e **98 memberships**. Desses, **71 blobs / 6.582.528 B** são novos para o arquivo; **21 blobs** já estavam no R5 e recebem apenas memberships adicionais. Os 71 corpos novos e quatro corpos reutilizados foram rehashados neste incremento. Os outros 17 reutilizados conservam a autenticação do R5, cujo índice foi cotejado com todos os 535 objetos da árvore publicada. Não se alega nova aquisição dos 535 corpos históricos. O catálogo acrescenta seus próprios **84.274 B** como objeto real no grupo de controle do arquivo, sem listar a si mesmo em seu conteúdo.
+
+| Grupo acrescentado | Blobs distintos no grupo / memberships |
+| --- | ---: |
+| C19-source | 12 |
+| C19-focal | 35 |
+| D28-final-qualification | 14 |
+| C19-analytics | 31 |
+| R5-archive-control | 7 |
+
+Um mesmo blob pode pertencer a mais de um grupo; os totais globais deduplicam pelo SHA Git. O grupo `R5-archive-control` conserva o [índice R5](objects/2f80c037c70071b8bb756f44439047b1e5ac50d0), o [README R5](objects/8e76aea8b7c6881d648ce8df6e64455c6bc692bd), o [manifesto R5](objects/c408b4f69264f9816d44d921f855263e0c816b7b), o [review da raiz](objects/1c8c5052ee74efd0678211a7b7cde33126f3e173), o [recibo de publicação](objects/a6e5f0b6f22d93079b85a667fdb6e0611faa8456), o catálogo de entrada anterior já arquivado e o catálogo atual de R6. O README R5 inteiro também está preservado no bloco histórico ao final. Os rótulos históricos R5/R6/R7 de documentos de go-live não são renomeados por esta revisão do arquivo.
+
+## Resultado C19 e limite de qualificação
+
+A fonte limpa C19 é `7393cd010086f4a12d61ae9bb5db13534bd18aa0`, árvore `31954cfe7df07455d8b137f6f4f1e4d94a316fc3`, pai único S18 `455c02a7a05a6dd3262ae15b184419897366fde4`. Seu [manifesto de fonte](objects/1fe5ee9573055f405d10dc27450b3783e2275f29) e [review](objects/f3c4154ddc93d049770b8669d68a9a53fada8653) registram duas modificações: os três opt-ins ao contrato existente de leitura do grafo cases em Portfolio selection e o controle de consumidor correspondente. O contrato é um read-set explícito; não promete equivalência de efeitos exclusivos de namespaces não alcançados. As chamadas e verificações preservadas permanecem documentadas no pacote.
+
+| Evidência | Resultado recebido | Alcance |
+| --- | --- | --- |
+| Focal 46093171031/1 | **15 casos / 2.103 assertions**; sete grupos externos / 34 assertions; 13 comandos, 26 flags de truncamento falsas, 15 pins e seis reports | FOCAL_PASS_ONLY, com 36 cotejos da raiz e 53 independentes. |
+| Analytics original 46094695101/1 | **Um caso falhou e um passou**, duração reportada de 9,3 min; primeiro preview com timeout original de **60.000 ms**, spec **72:32** | UI42 teve seis capturas parciais; UI43/UI44 não foram alcançadas. BI passou apenas nesse snapshot. |
+| D28 | Revisão estática, quatro bindings finais **UNBOUND** | Nenhuma execução ou qualificação de composição final. |
+| Áreas e produção | **12/15 áreas históricas**, **zero novas** | Nenhum ganho de desempenho demonstrado, C613 final, tar verificado, Release, Migração ou go-live estabelecido. |
+
+O [recibo focal](objects/c5a95b9191392d8da949adadd44aedf8cf3f9ce1) preserva as populações **7/843** do contrato cases, **5/757** da projeção C08 e **3/503** do consumidor Portfolio. O novo report `SF_C19_PORTFOLIO_CASES` recebeu **6/9/6/3/1** nos cinco contadores documentados. A fixture do consumidor usa autorização opaca: seu resultado não mede materialização física estreita nem benefício temporal. As matrizes genéricas e controles antigos permanecem separados.
+
+O [recibo Analytics final](objects/86a38860ee558c6c21d2356a9f7770209d5b986a) e o [parecer independente](objects/08328f984a266a8ebe356b4220ea7c82694bdff2) fecharam **28 + 41 cotejos de integridade**, com resultado negativo de produto. O único POST `decision-portfolio-preview` de sequência 3 está registrado às `2026-11-28T01:52:13.6911930Z`, com vínculo `exact`, sem resposta correspondente nos marcadores recebidos.
+
+A história anterior de results é preservada como observada: sequência 1 inclui `native-request-failed` e HTTP 200 com `response-body-unavailable`; sequência 2 termina em HTTP 200/`ok`/`array`. Esses registros não são a requisição de preview. Não estabelecem a causa do timeout. BI recebeu **40 capturas** — sete UI45 e 33 UI46 — e as leituras originais concluíram no snapshot atual. Esse resultado não transfere aceite para outra composição.
+
+O Analytics executou `ac5274a52bed83db4c86c1cf2ea53d36b96aa84b`, árvore `5c7de31ad8a10c4b41e5e0a839417eb43198fd0c`, filho único de S19 com apenas o request original de **295 B sem LF**. Spec, seed, duas jornadas, um worker, retry zero, repeat um, preview de 60 s e sensibilidade de 120 s foram mantidos. Não houve overlay E13, profiler ou novo observador nesse source.
+
+## D28 permanece paramétrico
+
+O [manifesto D28 vigente](objects/b980dfc157b4b5fbe8c70cf7e324beca63f7a281) conserva **26 grupos, 32 sites sintáticos, 37 comandos efetivos e 74 flags de truncamento**, além dos seis filhos de prova separados. Os quatro bindings de source, tree e identidades do wrapper permanecem `UNBOUND`; os totais funcionais e de reports da futura seleção completa permanecem `null`.
+
+G23 usa o título sem número fixo para casos e preferências, com o controle `68ae48f9a039180824f5471a1de27c0ca34be088`: **três declarações**, deadlines Bun de **15/15/20 s**, nominal de 50 s, processo de 120 s e pai de 180 s. Envelope, finalizer, workflow, argv e gates continuam literais. O [review da raiz](objects/27f39a06e070ac81100c511a9326de6048fd2d85) contém 37 cotejos e o [review independente](objects/3f9da09feb817f8e5f3b713f2f86cc8d66a28e44), 75.
+
+O [manifesto anterior](objects/094468973ff9ff14121c424d6c7d60e01e4d6e26), com locator de receipt ainda nulo, permanece histórico. A [derivação de campo](objects/6b10fc47e5df6376889be69cd93ed2297bfccace) liga somente o recibo focal fechado. Nenhum número do focal foi copiado para resultados futuros de D28, e S19 não é declarado candidato final.
+
+## Streams reais e exclusões
+
+| Stream C19 acrescentado | Partes reais | Bytes |
+| --- | ---: | ---: |
+| Focal main | 1 | 105.958 |
+| Focal cleanup | 1 | 2.281 |
+| Focal reports | 1 | 9.251 |
+| Analytics main | 17 | 4.866.399 |
+| Analytics cleanup | 1 | 2.281 |
+| Analytics markers | 1 | 34.316 |
+
+As seis composições foram autenticadas a partir dos blobs Git efetivos, com ordem, LF e BOM preservados. A [união focal](objects/6b59ebdc105a00b9053854139dadfd10ba4e0551) contém seis reports. A [união Analytics](objects/fa71c102ec320dfe7baf497af583db07bd7344ac) contém **97 linhas: 45 SOURCE, 46 CAPTURE, cinco DIAGNOSTICS e um SCOPE**. A extração das uniões remove somente o transporte de timestamp/ANSI; os payloads não são reserializados. Os originais permanecem intactos.
+
+O [manifesto do main Analytics](objects/d48e9674a25b694c17db6c770c0116ec8c2ff1bb) lista as 17 partes reais. O inteiro recomposto tem SHA256 `23bb1910d623ebbdc27ba01ff0faf3d055fff01b6b90fc8a89364345ed109c2a`, 1.976 LF e BOM nos offsets **0, 2.104.899 e 4.224.262**. Seu Git SHA `d5dacd1ea8b65419de9a47eef69134ab32c8471f` é **somente calculado**; não foi adquirido ou criado e não está em `objects/`.
+
+O artefato **15242603880**, 45.814.109 B, SHA256 `bccc5ec8ff3eb6c7c57f34211fa59bbf691d072af0faf115f5f1ed3857b47392`, é **metadata only**, com **zero aquisições ZIP**. Este incremento não contém runtime JSON, PNG, trace, membros do ZIP ou prova de CRC desses membros. O request UI6 de 390 B permanece texto/identidade calculada dentro do checkpoint; não é objeto de request nem execução final.
+
+## Cortes operacionais e checkpoints
+
+O [checkpoint anterior](objects/45304b589465dfdaa584f9783aeef13d1dd6ae47) conserva o corte em progresso. O [checkpoint posterior](objects/8863b12b4c3b52d26ea43844986c7857faa19b95) registra todos os originais até C19 fechados, incluindo os dois GETs emitidos e os manifestos/recibo atuais; o receiver de aquisição encerrado foi omitido. Helpers textuais nesses checkpoints são dados históricos e não autorizam reexecução ou nova aquisição.
+
+A [observação operacional final](objects/8283eabd80da4413a0e3fc720ae3c8e1be281e4d) tem corte de acesso em **01:49:46 UTC**. Ela preserva a autorização prévia do host e o caminho do operador Codex local; registra falta de confirmações/rota disponível nesse corte e reservas G08/G10 pendentes. Não declara outage global. O campo de zero GETs é restrito à observação de acesso; os **dois originais Analytics** foram recebidos separadamente e fechados às **01:58:34 UTC**. O draft operacional `0e1e265…` não foi incluído.
+
+E14 é posterior e fica fora do corpus deste incremento. Sua menção nos recibos/checkpoints registra apenas autoria futura; não adiciona fonte, controle, execução ou autorização ao arquivo R6.
+
+## Retenção e publicação proposta
+
+A árvore documental tem apenas `README.md`, `index.json` e `objects/<sha>`, todos os arquivos em modo `100644`. Os pais planejados, nesta ordem, são:
+
+1. R5 publicado: `7685a790349b7a3b9c3e68cfe56b96fd4963b762`, árvore `4cee3a5483cbeb8911d242e16b86c418a7bc0a4c`.
+2. Focal C19 executado: `86e365fe047f86597751c7e8222011dca4b0a0af`, árvore `e8bd146e3fa65de60e1b4f93ddd41950fc4c59a2`.
+3. Analytics C19 executado: `ac5274a52bed83db4c86c1cf2ea53d36b96aa84b`, árvore `5c7de31ad8a10c4b41e5e0a839417eb43198fd0c`.
+
+Os dois últimos são filhos distintos de S19; a cadeia já retém S18 e as fontes anteriores. Commits e árvores são identidades de retenção, não entradas de blob. A raiz deve revalidar a ref esperada R5 antes de atualizar `sf613-evidence` sem force. Este autor cria somente catálogo, índice, README e manifesto propostos; não cria árvore, commit, ref, workflow, run, alteração de produto, aquisição original ou ZIP. As refs de produto e o ledger histórico permanecem separados.
+
+<details>
+<summary>README R5 publicado — histórico literal</summary>
+
+# Evidências do Orchestra-SF — arquivo do #613
+
 Este quinto incremento documental preserva R4 e acrescenta o corpus E13 fechado e enumerado: fonte diagnóstica e sua revisão, controles, focal aprovado, Analytics original negativo, logs completos preservados em Git, uniões derivadas e os recibos finais de recepção. A proposta contém somente este README, o índice e os blobs em `objects/`. A raiz ainda precisa revisar e publicar os objetos Git do arquivo. Não há autorização de nova execução, alteração de produto, candidato final ou produção.
 
 ## Conteúdo e preservação
@@ -272,6 +357,8 @@ O índice distingue referências históricas de evidências efetivamente incluí
 A fonte limpa C16 é `0860b3404ca54235997c4cdaee63bbe0659d5a7a`, árvore `194690fc63c26ac7feb690e44d0fea70742da88c`. Os snapshots executados são o focal `30890fcdcfd4e255185f443d128fe85ba21299ff` e a Analytics `dfa5cca0f7e20b92c23ea45897301c2327dc60ea`. A publicação do arquivo manterá esses commits como pais da cadeia documental, além dos blobs como entradas reais de árvore.
 
 Esta ref deverá ser mantida enquanto as evidências forem necessárias. Atualizações avançam a mesma cadeia sem reescrever a história. O ledger histórico `sf613-ledger`, o PR #613 e as refs de produto permanecem separados. A integração em `dev` segue pelo PR revisado; qualquer virada de produção continua exigindo o aval explícito do usuário.
+
+</details>
 
 </details>
 
