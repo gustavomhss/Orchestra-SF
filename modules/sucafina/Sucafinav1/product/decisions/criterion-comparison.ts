@@ -12,6 +12,9 @@ import { criterionRuleKey } from "./criterion-rules.ts"
 import type { createCriterionRuleRegistry } from "./criterion-rules.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
+type CriteriaChecks = Awaited<ReturnType<ReturnType<typeof createCriterionRuleRegistry>["evaluate"]>>[]
+type ObserveCriteria = (request: ScenarioCompareRequest, context: TrustedDomainContext,
+  work: () => Promise<PortResult<true>>) => Promise<PortResult<true>>
 export type ComparisonRuleProof = { criterionId: string; ruleRef: string | null; version: number | null; digest: string | null }
 export type CriterionComparisonBinding = { schema: "sf-criterion-comparison-v1"; caseRef: CaseRef; resultRef: string; resultDigest: string; request: ScenarioCompareRequest; requestDigest: string; rules: readonly ComparisonRuleProof[]; principalRef: string; accessRevision: string; policyVersion: string; createdAt: string; bindingDigest: string }
 
@@ -24,6 +27,8 @@ export function createCriterionComparisonBindings(input: {
   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   verifyBinding: (binding: CriterionComparisonBinding, result: StoredDecisionResult, context: TrustedDomainContext) => Promise<boolean>
   verifySnapshot: (snapshot: Snapshot, binding: CriterionComparisonBinding, context: TrustedDomainContext) => boolean
+  /** Canonical composition may own only the independent read-only criterion batch. */
+  observeCriteria?: ObserveCriteria
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   proposalCoverageWrites: WeakSet<object>
   now: () => string
@@ -33,12 +38,39 @@ export function createCriterionComparisonBindings(input: {
     if (resolved.some((item) => item.value.status !== "ok" && !(item.value.status === "needs-input" && item.value.reason === "criterion-rule-unavailable"))) return { status: "unavailable", reason: "comparison-rule-unavailable" }
     return { status: "ok", value: resolved.map((item) => item.value.status === "ok" ? { criterionId: item.criterionId, ruleRef: item.value.value.ruleRef, version: item.value.value.version, digest: digestSfValue(item.value.value) } : { criterionId: item.criterionId, ruleRef: null, version: null, digest: null }) }
   }
+  const observeChecks = async (binding: CriterionComparisonBinding, context: TrustedDomainContext, observe: ObserveCriteria) => {
+    const registry = input.rules, evaluate = registry.evaluate, identity = digestSfValue(binding)
+    const current = () => input.observeCriteria === observe && input.rules === registry &&
+      registry.evaluate === evaluate && digestSfValue(binding) === identity
+    let invocations = 0, open = true, threw = false
+    let failure: unknown, checks: CriteriaChecks | undefined
+    try {
+      const accepted = await observe(binding.request, context, async () => {
+        if (!open || ++invocations !== 1 || !current()) return { status: "unavailable", reason: "comparison-criteria-observation-changed" }
+        try {
+          const evaluated = await Promise.all(binding.request.criteria.map((criterionId) => input.rules.evaluate({ caseRef: binding.caseRef, criterionId, baselineRef: binding.request.scenarioRefs[0], scenarioRef: binding.request.scenarioRefs[1]! }, context)))
+          if (!open || !current()) return { status: "unavailable", reason: "comparison-criteria-observation-changed" }
+          // Only a Boolean escapes to the observer; it cannot supply or replace the checks.
+          checks = evaluated
+          return { status: "ok", value: true }
+        } catch (error) { threw = true; failure = error; throw error }
+      })
+      open = false
+      if (threw) throw failure
+      if (accepted.status !== "ok" || accepted.value !== true || invocations !== 1 || checks === undefined || !current()) return undefined
+      return checks
+    } catch (error) { if (threw) throw failure; throw error }
+    finally { open = false }
+  }
   const validate = async (binding: CriterionComparisonBinding, context: TrustedDomainContext) => {
     const stored = await input.results.read({ resultRef: binding.resultRef, kind: "comparison" }, context)
     const rules = await proofs(binding.caseRef, binding.request.criteria, context)
     if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultDigest !== binding.resultDigest || stored.value.requestDigest !== binding.requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(binding.caseRef) || rules.status !== "ok" || digestSfValue(rules.value) !== digestSfValue(binding.rules) || stored.value.result.baselineResultRef !== binding.request.scenarioRefs[0] || stored.value.result.alternativeResultRef !== binding.request.scenarioRefs[1] || !await input.verifyBinding(binding, stored.value, context)) return undefined
     const comparison = stored.value.result
-    const checks = await Promise.all(binding.request.criteria.map((criterionId) => input.rules.evaluate({ caseRef: binding.caseRef, criterionId, baselineRef: binding.request.scenarioRefs[0], scenarioRef: binding.request.scenarioRefs[1]! }, context)))
+    const observe = input.observeCriteria
+    const checks = observe ? await observeChecks(binding, context, observe)
+      : await Promise.all(binding.request.criteria.map((criterionId) => input.rules.evaluate({ caseRef: binding.caseRef, criterionId, baselineRef: binding.request.scenarioRefs[0], scenarioRef: binding.request.scenarioRefs[1]! }, context)))
+    if (checks === undefined) return undefined
     if (comparison.criterionResults.length !== checks.length || checks.some((check, index) => { if (check.status !== "ok") return true; const evaluated = check.value; return comparison.criterionResults.filter((item) => item.criterionId === binding.request.criteria[index] && item.state === evaluated.state && item.reason === evaluated.reason).length !== 1 })) return undefined
     return stored.value
   }

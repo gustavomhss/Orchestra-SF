@@ -16,6 +16,11 @@ import { createCriterionComparisonBindings, type CriterionComparisonBinding } fr
 import { createCriterionRuleRegistry } from "../../../../product/decisions/criterion-rules.ts"
 import { createSfDecisionResultStore } from "../../../../product/decisions/result-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { AsyncLocalStorage } from "node:async_hooks"
+import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
+import { currentSfPlannerReadonlySnapshotScope, currentSfReadonlySnapshotScope } from "../../../../product/integration/source-lifecycle.ts"
+import { plannerValueRef } from "../../../../product/planner/scenario-inputs.ts"
+import { sensitivityObservationFixture } from "./sensitivity-observation-fixture.ts"
 
 type Deadline = ReturnType<typeof compositionTestDeadline>
 type Read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => unknown | Promise<unknown>
@@ -395,3 +400,322 @@ test("Comparison binding read-set keeps both native observations, complete graph
     expect(f.audit.unused).toBe(0)
   } finally { await deadline.close() }
 }, 15_000)
+
+test("Comparison criteria observation owns only the post-proof single-criterion batch and preserves fallback and revocation", async () => {
+  const deadline = compositionTestDeadline("comparison-criteria-observation", 50_000)
+  const outcomes: string[] = []
+  try {
+    // This first part exercises the actual consumer on C08 with a controlled
+    // observer protocol. It does not claim a native Planner root.
+    const local = await fixture(deadline)
+    const call = context(), writes = new WeakSet<object>()
+    const events: string[] = []
+    type Input = Parameters<typeof createCriterionComparisonBindings>[0]
+    type Observe = NonNullable<Input["observeCriteria"]>
+    type Rules = Input["rules"]
+    let evaluations = 0, receiverMatches = 0, retained: CriterionComparisonBinding | undefined
+    let evaluation: "normal" | "throw-undefined" | "denied" = "normal"
+    const host = { requestFor: () => local.control.incoming, revalidate: async () => local.control.active }
+    const authorizeCase = async (value: DecisionCase) => local.control.active &&
+      value.id === caseRef.id && value.incarnation === caseRef.incarnation && value.version === caseRef.version
+    const never = (): never => { throw new Error("No metric or rule write belongs to the controlled missing-rule fixture") }
+    const originalRules = createCriterionRuleRegistry({ state: local.port, host, authorizeCase,
+      authorizeRule: never, verifyEvidence: never, verifySnapshot: never, readMetric: never, verifyMetric: never,
+      operationIdentity: never, proposalCoverageWrites: writes, now: () => at })
+    const evaluate = function(this: Rules, ...args: Parameters<Rules["evaluate"]>): ReturnType<Rules["evaluate"]> {
+      evaluations++; events.push("evaluate")
+      if (this === rules) receiverMatches++
+      if (evaluation === "throw-undefined") throw undefined
+      if (evaluation === "denied") return Promise.resolve({ status: "denied", reason: "control-denied" })
+      return originalRules.evaluate(...args)
+    }
+    const rules: Rules = { ...originalRules, evaluate,
+      resolve: (...args) => { events.push("proofs"); return originalRules.resolve(...args) } }
+    const originalResults = createSfDecisionResultStore({ state: local.port, host, authorizeCase,
+      verifySources: async (value, refs) => local.control.active && value.kind === "comparison" && refs.length === 0,
+      createId: () => "comparison", now: () => at })
+    const input: Input = { state: local.port, host, rules, results: { ...originalResults,
+      read: (...args) => { events.push("results"); return originalResults.read(...args) } },
+      authorizeCase, verifyBinding: async (binding, stored) => {
+        retained = binding; events.push("verify")
+        return local.control.active && stored.kind === "comparison" && stored.resultRef === binding.resultRef
+      }, verifySnapshot: () => local.control.active, operationIdentity: () => "comparison-observation-control",
+      proposalCoverageWrites: writes, now: () => at }
+    const bindings = createCriterionComparisonBindings(input)
+    const read = () => bindings.read({ caseRef, resultRef: local.binding.resultRef }, call)
+    const reset = (observe?: Observe) => {
+      deadline.check(); events.length = 0; evaluations = 0; receiverMatches = 0; retained = undefined
+      evaluation = "normal"; input.rules = rules; rules.evaluate = evaluate; input.observeCriteria = observe
+    }
+    reset()
+    expect(await read()).toEqual({ status: "ok", value: local.binding })
+    expect(events).toEqual(["results", "proofs", "verify", "evaluate", "results", "proofs", "verify", "evaluate"])
+    expect({ evaluations, receiverMatches }).toEqual({ evaluations: 2, receiverMatches: 2 })
+    outcomes.push("absent-opt-in-order-and-receiver")
+
+    let observed = 0
+    reset(async (_request, _context, work) => {
+      observed++
+      const result = await work()
+      expect(result).toEqual({ status: "ok", value: true })
+      return result
+    })
+    expect(await read()).toEqual({ status: "ok", value: local.binding })
+    expect({ observed, evaluations, receiverMatches }).toEqual({ observed: 2, evaluations: 2, receiverMatches: 2 })
+    expect(events).toEqual(["results", "proofs", "verify", "evaluate", "results", "proofs", "verify", "evaluate"])
+    outcomes.push("single-work-private-checks")
+
+    const stale = { status: "stale", reason: "comparison-rule-or-source-changed" } as const
+    for (const mode of ["no-work", "refused-after-work", "double-work", "late-work"] as const) {
+      let late: (() => Promise<PortResult<true>>) | undefined
+      let attempts = 0
+      reset(async (_request, _context, work) => {
+        attempts++
+        if (mode === "no-work") return { status: "ok", value: true }
+        if (mode === "late-work") { late = work; return { status: "ok", value: true } }
+        const result = await work()
+        if (mode === "double-work") expect(await work()).toEqual({ status: "unavailable", reason: "comparison-criteria-observation-changed" })
+        if (mode === "refused-after-work") return { status: "unavailable", reason: "control-observer-refused" }
+        return result
+      })
+      expect(await read()).toEqual(stale)
+      expect(attempts).toBe(1)
+      expect(evaluations).toBe(mode === "no-work" || mode === "late-work" ? 0 : 1)
+      if (late) {
+        expect(await late()).toEqual({ status: "unavailable", reason: "comparison-criteria-observation-changed" })
+        expect(evaluations).toBe(0)
+      }
+      outcomes.push(mode)
+    }
+    for (const mode of ["hook", "registry", "method", "binding"] as const) {
+      reset(async (_request, _context, work) => {
+        const result = await work()
+        if (mode === "hook") input.observeCriteria = async () => ({ status: "ok", value: true })
+        if (mode === "registry") input.rules = { ...rules }
+        if (mode === "method") rules.evaluate = (...args) => originalRules.evaluate(...args)
+        if (mode === "binding") {
+          if (!retained) throw new Error("The actual binding was not retained")
+          retained.createdAt = "2027-02-03T00:00:00Z"
+        }
+        return result
+      })
+      expect(await read()).toEqual(stale)
+      expect({ evaluations, receiverMatches }).toEqual({ evaluations: 1, receiverMatches: 1 })
+      outcomes.push(mode + "-drift")
+    }
+    reset()
+    evaluation = "throw-undefined"
+    const thrownWithoutObserver = await read()
+    expect(thrownWithoutObserver).toEqual({ status: "unavailable", reason: "comparison-binding-unavailable" })
+    let caught = false, caughtError: unknown
+    reset(async (_request, _context, work) => {
+      try { await work() } catch (error) { caught = true; caughtError = error }
+      return { status: "ok", value: true }
+    })
+    evaluation = "throw-undefined"
+    expect(await read()).toEqual(thrownWithoutObserver)
+    expect(caught).toBe(true)
+    expect(caughtError).toBeUndefined()
+    expect(evaluations).toBe(1)
+    outcomes.push("throw-undefined-not-converted-or-replayed")
+    reset(async (_request, _context, work) => work())
+    evaluation = "denied"
+    expect(await read()).toEqual(stale)
+    expect(evaluations).toBe(1)
+    outcomes.push("original-check-status")
+
+    // Native C08/Source/Finance/Planner composition. Only fixture data and the
+    // factory seam are supplied; no LocalStore method or evaluator is replaced.
+    const native = await sensitivityObservationFixture(deadline, "all", "lte", { plannerRecordProof: true })
+    const proofPhase = new AsyncLocalStorage<boolean>()
+    type Batch = { owned: boolean; planner: boolean; same: boolean; currentAfter: boolean; booleanOnly: boolean }
+    const measurement: { active: boolean; batches: Batch[]; proofs: number; afterBatch?: () => void } = {
+      active: false, batches: [], proofs: 0,
+    }
+    const makeObservation = native.business.createPlannerCriteriaObservation
+    native.business.createPlannerCriteriaObservation = (criteria) => {
+      const original = makeObservation.call(native.business, criteria)
+      return <Value>(request: ScenarioCompareRequest, incoming: TrustedDomainContext,
+        work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => original(request, incoming, async () => {
+        if (!measurement.active || proofPhase.getStore()) return work()
+        const before = currentSfReadonlySnapshotScope(native.persistence)
+        const planner = currentSfPlannerReadonlySnapshotScope(native.persistence)
+        const batch: Batch = { owned: !!before && before.current(),
+          planner: !!before && !!planner && planner.identity === before.identity &&
+            planner.bytesIdentity === before.bytesIdentity && planner.current(),
+          same: false, currentAfter: false, booleanOnly: false }
+        measurement.batches.push(batch)
+        const result = await work()
+        const after = currentSfReadonlySnapshotScope(native.persistence)
+        batch.same = !!before && !!after && before.identity === after.identity && before.bytesIdentity === after.bytesIdentity
+        batch.currentAfter = !!after && after.current()
+        batch.booleanOnly = result.status === "ok" && Object.is(result.value, true)
+        const afterBatch = measurement.afterBatch
+        measurement.afterBatch = undefined
+        afterBatch?.()
+        return result
+      })
+    }
+    const portfolio = (() => {
+      try { return createSfPortfolioServices({ authority: native.authority, business: native.business, proposalCoverageWrites: native.writes }) }
+      finally { native.business.createPlannerCriteriaObservation = makeObservation }
+    })()
+    deadline.own(() => portfolio.dispose())
+    const proof = portfolio.proof
+    if (!proof) throw new Error("The real Portfolio verifier was not composed")
+    const verify = proof.verifyComparison
+    proof.verifyComparison = (...args) => {
+      if (measurement.active) measurement.proofs++
+      return proofPhase.run(true, () => verify.call(proof, ...args))
+    }
+    deadline.own(() => { proof.verifyComparison = verify })
+    const request = () => new Request(native.transport.url, { method: "POST", signal: deadline.signal,
+      headers: { origin: new URL(native.transport.url).origin } })
+    const prepare = async (selected: typeof native.caseRef, references: string[], criteria: string[]) => {
+      const pair: ScenarioCompareRequest = { scenarioRefs: references, criteria }
+      const admitted = ok(await native.authority.ui.admit(request(), "sf_scenario_compare", digestSfValue(pair)))
+      deadline.own(() => native.authority.ui.finish(admitted))
+      const stored = ok(await native.business.withCase(admitted, selected, {}, async () => {
+        const comparison = ok(await portfolio.planner.compareScenarios(pair, admitted))
+        return native.business.results.write({ kind: "comparison", result: comparison, caseRef: selected,
+          requestDigest: digestSfValue(pair), sourceRefs: native.sources, idempotencyKey: randomUUID() }, admitted)
+      }))
+      if (stored.kind !== "comparison") throw new Error("The real comparison was not stored")
+      const proofs = ok(await native.business.withCase(admitted, selected, {}, () =>
+        portfolio.comparisonBindings.proofs(selected, criteria, admitted)))
+      return { selected, pair, admitted, stored, proofs }
+    }
+    type Prepared = Awaited<ReturnType<typeof prepare>>
+    const bindNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>
+      portfolio.comparisonBindings.bind({ caseRef: data.selected, resultRef: data.stored.resultRef,
+        request: data.pair, expectedRules: data.proofs }, data.admitted))
+    const readNative = (data: Prepared) => native.business.withCase(data.admitted, data.selected, {}, () =>
+      portfolio.comparisonBindings.read({ caseRef: data.selected, resultRef: data.stored.resultRef }, data.admitted))
+    const begin = (afterBatch?: () => void) => {
+      deadline.check(); measurement.batches = []; measurement.proofs = 0
+      measurement.afterBatch = afterBatch; measurement.active = true
+    }
+    const outside = () => {
+      measurement.active = false; measurement.afterBatch = undefined
+      expect(currentSfReadonlySnapshotScope(native.persistence)).toBeUndefined()
+    }
+    const owned = (count: number) => {
+      expect(measurement.batches).toHaveLength(count)
+      expect(measurement.proofs).toBe(count)
+      for (const batch of measurement.batches) expect(batch).toEqual({
+        owned: true, planner: true, same: true, currentAfter: true, booleanOnly: true,
+      })
+      outside()
+    }
+    const single = await deadline.phase("single-criterion-data", () => prepare(native.caseRef, [...native.references], ["cost"]))
+    begin()
+    const bound = ok(await deadline.phase("native-bind", () => bindNative(single)))
+    expect(bound.resultRef).toBe(single.stored.resultRef)
+    owned(3)
+    // A real durable bind cannot commit inside a readonly owner. Its subsequent
+    // two readbacks still run, each with a fresh, closed criterion-batch scope.
+    begin()
+    expect(await deadline.phase("native-read", () => readNative(single))).toEqual({ status: "ok", value: bound })
+    owned(2)
+    outcomes.push("native-single-criterion-post-proof-and-durable-bind")
+
+    const nativeEvaluate = portfolio.rules.evaluate
+    begin(() => { portfolio.rules.evaluate = (...args) => nativeEvaluate(...args) })
+    try {
+      expect((await readNative(single)).status).not.toBe("ok")
+      expect(measurement.batches).toHaveLength(1)
+      expect(measurement.batches[0]?.owned).toBe(true)
+      expect(measurement.proofs).toBe(1)
+    } finally { portfolio.rules.evaluate = nativeEvaluate; outside() }
+    outcomes.push("native-evaluator-identity-drift")
+
+    // Two independently registered Planner criteria share the same evidence.
+    // They keep the original Promise.all route, rather than sharing one new
+    // record-proof frame and colliding on concurrent terminal reads.
+    const originalRule = ok(await native.business.withCase(single.admitted, single.selected, {}, () =>
+      portfolio.rules.resolve({ caseRef: single.selected, criterionId: "cost" }, single.admitted)))
+    const multipleRef = await native.persistence.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      const selected = state.cases[native.caseRef.id]
+      if (!selected) throw new Error("The native fixture case disappeared")
+      selected.criteria.push({ id: "cost-peer", description: "The same Planner subtotal source", required: true })
+      selected.version++; state.versions.cases++; state.revision++
+      return { commit: true, value: { id: selected.id, incarnation: selected.incarnation, version: selected.version } }
+    })
+    const registration = { caseRef: multipleRef, criterionId: "cost-peer", metricRef: originalRule.metricRef,
+      operator: originalRule.operator, value: originalRule.value, unit: originalRule.unit, period: originalRule.period,
+      evidenceRefs: originalRule.evidenceRefs, expectedRuleVersion: 0, sensitivity: originalRule.sensitivity }
+    const human = ok(await native.authority.human.admit(request(), "decisions.criteria", registration))
+    try {
+      ok(await native.business.withCase(human, multipleRef, {}, () => portfolio.rules.register(registration, human)))
+    } finally { native.authority.human.finish(human) }
+    const multiple = await deadline.phase("multiple-criterion-data", () =>
+      prepare(multipleRef, [...native.references], ["cost", "cost-peer"]))
+    expect(multiple.proofs.map((item) => item.criterionId)).toEqual(["cost", "cost-peer"])
+    expect(multiple.proofs.every((item) => item.ruleRef !== null)).toBe(true)
+    begin()
+    const multipleBinding = ok(await bindNative(multiple))
+    expect(measurement.proofs).toBe(3)
+    expect(measurement.batches).toEqual([])
+    outside()
+    begin()
+    expect(await readNative(multiple)).toEqual({ status: "ok", value: multipleBinding })
+    expect(measurement.proofs).toBe(2)
+    expect(measurement.batches).toEqual([])
+    outside()
+    outcomes.push("multiple-planner-criteria-original-parallel-fallback")
+
+    const authorityData = await prepare(multipleRef, [...native.references], ["cost"])
+    ok(await bindNative(authorityData))
+    begin(() => { native.control.active = false })
+    try {
+      expect((await readNative(authorityData)).status).not.toBe("ok")
+      expect(measurement.batches).toHaveLength(1)
+      expect(measurement.batches[0]?.owned).toBe(true)
+      expect(measurement.proofs).toBe(1)
+    } finally { native.control.active = true; outside() }
+    outcomes.push("native-authority-revoked-after-batch")
+
+    // An actual promoted replacement is outside Finance's closed Planner pair.
+    // The observer must retain the complete producer, not invent eligibility.
+    const coverageRef = native.proofCoverageRefs?.[1]
+    if (!coverageRef) throw new Error("The fixture's real candidate coverage was not retained")
+    const promotion = { caseRef: multipleRef, title: "Unsupported replacement closure",
+      coverageRef, scenario: { baseRef: native.sources[1]!.refId, operations: [{
+        kind: "replace" as const, targetRef: "line:1",
+        replacementRef: plannerValueRef(native.sources[0]!.refId, "line:1:forecast"),
+      }], assumptions: [] } }
+    const promotionCall = ok(await native.authority.human.admit(request(), "decisions.promote-alternative", promotion))
+    const promoted = await (async () => {
+      try { return ok(await native.business.withCase(promotionCall, multipleRef, {}, () =>
+        portfolio.mutations.addAlternative(promotion, promotionCall))) }
+      finally { native.authority.human.finish(promotionCall) }
+    })()
+    if (!promoted.resultRef) throw new Error("The canonical replacement promotion did not persist its scenario")
+    const unsupported = await prepare(promoted.caseRef, [native.references[0]!, promoted.resultRef], ["cost"])
+    begin()
+    const unsupportedBinding = ok(await bindNative(unsupported))
+    expect(measurement.proofs).toBe(3)
+    expect(measurement.batches).toHaveLength(3)
+    for (const batch of measurement.batches) expect(batch).toEqual({
+      owned: false, planner: false, same: false, currentAfter: false, booleanOnly: true,
+    })
+    outside()
+    begin()
+    expect(await readNative(unsupported)).toEqual({ status: "ok", value: unsupportedBinding })
+    expect(measurement.proofs).toBe(2)
+    expect(measurement.batches).toHaveLength(2)
+    for (const batch of measurement.batches) expect(batch).toEqual({
+      owned: false, planner: false, same: false, currentAfter: false, booleanOnly: true,
+    })
+    outside()
+    outcomes.push("unsupported-planner-closure-complete-fallback")
+    console.info("SF_C22_COMPARISON_CRITERIA_OBSERVATION", JSON.stringify({
+      schema: "sf-c22-comparison-criteria-observation-v1", qualification: false,
+      singleCriterion: { bindingBatches: 3, readBatches: 2, nativeScope: true },
+      multipleCriteria: { criteria: 2, sharedPlannerSources: true, newBatchObservations: 0 },
+      unsupportedClosure: { bindingBatches: 3, readBatches: 2, nativeScope: false },
+      outcomes,
+    }))
+  } finally { await deadline.close() }
+}, 60_000)

@@ -165,6 +165,9 @@ export function createSfPortfolioAuthority(input: {
     verifySnapshot: (snapshot, binding, _rule, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
   const comparisonBindings = createCriterionComparisonBindings({ ...common, rules, results: business.results,
+    // Parallel criteria retain their original route; shared terminal reads are not coalesced.
+    observeCriteria: (request, call, work) => request.criteria.length === 1
+      ? observation.scenarios(request, call, work) : work(),
     verifyBinding: async (binding, result, call) => await fresh(result.sourceRefs, call) && await (input.proof()?.verifyComparison(binding, result, call) ?? Promise.resolve(false)),
     verifySnapshot: (snapshot, binding, call) => input.proof()?.verifySnapshot(snapshot, binding, call) ?? false,
   })
