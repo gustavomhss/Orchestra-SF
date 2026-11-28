@@ -1,0 +1,663 @@
+{
+  "schema": "sf613-e15-independent-original-analytics-reception-v1",
+  "status": "ACK_RECEPTION_PREVIEW_TIMEOUT_BI_PASS_NO_NEW_QUALIFICATION",
+  "reviewer": "/root/review_archive",
+  "reviewedUtc": "2026-11-28 10:00:43 UTC",
+  "materialDivergenceFromRoot": false,
+  "run": {
+    "id": 46130942119,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46130942119",
+    "head": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+    "branch": "ci-run-sf613e15a",
+    "conclusion": "failure",
+    "mainJob": {
+      "id": 140935705301,
+      "conclusion": "failure"
+    },
+    "cleanupJob": {
+      "id": 140938044223,
+      "conclusion": "success"
+    }
+  },
+  "evidence": {
+    "authority": {
+      "gitBlob": "3e871d777e66afbbaf0c3491e9367041dc8707f8",
+      "bytes": 16632,
+      "sha256": "c98dd8e06357d05583d8332574f0c37221e54c672aae94d91302e6df07dadb94",
+      "lf": 431,
+      "endsWithLF": true
+    },
+    "binding": {
+      "gitBlob": "5ba1cdb8930936aa339d67e1ab48a9cfbc09edce",
+      "bytes": 1766,
+      "sha256": "fb7a36d608802ddc1304a39322884a4c063aabac774392fdcb057ca6f7c0f2e2",
+      "lf": 53,
+      "endsWithLF": true
+    },
+    "terminalContext": {
+      "gitBlob": "f4f65eaedcf7651cea76fadfb8a83c26718d31fc",
+      "bytes": 25286,
+      "sha256": "e8c68dd44ee8ec6dc96d7cea7f553fbc1b51a53959ec32b836137946881c8e4e",
+      "lf": 548,
+      "endsWithLF": true
+    },
+    "mainManifest": {
+      "gitBlob": "b907e7aae121c6a92d9812620b5143cd396693d3",
+      "bytes": 7997,
+      "sha256": "d51e4f357c245014038df222a8a78db50cb8c22d6f98191aaf669ea10210d3d9",
+      "lf": 274,
+      "endsWithLF": true
+    },
+    "mainRepresentation": {
+      "actualPartCount": 17,
+      "partsIndependentlyAuthenticated": 17,
+      "bytes": 4951586,
+      "sha256": "9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2",
+      "lf": 2268,
+      "endsWithLF": true,
+      "calculatedWholeGitBlob": "28882b074b5030d2fa677093f11edee4158e4330",
+      "wholeGitObjectExistsClaim": false,
+      "wholeGitObjectRequested": false,
+      "allPartByteAndUtf16SeamsExact": true,
+      "bomCodeUnitOffsets": [
+        0,
+        2103029,
+        4206745
+      ],
+      "bomByteOffsets": [
+        0,
+        2107842,
+        4211566
+      ]
+    },
+    "cleanup": {
+      "gitBlob": "2814939e44f3eee93e0bd1e1714b740429399c95",
+      "bytes": 2281,
+      "sha256": "cad673a7b15dbc94a4a09dfd3bf6470731e568f3d043e8caad7622c8e9fdb710",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "2e3585727e4ccc8d3b63e3461016e5a199780a1c",
+      "bytes": 1822,
+      "sha256": "4a6e620124cc3bedbc17628eb46d4c30649a8dd43229a353a58c761339a6be24",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "eventUnion": {
+      "gitBlob": "f80c2745ee085608e47f7120bd8f007d655e3327",
+      "bytes": 76525,
+      "sha256": "8c25530af2cc8566ca2e1df5d11c6966d51524ff69c6ac2c90f85731883b3db3",
+      "lf": 134,
+      "endsWithLF": true
+    },
+    "core96Union": {
+      "gitBlob": "f58aee9a18aafec45e1931334f0405987fe81ec3",
+      "bytes": 34168,
+      "sha256": "f890276dc2e8b78e9a11dfaf2d155dfc4ffb82ba8612c63cf7b2b240cf96e1a6",
+      "lf": 96,
+      "endsWithLF": true
+    },
+    "contextUnion": {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true
+    },
+    "discoveryOwnerUnion": {
+      "gitBlob": "be48167c0118b7c2ebac0f5086a8809c85fb9c57",
+      "bytes": 1452,
+      "sha256": "55b5e3d16d4f429c7f38f8082fc78e776995d1b9d96201344c95f5ca1f16ed52",
+      "lf": 10,
+      "endsWithLF": true
+    },
+    "rootReceipt": {
+      "gitBlob": "2c543ab9c3c27991510866929291a09184f3ac32",
+      "bytes": 11211,
+      "sha256": "d0e760cc92da5b9750c7fac0e2759deeb3ebacfd61a6acead2f1ceeca5a37177",
+      "lf": 400,
+      "endsWithLF": true
+    },
+    "fourUnionsDerivedIndependentlyFromRecomposedMainAndLiteralMatched": true
+  },
+  "outcome": {
+    "selectedTests": 2,
+    "workerCount": 1,
+    "failed": 1,
+    "passed": 1,
+    "failedTest": "wave five analytics: native scenarios, recorded results and sensitivity",
+    "passedTest": "wave five analytics: question catalog and original contextual BI",
+    "failure": "page.waitForResponse timed out after 60000 ms awaiting decision-portfolio-preview response; original spec line 72",
+    "footerMainLines": [
+      2201,
+      2203
+    ],
+    "request": ".ci-run.json retains original design-wave-five-analytics.spec.ts and e2e/playwright.production.config.ts",
+    "history": [
+      {
+        "mainLine": 1197,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "mainLine": 1199,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 330,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "mainLine": 1217,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "mainLine": 1219,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 582,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      }
+    ],
+    "preview": [
+      {
+        "mainLine": 1237,
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    ],
+    "previewResponseObserved": false,
+    "newUI42UI43UI44Qualification": false
+  },
+  "installedEvidence": {
+    "sourceRows": 44,
+    "captureRows": 46,
+    "diagnosticRows": 5,
+    "scopeRows": 1,
+    "contextRows": 2,
+    "discoveryRows": 2,
+    "ownerAdmissionRows": 8,
+    "captureSurfaces": {
+      "UI42": 6,
+      "UI45": 7,
+      "UI46": 33
+    },
+    "captureWidths": [
+      1440,
+      390,
+      320
+    ],
+    "UI43Captures": 0,
+    "UI44Captures": 0,
+    "contextReadbacks": {
+      "stages": [
+        "UI42-list",
+        "UI42-empty-case"
+      ],
+      "http": [
+        200,
+        200
+      ],
+      "status": [
+        "ok",
+        "ok"
+      ],
+      "ownerBinding": "exact",
+      "acquisition": "authenticated-original-readback",
+      "previewOperationReady": true,
+      "sensitivityOperationsReady": true,
+      "unavailablePortfolioOperationsRemainExplicit": true
+    },
+    "discovery": {
+      "eachCount": 1,
+      "distinctNativeInstallations": 2
+    },
+    "ownerAdmission": {
+      "contextReadbacks": 16,
+      "allHttp200": true
+    },
+    "diagnostics": {
+      "errorArraysPresent": 4,
+      "allConsoleAndPageErrorArraysEmpty": true,
+      "nativeView": {
+        "discovery": "ready",
+        "provider": "ready",
+        "view": "ready",
+        "previewState": "Running",
+        "previewNotYetAvailable": true
+      }
+    },
+    "captureLimit": "Capture records and embedded previews remain preserved in log copies. This peer did not render screenshots or download the artifact."
+  },
+  "bi": {
+    "scope": {
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "catalogViews": 11,
+      "originalFinancialRead": true,
+      "originalOperationalRead": true,
+      "originalSourceResolution": true,
+      "originalOperationalSourceResolution": true,
+      "originalSensitivityChoices": 0,
+      "invalidatedOnPeriodChange": true,
+      "fabricatedResult": false
+    },
+    "BI01": {
+      "http": 200,
+      "rows": 36,
+      "numericValues": 14,
+      "missing": 22,
+      "valueBindingCount": 48,
+      "scalarDomObservations": 0,
+      "scalarDomLimit": "The published scalar-dom array is empty; fourteen scalar DOM oracles are not claimed."
+    },
+    "financialSources": {
+      "nativeResponseAcquisitions": 2,
+      "allHttp200": true,
+      "selectedValues": [
+        "budget:2026-01:effective",
+        "budget:2026-01:actual"
+      ],
+      "samePublishedReference": true,
+      "exactValueAndDigestQueries": 2,
+      "originalProjectionRetained": true,
+      "originalBudgetDestinationObserved": true
+    },
+    "BI06": {
+      "originalCdpCompletions": 2,
+      "sameNativeRequest": true,
+      "nativeRequestFinished": true,
+      "readbackLocales": [
+        "en-US",
+        "pt-BR"
+      ],
+      "allHttp200": true,
+      "rowsEach": 3,
+      "numericValuesEach": 3,
+      "missingEach": 1,
+      "valueBindingsEach": 17,
+      "scalarOracles": [
+        {
+          "mainLine": 1955,
+          "locale": "en-US",
+          "observations": 3,
+          "tableAndPlotMatchEachOther": true,
+          "tableMatchesOriginalRoundedEightPlaces": true
+        },
+        {
+          "mainLine": 2159,
+          "locale": "pt-BR",
+          "observations": 3,
+          "tableAndPlotMatchEachOther": true,
+          "tableMatchesOriginalRoundedEightPlaces": true
+        }
+      ],
+      "originalAgeValuesConfirmed": true,
+      "unit": "days",
+      "valuesComparedSeparatelyToEachReadback": true
+    },
+    "operationalSource": {
+      "positiveHttp": 200,
+      "acquisition": "native-response",
+      "originalProcurementDestinationObserved": true,
+      "negativeHttp": 403,
+      "negativeStatus": "denied",
+      "negativeReason": "bi-source-outside-selected-value"
+    },
+    "negativeEvidence": "Unavailable operations remain explicit; original sensitivity choices remain zero; period change invalidates the result; the operational source outside the selected value is denied. These observations do not qualify the unexecuted sensitivity evaluation journey."
+  },
+  "eventStream": {
+    "frame": {
+      "schema": "sf-preview-causal-e15-event-v1",
+      "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+      "qualification": false,
+      "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+      "runId": "46130942119",
+      "attempt": "1",
+      "nonce": "sf613-e15-event-mdoIvu",
+      "pid": 3746,
+      "parentPid": 3687,
+      "request": 1
+    },
+    "events": 134,
+    "bytes": 76525,
+    "sequenceStart": 1,
+    "sequenceEnd": 134,
+    "continuous": true,
+    "elapsedMonotonic": true,
+    "maxPayloadLineBytesIncludingPrefixAndLf": 654,
+    "onlyOuterAnsiFramingRemovedFromEvents": 84,
+    "extraction": "Timestamp and leading ANSI framing are excluded from protocol unions; payload characters, prefix and LF remain literal. Original copies retain all framing and BOMs.",
+    "kinds": {
+      "request-enter": 1,
+      "http-boundary": 3,
+      "unit-enter": 4,
+      "phase-enter": 7,
+      "phase-close": 5,
+      "route": 111,
+      "compare-body-checkpoint": 3
+    },
+    "sixSelectedLookups": [
+      {
+        "id": 1,
+        "phase": "preparation",
+        "points": 10,
+        "sourceSelection": "root-absent",
+        "forward": "direct",
+        "local": "top-level",
+        "copy": "full",
+        "copyReturned": "full",
+        "providerView": null,
+        "gatesAtClose": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "copyIntervalMs": 1.6
+      },
+      {
+        "id": 2,
+        "phase": "preparation",
+        "points": 10,
+        "sourceSelection": "root-absent",
+        "forward": "direct",
+        "local": "top-level",
+        "copy": "full",
+        "copyReturned": "full",
+        "providerView": null,
+        "gatesAtClose": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "copyIntervalMs": 1.6
+      },
+      {
+        "id": 3,
+        "phase": "comparator",
+        "points": 12,
+        "sourceSelection": "decisionResults",
+        "forward": "direct",
+        "local": "child",
+        "copy": "projected",
+        "copyReturned": "decisionResults",
+        "providerView": "decisionResults",
+        "gatesAtClose": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "copyIntervalMs": 0.7
+      },
+      {
+        "id": 4,
+        "phase": "comparator",
+        "points": 12,
+        "sourceSelection": "decisionResults",
+        "forward": "direct",
+        "local": "child",
+        "copy": "projected",
+        "copyReturned": "decisionResults",
+        "providerView": "decisionResults",
+        "gatesAtClose": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "copyIntervalMs": 0.9
+      },
+      {
+        "id": 5,
+        "phase": "comparator",
+        "points": 12,
+        "sourceSelection": "decisionResults",
+        "forward": "direct",
+        "local": "child",
+        "copy": "projected",
+        "copyReturned": "decisionResults",
+        "providerView": "decisionResults",
+        "gatesAtClose": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "copyIntervalMs": 1
+      },
+      {
+        "id": 6,
+        "phase": "comparator",
+        "points": 12,
+        "sourceSelection": "decisionResults",
+        "forward": "direct",
+        "local": "child",
+        "copy": "projected",
+        "copyReturned": "decisionResults",
+        "providerView": "decisionResults",
+        "gatesAtClose": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "copyIntervalMs": 0.9
+      }
+    ],
+    "intervals": [
+      {
+        "name": "analysis-select-initial",
+        "fromSequence": 15,
+        "toSequence": 93,
+        "fromMs": 1646.1,
+        "toMs": 24104.2,
+        "intervalMs": 22458.1
+      },
+      {
+        "name": "analysis-compare",
+        "fromSequence": 94,
+        "toSequence": 95,
+        "fromMs": 24320.2,
+        "toMs": 27359.9,
+        "intervalMs": 3039.7
+      },
+      {
+        "name": "analysis-persist",
+        "fromSequence": 96,
+        "toSequence": 134,
+        "fromMs": 27376,
+        "toMs": 60468.1,
+        "intervalMs": 33092.1
+      },
+      {
+        "name": "persistence-enter to prewrite",
+        "fromSequence": 97,
+        "toSequence": 98,
+        "fromMs": 27376.3,
+        "toMs": 32106.5,
+        "intervalMs": 4730.2
+      },
+      {
+        "name": "C08 state transaction",
+        "fromSequence": 99,
+        "toSequence": 125,
+        "fromMs": 32152.5,
+        "toMs": 32210.9,
+        "intervalMs": 58.4
+      },
+      {
+        "name": "store prewrite to returned",
+        "fromSequence": 98,
+        "toSequence": 126,
+        "fromMs": 32106.5,
+        "toMs": 32329.8,
+        "intervalMs": 223.3
+      },
+      {
+        "name": "binding",
+        "fromSequence": 127,
+        "toSequence": 128,
+        "fromMs": 32329.8,
+        "toMs": 46991.7,
+        "intervalMs": 14661.9
+      },
+      {
+        "name": "validation",
+        "fromSequence": 129,
+        "toSequence": 131,
+        "fromMs": 46991.8,
+        "toMs": 51400,
+        "intervalMs": 4408.2
+      },
+      {
+        "name": "after validation to binding read returned",
+        "fromSequence": 131,
+        "toSequence": 132,
+        "fromMs": 51400,
+        "toMs": 60467.8,
+        "intervalMs": 9067.8
+      }
+    ],
+    "last": {
+      "sequence": 134,
+      "kind": "phase-close",
+      "unit": 4,
+      "phase": 4,
+      "point": "analysis-persist",
+      "outcome": "await-returned",
+      "elapsedMs": 60468.1,
+      "compareBodies": [
+        41,
+        41,
+        0,
+        0,
+        1,
+        0
+      ],
+      "saturated": false
+    },
+    "observedRequestClose": false,
+    "observedUnitCloses": 0,
+    "absentLaterBoundaries": [
+      {
+        "point": "request-close",
+        "observed": false
+      },
+      {
+        "point": "with-case-returned",
+        "observed": false
+      },
+      {
+        "point": "egress-passed",
+        "observed": false
+      },
+      {
+        "point": "analysis-bind",
+        "observed": false
+      },
+      {
+        "point": "analysis-select-final",
+        "observed": false
+      },
+      {
+        "point": "analysis-revalidate",
+        "observed": false
+      },
+      {
+        "point": "production-analysis-revalidate",
+        "observed": false
+      },
+      {
+        "point": "port-authority-final",
+        "observed": false
+      },
+      {
+        "point": "evaluations-recheck",
+        "observed": false
+      },
+      {
+        "point": "candidates-final",
+        "observed": false
+      }
+    ],
+    "launcherMarkers": 0
+  },
+  "interpretation": [
+    "The selected C08 state transaction returned at 32210.9 ms. The trace therefore does not support an exclusive explanation that this sampled transaction remained blocked until the browser deadline.",
+    "Two preparation lookups took the full/top-level fallback with root-absent; four comparator lookups reached decisionResults selection, all five true gates, projected copy, decisionResults copy-close/provider-view and lookup close. This is bounded evidence of the selected routes, not all reads in the request.",
+    "The observed selection-initial interval is 22458.1 ms and persistence interval is 33092.1 ms. The sampled C08 transaction interval is 58.4 ms. These regions overlap hierarchically and must not be summed as independent costs.",
+    "Binding inside persistence spans 14661.9 ms; validation spans 4408.2 ms. The 9067.8 ms after validation until binding-read-returned is an interval between boundaries, not an isolated measurement of the read.",
+    "The binding route points belong to persistence. The later analysis-bind phase is not observed.",
+    "analysis-persist await-returned and the internal returned markers do not establish an HTTP response, domain result accepted by the browser, durable release qualification, or completion of the remaining analysis/port phases.",
+    "No request-close or egress marker appears. A contiguous prefix ending before the quota cannot by itself distinguish later work, process termination, or an observation sink failure. Missing events are not evidence that later work was impossible.",
+    "The helper clock and the browser's 60000-ms waiter are separate timing boundaries. No precise cross-clock offset, exclusive cause or uninstrumented performance improvement is inferred.",
+    "The last compare-body counters describe recorded body exits, not a universal count of settled Promises or every product call.",
+    "Source is the reviewed diagnostic overlay. BI pass preserves useful installed evidence but adds no clean-candidate or go-live qualification."
+  ],
+  "artifact": {
+    "id": 15258196107,
+    "name": "playwright-ubuntu-24.04-1",
+    "uploadedBytes": 45835820,
+    "reportedZipSha256": "95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2",
+    "metadataAndUploadLogOnly": true,
+    "zipGets": 0,
+    "artifactBytesIndependentlyHashed": false,
+    "uploadCandidateFiles": 150,
+    "zipEntryCountClaimed": false
+  },
+  "rootReportedState": {
+    "originalsClosedUtc": "2026-11-28 09:43:59 UTC",
+    "originalGets": {
+      "main": 1,
+      "cleanup": 1
+    },
+    "branchAbsent": true,
+    "peerLiveRefQueries": 0
+  },
+  "reviewerActions": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecution": 0,
+    "newCode": 0,
+    "newTrees": 0,
+    "newRefs": 0,
+    "newRuns": 0,
+    "onlyCreatedObject": "this review receipt",
+    "representation": "Exact decoded original tool strings preserved by Git parts and re-encoded as UTF-8; no raw HTTP/archive-byte equivalence claim."
+  },
+  "disposition": "Independent Analytics reception closed. Preview remains failed, BI passes, and no material divergence from root was found. Continue with separately reviewed clean C22 work; this receipt authorizes neither a new diagnostic run nor production."
+}

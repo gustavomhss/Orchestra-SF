@@ -1,0 +1,2147 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,3 +1,4 @@
++import { startSfE15Observation, markSfE15Http, runSfE15Observation, finishSfE15Observation } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -43,41 +44,51 @@
+     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
+     const mode = selected as Mode
++    const e14Handle = mode === "decision-portfolio-preview" ? startSfE15Observation(request) : undefined
++    let e15Rejected = false
+-    const payload = await boundedJson(request)
+-    if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+-    const admitted = await input.authority.human.admit(request, actions[mode], payload)
+-    if (admitted.status !== "ok") return reply(admitted)
+     try {
++      const payload = await boundedJson(request)
++      markSfE15Http(e14Handle, request, "body-returned")
++      if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
++      const admitted = await input.authority.human.admit(request, actions[mode], payload)
++      markSfE15Http(e14Handle, request, "admit-returned")
++      if (admitted.status !== "ok") return reply(admitted)
++      try {
++        const call = admitted.value
++        const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
++        const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
++        const result = await runSfE15Observation(e14Handle, request, () => input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
++          markSfE15Http(e14Handle, request, "case-callback-entered")
++          if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
++          if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
++          if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
++          if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
++          if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
++          if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
++          const product = input.product
++          if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
++          if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
++          if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
++          if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
++          if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
++          if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
++          if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
++          if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
++          if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
++          if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
++          return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
++        }))
++        markSfE15Http(e14Handle, request, "with-case-returned")
++        if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
++        if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
++          binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
++          return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
++        markSfE15Http(e14Handle, request, "egress-passed")
++        return reply(result)
++      } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
++      finally { input.authority.human.finish(admitted.value) }
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Observation(e14Handle, request, e15Rejected) }
+-      const call = admitted.value
+-      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+-      const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+-      const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+-        if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+-        if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
+-        if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
+-        if (mode === "decision-promote") return input.mutations.addAlternative(payload as Parameters<Mutations["addAlternative"]>[0], call)
+-        if (mode === "decision-prepare-changes") return input.mutations.prepareChanges(payload as Parameters<Mutations["prepareChanges"]>[0], call)
+-        if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
+-        const product = input.product
+-        if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
+-        if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
+-        if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
+-        if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
+-        if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
+-        if (mode === "decision-portfolio-read") return product.http.read(String(payload.resultRef), payload.caseRef, call)
+-        if (mode === "decision-sensitivity-read") return product.http.readSensitivity(String(payload.resultRef), payload.caseRef, call)
+-        if (mode === "decision-sensitivity-units") return product.http.sensitivityUnits(payload as Parameters<Portfolio["http"]["sensitivityUnits"]>[0], call)
+-        if (mode === "decision-sensitivity-evaluate") return product.http.sensitivity(payload.request as Parameters<Portfolio["http"]["sensitivity"]>[0], payload.caseRef, call)
+-        if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
+-        return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
+-      })
+-      if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
+-      if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+-        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
+-        return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
+-      return reply(result)
+-    } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+-    finally { input.authority.human.finish(admitted.value) }
+   }
+ }
+ 
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/port.ts b/modules/sucafina/Sucafinav1/product/portfolio/port.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/port.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/port.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { attachSensitivityV6 } from "./sensitivity-v6.ts"
+ import type { PortfolioRequest, ScenarioOperation, ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
+@@ -28,81 +29,91 @@
+ 
+ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { evaluateWithSelections: (request: PortfolioRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolio: PortfolioResult; selections: readonly { combinationId: string; selectedCandidateRefs: readonly string[] }[] }>> } {
+   const evaluate = async (incoming: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
++    const e15Unit = enterSfE15Unit("port")
++    let e15Rejected = false
++    try {
++      const request = structuredClone(incoming)
++      if (!(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "port-authority-initial", () => host.revalidate(context))))) return { status: "denied", reason: "invalid-binding" }
++      if (!request.candidateRefs.length || request.candidateRefs.length > 64 || new Set(request.candidateRefs).size !== request.candidateRefs.length || !Number.isSafeInteger(request.explorationLimit) || request.explorationLimit < 1 || request.explorationLimit > 1024 || !request.scope.currency || request.scope.horizon.start > request.scope.horizon.end)
++        return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
++      const resolved = returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "candidates-initial", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
++      const failure = resolved.find((item) => item.status !== "ok")
++      if (failure) return failure
++      const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
++      if (candidates.some((item) => (!item.operations.length && (!item.result?.id.startsWith("source-scenario:") || item.scenario.assumptions.length > 0)) || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
++      if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
++      // Enumerate a bounded prefix without computing 2 ** n or materializing the power set.
++      const combinations: PortfolioResult["combinations"][number][] = []
++      const evidenceRefs: PortfolioResult["evidenceRefs"][number][] = []
++      const evaluatedSources: { scenario: ScenarioResult; costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; candidates: readonly PortfolioCandidate[] }[] = []
++      const queue: number[][] = candidates.map((_, index) => [index])
++      while (queue.length && combinations.length < request.explorationLimit) {
++        const indexes = queue.shift()!
++        const selected = indexes.map((index) => candidates[index])
++        const operations = [...request.operations, ...selected.flatMap((candidate) => candidate.operations)]
++        const duplicateTargets = operations.map((operation) => operation.targetRef).filter((target, index, all) => all.indexOf(target) !== index)
++        const id = digestSfValue({ candidates: selected.map((candidate) => candidate.ref), operations })
++        selections.push({ combinationId: id, selectedCandidateRefs: selected.map((candidate) => candidate.ref) })
++        const last = indexes[indexes.length - 1]
++        for (let index = last + 1; index < candidates.length; index++) queue.push([...indexes, index])
++        if (duplicateTargets.length) {
++          combinations.push({ id, caseRefs: selected.map((candidate) => candidate.caseRef), components: [], costCoverageRefs: [], conflicts: [...new Set(duplicateTargets)].map((target) => `duplicate-target:${target}`), restrictions: [], eligibility: "ineligible", comparisonStatus: "incompatible" })
++          continue
++        }
++        const e15Combination = enterSfE15Unit("combination")
++        let e15CombinationRejected = false
++        try {
++          const evaluated = structuredClone(returnedSfE15Await(e15Combination, await runSfE15Phase(e15Combination, "combination-evaluate", () => host.evaluate(structuredClone({ request, candidates: selected, operations }), context))))
++          if (evaluated.status !== "ok") return evaluated
++          const scenario = evaluated.value.scenario
++          evaluatedSources.push({ scenario, costCoverageRefs: evaluated.value.costCoverageRefs, analysis: evaluated.value.analysis, candidates: selected })
++          const analysis = evaluated.value.analysis
++          if (analysis && (!analysis.scenarioResultRef.trim() || !analysis.comparisonRef.trim() || digestSfValue(analysis.scenario) !== digestSfValue(scenario) || analysis.comparison.alternativeResultRef !== analysis.scenarioResultRef || !analysis.comparison.costCoverageRefs.length || new Set(analysis.comparison.costCoverageRefs).size !== analysis.comparison.costCoverageRefs.length || new Set(evaluated.value.costCoverageRefs).size !== evaluated.value.costCoverageRefs.length || analysis.comparison.costCoverageRefs.some((ref) => !evaluated.value.costCoverageRefs.includes(ref)))) return { status: "unavailable", reason: "analysis-reference-mismatch" }
++          if (analysis && (new Set(analysis.comparison.criterionResults.map((item) => item.criterionId)).size !== analysis.comparison.criterionResults.length || request.constraints.some((ref) => !analysis.comparison.criterionResults.some((item) => item.criterionId === ref)) || analysis.comparison.criterionResults.some((item) => !request.constraints.includes(item.criterionId)))) return { status: "unavailable", reason: "comparison-criteria-incomplete" }
++          if (new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length) return { status: "unavailable", reason: "duplicate-scenario-component" }
++          if (scenario.currency !== request.scope.currency || scenario.horizon.start !== request.scope.horizon.start || scenario.horizon.end !== request.scope.horizon.end) return { status: "stale", reason: "scenario-scope-mismatch" }
++          const checks = evaluated.value.constraints
++          if (new Set(checks.map((check) => check.ref)).size !== checks.length || request.constraints.some((ref) => !checks.some((check) => check.ref === ref)) || checks.some((check) => !request.constraints.includes(check.ref)) || (analysis && checks.some((check) => analysis.comparison.criterionResults.some((item) => item.criterionId === check.ref && item.state !== check.state)))) return { status: "unavailable", reason: "constraint-assessment-incomplete" }
++          const restrictions = [...scenario.restrictions, ...scenario.unresolvedConditions, ...(scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${scenario.costCoverage.coverageState}`]), ...scenario.costCoverage.issues, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...scenario.costCoverage.derivedMissingCategoryIds.map((category) => `missing-category:${category}`), ...checks.filter((check) => check.state !== "satisfied").map((check) => `${check.ref}:${check.reason}`), ...(analysis?.comparison.unresolvedConditions ?? []), ...(analysis?.comparison.criterionResults.filter((item) => item.state !== "satisfied").map((item) => `${item.criterionId}:${item.reason}`) ?? [])]
++          restrictions.push(...selected.flatMap((candidate) => candidate.result ? [...(candidate.result.costCoverage.coverageState === "complete" ? [] : [`candidate:${candidate.ref}:coverage:${candidate.result.costCoverage.coverageState}`]), ...candidate.result.unresolvedConditions.map((reason) => `candidate:${candidate.ref}:${reason}`), ...candidate.result.restrictions.map((reason) => `candidate:${candidate.ref}:${reason}`), ...candidate.result.costCoverage.issues.map((issue) => `candidate:${candidate.ref}:${issue}`), ...candidate.result.costCoverage.derivedMissingCategoryIds.map((category) => `candidate:${candidate.ref}:missing-category:${category}`), ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`candidate:${candidate.ref}:${entry.categoryId}:${entry.reason}`] : [])] : []))
++          restrictions.push(...scenario.components.filter((component) => component.amount === null || component.evidenceState !== "confirmed" || !component.sourceRefs.length).map((component) => `component-unconfirmed:${component.id}`))
++          if (scenario.comparisonStatus === "complete" && (!scenario.costCoverage.entries.length || !scenario.costCoverage.evaluatedSourceRefs.length || scenario.costCoverage.entries.some((entry) => !entry.evidenceRefs.length) || scenario.components.some((component) => !component.sourceRefs.length))) restrictions.push("coverage-evidence-unavailable")
++          if (!analysis) restrictions.push("analysis-unavailable")
++          restrictions.push(...selected.filter((candidate) => !candidate.result).map((candidate) => `candidate:${candidate.ref}:coverage-unavailable`))
++          const common = { ...(analysis ? { analysis } : {}), id, caseRefs: selected.map((candidate) => candidate.caseRef), components: scenario.components, costCoverageRefs: evaluated.value.costCoverageRefs, conflicts: [], restrictions }
++          evidenceRefs.push(...selected.flatMap((candidate) => candidate.result ? [...candidate.result.sourceRefs, ...candidate.result.costCoverage.evaluatedSourceRefs, ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : []), ...scenario.sourceRefs, ...scenario.costCoverage.evaluatedSourceRefs, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
++          const candidateComplete = selected.every((candidate) => !!candidate.result && candidate.result.comparisonStatus === "complete" && candidate.result.costCoverage.coverageState === "complete" && !candidate.result.unresolvedConditions.length && !candidate.result.restrictions.length && !candidate.result.costCoverage.issues.length && candidate.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidate.result.costCoverage.entries.length > 0 && candidate.result.costCoverage.evaluatedSourceRefs.length > 0 && candidate.result.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0))
++          const observedStatuses = [scenario.comparisonStatus, ...selected.flatMap((candidate) => candidate.result ? [candidate.result.comparisonStatus] : []), ...(analysis ? [analysis.comparison.comparisonStatus] : [])]
++          const financialStatus = observedStatuses.includes("incompatible") ? "incompatible" : observedStatuses.includes("unavailable") ? "unavailable" : scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
++          // A producer's definitive failed constraint makes the combination infeasible even while
++          // financial coverage remains pending. Provisional financial metrics must be "unknown".
++          if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || analysis?.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")) {
++            combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : financialStatus })
++            continue
++          }
++          if (scenario.comparisonStatus === "complete" && analysis && analysis.comparison.comparisonStatus === "complete" && !analysis.comparison.unresolvedConditions.length && analysis.comparison.criterionResults.every((item) => item.state === "satisfied") && scenario.costCoverage.coverageState === "complete" && !scenario.unresolvedConditions.length && !scenario.restrictions.length && !scenario.costCoverage.issues.length && scenario.costCoverage.entries.length > 0 && scenario.costCoverage.evaluatedSourceRefs.length > 0 && scenario.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0) && scenario.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidateComplete && checks.every((check) => check.state === "satisfied") && evaluated.value.costCoverageRefs.length) {
++            combinations.push({ ...common, eligibility: "eligible-complete", comparisonStatus: "complete" })
++            continue
++          }
++          if (scenario.comparisonStatus === "unavailable" || selected.some((candidate) => candidate.result?.comparisonStatus === "unavailable") || analysis?.comparison.comparisonStatus === "unavailable") {
++            combinations.push({ ...common, eligibility: "unavailable", comparisonStatus: "unavailable" })
++            continue
++          }
++          combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
++        } catch (e15Error) { e15CombinationRejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15Combination, e15CombinationRejected) }
+-    const request = structuredClone(incoming)
+-    if (!(await host.revalidate(context))) return { status: "denied", reason: "invalid-binding" }
+-    if (!request.candidateRefs.length || request.candidateRefs.length > 64 || new Set(request.candidateRefs).size !== request.candidateRefs.length || !Number.isSafeInteger(request.explorationLimit) || request.explorationLimit < 1 || request.explorationLimit > 1024 || !request.scope.currency || request.scope.horizon.start > request.scope.horizon.end)
+-      return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
+-    const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
+-    const failure = resolved.find((item) => item.status !== "ok")
+-    if (failure) return failure
+-    const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
+-    if (candidates.some((item) => (!item.operations.length && (!item.result?.id.startsWith("source-scenario:") || item.scenario.assumptions.length > 0)) || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
+-    if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
+-    // Enumerate a bounded prefix without computing 2 ** n or materializing the power set.
+-    const combinations: PortfolioResult["combinations"][number][] = []
+-    const evidenceRefs: PortfolioResult["evidenceRefs"][number][] = []
+-    const evaluatedSources: { scenario: ScenarioResult; costCoverageRefs: readonly string[]; analysis?: PortfolioCombination["analysis"]; candidates: readonly PortfolioCandidate[] }[] = []
+-    const queue: number[][] = candidates.map((_, index) => [index])
+-    while (queue.length && combinations.length < request.explorationLimit) {
+-      const indexes = queue.shift()!
+-      const selected = indexes.map((index) => candidates[index])
+-      const operations = [...request.operations, ...selected.flatMap((candidate) => candidate.operations)]
+-      const duplicateTargets = operations.map((operation) => operation.targetRef).filter((target, index, all) => all.indexOf(target) !== index)
+-      const id = digestSfValue({ candidates: selected.map((candidate) => candidate.ref), operations })
+-      selections.push({ combinationId: id, selectedCandidateRefs: selected.map((candidate) => candidate.ref) })
+-      const last = indexes[indexes.length - 1]
+-      for (let index = last + 1; index < candidates.length; index++) queue.push([...indexes, index])
+-      if (duplicateTargets.length) {
+-        combinations.push({ id, caseRefs: selected.map((candidate) => candidate.caseRef), components: [], costCoverageRefs: [], conflicts: [...new Set(duplicateTargets)].map((target) => `duplicate-target:${target}`), restrictions: [], eligibility: "ineligible", comparisonStatus: "incompatible" })
+-        continue
+       }
++      if (!(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "port-authority-final", () => host.revalidate(context)))) || !(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "evaluations-recheck", () => Promise.all(evaluatedSources.map(async (item) => {
++        const observed = structuredClone(item)
++        const expected = digestSfValue(observed)
++        const valid = await host.revalidateEvaluation(observed.scenario, observed.costCoverageRefs, observed.analysis, context, observed.candidates)
++        return valid && digestSfValue(observed) === expected
++      }))))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
++      const latest = returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "candidates-final", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
++      if (latest.some((item, index) => item.status !== "ok" || digestSfValue(item.value) !== digestSfValue(candidates[index]))) return { status: "stale", reason: "candidate-changed-or-revoked" }
++      return { status: "ok", value: { combinations, evidenceRefs: evidenceRefs.filter((ref, index) => evidenceRefs.findIndex((item) => item.refDigest === ref.refDigest) === index), limitations: ["Finite exploration; no global optimum is asserted.", ...(queue.length ? [`Exploration limit ${request.explorationLimit} reached.`] : [])] } }
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Unit(e15Unit, e15Rejected) }
+-      const evaluated = structuredClone(await host.evaluate(structuredClone({ request, candidates: selected, operations }), context))
+-      if (evaluated.status !== "ok") return evaluated
+-      const scenario = evaluated.value.scenario
+-      evaluatedSources.push({ scenario, costCoverageRefs: evaluated.value.costCoverageRefs, analysis: evaluated.value.analysis, candidates: selected })
+-      const analysis = evaluated.value.analysis
+-      if (analysis && (!analysis.scenarioResultRef.trim() || !analysis.comparisonRef.trim() || digestSfValue(analysis.scenario) !== digestSfValue(scenario) || analysis.comparison.alternativeResultRef !== analysis.scenarioResultRef || !analysis.comparison.costCoverageRefs.length || new Set(analysis.comparison.costCoverageRefs).size !== analysis.comparison.costCoverageRefs.length || new Set(evaluated.value.costCoverageRefs).size !== evaluated.value.costCoverageRefs.length || analysis.comparison.costCoverageRefs.some((ref) => !evaluated.value.costCoverageRefs.includes(ref)))) return { status: "unavailable", reason: "analysis-reference-mismatch" }
+-      if (analysis && (new Set(analysis.comparison.criterionResults.map((item) => item.criterionId)).size !== analysis.comparison.criterionResults.length || request.constraints.some((ref) => !analysis.comparison.criterionResults.some((item) => item.criterionId === ref)) || analysis.comparison.criterionResults.some((item) => !request.constraints.includes(item.criterionId)))) return { status: "unavailable", reason: "comparison-criteria-incomplete" }
+-      if (new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length) return { status: "unavailable", reason: "duplicate-scenario-component" }
+-      if (scenario.currency !== request.scope.currency || scenario.horizon.start !== request.scope.horizon.start || scenario.horizon.end !== request.scope.horizon.end) return { status: "stale", reason: "scenario-scope-mismatch" }
+-      const checks = evaluated.value.constraints
+-      if (new Set(checks.map((check) => check.ref)).size !== checks.length || request.constraints.some((ref) => !checks.some((check) => check.ref === ref)) || checks.some((check) => !request.constraints.includes(check.ref)) || (analysis && checks.some((check) => analysis.comparison.criterionResults.some((item) => item.criterionId === check.ref && item.state !== check.state)))) return { status: "unavailable", reason: "constraint-assessment-incomplete" }
+-      const restrictions = [...scenario.restrictions, ...scenario.unresolvedConditions, ...(scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${scenario.costCoverage.coverageState}`]), ...scenario.costCoverage.issues, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...scenario.costCoverage.derivedMissingCategoryIds.map((category) => `missing-category:${category}`), ...checks.filter((check) => check.state !== "satisfied").map((check) => `${check.ref}:${check.reason}`), ...(analysis?.comparison.unresolvedConditions ?? []), ...(analysis?.comparison.criterionResults.filter((item) => item.state !== "satisfied").map((item) => `${item.criterionId}:${item.reason}`) ?? [])]
+-      restrictions.push(...selected.flatMap((candidate) => candidate.result ? [...(candidate.result.costCoverage.coverageState === "complete" ? [] : [`candidate:${candidate.ref}:coverage:${candidate.result.costCoverage.coverageState}`]), ...candidate.result.unresolvedConditions.map((reason) => `candidate:${candidate.ref}:${reason}`), ...candidate.result.restrictions.map((reason) => `candidate:${candidate.ref}:${reason}`), ...candidate.result.costCoverage.issues.map((issue) => `candidate:${candidate.ref}:${issue}`), ...candidate.result.costCoverage.derivedMissingCategoryIds.map((category) => `candidate:${candidate.ref}:missing-category:${category}`), ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`candidate:${candidate.ref}:${entry.categoryId}:${entry.reason}`] : [])] : []))
+-      restrictions.push(...scenario.components.filter((component) => component.amount === null || component.evidenceState !== "confirmed" || !component.sourceRefs.length).map((component) => `component-unconfirmed:${component.id}`))
+-      if (scenario.comparisonStatus === "complete" && (!scenario.costCoverage.entries.length || !scenario.costCoverage.evaluatedSourceRefs.length || scenario.costCoverage.entries.some((entry) => !entry.evidenceRefs.length) || scenario.components.some((component) => !component.sourceRefs.length))) restrictions.push("coverage-evidence-unavailable")
+-      if (!analysis) restrictions.push("analysis-unavailable")
+-      restrictions.push(...selected.filter((candidate) => !candidate.result).map((candidate) => `candidate:${candidate.ref}:coverage-unavailable`))
+-      const common = { ...(analysis ? { analysis } : {}), id, caseRefs: selected.map((candidate) => candidate.caseRef), components: scenario.components, costCoverageRefs: evaluated.value.costCoverageRefs, conflicts: [], restrictions }
+-      evidenceRefs.push(...selected.flatMap((candidate) => candidate.result ? [...candidate.result.sourceRefs, ...candidate.result.costCoverage.evaluatedSourceRefs, ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : []), ...scenario.sourceRefs, ...scenario.costCoverage.evaluatedSourceRefs, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
+-      const candidateComplete = selected.every((candidate) => !!candidate.result && candidate.result.comparisonStatus === "complete" && candidate.result.costCoverage.coverageState === "complete" && !candidate.result.unresolvedConditions.length && !candidate.result.restrictions.length && !candidate.result.costCoverage.issues.length && candidate.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidate.result.costCoverage.entries.length > 0 && candidate.result.costCoverage.evaluatedSourceRefs.length > 0 && candidate.result.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0))
+-      const observedStatuses = [scenario.comparisonStatus, ...selected.flatMap((candidate) => candidate.result ? [candidate.result.comparisonStatus] : []), ...(analysis ? [analysis.comparison.comparisonStatus] : [])]
+-      const financialStatus = observedStatuses.includes("incompatible") ? "incompatible" : observedStatuses.includes("unavailable") ? "unavailable" : scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
+-      // A producer's definitive failed constraint makes the combination infeasible even while
+-      // financial coverage remains pending. Provisional financial metrics must be "unknown".
+-      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || analysis?.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")) {
+-        combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : financialStatus })
+-        continue
+-      }
+-      if (scenario.comparisonStatus === "complete" && analysis && analysis.comparison.comparisonStatus === "complete" && !analysis.comparison.unresolvedConditions.length && analysis.comparison.criterionResults.every((item) => item.state === "satisfied") && scenario.costCoverage.coverageState === "complete" && !scenario.unresolvedConditions.length && !scenario.restrictions.length && !scenario.costCoverage.issues.length && scenario.costCoverage.entries.length > 0 && scenario.costCoverage.evaluatedSourceRefs.length > 0 && scenario.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0) && scenario.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidateComplete && checks.every((check) => check.state === "satisfied") && evaluated.value.costCoverageRefs.length) {
+-        combinations.push({ ...common, eligibility: "eligible-complete", comparisonStatus: "complete" })
+-        continue
+-      }
+-      if (scenario.comparisonStatus === "unavailable" || selected.some((candidate) => candidate.result?.comparisonStatus === "unavailable") || analysis?.comparison.comparisonStatus === "unavailable") {
+-        combinations.push({ ...common, eligibility: "unavailable", comparisonStatus: "unavailable" })
+-        continue
+-      }
+-      combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
+-    }
+-    if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map(async (item) => {
+-      const observed = structuredClone(item)
+-      const expected = digestSfValue(observed)
+-      const valid = await host.revalidateEvaluation(observed.scenario, observed.costCoverageRefs, observed.analysis, context, observed.candidates)
+-      return valid && digestSfValue(observed) === expected
+-    }))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
+-    const latest = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
+-    if (latest.some((item, index) => item.status !== "ok" || digestSfValue(item.value) !== digestSfValue(candidates[index]))) return { status: "stale", reason: "candidate-changed-or-revoked" }
+-    return { status: "ok", value: { combinations, evidenceRefs: evidenceRefs.filter((ref, index) => evidenceRefs.findIndex((item) => item.refDigest === ref.refDigest) === index), limitations: ["Finite exploration; no global optimum is asserted.", ...(queue.length ? [`Exploration limit ${request.explorationLimit} reached.`] : [])] } }
+   }
+   const sensitivity: PortfolioPort["sensitivity"] = async (incoming, context) => {
+     const request = structuredClone(incoming)
+diff --git a/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts b/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Compare, runSfE15Compare, finishSfE15Compare } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DomainProjection } from "../contracts/context.ts"
+@@ -18,53 +19,58 @@
+ 
+ /** Resolve current, authorized case results and recheck their sources before returning. */
+ export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
++  const e15Compare = enterSfE15Compare()
++  let e15Rejected = false
++  try {
++    const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
++    if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
++    const request = parsed.value
++    if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
++    if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
++    if (!(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "denied", reason: "invalid-binding" }
++    const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
++    const resolved = await runSfE15Compare(e15Compare, () => resolveScenarios())
++    const failed = resolved.find((result) => result.status !== "ok")
++    if (failed) return failed
++    if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
++    const values = [resolved[0].value, resolved[1].value]
++    const validateSources = async () => {
++      const checks: boolean[] = []
++      for (const value of values) {
++        if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
++          checks.push(false)
++          continue
++        }
++        const source = structuredClone(await input.sources.resolveForecastSource(value.source.refId, binding))
++        const coverage = structuredClone(await input.sources.resolveForecastCoverage(value.coverageRef, binding))
++        checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
+-  const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
+-  if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
+-  const request = parsed.value
+-  if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
+-  if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
+-  if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
+-  const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
+-  const resolved = await resolveScenarios()
+-  const failed = resolved.find((result) => result.status !== "ok")
+-  if (failed) return failed
+-  if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
+-  const values = [resolved[0].value, resolved[1].value]
+-  const validateSources = async () => {
+-    const checks: boolean[] = []
+-    for (const value of values) {
+-      if (!value.result.sourceRefs.some((ref) => ref.refDigest === value.source.refDigest) || !value.result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && ref.refDigest === value.source.refDigest)) {
+-        checks.push(false)
+-        continue
+       }
++      return checks
++    }
++    if ((await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
++    const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
++    const again = await runSfE15Compare(e15Compare, () => resolveScenarios())
++    if (!(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding))) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "scenario-or-authority-changed" }
++    if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
++    if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
++    const criteria = input.criteria
++    const evaluate = async () => {
++      const results: Awaited<ReturnType<PlannerCriteriaHost["evaluate"]>>[] = []
++      // A host may reuse a cached result object; retain this observation before its next call.
++      for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
++      return results
+-      const source = structuredClone(await input.sources.resolveForecastSource(value.source.refId, binding))
+-      const coverage = structuredClone(await input.sources.resolveForecastCoverage(value.coverageRef, binding))
+-      checks.push(source.status === "ok" && source.value.evidence.refDigest === value.source.refDigest && coverage.status === "ok" && coverage.value.coverageRef === value.coverageRef && digestSfValue(coverage.value.basis) === digestSfValue(value.basis) && digestSfValue(coverage.value.assessment) === digestSfValue(value.result.costCoverage))
+     }
++    const evaluated = await runSfE15Compare(e15Compare, () => evaluate())
++    const failure = evaluated.find((item) => item.status !== "ok")
++    if (failure) return failure
++    if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
++    const checked = await runSfE15Compare(e15Compare, () => evaluate())
++    const finalScenarios = await runSfE15Compare(e15Compare, () => resolveScenarios())
++    if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding))) || (await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "criterion-or-authority-changed" }
++    const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
++    return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
++  } catch (e15Error) { e15Rejected = true; throw e15Error }
++  finally { finishSfE15Compare(e15Compare, e15Rejected) }
+-    return checks
+-  }
+-  if ((await validateSources()).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
+-  const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
+-  const again = await resolveScenarios()
+-  if (!(await input.host.revalidate(binding)) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-or-authority-changed" }
+-  if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
+-  if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
+-  const criteria = input.criteria
+-  const evaluate = async () => {
+-    const results: Awaited<ReturnType<PlannerCriteriaHost["evaluate"]>>[] = []
+-    // A host may reuse a cached result object; retain this observation before its next call.
+-    for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
+-    return results
+-  }
+-  const evaluated = await evaluate()
+-  const failure = evaluated.find((item) => item.status !== "ok")
+-  if (failure) return failure
+-  if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
+-  const checked = await evaluate()
+-  const finalScenarios = await resolveScenarios()
+-  if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await input.host.revalidate(binding)) || (await validateSources()).some((item) => !item) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "criterion-or-authority-changed" }
+-  const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
+-  return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
+ }
+ 
+ export function projectionDigest(projection: DomainProjection) {
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, markSfE15Branch, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { PortResult, PlannerPort } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -19,72 +20,82 @@
+   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
+ }): Analysis {
+   const revalidate: Analysis["revalidate"] = async (analysis, context) => {
++    const e15Revalidation = enterSfE15Unit("analysis-revalidation")
++    let e15Rejected = false
++    try {
++      const expected = structuredClone(analysis)
++      const inspect = async () => {
++        const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: expected.comparisonRef }, context))
++        if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultRef !== expected.comparisonRef || stored.value.resultDigest !== digestSfValue(expected.comparison) || digestSfValue(stored.value.result) !== stored.value.resultDigest || expected.comparison.alternativeResultRef !== expected.scenarioResultRef || expected.comparison.baselineResultRef === expected.scenarioResultRef) return undefined
++        const binding = structuredClone(await input.bindings.read({ caseRef: stored.value.caseRef, resultRef: expected.comparisonRef }, context))
++        if (binding.status !== "ok" || binding.value.resultRef !== stored.value.resultRef || binding.value.resultDigest !== stored.value.resultDigest || binding.value.requestDigest !== stored.value.requestDigest || binding.value.requestDigest !== digestSfValue(binding.value.request) || digestSfValue(binding.value.caseRef) !== digestSfValue(stored.value.caseRef) || digestSfValue(binding.value.request.scenarioRefs) !== digestSfValue([expected.comparison.baselineResultRef, expected.scenarioResultRef])) return undefined
++        const results = input.results
++        const scenarios = structuredClone(await readHistoricalScenarios(results, binding.value.request.scenarioRefs, context, "parallel-joint"))
++        if (input.results !== results) return undefined
++        if (scenarios.some((item, index) => item.status !== "ok" || item.value.kind !== "scenario" || item.value.resultRef !== binding.value.request.scenarioRefs[index] || item.value.resultDigest !== digestSfValue(item.value.result) || item.value.caseRef.id !== stored.value.caseRef.id || item.value.caseRef.incarnation !== stored.value.caseRef.incarnation || item.value.caseRef.version > stored.value.caseRef.version)) return undefined
++        const alternative = scenarios[1]
++        if (!alternative || alternative.status !== "ok" || digestSfValue(alternative.value.result) !== digestSfValue(expected.scenario)) return undefined
++        return { stored: stored.value, binding: binding.value, scenarios }
++      }
++      const first = await inspect()
++      if (!first) return false
++      const replay = await input.planner.compareScenarios(structuredClone(first.binding.request), context)
++      if (replay.status !== "ok" || digestSfValue(replay.value) !== first.stored.resultDigest) return false
++      const second = await inspect()
++      return !!second && digestSfValue(first) === digestSfValue(second)
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Unit(e15Revalidation, e15Rejected) }
+-    const expected = structuredClone(analysis)
+-    const inspect = async () => {
+-      const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: expected.comparisonRef }, context))
+-      if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultRef !== expected.comparisonRef || stored.value.resultDigest !== digestSfValue(expected.comparison) || digestSfValue(stored.value.result) !== stored.value.resultDigest || expected.comparison.alternativeResultRef !== expected.scenarioResultRef || expected.comparison.baselineResultRef === expected.scenarioResultRef) return undefined
+-      const binding = structuredClone(await input.bindings.read({ caseRef: stored.value.caseRef, resultRef: expected.comparisonRef }, context))
+-      if (binding.status !== "ok" || binding.value.resultRef !== stored.value.resultRef || binding.value.resultDigest !== stored.value.resultDigest || binding.value.requestDigest !== stored.value.requestDigest || binding.value.requestDigest !== digestSfValue(binding.value.request) || digestSfValue(binding.value.caseRef) !== digestSfValue(stored.value.caseRef) || digestSfValue(binding.value.request.scenarioRefs) !== digestSfValue([expected.comparison.baselineResultRef, expected.scenarioResultRef])) return undefined
+-      const results = input.results
+-      const scenarios = structuredClone(await readHistoricalScenarios(results, binding.value.request.scenarioRefs, context, "parallel-joint"))
+-      if (input.results !== results) return undefined
+-      if (scenarios.some((item, index) => item.status !== "ok" || item.value.kind !== "scenario" || item.value.resultRef !== binding.value.request.scenarioRefs[index] || item.value.resultDigest !== digestSfValue(item.value.result) || item.value.caseRef.id !== stored.value.caseRef.id || item.value.caseRef.incarnation !== stored.value.caseRef.incarnation || item.value.caseRef.version > stored.value.caseRef.version)) return undefined
+-      const alternative = scenarios[1]
+-      if (!alternative || alternative.status !== "ok" || digestSfValue(alternative.value.result) !== digestSfValue(expected.scenario)) return undefined
+-      return { stored: stored.value, binding: binding.value, scenarios }
+-    }
+-    const first = await inspect()
+-    if (!first) return false
+-    const replay = await input.planner.compareScenarios(structuredClone(first.binding.request), context)
+-    if (replay.status !== "ok" || digestSfValue(replay.value) !== first.stored.resultDigest) return false
+-    const second = await inspect()
+-    return !!second && digestSfValue(first) === digestSfValue(second)
+   }
+   return {
+     evaluate: async (incoming, context) => {
++      const e15Analysis = enterSfE15Unit("analysis")
++      let e15Rejected = false
++      try {
++        const request = structuredClone(incoming)
++        const selection = structuredClone(returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-select-initial", () => input.select(structuredClone(request), context))))
++        if (selection.status !== "ok") return selection
++        const selected = selection.value
++        if (!selected.baselineRef.trim() || !selected.alternativeRef.trim() || selected.baselineRef === selected.alternativeRef || !/^[a-f0-9]{64}$/.test(selected.selectionDigest) || digestSfValue(selected.criteria) !== digestSfValue(request.portfolio.constraints)) return { status: "needs-input", reason: "portfolio-baseline-selection-required" }
++        const scenario = structuredClone(await input.results.readHistoricalScenario({ resultRef: selected.alternativeRef }, context))
++        if (scenario.status !== "ok") return scenario
++        if (scenario.value.kind !== "scenario" || scenario.value.resultRef !== selected.alternativeRef || scenario.value.resultDigest !== digestSfValue(scenario.value.result) || scenario.value.caseRef.id !== selected.caseRef.id || scenario.value.caseRef.incarnation !== selected.caseRef.incarnation || scenario.value.caseRef.version > selected.caseRef.version || scenario.value.requestDigest !== digestSfValue(request.scenario)) return { status: "stale", reason: "portfolio-alternative-changed" }
++        const compare = { scenarioRefs: [selected.baselineRef, selected.alternativeRef], criteria: request.portfolio.constraints }
++        const proofs = structuredClone(await input.bindings.proofs(selected.caseRef, compare.criteria, context))
++        if (proofs.status !== "ok") return proofs
++        const comparison = structuredClone(returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-compare", () => input.planner.compareScenarios(structuredClone(compare), context))))
++        if (comparison.status !== "ok") return comparison
++        if (comparison.value.baselineResultRef !== selected.baselineRef || comparison.value.alternativeResultRef !== selected.alternativeRef || compare.criteria.some((ref) => !comparison.value.criterionResults.some((item) => item.criterionId === ref))) return { status: "unavailable", reason: "portfolio-comparison-incomplete" }
++        const requestDigest = digestSfValue(compare)
++        const key = await input.idempotencyKey(requestDigest, context)
++        if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" }
++        const idempotencyKey = `portfolio-comparison:${key}:${requestDigest}`
++        const existing = await input.results.readByRequest({ caseRef: selected.caseRef, kind: "comparison", idempotencyKey, requestDigest }, context)
++        if (existing.status !== "ok") return existing
++        const resultRef = existing.value.state === "found" ? existing.value.result.resultRef : undefined
++        const saved = resultRef ? (markSfE15Branch(e15Analysis, "analysis-persist", "reuse-result"), { status: "ok" as const, value: { resultRef } }) : returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-persist", () => input.persist({ kind: "comparison", request: compare, result: comparison.value }, idempotencyKey, context)))
++        if (saved.status !== "ok") return saved
++        const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
++        if (stored.status !== "ok") return stored
++        if (stored.value.kind !== "comparison" || stored.value.resultRef !== saved.value.resultRef || stored.value.requestDigest !== requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(selected.caseRef) || stored.value.resultDigest !== digestSfValue(stored.value.result) || digestSfValue(stored.value.result) !== digestSfValue(comparison.value)) return { status: "stale", reason: "portfolio-comparison-changed" }
++        // Canonical persistence may have already bound this newly written C08.
++        // Observe that binding now; an absent/invalid binding still takes the recovery
++        // path, and the independent read and revalidation below remain mandatory.
++        const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
++        if (previousBinding.status !== "ok") {
++          const binding = returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-bind", () => input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)))
++          if (binding.status !== "ok") return binding
++        } else { markSfE15Branch(e15Analysis, "analysis-bind", "binding-present") }
++        const binding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+-      const request = structuredClone(incoming)
+-      const selection = structuredClone(await input.select(structuredClone(request), context))
+-      if (selection.status !== "ok") return selection
+-      const selected = selection.value
+-      if (!selected.baselineRef.trim() || !selected.alternativeRef.trim() || selected.baselineRef === selected.alternativeRef || !/^[a-f0-9]{64}$/.test(selected.selectionDigest) || digestSfValue(selected.criteria) !== digestSfValue(request.portfolio.constraints)) return { status: "needs-input", reason: "portfolio-baseline-selection-required" }
+-      const scenario = structuredClone(await input.results.readHistoricalScenario({ resultRef: selected.alternativeRef }, context))
+-      if (scenario.status !== "ok") return scenario
+-      if (scenario.value.kind !== "scenario" || scenario.value.resultRef !== selected.alternativeRef || scenario.value.resultDigest !== digestSfValue(scenario.value.result) || scenario.value.caseRef.id !== selected.caseRef.id || scenario.value.caseRef.incarnation !== selected.caseRef.incarnation || scenario.value.caseRef.version > selected.caseRef.version || scenario.value.requestDigest !== digestSfValue(request.scenario)) return { status: "stale", reason: "portfolio-alternative-changed" }
+-      const compare = { scenarioRefs: [selected.baselineRef, selected.alternativeRef], criteria: request.portfolio.constraints }
+-      const proofs = structuredClone(await input.bindings.proofs(selected.caseRef, compare.criteria, context))
+-      if (proofs.status !== "ok") return proofs
+-      const comparison = structuredClone(await input.planner.compareScenarios(structuredClone(compare), context))
+-      if (comparison.status !== "ok") return comparison
+-      if (comparison.value.baselineResultRef !== selected.baselineRef || comparison.value.alternativeResultRef !== selected.alternativeRef || compare.criteria.some((ref) => !comparison.value.criterionResults.some((item) => item.criterionId === ref))) return { status: "unavailable", reason: "portfolio-comparison-incomplete" }
+-      const requestDigest = digestSfValue(compare)
+-      const key = await input.idempotencyKey(requestDigest, context)
+-      if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" }
+-      const idempotencyKey = `portfolio-comparison:${key}:${requestDigest}`
+-      const existing = await input.results.readByRequest({ caseRef: selected.caseRef, kind: "comparison", idempotencyKey, requestDigest }, context)
+-      if (existing.status !== "ok") return existing
+-      const resultRef = existing.value.state === "found" ? existing.value.result.resultRef : undefined
+-      const saved = resultRef ? { status: "ok" as const, value: { resultRef } } : await input.persist({ kind: "comparison", request: compare, result: comparison.value }, idempotencyKey, context)
+-      if (saved.status !== "ok") return saved
+-      const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
+-      if (stored.status !== "ok") return stored
+-      if (stored.value.kind !== "comparison" || stored.value.resultRef !== saved.value.resultRef || stored.value.requestDigest !== requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(selected.caseRef) || stored.value.resultDigest !== digestSfValue(stored.value.result) || digestSfValue(stored.value.result) !== digestSfValue(comparison.value)) return { status: "stale", reason: "portfolio-comparison-changed" }
+-      // Canonical persistence may have already bound this newly written C08.
+-      // Observe that binding now; an absent/invalid binding still takes the recovery
+-      // path, and the independent read and revalidation below remain mandatory.
+-      const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+-      if (previousBinding.status !== "ok") {
+-        const binding = await input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)
+         if (binding.status !== "ok") return binding
++        if (digestSfValue(binding.value.request) !== requestDigest || digestSfValue(binding.value.rules) !== digestSfValue(proofs.value)) return { status: "stale", reason: "portfolio-criteria-changed" }
++        const selectionAgain = returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-select-final", () => input.select(request, context)))
++        if (selectionAgain.status !== "ok" || digestSfValue(selectionAgain.value) !== digestSfValue(selected)) return { status: "stale", reason: "portfolio-selection-changed" }
++        const compared = stored.value.result
++        const analysis = { scenarioResultRef: selected.alternativeRef, scenario: scenario.value.result, comparisonRef: saved.value.resultRef, comparison: compared }
++        if (!returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-revalidate", () => revalidate(analysis, context)))) return { status: "stale", reason: "portfolio-analysis-changed" }
++        return { status: "ok", value: { analysis, constraints: compare.criteria.map((ref) => { const criterion = compared.criterionResults.find((item) => item.criterionId === ref)!; return { ref, state: criterion.state, reason: criterion.reason } }) } }
++      } catch (e15Error) { e15Rejected = true; throw e15Error }
++      finally { finishSfE15Unit(e15Analysis, e15Rejected) }
+-      }
+-      const binding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+-      if (binding.status !== "ok") return binding
+-      if (digestSfValue(binding.value.request) !== requestDigest || digestSfValue(binding.value.rules) !== digestSfValue(proofs.value)) return { status: "stale", reason: "portfolio-criteria-changed" }
+-      const selectionAgain = await input.select(request, context)
+-      if (selectionAgain.status !== "ok" || digestSfValue(selectionAgain.value) !== digestSfValue(selected)) return { status: "stale", reason: "portfolio-selection-changed" }
+-      const compared = stored.value.result
+-      const analysis = { scenarioResultRef: selected.alternativeRef, scenario: scenario.value.result, comparisonRef: saved.value.resultRef, comparison: compared }
+-      if (!await revalidate(analysis, context)) return { status: "stale", reason: "portfolio-analysis-changed" }
+-      return { status: "ok", value: { analysis, constraints: compare.criteria.map((ref) => { const criterion = compared.criterionResults.find((item) => item.criterionId === ref)!; return { ref, state: criterion.state, reason: criterion.reason } }) } }
+     },
+     revalidate,
+   }
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/production.ts b/modules/sucafina/Sucafinav1/product/portfolio/production.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/production.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/production.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DecisionCasePort, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+@@ -78,37 +79,47 @@
+         return { status: "ok", value: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }
+       },
+       assess: async (request, candidates, scenario, context, scenarioRequest) => {
++        const e15Assess = enterSfE15Unit("production-assess")
++        let e15Rejected = false
++        try {
++          if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
++          const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
++          if (result.status !== "ok") return result
++          const candidatesResult = await candidateCoverage(candidates, context)
++          if (candidatesResult.status !== "ok") return candidatesResult
++          const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
++          if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
++          if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
++          const analysis = returnedSfE15Await(e15Assess, await runSfE15Phase(e15Assess, "production-analysis", () => input.analysis!.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)))
++          if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
++          if (analysis.status !== "ok") return analysis
++          const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
++          if (stored.status !== "ok") return stored
++          if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
++          const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.value.analysis.comparisonRef }, context)
++          if (compared.status !== "ok") return compared
++          if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
++          return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
++        } catch (e15Error) { e15Rejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15Assess, e15Rejected) }
+-        if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
+-        const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+-        if (result.status !== "ok") return result
+-        const candidatesResult = await candidateCoverage(candidates, context)
+-        if (candidatesResult.status !== "ok") return candidatesResult
+-        const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
+-        if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+-        if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
+-        const analysis = await input.analysis.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)
+-        if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+-        if (analysis.status !== "ok") return analysis
+-        const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
+-        if (stored.status !== "ok") return stored
+-        if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
+-        const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.value.analysis.comparisonRef }, context)
+-        if (compared.status !== "ok") return compared
+-        if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
+-        return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
+       },
+       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
++        const e15EvaluationRevalidation = enterSfE15Unit("production-revalidation")
++        let e15Rejected = false
++        try {
++          if (!await fresh(evidenceRefs(scenario), context)) return false
++          const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
++          const candidatesResult = await candidateCoverage(candidates, context)
++          if (current.status !== "ok" || candidatesResult.status !== "ok") return false
++          const known = [...new Set([...current.value, ...candidatesResult.value])]
++          if (analysis) {
++            const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
++            const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
++            return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && returnedSfE15Await(e15EvaluationRevalidation, await runSfE15Phase(e15EvaluationRevalidation, "production-analysis-revalidate", () => input.analysis!.revalidate(analysis, context)))
++          }
++          return digestSfValue(known) === digestSfValue(refs)
++        } catch (e15Error) { e15Rejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15EvaluationRevalidation, e15Rejected) }
+-        if (!await fresh(evidenceRefs(scenario), context)) return false
+-        const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+-        const candidatesResult = await candidateCoverage(candidates, context)
+-        if (current.status !== "ok" || candidatesResult.status !== "ok") return false
+-        const known = [...new Set([...current.value, ...candidatesResult.value])]
+-        if (analysis) {
+-          const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
+-          const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
+-          return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && await input.analysis.revalidate(analysis, context)
+-        }
+-        return digestSfValue(known) === digestSfValue(refs)
+       },
+     },
+   })
+diff --git a/apps/cli/test/fixture/sucafina-native-installation.ts b/apps/cli/test/fixture/sucafina-native-installation.ts
+--- a/apps/cli/test/fixture/sucafina-native-installation.ts
++++ b/apps/cli/test/fixture/sucafina-native-installation.ts
+@@ -1,4 +1,8 @@
++import { createSfE15Forwarder } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import { mkdtemp, realpath, rm } from "node:fs/promises"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { lstatSync, readFileSync, realpathSync } from "node:fs"
+ import { tmpdir, userInfo } from "node:os"
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
+@@ -62,6 +66,7 @@
+       return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }
+     })
+     const app = yield* AppProcess.Service
++    const eventEnvironment = nativePreviewE15EventEnvironment(root)
+     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
+       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", factory,
+     ], {
+@@ -79,13 +84,15 @@
+         XDG_STATE_HOME: path.join(root, "host-state"),
+         ...(input.webRoot ? { ORCHESTRA_WEB_UI_DIR: input.webRoot } : {}),
+         ...(input.serverPassword ? { ORCHESTRA_SERVER_PASSWORD: input.serverPassword } : {}),
++        ...eventEnvironment,
+       },
+     }))
++    const e15Forward = createSfE15Forwarder()
+     const ready = yield* Deferred.make<void>()
+     const diagnostic = { last: "" }
++    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {
++      return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
++    })))
+-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
+-      line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void,
+-    )))
+     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
+       Effect.sync(() => { diagnostic.last = line.slice(0, 256) }),
+     )))
+@@ -118,4 +125,58 @@
+       },
+     }
+   })
++}
++
++
++/** Neutralize only our diagnostic keys on refusal, including possible inherited values. */
++function nativePreviewE15EventEnvironment(privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
++  const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb", sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
++  let stage = "binding"
++  try {
++    const directory = process.env[directoryKey], encoded = process.env[bindingKey]
++    if (!directory && !encoded) return disabled
++    if (!directory || !encoded || encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
++        Bun.version !== "1.3.14" || Bun.revision !== "0d9b296af33f2b851fcbf4df3e9ec89751734ba4") throw new Error("cpu-binding")
++    const value: unknown = JSON.parse(encoded)
++    if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("cpu-binding")
++    const binding = value as Record<string, unknown>
++    if (binding.schema !== "sf-preview-e15-event-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
++        typeof binding.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||
++        typeof binding.runId !== "string" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== "1" ||
++        typeof binding.nonce !== "string" || !/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
++        typeof binding.launcherBytes !== "number" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||
++        binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))
++      throw new Error("cpu-binding")
++    stage = "directory"
++    const repository = realpathSync(path.resolve(path.dirname(entry), "../../.."))
++    const base = path.join(repository, "test-ci-evidence"), info = lstatSync(directory)
++    const relative = path.relative(realpathSync(privateRoot), directory)
++    if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== binding.nonce ||
++        realpathSync(base) !== base || realpathSync(directory) !== directory || !info.isDirectory() || info.isSymbolicLink() ||
++        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
++      throw new Error("cpu-directory")
++    stage = "launcher"
++    const launcherPath = path.join(directory, "launcher.json"), launcherInfo = lstatSync(launcherPath)
++    if (!launcherInfo.isFile() || launcherInfo.isSymbolicLink() || launcherInfo.size !== binding.launcherBytes)
++      throw new Error("cpu-launcher")
++    const text = readFileSync(launcherPath, "utf8")
++    if (Buffer.byteLength(text, "utf8") !== binding.launcherBytes ||
++        createHash("sha256").update(text, "utf8").digest("hex") !== binding.launcherSha256) throw new Error("cpu-launcher-hash")
++    const parsed: unknown = JSON.parse(text)
++    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("cpu-launcher-shape")
++    const launcher = parsed as Record<string, unknown>
++    for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
++      if (launcher[key] !== binding[key]) throw new Error("cpu-launcher-binding")
++    if (launcher.processRole !== "native-cli" || launcher.streamName !== "preview-events.jsonl")
++      throw new Error("cpu-launcher-role")
++    return { [directoryKey]: directory, [bindingKey]: encoded }
++  } catch {
++    try {
++      createSfE15Forwarder()("SF_PREVIEW_E15_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e15-launcher-v1", source, sourceTree,
++        qualification: false, role: "native-launcher", kind: "disabled", reason: stage }) + "\n")
++    } catch { /* The original child must still be spawned with its original settings. */ }
++    return disabled
++  }
+ }
+diff --git a/packages/app-shell/e2e/sucafina/design-support/installation.ts b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+--- a/packages/app-shell/e2e/sucafina/design-support/installation.ts
++++ b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+@@ -1,6 +1,10 @@
++import { createSfE15Forwarder } from "../../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import type { BrowserContext } from "@playwright/test"
+ import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
+ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { chmodSync, closeSync, fstatSync, fsyncSync, lstatSync, mkdtempSync, openSync, realpathSync, writeFileSync } from "node:fs"
+ import { tmpdir } from "node:os"
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
+@@ -57,11 +61,13 @@
+       }).pipe(Effect.orDie),
+     )
+     const installed = yield* Effect.gen(function* () {
++      const e15Forward = createSfE15Forwarder()
+       const ready = yield* Deferred.make<void, Error>()
+       const diagnostic = { tail: "" }
++      const eventEnvironment = preparePreviewE15EventEnvironment(repository, root)
+       const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
+         cwd: repository,
++        env: { ...isolatedEnvironment(root), ...eventEnvironment },
+-        env: isolatedEnvironment(root),
+         extendEnv: false,
+         stdin: "ignore",
+         stdout: "pipe",
+@@ -70,7 +76,7 @@
+         forceKillAfter: "10 seconds",
+       }))
+       owned.child = child
++      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {
+-      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
+@@ -203,4 +209,57 @@
+ 
+ function redact(value: string) {
+   return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/code=[^&\s"']+/g, "code=[redacted]")
++}
++
++
++/** Diagnostic files survive the two original private roots; failure never blocks launch. */
++function preparePreviewE15EventEnvironment(repository: string, privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
++  const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb", sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
++  let fd: number | undefined, stage = "gate"
++  try {
++    const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
++    if (process.env.GITHUB_ACTIONS !== "true" || process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
++        process.platform !== "linux" || process.arch !== "x64" || !snapshot || !/^[a-f0-9]{40}$/.test(snapshot) ||
++        !runId || !/^[0-9]{1,20}$/.test(runId) || attempt !== "1") throw new Error("cpu-gate")
++    stage = "base"
++    const base = path.join(realpathSync(repository), "test-ci-evidence"), baseInfo = lstatSync(base)
++    if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error("cpu-base")
++    stage = "directory"
++    const directory = mkdtempSync(path.join(base, "sf613-e15-event-"))
++    chmodSync(directory, 0o700)
++    const relative = path.relative(realpathSync(privateRoot), directory)
++    if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||
++        relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
++      throw new Error("cpu-root")
++    const nonce = path.basename(directory)
++    if (!/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
++    const binding = { schema: "sf-preview-e15-event-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
++    const launcher = { ...binding, qualification: false, state: "prepared", processRole: "native-cli",
++      entry: "apps/cli/src/index.ts", command: "serve", streamName: "preview-events.jsonl",
++      relativeDirectory: "test-ci-evidence/" + nonce, createdUtcMs: Date.now(),
++      childGraceMs: 2000, adapterGraceMs: 10000,
++      limits: "Preparation is not proof of Request selection, phase completion, event transport or successful fsync." }
++    stage = "launcher"
++    const text = JSON.stringify(launcher) + "\n", launcherBytes = Buffer.byteLength(text, "utf8")
++    if (launcherBytes > 8192) throw new Error("cpu-launcher-size")
++    const launcherSha256 = createHash("sha256").update(text, "utf8").digest("hex")
++    fd = openSync(path.join(directory, "launcher.json"), "wx", 0o600)
++    writeFileSync(fd, text, "utf8")
++    fsyncSync(fd)
++    const written = fstatSync(fd)
++    if (!written.isFile() || written.size !== launcherBytes) throw new Error("cpu-launcher-write")
++    closeSync(fd)
++    fd = undefined
++    return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }
++  } catch {
++    try {
++      createSfE15Forwarder()("SF_PREVIEW_E15_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e15-launcher-v1", source, sourceTree,
++        qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }) + "\n")
++    } catch { /* Original setup/spawn remains authoritative. */ }
++    return disabled
++  } finally {
++    if (fd !== undefined) { try { closeSync(fd) } catch { /* Preserve original setup outcome. */ } }
++  }
+ }
+diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
+--- a/apps/cli/src/sucafina-product/portfolio-authority.ts
++++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Route, runSfE15Route } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+@@ -147,7 +148,11 @@
+       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
+     } } }, request, call)) : business.planner.compareScenarios }
+   const originalCompare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
++  const compareCanonical: typeof originalCompare = (request, call) => {
++    const e15Canonical = enterSfE15Route("canonical")
++    return runSfE15Route(e15Canonical, "preparation", () => observation.alternatives(request, call,
++      () => runSfE15Route(e15Canonical, "comparator", () => originalCompare(request, call))))
++  }
+-  const compareCanonical: typeof originalCompare = (request, call) => observation.alternatives(request, call, () => originalCompare(request, call))
+   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios, rules })
+   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
+   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
+diff --git a/apps/cli/src/sucafina-product/finance-pair-observation.ts b/apps/cli/src/sucafina-product/finance-pair-observation.ts
+--- a/apps/cli/src/sucafina-product/finance-pair-observation.ts
++++ b/apps/cli/src/sucafina-product/finance-pair-observation.ts
+@@ -1,3 +1,4 @@
++import { markSfE15Finance } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+@@ -42,6 +43,7 @@
+ 
+   return async <Value>(incoming: ScenarioCompareRequest, call: TrustedDomainContext,
+     work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
++    const e15Finance = markSfE15Finance("entered")
+     try {
+       if (!root.allows(call)) return unavailable()
+       const host = input.host, persistence = host.persistence
+@@ -49,9 +51,9 @@
+       if (call.kind !== "ui" || !parsed.ok || (parsed.value.criteria.length > 0 && !input.criteria) || parsed.value.scenarioRefs.length !== 2 ||
+         parsed.value.scenarioRefs[0] === parsed.value.scenarioRefs[1] ||
+         digestSfValue(parsed.value) !== digestSfValue(incoming) ||
++        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return (markSfE15Finance("fallback-before-root", e15Finance), await work())
+-        !persistence.readSnapshotRoot || !persistence.currentSnapshots || persistence.currentSnapshots()) return await work()
+       const selection = input.selectedScope(call)
++      if (!selection) return (markSfE15Finance("fallback-no-selection", e15Finance), await work())
+-      if (!selection) return await work()
+       const request = host.requestFor(call)
+       if (!request || request.signal.aborted || !selection.current()) return unavailable()
+ 
+@@ -130,16 +132,16 @@
+         rulesDigest = digestSfValue(rules)
+         return true
+       }, current)
++      if (!prepared) return (markSfE15Finance("prepare-refused", e15Finance), unavailable())
+-      if (!prepared) return unavailable()
+       // Missing rules retain the original comparator's unknown outcome. This
+       // branch runs before any comparison and opens no owned read root.
++      if (unsupportedCriteria) return (markSfE15Finance("unsupported-criteria", e15Finance), prepared.run(work))
+-      if (unsupportedCriteria) return prepared.run(work)
+       const grouped = await prepared.run(async (): Promise<PortResult<typeof unsupported | {
+         kind: "observed"; witness: string; result: PortResult<Value>
+       }>> => {
+         const before = await witness()
++        if (!before) return (markSfE15Finance("witness-refused", e15Finance), unavailable())
++        if (before.kind === "unsupported") return (markSfE15Finance("witness-unsupported", e15Finance), { status: "ok", value: unsupported })
+-        if (!before) return unavailable()
+-        if (before.kind === "unsupported") return { status: "ok", value: unsupported }
+         // A hit reuses a completed terminal fact with its original timestamp.
+         // The owner and bytes remain current; authorization is observed anew.
+         const authorizeRecords = async () => {
+@@ -151,15 +153,16 @@
+             await host.revalidate(call) && current()
+         }
+         const result = observeRecords && before.records
++          ? await (markSfE15Finance("owned-records", e15Finance), observeRecords(before.records.refs, call, root.proof(call), authorizeRecords, current, work))
++          : await (markSfE15Finance("owned-direct", e15Finance), work())
++        markSfE15Finance("observation-returned", e15Finance)
+-          ? await observeRecords(before.records.refs, call, root.proof(call), authorizeRecords, current, work)
+-          : await work()
+         const after = await witness()
+         return after?.kind === "current" && after.digest === before.digest
+           ? { status: "ok", value: { kind: "observed", witness: after.digest, result } }
+           : unavailable()
+       })
+       if (grouped.status !== "ok") return grouped
++      if (grouped.value.kind === "unsupported") return current() ? (markSfE15Finance("outside-root", e15Finance), await work()) : unavailable()
+-      if (grouped.value.kind === "unsupported") return current() ? await work() : unavailable()
+       // The first root is closed. Never replay the work when a source or reader has changed.
+       const egress = await root.prepare(call, async () => true, current)
+       if (!egress) return unavailable()
+@@ -169,6 +172,7 @@
+       const closed = await environment()
+       return closed === fresh.value.environment && current() ? grouped.value.result : unavailable()
+     } catch { return unavailable() }
++    finally { markSfE15Finance("returned", e15Finance) }
+   }
+ }
+ 
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts b/modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Route, runSfE15Route, returnedSfE15Route, finishSfE15Route } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -9,6 +10,8 @@
+ /** Resolve a current alternative to an actually persisted and currently authorized C08 result. */
+ export function createDecisionScenarioLookup(input: { cases: DecisionCasePort; state: SfProductStatePort; results: ReturnType<typeof createSfDecisionResultStore>; host: Pick<DomainPortHost, "requestFor" | "revalidate"> }) {
+   return async (request: { caseRef: { id: string; incarnation: string; version: number }; alternativeId: string; alternativeVersion: number }, context: TrustedDomainContext): Promise<PortResult<{ resultRef: string; requestDigest: string; resultDigest: string }>> => {
++    const e15Lookup = enterSfE15Route("lookup")
++    let e15Threw = false
+     try {
+       const source = input.host.requestFor(context)
+       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "scenario-access-unavailable" }
+@@ -19,7 +22,7 @@
+       if (alternatives.length !== 1) return { status: "unavailable", reason: "alternative-unavailable" }
+       const requestDigest = digestSfValue(alternatives[0]!.scenario)
+       const resultDigest = digestSfValue(alternatives[0]!.result)
++      const records = returnedSfE15Route(e15Lookup, "candidate-read-returned", await runSfE15Route(e15Lookup, "candidate-read", () => input.state.read(source, "cases", selectSfScenarioCandidates(request, requestDigest, resultDigest, context))))
+-      const records = await input.state.read(source, "cases", selectSfScenarioCandidates(request, requestDigest, resultDigest, context))
+       if (records.status !== "ok" || !records.value?.length) return { status: "unavailable", reason: "scenario-result-unavailable" }
+       const newest = Math.max(...records.value.map((item) => item.caseRef.version))
+       const matches = records.value.filter((item) => item.caseRef.version === newest)
+@@ -31,6 +34,7 @@
+       const resultAgain = await input.results.readHistoricalScenario({ resultRef }, context)
+       if (again.status !== "ok" || again.value.case.version !== request.caseRef.version || digestSfValue(again.value.case.alternatives) !== digestSfValue(current.value.case.alternatives) || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(stored.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-result-changed" }
+       return { status: "ok", value: { resultRef, requestDigest, resultDigest } }
++    } catch { e15Threw = true; return { status: "unavailable", reason: "scenario-result-unavailable" } }
++    finally { finishSfE15Route(e15Lookup, e15Threw) }
+-    } catch { return { status: "unavailable", reason: "scenario-result-unavailable" } }
+   }
+ }
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/result-store.ts
+@@ -1,3 +1,4 @@
++import { currentSfE15Route, runSfE15Route, returnedSfE15Route } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { types } from "node:util"
+ import { canonicalSfValue, digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+ import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+@@ -303,7 +304,8 @@
+     const id = input.createId()
+     if (!id.trim()) return { status: "unavailable", reason: "result-identity-unavailable" }
+     const stored = { schema: "sf-decision-result-v1" as const, resultRef: `decision-result:${encodeURIComponent(id)}`, caseRef: request.caseRef, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, requestDigest: request.requestDigest, resultDigest: digestSfValue(request.result), sourceRefs: request.sourceRefs, createdAt: input.now(), kind: request.kind, result: request.result } as StoredDecisionResult
++    const e15Transaction = currentSfE15Route()
++    const saved = returnedSfE15Route(e15Transaction, "state-transaction-returned", await runSfE15Route(e15Transaction, "state-transaction", () => input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `decision-result:${request.idempotencyKey}`, commandDigest: digestSfValue({ kind: request.kind, result: request.result, caseRef: request.caseRef, requestDigest: request.requestDigest, sourceRefs: request.sourceRefs }) }, async (state, authority) => {
+-    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `decision-result:${request.idempotencyKey}`, commandDigest: digestSfValue({ kind: request.kind, result: request.result, caseRef: request.caseRef, requestDigest: request.requestDigest, sourceRefs: request.sourceRefs }) }, async (state, authority) => {
+       if (!sameAuthority(authority, context) || !allowedCase(state.cases[request.caseRef.id], request.caseRef, context)) return { commit: false, value: null }
+       const results = state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }
+       results.decisionResults ??= {}
+@@ -313,7 +315,7 @@
+       // that immutable envelope without serializing a second copy on every read.
+       const receipt: StoredResultReceipt = { schema: "sf-decision-result-receipt-v1", resultRef: stored.resultRef, kind: stored.kind, caseRef: structuredClone(stored.caseRef), requestDigest: stored.requestDigest, storedDigest: digestSfValue(stored) }
+       return { commit: true, value: receipt }
++    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))))
+-    }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+     if (saved.status !== "ok") return { status: saved.status === "preview" ? "conflict" : saved.status, reason: "result-write-unavailable" }
+     if (!saved.value) return { status: "conflict", reason: "result-identity-conflict" }
+     // The provider may replay an older full receipt after a real restart.
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -1,3 +1,4 @@
++import { currentSfE15Route, linkSfE15Work, tapSfE15ProviderSelection } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { types } from "node:util"
+ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
+ import type { AssetPersistence } from "../../runtime/assets.ts"
+@@ -535,7 +536,7 @@
+     })
+     selectionApply(selectionSet, productSnapshotSelections, [work, (transaction: object) =>
+       isSfProductSnapshotRead(work, transaction) ? productReadSelection(namespace, read) : undefined])
++    return linkSfE15Work(currentSfE15Route(), "provider-read", work, read)
+-    return work
+   }
+   const port: SfProductStatePort = {
+     read: <T>(request: Request, namespace: SfStateNamespace, read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) =>
+@@ -579,7 +580,7 @@
+         // Recheck the actual precedence after admission, then keep the existing
+         // fresh selected clone and callback at this original observation point.
+         if (projection?.selection) {
++          if (!selectionCurrent() || (tapSfE15ProviderSelection(read, projection.selection) === "cases"
+-          if (!selectionCurrent() || (projection.selection === "cases"
+             ? readiness || resultSelection || scenarioSelection ||
+               (selection ? casesSelection || identitySelection : identitySelection ? casesSelection : casesSelection !== read)
+             : projection.selection === "case-identities"
+@@ -792,7 +793,7 @@
+           return result
+         })
+       }
++      return input.persistence.transaction("dashboard", linkSfE15Work(currentSfE15Route(), "provider-write", (snapshot: Snapshot) => run(snapshot, snapshot)), { signal: request.signal })
+-      return input.persistence.transaction("dashboard", (snapshot) => run(snapshot, snapshot), { signal: request.signal })
+     },
+   }
+   if (artifactFence() && artifacts) {
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Layer, linkSfE15Work, markSfE15Route, returnedSfE15Route, tapSfE15Gate } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { types } from "node:util"
+ import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, hasPairedLocalSnapshotReads, isLocalSnapshotAuthorityReader, observeLocalProductRead } from "../../runtime/local-store.ts"
+ import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
+@@ -670,6 +671,7 @@
+       })
+     },
+     transaction: (surface, work, options) => {
++      const e15Source = enterSfE15Layer("source", work)
+       const checking = readCheckScope()
+       const driver = input.persistence
+       const method = !types.isProxy(driver) && Object.getOwnPropertyDescriptor(driver, "transaction")
+@@ -685,17 +687,19 @@
+           (isLocalSnapshotAuthorityReader(driver, readAuthority) || isCurrentChoiceSnapshotAuthorityReader(driver, readAuthority))
+       }
+       const productRead = <T>(execute: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>) => {
++        linkSfE15Work(e15Source, "source-work", execute)
+         // This runs in the original work-argument position, after the method
+         // lookup. No selector or business authorization runs to choose a view.
++        if (!productCurrent()) { markSfE15Route(e15Source, "source-selection", "product-refused"); return execute }
++        if (options && (types.isProxy(options) || Object.getPrototypeOf(options) !== Object.prototype)) { markSfE15Route(e15Source, "source-selection", "options-refused"); return execute }
+-        if (!productCurrent()) return execute
+-        if (options && (types.isProxy(options) || Object.getPrototypeOf(options) !== Object.prototype)) return execute
+         const fields = options ? Object.getOwnPropertyDescriptors(options) : {}
+         if (Object.values(fields).some((field) => !Object.hasOwn(field, "value") || !field.enumerable) ||
++          Object.hasOwn(fields, "dashboardProductRead")) { markSfE15Route(e15Source, "source-selection", "options-refused"); return execute }
+-          Object.hasOwn(fields, "dashboardProductRead")) return execute
+         const root = readAuthority?.([])
++        if (!tapSfE15Gate(e15Source, "source-root-current", root?.current())) { markSfE15Route(e15Source, "source-selection", root === undefined ? "root-absent" : "root-refused"); return execute }
+-        if (!root?.current()) return execute
+         const selection = sfProductSnapshotReadSelection(work, ownValue(persistence, "transaction"))
++        markSfE15Route(e15Source, "source-selection", selection)
++        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root!.identity, work: execute, ...(selection ? { selection } : {}) }) }
+-        forwarded.options = { ...options, dashboardProductRead: Object.freeze({ identity: root.identity, work: execute, ...(selection ? { selection } : {}) }) }
+         return execute
+       }
+       return driver.transaction(surface, productRead(async (snapshot, blobs) => {
+@@ -745,16 +749,25 @@
+         const sealedPreimage = sealed ? () => sealed.current() ? driver.currentSnapshot?.(surface) : undefined : undefined
+         const guarded = guard(surface, snapshot, sealedPreimage)
+         try {
++          markSfE15Route(e15Source, "source-work-enter")
++          const result = returnedSfE15Route(e15Source, "source-work-returned", await work(snapshot, blobs))
+-          const result = await work(snapshot, blobs)
+           if (result.commit && sealed) {
+             if (checking && admitSourceChecks(checking)) checking.failed = true
+           } else {
+             checkReadCommit(checking, result.commit)
++          }
++          if (result.commit) {
++            markSfE15Route(e15Source, "source-finish-enter")
++            guarded.finish()
++            markSfE15Route(e15Source, "source-finish-returned")
+           }
+-          if (result.commit) guarded.finish()
+           if (projection && !result.commit) requireProduct()
+           return result
++        } finally {
++          markSfE15Route(e15Source, "source-dispose-enter")
++          guarded.dispose()
++          markSfE15Route(e15Source, "source-dispose-returned")
++        }
+-        } finally { guarded.dispose() }
+       }), forwarded.options)
+     },
+     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => {
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts b/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
+--- a/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Layer, linkSfE15Work, markSfE15Route } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue, sfCanonicalSerializerUnhooked } from "../contracts/canonical.ts"
+ import { currentLocalReadonlyAuthorityData, hasLocalSnapshotScope, isLocalSnapshotAuthorityReader, observeLocalSnapshotStability } from "../../runtime/local-store.ts"
+ import type { ReadonlyAuthorityData } from "../../runtime/local-store.ts"
+@@ -395,9 +396,14 @@
+       work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>,
+       options?: TransactionOptions,
+     ) => {
++      const e15Choice = enterSfE15Layer("choice", work)
+       const scope = scopes.getStore()
++      if (!scope && !input.authorizeCommit) {
++        markSfE15Route(e15Choice, "choice-forward", "direct")
++        return directTransactions.run(true, () => input.persistence.transaction(surface, work, options))
++      }
++      markSfE15Route(e15Choice, "choice-forward", "wrapped")
++      const run = () => input.persistence.transaction(surface, linkSfE15Work(e15Choice, "choice-wrapped", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+-      if (!scope && !input.authorizeCommit) return directTransactions.run(true, () => input.persistence.transaction(surface, work, options))
+-      const run = () => input.persistence.transaction(surface, async (snapshot, blobs) => {
+         if (scope && !currentScope(scope)) throw denied()
+         const result = await work(snapshot, blobs)
+         if (result.commit && input.authorizeCommit && !await input.authorizeCommit()) throw denied()
+@@ -407,7 +413,7 @@
+         const authorized = await authorizeSnapshot(scope)
+         if (!publication(scope, authorized)) throw denied()
+         return result
++      }), options)
+-      }, options)
+       return directTransactions.run(false, () => scope ? track(scope, run) : run())
+     },
+     ...(input.persistence.transactionAll ? {
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Layer, linkSfE15Work, markSfE15Route, returnedSfE15Route, tapSfE15Gate } from "./preview-progress-e15-diagnostic.ts"
+ import { Database } from "bun:sqlite"
+ import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
+ import { AsyncLocalStorage } from "node:async_hooks"
+@@ -357,6 +358,7 @@
+   }
+   const abortRoots = new WeakMap<Database, LocalTransactionAbort>()
+   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
++    const e15Operation = enterSfE15Layer("operation", work)
+     if (lifecycle.closed) {
+       const scope = (retainOwnerPrivacy(), context).getStore()
+       // An admitted readonly root may drain during disposal, but a rejected
+@@ -383,14 +385,18 @@
+       // Serialize writers within this instance instead of making maintenance
+       // contend with its own business transaction in WAL. Credential reads
+       // remain independent because authentication awaits them inside that transaction.
++      markSfE15Route(e15Operation, "queue-enter", !!previous)
+       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
++      markSfE15Route(e15Operation, "queue-returned")
+       signal?.throwIfAborted()
+       const db = write ? acquireWriter() : acquireAuthReader()
+       const status = { completed: false }
+       const failure: { failed: boolean; error?: unknown } = { failed: false }
+       try {
+         if (write) {
++          markSfE15Route(e15Operation, "begin-enter")
+           await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
++          markSfE15Route(e15Operation, "begin-returned")
+           requireDatabaseFile()
+         }
+         signal?.throwIfAborted()
+@@ -399,8 +405,10 @@
+         if (inherited) requireScope(inherited)
+         requireDatabaseFile()
+         status.completed = true
++        markSfE15Route(e15Operation, "operation-returned", "returned")
+         return value
+       } catch (error) {
++        markSfE15Route(e15Operation, "operation-returned", "threw")
+         failure.failed = true
+         failure.error = error
+         throw error
+@@ -612,7 +620,9 @@
+       return copyCurrentSnapshot(scope, surface)
+     },
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
++      const e15Local = enterSfE15Layer("local", work)
+       const parent = (retainOwnerPrivacy(), context).getStore()
++      markSfE15Route(e15Local, "local-enter", parent ? "child" : "top-level")
+       if (parent) return (async () => {
+         if (lifecycle.closed) {
+           // No callback can be admitted after disposal to establish read-only
+@@ -635,9 +645,10 @@
+         const selection: "cases" | "preferences" | "case-identities" | "decisionResults" | undefined = selected && productSnapshotView.own(selected, "value") &&
+           (selected.value === "cases" || selected.value === "preferences" || selected.value === "case-identities" || selected.value === "decisionResults") ? selected.value : undefined
+         // CurrentChoice's wrapped route changes work and retains the full path.
++        const productRoot = tapSfE15Gate(e15Local, "product-condition", !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
++          callback && productSnapshotView.own(callback, "value") && tapSfE15Gate(e15Local, "callback-equal", callback.value === work) &&
++          tapSfE15Gate(e15Local, "store-current", sameStore()) && tapSfE15Gate(e15Local, "view-current", productSnapshotView.current())) ? identity!.value as object : undefined
++        markSfE15Route(e15Local, "native-gates", selection)
+-        const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
+-          callback && productSnapshotView.own(callback, "value") && callback.value === work &&
+-          sameStore() && productSnapshotView.current() ? identity.value as object : undefined
+         if ((sourceRoot || aclRoot || productRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
+         const materialize = sourceRoot || aclRoot || productRoot ? undefined : currentCopy(parent, surface)
+         const staged = sourceRoot || aclRoot || productRoot || materialize ? undefined : parent.root.snapshots[surface]
+@@ -645,13 +656,18 @@
+         if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || (retainOwnerPrivacy(), rootIdentities).get(parent.root) !== aclRoot))
+           throw new Error("Local Dashboard ACL root changed")
+         // The callback obtains ACL fields separately via observeAuthority.
++        markSfE15Route(e15Local, "copy-enter", productRoot ? "projected" : "full")
++        let e15CopyReturned = false
++        try {
+         const projected = productRoot ? dashboardProductSnapshot(parent, productRoot, selection) : undefined
+         const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
+           : projected ? projected.snapshot
+           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
++        e15CopyReturned = true
++        if (!productRoot) markSfE15Route(e15Local, "copy-close", "full")
+         if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
++          selection: returnedSfE15Route(e15Local, "copy-close", projected?.selection),
+-          selection: projected?.selection,
+           current: () => {
+             requireScope(scope)
+             if ((retainOwnerPrivacy(), context).getStore() !== scope || !sameStore() || !productSnapshotView.current() ||
+@@ -691,9 +707,16 @@
+         } finally {
+           scope.open = false
+           scope.root.readers--
++        }
++        } finally {
++          if (!e15CopyReturned) markSfE15Route(e15Local, "copy-close", "threw")
+         }
+       })()
++      return operation(true, linkSfE15Work(e15Local, "local-operation", async (db: Database) => {
++        let e15Materializing = false, e15CopyStarted = false, e15Materialized = false
++        try {
++        e15Materializing = true
++        markSfE15Route(e15Local, "materialize-enter")
+-      return operation(true, async (db) => {
+         const copies: SnapshotCopies = {}
+         const aclCopies: AclCopies = {}
+         const byteKeys: Partial<Record<Surface, object>> = {}
+@@ -739,6 +762,8 @@
+           get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
+           get procurement() { return observed.procurement() },
+         }
++        e15CopyStarted = true
++        markSfE15Route(e15Local, "copy-enter", "full")
+         const snapshot = snapshots[surface]
+         // If no byte plan is available, capture a private preimage before
+         // handing the writable snapshot to its owner.
+@@ -752,6 +777,9 @@
+           copies[surface] = () => cloneSnapshot(held)
+           return () => held
+         })()
++        e15Materialized = true
++        markSfE15Route(e15Local, "copy-close", "full")
++        markSfE15Route(e15Local, "materialize-returned", "returned")
+         const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
+         const checkGenerations = () => {
+           if (!Bun.deepEquals(snapshot.sfBlobGenerations ?? {}, Object.fromEntries(generations))) throw new Error("Private blob generations changed outside storage")
+@@ -817,6 +845,7 @@
+             delete scope.root.copies
+             delete scope.root.preimage
+             delete scope.root.aclCopies
++            markSfE15Route(e15Local, "local-scope-closed")
+           }
+         })()
+         transactionOptions?.signal?.throwIfAborted()
+@@ -827,16 +856,29 @@
+           requireDatabaseFile()
+           if (transactionOptions?.sealedRead) throw new Error("Local sealed read attempted a write")
+           if (currentPreimage?.()) throw new Error("Local target preimage must be released before publication")
++          markSfE15Route(e15Local, "encode-enter")
+           const payload = encodeSnapshot(snapshot)
++          markSfE15Route(e15Local, "encode-returned")
+           decodeSnapshot(payload)
++          markSfE15Route(e15Local, "decode-returned")
+           requireDatabaseFile()
+           db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
++          markSfE15Route(e15Local, "sql-returned")
+           transactionOptions?.signal?.throwIfAborted()
+           requireDatabaseFile()
++          markSfE15Route(e15Local, "commit-enter")
+           db.exec("COMMIT")
++          markSfE15Route(e15Local, "commit-returned")
+         }
++        markSfE15Route(e15Local, "local-returning")
+         return result.value
++        } finally {
++          if (e15Materializing && !e15Materialized) {
++            if (e15CopyStarted) markSfE15Route(e15Local, "copy-close", "threw")
++            markSfE15Route(e15Local, "materialize-returned", "threw")
++          }
++        }
++      }), transactionOptions?.signal)
+-      }, transactionOptions?.signal)
+     },
+     transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
+       operation(true, async (db) => {
+diff --git a/modules/sucafina/Sucafinav1/product/planner/persistence.ts b/modules/sucafina/Sucafinav1/product/planner/persistence.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/persistence.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/persistence.ts
+@@ -1,3 +1,4 @@
++import { enterSfE15Route, currentSfE15Route, runSfE15Route, returnedSfE15Route, markSfE15Route, finishSfE15Route } from "../../runtime/preview-progress-e15-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { ScenarioComparison, ScenarioResult } from "../contracts/decisions.ts"
+@@ -99,23 +100,29 @@
+     if (current.status !== "ok") return current
+     const refs: BusinessEvidenceRef[] = records.flatMap((record) => record.status === "ok" ? record.value.sourceRefs : [])
+     const sourceRefs = refs.filter((ref, index) => refs.findIndex((item) => item.refDigest === ref.refDigest) === index)
++    const e15Persistence = currentSfE15Route()
++    const saved = returnedSfE15Route(e15Persistence, "store-write-returned", await runSfE15Route(e15Persistence, "store-write", () => input.store.write({ kind: "comparison", result: value.result, caseRef: selected.value, requestDigest, sourceRefs, idempotencyKey: callId }, context)))
+-    const saved = await input.store.write({ kind: "comparison", result: value.result, caseRef: selected.value, requestDigest, sourceRefs, idempotencyKey: callId }, context)
+     if (saved.status !== "ok") return saved
+     if (rules?.status === "ok" && bindings) {
++      markSfE15Route(e15Persistence, "binding-enter")
++      const bound = returnedSfE15Route(e15Persistence, "binding-returned", await bindings.bind({ caseRef: selected.value, resultRef: saved.value.resultRef, request: value.request, expectedRules: rules.value }, context))
+-      const bound = await bindings.bind({ caseRef: selected.value, resultRef: saved.value.resultRef, request: value.request, expectedRules: rules.value }, context)
+       if (bound.status !== "ok") return { status: bound.status, reason: "comparison-persisted-but-binding-unavailable" }
+     }
++    markSfE15Route(e15Persistence, "validation-enter")
++    const latest = returnedSfE15Route(e15Persistence, "validation-returned", await validate())
+-    const latest = await validate()
+     if (latest.status !== "ok") return latest
+     if (rules?.status === "ok" && bindings) {
++      const checked = returnedSfE15Route(e15Persistence, "binding-read-returned", await bindings.read({ caseRef: selected.value, resultRef: saved.value.resultRef }, context))
+-      const checked = await bindings.read({ caseRef: selected.value, resultRef: saved.value.resultRef }, context)
+       if (checked.status !== "ok") return checked
+     }
+     return { status: "ok", value: { resultRef: saved.value.resultRef } }
+   }
+   return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Replay,
+     observeScenario?: ObserveScenarioWrite): Promise<PortResult<{ resultRef: string }>> => {
++    const e15Persistence = enterSfE15Route("persistence")
++    let e15Threw = false
++    try { return await runSfE15Route(e15Persistence, "persist-body", () => persist(incoming, callId, context, replay ?? input.replay, observeScenario)) }
++    catch { e15Threw = true; return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
++    finally { finishSfE15Route(e15Persistence, e15Threw) }
+-    try { return await persist(incoming, callId, context, replay ?? input.replay, observeScenario) }
+-    catch { return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
+   }
+ }
+diff --git a/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts b/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts
+@@ -0,0 +1,814 @@
++import { AsyncLocalStorage } from "node:async_hooks"
++import { createHash } from "node:crypto"
++import { Buffer } from "node:buffer"
++import { closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, writeSync } from "node:fs"
++import path from "node:path"
++import { fileURLToPath } from "node:url"
++
++const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
++const sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
++const prefix = "SF_PREVIEW_E15_EVENT ", schema = "sf-preview-causal-e15-event-v1"
++const maxEvents = 191, maxBytes = 191 * 1024, maxLineBytes = 1024, countCap = 65_535
++const generalSlots = 17, unitSlots = 28, activeCompareSlots = 64, numberCap = 999_999_999
++const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
++const revision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
++type Binding = { schema: string; source: string; sourceTree: string; snapshot: string; runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string }
++type UnitKind = "port" | "combination" | "analysis" | "analysis-revalidation" | "production-assess" | "production-revalidation"
++type PhasePoint = "port-authority-initial" | "candidates-initial" | "combination-evaluate" | "port-authority-final" | "evaluations-recheck" | "candidates-final" |
++  "analysis-select-initial" | "analysis-compare" | "analysis-persist" | "analysis-bind" | "analysis-select-final" | "analysis-revalidate" | "production-analysis" | "production-analysis-revalidate"
++type HttpPoint = "body-returned" | "admit-returned" | "case-callback-entered" | "with-case-returned" | "egress-passed"
++type Outcome = "await-returned" | "rejected" | "abrupt" | "abandoned"
++type Payload = Readonly<Record<string, string | number | boolean | null | readonly number[]>>
++type Frame = {
++  handle: object; request: Request | undefined; binding: Binding; storage: AsyncLocalStorage<object>; root: Scope | undefined;
++  start: number; last: number; fd: number | undefined; closed: boolean; pendingClose: boolean; closeRejected: boolean; events: number; bytes: number; dropped: number;
++  nextUnit: number; nextPhase: number; nextCompare: number; openUnits: number; openPhases: number; openCompares: number; maxDepth: number;
++  generalUsed: number; firstAnalysis: Unit | undefined; critical: boolean[]; checkpoints: boolean[]; totals: number[]; stages: number[]; lineage: number[]; untracked: number; saturated: boolean;
++  overflowWritten: boolean; emissionFault: boolean; fileFault: boolean; scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean; backpressure: boolean; emitting: boolean
++  stdoutFailed: boolean; routeDisabled: boolean; routeScopes: number; routeOmitted: number; tailUsed: number;
++  firstPort: Unit | undefined; firstProductionRevalidation: Unit | undefined; tailMask: number;
++}
++type Scope = { token: object; frame: Frame; parent: Scope | undefined; owner: Unit | undefined; phase: Phase | undefined; compare: Compare | undefined; stage: number; next: Scope | undefined }
++type Unit = { handle: object; frame: Frame; birth: Scope; id: number; kind: UnitKind; parentUnit: number; parentPhase: number; phase: Phase | undefined; entryReserved: boolean; closed: boolean; next: Unit | undefined }
++type Phase = { frame: Frame; owner: Unit; id: number; point: PhasePoint; scope: Scope; recordReserved: boolean; workReturned: boolean; workThrew: boolean; closed: boolean }
++type Compare = { handle: object; frame: Frame; birth: Scope; scope: Scope; id: number; parentCompare: number; depth: number; stage: number; closed: boolean; next: Compare | undefined }
++const neutralToken = {}
++let selectionTried = false, selected: Frame | undefined, scopes: Scope | undefined, units: Unit | undefined, compares: Compare | undefined
++
++// 32 detail places = five first critical pairs (10), four global checkpoints,
++// the first analysis entry (1), and 17 general places. Pairs reserve both places
++// at entry; critical phase IDs 1-5 also cannot be consumed by generic phases.
++// Up to 28 admitted units each reserve one close outside those 32.
++// Request enter/close and one overflow add three: 63 base rows.
++// E15 independently reserves 12 tail rows, 6*12 lookup rows, 8 canonical/Finance
++// rows and 36 persistence rows: 191 stream rows / 191 KiB including prefix+LF.
++// One BI launcher-disabled row gives <=192 rows/192 KiB of diagnostic payload,
++// not a bound on the complete Actions log or its timestamp/ANSI encapsulation.
++// A skip uses its critical pair reservation but emits only one decision row.
++// Detail saturation never borrows a critical/checkpoint/unit-close reservation.
++function whole(value: number) { return value - value % 1 }
++function increment(value: number) { return value < countCap ? value + 1 : countCap }
++function bump(frame: Frame, value: number) { if (value >= countCap) frame.saturated = true; return increment(value) }
++function now() {
++  try {
++    const value = performance.now()
++    if (typeof value === "number" && value >= 0 && value <= numberCap / 10) return value
++  } catch { /* Observation is not a product operation. */ }
++}
++function elapsed(frame: Frame) {
++  const value = now()
++  if (value === undefined || value < frame.start || value < frame.last) { frame.clockFault = true; return null }
++  frame.last = value
++  return whole((value - frame.start) * 10)
++}
++function live(scope: Scope) {
++  let depth = 0
++  for (let at: Scope | undefined = scope; at; at = at.parent) {
++    if (++depth > 128 || at.frame !== scope.frame || at.owner?.closed || at.phase?.closed || at.compare?.closed) return false
++  }
++  return true
++}
++function currentScope(): Scope | undefined {
++  try {
++    const frame = selected
++    if (!frame || frame.closed || frame.scopeDisabled || frame.emitting) return
++    const token = frame.storage.getStore()
++    for (let scope = scopes; scope; scope = scope.next) if (scope.token === token && scope.frame === frame && live(scope)) return scope
++  } catch { if (selected && !selected.closed) { selected.scopeFault = true; selected.scopeDisabled = true } }
++}
++function unitFor(handle: unknown): Unit | undefined {
++  const scope = currentScope()
++  if (!scope) return
++  for (let unit = units; unit; unit = unit.next)
++    if (unit.handle === handle && !unit.closed && unit.frame === scope.frame && unit.birth === scope) return unit
++}
++function compareFor(handle: unknown): Compare | undefined {
++  const scope = currentScope()
++  if (!scope) return
++  for (let compare = compares; compare; compare = compare.next)
++    if (compare.handle === handle && !compare.closed && compare.frame === scope.frame && compare.birth === scope) return compare
++}
++function forgetScope(scope: Scope) {
++  let previous: Scope | undefined
++  for (let at = scopes; at; at = at.next) {
++    if (at === scope) { if (previous) previous.next = at.next; else scopes = at.next; return }
++    previous = at
++  }
++}
++function forgetCompare(compare: Compare) {
++  let previous: Compare | undefined
++  for (let at = compares; at; at = at.next) {
++    if (at === compare) { if (previous) previous.next = at.next; else compares = at.next; return }
++    previous = at
++  }
++}
++function counters(frame: Frame): Payload {
++  // Stages are a separate axis from explicit compare parent/depth. These are
++  // E15 scoped-root/scoped-child/stage-unclassified counts, not E13 taxonomy.
++  // compareBodies = [bodyEntered, bodyReturned, bodyThrew, open, maxDepth, untracked].
++  // stages = eleven [entered, returned, threw] triples: unclassified, port,
++  // combination, production-analysis, select-initial, analysis-compare, persist,
++  // bind, select-final, analysis-revalidate, production-analysis-revalidate.
++  // A body return does not attest to later async adoption or a caller clone/guard.
++  return { compareBodies: [frame.totals[0] ?? 0, frame.totals[1] ?? 0, frame.totals[2] ?? 0, frame.openCompares, frame.maxDepth, frame.untracked],
++    stages: frame.stages, lineage: frame.lineage, saturated: frame.saturated }
++}
++function append(frame: Frame, kind: string, payload: Payload) {
++  const record = { schema, source, sourceTree, qualification: false, snapshot: frame.binding.snapshot, runId: frame.binding.runId,
++    attempt: frame.binding.attempt, nonce: frame.binding.nonce, pid: process.pid, parentPid: process.ppid, request: 1,
++    sequence: frame.events + 1, kind, elapsedTenthMs: elapsed(frame), ...payload }
++  const line = prefix + JSON.stringify(record) + "\n", bytes = Buffer.byteLength(line, "utf8")
++  if (bytes > maxLineBytes || !/^[\x20-\x7e]*\n$/.test(line)) { frame.emissionFault = true; return }
++  if (frame.events >= maxEvents || frame.bytes + bytes > maxBytes) { frame.emissionFault = true; return }
++  // Each admitted attempt consumes quota once, even on write(false), partial write or throw.
++  frame.events++
++  frame.bytes += bytes
++  if (frame.fd !== undefined && !frame.fileFault) {
++    try { if (writeSync(frame.fd, line, undefined, "utf8") !== bytes) frame.fileFault = true }
++    catch { frame.fileFault = true }
++  }
++  // One synchronous attempt per line. A partial/zero write or throw permanently
++  // disables this sink; no reconstruction/replay can turn a fragment into a row.
++  if (!frame.stdoutFailed) {
++    try { if (writeSync(1, line, undefined, "utf8") !== bytes) { frame.stdoutFailed = true; frame.emissionFault = true } }
++    catch { frame.stdoutFailed = true; frame.emissionFault = true }
++  }
++}
++function emit(frame: Frame, kind: string, payload: Payload) {
++  if (frame.closed) return
++  if (frame.emitting) { frame.emissionFault = true; return }
++  frame.emitting = true
++  try { append(frame, kind, payload) }
++  catch { frame.emissionFault = true }
++  finally { frame.emitting = false; if (frame.pendingClose) closeFrame(frame) }
++}
++function omit(frame: Frame, reason: "detail" | "unit" | "compare" | "phase") {
++  if (frame.closed || frame.emitting) return
++  frame.dropped = bump(frame, frame.dropped)
++  if (!frame.overflowWritten) {
++    frame.overflowWritten = true
++    emit(frame, "overflow", { reason, generalUsed: frame.generalUsed, unitsAdmitted: frame.nextUnit, dropped: frame.dropped })
++  }
++}
++function general(frame: Frame, places: 1 | 2) {
++  if (frame.generalUsed + places > generalSlots) return false
++  frame.generalUsed += places
++  return true
++}
++function criticalIndex(point: PhasePoint) {
++  if (point === "analysis-select-initial") return 0
++  if (point === "analysis-select-final") return 1
++  if (point === "analysis-revalidate") return 2
++  if (point === "analysis-persist") return 3
++  if (point === "analysis-bind") return 4
++  return -1
++}
++function stageFor(point: PhasePoint) {
++  if (point === "analysis-select-initial") return 4
++  if (point === "analysis-compare") return 5
++  if (point === "analysis-persist") return 6
++  if (point === "analysis-bind") return 7
++  if (point === "analysis-select-final") return 8
++  if (point === "analysis-revalidate") return 9
++  if (point === "production-analysis-revalidate") return 10
++  if (point === "production-analysis") return 3
++  if (point === "combination-evaluate") return 2
++  return 1
++}
++function reservePhase(unit: Unit, point: PhasePoint) {
++  const tail = tailIndex(unit, point)
++  if (tail >= 0 && claimTail(unit.frame, tail)) return true
++  const index = criticalIndex(point), frame = unit.frame
++  if (frame.firstAnalysis === unit && index >= 0 && !frame.critical[index]) { frame.critical[index] = true; return true }
++  return general(frame, 2)
++}
++// This thunk owns the only invocation. ALS return/error is never authoritative.
++function runOnce<T>(frame: Frame | undefined, scope: Scope | undefined, work: () => T, phase?: Phase): T {
++  let invoked = false, returned = false, threw = false
++  let result!: T, thrown: unknown
++  const once = () => {
++    if (invoked) { if (threw) throw thrown; return result }
++    invoked = true
++    if (frame) {
++      let installed = false
++      try { installed = frame.storage.getStore() === (scope?.token ?? neutralToken) } catch { /* A missing guarantee disables attribution. */ }
++      if (!installed) { frame.scopeFault = true; frame.scopeDisabled = true }
++    }
++    try {
++      result = work()
++      returned = true
++      if (phase) phase.workReturned = true
++      return result
++    } catch (error) {
++      threw = true
++      thrown = error
++      if (phase) phase.workThrew = true
++      throw error
++    }
++  }
++  if (frame) {
++    try { frame.storage.run(scope?.token ?? neutralToken, once) }
++    catch { if (!threw) { frame.scopeFault = true; frame.scopeDisabled = true } }
++  }
++  if (!invoked) {
++    if (frame) { frame.scopeFault = true; frame.scopeDisabled = true }
++    try { once() } catch { /* Rethrow only the value captured from work below. */ }
++  }
++  if (threw) throw thrown
++  // returned is separate from result: undefined is a valid result and no thenable is assimilated.
++  if (!returned && frame) frame.scopeFault = true
++  return result
++}
++export function startSfE15Observation(request: Request): unknown {
++  if (selectionTried) return undefined
++  selectionTried = true
++  let fd: number | undefined
++  try {
++    const start = now(), admitted = admit()
++    if (start === undefined || !admitted) return undefined
++    const storage = new AsyncLocalStorage<object>()
++    fd = openSync(path.join(admitted.directory, "preview-events.jsonl"), "wx", 0o600)
++    const frame: Frame = { handle: {}, request, binding: admitted.binding, storage, root: undefined, start, last: start, fd,
++      closed: false, pendingClose: false, closeRejected: false, events: 0, bytes: 0, dropped: 0, nextUnit: 0, nextPhase: 0, nextCompare: 0,
++      openUnits: 0, openPhases: 0, openCompares: 0, maxDepth: 0, generalUsed: 0, firstAnalysis: undefined,
++      critical: [false, false, false, false, false], checkpoints: [false, false, false, false],
++      totals: [0, 0, 0], stages: Array.from({ length: 33 }, () => 0), lineage: [0, 0, 0], untracked: 0, saturated: false,
++      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false,
++      stdoutFailed: false, routeDisabled: false, routeScopes: 0, routeOmitted: 0, tailUsed: 0,
++      firstPort: undefined, firstProductionRevalidation: undefined, tailMask: 0 }
++    const scope: Scope = { token: {}, frame, parent: undefined, owner: undefined, phase: undefined, compare: undefined, stage: 0, next: undefined }
++    frame.root = scope
++    selected = frame
++    scopes = scope
++    fd = undefined
++    emit(frame, "request-enter", { maxEvents, maxBytes, maxLineBytes, detailSlots: 32, unitCloseSlots: unitSlots, activeCompareSlots })
++    return frame.handle
++  } catch {
++    if (fd !== undefined) { try { closeSync(fd) } catch { /* Observer setup remains optional. */ } }
++    return undefined
++  }
++}
++export function markSfE15Http(handle: unknown, request: Request, point: HttpPoint) {
++  try {
++    const frame = selected
++    if (!frame || frame.closed || frame.emitting || frame.handle !== handle || frame.request !== request ||
++        !["body-returned", "admit-returned", "case-callback-entered", "with-case-returned", "egress-passed"].includes(point)) return
++    const tail = point === "with-case-returned" ? 5 : point === "egress-passed" ? 6 : -1
++    if (!(tail >= 0 && claimTail(frame, tail)) && !general(frame, 1)) { omit(frame, "detail"); return }
++    emit(frame, "http-boundary", { point })
++  } catch { /* No Request member, result or error is inspected. */ }
++}
++export function runSfE15Observation<T>(handle: unknown, request: Request, work: () => T): T {
++  let frame: Frame | undefined, scope: Scope | undefined
++  try {
++    const candidate = selected
++    if (candidate && !candidate.closed && candidate.handle === handle && candidate.request === request) { frame = candidate; scope = candidate.root }
++  } catch { /* The exact work still executes once. */ }
++  return runOnce(frame ?? selected, scope, work)
++}
++export function enterSfE15Unit(kind: UnitKind): unknown {
++  try {
++    const birth = currentScope()
++    if (!birth || !["port", "combination", "analysis", "analysis-revalidation", "production-assess", "production-revalidation"].includes(kind)) return undefined
++    const frame = birth.frame, firstAnalysis = kind === "analysis" && !frame.firstAnalysis
++    // Reserve one admission and one detail entry for the first analysis even
++    // after other units/general details have consumed their own places.
++    if (frame.nextUnit >= unitSlots - (frame.firstAnalysis || firstAnalysis ? 0 : 1)) { omit(frame, "unit"); return undefined }
++    const unit: Unit = { handle: {}, frame, birth, id: ++frame.nextUnit, kind, parentUnit: birth.owner?.id ?? 0,
++      parentPhase: birth.phase?.id ?? 0, phase: undefined, entryReserved: firstAnalysis || general(frame, 1), closed: false, next: units }
++    units = unit
++    if (firstAnalysis) frame.firstAnalysis = unit
++    if (kind === "port" && !frame.firstPort) frame.firstPort = unit
++    if (kind === "production-revalidation" && !frame.firstProductionRevalidation) frame.firstProductionRevalidation = unit
++    frame.openUnits++
++    if (unit.entryReserved) emit(frame, "unit-enter", { unit: unit.id, unitKind: kind, parentUnit: unit.parentUnit, parentPhase: unit.parentPhase })
++    else omit(frame, "detail")
++    return unit.handle
++  } catch { return undefined }
++}
++export function runSfE15Phase<T>(handle: unknown, point: PhasePoint, work: () => T): T {
++  let frame: Frame | undefined, scope: Scope | undefined, phase: Phase | undefined
++  try {
++    const unit = unitFor(handle), critical = criticalIndex(point)
++    const firstCritical = !!unit && unit.frame.firstAnalysis === unit && critical >= 0 && !unit.frame.critical[critical]
++    if (unit && !unit.phase && (firstCritical || unit.frame.nextPhase < countCap - 5) &&
++        ["port-authority-initial", "candidates-initial", "combination-evaluate", "port-authority-final", "evaluations-recheck", "candidates-final",
++          "analysis-select-initial", "analysis-compare", "analysis-persist", "analysis-bind", "analysis-select-final", "analysis-revalidate", "production-analysis", "production-analysis-revalidate"].includes(point)) {
++      frame = unit.frame
++      const recordReserved = reservePhase(unit, point)
++      scope = { token: {}, frame, parent: unit.birth, owner: unit, phase: undefined, compare: undefined, stage: stageFor(point), next: scopes }
++      phase = { frame, owner: unit, id: firstCritical ? critical + 1 : ++frame.nextPhase + 5, point, scope, recordReserved, workReturned: false, workThrew: false, closed: false }
++      scope.phase = phase
++      scopes = scope
++      unit.phase = phase
++      frame.openPhases++
++      if (recordReserved) emit(frame, "phase-enter", { unit: unit.id, phase: phase.id, point, stage: scope.stage, ...counters(frame) })
++      else omit(frame, "detail")
++    } else if (unit) omit(unit.frame, "phase")
++  } catch { /* Do not replace or repeat the original expression. */ }
++  return runOnce(frame ?? selected, scope, work, phase)
++}
++function detachPhase(unit: Unit) {
++  const phase = unit.phase
++  if (!phase || phase.closed) return undefined
++  phase.closed = true
++  unit.phase = undefined
++  unit.frame.openPhases--
++  forgetScope(phase.scope)
++  return phase
++}
++function publishPhase(phase: Phase, outcome: Outcome) {
++  if (phase.recordReserved) emit(phase.frame, "phase-close", { unit: phase.owner.id, phase: phase.id, point: phase.point, stage: phase.scope.stage, outcome, ...counters(phase.frame) })
++}
++export function returnedSfE15Await<T>(handle: unknown, value: T): T {
++  try {
++    const unit = unitFor(handle)
++    if (unit) { const phase = detachPhase(unit); if (phase) publishPhase(phase, "await-returned") }
++  } catch { /* This tap precedes any outer clone/guard and returns the exact value. */ }
++  return value
++}
++export function markSfE15Branch(handle: unknown, point: "analysis-persist" | "analysis-bind", branch: "reuse-result" | "binding-present") {
++  try {
++    const unit = unitFor(handle)
++    if (!unit || unit.kind !== "analysis" || unit.phase ||
++        !(point === "analysis-persist" && branch === "reuse-result" || point === "analysis-bind" && branch === "binding-present")) return
++    if (!reservePhase(unit, point)) { omit(unit.frame, "detail"); return }
++    emit(unit.frame, "branch", { unit: unit.id, point, branch, ...counters(unit.frame) })
++  } catch { /* Called only inside an already decided original branch; no predicate repeats. */ }
++}
++export function finishSfE15Unit(handle: unknown, rejected: boolean) {
++  try {
++    const unit = unitFor(handle)
++    if (!unit) return
++    // All close state precedes output, so a reentrant Request close sees one cut.
++    const phase = detachPhase(unit)
++    unit.closed = true
++    unit.frame.openUnits--
++    if (phase) publishPhase(phase, rejected ? phase.workThrew ? "abrupt" : phase.workReturned ? "rejected" : "abandoned" : "abandoned")
++    emit(unit.frame, "unit-close", { unit: unit.id, unitKind: unit.kind, entryReserved: unit.entryReserved, outcome: rejected ? "body-threw" : "body-returned", ...counters(unit.frame) })
++  } catch { /* No sibling is closed or classified by this unit's outcome. */ }
++}
++export function enterSfE15Compare(): unknown {
++  try {
++    const birth = currentScope()
++    if (!birth) return undefined
++    const frame = birth.frame
++    let parent: Compare | undefined
++    for (let at: Scope | undefined = birth; at; at = at.parent) if (at.compare) { parent = at.compare; break }
++    const depth = parent ? parent.depth + 1 : 0, stage = birth.stage
++    if (frame.openCompares >= activeCompareSlots || frame.nextCompare >= countCap || depth >= activeCompareSlots) {
++      frame.untracked = bump(frame, frame.untracked); omit(frame, "compare"); return undefined
++    }
++    const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage, next: scopes }
++    const compare: Compare = { handle: {}, frame, birth, scope, id: ++frame.nextCompare, parentCompare: parent?.id ?? 0, depth, stage, closed: false, next: compares }
++    scope.compare = compare
++    scopes = scope
++    compares = compare
++    frame.openCompares++
++    if (depth > frame.maxDepth) frame.maxDepth = depth
++    frame.totals[0] = bump(frame, frame.totals[0] ?? 0)
++    frame.stages[stage * 3] = bump(frame, frame.stages[stage * 3] ?? 0)
++    const axis = stage === 0 ? 2 : parent ? 1 : 0
++    frame.lineage[axis] = bump(frame, frame.lineage[axis] ?? 0)
++    return compare.handle
++  } catch { return undefined }
++}
++export function runSfE15Compare<T>(handle: unknown, work: () => T): T {
++  let compare: Compare | undefined
++  try { compare = compareFor(handle) } catch { /* No replacement invocation. */ }
++  return runOnce(compare?.frame ?? selected, compare?.scope, work)
++}
++export function finishSfE15Compare(handle: unknown, rejected: boolean) {
++  try {
++    const compare = compareFor(handle)
++    if (!compare) return
++    const frame = compare.frame, outcome = rejected ? 2 : 1
++    compare.closed = true
++    frame.openCompares--
++    forgetScope(compare.scope)
++    forgetCompare(compare)
++    frame.totals[outcome] = bump(frame, frame.totals[outcome] ?? 0)
++    frame.stages[compare.stage * 3 + outcome] = bump(frame, frame.stages[compare.stage * 3 + outcome] ?? 0)
++    const bodyExits = (frame.totals[1] ?? 0) + (frame.totals[2] ?? 0)
++    const index = bodyExits === 1 ? 0 : bodyExits === 8 ? 1 : bodyExits === 32 ? 2 : bodyExits === 128 ? 3 : -1
++    if (index >= 0 && !frame.checkpoints[index]) {
++      frame.checkpoints[index] = true
++      emit(frame, "compare-body-checkpoint", { bodyExits, compare: compare.id, parentCompare: compare.parentCompare, depth: compare.depth, stage: compare.stage, ...counters(frame) })
++    }
++  } catch { /* Counts body exit, not subsequent async adoption; no descendant microphase is emitted. */ }
++}
++function closeFrame(frame: Frame) {
++  if (!frame.pendingClose || frame.emitting) return
++  frame.pendingClose = false
++  frame.emitting = true
++  try {
++    append(frame, "request-close", { outcome: frame.closeRejected ? "rejected" : "returned", eventsBefore: frame.events, bytesBefore: frame.bytes,
++      dropped: frame.dropped, openUnits: frame.openUnits, openPhases: frame.openPhases, ...counters(frame),
++      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.stdoutFailed)],
++      routeCoverage: [canonicalRoute ? 1 : 0, preparedLookups, comparatorLookups, persistenceRoute ? 1 : 0, frame.routeOmitted, Number(frame.routeDisabled)] })
++  } catch { frame.emissionFault = true }
++  finally {
++    const fd = frame.fd
++    frame.fd = undefined
++    if (fd !== undefined) {
++      try { fsyncSync(fd); const info = fstatSync(fd); if (!info.isFile() || (!frame.fileFault && info.size !== frame.bytes)) frame.fileFault = true } catch { frame.fileFault = true }
++      finally { try { closeSync(fd) } catch { frame.fileFault = true } }
++    }
++    frame.emitting = false
++    scopes = undefined
++    units = undefined
++    compares = undefined
++    routes = undefined
++    routeScopes = undefined
++    canonicalRoute = undefined
++    persistenceRoute = undefined
++    financeOwner = undefined
++  }
++  // This boundary does not attest to later fsync/close, censored units, or a missing terminal.
++}
++export function finishSfE15Observation(handle: unknown, request: Request, rejected: boolean) {
++  try {
++    const frame = selected
++    if (!frame || frame.closed || frame.handle !== handle || frame.request !== request) return
++    frame.closed = true
++    frame.request = undefined
++    frame.closeRejected = rejected
++    frame.pendingClose = true
++    closeFrame(frame)
++  } catch { /* Preserve the HTTP return/rejection even if observation cannot close. */ }
++}
++
++type RouteKind = "canonical" | "lookup" | "persistence"
++type RoutePhase = "preparation" | "comparator" | "candidate-read" | "persist-body" | "store-write" | "state-transaction"
++type WorkLink = "provider-read" | "provider-write" | "source-work" | "choice-wrapped" | "local-operation"
++type Layer = "source" | "choice" | "local" | "operation"
++type Gate = "source-root-current" | "callback-equal" | "store-current" | "view-current" | "product-condition"
++type FinancePoint = "entered" | "fallback-before-root" | "fallback-no-selection" | "prepare-refused" | "unsupported-criteria" | "witness-refused" | "witness-unsupported" | "owned-records" | "owned-direct" | "outside-root" | "work-enter" | "observation-returned" | "returned"
++type RoutePoint =
++  "source-enter" | "source-selection" | "choice-forward" | "local-enter" | "native-gates" | "copy-enter" | "copy-close" |
++  "candidate-read-returned" | "prewrite" | "store-write-returned" | "state-transaction-enter" | "state-transaction-returned" |
++  "queue-enter" | "queue-returned" | "begin-enter" | "begin-returned" | "materialize-enter" | "materialize-returned" |
++  "source-work-enter" | "source-work-returned" | "source-finish-enter" | "source-finish-returned" |
++  "source-dispose-enter" | "source-dispose-returned" | "local-scope-closed" |
++  "encode-enter" | "encode-returned" | "decode-returned" | "sql-returned" | "commit-enter" | "commit-returned" |
++  "local-returning" | "operation-returned" | "binding-enter" | "binding-returned" | "validation-enter" | "validation-returned" | "binding-read-returned"
++type Route = {
++  handle: object; frame: Frame; birth: Scope; kind: RouteKind; id: number; phase: RoutePhase; closed: boolean;
++  points: number; phaseMask: number; providerWork: unknown; callback: unknown; sourceWork: unknown; forwardedWork: unknown; operationWork: unknown;
++  sourceSeen: boolean; choiceSeen: boolean; localSeen: boolean; operationSeen: boolean; gates: number[]; next: Route | undefined
++}
++type RouteScope = { scope: Scope; route: Route | undefined; phase: RoutePhase; next: RouteScope | undefined }
++const lookupPoints = ["lookup-enter", "candidate-read-enter", "source-enter", "source-selection", "choice-forward", "local-enter",
++  "native-gates", "copy-enter", "copy-close", "provider-view", "candidate-read-returned", "lookup-close"]
++const persistencePoints = ["persist-enter", "prewrite", "store-write-returned", "persist-close", "state-transaction-enter", "state-transaction-returned",
++  "source-enter", "source-selection", "choice-forward", "local-enter", "queue-enter", "queue-returned", "begin-enter", "begin-returned",
++  "materialize-enter", "materialize-returned", "source-work-enter", "source-work-returned", "source-finish-enter", "source-finish-returned",
++  "source-dispose-enter", "source-dispose-returned", "local-scope-closed", "encode-enter", "encode-returned", "decode-returned",
++  "sql-returned", "commit-enter", "commit-returned", "local-returning", "operation-returned", "binding-enter", "binding-returned",
++  "validation-enter", "validation-returned", "binding-read-returned"]
++const canonicalPoints = ["canonical-enter", "comparator-enter", "finance-enter", "finance-branch", "finance-work-enter", "finance-observation-returned", "finance-body-exit", "finance-outside-root"]
++let routes: Route | undefined, routeScopes: RouteScope | undefined, canonicalRoute: Route | undefined, persistenceRoute: Route | undefined
++let preparedLookups = 0, comparatorLookups = 0
++let financeOwner: object | undefined
++
++function tailIndex(unit: Unit, point: PhasePoint) {
++  if (unit === unit.frame.firstAnalysis && point === "analysis-compare") return 0
++  if (unit === unit.frame.firstProductionRevalidation && point === "production-analysis-revalidate") return 1
++  if (unit !== unit.frame.firstPort) return -1
++  return point === "port-authority-final" ? 2 : point === "evaluations-recheck" ? 3 : point === "candidates-final" ? 4 : -1
++}
++function claimTail(frame: Frame, index: number) {
++  const bit = 2 ** index
++  if (frame.tailMask % (bit * 2) >= bit) return false
++  frame.tailMask += bit
++  frame.tailUsed += index < 5 ? 2 : 1
++  return true
++}
++function routeContext(birth = currentScope()): RouteScope | undefined {
++  if (!birth || birth.frame.routeDisabled) return
++  for (let at: Scope | undefined = birth; at; at = at.parent) {
++    for (let item = routeScopes; item; item = item.next) {
++      if (item.scope !== at) continue
++      if (!item.route || item.route.closed || item.route.frame !== birth.frame) return
++      return item
++    }
++  }
++}
++function routeFor(handle: unknown): Route | undefined {
++  const birth = currentScope()
++  if (!birth || birth.frame.routeDisabled) return
++  for (let route = routes; route; route = route.next) {
++    if (route.handle !== handle || route.closed || route.frame !== birth.frame) continue
++    if (route.birth === birth || routeContext(birth)?.route === route) return route
++  }
++}
++function routeScope(route: Route | undefined, phase: RoutePhase, birth: Scope) {
++  const frame = birth.frame
++  // Two canonical scopes, six read scopes and three persistence scopes fit.
++  // Bounded neutral masks cover reentrancy; exhaustion disables attribution.
++  if (frame.routeDisabled || frame.routeScopes >= 32) { frame.routeDisabled = true; frame.scopeFault = true; return undefined }
++  frame.routeScopes++
++  const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage: birth.stage, next: scopes }
++  const item: RouteScope = { scope, route, phase, next: routeScopes }
++  scopes = scope
++  routeScopes = item
++  return scope
++}
++function selectedDetail(value: unknown) {
++  if (value === undefined) return "none"
++  if (value === true) return "true"
++  if (value === false) return "false"
++  if (typeof value !== "string") return "unknown"
++  return ["cases", "preferences", "case-identities", "decisionResults", "direct", "wrapped", "child", "top-level", "projected", "full",
++    "returned", "threw", "abandoned", "product-refused", "options-refused", "root-absent", "root-refused", "not-requested",
++    "fallback-before-root", "fallback-no-selection", "prepare-refused", "unsupported-criteria", "witness-refused", "witness-unsupported",
++    "owned-records", "owned-direct", "outside-root"].includes(value) ? value : "unknown"
++}
++function routeEmit(route: Route, point: string, detail?: unknown) {
++  if (route.closed || route.frame.closed || route.frame.routeDisabled || route.frame.emitting) return
++  const points = route.kind === "lookup" ? lookupPoints : route.kind === "persistence" ? persistencePoints : canonicalPoints
++  const index = points.indexOf(point)
++  if (index < 0) return
++  const bit = 2 ** index
++  if (route.points % (bit * 2) >= bit) return
++  // Claim before serialization/clock/sink: reentrancy cannot reuse a place.
++  route.points += bit
++  emit(route.frame, "route", { routeKind: route.kind, route: route.id, routePhase: route.phase, point, detail: selectedDetail(detail),
++    gates: route.gates, parentUnit: route.birth.owner?.id ?? 0, parentPhase: route.birth.phase?.id ?? 0 })
++}
++function newRoute(kind: RouteKind, phase: RoutePhase, birth: Scope, id: number) {
++  const route: Route = { handle: {}, frame: birth.frame, birth, kind, id, phase, closed: false, points: 0, phaseMask: 0,
++    providerWork: undefined, callback: undefined, sourceWork: undefined, forwardedWork: undefined, operationWork: undefined,
++    sourceSeen: false, choiceSeen: false, localSeen: false, operationSeen: false, gates: [-1, -1, -1, -1, -1], next: routes }
++  routes = route
++  return route
++}
++export function enterSfE15Route(kind: RouteKind): unknown {
++  try {
++    const birth = currentScope()
++    if (!birth || birth.frame.routeDisabled) return undefined
++    const frame = birth.frame, context = routeContext(birth)
++    if (kind === "canonical") {
++      if (canonicalRoute) return undefined
++      const route = newRoute(kind, "preparation", birth, 1)
++      canonicalRoute = route
++      routeEmit(route, "canonical-enter")
++      return route.handle
++    }
++    if (kind === "lookup") {
++      if (!context || context.route !== canonicalRoute || context.phase !== "preparation" && context.phase !== "comparator") return undefined
++      const preparation = context.phase === "preparation"
++      if (preparation ? preparedLookups >= 2 : comparatorLookups >= 4) {
++        frame.routeOmitted = bump(frame, frame.routeOmitted); omit(frame, "detail"); return undefined
++      }
++      const id = preparation ? ++preparedLookups : 2 + ++comparatorLookups
++      const route = newRoute(kind, context.phase, birth, id)
++      routeEmit(route, "lookup-enter")
++      return route.handle
++    }
++    if (kind === "persistence") {
++      if (persistenceRoute) return undefined
++      let owner = false
++      for (let at: Scope | undefined = birth; at; at = at.parent)
++        if (at.phase?.point === "analysis-persist" && at.owner === frame.firstAnalysis) { owner = true; break }
++      if (!owner) return undefined
++      const route = newRoute(kind, "persist-body", birth, 1)
++      persistenceRoute = route
++      routeEmit(route, "persist-enter")
++      return route.handle
++    }
++  } catch { /* A diagnostic handle never grants product authority. */ }
++  return undefined
++}
++export function currentSfE15Route(): unknown {
++  try { return routeContext()?.route?.handle } catch { return undefined }
++}
++export function runSfE15Route<T>(handle: unknown, phase: RoutePhase, work: () => T): T {
++  let frame: Frame | undefined, scope: Scope | undefined
++  try {
++    const birth = currentScope(), route = routeFor(handle)
++    if (birth) {
++      frame = birth.frame
++      const index = ["preparation", "comparator", "candidate-read", "persist-body", "store-write", "state-transaction"].indexOf(phase)
++      const context = routeContext(birth)
++      const valid = route && index >= 0 && (route.kind === "canonical" && (phase === "preparation" || phase === "comparator") ||
++        route.kind === "lookup" && phase === "candidate-read" ||
++        route.kind === "persistence" && (phase === "persist-body" || phase === "store-write" || phase === "state-transaction" && context?.phase === "store-write"))
++      const bit = index >= 0 ? 2 ** index : 0
++      if (valid && route.phaseMask % (bit * 2) < bit) {
++        route.phaseMask += bit
++        scope = routeScope(route, phase, birth)
++        if (phase === "comparator") {
++          routeEmit(route, "comparator-enter")
++          if (financeOwner) routeEmit(route, "finance-work-enter")
++        }
++        if (phase === "candidate-read") routeEmit(route, "candidate-read-enter")
++        if (phase === "store-write") routeEmit(route, "prewrite")
++        if (phase === "state-transaction") routeEmit(route, "state-transaction-enter")
++      } else {
++        // Preserve E14's lexical stage while masking an ambient selected route.
++        scope = context ? routeScope(undefined, phase, birth) : birth
++      }
++    }
++  } catch { if (selected) { selected.scopeFault = true; selected.routeDisabled = true } }
++  return runOnce(frame ?? selected, scope, work)
++}
++export function finishSfE15Route(handle: unknown, threw: boolean) {
++  try {
++    const route = routeFor(handle)
++    if (!route) return
++    if (route.kind !== "canonical") routeEmit(route, route.kind === "lookup" ? "lookup-close" : "persist-close", threw ? "threw" : "returned")
++    route.closed = true
++    route.providerWork = undefined
++    route.callback = undefined
++    route.sourceWork = undefined
++    route.forwardedWork = undefined
++    route.operationWork = undefined
++  } catch { /* The original caught/thrown value is not passed to the observer. */ }
++}
++export function linkSfE15Work<T>(handle: unknown, point: WorkLink, value: T, callback?: unknown): T {
++  try {
++    const route = routeFor(handle), context = routeContext()
++    if (!route || context?.route !== route || typeof value !== "function") return value
++    if (point === "provider-read" && route.kind === "lookup" && context.phase === "candidate-read" && route.providerWork === undefined) {
++      route.providerWork = value
++      route.callback = callback
++    } else if (point === "provider-write" && route.kind === "persistence" && context.phase === "state-transaction" && route.providerWork === undefined) {
++      route.providerWork = value
++    } else if (point === "source-work" && route.sourceSeen && route.sourceWork === undefined) {
++      route.sourceWork = value
++    } else if (point === "choice-wrapped" && route.choiceSeen && route.forwardedWork === undefined) {
++      route.forwardedWork = value
++    } else if (point === "local-operation" && route.localSeen && route.operationWork === undefined) {
++      route.operationWork = value
++    }
++  } catch { /* No original callback is wrapped, invoked, or inspected. */ }
++  return value
++}
++export function enterSfE15Layer(layer: Layer, work: unknown): unknown {
++  try {
++    const context = routeContext(), route = context?.route
++    if (!route || route.kind === "canonical" || typeof work !== "function") return undefined
++    if (layer === "source" && !route.sourceSeen && work === route.providerWork) {
++      route.sourceSeen = true
++      routeEmit(route, "source-enter")
++      return route.handle
++    }
++    if (layer === "choice" && !route.choiceSeen && route.sourceSeen && work === route.sourceWork) {
++      route.choiceSeen = true
++      return route.handle
++    }
++    if (layer === "local" && !route.localSeen && route.sourceSeen && work === (route.forwardedWork ?? route.sourceWork)) {
++      route.localSeen = true
++      return route.handle
++    }
++    if (layer === "operation" && !route.operationSeen && route.localSeen && work === route.operationWork) {
++      route.operationSeen = true
++      return route.handle
++    }
++  } catch { /* Unknown, reused, foreign and late work cannot join the selected chain. */ }
++  return undefined
++}
++export function markSfE15Route(handle: unknown, point: RoutePoint, detail?: unknown) {
++  try {
++    const route = routeFor(handle)
++    if (!route) return
++    if (point === "choice-forward" && detail === "direct" && route.choiceSeen && route.forwardedWork === undefined)
++      route.forwardedWork = route.sourceWork
++    routeEmit(route, point, detail)
++  } catch { /* Only bounded local facts are emitted. */ }
++}
++export function returnedSfE15Route<T>(handle: unknown, point: RoutePoint, value: T): T {
++  markSfE15Route(handle, point, point === "copy-close" ? value : "returned")
++  return value
++}
++export function tapSfE15Gate<T>(handle: unknown, gate: Gate, value: T): T {
++  try {
++    const route = routeFor(handle)
++    if (route) {
++      const index = ["source-root-current", "callback-equal", "store-current", "view-current", "product-condition"].indexOf(gate)
++      // -1 means no tap evaluated; 2 means an evaluated nonboolean result.
++      // Optional source-root absence is identified separately by its branch row.
++      if (index >= 0 && route.gates[index] === -1) route.gates[index] = value === true ? 1 : value === false ? 0 : 2
++    }
++  } catch { /* A tap returns the original predicate result without coercing it. */ }
++  return value
++}
++export function tapSfE15ProviderSelection<T>(callback: unknown, value: T): T {
++  try {
++    const route = routeContext()?.route
++    if (route?.kind === "lookup" && typeof callback === "function" && callback === route.callback) routeEmit(route, "provider-view", value)
++  } catch { /* Preserve the already performed optional selection lookup. */ }
++  return value
++}
++export function markSfE15Finance(point: FinancePoint, owner?: unknown): unknown {
++  try {
++    const context = routeContext(), route = context?.route
++    if (!route || route !== canonicalRoute) return undefined
++    if (point === "entered") {
++      if (context.phase !== "preparation" || financeOwner) return undefined
++      financeOwner = {}
++      routeEmit(route, "finance-enter")
++      return financeOwner
++    }
++    if (!financeOwner || owner !== financeOwner) return undefined
++    if (point === "returned") routeEmit(route, "finance-body-exit")
++    else if (point === "work-enter") routeEmit(route, "finance-work-enter")
++    else if (point === "observation-returned") routeEmit(route, "finance-observation-returned")
++    else if (point === "outside-root") routeEmit(route, "finance-outside-root", point)
++    else routeEmit(route, "finance-branch", point)
++  } catch { /* Records an existing branch; it never reads a witness or grant. */ }
++  return undefined
++}
++
++// The bridges feed decoded chunks here BEFORE their unchanged splitLines/readiness
++// pipeline. Only observed LF completes a diagnostic row; EOF never invents one.
++export function createSfE15Forwarder(): (chunk: string) => string {
++  const state = { tail: "", discarding: false, diagnostic: false, failed: false, events: 0, bytes: 0, mode: "" }
++  return (chunk) => {
++    try {
++      if (state.failed || typeof chunk !== "string") return chunk
++      for (let index = 0; index < chunk.length; index++) {
++        const character = chunk[index]!
++        if (character !== "\n") {
++          if (character.charCodeAt(0) > 127) {
++            if (state.diagnostic || state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")) { state.failed = true; break }
++            state.tail = ""
++            state.discarding = true
++            continue
++          }
++          if (!state.discarding) {
++            if (state.tail.length < maxLineBytes - 1) state.tail += character
++            else {
++              state.diagnostic = state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")
++              state.tail = ""
++              state.discarding = true
++            }
++          }
++          continue
++        }
++        const line = state.tail
++        const discarded = state.discarding, diagnostic = state.diagnostic
++        state.tail = ""
++        state.discarding = false
++        state.diagnostic = false
++        if (discarded) { if (diagnostic) { state.failed = true; break } else continue }
++        const mode = line.startsWith(prefix) ? "events" : line.startsWith("SF_PREVIEW_E15_LAUNCHER ") ? "disabled" : ""
++        if (!mode) continue
++        if (!/^[\x20-\x7e]*$/.test(line) || state.mode && mode !== state.mode ||
++            state.events >= (mode === "events" ? maxEvents : 1) || state.bytes + line.length + 1 > (mode === "events" ? maxBytes : maxLineBytes)) {
++          state.failed = true
++          break
++        }
++        state.mode = mode
++        const complete = line + "\n", bytes = line.length + 1
++        state.events++
++        state.bytes += bytes
++        try { if (writeSync(1, complete, undefined, "utf8") !== bytes) state.failed = true }
++        catch { state.failed = true }
++        if (state.failed) break
++      }
++    } catch { state.failed = true }
++    return chunk
++  }
++}
++
++function hash(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
++function within(parent: string, child: string) {
++  const relative = path.relative(parent, child)
++  return relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative)
++}
++function object(value: unknown): value is Record<string, unknown> {
++  return value !== null && typeof value === "object" && !Array.isArray(value)
++}
++function admit(): { directory: string; binding: Binding } | undefined {
++  const directory = process.env[directoryKey], encoded = process.env[bindingKey]
++  if (!directory || !encoded) return undefined
++  if (encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
++      typeof Bun === "undefined" || Bun.version !== "1.3.14" || Bun.revision !== revision) throw new Error("cpu-runtime")
++  const repository = realpathSync(fileURLToPath(new URL("../../../../", import.meta.url)))
++  if (process.argv[1] !== path.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
++    throw new Error("cpu-process")
++  const base = path.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
++  if (!object(value) || value.schema !== "sf-preview-e15-event-launch-v1" || value.source !== source ||
++      value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
++      typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
++      typeof value.nonce !== "string" || !/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(value.nonce) ||
++      typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
++      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
++    throw new Error("cpu-binding")
++  if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== value.nonce ||
++      realpathSync(base) !== base || realpathSync(directory) !== directory ||
++      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || within(realpathSync(process.cwd()), directory))
++    throw new Error("cpu-directory")
++  const launcherPath = path.join(directory, "launcher.json"), info = lstatSync(launcherPath)
++  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error("cpu-launcher")
++  const text = readFileSync(launcherPath, "utf8"), launcher: unknown = JSON.parse(text)
++  if (Buffer.byteLength(text, "utf8") !== value.launcherBytes || hash(text) !== value.launcherSha256 || !object(launcher))
++    throw new Error("cpu-launcher")
++  for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
++    if (launcher[key] !== value[key]) throw new Error("cpu-launcher-binding")
++  if (launcher.processRole !== "native-cli" || launcher.streamName !== "preview-events.jsonl")
++    throw new Error("cpu-launcher-role")
++  return { directory, binding: value as Binding }
++}
+diff --git a/.ci-run.json b/.ci-run.json
+new file mode 100644
+--- /dev/null
++++ b/.ci-run.json
+@@ -0,0 +1,1 @@
++{"package":"app","directory":"packages/app-shell","packageSelector":"@orchestra/app","runner":"playwright","args":["e2e/sucafina/design-wave-five-analytics.spec.ts"],"env":{"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER":"strict","ORCHESTRA_CHANNEL":"prod"},"config":"e2e/playwright.production.config.ts"}
+\ No newline at end of file

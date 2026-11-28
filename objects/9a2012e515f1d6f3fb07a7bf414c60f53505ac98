@@ -1,0 +1,1069 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,4 +1,4 @@
++import { startSfE15Observation, markSfE15Http, runSfE15Observation, finishSfE15Observation } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+-import { startSfE14Observation, markSfE14Http, runSfE14Observation, finishSfE14Observation } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts"
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+@@ -44,21 +44,21 @@
+     if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+     if (url.searchParams.getAll("sf").length !== 1 || [...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-decision-request" })
+     const mode = selected as Mode
++    const e14Handle = mode === "decision-portfolio-preview" ? startSfE15Observation(request) : undefined
++    let e15Rejected = false
+-    const e14Handle = mode === "decision-portfolio-preview" ? startSfE14Observation(request) : undefined
+-    let e14Rejected = false
+     try {
+       const payload = await boundedJson(request)
++      markSfE15Http(e14Handle, request, "body-returned")
+-      markSfE14Http(e14Handle, request, "body-returned")
+       if (!valid(mode, payload)) return reply({ status: "needs-input", reason: "invalid-decision-input" })
+       const admitted = await input.authority.human.admit(request, actions[mode], payload)
++      markSfE15Http(e14Handle, request, "admit-returned")
+-      markSfE14Http(e14Handle, request, "admit-returned")
+       if (admitted.status !== "ok") return reply(admitted)
+       try {
+         const call = admitted.value
+         const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+         const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
++        const result = await runSfE15Observation(e14Handle, request, () => input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
++          markSfE15Http(e14Handle, request, "case-callback-entered")
+-        const result = await runSfE14Observation(e14Handle, request, () => input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+-          markSfE14Http(e14Handle, request, "case-callback-entered")
+           if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+           if (mode === "decision-add-question") return input.mutations.addQuestion(payload as Parameters<Mutations["addQuestion"]>[0], call)
+           if (mode === "decision-answer-question") return input.mutations.answerQuestion(payload as Parameters<Mutations["answerQuestion"]>[0], call)
+@@ -78,17 +78,17 @@
+           if (mode === "decision-portfolio-preview") return product.http.preview(payload.request as Parameters<Portfolio["http"]["preview"]>[0], payload.caseRef, call)
+           return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
+         }))
++        markSfE15Http(e14Handle, request, "with-case-returned")
+-        markSfE14Http(e14Handle, request, "with-case-returned")
+         if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
+         if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+           binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
+           return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
++        markSfE15Http(e14Handle, request, "egress-passed")
+-        markSfE14Http(e14Handle, request, "egress-passed")
+         return reply(result)
+       } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+       finally { input.authority.human.finish(admitted.value) }
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Observation(e14Handle, request, e15Rejected) }
+-    } catch (e14Error) { e14Rejected = true; throw e14Error }
+-    finally { finishSfE14Observation(e14Handle, request, e14Rejected) }
+   }
+ }
+ 
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/port.ts b/modules/sucafina/Sucafinav1/product/portfolio/port.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/port.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/port.ts
+@@ -1,4 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+-import { enterSfE14Unit, runSfE14Phase, returnedSfE14Await, finishSfE14Unit } from "../../runtime/preview-progress-e14-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { attachSensitivityV6 } from "./sensitivity-v6.ts"
+ import type { PortfolioRequest, ScenarioOperation, ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
+@@ -29,14 +29,14 @@
+ 
+ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { evaluateWithSelections: (request: PortfolioRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolio: PortfolioResult; selections: readonly { combinationId: string; selectedCandidateRefs: readonly string[] }[] }>> } {
+   const evaluate = async (incoming: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
++    const e15Unit = enterSfE15Unit("port")
++    let e15Rejected = false
+-    const e14Unit = enterSfE14Unit("port")
+-    let e14Rejected = false
+     try {
+       const request = structuredClone(incoming)
++      if (!(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "port-authority-initial", () => host.revalidate(context))))) return { status: "denied", reason: "invalid-binding" }
+-      if (!(returnedSfE14Await(e14Unit, await runSfE14Phase(e14Unit, "port-authority-initial", () => host.revalidate(context))))) return { status: "denied", reason: "invalid-binding" }
+       if (!request.candidateRefs.length || request.candidateRefs.length > 64 || new Set(request.candidateRefs).size !== request.candidateRefs.length || !Number.isSafeInteger(request.explorationLimit) || request.explorationLimit < 1 || request.explorationLimit > 1024 || !request.scope.currency || request.scope.horizon.start > request.scope.horizon.end)
+         return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
++      const resolved = returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "candidates-initial", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
+-      const resolved = returnedSfE14Await(e14Unit, await runSfE14Phase(e14Unit, "candidates-initial", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
+       const failure = resolved.find((item) => item.status !== "ok")
+       if (failure) return failure
+       const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
+@@ -60,10 +60,10 @@
+           combinations.push({ id, caseRefs: selected.map((candidate) => candidate.caseRef), components: [], costCoverageRefs: [], conflicts: [...new Set(duplicateTargets)].map((target) => `duplicate-target:${target}`), restrictions: [], eligibility: "ineligible", comparisonStatus: "incompatible" })
+           continue
+         }
++        const e15Combination = enterSfE15Unit("combination")
++        let e15CombinationRejected = false
+-        const e14Combination = enterSfE14Unit("combination")
+-        let e14CombinationRejected = false
+         try {
++          const evaluated = structuredClone(returnedSfE15Await(e15Combination, await runSfE15Phase(e15Combination, "combination-evaluate", () => host.evaluate(structuredClone({ request, candidates: selected, operations }), context))))
+-          const evaluated = structuredClone(returnedSfE14Await(e14Combination, await runSfE14Phase(e14Combination, "combination-evaluate", () => host.evaluate(structuredClone({ request, candidates: selected, operations }), context))))
+           if (evaluated.status !== "ok") return evaluated
+           const scenario = evaluated.value.scenario
+           evaluatedSources.push({ scenario, costCoverageRefs: evaluated.value.costCoverageRefs, analysis: evaluated.value.analysis, candidates: selected })
+@@ -100,20 +100,20 @@
+             continue
+           }
+           combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
++        } catch (e15Error) { e15CombinationRejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15Combination, e15CombinationRejected) }
+-        } catch (e14Error) { e14CombinationRejected = true; throw e14Error }
+-        finally { finishSfE14Unit(e14Combination, e14CombinationRejected) }
+       }
++      if (!(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "port-authority-final", () => host.revalidate(context)))) || !(returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "evaluations-recheck", () => Promise.all(evaluatedSources.map(async (item) => {
+-      if (!(returnedSfE14Await(e14Unit, await runSfE14Phase(e14Unit, "port-authority-final", () => host.revalidate(context)))) || !(returnedSfE14Await(e14Unit, await runSfE14Phase(e14Unit, "evaluations-recheck", () => Promise.all(evaluatedSources.map(async (item) => {
+         const observed = structuredClone(item)
+         const expected = digestSfValue(observed)
+         const valid = await host.revalidateEvaluation(observed.scenario, observed.costCoverageRefs, observed.analysis, context, observed.candidates)
+         return valid && digestSfValue(observed) === expected
+       }))))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
++      const latest = returnedSfE15Await(e15Unit, await runSfE15Phase(e15Unit, "candidates-final", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
+-      const latest = returnedSfE14Await(e14Unit, await runSfE14Phase(e14Unit, "candidates-final", () => Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))))
+       if (latest.some((item, index) => item.status !== "ok" || digestSfValue(item.value) !== digestSfValue(candidates[index]))) return { status: "stale", reason: "candidate-changed-or-revoked" }
+       return { status: "ok", value: { combinations, evidenceRefs: evidenceRefs.filter((ref, index) => evidenceRefs.findIndex((item) => item.refDigest === ref.refDigest) === index), limitations: ["Finite exploration; no global optimum is asserted.", ...(queue.length ? [`Exploration limit ${request.explorationLimit} reached.`] : [])] } }
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Unit(e15Unit, e15Rejected) }
+-    } catch (e14Error) { e14Rejected = true; throw e14Error }
+-    finally { finishSfE14Unit(e14Unit, e14Rejected) }
+   }
+   const sensitivity: PortfolioPort["sensitivity"] = async (incoming, context) => {
+     const request = structuredClone(incoming)
+diff --git a/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts b/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts
+@@ -1,4 +1,4 @@
++import { enterSfE15Compare, runSfE15Compare, finishSfE15Compare } from "../../runtime/preview-progress-e15-diagnostic.ts"
+-import { enterSfE14Compare, runSfE14Compare, finishSfE14Compare } from "../../runtime/preview-progress-e14-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DomainProjection } from "../contracts/context.ts"
+@@ -19,17 +19,17 @@
+ 
+ /** Resolve current, authorized case results and recheck their sources before returning. */
+ export async function compareScenarios(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios: PlannerScenarioHost; criteria?: PlannerCriteriaHost }, incoming: ScenarioCompareRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["compareScenarios"]> {
++  const e15Compare = enterSfE15Compare()
++  let e15Rejected = false
+-  const e14Compare = enterSfE14Compare()
+-  let e14Rejected = false
+   try {
+     const parsed = decodeSfOperationInput("sf_scenario_compare", incoming)
+     if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-comparison-input" }
+     const request = parsed.value
+     if (new Set(request.criteria).size !== request.criteria.length) return { status: "needs-input", reason: "duplicate-criteria" }
+     if (request.scenarioRefs.length !== 2 || request.scenarioRefs[0] === request.scenarioRefs[1]) return { status: "needs-input", reason: "two-distinct-scenarios-required" }
++    if (!(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "denied", reason: "invalid-binding" }
+-    if (!(await runSfE14Compare(e14Compare, () => input.host.revalidate(binding)))) return { status: "denied", reason: "invalid-binding" }
+     const resolveScenarios = () => resolvePlannerScenarioBatch(input.scenarios, request.scenarioRefs, binding)
++    const resolved = await runSfE15Compare(e15Compare, () => resolveScenarios())
+-    const resolved = await runSfE14Compare(e14Compare, () => resolveScenarios())
+     const failed = resolved.find((result) => result.status !== "ok")
+     if (failed) return failed
+     if (resolved[0].status !== "ok" || resolved[1].status !== "ok") return { status: "unavailable", reason: "scenario-unavailable" }
+@@ -47,10 +47,10 @@
+       }
+       return checks
+     }
++    if ((await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
+-    if ((await runSfE14Compare(e14Compare, () => validateSources())).some((item) => !item)) return { status: "stale", reason: "scenario-source-or-coverage-changed" }
+     const comparison = comparePlannerScenarios({ baselineRef: request.scenarioRefs[0], alternativeRef: request.scenarioRefs[1], baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef, baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
++    const again = await runSfE15Compare(e15Compare, () => resolveScenarios())
++    if (!(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding))) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "scenario-or-authority-changed" }
+-    const again = await runSfE14Compare(e14Compare, () => resolveScenarios())
+-    if (!(await runSfE14Compare(e14Compare, () => input.host.revalidate(binding))) || again.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || (await runSfE14Compare(e14Compare, () => validateSources())).some((item) => !item) || !(await runSfE14Compare(e14Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "scenario-or-authority-changed" }
+     if (!request.criteria.length || comparison.comparisonStatus === "incompatible" || comparison.comparisonStatus === "unavailable") return { status: "ok", value: comparison }
+     if (!input.criteria) return { status: "ok", value: { ...comparison, criterionResults: request.criteria.map((criterionId) => ({ criterionId, state: "unknown", reason: "criterion-rule-unavailable" })), unresolvedConditions: [...comparison.unresolvedConditions, "criterion-rules-unavailable"] } }
+     const criteria = input.criteria
+@@ -60,17 +60,17 @@
+       for (const criterionId of request.criteria) results.push(structuredClone(await criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
+       return results
+     }
++    const evaluated = await runSfE15Compare(e15Compare, () => evaluate())
+-    const evaluated = await runSfE14Compare(e14Compare, () => evaluate())
+     const failure = evaluated.find((item) => item.status !== "ok")
+     if (failure) return failure
+     if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
++    const checked = await runSfE15Compare(e15Compare, () => evaluate())
++    const finalScenarios = await runSfE15Compare(e15Compare, () => resolveScenarios())
++    if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding))) || (await runSfE15Compare(e15Compare, () => validateSources())).some((item) => !item) || !(await runSfE15Compare(e15Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "criterion-or-authority-changed" }
+-    const checked = await runSfE14Compare(e14Compare, () => evaluate())
+-    const finalScenarios = await runSfE14Compare(e14Compare, () => resolveScenarios())
+-    if (checked.some((item, index) => digestSfValue(item) !== digestSfValue(evaluated[index])) || finalScenarios.some((entry, index) => entry.status !== "ok" || !values[index] || digestSfValue({ ...entry.value, projection: undefined }) !== digestSfValue({ ...values[index], projection: undefined }) || projectionDigest(entry.value.projection) !== projectionDigest(values[index].projection)) || !(await runSfE14Compare(e14Compare, () => input.host.revalidate(binding))) || (await runSfE14Compare(e14Compare, () => validateSources())).some((item) => !item) || !(await runSfE14Compare(e14Compare, () => input.host.revalidate(binding)))) return { status: "stale", reason: "criterion-or-authority-changed" }
+     const criterionResults = evaluated.flatMap((item) => item.status === "ok" ? [{ criterionId: item.value.criterionId, state: item.value.state, reason: item.value.reason }] : [])
+     return { status: "ok", value: { ...comparison, criterionResults, unresolvedConditions: criterionResults.some((item) => item.state === "unknown") ? [...comparison.unresolvedConditions, "criterion-rules-unavailable"] : comparison.unresolvedConditions } }
++  } catch (e15Error) { e15Rejected = true; throw e15Error }
++  finally { finishSfE15Compare(e15Compare, e15Rejected) }
+-  } catch (e14Error) { e14Rejected = true; throw e14Error }
+-  finally { finishSfE14Compare(e14Compare, e14Rejected) }
+ }
+ 
+ export function projectionDigest(projection: DomainProjection) {
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -1,4 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, markSfE15Branch, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+-import { enterSfE14Unit, runSfE14Phase, returnedSfE14Await, markSfE14Branch, finishSfE14Unit } from "../../runtime/preview-progress-e14-diagnostic.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { PortResult, PlannerPort } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+@@ -20,8 +20,8 @@
+   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
+ }): Analysis {
+   const revalidate: Analysis["revalidate"] = async (analysis, context) => {
++    const e15Revalidation = enterSfE15Unit("analysis-revalidation")
++    let e15Rejected = false
+-    const e14Revalidation = enterSfE14Unit("analysis-revalidation")
+-    let e14Rejected = false
+     try {
+       const expected = structuredClone(analysis)
+       const inspect = async () => {
+@@ -43,16 +43,16 @@
+       if (replay.status !== "ok" || digestSfValue(replay.value) !== first.stored.resultDigest) return false
+       const second = await inspect()
+       return !!second && digestSfValue(first) === digestSfValue(second)
++    } catch (e15Error) { e15Rejected = true; throw e15Error }
++    finally { finishSfE15Unit(e15Revalidation, e15Rejected) }
+-    } catch (e14Error) { e14Rejected = true; throw e14Error }
+-    finally { finishSfE14Unit(e14Revalidation, e14Rejected) }
+   }
+   return {
+     evaluate: async (incoming, context) => {
++      const e15Analysis = enterSfE15Unit("analysis")
++      let e15Rejected = false
+-      const e14Analysis = enterSfE14Unit("analysis")
+-      let e14Rejected = false
+       try {
+         const request = structuredClone(incoming)
++        const selection = structuredClone(returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-select-initial", () => input.select(structuredClone(request), context))))
+-        const selection = structuredClone(returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-select-initial", () => input.select(structuredClone(request), context))))
+         if (selection.status !== "ok") return selection
+         const selected = selection.value
+         if (!selected.baselineRef.trim() || !selected.alternativeRef.trim() || selected.baselineRef === selected.alternativeRef || !/^[a-f0-9]{64}$/.test(selected.selectionDigest) || digestSfValue(selected.criteria) !== digestSfValue(request.portfolio.constraints)) return { status: "needs-input", reason: "portfolio-baseline-selection-required" }
+@@ -62,7 +62,7 @@
+         const compare = { scenarioRefs: [selected.baselineRef, selected.alternativeRef], criteria: request.portfolio.constraints }
+         const proofs = structuredClone(await input.bindings.proofs(selected.caseRef, compare.criteria, context))
+         if (proofs.status !== "ok") return proofs
++        const comparison = structuredClone(returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-compare", () => input.planner.compareScenarios(structuredClone(compare), context))))
+-        const comparison = structuredClone(returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-compare", () => input.planner.compareScenarios(structuredClone(compare), context))))
+         if (comparison.status !== "ok") return comparison
+         if (comparison.value.baselineResultRef !== selected.baselineRef || comparison.value.alternativeResultRef !== selected.alternativeRef || compare.criteria.some((ref) => !comparison.value.criterionResults.some((item) => item.criterionId === ref))) return { status: "unavailable", reason: "portfolio-comparison-incomplete" }
+         const requestDigest = digestSfValue(compare)
+@@ -72,7 +72,7 @@
+         const existing = await input.results.readByRequest({ caseRef: selected.caseRef, kind: "comparison", idempotencyKey, requestDigest }, context)
+         if (existing.status !== "ok") return existing
+         const resultRef = existing.value.state === "found" ? existing.value.result.resultRef : undefined
++        const saved = resultRef ? (markSfE15Branch(e15Analysis, "analysis-persist", "reuse-result"), { status: "ok" as const, value: { resultRef } }) : returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-persist", () => input.persist({ kind: "comparison", request: compare, result: comparison.value }, idempotencyKey, context)))
+-        const saved = resultRef ? (markSfE14Branch(e14Analysis, "analysis-persist", "reuse-result"), { status: "ok" as const, value: { resultRef } }) : returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-persist", () => input.persist({ kind: "comparison", request: compare, result: comparison.value }, idempotencyKey, context)))
+         if (saved.status !== "ok") return saved
+         const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
+         if (stored.status !== "ok") return stored
+@@ -82,20 +82,20 @@
+         // path, and the independent read and revalidation below remain mandatory.
+         const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+         if (previousBinding.status !== "ok") {
++          const binding = returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-bind", () => input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)))
+-          const binding = returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-bind", () => input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)))
+           if (binding.status !== "ok") return binding
++        } else { markSfE15Branch(e15Analysis, "analysis-bind", "binding-present") }
+-        } else { markSfE14Branch(e14Analysis, "analysis-bind", "binding-present") }
+         const binding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+         if (binding.status !== "ok") return binding
+         if (digestSfValue(binding.value.request) !== requestDigest || digestSfValue(binding.value.rules) !== digestSfValue(proofs.value)) return { status: "stale", reason: "portfolio-criteria-changed" }
++        const selectionAgain = returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-select-final", () => input.select(request, context)))
+-        const selectionAgain = returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-select-final", () => input.select(request, context)))
+         if (selectionAgain.status !== "ok" || digestSfValue(selectionAgain.value) !== digestSfValue(selected)) return { status: "stale", reason: "portfolio-selection-changed" }
+         const compared = stored.value.result
+         const analysis = { scenarioResultRef: selected.alternativeRef, scenario: scenario.value.result, comparisonRef: saved.value.resultRef, comparison: compared }
++        if (!returnedSfE15Await(e15Analysis, await runSfE15Phase(e15Analysis, "analysis-revalidate", () => revalidate(analysis, context)))) return { status: "stale", reason: "portfolio-analysis-changed" }
+-        if (!returnedSfE14Await(e14Analysis, await runSfE14Phase(e14Analysis, "analysis-revalidate", () => revalidate(analysis, context)))) return { status: "stale", reason: "portfolio-analysis-changed" }
+         return { status: "ok", value: { analysis, constraints: compare.criteria.map((ref) => { const criterion = compared.criterionResults.find((item) => item.criterionId === ref)!; return { ref, state: criterion.state, reason: criterion.reason } }) } }
++      } catch (e15Error) { e15Rejected = true; throw e15Error }
++      finally { finishSfE15Unit(e15Analysis, e15Rejected) }
+-      } catch (e14Error) { e14Rejected = true; throw e14Error }
+-      finally { finishSfE14Unit(e14Analysis, e14Rejected) }
+     },
+     revalidate,
+   }
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/production.ts b/modules/sucafina/Sucafinav1/product/portfolio/production.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/production.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/production.ts
+@@ -1,4 +1,4 @@
++import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
+-import { enterSfE14Unit, runSfE14Phase, returnedSfE14Await, finishSfE14Unit } from "../../runtime/preview-progress-e14-diagnostic.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DecisionCasePort, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
+@@ -79,8 +79,8 @@
+         return { status: "ok", value: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }
+       },
+       assess: async (request, candidates, scenario, context, scenarioRequest) => {
++        const e15Assess = enterSfE15Unit("production-assess")
++        let e15Rejected = false
+-        const e14Assess = enterSfE14Unit("production-assess")
+-        let e14Rejected = false
+         try {
+           if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
+           const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+@@ -90,7 +90,7 @@
+           const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
+           if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+           if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
++          const analysis = returnedSfE15Await(e15Assess, await runSfE15Phase(e15Assess, "production-analysis", () => input.analysis!.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)))
+-          const analysis = returnedSfE14Await(e14Assess, await runSfE14Phase(e14Assess, "production-analysis", () => input.analysis!.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)))
+           if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+           if (analysis.status !== "ok") return analysis
+           const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
+@@ -100,12 +100,12 @@
+           if (compared.status !== "ok") return compared
+           if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
+           return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
++        } catch (e15Error) { e15Rejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15Assess, e15Rejected) }
+-        } catch (e14Error) { e14Rejected = true; throw e14Error }
+-        finally { finishSfE14Unit(e14Assess, e14Rejected) }
+       },
+       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
++        const e15EvaluationRevalidation = enterSfE15Unit("production-revalidation")
++        let e15Rejected = false
+-        const e14EvaluationRevalidation = enterSfE14Unit("production-revalidation")
+-        let e14Rejected = false
+         try {
+           if (!await fresh(evidenceRefs(scenario), context)) return false
+           const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+@@ -115,11 +115,11 @@
+           if (analysis) {
+             const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
+             const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
++            return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && returnedSfE15Await(e15EvaluationRevalidation, await runSfE15Phase(e15EvaluationRevalidation, "production-analysis-revalidate", () => input.analysis!.revalidate(analysis, context)))
+-            return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && returnedSfE14Await(e14EvaluationRevalidation, await runSfE14Phase(e14EvaluationRevalidation, "production-analysis-revalidate", () => input.analysis!.revalidate(analysis, context)))
+           }
+           return digestSfValue(known) === digestSfValue(refs)
++        } catch (e15Error) { e15Rejected = true; throw e15Error }
++        finally { finishSfE15Unit(e15EvaluationRevalidation, e15Rejected) }
+-        } catch (e14Error) { e14Rejected = true; throw e14Error }
+-        finally { finishSfE14Unit(e14EvaluationRevalidation, e14Rejected) }
+       },
+     },
+   })
+diff --git a/apps/cli/test/fixture/sucafina-native-installation.ts b/apps/cli/test/fixture/sucafina-native-installation.ts
+--- a/apps/cli/test/fixture/sucafina-native-installation.ts
++++ b/apps/cli/test/fixture/sucafina-native-installation.ts
+@@ -1,3 +1,4 @@
++import { createSfE15Forwarder } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import { mkdtemp, realpath, rm } from "node:fs/promises"
+ import { createHash } from "node:crypto"
+ import { Buffer } from "node:buffer"
+@@ -65,7 +66,7 @@
+       return { config, mount: loaded.config.mount, actorId, shop, signIn: JSON.parse(encodedUrl) as string }
+     })
+     const app = yield* AppProcess.Service
++    const eventEnvironment = nativePreviewE15EventEnvironment(root)
+-    const eventEnvironment = nativePreviewE14EventEnvironment(root)
+     const child = yield* app.spawn(ChildProcess.make(process.execPath, [
+       entry, "serve", "--hostname", hostname, "--port", String(port), "--installation", factory,
+     ], {
+@@ -86,13 +87,10 @@
+         ...eventEnvironment,
+       },
+     }))
++    const e15Forward = createSfE15Forwarder()
+     const ready = yield* Deferred.make<void>()
+     const diagnostic = { last: "" }
++    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {
+-    yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+-      if (((line.startsWith("SF_PREVIEW_E14_EVENT ") && line.length + 1 <= 1024) ||
+-          (line.startsWith("SF_PREVIEW_E14_LAUNCHER ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+-        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }
+-      }
+       return line.includes(`server listening on ${origin}`) ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+     })))
+     yield* Effect.forkScoped(child.stderr.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) =>
+@@ -131,10 +129,10 @@
+ 
+ 
+ /** Neutralize only our diagnostic keys on refusal, including possible inherited values. */
++function nativePreviewE15EventEnvironment(privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
+-function nativePreviewE14EventEnvironment(privateRoot: string): Record<string, string> {
+-  const directoryKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_BINDING"
+   const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb", sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+-  const source = "7393cd010086f4a12d61ae9bb5db13534bd18aa0", sourceTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+   let stage = "binding"
+   try {
+     const directory = process.env[directoryKey], encoded = process.env[bindingKey]
+@@ -144,10 +142,10 @@
+     const value: unknown = JSON.parse(encoded)
+     if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("cpu-binding")
+     const binding = value as Record<string, unknown>
++    if (binding.schema !== "sf-preview-e15-event-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
+-    if (binding.schema !== "sf-preview-e14-event-launch-v1" || binding.source !== source || binding.sourceTree !== sourceTree ||
+         typeof binding.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(binding.snapshot) ||
+         typeof binding.runId !== "string" || !/^[0-9]{1,20}$/.test(binding.runId) || binding.attempt !== "1" ||
++        typeof binding.nonce !== "string" || !/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
+-        typeof binding.nonce !== "string" || !/^sf613-e14-event-[A-Za-z0-9]{6}$/.test(binding.nonce) ||
+         typeof binding.launcherBytes !== "number" || binding.launcherBytes < 1 || binding.launcherBytes > 8192 ||
+         binding.launcherBytes % 1 !== 0 || typeof binding.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(binding.launcherSha256))
+       throw new Error("cpu-binding")
+@@ -176,8 +174,8 @@
+     return { [directoryKey]: directory, [bindingKey]: encoded }
+   } catch {
+     try {
++      createSfE15Forwarder()("SF_PREVIEW_E15_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e15-launcher-v1", source, sourceTree,
++        qualification: false, role: "native-launcher", kind: "disabled", reason: stage }) + "\n")
+-      console.info("SF_PREVIEW_E14_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e14-launcher-v1", source, sourceTree,
+-        qualification: false, role: "native-launcher", kind: "disabled", reason: stage }))
+     } catch { /* The original child must still be spawned with its original settings. */ }
+     return disabled
+   }
+diff --git a/packages/app-shell/e2e/sucafina/design-support/installation.ts b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+--- a/packages/app-shell/e2e/sucafina/design-support/installation.ts
++++ b/packages/app-shell/e2e/sucafina/design-support/installation.ts
+@@ -1,3 +1,4 @@
++import { createSfE15Forwarder } from "../../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
+ import type { BrowserContext } from "@playwright/test"
+ import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
+ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+@@ -60,9 +61,10 @@
+       }).pipe(Effect.orDie),
+     )
+     const installed = yield* Effect.gen(function* () {
++      const e15Forward = createSfE15Forwarder()
+       const ready = yield* Deferred.make<void, Error>()
+       const diagnostic = { tail: "" }
++      const eventEnvironment = preparePreviewE15EventEnvironment(repository, root)
+-      const eventEnvironment = preparePreviewE14EventEnvironment(repository, root)
+       const child = yield* launcher.spawn(ChildProcess.make("bun", [path.join(support, "native-host.ts"), root, wave, ...(scanner ? [JSON.stringify(scanner)] : [])], {
+         cwd: repository,
+         env: { ...isolatedEnvironment(root), ...eventEnvironment },
+@@ -74,11 +76,7 @@
+         forceKillAfter: "10 seconds",
+       }))
+       owned.child = child
++      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {
+-      yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {
+-        if (((line.startsWith("SF_PREVIEW_E14_EVENT ") && line.length + 1 <= 1024) ||
+-          (line.startsWith("SF_PREVIEW_E14_LAUNCHER ") && line.length + 1 <= 1024)) && /^[\x20-\x7e]*$/.test(line)) {
+-          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }
+-        }
+         if (/^SF_DESIGN_STAGE [a-z-]+$/.test(line)) console.info(line)
+         return line === "SF_DESIGN_READY" ? Effect.asVoid(Deferred.succeed(ready, undefined)) : Effect.void
+       }), Effect.catch(() => Deferred.fail(ready, new Error("Native design host output failed")))))
+@@ -215,10 +213,10 @@
+ 
+ 
+ /** Diagnostic files survive the two original private roots; failure never blocks launch. */
++function preparePreviewE15EventEnvironment(repository: string, privateRoot: string): Record<string, string> {
++  const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
+-function preparePreviewE14EventEnvironment(repository: string, privateRoot: string): Record<string, string> {
+-  const directoryKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_BINDING"
+   const disabled = { [directoryKey]: "", [bindingKey]: "" }
++  const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb", sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+-  const source = "7393cd010086f4a12d61ae9bb5db13534bd18aa0", sourceTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+   let fd: number | undefined, stage = "gate"
+   try {
+     const snapshot = process.env.GITHUB_SHA, runId = process.env.GITHUB_RUN_ID, attempt = process.env.GITHUB_RUN_ATTEMPT
+@@ -229,15 +227,15 @@
+     const base = path.join(realpathSync(repository), "test-ci-evidence"), baseInfo = lstatSync(base)
+     if (!baseInfo.isDirectory() || baseInfo.isSymbolicLink() || realpathSync(base) !== base) throw new Error("cpu-base")
+     stage = "directory"
++    const directory = mkdtempSync(path.join(base, "sf613-e15-event-"))
+-    const directory = mkdtempSync(path.join(base, "sf613-e14-event-"))
+     chmodSync(directory, 0o700)
+     const relative = path.relative(realpathSync(privateRoot), directory)
+     if (realpathSync(directory) !== directory || path.dirname(directory) !== base ||
+         relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative))
+       throw new Error("cpu-root")
+     const nonce = path.basename(directory)
++    if (!/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
++    const binding = { schema: "sf-preview-e15-event-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
+-    if (!/^sf613-e14-event-[A-Za-z0-9]{6}$/.test(nonce)) throw new Error("cpu-nonce")
+-    const binding = { schema: "sf-preview-e14-event-launch-v1", source, sourceTree, snapshot, runId, attempt, nonce }
+     const launcher = { ...binding, qualification: false, state: "prepared", processRole: "native-cli",
+       entry: "apps/cli/src/index.ts", command: "serve", streamName: "preview-events.jsonl",
+       relativeDirectory: "test-ci-evidence/" + nonce, createdUtcMs: Date.now(),
+@@ -257,8 +255,8 @@
+     return { [directoryKey]: directory, [bindingKey]: JSON.stringify({ ...binding, launcherBytes, launcherSha256 }) }
+   } catch {
+     try {
++      createSfE15Forwarder()("SF_PREVIEW_E15_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e15-launcher-v1", source, sourceTree,
++        qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }) + "\n")
+-      console.info("SF_PREVIEW_E14_LAUNCHER " + JSON.stringify({ schema: "sf-preview-causal-e14-launcher-v1", source, sourceTree,
+-        qualification: false, role: "playwright-launcher", kind: "disabled", reason: stage }))
+     } catch { /* Original setup/spawn remains authoritative. */ }
+     return disabled
+   } finally {
+diff --git a/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts b/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts
+--- a/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts
++++ b/modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts
+@@ -5,12 +5,12 @@
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
+ 
++const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
++const sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
++const prefix = "SF_PREVIEW_E15_EVENT ", schema = "sf-preview-causal-e15-event-v1"
++const maxEvents = 191, maxBytes = 191 * 1024, maxLineBytes = 1024, countCap = 65_535
+-const source = "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+-const sourceTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+-const prefix = "SF_PREVIEW_E14_EVENT ", schema = "sf-preview-causal-e14-event-v1"
+-const maxEvents = 63, maxBytes = 63 * 1024, maxLineBytes = 1024, countCap = 65_535
+ const generalSlots = 17, unitSlots = 28, activeCompareSlots = 64, numberCap = 999_999_999
++const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
+-const directoryKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E14_EVENT_EVIDENCE_BINDING"
+ const revision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+ type Binding = { schema: string; source: string; sourceTree: string; snapshot: string; runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string }
+ type UnitKind = "port" | "combination" | "analysis" | "analysis-revalidation" | "production-assess" | "production-revalidation"
+@@ -25,6 +25,8 @@
+   nextUnit: number; nextPhase: number; nextCompare: number; openUnits: number; openPhases: number; openCompares: number; maxDepth: number;
+   generalUsed: number; firstAnalysis: Unit | undefined; critical: boolean[]; checkpoints: boolean[]; totals: number[]; stages: number[]; lineage: number[]; untracked: number; saturated: boolean;
+   overflowWritten: boolean; emissionFault: boolean; fileFault: boolean; scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean; backpressure: boolean; emitting: boolean
++  stdoutFailed: boolean; routeDisabled: boolean; routeScopes: number; routeOmitted: number; tailUsed: number;
++  firstPort: Unit | undefined; firstProductionRevalidation: Unit | undefined; tailMask: number;
+ }
+ type Scope = { token: object; frame: Frame; parent: Scope | undefined; owner: Unit | undefined; phase: Phase | undefined; compare: Compare | undefined; stage: number; next: Scope | undefined }
+ type Unit = { handle: object; frame: Frame; birth: Scope; id: number; kind: UnitKind; parentUnit: number; parentPhase: number; phase: Phase | undefined; entryReserved: boolean; closed: boolean; next: Unit | undefined }
+@@ -37,7 +39,11 @@
+ // the first analysis entry (1), and 17 general places. Pairs reserve both places
+ // at entry; critical phase IDs 1-5 also cannot be consumed by generic phases.
+ // Up to 28 admitted units each reserve one close outside those 32.
++// Request enter/close and one overflow add three: 63 base rows.
++// E15 independently reserves 12 tail rows, 6*12 lookup rows, 8 canonical/Finance
++// rows and 36 persistence rows: 191 stream rows / 191 KiB including prefix+LF.
++// One BI launcher-disabled row gives <=192 rows/192 KiB of diagnostic payload,
++// not a bound on the complete Actions log or its timestamp/ANSI encapsulation.
+-// Request enter/close and one overflow add three: at most 63 rows / 63 KiB.
+ // A skip uses its critical pair reservation but emits only one decision row.
+ // Detail saturation never borrows a critical/checkpoint/unit-close reservation.
+ function whole(value: number) { return value - value % 1 }
+@@ -98,7 +104,7 @@
+ }
+ function counters(frame: Frame): Payload {
+   // Stages are a separate axis from explicit compare parent/depth. These are
++  // E15 scoped-root/scoped-child/stage-unclassified counts, not E13 taxonomy.
+-  // E14 scoped-root/scoped-child/stage-unclassified counts, not E13 taxonomy.
+   // compareBodies = [bodyEntered, bodyReturned, bodyThrew, open, maxDepth, untracked].
+   // stages = eleven [entered, returned, threw] triples: unclassified, port,
+   // combination, production-analysis, select-initial, analysis-compare, persist,
+@@ -120,9 +126,13 @@
+   if (frame.fd !== undefined && !frame.fileFault) {
+     try { if (writeSync(frame.fd, line, undefined, "utf8") !== bytes) frame.fileFault = true }
+     catch { frame.fileFault = true }
++  }
++  // One synchronous attempt per line. A partial/zero write or throw permanently
++  // disables this sink; no reconstruction/replay can turn a fragment into a row.
++  if (!frame.stdoutFailed) {
++    try { if (writeSync(1, line, undefined, "utf8") !== bytes) { frame.stdoutFailed = true; frame.emissionFault = true } }
++    catch { frame.stdoutFailed = true; frame.emissionFault = true }
+   }
+-  try { if (!process.stdout.write(line)) frame.backpressure = true }
+-  catch { frame.emissionFault = true }
+ }
+ function emit(frame: Frame, kind: string, payload: Payload) {
+   if (frame.closed) return
+@@ -166,6 +176,8 @@
+   return 1
+ }
+ function reservePhase(unit: Unit, point: PhasePoint) {
++  const tail = tailIndex(unit, point)
++  if (tail >= 0 && claimTail(unit.frame, tail)) return true
+   const index = criticalIndex(point), frame = unit.frame
+   if (frame.firstAnalysis === unit && index >= 0 && !frame.critical[index]) { frame.critical[index] = true; return true }
+   return general(frame, 2)
+@@ -207,7 +219,7 @@
+   if (!returned && frame) frame.scopeFault = true
+   return result
+ }
++export function startSfE15Observation(request: Request): unknown {
+-export function startSfE14Observation(request: Request): unknown {
+   if (selectionTried) return undefined
+   selectionTried = true
+   let fd: number | undefined
+@@ -221,7 +233,9 @@
+       openUnits: 0, openPhases: 0, openCompares: 0, maxDepth: 0, generalUsed: 0, firstAnalysis: undefined,
+       critical: [false, false, false, false, false], checkpoints: [false, false, false, false],
+       totals: [0, 0, 0], stages: Array.from({ length: 33 }, () => 0), lineage: [0, 0, 0], untracked: 0, saturated: false,
++      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false,
++      stdoutFailed: false, routeDisabled: false, routeScopes: 0, routeOmitted: 0, tailUsed: 0,
++      firstPort: undefined, firstProductionRevalidation: undefined, tailMask: 0 }
+-      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false }
+     const scope: Scope = { token: {}, frame, parent: undefined, owner: undefined, phase: undefined, compare: undefined, stage: 0, next: undefined }
+     frame.root = scope
+     selected = frame
+@@ -234,16 +248,17 @@
+     return undefined
+   }
+ }
++export function markSfE15Http(handle: unknown, request: Request, point: HttpPoint) {
+-export function markSfE14Http(handle: unknown, request: Request, point: HttpPoint) {
+   try {
+     const frame = selected
+     if (!frame || frame.closed || frame.emitting || frame.handle !== handle || frame.request !== request ||
+         !["body-returned", "admit-returned", "case-callback-entered", "with-case-returned", "egress-passed"].includes(point)) return
++    const tail = point === "with-case-returned" ? 5 : point === "egress-passed" ? 6 : -1
++    if (!(tail >= 0 && claimTail(frame, tail)) && !general(frame, 1)) { omit(frame, "detail"); return }
+-    if (!general(frame, 1)) { omit(frame, "detail"); return }
+     emit(frame, "http-boundary", { point })
+   } catch { /* No Request member, result or error is inspected. */ }
+ }
++export function runSfE15Observation<T>(handle: unknown, request: Request, work: () => T): T {
+-export function runSfE14Observation<T>(handle: unknown, request: Request, work: () => T): T {
+   let frame: Frame | undefined, scope: Scope | undefined
+   try {
+     const candidate = selected
+@@ -251,7 +266,7 @@
+   } catch { /* The exact work still executes once. */ }
+   return runOnce(frame ?? selected, scope, work)
+ }
++export function enterSfE15Unit(kind: UnitKind): unknown {
+-export function enterSfE14Unit(kind: UnitKind): unknown {
+   try {
+     const birth = currentScope()
+     if (!birth || !["port", "combination", "analysis", "analysis-revalidation", "production-assess", "production-revalidation"].includes(kind)) return undefined
+@@ -263,13 +278,15 @@
+       parentPhase: birth.phase?.id ?? 0, phase: undefined, entryReserved: firstAnalysis || general(frame, 1), closed: false, next: units }
+     units = unit
+     if (firstAnalysis) frame.firstAnalysis = unit
++    if (kind === "port" && !frame.firstPort) frame.firstPort = unit
++    if (kind === "production-revalidation" && !frame.firstProductionRevalidation) frame.firstProductionRevalidation = unit
+     frame.openUnits++
+     if (unit.entryReserved) emit(frame, "unit-enter", { unit: unit.id, unitKind: kind, parentUnit: unit.parentUnit, parentPhase: unit.parentPhase })
+     else omit(frame, "detail")
+     return unit.handle
+   } catch { return undefined }
+ }
++export function runSfE15Phase<T>(handle: unknown, point: PhasePoint, work: () => T): T {
+-export function runSfE14Phase<T>(handle: unknown, point: PhasePoint, work: () => T): T {
+   let frame: Frame | undefined, scope: Scope | undefined, phase: Phase | undefined
+   try {
+     const unit = unitFor(handle), critical = criticalIndex(point)
+@@ -303,14 +320,14 @@
+ function publishPhase(phase: Phase, outcome: Outcome) {
+   if (phase.recordReserved) emit(phase.frame, "phase-close", { unit: phase.owner.id, phase: phase.id, point: phase.point, stage: phase.scope.stage, outcome, ...counters(phase.frame) })
+ }
++export function returnedSfE15Await<T>(handle: unknown, value: T): T {
+-export function returnedSfE14Await<T>(handle: unknown, value: T): T {
+   try {
+     const unit = unitFor(handle)
+     if (unit) { const phase = detachPhase(unit); if (phase) publishPhase(phase, "await-returned") }
+   } catch { /* This tap precedes any outer clone/guard and returns the exact value. */ }
+   return value
+ }
++export function markSfE15Branch(handle: unknown, point: "analysis-persist" | "analysis-bind", branch: "reuse-result" | "binding-present") {
+-export function markSfE14Branch(handle: unknown, point: "analysis-persist" | "analysis-bind", branch: "reuse-result" | "binding-present") {
+   try {
+     const unit = unitFor(handle)
+     if (!unit || unit.kind !== "analysis" || unit.phase ||
+@@ -319,7 +336,7 @@
+     emit(unit.frame, "branch", { unit: unit.id, point, branch, ...counters(unit.frame) })
+   } catch { /* Called only inside an already decided original branch; no predicate repeats. */ }
+ }
++export function finishSfE15Unit(handle: unknown, rejected: boolean) {
+-export function finishSfE14Unit(handle: unknown, rejected: boolean) {
+   try {
+     const unit = unitFor(handle)
+     if (!unit) return
+@@ -331,7 +348,7 @@
+     emit(unit.frame, "unit-close", { unit: unit.id, unitKind: unit.kind, entryReserved: unit.entryReserved, outcome: rejected ? "body-threw" : "body-returned", ...counters(unit.frame) })
+   } catch { /* No sibling is closed or classified by this unit's outcome. */ }
+ }
++export function enterSfE15Compare(): unknown {
+-export function enterSfE14Compare(): unknown {
+   try {
+     const birth = currentScope()
+     if (!birth) return undefined
+@@ -356,12 +373,12 @@
+     return compare.handle
+   } catch { return undefined }
+ }
++export function runSfE15Compare<T>(handle: unknown, work: () => T): T {
+-export function runSfE14Compare<T>(handle: unknown, work: () => T): T {
+   let compare: Compare | undefined
+   try { compare = compareFor(handle) } catch { /* No replacement invocation. */ }
+   return runOnce(compare?.frame ?? selected, compare?.scope, work)
+ }
++export function finishSfE15Compare(handle: unknown, rejected: boolean) {
+-export function finishSfE14Compare(handle: unknown, rejected: boolean) {
+   try {
+     const compare = compareFor(handle)
+     if (!compare) return
+@@ -387,7 +404,8 @@
+   try {
+     append(frame, "request-close", { outcome: frame.closeRejected ? "rejected" : "returned", eventsBefore: frame.events, bytesBefore: frame.bytes,
+       dropped: frame.dropped, openUnits: frame.openUnits, openPhases: frame.openPhases, ...counters(frame),
++      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.stdoutFailed)],
++      routeCoverage: [canonicalRoute ? 1 : 0, preparedLookups, comparatorLookups, persistenceRoute ? 1 : 0, frame.routeOmitted, Number(frame.routeDisabled)] })
+-      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.backpressure)] })
+   } catch { frame.emissionFault = true }
+   finally {
+     const fd = frame.fd
+@@ -400,10 +418,15 @@
+     scopes = undefined
+     units = undefined
+     compares = undefined
++    routes = undefined
++    routeScopes = undefined
++    canonicalRoute = undefined
++    persistenceRoute = undefined
++    financeOwner = undefined
+   }
+   // This boundary does not attest to later fsync/close, censored units, or a missing terminal.
+ }
++export function finishSfE15Observation(handle: unknown, request: Request, rejected: boolean) {
+-export function finishSfE14Observation(handle: unknown, request: Request, rejected: boolean) {
+   try {
+     const frame = selected
+     if (!frame || frame.closed || frame.handle !== handle || frame.request !== request) return
+@@ -413,6 +436,341 @@
+     frame.pendingClose = true
+     closeFrame(frame)
+   } catch { /* Preserve the HTTP return/rejection even if observation cannot close. */ }
++}
++
++type RouteKind = "canonical" | "lookup" | "persistence"
++type RoutePhase = "preparation" | "comparator" | "candidate-read" | "persist-body" | "store-write" | "state-transaction"
++type WorkLink = "provider-read" | "provider-write" | "source-work" | "choice-wrapped" | "local-operation"
++type Layer = "source" | "choice" | "local" | "operation"
++type Gate = "source-root-current" | "callback-equal" | "store-current" | "view-current" | "product-condition"
++type FinancePoint = "entered" | "fallback-before-root" | "fallback-no-selection" | "prepare-refused" | "unsupported-criteria" | "witness-refused" | "witness-unsupported" | "owned-records" | "owned-direct" | "outside-root" | "work-enter" | "observation-returned" | "returned"
++type RoutePoint =
++  "source-enter" | "source-selection" | "choice-forward" | "local-enter" | "native-gates" | "copy-enter" | "copy-close" |
++  "candidate-read-returned" | "prewrite" | "store-write-returned" | "state-transaction-enter" | "state-transaction-returned" |
++  "queue-enter" | "queue-returned" | "begin-enter" | "begin-returned" | "materialize-enter" | "materialize-returned" |
++  "source-work-enter" | "source-work-returned" | "source-finish-enter" | "source-finish-returned" |
++  "source-dispose-enter" | "source-dispose-returned" | "local-scope-closed" |
++  "encode-enter" | "encode-returned" | "decode-returned" | "sql-returned" | "commit-enter" | "commit-returned" |
++  "local-returning" | "operation-returned" | "binding-enter" | "binding-returned" | "validation-enter" | "validation-returned" | "binding-read-returned"
++type Route = {
++  handle: object; frame: Frame; birth: Scope; kind: RouteKind; id: number; phase: RoutePhase; closed: boolean;
++  points: number; phaseMask: number; providerWork: unknown; callback: unknown; sourceWork: unknown; forwardedWork: unknown; operationWork: unknown;
++  sourceSeen: boolean; choiceSeen: boolean; localSeen: boolean; operationSeen: boolean; gates: number[]; next: Route | undefined
++}
++type RouteScope = { scope: Scope; route: Route | undefined; phase: RoutePhase; next: RouteScope | undefined }
++const lookupPoints = ["lookup-enter", "candidate-read-enter", "source-enter", "source-selection", "choice-forward", "local-enter",
++  "native-gates", "copy-enter", "copy-close", "provider-view", "candidate-read-returned", "lookup-close"]
++const persistencePoints = ["persist-enter", "prewrite", "store-write-returned", "persist-close", "state-transaction-enter", "state-transaction-returned",
++  "source-enter", "source-selection", "choice-forward", "local-enter", "queue-enter", "queue-returned", "begin-enter", "begin-returned",
++  "materialize-enter", "materialize-returned", "source-work-enter", "source-work-returned", "source-finish-enter", "source-finish-returned",
++  "source-dispose-enter", "source-dispose-returned", "local-scope-closed", "encode-enter", "encode-returned", "decode-returned",
++  "sql-returned", "commit-enter", "commit-returned", "local-returning", "operation-returned", "binding-enter", "binding-returned",
++  "validation-enter", "validation-returned", "binding-read-returned"]
++const canonicalPoints = ["canonical-enter", "comparator-enter", "finance-enter", "finance-branch", "finance-work-enter", "finance-observation-returned", "finance-body-exit", "finance-outside-root"]
++let routes: Route | undefined, routeScopes: RouteScope | undefined, canonicalRoute: Route | undefined, persistenceRoute: Route | undefined
++let preparedLookups = 0, comparatorLookups = 0
++let financeOwner: object | undefined
++
++function tailIndex(unit: Unit, point: PhasePoint) {
++  if (unit === unit.frame.firstAnalysis && point === "analysis-compare") return 0
++  if (unit === unit.frame.firstProductionRevalidation && point === "production-analysis-revalidate") return 1
++  if (unit !== unit.frame.firstPort) return -1
++  return point === "port-authority-final" ? 2 : point === "evaluations-recheck" ? 3 : point === "candidates-final" ? 4 : -1
++}
++function claimTail(frame: Frame, index: number) {
++  const bit = 2 ** index
++  if (frame.tailMask % (bit * 2) >= bit) return false
++  frame.tailMask += bit
++  frame.tailUsed += index < 5 ? 2 : 1
++  return true
++}
++function routeContext(birth = currentScope()): RouteScope | undefined {
++  if (!birth || birth.frame.routeDisabled) return
++  for (let at: Scope | undefined = birth; at; at = at.parent) {
++    for (let item = routeScopes; item; item = item.next) {
++      if (item.scope !== at) continue
++      if (!item.route || item.route.closed || item.route.frame !== birth.frame) return
++      return item
++    }
++  }
++}
++function routeFor(handle: unknown): Route | undefined {
++  const birth = currentScope()
++  if (!birth || birth.frame.routeDisabled) return
++  for (let route = routes; route; route = route.next) {
++    if (route.handle !== handle || route.closed || route.frame !== birth.frame) continue
++    if (route.birth === birth || routeContext(birth)?.route === route) return route
++  }
++}
++function routeScope(route: Route | undefined, phase: RoutePhase, birth: Scope) {
++  const frame = birth.frame
++  // Two canonical scopes, six read scopes and three persistence scopes fit.
++  // Bounded neutral masks cover reentrancy; exhaustion disables attribution.
++  if (frame.routeDisabled || frame.routeScopes >= 32) { frame.routeDisabled = true; frame.scopeFault = true; return undefined }
++  frame.routeScopes++
++  const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage: birth.stage, next: scopes }
++  const item: RouteScope = { scope, route, phase, next: routeScopes }
++  scopes = scope
++  routeScopes = item
++  return scope
++}
++function selectedDetail(value: unknown) {
++  if (value === undefined) return "none"
++  if (value === true) return "true"
++  if (value === false) return "false"
++  if (typeof value !== "string") return "unknown"
++  return ["cases", "preferences", "case-identities", "decisionResults", "direct", "wrapped", "child", "top-level", "projected", "full",
++    "returned", "threw", "abandoned", "product-refused", "options-refused", "root-absent", "root-refused", "not-requested",
++    "fallback-before-root", "fallback-no-selection", "prepare-refused", "unsupported-criteria", "witness-refused", "witness-unsupported",
++    "owned-records", "owned-direct", "outside-root"].includes(value) ? value : "unknown"
++}
++function routeEmit(route: Route, point: string, detail?: unknown) {
++  if (route.closed || route.frame.closed || route.frame.routeDisabled || route.frame.emitting) return
++  const points = route.kind === "lookup" ? lookupPoints : route.kind === "persistence" ? persistencePoints : canonicalPoints
++  const index = points.indexOf(point)
++  if (index < 0) return
++  const bit = 2 ** index
++  if (route.points % (bit * 2) >= bit) return
++  // Claim before serialization/clock/sink: reentrancy cannot reuse a place.
++  route.points += bit
++  emit(route.frame, "route", { routeKind: route.kind, route: route.id, routePhase: route.phase, point, detail: selectedDetail(detail),
++    gates: route.gates, parentUnit: route.birth.owner?.id ?? 0, parentPhase: route.birth.phase?.id ?? 0 })
++}
++function newRoute(kind: RouteKind, phase: RoutePhase, birth: Scope, id: number) {
++  const route: Route = { handle: {}, frame: birth.frame, birth, kind, id, phase, closed: false, points: 0, phaseMask: 0,
++    providerWork: undefined, callback: undefined, sourceWork: undefined, forwardedWork: undefined, operationWork: undefined,
++    sourceSeen: false, choiceSeen: false, localSeen: false, operationSeen: false, gates: [-1, -1, -1, -1, -1], next: routes }
++  routes = route
++  return route
++}
++export function enterSfE15Route(kind: RouteKind): unknown {
++  try {
++    const birth = currentScope()
++    if (!birth || birth.frame.routeDisabled) return undefined
++    const frame = birth.frame, context = routeContext(birth)
++    if (kind === "canonical") {
++      if (canonicalRoute) return undefined
++      const route = newRoute(kind, "preparation", birth, 1)
++      canonicalRoute = route
++      routeEmit(route, "canonical-enter")
++      return route.handle
++    }
++    if (kind === "lookup") {
++      if (!context || context.route !== canonicalRoute || context.phase !== "preparation" && context.phase !== "comparator") return undefined
++      const preparation = context.phase === "preparation"
++      if (preparation ? preparedLookups >= 2 : comparatorLookups >= 4) {
++        frame.routeOmitted = bump(frame, frame.routeOmitted); omit(frame, "detail"); return undefined
++      }
++      const id = preparation ? ++preparedLookups : 2 + ++comparatorLookups
++      const route = newRoute(kind, context.phase, birth, id)
++      routeEmit(route, "lookup-enter")
++      return route.handle
++    }
++    if (kind === "persistence") {
++      if (persistenceRoute) return undefined
++      let owner = false
++      for (let at: Scope | undefined = birth; at; at = at.parent)
++        if (at.phase?.point === "analysis-persist" && at.owner === frame.firstAnalysis) { owner = true; break }
++      if (!owner) return undefined
++      const route = newRoute(kind, "persist-body", birth, 1)
++      persistenceRoute = route
++      routeEmit(route, "persist-enter")
++      return route.handle
++    }
++  } catch { /* A diagnostic handle never grants product authority. */ }
++  return undefined
++}
++export function currentSfE15Route(): unknown {
++  try { return routeContext()?.route?.handle } catch { return undefined }
++}
++export function runSfE15Route<T>(handle: unknown, phase: RoutePhase, work: () => T): T {
++  let frame: Frame | undefined, scope: Scope | undefined
++  try {
++    const birth = currentScope(), route = routeFor(handle)
++    if (birth) {
++      frame = birth.frame
++      const index = ["preparation", "comparator", "candidate-read", "persist-body", "store-write", "state-transaction"].indexOf(phase)
++      const context = routeContext(birth)
++      const valid = route && index >= 0 && (route.kind === "canonical" && (phase === "preparation" || phase === "comparator") ||
++        route.kind === "lookup" && phase === "candidate-read" ||
++        route.kind === "persistence" && (phase === "persist-body" || phase === "store-write" || phase === "state-transaction" && context?.phase === "store-write"))
++      const bit = index >= 0 ? 2 ** index : 0
++      if (valid && route.phaseMask % (bit * 2) < bit) {
++        route.phaseMask += bit
++        scope = routeScope(route, phase, birth)
++        if (phase === "comparator") {
++          routeEmit(route, "comparator-enter")
++          if (financeOwner) routeEmit(route, "finance-work-enter")
++        }
++        if (phase === "candidate-read") routeEmit(route, "candidate-read-enter")
++        if (phase === "store-write") routeEmit(route, "prewrite")
++        if (phase === "state-transaction") routeEmit(route, "state-transaction-enter")
++      } else {
++        // Preserve E14's lexical stage while masking an ambient selected route.
++        scope = context ? routeScope(undefined, phase, birth) : birth
++      }
++    }
++  } catch { if (selected) { selected.scopeFault = true; selected.routeDisabled = true } }
++  return runOnce(frame ?? selected, scope, work)
++}
++export function finishSfE15Route(handle: unknown, threw: boolean) {
++  try {
++    const route = routeFor(handle)
++    if (!route) return
++    if (route.kind !== "canonical") routeEmit(route, route.kind === "lookup" ? "lookup-close" : "persist-close", threw ? "threw" : "returned")
++    route.closed = true
++    route.providerWork = undefined
++    route.callback = undefined
++    route.sourceWork = undefined
++    route.forwardedWork = undefined
++    route.operationWork = undefined
++  } catch { /* The original caught/thrown value is not passed to the observer. */ }
++}
++export function linkSfE15Work<T>(handle: unknown, point: WorkLink, value: T, callback?: unknown): T {
++  try {
++    const route = routeFor(handle), context = routeContext()
++    if (!route || context?.route !== route || typeof value !== "function") return value
++    if (point === "provider-read" && route.kind === "lookup" && context.phase === "candidate-read" && route.providerWork === undefined) {
++      route.providerWork = value
++      route.callback = callback
++    } else if (point === "provider-write" && route.kind === "persistence" && context.phase === "state-transaction" && route.providerWork === undefined) {
++      route.providerWork = value
++    } else if (point === "source-work" && route.sourceSeen && route.sourceWork === undefined) {
++      route.sourceWork = value
++    } else if (point === "choice-wrapped" && route.choiceSeen && route.forwardedWork === undefined) {
++      route.forwardedWork = value
++    } else if (point === "local-operation" && route.localSeen && route.operationWork === undefined) {
++      route.operationWork = value
++    }
++  } catch { /* No original callback is wrapped, invoked, or inspected. */ }
++  return value
++}
++export function enterSfE15Layer(layer: Layer, work: unknown): unknown {
++  try {
++    const context = routeContext(), route = context?.route
++    if (!route || route.kind === "canonical" || typeof work !== "function") return undefined
++    if (layer === "source" && !route.sourceSeen && work === route.providerWork) {
++      route.sourceSeen = true
++      routeEmit(route, "source-enter")
++      return route.handle
++    }
++    if (layer === "choice" && !route.choiceSeen && route.sourceSeen && work === route.sourceWork) {
++      route.choiceSeen = true
++      return route.handle
++    }
++    if (layer === "local" && !route.localSeen && route.sourceSeen && work === (route.forwardedWork ?? route.sourceWork)) {
++      route.localSeen = true
++      return route.handle
++    }
++    if (layer === "operation" && !route.operationSeen && route.localSeen && work === route.operationWork) {
++      route.operationSeen = true
++      return route.handle
++    }
++  } catch { /* Unknown, reused, foreign and late work cannot join the selected chain. */ }
++  return undefined
++}
++export function markSfE15Route(handle: unknown, point: RoutePoint, detail?: unknown) {
++  try {
++    const route = routeFor(handle)
++    if (!route) return
++    if (point === "choice-forward" && detail === "direct" && route.choiceSeen && route.forwardedWork === undefined)
++      route.forwardedWork = route.sourceWork
++    routeEmit(route, point, detail)
++  } catch { /* Only bounded local facts are emitted. */ }
++}
++export function returnedSfE15Route<T>(handle: unknown, point: RoutePoint, value: T): T {
++  markSfE15Route(handle, point, point === "copy-close" ? value : "returned")
++  return value
++}
++export function tapSfE15Gate<T>(handle: unknown, gate: Gate, value: T): T {
++  try {
++    const route = routeFor(handle)
++    if (route) {
++      const index = ["source-root-current", "callback-equal", "store-current", "view-current", "product-condition"].indexOf(gate)
++      // -1 means no tap evaluated; 2 means an evaluated nonboolean result.
++      // Optional source-root absence is identified separately by its branch row.
++      if (index >= 0 && route.gates[index] === -1) route.gates[index] = value === true ? 1 : value === false ? 0 : 2
++    }
++  } catch { /* A tap returns the original predicate result without coercing it. */ }
++  return value
++}
++export function tapSfE15ProviderSelection<T>(callback: unknown, value: T): T {
++  try {
++    const route = routeContext()?.route
++    if (route?.kind === "lookup" && typeof callback === "function" && callback === route.callback) routeEmit(route, "provider-view", value)
++  } catch { /* Preserve the already performed optional selection lookup. */ }
++  return value
++}
++export function markSfE15Finance(point: FinancePoint, owner?: unknown): unknown {
++  try {
++    const context = routeContext(), route = context?.route
++    if (!route || route !== canonicalRoute) return undefined
++    if (point === "entered") {
++      if (financeOwner) return undefined
++      financeOwner = {}
++      routeEmit(route, "finance-enter")
++      return financeOwner
++    }
++    if (!financeOwner || owner !== financeOwner) return undefined
++    if (point === "returned") routeEmit(route, "finance-body-exit")
++    else if (point === "work-enter") routeEmit(route, "finance-work-enter")
++    else if (point === "observation-returned") routeEmit(route, "finance-observation-returned")
++    else if (point === "outside-root") routeEmit(route, "finance-outside-root", point)
++    else routeEmit(route, "finance-branch", point)
++  } catch { /* Records an existing branch; it never reads a witness or grant. */ }
++  return undefined
++}
++
++// The bridges feed decoded chunks here BEFORE their unchanged splitLines/readiness
++// pipeline. Only observed LF completes a diagnostic row; EOF never invents one.
++export function createSfE15Forwarder(): (chunk: string) => string {
++  const state = { tail: "", discarding: false, diagnostic: false, failed: false, events: 0, bytes: 0, mode: "" }
++  return (chunk) => {
++    try {
++      if (state.failed || typeof chunk !== "string") return chunk
++      for (let index = 0; index < chunk.length; index++) {
++        const character = chunk[index]!
++        if (character !== "\n") {
++          if (character.charCodeAt(0) > 127) {
++            if (state.diagnostic || state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")) { state.failed = true; break }
++            state.tail = ""
++            state.discarding = true
++            continue
++          }
++          if (!state.discarding) {
++            if (state.tail.length < maxLineBytes - 1) state.tail += character
++            else {
++              state.diagnostic = state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")
++              state.tail = ""
++              state.discarding = true
++            }
++          }
++          continue
++        }
++        const line = state.tail
++        const discarded = state.discarding, diagnostic = state.diagnostic
++        state.tail = ""
++        state.discarding = false
++        state.diagnostic = false
++        if (discarded) { if (diagnostic) { state.failed = true; break } else continue }
++        const mode = line.startsWith(prefix) ? "events" : line.startsWith("SF_PREVIEW_E15_LAUNCHER ") ? "disabled" : ""
++        if (!mode) continue
++        if (!/^[\x20-\x7e]*$/.test(line) || state.mode && mode !== state.mode ||
++            state.events >= (mode === "events" ? maxEvents : 1) || state.bytes + line.length + 1 > (mode === "events" ? maxBytes : maxLineBytes)) {
++          state.failed = true
++          break
++        }
++        state.mode = mode
++        const complete = line + "\n", bytes = line.length + 1
++        state.events++
++        state.bytes += bytes
++        try { if (writeSync(1, complete, undefined, "utf8") !== bytes) state.failed = true }
++        catch { state.failed = true }
++        if (state.failed) break
++      }
++    } catch { state.failed = true }
++    return chunk
++  }
+ }
+ 
+ function hash(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
+@@ -432,10 +790,10 @@
+   if (process.argv[1] !== path.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
+     throw new Error("cpu-process")
+   const base = path.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
++  if (!object(value) || value.schema !== "sf-preview-e15-event-launch-v1" || value.source !== source ||
+-  if (!object(value) || value.schema !== "sf-preview-e14-event-launch-v1" || value.source !== source ||
+       value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
+       typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
++      typeof value.nonce !== "string" || !/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(value.nonce) ||
+-      typeof value.nonce !== "string" || !/^sf613-e14-event-[A-Za-z0-9]{6}$/.test(value.nonce) ||
+       typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
+       value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
+     throw new Error("cpu-binding")

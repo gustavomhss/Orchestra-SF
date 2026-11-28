@@ -1,0 +1,1077 @@
+{
+  "schema": "sf613-e15-diagnostic-source-proposal-v1",
+  "status": "STATIC_SOURCE_PACKAGE_COMPLETE_NO_EXECUTION",
+  "createdUtc": "2026-11-28 09:00:07 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/close_pr613",
+  "purpose": "Observe installed route and first persistence boundaries for the first canonical comparison of the first preview Request while retaining the outer preview lifecycle. This proposal is diagnostic only.",
+  "authority": {
+    "authorizedScope": "Proposal blobs and literal readback only. Root alone creates and binds source/focal objects, refs and runs, and receives originals.",
+    "cleanBase": {
+      "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+    },
+    "proposedDiagnosticSource": {
+      "commit": "UNBOUND",
+      "tree": "UNBOUND",
+      "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "delta": {
+        "added": 2,
+        "modified": 16,
+        "deleted": 0
+      }
+    },
+    "diagnosticSourceIsFinalCandidate": false,
+    "noProductOptimization": true
+  },
+  "currentHelper": {
+    "version": "R6",
+    "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts",
+    "gitSha": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+    "bytes": 47324,
+    "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+    "lf": 814,
+    "endsWithLF": true,
+    "api": {
+      "gitSha": "fdbab600e56af5c9fcc5bb40eb84d7a67e7780bf",
+      "bytes": 3272,
+      "sha256": "faee326027f2ee82a3b14301d8fb1884bc17578cb67460324f2003b6233a8362",
+      "lf": 35,
+      "endsWithLF": true
+    }
+  },
+  "modifications": [
+    {
+      "role": "http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "9cbbba7a3292f22e766aad41e6066eb69ae6424a",
+        "bytes": 14101,
+        "sha256": "de4414c0c4af396a8be85861d333edb8bd4e887782649f324aaced6eebf657c5",
+        "lf": 145,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        7,
+        7
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "port",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "lf": 129,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "9267e181901f4bf9d33f85de0b223f18dbc1df17",
+        "bytes": 18817,
+        "sha256": "e58e35513e631f96a8285d954eb1f6f2640be5299e63b321be59c4bc81e81cea",
+        "lf": 140,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        11,
+        11
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "compare",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "lf": 85,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "8d4e1583efe5611114cd495b71197c7e1bb690df",
+        "bytes": 9455,
+        "sha256": "508dad85406218725414c8a8189f6b39d4ed24a9a0846314ab47258a77bf149c",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        18,
+        18
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "analysis",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "47c4388c34c21c7294b0ffc34e4adcbe65b138de",
+        "bytes": 9554,
+        "sha256": "a4d2a00a8a146e82eafec02985b15313625c02dbf7fac5bdb21f31cc8d0bd9ae",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "90146429a3a264f4d66f5b74d1502715a58c1099",
+        "bytes": 10956,
+        "sha256": "6323e7ddecb3bcc0e21d382b9b56069b5f3795f5995705a24d64e1c14a0cbfcd",
+        "lf": 102,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        19,
+        19
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "production",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+        "bytes": 11633,
+        "sha256": "198c157ac531898f51f2581c0a8d39482992ca5ece056e45439b00352de26057",
+        "lf": 115,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "a3f69c5d987769a2ad66685f447002bf4307b2e1",
+        "bytes": 12548,
+        "sha256": "f5c483828c21d1a910340f8c4d22f880362b98a1f6ec52ada1dfd21a129fc321",
+        "lf": 126,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        22,
+        22
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "inner",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "8df288b2386618a7961ba20c1054e466cff39c95",
+        "bytes": 10249,
+        "sha256": "e6470534bca50e04efcf7d032f275ee432a2d88c71a9a41f1b0eaf6f9bcdb2f4",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        13,
+        13
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "outer",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "5989de182f65c2a6faf20218adf8b20af6dfa000",
+        "bytes": 16353,
+        "sha256": "919c99cf8a10e8fafa888f50bd13e53e563e0c6a2ac7248ec086d015286324cb",
+        "lf": 265,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        16,
+        16
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "authority",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "d377cfef3ea9e49178b1054da4cd26b0a4feea6c",
+        "bytes": 14879,
+        "sha256": "e15a2ec96303dc7194e68f21f72d00aaa4b42f9a9be5761b87c96434284ebda0",
+        "lf": 178,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "ff0f95cb0edef96bda838f35712599e449d45031",
+        "bytes": 15187,
+        "sha256": "6b8d0ac82d242fe1b5566e5c6423bd20177f1632b13a77279873f7967f1c3c5f",
+        "lf": 183,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        20,
+        20
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "finance",
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "baef3e2fe2169bc556d0358eac8cc74419a4b697",
+        "bytes": 16776,
+        "sha256": "91aafd39be34b0fa812b4696486bbd79439f6bbc151d8d3febac755f88c51679",
+        "lf": 229,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "2eed03d569ffe4c558cf3f737affb88899062629",
+        "bytes": 17534,
+        "sha256": "a7992c7617af020b3818a2613b679e72c04fec9e2c59d330f1204c3353fd4971",
+        "lf": 233,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        30,
+        30
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "lookup",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "c8dd1c26b46ea7c287db80d0ca5746205e45f1ef",
+        "bytes": 3614,
+        "sha256": "c66ade4df51776356ce4750b4f16fe4e14573a0b74a3ea16f1dad1ef3fefbf83",
+        "lf": 36,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "cd71a9d8440cdc94cf6663928063c38449a25721",
+        "bytes": 4002,
+        "sha256": "6de460adac2d2deff03c8061a4ed626d77bfa69c9c2f1fa0da8de03c9a9ae424",
+        "lf": 40,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        7,
+        7
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "resultStore",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "bf1b2e6d62b21f9ebf1819d84a6e3e075f2a2efc",
+        "bytes": 34043,
+        "sha256": "63ce6e23a2959dcf3abfe79f3dca97b37bafdf0bd9ea84c10d4ec79be3bf6ab1",
+        "lf": 364,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "8fce115635205bf07f2727cb3782677ee98ef482",
+        "bytes": 34334,
+        "sha256": "bba186a76984c4024dd4fdc4568cb16989c67f4908f169e098e7b43ad52f37d7",
+        "lf": 366,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        48,
+        48
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "bytes": 67954,
+        "sha256": "db1a3ac11285475de6a5e8197866276ac988cae05352d28873c24b25456acae1",
+        "lf": 898,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "c9a887ede73e2ebf72b4c7c25c01c2396708454a",
+        "bytes": 68237,
+        "sha256": "2f4117cc2710c67b5e9acc2b6ff2e7caba1a47e43fbd2018c30aa7d7c0d7e3e2",
+        "lf": 899,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        36,
+        36
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "source",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "b7de9404461591ce0162d496ec917a47fb72a479",
+        "bytes": 60735,
+        "sha256": "95b89a7a9fa8f67a85c4db212fb29dbfe2e8d4b2f222412139b45628e0d3b969",
+        "lf": 891,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "3942f378f6d94f53b5622df2a459e127d410f543",
+        "bytes": 61828,
+        "sha256": "c969cd95ef44a34012858e534a85248a8b64bcae7ebdc5747ed7f0cd803a0f02",
+        "lf": 904,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        21,
+        21
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "choice",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+        "bytes": 46151,
+        "sha256": "53b58912b3869b1af0f95c09cf0d0f8fd48da115210fb70ed56a5ae5d6979c45",
+        "lf": 533,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "d00519c139524b8b1b2699ac40868a40f1a18d02",
+        "bytes": 46533,
+        "sha256": "25870740c210f592c51227d0d541c99568df57939764e144ce69e5c3a19226c7",
+        "lf": 539,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        56,
+        56
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    },
+    {
+      "role": "local",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "bytes": 96632,
+        "sha256": "ac08a58d8479646e1cc641c4431c64a85f04133849adb93c39769ca4a1fb4be9",
+        "lf": 1688,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "637913f32c8b5489c2c90b78d309d52e2f3ee94c",
+        "bytes": 99097,
+        "sha256": "1f7d696be534c6054a712d7eabe5033d4dd93c315f194842b5ce3bc6f7614561",
+        "lf": 1730,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        21,
+        21
+      ],
+      "thenCounts": [
+        7,
+        7
+      ]
+    },
+    {
+      "role": "persistence",
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6306e5e165495947cd9e00408c0d88c6051dfb64",
+        "bytes": 9698,
+        "sha256": "4bba3f6d6d829c74b0ad3dc491153e00426b74304ba2084b62d6196bff773837",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "e0d5decb4aa4e5f94885cd11c5afbbffbd96d279",
+        "bytes": 10525,
+        "sha256": "03547a4fdca1f84f0068a576457eaf0fc0f66e5ff45b709199ebd127c59ca27b",
+        "lf": 128,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true,
+      "awaitCounts": [
+        18,
+        18
+      ],
+      "thenCounts": [
+        0,
+        0
+      ]
+    }
+  ],
+  "additions": [
+    {
+      "role": "helper",
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+        "bytes": 47324,
+        "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "createdAndReadbackLiteral": true
+    },
+    {
+      "role": "original Analytics request",
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "bodyUnchanged": true
+    }
+  ],
+  "sourceTreeVerification": {
+    "all18PathsResolvedInActualBaseTree": true,
+    "all16PreimagesExact": true,
+    "twoAdditionsAbsent": true,
+    "derivationContainsTreePaths": true,
+    "unrelatedSourcePathsChanged": 0
+  },
+  "artifacts": {
+    "fullDerivation": {
+      "gitSha": "6bb16fcd982f7f167e5e5a421f39951544865c52",
+      "bytes": 306067,
+      "sha256": "1be409300e0cb158033b4944f3ea415a7e2f460175b4f86848acd1563bba4567",
+      "lf": 2980,
+      "endsWithLF": true
+    },
+    "fullDiff": {
+      "gitSha": "169d9b062e35fcbef398af087f948e14a03d2356",
+      "bytes": 179552,
+      "sha256": "0e26717f333dfbb03afe2027327092c05b9785ec55ed11d5e2bf5944b8e6c12b",
+      "lf": 2147,
+      "endsWithLF": true
+    },
+    "reuseHistory": {
+      "gitSha": "76338a572febd5fbe3053c4d89aabdb74cd4a602",
+      "bytes": 95612,
+      "sha256": "0c811d33ad379922c98d018060f66bd943830fa29c7c4613c0fd298f3fd085e7",
+      "lf": 1927,
+      "endsWithLF": true
+    },
+    "reuseDiff": {
+      "gitSha": "70f32988561710bb0999be07c69633d0d87de88e",
+      "bytes": 80948,
+      "sha256": "c1abb5d791194abd43259f480baf40051a8a5d24aa89aecf50097285432375b7",
+      "lf": 1069,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitSha": "31f6e0e98773bb644634445e25cd3c57c54a73f6",
+      "bytes": 58090,
+      "sha256": "3d792295aaa907346fd7ba8bfd84daf154f611cbe16431ac5ed799513bfbc20b",
+      "lf": 1151,
+      "endsWithLF": true
+    },
+    "helperTransportIndependentReview": {
+      "gitSha": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+      "bytes": 25602,
+      "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+      "lf": 563,
+      "endsWithLF": true
+    },
+    "priorE14SourceManifest": {
+      "gitSha": "137739c767d7951c517fee96bb1081ccec0e5a93",
+      "bytes": 29629,
+      "sha256": "957ad9b8a47996d9f14d1717f7bd4d0ab3ffb177f504d5e36b7e34035d7c9139",
+      "lf": 706,
+      "endsWithLF": true
+    },
+    "priorE14Bounds": {
+      "gitSha": "e348de4270c8add6a6d239f5ba4723959a00d8a8",
+      "bytes": 26764,
+      "sha256": "a5c807616fc39020e91afa89d30464fa027f1af29d3cf958aed60c49d998cac0",
+      "lf": 453,
+      "endsWithLF": true
+    },
+    "selectionBoundMemo": {
+      "gitSha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    }
+  },
+  "derivationSummary": {
+    "cleanS21": {
+      "modified": 16,
+      "added": 2,
+      "anchors": 58,
+      "completeLiteralAdditions": 2,
+      "files": 18,
+      "hunks": 60,
+      "addedLines": 1358,
+      "removedLines": 289,
+      "forwardInverse": "Exact literal application and inversion of all18 buffers;diff separately parsed and applied as data."
+    },
+    "reuseE14": {
+      "files": 8,
+      "hunks": 53,
+      "addedLines": 473,
+      "removedLines": 119,
+      "callerOperations": 47,
+      "helperOperations": 32,
+      "helperVersionChain": "E14→R1:17;R1→R2:5;R2→R3:3;R3→R4:3;R4→R5:3;R5→R6:1"
+    },
+    "replacements": "Only explicit named E14 tokens or exact complete source/tree hashes are retargeted. No generic e11/e14 replacement is applied across unknown hashes.",
+    "originalRequest": "295 UTF-8 bytes,zeroLF,exact eda49a023c07599de00f5af9642ee92b9d9adf3b.",
+    "calculatedFragmentHashesAreNotCreatedBlobs": true
+  },
+  "codeMap": [
+    {
+      "roles": [
+        "http",
+        "port",
+        "compare",
+        "analysis",
+        "production"
+      ],
+      "mechanism": "Literal retarget of reviewed E14 lifecycle names. Existing expression wrappers preserve each original await and return by identity;original callbacks and short-circuit operands remain. Protected tail reservations are in helper."
+    },
+    {
+      "roles": [
+        "authority"
+      ],
+      "mechanism": "One synchronous private route scope around the original alternatives expression and its existing comparator callback. The original returned Promise is retained without adding await/then;no installed canonical-close is claimed."
+    },
+    {
+      "roles": [
+        "finance"
+      ],
+      "mechanism": "Outer Finance selected only in canonical preparation. Already-decided branch markers,actual comparator entry,observation-returned and body-exit remain distinct. Nested comparator Finance is outside this detail population."
+    },
+    {
+      "roles": [
+        "lookup"
+      ],
+      "mechanism": "One handle per bounded actual scenario-lookup invocation;only its original candidates state.read expression opens candidate-read scope. Other lookup reads remain original and are not mislabeled as candidate-selection population."
+    },
+    {
+      "roles": [
+        "provider",
+        "source",
+        "choice",
+        "local"
+      ],
+      "mechanism": "Original function values are linked privately,never wrapped by identity taps. Original short-circuit gate results are tapped once. Requested tag,forwarded work,native gate/copy/effective tag and Provider-view are separate facts."
+    },
+    {
+      "roles": [
+        "persistence",
+        "resultStore"
+      ],
+      "mechanism": "First persistence selected from first-analysis persist phase. Exact original store.write and result-store state.transaction expressions establish lexical ownership;postwrite binding/validation/read remain marked without removing existing proofs or reads."
+    },
+    {
+      "roles": [
+        "local",
+        "source"
+      ],
+      "mechanism": "Only selected transaction work reachesqueue/BEGIN/preparation/copy/finish/dispose/scope/serialization/commit markers. operation(true) by itself is not an identity. Materialize-enter precedes SQL/observation/plans;target copy is a separate boundary."
+    },
+    {
+      "roles": [
+        "inner",
+        "outer"
+      ],
+      "mechanism": "Shared ASCII/LF bounded forwarder executes before unchanged splitLines/readiness. It returns the exact original decoded chunk and uses synchronous fd1 attempts with irreversible failure latch. No screenshots/HTML/ZIP/profile are read."
+    }
+  ],
+  "quota": {
+    "streamMaximumRecords": 191,
+    "streamMaximumBytes": 195584,
+    "lineMaximumBytes": 1024,
+    "campaignLogicalMaximumRecords": 192,
+    "campaignLogicalMaximumBytes": 196608,
+    "partition": {
+      "core": 63,
+      "protectedTail": 12,
+      "lookupRoutes": 72,
+      "canonicalFinance": 8,
+      "firstPersistence": 36
+    },
+    "maximumModeledEventBytes": 926,
+    "modeledHeadroomBytes": 98,
+    "layer": "Diagnostic ASCII prefix+JSON+LF. Not the full Actions log,not all mirrored physical copies,not elapsed I/O duration.",
+    "clock": "One native monotonic origin;elapsedTenthMs integer ornull on observed clockfault;no exclusive time arithmetic."
+  },
+  "protocol": {
+    "eventPrefix": "SF_PREVIEW_E15_EVENT ",
+    "eventSchema": "sf-preview-causal-e15-event-v1",
+    "launcherPrefix": "SF_PREVIEW_E15_LAUNCHER ",
+    "launcherSchema": "sf-preview-causal-e15-launcher-v1",
+    "bindingSchema": "sf-preview-e15-event-launch-v1",
+    "directory": "test-ci-evidence/sf613-e15-event-<6alnum>",
+    "streamName": "preview-events.jsonl",
+    "launcherName": "launcher.json",
+    "env": [
+      "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR",
+      "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
+    ],
+    "selectedRequest": "First setup attempt at existing validated preview boundary;exact Request identity and private ALS tokens.",
+    "mainCarrier": "Native fd1→inner forwarder→outer forwarder→worker fd1/main. Report case/result/stdout arrays are not assumed equal to main.",
+    "partial": "No EOFflush or inventedLF;zero/partialwrite/throw stops the affected sink or forwarder without replay. Keep invalid/trailing bytes andprefix-only status;no terminal or60s current state inferred from silence.",
+    "finance": "finance-observation-returned may be a cached observation without work;finance-body-exit is not async settlement;finance-outside-root is a dedicated eighth slot;no canonical-close.",
+    "copy": "copy-close reflects successful snapshot construction before registration/freeze andlater work;it does not attest transaction success. Route close threw reflects caught-exception flag,not a mandatory rejected Promise.",
+    "late": "Foreign/late/neutral scopes never reselect or inherit a wrong Request;scope faults disable attribution while product work still executes once."
+  },
+  "runtime": {
+    "platform": "linux",
+    "arch": "x64",
+    "bunVersion": "1.3.14",
+    "bunRevision": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "profileSampling": false
+  },
+  "originalAnalytics": {
+    "request": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "requestBytes": 295,
+    "requestLf": 0,
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitSha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "previewResponseWaitMs": 60000,
+    "sensitivityResponseWaitMs": 120000,
+    "specConfigActionsRetriesLiteral": true,
+    "selectionBoundMemo": {
+      "gitSha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    },
+    "memoScope": "Seven unchanged spec/BI/helper/schema source pins are verified in S21;E15 HTTP retains original operation/POST guards with diagnostic entry. Fixed selection only,not universal endpoint exclusion.",
+    "maxFormula": "max(191 stream +1 BI disabled,2 disabled)=192 records;max(191KiB+1KiB,2KiB)=192KiB.",
+    "mirroredCopies": "Producer andtwo forwards make separate finite physical attempts;the logical cap does not cap all raw log representations.",
+    "noOriginalAcquisitionByAuthor": true
+  },
+  "controlsAndWrapper": {
+    "owner": "/root/focal_migration authors only two D control files;root authors focal driver/request/binding.",
+    "fixture": {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+      "gitSha": "06ad7e879bf15e4c2e1287a70f07524a618fd052",
+      "bytes": 63845,
+      "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+      "lf": 987,
+      "endsWithLF": true,
+      "version": "R2",
+      "status": "AUTHOR_PROPOSAL_PENDING_ROOT_REVIEW"
+    },
+    "test": {
+      "path": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts",
+      "gitSha": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e",
+      "bytes": 1167,
+      "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+      "lf": 24,
+      "endsWithLF": true,
+      "status": "AUTHOR_PROPOSAL_PENDING_ROOT_REVIEW"
+    },
+    "controlFilesInDiagnosticSource": false,
+    "expectedDeclaredScope": "Ten isolated modes,one whole-file test/report. Synthetic ALS/clock/sink/route contexts plus real Source/CC/LS composition;no installed authority or Analytics latency claim.",
+    "executionResults": null,
+    "sourceCommitTreeRunBindings": "UNBOUND;root will bind concrete objects after reviews.",
+    "package": {
+      "controlManifest": {
+        "gitSha": "a9d92ca1d90ff1ed855c104642cc81e1fd8394bb",
+        "bytes": 13227,
+        "sha256": "96bcbee6dbf74f9463bd9ea9f60cc5c7f1ec8aa172a1ffa7c9bde4f5a788ad8a",
+        "lf": 328,
+        "endsWithLF": true
+      },
+      "controlBounds": {
+        "gitSha": "565d55a74d581cd017f99c7d95a08ad12d5d9ba7",
+        "bytes": 29425,
+        "sha256": "420759bcbf84b6445f4fa7e2687afe228dc07cc3e31df19eb6f7ac0cc6269433",
+        "lf": 750,
+        "endsWithLF": true
+      },
+      "controlDerivation": {
+        "gitSha": "b3caba9a99f048461424266857e0f5f0576650e1",
+        "bytes": 94092,
+        "sha256": "f2bcdbcfb08d059467ba7599184786b4b49ffe2c790cf4a772975f601ec03ec1",
+        "lf": 225,
+        "endsWithLF": true
+      },
+      "controlDiff": {
+        "gitSha": "a5da17e56e59b67863e40593049d86643cbc463f",
+        "bytes": 66585,
+        "sha256": "337240b24791c93aea04576a99bcd0a1d4c1fae4bb05837ac712a5768d8b7555",
+        "lf": 1023,
+        "endsWithLF": true
+      }
+    }
+  },
+  "independentReviews": {
+    "helperTransport": {
+      "status": "ACK_R6_HELPER_TRANSPORT_STATIC_NO_REMAINING_FINDING",
+      "receipt": {
+        "gitSha": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+        "bytes": 25602,
+        "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+        "lf": 563,
+        "endsWithLF": true
+      },
+      "scope": "helperR6/API/two pumps and60 operations;does not cover other product taps,controls,CI or latency"
+    },
+    "productTaps": {
+      "owner": "/root/focal_migration and /root",
+      "status": "REVIEW_IN_PROGRESS_NO_RUNTIME_RESULT"
+    },
+    "controls": {
+      "owner": "/root",
+      "status": "REVIEW_IN_PROGRESS_NO_RUNTIME_RESULT"
+    }
+  },
+  "history": {
+    "helperDrafts": [
+      {
+        "version": "R1",
+        "gitSha": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+        "bytes": 44246,
+        "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+        "lf": 747,
+        "endsWithLF": true,
+        "status": "SUPERSEDED_NO_EXECUTION"
+      },
+      {
+        "version": "R2",
+        "gitSha": "83219e5647237dbc70f4c8720795ed94e88f82de",
+        "bytes": 46849,
+        "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+        "lf": 807,
+        "endsWithLF": true,
+        "status": "SUPERSEDED_NO_EXECUTION"
+      },
+      {
+        "version": "R3",
+        "gitSha": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+        "bytes": 47256,
+        "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+        "lf": 814,
+        "endsWithLF": true,
+        "status": "SUPERSEDED_NO_EXECUTION"
+      },
+      {
+        "version": "R4",
+        "gitSha": "ba6b54f57bb517fa092545c061b203180b7074fe",
+        "bytes": 47286,
+        "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+        "lf": 814,
+        "endsWithLF": true,
+        "status": "SUPERSEDED_NO_EXECUTION"
+      },
+      {
+        "version": "R5",
+        "gitSha": "bccde934773e78e54cd930e8d874bd6a3d066052",
+        "bytes": 47289,
+        "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+        "lf": 814,
+        "endsWithLF": true,
+        "status": "SUPERSEDED_NO_EXECUTION"
+      }
+    ],
+    "productDrafts": [
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "prior": [
+          {
+            "gitSha": "edb57e119356cb6daea595cc4e3ef3c9dd1e5aa5",
+            "bytes": 17527,
+            "sha256": "dd7690caaaa76c01bee5bc34b591194814135a3433db6154c79f67b9a62f560a",
+            "lf": 233,
+            "endsWithLF": true,
+            "status": "SUPERSEDED_NO_EXECUTION"
+          }
+        ],
+        "current": {
+          "gitSha": "2eed03d569ffe4c558cf3f737affb88899062629",
+          "bytes": 17534,
+          "sha256": "a7992c7617af020b3818a2613b679e72c04fec9e2c59d330f1204c3353fd4971",
+          "lf": 233,
+          "endsWithLF": true
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "prior": [
+          {
+            "gitSha": "04b5beec845fec13afc235ff10fe0703071b7e1c",
+            "bytes": 61827,
+            "sha256": "56deb2756a666597c0b28888bce56e80f9ab2bc5435ebce85d8caac62674ee79",
+            "lf": 904,
+            "endsWithLF": true,
+            "status": "SUPERSEDED_NO_EXECUTION"
+          }
+        ],
+        "current": {
+          "gitSha": "3942f378f6d94f53b5622df2a459e127d410f543",
+          "bytes": 61828,
+          "sha256": "c969cd95ef44a34012858e534a85248a8b64bcae7ebdc5747ed7f0cd803a0f02",
+          "lf": 904,
+          "endsWithLF": true
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "prior": [
+          {
+            "gitSha": "c5d19bce90a3af66aa090edef403d6aba99e3187",
+            "bytes": 99023,
+            "sha256": "cb376d3311d7aa9bcfb09f81085d4d0472e27a5b5bd462fe0f61798b176e6395",
+            "lf": 1729,
+            "endsWithLF": true,
+            "status": "SUPERSEDED_NO_EXECUTION"
+          }
+        ],
+        "current": {
+          "gitSha": "637913f32c8b5489c2c90b78d309d52e2f3ee94c",
+          "bytes": 99097,
+          "sha256": "1f7d696be534c6054a712d7eabe5033d4dd93c315f194842b5ce3bc6f7614561",
+          "lf": 1730,
+          "endsWithLF": true
+        }
+      }
+    ],
+    "supersededSourceSupport": {
+      "gitSha": "7866b8e6510f0741fcdb5543884e7a56cc7eeed4",
+      "bytes": 305401,
+      "sha256": "d97be91ca8b2e7d3270d7ce00fc07cf0c5dd178fb4f2f929dded55509aeb6efc",
+      "lf": 2963,
+      "endsWithLF": true
+    },
+    "supersededFullDiff": {
+      "gitSha": "ee2bee8d3e3d25673f81ffff5d50dff264cb3035",
+      "bytes": 179517,
+      "sha256": "d9303f685ce0bc0ccae1191e1ac293231f285b399a47e27c1ae7ebf495115b33",
+      "lf": 2147,
+      "endsWithLF": true
+    },
+    "supersededReuseSupport": {
+      "gitSha": "80cd6f1fd5e082de40366f655344802975fd3fe2",
+      "bytes": 93689,
+      "sha256": "821a2aabb5c9946ff556565da23fd8f9824cafa6a914a6132844910957279dbe",
+      "lf": 1873,
+      "endsWithLF": true
+    },
+    "supersededReuseDiff": {
+      "gitSha": "9a2012e515f1d6f3fb07a7bf414c60f53505ac98",
+      "bytes": 80913,
+      "sha256": "bbb24858e5399ce3fee9fa82c77005bb1fdc2bcb72f65fbfafebc146612a34ca",
+      "lf": 1069,
+      "endsWithLF": true
+    },
+    "supersededBounds": {
+      "gitSha": "6d7ffec9fb8d1a06caad167a8482b41f4c3e1a2a",
+      "bytes": 57292,
+      "sha256": "e93f66c866800ba1eeac77965a3ad2747015c9c391f2a4a1a2a1db05eeec22d7",
+      "lf": 1142,
+      "endsWithLF": true
+    },
+    "note": "These are actual historical proposal blobs,not accepted runs. Fragments/models/intermediate hashes in supports are calculated-only unless explicitly identified as real created blobs."
+  },
+  "instructionsRead": {
+    "localGuidance": [
+      {
+        "path": "AGENTS.md",
+        "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+        "bytes": 16583,
+        "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+        "lf": 223,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/AGENTS.md",
+        "gitSha": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+        "bytes": 5333,
+        "sha256": "085a84754d37145690b286ea7f37103be07511d361e34c807fe08af27d5df9a9",
+        "lf": 56,
+        "endsWithLF": true
+      },
+      {
+        "path": "packages/app-shell/e2e/AGENTS.md",
+        "gitSha": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+        "bytes": 2379,
+        "sha256": "87f2775fafa79874744ead17751b8df5c6b74b38ea66e70e02beeeeba1a121f9",
+        "lf": 22,
+        "endsWithLF": true
+      }
+    ],
+    "playwrightGuides": [
+      {
+        "title": "Best practices",
+        "url": "https://playwright.dev/docs/best-practices",
+        "read": true
+      },
+      {
+        "title": "Actionability",
+        "url": "https://playwright.dev/docs/actionability",
+        "read": true
+      },
+      {
+        "title": "Assertions",
+        "url": "https://playwright.dev/docs/test-assertions",
+        "read": true
+      },
+      {
+        "title": "Locators",
+        "url": "https://playwright.dev/docs/locators",
+        "read": true
+      },
+      {
+        "title": "Network",
+        "url": "https://playwright.dev/docs/network",
+        "read": true
+      },
+      {
+        "title": "Browser contexts",
+        "url": "https://playwright.dev/docs/browser-contexts",
+        "read": true
+      }
+    ],
+    "effect": "Original E2E behavior/selection/readiness stays literal outside explicitly reviewed launcher environment and pre-splitLines forwarder additions. Six official Playwright guides were read before editing the outer bridge."
+  },
+  "noChanges": [
+    "Original Analytics spec/configuration/assertions/seed",
+    "Original60s preview and 120s sensitivity response waits",
+    "Product authorization/grant/fence/recheck contracts",
+    "Product clone/fallback/error/abort/poison behavior apart from finite observational I/O/bookkeeping",
+    "Existing CC and LS callback identities used by native admission",
+    "Any final PR source or release qualification"
+  ],
+  "requiredFutureEvidence": [
+    "Root-bound source and focal objects with independent static reviews complete.",
+    "Separate future focal run and receipt;synthetic controls do not prove installed route.",
+    "If root activates original Analytics: preserve original main once before parse,validate allcomplete E15 records/identity/sequence and any partial tail,without relying on ZIP.",
+    "Only actual received lifecycle/route facts may guide a subsequent clean product change;absence or historical timing alone is insufficient."
+  ],
+  "authorEffects": {
+    "proposalBlobsAndReadbacks": true,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0
+  },
+  "limits": [
+    "Diagnostic overlay is not clean product or final #613 qualification.",
+    "No elapsed gain is inferred from static code,synthetic controls,E12 samples,E14 timing,or the A21 timeout.",
+    "No C21 admission/denial is inferred from19 synthetic outcomes or absent markers.",
+    "The observer preserves existing product work/error flow but adds finite bookkeeping and synchronous I/O;timing equivalence is not claimed."
+  ]
+}

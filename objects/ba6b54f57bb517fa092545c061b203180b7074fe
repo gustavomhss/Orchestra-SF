@@ -1,0 +1,814 @@
+import { AsyncLocalStorage } from "node:async_hooks"
+import { createHash } from "node:crypto"
+import { Buffer } from "node:buffer"
+import { closeSync, fstatSync, fsyncSync, lstatSync, openSync, readFileSync, realpathSync, writeSync } from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const source = "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb"
+const sourceTree = "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+const prefix = "SF_PREVIEW_E15_EVENT ", schema = "sf-preview-causal-e15-event-v1"
+const maxEvents = 191, maxBytes = 191 * 1024, maxLineBytes = 1024, countCap = 65_535
+const generalSlots = 17, unitSlots = 28, activeCompareSlots = 64, numberCap = 999_999_999
+const directoryKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_DIR", bindingKey = "SF_PREVIEW_E15_EVENT_EVIDENCE_BINDING"
+const revision = "0d9b296af33f2b851fcbf4df3e9ec89751734ba4"
+type Binding = { schema: string; source: string; sourceTree: string; snapshot: string; runId: string; attempt: string; nonce: string; launcherBytes: number; launcherSha256: string }
+type UnitKind = "port" | "combination" | "analysis" | "analysis-revalidation" | "production-assess" | "production-revalidation"
+type PhasePoint = "port-authority-initial" | "candidates-initial" | "combination-evaluate" | "port-authority-final" | "evaluations-recheck" | "candidates-final" |
+  "analysis-select-initial" | "analysis-compare" | "analysis-persist" | "analysis-bind" | "analysis-select-final" | "analysis-revalidate" | "production-analysis" | "production-analysis-revalidate"
+type HttpPoint = "body-returned" | "admit-returned" | "case-callback-entered" | "with-case-returned" | "egress-passed"
+type Outcome = "await-returned" | "rejected" | "abrupt" | "abandoned"
+type Payload = Readonly<Record<string, string | number | boolean | null | readonly number[]>>
+type Frame = {
+  handle: object; request: Request | undefined; binding: Binding; storage: AsyncLocalStorage<object>; root: Scope | undefined;
+  start: number; last: number; fd: number | undefined; closed: boolean; pendingClose: boolean; closeRejected: boolean; events: number; bytes: number; dropped: number;
+  nextUnit: number; nextPhase: number; nextCompare: number; openUnits: number; openPhases: number; openCompares: number; maxDepth: number;
+  generalUsed: number; firstAnalysis: Unit | undefined; critical: boolean[]; checkpoints: boolean[]; totals: number[]; stages: number[]; lineage: number[]; untracked: number; saturated: boolean;
+  overflowWritten: boolean; emissionFault: boolean; fileFault: boolean; scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean; backpressure: boolean; emitting: boolean
+  stdoutFailed: boolean; routeDisabled: boolean; routeScopes: number; routeOmitted: number; tailUsed: number;
+  firstPort: Unit | undefined; firstProductionRevalidation: Unit | undefined; tailMask: number;
+}
+type Scope = { token: object; frame: Frame; parent: Scope | undefined; owner: Unit | undefined; phase: Phase | undefined; compare: Compare | undefined; stage: number; next: Scope | undefined }
+type Unit = { handle: object; frame: Frame; birth: Scope; id: number; kind: UnitKind; parentUnit: number; parentPhase: number; phase: Phase | undefined; entryReserved: boolean; closed: boolean; next: Unit | undefined }
+type Phase = { frame: Frame; owner: Unit; id: number; point: PhasePoint; scope: Scope; recordReserved: boolean; workReturned: boolean; workThrew: boolean; closed: boolean }
+type Compare = { handle: object; frame: Frame; birth: Scope; scope: Scope; id: number; parentCompare: number; depth: number; stage: number; closed: boolean; next: Compare | undefined }
+const neutralToken = {}
+let selectionTried = false, selected: Frame | undefined, scopes: Scope | undefined, units: Unit | undefined, compares: Compare | undefined
+
+// 32 detail places = five first critical pairs (10), four global checkpoints,
+// the first analysis entry (1), and 17 general places. Pairs reserve both places
+// at entry; critical phase IDs 1-5 also cannot be consumed by generic phases.
+// Up to 28 admitted units each reserve one close outside those 32.
+// Request enter/close and one overflow add three: 63 base rows.
+// E15 independently reserves 12 tail rows, 6*12 lookup rows, 8 canonical/Finance
+// rows and 36 persistence rows: 191 stream rows / 191 KiB including prefix+LF.
+// One BI launcher-disabled row gives <=192 rows/192 KiB of diagnostic payload,
+// not a bound on the complete Actions log or its timestamp/ANSI encapsulation.
+// A skip uses its critical pair reservation but emits only one decision row.
+// Detail saturation never borrows a critical/checkpoint/unit-close reservation.
+function whole(value: number) { return value - value % 1 }
+function increment(value: number) { return value < countCap ? value + 1 : countCap }
+function bump(frame: Frame, value: number) { if (value >= countCap) frame.saturated = true; return increment(value) }
+function now() {
+  try {
+    const value = performance.now()
+    if (typeof value === "number" && value >= 0 && value <= numberCap / 10) return value
+  } catch { /* Observation is not a product operation. */ }
+}
+function elapsed(frame: Frame) {
+  const value = now()
+  if (value === undefined || value < frame.start || value < frame.last) { frame.clockFault = true; return null }
+  frame.last = value
+  return whole((value - frame.start) * 10)
+}
+function live(scope: Scope) {
+  let depth = 0
+  for (let at: Scope | undefined = scope; at; at = at.parent) {
+    if (++depth > 128 || at.frame !== scope.frame || at.owner?.closed || at.phase?.closed || at.compare?.closed) return false
+  }
+  return true
+}
+function currentScope(): Scope | undefined {
+  try {
+    const frame = selected
+    if (!frame || frame.closed || frame.scopeDisabled || frame.emitting) return
+    const token = frame.storage.getStore()
+    for (let scope = scopes; scope; scope = scope.next) if (scope.token === token && scope.frame === frame && live(scope)) return scope
+  } catch { if (selected && !selected.closed) { selected.scopeFault = true; selected.scopeDisabled = true } }
+}
+function unitFor(handle: unknown): Unit | undefined {
+  const scope = currentScope()
+  if (!scope) return
+  for (let unit = units; unit; unit = unit.next)
+    if (unit.handle === handle && !unit.closed && unit.frame === scope.frame && unit.birth === scope) return unit
+}
+function compareFor(handle: unknown): Compare | undefined {
+  const scope = currentScope()
+  if (!scope) return
+  for (let compare = compares; compare; compare = compare.next)
+    if (compare.handle === handle && !compare.closed && compare.frame === scope.frame && compare.birth === scope) return compare
+}
+function forgetScope(scope: Scope) {
+  let previous: Scope | undefined
+  for (let at = scopes; at; at = at.next) {
+    if (at === scope) { if (previous) previous.next = at.next; else scopes = at.next; return }
+    previous = at
+  }
+}
+function forgetCompare(compare: Compare) {
+  let previous: Compare | undefined
+  for (let at = compares; at; at = at.next) {
+    if (at === compare) { if (previous) previous.next = at.next; else compares = at.next; return }
+    previous = at
+  }
+}
+function counters(frame: Frame): Payload {
+  // Stages are a separate axis from explicit compare parent/depth. These are
+  // E15 scoped-root/scoped-child/stage-unclassified counts, not E13 taxonomy.
+  // compareBodies = [bodyEntered, bodyReturned, bodyThrew, open, maxDepth, untracked].
+  // stages = eleven [entered, returned, threw] triples: unclassified, port,
+  // combination, production-analysis, select-initial, analysis-compare, persist,
+  // bind, select-final, analysis-revalidate, production-analysis-revalidate.
+  // A body return does not attest to later async adoption or a caller clone/guard.
+  return { compareBodies: [frame.totals[0] ?? 0, frame.totals[1] ?? 0, frame.totals[2] ?? 0, frame.openCompares, frame.maxDepth, frame.untracked],
+    stages: frame.stages, lineage: frame.lineage, saturated: frame.saturated }
+}
+function append(frame: Frame, kind: string, payload: Payload) {
+  const record = { schema, source, sourceTree, qualification: false, snapshot: frame.binding.snapshot, runId: frame.binding.runId,
+    attempt: frame.binding.attempt, nonce: frame.binding.nonce, pid: process.pid, parentPid: process.ppid, request: 1,
+    sequence: frame.events + 1, kind, elapsedTenthMs: elapsed(frame), ...payload }
+  const line = prefix + JSON.stringify(record) + "\n", bytes = Buffer.byteLength(line, "utf8")
+  if (bytes > maxLineBytes || !/^[\x20-\x7e]*\n$/.test(line)) { frame.emissionFault = true; return }
+  if (frame.events >= maxEvents || frame.bytes + bytes > maxBytes) { frame.emissionFault = true; return }
+  // Each admitted attempt consumes quota once, even on write(false), partial write or throw.
+  frame.events++
+  frame.bytes += bytes
+  if (frame.fd !== undefined && !frame.fileFault) {
+    try { if (writeSync(frame.fd, line, undefined, "utf8") !== bytes) frame.fileFault = true }
+    catch { frame.fileFault = true }
+  }
+  // One synchronous attempt per line. A partial/zero write or throw permanently
+  // disables this sink; no reconstruction/replay can turn a fragment into a row.
+  if (!frame.stdoutFailed) {
+    try { if (writeSync(1, line, undefined, "utf8") !== bytes) { frame.stdoutFailed = true; frame.emissionFault = true } }
+    catch { frame.stdoutFailed = true; frame.emissionFault = true }
+  }
+}
+function emit(frame: Frame, kind: string, payload: Payload) {
+  if (frame.closed) return
+  if (frame.emitting) { frame.emissionFault = true; return }
+  frame.emitting = true
+  try { append(frame, kind, payload) }
+  catch { frame.emissionFault = true }
+  finally { frame.emitting = false; if (frame.pendingClose) closeFrame(frame) }
+}
+function omit(frame: Frame, reason: "detail" | "unit" | "compare" | "phase") {
+  if (frame.closed || frame.emitting) return
+  frame.dropped = bump(frame, frame.dropped)
+  if (!frame.overflowWritten) {
+    frame.overflowWritten = true
+    emit(frame, "overflow", { reason, generalUsed: frame.generalUsed, unitsAdmitted: frame.nextUnit, dropped: frame.dropped })
+  }
+}
+function general(frame: Frame, places: 1 | 2) {
+  if (frame.generalUsed + places > generalSlots) return false
+  frame.generalUsed += places
+  return true
+}
+function criticalIndex(point: PhasePoint) {
+  if (point === "analysis-select-initial") return 0
+  if (point === "analysis-select-final") return 1
+  if (point === "analysis-revalidate") return 2
+  if (point === "analysis-persist") return 3
+  if (point === "analysis-bind") return 4
+  return -1
+}
+function stageFor(point: PhasePoint) {
+  if (point === "analysis-select-initial") return 4
+  if (point === "analysis-compare") return 5
+  if (point === "analysis-persist") return 6
+  if (point === "analysis-bind") return 7
+  if (point === "analysis-select-final") return 8
+  if (point === "analysis-revalidate") return 9
+  if (point === "production-analysis-revalidate") return 10
+  if (point === "production-analysis") return 3
+  if (point === "combination-evaluate") return 2
+  return 1
+}
+function reservePhase(unit: Unit, point: PhasePoint) {
+  const tail = tailIndex(unit, point)
+  if (tail >= 0 && claimTail(unit.frame, tail)) return true
+  const index = criticalIndex(point), frame = unit.frame
+  if (frame.firstAnalysis === unit && index >= 0 && !frame.critical[index]) { frame.critical[index] = true; return true }
+  return general(frame, 2)
+}
+// This thunk owns the only invocation. ALS return/error is never authoritative.
+function runOnce<T>(frame: Frame | undefined, scope: Scope | undefined, work: () => T, phase?: Phase): T {
+  let invoked = false, returned = false, threw = false
+  let result!: T, thrown: unknown
+  const once = () => {
+    if (invoked) { if (threw) throw thrown; return result }
+    invoked = true
+    if (frame) {
+      let installed = false
+      try { installed = frame.storage.getStore() === (scope?.token ?? neutralToken) } catch { /* A missing guarantee disables attribution. */ }
+      if (!installed) { frame.scopeFault = true; frame.scopeDisabled = true }
+    }
+    try {
+      result = work()
+      returned = true
+      if (phase) phase.workReturned = true
+      return result
+    } catch (error) {
+      threw = true
+      thrown = error
+      if (phase) phase.workThrew = true
+      throw error
+    }
+  }
+  if (frame) {
+    try { frame.storage.run(scope?.token ?? neutralToken, once) }
+    catch { if (!threw) { frame.scopeFault = true; frame.scopeDisabled = true } }
+  }
+  if (!invoked) {
+    if (frame) { frame.scopeFault = true; frame.scopeDisabled = true }
+    try { once() } catch { /* Rethrow only the value captured from work below. */ }
+  }
+  if (threw) throw thrown
+  // returned is separate from result: undefined is a valid result and no thenable is assimilated.
+  if (!returned && frame) frame.scopeFault = true
+  return result
+}
+export function startSfE15Observation(request: Request): unknown {
+  if (selectionTried) return undefined
+  selectionTried = true
+  let fd: number | undefined
+  try {
+    const start = now(), admitted = admit()
+    if (start === undefined || !admitted) return undefined
+    const storage = new AsyncLocalStorage<object>()
+    fd = openSync(path.join(admitted.directory, "preview-events.jsonl"), "wx", 0o600)
+    const frame: Frame = { handle: {}, request, binding: admitted.binding, storage, root: undefined, start, last: start, fd,
+      closed: false, pendingClose: false, closeRejected: false, events: 0, bytes: 0, dropped: 0, nextUnit: 0, nextPhase: 0, nextCompare: 0,
+      openUnits: 0, openPhases: 0, openCompares: 0, maxDepth: 0, generalUsed: 0, firstAnalysis: undefined,
+      critical: [false, false, false, false, false], checkpoints: [false, false, false, false],
+      totals: [0, 0, 0], stages: Array.from({ length: 33 }, () => 0), lineage: [0, 0, 0], untracked: 0, saturated: false,
+      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false,
+      stdoutFailed: false, routeDisabled: false, routeScopes: 0, routeOmitted: 0, tailUsed: 0,
+      firstPort: undefined, firstProductionRevalidation: undefined, tailMask: 0 }
+    const scope: Scope = { token: {}, frame, parent: undefined, owner: undefined, phase: undefined, compare: undefined, stage: 0, next: undefined }
+    frame.root = scope
+    selected = frame
+    scopes = scope
+    fd = undefined
+    emit(frame, "request-enter", { maxEvents, maxBytes, maxLineBytes, detailSlots: 32, unitCloseSlots: unitSlots, activeCompareSlots })
+    return frame.handle
+  } catch {
+    if (fd !== undefined) { try { closeSync(fd) } catch { /* Observer setup remains optional. */ } }
+    return undefined
+  }
+}
+export function markSfE15Http(handle: unknown, request: Request, point: HttpPoint) {
+  try {
+    const frame = selected
+    if (!frame || frame.closed || frame.emitting || frame.handle !== handle || frame.request !== request ||
+        !["body-returned", "admit-returned", "case-callback-entered", "with-case-returned", "egress-passed"].includes(point)) return
+    const tail = point === "with-case-returned" ? 5 : point === "egress-passed" ? 6 : -1
+    if (!(tail >= 0 && claimTail(frame, tail)) && !general(frame, 1)) { omit(frame, "detail"); return }
+    emit(frame, "http-boundary", { point })
+  } catch { /* No Request member, result or error is inspected. */ }
+}
+export function runSfE15Observation<T>(handle: unknown, request: Request, work: () => T): T {
+  let frame: Frame | undefined, scope: Scope | undefined
+  try {
+    const candidate = selected
+    if (candidate && !candidate.closed && candidate.handle === handle && candidate.request === request) { frame = candidate; scope = candidate.root }
+  } catch { /* The exact work still executes once. */ }
+  return runOnce(frame ?? selected, scope, work)
+}
+export function enterSfE15Unit(kind: UnitKind): unknown {
+  try {
+    const birth = currentScope()
+    if (!birth || !["port", "combination", "analysis", "analysis-revalidation", "production-assess", "production-revalidation"].includes(kind)) return undefined
+    const frame = birth.frame, firstAnalysis = kind === "analysis" && !frame.firstAnalysis
+    // Reserve one admission and one detail entry for the first analysis even
+    // after other units/general details have consumed their own places.
+    if (frame.nextUnit >= unitSlots - (frame.firstAnalysis || firstAnalysis ? 0 : 1)) { omit(frame, "unit"); return undefined }
+    const unit: Unit = { handle: {}, frame, birth, id: ++frame.nextUnit, kind, parentUnit: birth.owner?.id ?? 0,
+      parentPhase: birth.phase?.id ?? 0, phase: undefined, entryReserved: firstAnalysis || general(frame, 1), closed: false, next: units }
+    units = unit
+    if (firstAnalysis) frame.firstAnalysis = unit
+    if (kind === "port" && !frame.firstPort) frame.firstPort = unit
+    if (kind === "production-revalidation" && !frame.firstProductionRevalidation) frame.firstProductionRevalidation = unit
+    frame.openUnits++
+    if (unit.entryReserved) emit(frame, "unit-enter", { unit: unit.id, unitKind: kind, parentUnit: unit.parentUnit, parentPhase: unit.parentPhase })
+    else omit(frame, "detail")
+    return unit.handle
+  } catch { return undefined }
+}
+export function runSfE15Phase<T>(handle: unknown, point: PhasePoint, work: () => T): T {
+  let frame: Frame | undefined, scope: Scope | undefined, phase: Phase | undefined
+  try {
+    const unit = unitFor(handle), critical = criticalIndex(point)
+    const firstCritical = !!unit && unit.frame.firstAnalysis === unit && critical >= 0 && !unit.frame.critical[critical]
+    if (unit && !unit.phase && (firstCritical || unit.frame.nextPhase < countCap - 5) &&
+        ["port-authority-initial", "candidates-initial", "combination-evaluate", "port-authority-final", "evaluations-recheck", "candidates-final",
+          "analysis-select-initial", "analysis-compare", "analysis-persist", "analysis-bind", "analysis-select-final", "analysis-revalidate", "production-analysis", "production-analysis-revalidate"].includes(point)) {
+      frame = unit.frame
+      const recordReserved = reservePhase(unit, point)
+      scope = { token: {}, frame, parent: unit.birth, owner: unit, phase: undefined, compare: undefined, stage: stageFor(point), next: scopes }
+      phase = { frame, owner: unit, id: firstCritical ? critical + 1 : ++frame.nextPhase + 5, point, scope, recordReserved, workReturned: false, workThrew: false, closed: false }
+      scope.phase = phase
+      scopes = scope
+      unit.phase = phase
+      frame.openPhases++
+      if (recordReserved) emit(frame, "phase-enter", { unit: unit.id, phase: phase.id, point, stage: scope.stage, ...counters(frame) })
+      else omit(frame, "detail")
+    } else if (unit) omit(unit.frame, "phase")
+  } catch { /* Do not replace or repeat the original expression. */ }
+  return runOnce(frame ?? selected, scope, work, phase)
+}
+function detachPhase(unit: Unit) {
+  const phase = unit.phase
+  if (!phase || phase.closed) return undefined
+  phase.closed = true
+  unit.phase = undefined
+  unit.frame.openPhases--
+  forgetScope(phase.scope)
+  return phase
+}
+function publishPhase(phase: Phase, outcome: Outcome) {
+  if (phase.recordReserved) emit(phase.frame, "phase-close", { unit: phase.owner.id, phase: phase.id, point: phase.point, stage: phase.scope.stage, outcome, ...counters(phase.frame) })
+}
+export function returnedSfE15Await<T>(handle: unknown, value: T): T {
+  try {
+    const unit = unitFor(handle)
+    if (unit) { const phase = detachPhase(unit); if (phase) publishPhase(phase, "await-returned") }
+  } catch { /* This tap precedes any outer clone/guard and returns the exact value. */ }
+  return value
+}
+export function markSfE15Branch(handle: unknown, point: "analysis-persist" | "analysis-bind", branch: "reuse-result" | "binding-present") {
+  try {
+    const unit = unitFor(handle)
+    if (!unit || unit.kind !== "analysis" || unit.phase ||
+        !(point === "analysis-persist" && branch === "reuse-result" || point === "analysis-bind" && branch === "binding-present")) return
+    if (!reservePhase(unit, point)) { omit(unit.frame, "detail"); return }
+    emit(unit.frame, "branch", { unit: unit.id, point, branch, ...counters(unit.frame) })
+  } catch { /* Called only inside an already decided original branch; no predicate repeats. */ }
+}
+export function finishSfE15Unit(handle: unknown, rejected: boolean) {
+  try {
+    const unit = unitFor(handle)
+    if (!unit) return
+    // All close state precedes output, so a reentrant Request close sees one cut.
+    const phase = detachPhase(unit)
+    unit.closed = true
+    unit.frame.openUnits--
+    if (phase) publishPhase(phase, rejected ? phase.workThrew ? "abrupt" : phase.workReturned ? "rejected" : "abandoned" : "abandoned")
+    emit(unit.frame, "unit-close", { unit: unit.id, unitKind: unit.kind, entryReserved: unit.entryReserved, outcome: rejected ? "body-threw" : "body-returned", ...counters(unit.frame) })
+  } catch { /* No sibling is closed or classified by this unit's outcome. */ }
+}
+export function enterSfE15Compare(): unknown {
+  try {
+    const birth = currentScope()
+    if (!birth) return undefined
+    const frame = birth.frame
+    let parent: Compare | undefined
+    for (let at: Scope | undefined = birth; at; at = at.parent) if (at.compare) { parent = at.compare; break }
+    const depth = parent ? parent.depth + 1 : 0, stage = birth.stage
+    if (frame.openCompares >= activeCompareSlots || frame.nextCompare >= countCap || depth >= activeCompareSlots) {
+      frame.untracked = bump(frame, frame.untracked); omit(frame, "compare"); return undefined
+    }
+    const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage, next: scopes }
+    const compare: Compare = { handle: {}, frame, birth, scope, id: ++frame.nextCompare, parentCompare: parent?.id ?? 0, depth, stage, closed: false, next: compares }
+    scope.compare = compare
+    scopes = scope
+    compares = compare
+    frame.openCompares++
+    if (depth > frame.maxDepth) frame.maxDepth = depth
+    frame.totals[0] = bump(frame, frame.totals[0] ?? 0)
+    frame.stages[stage * 3] = bump(frame, frame.stages[stage * 3] ?? 0)
+    const axis = stage === 0 ? 2 : parent ? 1 : 0
+    frame.lineage[axis] = bump(frame, frame.lineage[axis] ?? 0)
+    return compare.handle
+  } catch { return undefined }
+}
+export function runSfE15Compare<T>(handle: unknown, work: () => T): T {
+  let compare: Compare | undefined
+  try { compare = compareFor(handle) } catch { /* No replacement invocation. */ }
+  return runOnce(compare?.frame ?? selected, compare?.scope, work)
+}
+export function finishSfE15Compare(handle: unknown, rejected: boolean) {
+  try {
+    const compare = compareFor(handle)
+    if (!compare) return
+    const frame = compare.frame, outcome = rejected ? 2 : 1
+    compare.closed = true
+    frame.openCompares--
+    forgetScope(compare.scope)
+    forgetCompare(compare)
+    frame.totals[outcome] = bump(frame, frame.totals[outcome] ?? 0)
+    frame.stages[compare.stage * 3 + outcome] = bump(frame, frame.stages[compare.stage * 3 + outcome] ?? 0)
+    const bodyExits = (frame.totals[1] ?? 0) + (frame.totals[2] ?? 0)
+    const index = bodyExits === 1 ? 0 : bodyExits === 8 ? 1 : bodyExits === 32 ? 2 : bodyExits === 128 ? 3 : -1
+    if (index >= 0 && !frame.checkpoints[index]) {
+      frame.checkpoints[index] = true
+      emit(frame, "compare-body-checkpoint", { bodyExits, compare: compare.id, parentCompare: compare.parentCompare, depth: compare.depth, stage: compare.stage, ...counters(frame) })
+    }
+  } catch { /* Counts body exit, not subsequent async adoption; no descendant microphase is emitted. */ }
+}
+function closeFrame(frame: Frame) {
+  if (!frame.pendingClose || frame.emitting) return
+  frame.pendingClose = false
+  frame.emitting = true
+  try {
+    append(frame, "request-close", { outcome: frame.closeRejected ? "rejected" : "returned", eventsBefore: frame.events, bytesBefore: frame.bytes,
+      dropped: frame.dropped, openUnits: frame.openUnits, openPhases: frame.openPhases, ...counters(frame),
+      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.stdoutFailed)],
+      routeCoverage: [canonicalRoute ? 1 : 0, preparedLookups, comparatorLookups, persistenceRoute ? 1 : 0, frame.routeOmitted, Number(frame.routeDisabled)] })
+  } catch { frame.emissionFault = true }
+  finally {
+    const fd = frame.fd
+    frame.fd = undefined
+    if (fd !== undefined) {
+      try { fsyncSync(fd); const info = fstatSync(fd); if (!info.isFile() || (!frame.fileFault && info.size !== frame.bytes)) frame.fileFault = true } catch { frame.fileFault = true }
+      finally { try { closeSync(fd) } catch { frame.fileFault = true } }
+    }
+    frame.emitting = false
+    scopes = undefined
+    units = undefined
+    compares = undefined
+    routes = undefined
+    routeScopes = undefined
+    canonicalRoute = undefined
+    persistenceRoute = undefined
+    financeOwner = undefined
+  }
+  // This boundary does not attest to later fsync/close, censored units, or a missing terminal.
+}
+export function finishSfE15Observation(handle: unknown, request: Request, rejected: boolean) {
+  try {
+    const frame = selected
+    if (!frame || frame.closed || frame.handle !== handle || frame.request !== request) return
+    frame.closed = true
+    frame.request = undefined
+    frame.closeRejected = rejected
+    frame.pendingClose = true
+    closeFrame(frame)
+  } catch { /* Preserve the HTTP return/rejection even if observation cannot close. */ }
+}
+
+type RouteKind = "canonical" | "lookup" | "persistence"
+type RoutePhase = "preparation" | "comparator" | "candidate-read" | "persist-body" | "store-write" | "state-transaction"
+type WorkLink = "provider-read" | "provider-write" | "source-work" | "choice-wrapped" | "local-operation"
+type Layer = "source" | "choice" | "local" | "operation"
+type Gate = "source-root-current" | "callback-equal" | "store-current" | "view-current" | "product-condition"
+type FinancePoint = "entered" | "fallback-before-root" | "fallback-no-selection" | "prepare-refused" | "unsupported-criteria" | "witness-refused" | "witness-unsupported" | "owned-records" | "owned-direct" | "outside-root" | "work-enter" | "observation-returned" | "returned"
+type RoutePoint =
+  "source-enter" | "source-selection" | "choice-forward" | "local-enter" | "native-gates" | "copy-enter" | "copy-close" |
+  "candidate-read-returned" | "prewrite" | "store-write-returned" | "state-transaction-enter" | "state-transaction-returned" |
+  "queue-enter" | "queue-returned" | "begin-enter" | "begin-returned" | "materialize-enter" | "materialize-returned" |
+  "source-work-enter" | "source-work-returned" | "source-finish-enter" | "source-finish-returned" |
+  "source-dispose-enter" | "source-dispose-returned" | "local-scope-closed" |
+  "encode-enter" | "encode-returned" | "decode-returned" | "sql-returned" | "commit-enter" | "commit-returned" |
+  "local-returning" | "operation-returned" | "binding-enter" | "binding-returned" | "validation-enter" | "validation-returned" | "binding-read-returned"
+type Route = {
+  handle: object; frame: Frame; birth: Scope; kind: RouteKind; id: number; phase: RoutePhase; closed: boolean;
+  points: number; phaseMask: number; providerWork: unknown; callback: unknown; sourceWork: unknown; forwardedWork: unknown; operationWork: unknown;
+  sourceSeen: boolean; choiceSeen: boolean; localSeen: boolean; operationSeen: boolean; gates: number[]; next: Route | undefined
+}
+type RouteScope = { scope: Scope; route: Route | undefined; phase: RoutePhase; next: RouteScope | undefined }
+const lookupPoints = ["lookup-enter", "candidate-read-enter", "source-enter", "source-selection", "choice-forward", "local-enter",
+  "native-gates", "copy-enter", "copy-close", "provider-view", "candidate-read-returned", "lookup-close"]
+const persistencePoints = ["persist-enter", "prewrite", "store-write-returned", "persist-close", "state-transaction-enter", "state-transaction-returned",
+  "source-enter", "source-selection", "choice-forward", "local-enter", "queue-enter", "queue-returned", "begin-enter", "begin-returned",
+  "materialize-enter", "materialize-returned", "source-work-enter", "source-work-returned", "source-finish-enter", "source-finish-returned",
+  "source-dispose-enter", "source-dispose-returned", "local-scope-closed", "encode-enter", "encode-returned", "decode-returned",
+  "sql-returned", "commit-enter", "commit-returned", "local-returning", "operation-returned", "binding-enter", "binding-returned",
+  "validation-enter", "validation-returned", "binding-read-returned"]
+const canonicalPoints = ["canonical-enter", "comparator-enter", "finance-enter", "finance-branch", "finance-work-enter", "finance-observation-returned", "finance-body-exit", "route-facts"]
+let routes: Route | undefined, routeScopes: RouteScope | undefined, canonicalRoute: Route | undefined, persistenceRoute: Route | undefined
+let preparedLookups = 0, comparatorLookups = 0
+let financeOwner: object | undefined
+
+function tailIndex(unit: Unit, point: PhasePoint) {
+  if (unit === unit.frame.firstAnalysis && point === "analysis-compare") return 0
+  if (unit === unit.frame.firstProductionRevalidation && point === "production-analysis-revalidate") return 1
+  if (unit !== unit.frame.firstPort) return -1
+  return point === "port-authority-final" ? 2 : point === "evaluations-recheck" ? 3 : point === "candidates-final" ? 4 : -1
+}
+function claimTail(frame: Frame, index: number) {
+  const bit = 2 ** index
+  if (frame.tailMask % (bit * 2) >= bit) return false
+  frame.tailMask += bit
+  frame.tailUsed += index < 5 ? 2 : 1
+  return true
+}
+function routeContext(birth = currentScope()): RouteScope | undefined {
+  if (!birth || birth.frame.routeDisabled) return
+  for (let at: Scope | undefined = birth; at; at = at.parent) {
+    for (let item = routeScopes; item; item = item.next) {
+      if (item.scope !== at) continue
+      if (!item.route || item.route.closed || item.route.frame !== birth.frame) return
+      return item
+    }
+  }
+}
+function routeFor(handle: unknown): Route | undefined {
+  const birth = currentScope()
+  if (!birth || birth.frame.routeDisabled) return
+  for (let route = routes; route; route = route.next) {
+    if (route.handle !== handle || route.closed || route.frame !== birth.frame) continue
+    if (route.birth === birth || routeContext(birth)?.route === route) return route
+  }
+}
+function routeScope(route: Route | undefined, phase: RoutePhase, birth: Scope) {
+  const frame = birth.frame
+  // Two canonical scopes, six read scopes and three persistence scopes fit.
+  // Bounded neutral masks cover reentrancy; exhaustion disables attribution.
+  if (frame.routeDisabled || frame.routeScopes >= 32) { frame.routeDisabled = true; frame.scopeFault = true; return undefined }
+  frame.routeScopes++
+  const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage: birth.stage, next: scopes }
+  const item: RouteScope = { scope, route, phase, next: routeScopes }
+  scopes = scope
+  routeScopes = item
+  return scope
+}
+function selectedDetail(value: unknown) {
+  if (value === undefined) return "none"
+  if (value === true) return "true"
+  if (value === false) return "false"
+  if (typeof value !== "string") return "unknown"
+  return ["cases", "preferences", "case-identities", "decisionResults", "direct", "wrapped", "child", "top-level", "projected", "full",
+    "returned", "threw", "abandoned", "product-refused", "options-refused", "root-absent", "root-refused", "not-requested",
+    "fallback-before-root", "fallback-no-selection", "prepare-refused", "unsupported-criteria", "witness-refused", "witness-unsupported",
+    "owned-records", "owned-direct", "outside-root"].includes(value) ? value : "unknown"
+}
+function routeEmit(route: Route, point: string, detail?: unknown) {
+  if (route.closed || route.frame.closed || route.frame.routeDisabled || route.frame.emitting) return
+  const points = route.kind === "lookup" ? lookupPoints : route.kind === "persistence" ? persistencePoints : canonicalPoints
+  const index = points.indexOf(point)
+  if (index < 0) return
+  const bit = 2 ** index
+  if (route.points % (bit * 2) >= bit) return
+  // Claim before serialization/clock/sink: reentrancy cannot reuse a place.
+  route.points += bit
+  emit(route.frame, "route", { routeKind: route.kind, route: route.id, routePhase: route.phase, point, detail: selectedDetail(detail),
+    gates: route.gates, parentUnit: route.birth.owner?.id ?? 0, parentPhase: route.birth.phase?.id ?? 0 })
+}
+function newRoute(kind: RouteKind, phase: RoutePhase, birth: Scope, id: number) {
+  const route: Route = { handle: {}, frame: birth.frame, birth, kind, id, phase, closed: false, points: 0, phaseMask: 0,
+    providerWork: undefined, callback: undefined, sourceWork: undefined, forwardedWork: undefined, operationWork: undefined,
+    sourceSeen: false, choiceSeen: false, localSeen: false, operationSeen: false, gates: [-1, -1, -1, -1, -1], next: routes }
+  routes = route
+  return route
+}
+export function enterSfE15Route(kind: RouteKind): unknown {
+  try {
+    const birth = currentScope()
+    if (!birth || birth.frame.routeDisabled) return undefined
+    const frame = birth.frame, context = routeContext(birth)
+    if (kind === "canonical") {
+      if (canonicalRoute) return undefined
+      const route = newRoute(kind, "preparation", birth, 1)
+      canonicalRoute = route
+      routeEmit(route, "canonical-enter")
+      return route.handle
+    }
+    if (kind === "lookup") {
+      if (!context || context.route !== canonicalRoute || context.phase !== "preparation" && context.phase !== "comparator") return undefined
+      const preparation = context.phase === "preparation"
+      if (preparation ? preparedLookups >= 2 : comparatorLookups >= 4) {
+        frame.routeOmitted = bump(frame, frame.routeOmitted); omit(frame, "detail"); return undefined
+      }
+      const id = preparation ? ++preparedLookups : 2 + ++comparatorLookups
+      const route = newRoute(kind, context.phase, birth, id)
+      routeEmit(route, "lookup-enter")
+      return route.handle
+    }
+    if (kind === "persistence") {
+      if (persistenceRoute) return undefined
+      let owner = false
+      for (let at: Scope | undefined = birth; at; at = at.parent)
+        if (at.phase?.point === "analysis-persist" && at.owner === frame.firstAnalysis) { owner = true; break }
+      if (!owner) return undefined
+      const route = newRoute(kind, "persist-body", birth, 1)
+      persistenceRoute = route
+      routeEmit(route, "persist-enter")
+      return route.handle
+    }
+  } catch { /* A diagnostic handle never grants product authority. */ }
+  return undefined
+}
+export function currentSfE15Route(): unknown {
+  try { return routeContext()?.route?.handle } catch { return undefined }
+}
+export function runSfE15Route<T>(handle: unknown, phase: RoutePhase, work: () => T): T {
+  let frame: Frame | undefined, scope: Scope | undefined
+  try {
+    const birth = currentScope(), route = routeFor(handle)
+    if (birth) {
+      frame = birth.frame
+      const index = ["preparation", "comparator", "candidate-read", "persist-body", "store-write", "state-transaction"].indexOf(phase)
+      const context = routeContext(birth)
+      const valid = route && index >= 0 && (route.kind === "canonical" && (phase === "preparation" || phase === "comparator") ||
+        route.kind === "lookup" && phase === "candidate-read" ||
+        route.kind === "persistence" && (phase === "persist-body" || phase === "store-write" || phase === "state-transaction" && context?.phase === "store-write"))
+      const bit = index >= 0 ? 2 ** index : 0
+      if (valid && route.phaseMask % (bit * 2) < bit) {
+        route.phaseMask += bit
+        scope = routeScope(route, phase, birth)
+        if (phase === "comparator") {
+          routeEmit(route, "comparator-enter")
+          if (financeOwner) routeEmit(route, "finance-work-enter")
+        }
+        if (phase === "candidate-read") routeEmit(route, "candidate-read-enter")
+        if (phase === "store-write") routeEmit(route, "prewrite")
+        if (phase === "state-transaction") routeEmit(route, "state-transaction-enter")
+      } else {
+        // Preserve E14's lexical stage while masking an ambient selected route.
+        scope = context ? routeScope(undefined, phase, birth) : birth
+      }
+    }
+  } catch { if (selected) { selected.scopeFault = true; selected.routeDisabled = true } }
+  return runOnce(frame ?? selected, scope, work)
+}
+export function finishSfE15Route(handle: unknown, threw: boolean) {
+  try {
+    const route = routeFor(handle)
+    if (!route) return
+    routeEmit(route, route.kind === "lookup" ? "lookup-close" : route.kind === "persistence" ? "persist-close" : "route-facts", threw ? "threw" : "returned")
+    route.closed = true
+    route.providerWork = undefined
+    route.callback = undefined
+    route.sourceWork = undefined
+    route.forwardedWork = undefined
+    route.operationWork = undefined
+  } catch { /* The original caught/thrown value is not passed to the observer. */ }
+}
+export function linkSfE15Work<T>(handle: unknown, point: WorkLink, value: T, callback?: unknown): T {
+  try {
+    const route = routeFor(handle), context = routeContext()
+    if (!route || context?.route !== route || typeof value !== "function") return value
+    if (point === "provider-read" && route.kind === "lookup" && context.phase === "candidate-read" && route.providerWork === undefined) {
+      route.providerWork = value
+      route.callback = callback
+    } else if (point === "provider-write" && route.kind === "persistence" && context.phase === "state-transaction" && route.providerWork === undefined) {
+      route.providerWork = value
+    } else if (point === "source-work" && route.sourceSeen && route.sourceWork === undefined) {
+      route.sourceWork = value
+    } else if (point === "choice-wrapped" && route.choiceSeen && route.forwardedWork === undefined) {
+      route.forwardedWork = value
+    } else if (point === "local-operation" && route.localSeen && route.operationWork === undefined) {
+      route.operationWork = value
+    }
+  } catch { /* No original callback is wrapped, invoked, or inspected. */ }
+  return value
+}
+export function enterSfE15Layer(layer: Layer, work: unknown): unknown {
+  try {
+    const context = routeContext(), route = context?.route
+    if (!route || route.kind === "canonical" || typeof work !== "function") return undefined
+    if (layer === "source" && !route.sourceSeen && work === route.providerWork) {
+      route.sourceSeen = true
+      routeEmit(route, "source-enter")
+      return route.handle
+    }
+    if (layer === "choice" && !route.choiceSeen && route.sourceSeen && work === route.sourceWork) {
+      route.choiceSeen = true
+      return route.handle
+    }
+    if (layer === "local" && !route.localSeen && route.sourceSeen && work === (route.forwardedWork ?? route.sourceWork)) {
+      route.localSeen = true
+      return route.handle
+    }
+    if (layer === "operation" && !route.operationSeen && route.localSeen && work === route.operationWork) {
+      route.operationSeen = true
+      return route.handle
+    }
+  } catch { /* Unknown, reused, foreign and late work cannot join the selected chain. */ }
+  return undefined
+}
+export function markSfE15Route(handle: unknown, point: RoutePoint, detail?: unknown) {
+  try {
+    const route = routeFor(handle)
+    if (!route) return
+    if (point === "choice-forward" && detail === "direct" && route.choiceSeen && route.forwardedWork === undefined)
+      route.forwardedWork = route.sourceWork
+    routeEmit(route, point, detail)
+  } catch { /* Only bounded local facts are emitted. */ }
+}
+export function returnedSfE15Route<T>(handle: unknown, point: RoutePoint, value: T): T {
+  markSfE15Route(handle, point, point === "copy-close" ? value : "returned")
+  return value
+}
+export function tapSfE15Gate<T>(handle: unknown, gate: Gate, value: T): T {
+  try {
+    const route = routeFor(handle)
+    if (route) {
+      const index = ["source-root-current", "callback-equal", "store-current", "view-current", "product-condition"].indexOf(gate)
+      // -1 means no tap evaluated; 2 means an evaluated nonboolean result.
+      // Optional source-root absence is identified separately by its branch row.
+      if (index >= 0 && route.gates[index] === -1) route.gates[index] = value === true ? 1 : value === false ? 0 : 2
+    }
+  } catch { /* A tap returns the original predicate result without coercing it. */ }
+  return value
+}
+export function tapSfE15ProviderSelection<T>(callback: unknown, value: T): T {
+  try {
+    const route = routeContext()?.route
+    if (route?.kind === "lookup" && typeof callback === "function" && callback === route.callback) routeEmit(route, "provider-view", value)
+  } catch { /* Preserve the already performed optional selection lookup. */ }
+  return value
+}
+export function markSfE15Finance(point: FinancePoint, owner?: unknown): unknown {
+  try {
+    const context = routeContext(), route = context?.route
+    if (!route || route !== canonicalRoute) return undefined
+    if (point === "entered") {
+      if (financeOwner) return undefined
+      financeOwner = {}
+      routeEmit(route, "finance-enter")
+      return financeOwner
+    }
+    if (!financeOwner || owner !== financeOwner) return undefined
+    if (point === "returned") routeEmit(route, "finance-body-exit")
+    else if (point === "work-enter") routeEmit(route, "finance-work-enter")
+    else if (point === "observation-returned") routeEmit(route, "finance-observation-returned")
+    else if (point === "outside-root") routeEmit(route, "route-facts", point)
+    else routeEmit(route, "finance-branch", point)
+  } catch { /* Records an existing branch; it never reads a witness or grant. */ }
+  return undefined
+}
+
+// The bridges feed decoded chunks here BEFORE their unchanged splitLines/readiness
+// pipeline. Only observed LF completes a diagnostic row; EOF never invents one.
+export function createSfE15Forwarder(): (chunk: string) => string {
+  const state = { tail: "", discarding: false, diagnostic: false, failed: false, events: 0, bytes: 0, mode: "" }
+  return (chunk) => {
+    try {
+      if (state.failed || typeof chunk !== "string") return chunk
+      for (let index = 0; index < chunk.length; index++) {
+        const character = chunk[index]!
+        if (character !== "\n") {
+          if (character.charCodeAt(0) > 127) {
+            if (state.diagnostic || state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")) { state.failed = true; break }
+            state.tail = ""
+            state.discarding = true
+            continue
+          }
+          if (!state.discarding) {
+            if (state.tail.length < maxLineBytes - 1) state.tail += character
+            else {
+              state.diagnostic = state.tail.startsWith(prefix) || state.tail.startsWith("SF_PREVIEW_E15_LAUNCHER ")
+              state.tail = ""
+              state.discarding = true
+            }
+          }
+          continue
+        }
+        const line = state.tail
+        const discarded = state.discarding, diagnostic = state.diagnostic
+        state.tail = ""
+        state.discarding = false
+        state.diagnostic = false
+        if (discarded) { if (diagnostic) { state.failed = true; break } else continue }
+        const mode = line.startsWith(prefix) ? "events" : line.startsWith("SF_PREVIEW_E15_LAUNCHER ") ? "disabled" : ""
+        if (!mode) continue
+        if (!/^[\x20-\x7e]*$/.test(line) || state.mode && mode !== state.mode ||
+            state.events >= (mode === "events" ? maxEvents : 1) || state.bytes + line.length + 1 > (mode === "events" ? maxBytes : maxLineBytes)) {
+          state.failed = true
+          break
+        }
+        state.mode = mode
+        const complete = line + "\n", bytes = line.length + 1
+        state.events++
+        state.bytes += bytes
+        try { if (writeSync(1, complete, undefined, "utf8") !== bytes) state.failed = true }
+        catch { state.failed = true }
+        if (state.failed) break
+      }
+    } catch { state.failed = true }
+    return chunk
+  }
+}
+
+function hash(value: string) { return createHash("sha256").update(value, "utf8").digest("hex") }
+function within(parent: string, child: string) {
+  const relative = path.relative(parent, child)
+  return relative === "" || relative !== ".." && !relative.startsWith(".." + path.sep) && !path.isAbsolute(relative)
+}
+function object(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+}
+function admit(): { directory: string; binding: Binding } | undefined {
+  const directory = process.env[directoryKey], encoded = process.env[bindingKey]
+  if (!directory || !encoded) return undefined
+  if (encoded.length > 4096 || process.platform !== "linux" || process.arch !== "x64" ||
+      typeof Bun === "undefined" || Bun.version !== "1.3.14" || Bun.revision !== revision) throw new Error("cpu-runtime")
+  const repository = realpathSync(fileURLToPath(new URL("../../../../", import.meta.url)))
+  if (process.argv[1] !== path.join(repository, "apps/cli/src/index.ts") || process.argv[2] !== "serve")
+    throw new Error("cpu-process")
+  const base = path.join(repository, "test-ci-evidence"), value: unknown = JSON.parse(encoded)
+  if (!object(value) || value.schema !== "sf-preview-e15-event-launch-v1" || value.source !== source ||
+      value.sourceTree !== sourceTree || typeof value.snapshot !== "string" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||
+      typeof value.runId !== "string" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== "1" ||
+      typeof value.nonce !== "string" || !/^sf613-e15-event-[A-Za-z0-9]{6}$/.test(value.nonce) ||
+      typeof value.launcherBytes !== "number" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||
+      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== "string" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))
+    throw new Error("cpu-binding")
+  if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== value.nonce ||
+      realpathSync(base) !== base || realpathSync(directory) !== directory ||
+      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || within(realpathSync(process.cwd()), directory))
+    throw new Error("cpu-directory")
+  const launcherPath = path.join(directory, "launcher.json"), info = lstatSync(launcherPath)
+  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error("cpu-launcher")
+  const text = readFileSync(launcherPath, "utf8"), launcher: unknown = JSON.parse(text)
+  if (Buffer.byteLength(text, "utf8") !== value.launcherBytes || hash(text) !== value.launcherSha256 || !object(launcher))
+    throw new Error("cpu-launcher")
+  for (const key of ["schema", "source", "sourceTree", "snapshot", "runId", "attempt", "nonce"] as const)
+    if (launcher[key] !== value[key]) throw new Error("cpu-launcher-binding")
+  if (launcher.processRole !== "native-cli" || launcher.streamName !== "preview-events.jsonl")
+    throw new Error("cpu-launcher-role")
+  return { directory, binding: value as Binding }
+}

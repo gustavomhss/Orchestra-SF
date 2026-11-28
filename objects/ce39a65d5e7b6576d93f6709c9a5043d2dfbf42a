@@ -1,0 +1,563 @@
+{
+  "schema": "sf613-e15-independent-helper-transport-review-v1",
+  "status": "ACK_R6_HELPER_TRANSPORT_STATIC_NO_REMAINING_FINDING",
+  "reviewer": "/root/review_archive",
+  "author": "/root/close_pr613",
+  "reviewedUtc": "2026-11-28 08:57:49 UTC",
+  "scope": {
+    "include": [
+      "R6 preview-progress-e15-diagnostic.ts helper",
+      "final API declarations",
+      "inner native installation stdout bridge",
+      "outer Playwright installation stdout bridge",
+      "literal derivation of those sources and helper revision history"
+    ],
+    "exclude": [
+      "semantic review of the other product taps",
+      "D control fixture/test authoring or execution",
+      "whole proposal compilation or CI acceptance",
+      "candidate, installed UI, or go-live qualification",
+      "tree/commit/ref/run creation or mutation"
+    ],
+    "sourceBaseline": {
+      "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+    },
+    "meaning": "Approval is confined to the exact helper/API/pump bytes below and the stated static properties. It does not approve other source paths, execution, a future commit, or production."
+  },
+  "pins": {
+    "helperR6": {
+      "gitBlob": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+      "bytes": 47324,
+      "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "api": {
+      "gitBlob": "fdbab600e56af5c9fcc5bb40eb84d7a67e7780bf",
+      "bytes": 3272,
+      "sha256": "faee326027f2ee82a3b14301d8fb1884bc17578cb67460324f2003b6233a8362",
+      "lf": 35,
+      "endsWithLF": true
+    },
+    "inner": {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "preimage": {
+        "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitBlob": "8df288b2386618a7961ba20c1054e466cff39c95",
+        "bytes": 10249,
+        "sha256": "e6470534bca50e04efcf7d032f275ee432a2d88c71a9a41f1b0eaf6f9bcdb2f4",
+        "lf": 182,
+        "endsWithLF": true
+      }
+    },
+    "outer": {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "preimage": {
+        "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitBlob": "5989de182f65c2a6faf20218adf8b20af6dfa000",
+        "bytes": 16353,
+        "sha256": "919c99cf8a10e8fafa888f50bd13e53e563e0c6a2ac7248ec086d015286324cb",
+        "lf": 265,
+        "endsWithLF": true
+      }
+    },
+    "finalCleanDerivation": {
+      "gitBlob": "6bb16fcd982f7f167e5e5a421f39951544865c52",
+      "bytes": 306067,
+      "sha256": "1be409300e0cb158033b4944f3ea415a7e2f460175b4f86848acd1563bba4567",
+      "lf": 2980,
+      "endsWithLF": true
+    },
+    "finalHistory": {
+      "gitBlob": "76338a572febd5fbe3053c4d89aabdb74cd4a602",
+      "bytes": 95612,
+      "sha256": "0c811d33ad379922c98d018060f66bd943830fa29c7c4613c0fd298f3fd085e7",
+      "lf": 1927,
+      "endsWithLF": true
+    },
+    "supersededR5CleanDerivation": {
+      "gitBlob": "7866b8e6510f0741fcdb5543884e7a56cc7eeed4",
+      "bytes": 305401,
+      "sha256": "d97be91ca8b2e7d3270d7ce00fc07cf0c5dd178fb4f2f929dded55509aeb6efc",
+      "lf": 2963,
+      "endsWithLF": true
+    },
+    "supersededR5History": {
+      "gitBlob": "80cd6f1fd5e082de40366f655344802975fd3fe2",
+      "bytes": 93689,
+      "sha256": "821a2aabb5c9946ff556565da23fd8f9824cafa6a914a6132844910957279dbe",
+      "lf": 1873,
+      "endsWithLF": true
+    }
+  },
+  "method": {
+    "actualGitBlobsReadAndIndependentlyHashed": true,
+    "hashAlgorithms": [
+      "Git SHA-1 over blob header plus exact UTF-8 body",
+      "SHA-256 over exact UTF-8 body"
+    ],
+    "checkedMetadata": [
+      "byte count",
+      "LF count",
+      "final LF"
+    ],
+    "noProductSourceExecuted": true,
+    "ownJavascriptOnlyForDataHashAndLiteralDiff": true,
+    "noRepositoryCloneOrShell": true,
+    "noOriginalJobLogOrZipAcquisition": true,
+    "noRefsRunsTreesOrCommitsWritten": true,
+    "reviewReceiptIsOnlyNewObject": true,
+    "readingCoverage": "Helper R2 was read in full; all seven exact R2-to-R5 data diff hunks and the sole R5-to-R6 hunk were reviewed. API was read in full. Both pumps were inspected with all 14 independently computed clean-to-final diff hunks. Complete helper addition in final support equals the actual R6 blob."
+  },
+  "derivation": {
+    "cleanPumps": [
+      {
+        "role": "inner",
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "preimage": {
+          "gitBlob": "9d2351aaed9549f876a072ced264d9429924ab61",
+          "bytes": 5823,
+          "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+          "lf": 121,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "8df288b2386618a7961ba20c1054e466cff39c95",
+          "bytes": 10249,
+          "sha256": "e6470534bca50e04efcf7d032f275ee432a2d88c71a9a41f1b0eaf6f9bcdb2f4",
+          "lf": 182,
+          "endsWithLF": true
+        },
+        "forwardAnchors": [
+          {
+            "ordinal": 1,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 2,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 3,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 4,
+            "occurrences": 1
+          }
+        ],
+        "inverseAnchors": [
+          {
+            "ordinal": 1,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 2,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 3,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 4,
+            "occurrences": 1
+          }
+        ],
+        "fullDiffHunks": 7,
+        "literalForward": true,
+        "literalInverse": true
+      },
+      {
+        "role": "outer",
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "preimage": {
+          "gitBlob": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+          "bytes": 12321,
+          "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+          "lf": 206,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "5989de182f65c2a6faf20218adf8b20af6dfa000",
+          "bytes": 16353,
+          "sha256": "919c99cf8a10e8fafa888f50bd13e53e563e0c6a2ac7248ec086d015286324cb",
+          "lf": 265,
+          "endsWithLF": true
+        },
+        "forwardAnchors": [
+          {
+            "ordinal": 1,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 2,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 3,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 4,
+            "occurrences": 1
+          }
+        ],
+        "inverseAnchors": [
+          {
+            "ordinal": 1,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 2,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 3,
+            "occurrences": 1
+          },
+          {
+            "ordinal": 4,
+            "occurrences": 1
+          }
+        ],
+        "fullDiffHunks": 7,
+        "literalForward": true,
+        "literalInverse": true
+      }
+    ],
+    "priorHistory": [
+      {
+        "name": "E15 R4 to R5",
+        "preimage": {
+          "gitBlob": "ba6b54f57bb517fa092545c061b203180b7074fe",
+          "bytes": 47286,
+          "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+          "lf": 814,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "bccde934773e78e54cd930e8d874bd6a3d066052",
+          "bytes": 47289,
+          "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+          "lf": 814,
+          "endsWithLF": true
+        },
+        "operations": 3,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "E15 R3 to R4",
+        "preimage": {
+          "gitBlob": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+          "bytes": 47256,
+          "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+          "lf": 814,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "ba6b54f57bb517fa092545c061b203180b7074fe",
+          "bytes": 47286,
+          "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+          "lf": 814,
+          "endsWithLF": true
+        },
+        "operations": 3,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "E15 R2 to R3",
+        "preimage": {
+          "gitBlob": "83219e5647237dbc70f4c8720795ed94e88f82de",
+          "bytes": 46849,
+          "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+          "lf": 807,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+          "bytes": 47256,
+          "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+          "lf": 814,
+          "endsWithLF": true
+        },
+        "operations": 3,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "E15 R1 to R2",
+        "preimage": {
+          "gitBlob": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+          "bytes": 44246,
+          "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+          "lf": 747,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "83219e5647237dbc70f4c8720795ed94e88f82de",
+          "bytes": 46849,
+          "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+          "lf": 807,
+          "endsWithLF": true
+        },
+        "operations": 5,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "E14 to E15 R1",
+        "preimage": {
+          "gitBlob": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+          "bytes": 26983,
+          "sha256": "6efb7c185cb73acf14e699c091a5bf89ff9f113b10105a73c60ebc9d2ac343e6",
+          "lf": 456,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+          "bytes": 44246,
+          "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+          "lf": 747,
+          "endsWithLF": true
+        },
+        "operations": 17,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "inner E14-to-E15 reuse",
+        "preimage": {
+          "gitBlob": "4dce572e3fdace2042ae3c9a1102606b300f6d8d",
+          "bytes": 10356,
+          "sha256": "5deececcefcf4391d76d1612b143bb7091b5ecbd8beddbd63fab7c4f28688cd3",
+          "lf": 184,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "8df288b2386618a7961ba20c1054e466cff39c95",
+          "bytes": 10249,
+          "sha256": "e6470534bca50e04efcf7d032f275ee432a2d88c71a9a41f1b0eaf6f9bcdb2f4",
+          "lf": 182,
+          "endsWithLF": true
+        },
+        "operations": 10,
+        "forward": true,
+        "inverse": true
+      },
+      {
+        "name": "outer E14-to-E15 reuse",
+        "preimage": {
+          "gitBlob": "a9fb4f79968e3c753424f01534b1f7b5e61895fe",
+          "bytes": 16468,
+          "sha256": "81725bd498f02eab5cb903057fc96abdd7e36c2f0238af2b3ccef378b81fa19f",
+          "lf": 267,
+          "endsWithLF": true
+        },
+        "postimage": {
+          "gitBlob": "5989de182f65c2a6faf20218adf8b20af6dfa000",
+          "bytes": 16353,
+          "sha256": "919c99cf8a10e8fafa888f50bd13e53e563e0c6a2ac7248ec086d015286324cb",
+          "lf": 265,
+          "endsWithLF": true
+        },
+        "operations": 10,
+        "forward": true,
+        "inverse": true
+      }
+    ],
+    "r6OwnDerivation": {
+      "preimage": {
+        "gitBlob": "bccde934773e78e54cd930e8d874bd6a3d066052",
+        "bytes": 47289,
+        "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitBlob": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+        "bytes": 47324,
+        "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "select only external Finance in preparation",
+          "before": "      if (financeOwner) return undefined",
+          "after": "      if (context.phase !== \"preparation\" || financeOwner) return undefined",
+          "beforeMeta": {
+            "gitBlob": "ac30fc9572c617ced1c23fef5260f822016572be",
+            "bytes": 40,
+            "sha256": "770d29dd40a1b2cd244734cac2614c753508e19d93616743c69dcb794f5dffa6",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitBlob": "78c81f546fcbc2fa25404f4c91f2fa6edf13dc44",
+            "bytes": 75,
+            "sha256": "fab8c7c36fc6d142faacec13fe1065504d93b36e3583b880a7a1902ef299fb9a",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ],
+      "forward": true,
+      "inverse": true
+    },
+    "finalRebind": {
+      "newHelperLiteralMatchesActualR6": true,
+      "twoPumpEntriesLiteralUnchanged": true,
+      "other17NonhelperEntriesLiteralUnchanged": true,
+      "unchangedEntriesAreNotSemanticApproval": true,
+      "previousFiveHelperHistoryStagesLiteralUnchanged": true,
+      "previousReusedCallerHistoryEntriesLiteralUnchanged": true,
+      "authorR5ToR6AnchorAppliedAndInvertedExactly": true
+    },
+    "operationCounts": {
+      "cleanPumpAnchorsEachDirection": 8,
+      "helperE14ThroughR6HistoryEachDirection": 32,
+      "twoPumpE14ToE15HistoryEachDirection": 20,
+      "reviewedAuthoredOperationsEachDirection": 60
+    },
+    "historicalAcquisitionLimit": "E14 helper/pump preimages and R4 were reconstructed from the authenticated literal history and their complete hashes checked; this does not claim a new GET of those historical bodies. Known actual R1/R2/R3/R5/R6 bodies were compared to their matching derived endpoints.",
+    "fragmentLimit": "Fragment Git hashes in the derivation are data fingerprints; no fragment object existence or acquisition is claimed."
+  },
+  "resolvedFindings": [
+    {
+      "id": "callback-identity",
+      "foundIn": "R2",
+      "problem": "undefined callback could match an unbound route callback and emit provider-view.",
+      "resolution": "R3 and later require typeof callback === function before exact identity equality.",
+      "remainingFinding": false
+    },
+    {
+      "id": "ascii-buffer-byte-bound",
+      "foundIn": "R2",
+      "problem": "A length bound on UTF-16 code units did not establish an ASCII/UTF-8 byte bound for buffered Unicode.",
+      "resolution": "R3 and later reject characters above 127 before concatenation; unrelated lines are discarded through LF and diagnostic lines fail the forwarder.",
+      "remainingFinding": false
+    },
+    {
+      "id": "finance-boundary-names",
+      "foundBy": "/root",
+      "problem": "An awaited observation return may be a cache hit, and finally body exit may precede async adoption.",
+      "resolution": "R4 and later use finance-observation-returned and finance-body-exit; no additional await or then was added.",
+      "remainingFinding": false
+    },
+    {
+      "id": "canonical-close-semantics",
+      "foundBy": "joint clarification with /root",
+      "problem": "Installed authority preserves the original Promise and does not call finishRoute(canonical); a synthetic canonical terminal would be misleading.",
+      "resolution": "R5 and later dedicate the eighth canonical slot to finance-outside-root; finishRoute emits a close only for lookup and persistence.",
+      "remainingFinding": false
+    },
+    {
+      "id": "nested-finance-owner",
+      "foundBy": "/root/review_archive countersequence and /root installed-source confirmation",
+      "problem": "Selecting any first Finance under a canonical route could select a Finance nested inside comparator execution, which does not establish the outer observation relationship.",
+      "resolution": "R6 entered selects an opaque owner only in private preparation context, and only once. Comparator-context Finance cannot create or replace it.",
+      "remainingFinding": false,
+      "limit": "The stronger statement that this preparation site is the intended external Finance belongs to the independent installed-tap review by root/Focal; this review verifies the exact helper restriction."
+    }
+  ],
+  "findingsRemaining": [],
+  "staticConclusions": {
+    "invocationAndValues": [
+      "runOnce claims invocation before calling work, records returned/threw separately, and retains the raw work result or thrown value, including undefined.",
+      "ALS return values and ALS exceptions do not replace the work outcome. Repeated invocation of the observer thunk cannot execute work twice. If ALS does not invoke it, the single fallback invocation preserves the captured work outcome.",
+      "The helper has no await expression or .then call. A Promise/thenable result is returned by identity without reading then, awaiting, or assimilating it.",
+      "link/tap/returned helpers return the exact input value. They do not invoke the original callback or traverse arbitrary product values/errors.",
+      "Invalid or repeated handles run work under a private neutral mask when selected attribution would otherwise be inherited; own ALS failure disables attribution without replacing the work result."
+    ],
+    "ownershipAndCorrelation": [
+      "Request selection is process-lifetime once, claimed before admission/setup; attribution uses exact Request identity.",
+      "Route handles, callback identities, phase latches, source/choice/local/operation latches, and Finance owner tokens are private to the selected frame.",
+      "Only one canonical route and one first-analysis persistence route are selected. Lookup selection allows at most two preparation and four comparator routes.",
+      "Each route phase and each point claims its numeric bit before emission or work. Numeric powers-of-two are used for 36 persistence positions without 32-bit bitwise truncation.",
+      "Unknown, foreign, closed, repeated, or uncorrelated work does not join the selected route. Neutral route scope blocks ambient selected-route inheritance.",
+      "Finance R6 selects only first preparation-context entered. Explicit later Finance markers require its exact opaque owner. Comparator entry emits finance-work-enter only if that selected owner exists.",
+      "Provider-view requires a function callback and exact private callback identity. Gate taps record the already evaluated result without coercion: -1 not evaluated, 0 false, 1 true, 2 nonboolean.",
+      "Source selection, native gates, physical copy and provider-view are distinct observations. No one marker alone proves the other predicates."
+    ],
+    "reservationsAndBounds": {
+      "baseRows": 63,
+      "basePartition": "32 detail places (10 critical pair places, 4 checkpoint places, 1 first-analysis entry, 17 general), 28 unit closes, request enter/close and one overflow",
+      "tailRows": 12,
+      "tailPartition": "five reserved pairs and two single HTTP tail markers",
+      "lookupRows": 72,
+      "lookupPartition": "six routes times twelve unique point positions",
+      "canonicalAndFinanceRows": 8,
+      "persistenceRows": 36,
+      "maxEventRows": 191,
+      "maxEventLineBytesIncludingPrefixAndLF": 1024,
+      "maxEventPayloadBytes": 195584,
+      "permittedAdditionalBiDisabledRows": 1,
+      "combinedDiagnosticPayloadMaxRows": 192,
+      "combinedDiagnosticPayloadMaxBytes": 196608,
+      "capMeaning": "These are bounds on accepted E15 diagnostic payload under the planned invocation set, not on the complete Actions main log, its timestamps/ANSI, separately stored disk mirror, launcher JSON, or arbitrary repeated installations.",
+      "memory": "Route scopes have a lifetime ceiling of 32; exhaustion disables route attribution and records a scope fault. Existing unit/active-compare/general counters and saturation limits remain bounded.",
+      "closeReservation": "General saturation does not borrow critical/checkpoint/unit-close reservations; claim-once route and tail slots do not expand the global event/byte ceiling."
+    },
+    "sinkAndScanner": [
+      "Native append formats only bounded known metadata/codes/counters into printable ASCII plus one LF. It validates byte length and global quotas before I/O.",
+      "Disk and stdout each make one synchronous write attempt per admitted line. A zero/partial write or throw irreversibly disables that sink for the frame. No retry, reconstruction or replay is added.",
+      "Each bridge uses createSfE15Forwarder before Stream.splitLines and passes the exact original decoded chunk onward on every path, including failure.",
+      "The scanner retains at most 1023 ASCII characters/bytes before LF. It never treats EOF as LF or flushes an incomplete tail.",
+      "Only observed complete LF-terminated lines with the event or launcher prefix can be forwarded. Complete diagnostic lines must be printable ASCII and at most 1024 bytes including LF.",
+      "One forwarder instance chooses event mode (at most 191 rows / 191 KiB) or disabled mode (one row / 1024 bytes), claims mode/count/bytes before writing and does not mix modes.",
+      "Oversized or non-ASCII unrelated lines are discarded from observer state through LF. Diagnostic malformed/oversized input or a write failure latches failure. Original stdout still proceeds to the original readiness pipeline.",
+      "The scanner authenticates neither JSON schema nor nonce/run identity; those are evidence-intake duties. A prefix-shaped malformed JSON line could be transported and must not thereby be accepted as valid evidence.",
+      "Synchronous writeSync may perturb I/O timing. There is no guarantee of delivery under kill, no replay, and no timing-equivalence claim."
+    ],
+    "pumpPreservation": {
+      "innerAwaitCount": {
+        "before": 13,
+        "after": 13
+      },
+      "outerAwaitCount": {
+        "before": 16,
+        "after": 16
+      },
+      "thenCallsBothBeforeAndAfter": 0,
+      "innerReadiness": "line.includes(`server listening on ${origin}`) unchanged",
+      "outerReadiness": "line === SF_DESIGN_READY unchanged",
+      "innerReadinessDeadline": "60 seconds unchanged",
+      "outerSetupDeadline": "180 seconds unchanged",
+      "outerForceKillGrace": "10 seconds unchanged",
+      "changedOnly": "diagnostic imports, two diagnostic environment keys, environment admission/preparation, and identity-preserving stdout observation before existing splitLines",
+      "preserved": "executable/arguments/cwd, private roots, stderr processing, existing spawn/readiness/teardown behavior and original awaits",
+      "refusal": "Diagnostic admission failure neutralizes only the two diagnostic environment keys and may emit one bounded disabled marker; original child setup/spawn remains authoritative.",
+      "launcherAdmission": "Fixed repository/CI/runtime/source labels and exact launcher length/hash are checked; evidence directory is outside private installation roots, realpath checked, and not a symlink. Launcher creation uses wx/0600 under a 0700 directory. These checks do not establish that Request selection or a later event occurred."
+    },
+    "observationSemantics": [
+      "source/sourceTree label the S21 clean reference; snapshot/runId/attempt/nonce bind the future diagnostic execution. These fields do not turn diagnostic source into a qualified release candidate.",
+      "routePhase is the route's selection/birth phase; it is not a universal current-phase field.",
+      "finance-observation-returned is return of the awaited observation call and may be a cache hit. It does not prove comparator callback entry.",
+      "finance-body-exit is the Finance body/finally boundary. It does not prove Promise settlement or successful async adoption.",
+      "Per root's installed-tap review, authority has no canonical finish marker. This helper emits no canonical close; original request/unit/phase boundaries provide only what was actually observed.",
+      "The request-close payload precedes its final fsync/close attempts. It cannot attest to their later success, to a censored unit, or to a terminal that was never observed."
+    ]
+  },
+  "pendingOutsideThisApproval": [
+    "Focal's executable D controls and their separate independent review, including nested-Finance negative case, callback identity, Unicode/fragment/EOF/short-write cases, work exactly once, raw Promise identity and throw undefined.",
+    "Root/Focal semantic review of installed product taps and the resulting exact proposal package.",
+    "Compilation and approved CI execution on the exact eventual proposal SHA/tree; this receipt is static and contains no test result.",
+    "Installed UI42/UI43/UI44 validation, independent PR review, CI on approved head and integration; no new area or go-live gate is qualified by this receipt."
+  ]
+}

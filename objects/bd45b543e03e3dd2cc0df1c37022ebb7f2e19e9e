@@ -1,0 +1,197 @@
+{
+  "schema": "sf613-e15-focal-execution-authority-v1",
+  "status": "READY_FOR_ONE_REVIEWED_FOCAL_ACTIVATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "owner": "/root",
+  "userMandate": "Continue #613 diagnosis and CI through reviewed changes; no production cutover authorization.",
+  "source": {
+    "commit": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "diagnostic": true,
+    "delta": {
+      "added": 2,
+      "modified": 16
+    },
+    "manifest": {
+      "gitBlob": "67e22c1ae78a57659e520e2a38b7e1fe8c2502f3",
+      "bytes": 36896,
+      "sha256": "32879dd88b78c8947e4db98d16da61bb210dbfd70a2dc4ad426a363bf7677276",
+      "lf": 1077,
+      "endsWithLF": true
+    },
+    "review": {
+      "gitBlob": "2e82c34f4c1b8f3fb57e794cd7beb18a3a1f3f8a",
+      "bytes": 24763,
+      "sha256": "b67c87fcdc5f381c1340a92ffc7224100c150356edd5ed551c51aa952b185676",
+      "lf": 666,
+      "endsWithLF": true
+    },
+    "helperTransportReview": {
+      "gitBlob": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+      "bytes": 25602,
+      "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+      "lf": 563,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "31f6e0e98773bb644634445e25cd3c57c54a73f6",
+      "bytes": 58090,
+      "sha256": "3d792295aaa907346fd7ba8bfd84daf154f611cbe16431ac5ed799513bfbc20b",
+      "lf": 1151,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+    "tree": "a11006ec7afbfcbc693abcf469e5833e0c0f2844",
+    "soleParent": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "delta": {
+      "added": 3,
+      "modified": 1
+    },
+    "rootObjectReview": {
+      "gitBlob": "4b0333f6cd2f684fa2aca2f150e0f10e6e90ce52",
+      "bytes": 85005,
+      "sha256": "905780aa58dec0fb3acfa53b632d864a4f08e8fbb3cf0c42e2021b24e62cf639",
+      "lf": 2248,
+      "endsWithLF": true
+    }
+  },
+  "wrapper": {
+    "template": {
+      "gitBlob": "27273d07dbd0419ceeada8895009b7809444277c",
+      "bytes": 16447,
+      "sha256": "9664ce1c76166ee909ff89b16f9f671d864ef0cdc2607d50262c9c674eb63d6f",
+      "lf": 231,
+      "endsWithLF": true
+    },
+    "bound": {
+      "gitBlob": "98d464481cedaa9f370bfb6a38ed17ce88e01766",
+      "bytes": 16486,
+      "sha256": "85616945069395b98cc024992fdc42b4e53aa029a9580b3801373963ef0ac111",
+      "lf": 231,
+      "endsWithLF": true
+    },
+    "review": {
+      "gitBlob": "354030062565805026b8118ca0757cd3ca02c488",
+      "bytes": 16491,
+      "sha256": "8859aa53d28b246d35980ea047d9dca7141c052f400358c8aff4fa76c5c7b8eb",
+      "lf": 336,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "2584b253570d12371fa22c52bee0ea62a67f0d28",
+      "bytes": 28692,
+      "sha256": "cb58c85de357de96a470c9ef57c883c30fdde8912ecb2d2a11576163aa5bbd6f",
+      "lf": 411,
+      "endsWithLF": true
+    },
+    "bindings": {
+      "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+      "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43"
+    }
+  },
+  "controls": {
+    "manifest": {
+      "gitBlob": "a9d92ca1d90ff1ed855c104642cc81e1fd8394bb",
+      "bytes": 13227,
+      "sha256": "96bcbee6dbf74f9463bd9ea9f60cc5c7f1ec8aa172a1ffa7c9bde4f5a788ad8a",
+      "lf": 328,
+      "endsWithLF": true
+    },
+    "review": {
+      "gitBlob": "ddc28f1fb7bfa0f1270fa1a642f20286c6e4d877",
+      "bytes": 9144,
+      "sha256": "1ec4ca3b0ce3a7eccb0c6df81414c051204537b768434c951aeaf952a7527417",
+      "lf": 270,
+      "endsWithLF": true
+    },
+    "fixture": {
+      "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052",
+      "bytes": 63845,
+      "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+      "lf": 987,
+      "endsWithLF": true
+    },
+    "test": {
+      "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e",
+      "bytes": 1167,
+      "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+      "lf": 24,
+      "endsWithLF": true
+    }
+  },
+  "request": {
+    "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "selection": {
+    "groups": 10,
+    "commands": 16,
+    "functionalWholeFileProcesses": 6,
+    "sourceWorkingPins": 30,
+    "controlsWorkingPins": 2,
+    "workingPins": 32,
+    "reports": 9,
+    "observerNamedChildren": 10,
+    "outerCommandTruncationFlags": 32,
+    "globalOmniTotal": null,
+    "actualFunctionalTests": null,
+    "actualAssertions": null
+  },
+  "activation": {
+    "branch": "ci-run-sf613e15f",
+    "createOnly": true,
+    "forceAllowed": false,
+    "oneActivationOnly": true,
+    "expectedWorkflow": ".github/workflows/test-ci.yml",
+    "workflowBlob": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "expectedEvent": "push",
+    "expectedLinuxRunner": "ubuntu-24.04",
+    "jobTimeoutMs": 2700000,
+    "runDiscoveryWindowMs": 180000,
+    "automaticRerunOrRecoveryAllowed": false,
+    "preconditions": [
+      "No matching ref before creation",
+      "No run for exact focal head or branch",
+      "All static and object reviews present",
+      "Protected refs unchanged at preflight cut"
+    ]
+  },
+  "originalReception": {
+    "receiver": "/root",
+    "mainOriginalGets": 1,
+    "cleanupOriginalGets": 1,
+    "when": "One exact run, attempt1, all jobs terminal and expected main/cleanup job IDs recorded; no other original input.",
+    "preserve": "Exact decoded strings are saved to actual Git blobs with literal readback and full ordered recomposition before interpretation.",
+    "artifactZipGets": 0,
+    "reacquisitionAllowed": false,
+    "oldOriginals": "All originals through A21 remain CLOSED."
+  },
+  "scope": {
+    "qualification": false,
+    "cleanProductCandidate": false,
+    "productionApproval": false,
+    "localRepositoryExecution": false,
+    "originalAnalyticsSpecChanged": false,
+    "originalPlaywrightDeadlineChanged": false
+  },
+  "limits": [
+    "Diagnostic source/root identity differs from observer cleanBase source/tree by design.",
+    "No UI42–UI44 qualification, latency improvement or go-live gate acceptance is inferred.",
+    "The existing C21 pass does not certify this E15 source; the new run must be received in full.",
+    "Ten observer children, six functional driver processes and sixteen outer commands are separate populations."
+  ],
+  "preparedAtUtc": "2026-11-28 09:16:55 UTC",
+  "independentObjectReview": {
+    "gitBlob": "f9c316014d7cfe1ce0aa8ced8cbb067fd5b0d088",
+    "bytes": 5488,
+    "sha256": "36c991d7c0c8c0d020532f003b984f50d1dee4fc61cf991fcd0766fe99a5aa7f",
+    "lf": 151,
+    "endsWithLF": true
+  }
+}

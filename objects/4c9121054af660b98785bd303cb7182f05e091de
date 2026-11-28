@@ -1,0 +1,3519 @@
+{
+  "schema": "sf613-e15-analytics-git-copy-extraction-v1",
+  "at": "2026-11-28 09:56:41 UTC",
+  "source": {
+    "sha": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+  },
+  "snapshot": {
+    "sha": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43"
+  },
+  "run": {
+    "id": 46130942119,
+    "attempt": 1,
+    "main": 140935705301,
+    "cleanup": 140938044223,
+    "conclusion": "failure"
+  },
+  "inputs": {
+    "e15_analytics_intake_context": {
+      "gitBlob": "f4f65eaedcf7651cea76fadfb8a83c26718d31fc",
+      "bytes": 25286,
+      "sha256": "e8c68dd44ee8ec6dc96d7cea7f553fbc1b51a53959ec32b836137946881c8e4e",
+      "lf": 548,
+      "endsWithLF": true
+    },
+    "e15_analytics_main_preservation_manifest": {
+      "gitBlob": "b907e7aae121c6a92d9812620b5143cd396693d3",
+      "bytes": 7997,
+      "sha256": "d51e4f357c245014038df222a8a78db50cb8c22d6f98191aaf669ea10210d3d9",
+      "lf": 274,
+      "endsWithLF": true
+    },
+    "e15_analytics_cleanup_preservation_manifest": {
+      "gitBlob": "2e3585727e4ccc8d3b63e3461016e5a199780a1c",
+      "bytes": 1822,
+      "sha256": "4a6e620124cc3bedbc17628eb46d4c30649a8dd43229a353a58c761339a6be24",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "e15_analytics_event_union": {
+      "gitBlob": "f80c2745ee085608e47f7120bd8f007d655e3327",
+      "bytes": 76525,
+      "sha256": "8c25530af2cc8566ca2e1df5d11c6966d51524ff69c6ac2c90f85731883b3db3",
+      "lf": 134,
+      "endsWithLF": true
+    },
+    "e15_analytics_core_union": {
+      "gitBlob": "f58aee9a18aafec45e1931334f0405987fe81ec3",
+      "bytes": 34168,
+      "sha256": "f890276dc2e8b78e9a11dfaf2d155dfc4ffb82ba8612c63cf7b2b240cf96e1a6",
+      "lf": 96,
+      "endsWithLF": true
+    },
+    "e15_analytics_context_union": {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true
+    },
+    "e15_analytics_discovery_owner_union": {
+      "gitBlob": "be48167c0118b7c2ebac0f5086a8809c85fb9c57",
+      "bytes": 1452,
+      "sha256": "55b5e3d16d4f429c7f38f8082fc78e776995d1b9d96201344c95f5ca1f16ed52",
+      "lf": 10,
+      "endsWithLF": true
+    }
+  },
+  "originalsClosed": {
+    "at": "2026-11-28 09:43:59 UTC",
+    "run": 46130942119,
+    "attempt": 1,
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "irreversible": true
+  },
+  "derivation": {
+    "mainCalculatedOnly": {
+      "gitBlob": "28882b074b5030d2fa677093f11edee4158e4330",
+      "bytes": 4951586,
+      "sha256": "9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2",
+      "lf": 2268,
+      "endsWithLF": true
+    },
+    "prefixCounts": {
+      "SF_DESIGN_DISCOVERY": 2,
+      "SF_ANALYTICS_SOURCE": 44,
+      "SF_OWNER_ADMISSION_READS": 8,
+      "SF_ANALYTICS_CONTEXT": 2,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "eventCount": 134,
+    "eventMaxLineBytes": 654,
+    "eventBytes": 76525,
+    "phaseTimeline": [
+      {
+        "line": 1250,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 6,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 5100,
+        "unit": 1,
+        "phase": 6,
+        "point": "port-authority-initial",
+        "stage": 1,
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1253,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 7,
+        "kind": "phase-close",
+        "elapsedTenthMs": 5110,
+        "unit": 1,
+        "phase": 6,
+        "point": "port-authority-initial",
+        "stage": 1,
+        "outcome": "await-returned",
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1256,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 8,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 5112,
+        "unit": 1,
+        "phase": 7,
+        "point": "candidates-initial",
+        "stage": 1,
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1259,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 9,
+        "kind": "phase-close",
+        "elapsedTenthMs": 7158,
+        "unit": 1,
+        "phase": 7,
+        "point": "candidates-initial",
+        "stage": 1,
+        "outcome": "await-returned",
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1263,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 11,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 7161,
+        "unit": 2,
+        "phase": 8,
+        "point": "combination-evaluate",
+        "stage": 2,
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1269,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 13,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 16449,
+        "unit": 3,
+        "phase": 9,
+        "point": "production-analysis",
+        "stage": 3,
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1275,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 15,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 16461,
+        "unit": 4,
+        "phase": 1,
+        "point": "analysis-select-initial",
+        "stage": 4,
+        "compareBodies": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          0,
+          0,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1443,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 93,
+        "kind": "phase-close",
+        "elapsedTenthMs": 241042,
+        "unit": 4,
+        "phase": 1,
+        "point": "analysis-select-initial",
+        "stage": 4,
+        "outcome": "await-returned",
+        "compareBodies": [
+          12,
+          12,
+          0,
+          0,
+          1,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          4,
+          8,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1446,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 94,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 243202,
+        "unit": 4,
+        "phase": 10,
+        "point": "analysis-compare",
+        "stage": 5,
+        "compareBodies": [
+          12,
+          12,
+          0,
+          0,
+          1,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          4,
+          8,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1449,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 95,
+        "kind": "phase-close",
+        "elapsedTenthMs": 273599,
+        "unit": 4,
+        "phase": 10,
+        "point": "analysis-compare",
+        "stage": 5,
+        "outcome": "await-returned",
+        "compareBodies": [
+          15,
+          15,
+          0,
+          0,
+          1,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          5,
+          10,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1452,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 96,
+        "kind": "phase-enter",
+        "elapsedTenthMs": 273760,
+        "unit": 4,
+        "phase": 4,
+        "point": "analysis-persist",
+        "stage": 6,
+        "compareBodies": [
+          15,
+          15,
+          0,
+          0,
+          1,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          3,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          5,
+          10,
+          0
+        ],
+        "saturated": false
+      },
+      {
+        "line": 1542,
+        "schema": "sf-preview-causal-e15-event-v1",
+        "source": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+        "sourceTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "qualification": false,
+        "snapshot": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "runId": "46130942119",
+        "attempt": "1",
+        "nonce": "sf613-e15-event-mdoIvu",
+        "pid": 3746,
+        "parentPid": 3687,
+        "request": 1,
+        "sequence": 134,
+        "kind": "phase-close",
+        "elapsedTenthMs": 604681,
+        "unit": 4,
+        "phase": 4,
+        "point": "analysis-persist",
+        "stage": 6,
+        "outcome": "await-returned",
+        "compareBodies": [
+          41,
+          41,
+          0,
+          0,
+          1,
+          0
+        ],
+        "stages": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          12,
+          0,
+          3,
+          3,
+          0,
+          26,
+          26,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "lineage": [
+          17,
+          24,
+          0
+        ],
+        "saturated": false
+      }
+    ],
+    "routeTimeline": [
+      {
+        "line": 1278,
+        "sequence": 16,
+        "ms": 1863,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "canonical-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1281,
+        "sequence": 17,
+        "ms": 2091,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1284,
+        "sequence": 18,
+        "ms": 2295.4,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1285,
+        "sequence": 19,
+        "ms": 2295.6,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1288,
+        "sequence": 20,
+        "ms": 2295.6,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "source-selection",
+        "detail": "root-absent",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1291,
+        "sequence": 21,
+        "ms": 2295.7,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1292,
+        "sequence": 22,
+        "ms": 2295.7,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "local-enter",
+        "detail": "top-level",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1293,
+        "sequence": 23,
+        "ms": 2296,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "copy-enter",
+        "detail": "full",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1296,
+        "sequence": 24,
+        "ms": 2297.6,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "copy-close",
+        "detail": "full",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1299,
+        "sequence": 25,
+        "ms": 2298.9,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1302,
+        "sequence": 26,
+        "ms": 2712.2,
+        "kind": "lookup",
+        "route": 1,
+        "phase": "preparation",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1303,
+        "sequence": 27,
+        "ms": 2712.4,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1306,
+        "sequence": 28,
+        "ms": 2933.1,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1307,
+        "sequence": 29,
+        "ms": 2933.2,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1308,
+        "sequence": 30,
+        "ms": 2933.2,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "source-selection",
+        "detail": "root-absent",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1309,
+        "sequence": 31,
+        "ms": 2933.2,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1310,
+        "sequence": 32,
+        "ms": 2933.3,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "local-enter",
+        "detail": "top-level",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1311,
+        "sequence": 33,
+        "ms": 2933.5,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "copy-enter",
+        "detail": "full",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1314,
+        "sequence": 34,
+        "ms": 2935.1,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "copy-close",
+        "detail": "full",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1315,
+        "sequence": 35,
+        "ms": 2936.6,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1318,
+        "sequence": 36,
+        "ms": 3350.7,
+        "kind": "lookup",
+        "route": 2,
+        "phase": "preparation",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          2,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1321,
+        "sequence": 37,
+        "ms": 3350.9,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "finance-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1324,
+        "sequence": 38,
+        "ms": 3549.5,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "finance-branch",
+        "detail": "owned-records",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1327,
+        "sequence": 39,
+        "ms": 3550.8,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "comparator-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1328,
+        "sequence": 40,
+        "ms": 3550.9,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "finance-work-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1331,
+        "sequence": 41,
+        "ms": 3636.4,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1334,
+        "sequence": 42,
+        "ms": 3690.9,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1335,
+        "sequence": 43,
+        "ms": 3691,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1338,
+        "sequence": 44,
+        "ms": 3691,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "source-selection",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1339,
+        "sequence": 45,
+        "ms": 3691,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1340,
+        "sequence": 46,
+        "ms": 3691,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "local-enter",
+        "detail": "child",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1341,
+        "sequence": 47,
+        "ms": 3691.1,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "native-gates",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1342,
+        "sequence": 48,
+        "ms": 3691.1,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "copy-enter",
+        "detail": "projected",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1345,
+        "sequence": 49,
+        "ms": 3691.8,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "copy-close",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1348,
+        "sequence": 50,
+        "ms": 3692.3,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "provider-view",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1351,
+        "sequence": 51,
+        "ms": 3693.4,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1354,
+        "sequence": 52,
+        "ms": 3832.8,
+        "kind": "lookup",
+        "route": 3,
+        "phase": "comparator",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1355,
+        "sequence": 53,
+        "ms": 3832.9,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1358,
+        "sequence": 54,
+        "ms": 3888.5,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1359,
+        "sequence": 55,
+        "ms": 3888.5,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1362,
+        "sequence": 56,
+        "ms": 3888.6,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "source-selection",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1363,
+        "sequence": 57,
+        "ms": 3888.6,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1364,
+        "sequence": 58,
+        "ms": 3888.6,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "local-enter",
+        "detail": "child",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1365,
+        "sequence": 59,
+        "ms": 3888.7,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "native-gates",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1366,
+        "sequence": 60,
+        "ms": 3888.7,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "copy-enter",
+        "detail": "projected",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1369,
+        "sequence": 61,
+        "ms": 3889.6,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "copy-close",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1372,
+        "sequence": 62,
+        "ms": 3890.3,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "provider-view",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1375,
+        "sequence": 63,
+        "ms": 3891.3,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1378,
+        "sequence": 64,
+        "ms": 4012.5,
+        "kind": "lookup",
+        "route": 4,
+        "phase": "comparator",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1384,
+        "sequence": 66,
+        "ms": 7120.4,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1387,
+        "sequence": 67,
+        "ms": 7197.1,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1388,
+        "sequence": 68,
+        "ms": 7197.2,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1389,
+        "sequence": 69,
+        "ms": 7197.2,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "source-selection",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1392,
+        "sequence": 70,
+        "ms": 7197.3,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1393,
+        "sequence": 71,
+        "ms": 7197.3,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "local-enter",
+        "detail": "child",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1394,
+        "sequence": 72,
+        "ms": 7197.3,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "native-gates",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1395,
+        "sequence": 73,
+        "ms": 7197.3,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "copy-enter",
+        "detail": "projected",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1398,
+        "sequence": 74,
+        "ms": 7198.3,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "copy-close",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1401,
+        "sequence": 75,
+        "ms": 7198.8,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "provider-view",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1404,
+        "sequence": 76,
+        "ms": 7199.8,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1407,
+        "sequence": 77,
+        "ms": 7323.5,
+        "kind": "lookup",
+        "route": 5,
+        "phase": "comparator",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1408,
+        "sequence": 78,
+        "ms": 7323.6,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "lookup-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1411,
+        "sequence": 79,
+        "ms": 7381.2,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "candidate-read-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1412,
+        "sequence": 80,
+        "ms": 7381.3,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1413,
+        "sequence": 81,
+        "ms": 7381.3,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "source-selection",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1414,
+        "sequence": 82,
+        "ms": 7381.3,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1417,
+        "sequence": 83,
+        "ms": 7381.4,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "local-enter",
+        "detail": "child",
+        "gates": [
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1418,
+        "sequence": 84,
+        "ms": 7381.4,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "native-gates",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1419,
+        "sequence": 85,
+        "ms": 7381.4,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "copy-enter",
+        "detail": "projected",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1422,
+        "sequence": 86,
+        "ms": 7382.3,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "copy-close",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1425,
+        "sequence": 87,
+        "ms": 7382.8,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "provider-view",
+        "detail": "decisionResults",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1428,
+        "sequence": 88,
+        "ms": 7383.7,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "candidate-read-returned",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1431,
+        "sequence": 89,
+        "ms": 7507,
+        "kind": "lookup",
+        "route": 6,
+        "phase": "comparator",
+        "point": "lookup-close",
+        "detail": "returned",
+        "gates": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "line": 1434,
+        "sequence": 90,
+        "ms": 7508.8,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "finance-observation-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1437,
+        "sequence": 91,
+        "ms": 7736.5,
+        "kind": "canonical",
+        "route": 1,
+        "phase": "preparation",
+        "point": "finance-body-exit",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1455,
+        "sequence": 97,
+        "ms": 27376.3,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "persist-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1458,
+        "sequence": 98,
+        "ms": 32106.5,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "prewrite",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1461,
+        "sequence": 99,
+        "ms": 32152.5,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "state-transaction-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1464,
+        "sequence": 100,
+        "ms": 32152.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1465,
+        "sequence": 101,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-selection",
+        "detail": "product-refused",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1466,
+        "sequence": 102,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "choice-forward",
+        "detail": "direct",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1469,
+        "sequence": 103,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "local-enter",
+        "detail": "top-level",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1470,
+        "sequence": 104,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "queue-enter",
+        "detail": "false",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1471,
+        "sequence": 105,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "queue-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1474,
+        "sequence": 106,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "begin-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1475,
+        "sequence": 107,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "begin-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1478,
+        "sequence": 108,
+        "ms": 32152.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "materialize-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1481,
+        "sequence": 109,
+        "ms": 32154.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "materialize-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1484,
+        "sequence": 110,
+        "ms": 32155.6,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-work-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1487,
+        "sequence": 111,
+        "ms": 32183.5,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-work-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1488,
+        "sequence": 112,
+        "ms": 32183.6,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-finish-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1491,
+        "sequence": 113,
+        "ms": 32195.6,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-finish-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1494,
+        "sequence": 114,
+        "ms": 32195.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-dispose-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1495,
+        "sequence": 115,
+        "ms": 32195.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "source-dispose-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1496,
+        "sequence": 116,
+        "ms": 32195.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "local-scope-closed",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1497,
+        "sequence": 117,
+        "ms": 32195.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "encode-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1500,
+        "sequence": 118,
+        "ms": 32202.2,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "encode-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1503,
+        "sequence": 119,
+        "ms": 32208.2,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "decode-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1506,
+        "sequence": 120,
+        "ms": 32209.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "sql-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1509,
+        "sequence": 121,
+        "ms": 32209.9,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "commit-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1512,
+        "sequence": 122,
+        "ms": 32210.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "commit-returned",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1515,
+        "sequence": 123,
+        "ms": 32210.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "local-returning",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1516,
+        "sequence": 124,
+        "ms": 32210.9,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "operation-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1519,
+        "sequence": 125,
+        "ms": 32210.9,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "state-transaction-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1522,
+        "sequence": 126,
+        "ms": 32329.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "store-write-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1523,
+        "sequence": 127,
+        "ms": 32329.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "binding-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1526,
+        "sequence": 128,
+        "ms": 46991.7,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "binding-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1527,
+        "sequence": 129,
+        "ms": 46991.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "validation-enter",
+        "detail": "none",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1533,
+        "sequence": 131,
+        "ms": 51400,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "validation-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1540,
+        "sequence": 132,
+        "ms": 60467.8,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "binding-read-returned",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      },
+      {
+        "line": 1541,
+        "sequence": 133,
+        "ms": 60467.9,
+        "kind": "persistence",
+        "route": 1,
+        "phase": "persist-body",
+        "point": "persist-close",
+        "detail": "returned",
+        "gates": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ]
+      }
+    ],
+    "native": [
+      {
+        "line": 1197,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 1,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "line": 1199,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 1,
+        "ownerBinding": "exact",
+        "elapsedMs": 330,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "line": 1217,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request",
+        "sequence": 2,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      {
+        "line": 1219,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "sequence": 2,
+        "ownerBinding": "exact",
+        "elapsedMs": 582,
+        "http": 200,
+        "status": "ok",
+        "reason": null,
+        "valueShape": "array"
+      },
+      {
+        "line": 1237,
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      }
+    ],
+    "captures": [
+      {
+        "line": 1171,
+        "name": "UI42-list-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1183,
+        "name": "UI42-list-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1189,
+        "name": "UI42-list-dark-390-test-data",
+        "width": 390,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1195,
+        "name": "UI42-list-light-320-test-data",
+        "width": 320,
+        "surface": "UI42",
+        "stage": "list"
+      },
+      {
+        "line": 1215,
+        "name": "UI42-empty-authorized-case-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "line": 1235,
+        "name": "UI42-configure-focused-candidate-test-data",
+        "width": 1440,
+        "surface": "UI42",
+        "stage": "configure"
+      },
+      {
+        "line": 1719,
+        "name": "UI45-question-catalog-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "line": 1733,
+        "name": "UI45-question-catalog-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "line": 1739,
+        "name": "UI45-question-catalog-dark-390-test-data",
+        "width": 390,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "line": 1745,
+        "name": "UI45-question-catalog-light-320-test-data",
+        "width": 320,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "line": 1757,
+        "name": "UI45-authorized-financial-context-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "context"
+      },
+      {
+        "line": 1771,
+        "name": "UI45-financial-source-values-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "result"
+      },
+      {
+        "line": 1793,
+        "name": "UI46-financial-selected-context-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1809,
+        "name": "UI46-financial-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1825,
+        "name": "UI46-financial-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1833,
+        "name": "UI46-financial-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1839,
+        "name": "UI46-financial-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1845,
+        "name": "UI46-financial-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1851,
+        "name": "UI46-financial-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1869,
+        "name": "UI46-financial-source-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1887,
+        "name": "UI46-financial-source-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1893,
+        "name": "UI46-financial-source-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1899,
+        "name": "UI46-financial-source-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1921,
+        "name": "UI46-resolved-original-source-1-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1943,
+        "name": "UI46-resolved-original-source-2-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1973,
+        "name": "UI46-operations-original-coverage-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 1987,
+        "name": "UI46-operations-original-values-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2001,
+        "name": "UI46-operations-original-values-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2007,
+        "name": "UI46-operations-original-values-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2013,
+        "name": "UI46-operations-original-values-dark-390-scrolled-values-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2019,
+        "name": "UI46-operations-original-values-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2025,
+        "name": "UI46-operations-original-values-light-320-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2041,
+        "name": "UI46-operations-original-table-dark-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2057,
+        "name": "UI46-operations-original-table-light-desktop-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2063,
+        "name": "UI46-operations-original-table-dark-390-test-data",
+        "width": 390,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2069,
+        "name": "UI46-operations-original-table-light-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2075,
+        "name": "UI46-operations-dark-320-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2091,
+        "name": "UI46-operations-resolved-original-source-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2109,
+        "name": "UI46-source-empty-sensitivity-catalog-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "context"
+      },
+      {
+        "line": 2125,
+        "name": "UI45-pt-BR-dark-desktop-catalog-test-data",
+        "width": 1440,
+        "surface": "UI45",
+        "stage": "catalog"
+      },
+      {
+        "line": 2143,
+        "name": "UI46-pt-BR-dark-desktop-values-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2149,
+        "name": "UI46-pt-BR-dark-320-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2175,
+        "name": "UI46-pt-BR-dark-desktop-operations-test-data",
+        "width": 1440,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2181,
+        "name": "UI46-pt-BR-dark-320-operations-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2187,
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-values-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      },
+      {
+        "line": 2193,
+        "name": "UI46-pt-BR-dark-320-operations-scrolled-units-test-data",
+        "width": 320,
+        "surface": "UI46",
+        "stage": "result"
+      }
+    ],
+    "sourceInventory": [
+      {
+        "line": 1119,
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1121,
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1123,
+        "operation": "parameter-source-read",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1125,
+        "operation": "decision-promote-parameter",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1127,
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1129,
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1131,
+        "operation": "decision-criteria",
+        "phase": "source-request"
+      },
+      {
+        "line": 1133,
+        "operation": "decision-criteria",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 972
+      },
+      {
+        "line": 1135,
+        "operation": "sensitivity-controls-units-read",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1137,
+        "operation": "sensitivity-rule-fixture-registered-readback",
+        "status": "ok"
+      },
+      {
+        "line": 1139,
+        "operation": "decision-compare",
+        "phase": "source-request"
+      },
+      {
+        "line": 1141,
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 35990
+      },
+      {
+        "line": 1143,
+        "operation": "portfolio-selection-fixture-basis"
+      },
+      {
+        "line": 1145,
+        "operation": "decision-select-portfolio",
+        "phase": "source-request"
+      },
+      {
+        "line": 1147,
+        "operation": "decision-select-portfolio",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 21239
+      },
+      {
+        "line": 1149,
+        "operation": "decision-controls",
+        "http": 200,
+        "status": "ok"
+      },
+      {
+        "line": 1151,
+        "operation": "decision-compare",
+        "phase": "source-request"
+      },
+      {
+        "line": 1153,
+        "operation": "decision-compare",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 35048
+      },
+      {
+        "line": 1155,
+        "operation": "portfolio-selection-registered-readback",
+        "status": "ok"
+      },
+      {
+        "line": 1197,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request"
+      },
+      {
+        "line": 1199,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 330
+      },
+      {
+        "line": 1217,
+        "operation": "decision-portfolio-results",
+        "phase": "native-request"
+      },
+      {
+        "line": 1219,
+        "operation": "decision-portfolio-results",
+        "phase": "native-response",
+        "http": 200,
+        "status": "ok",
+        "elapsedMs": 582
+      },
+      {
+        "line": 1237,
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request"
+      },
+      {
+        "line": 1775,
+        "operation": "bi-source-binding-readback"
+      },
+      {
+        "line": 1777,
+        "operation": "bi-original-scalar-dom"
+      },
+      {
+        "line": 1779,
+        "operation": "bi-data-readback",
+        "http": 200
+      },
+      {
+        "line": 1901,
+        "operation": "bi-source-body-acquisition",
+        "http": 200
+      },
+      {
+        "line": 1903,
+        "operation": "bi-source-original-destinations"
+      },
+      {
+        "line": 1923,
+        "operation": "bi-source-body-acquisition",
+        "http": 200
+      },
+      {
+        "line": 1925,
+        "operation": "bi-source-original-destinations"
+      },
+      {
+        "line": 1945,
+        "operation": "bi-source-identity-regression"
+      },
+      {
+        "line": 1949,
+        "operation": "bi-data-original-acquisition",
+        "phase": "original-request-completed",
+        "http": 200
+      },
+      {
+        "line": 1951,
+        "operation": "bi-data-original-acquisition",
+        "http": 200
+      },
+      {
+        "line": 1953,
+        "operation": "bi-source-binding-readback"
+      },
+      {
+        "line": 1955,
+        "operation": "bi-original-scalar-dom"
+      },
+      {
+        "line": 1957,
+        "operation": "bi-data-readback",
+        "http": 200
+      },
+      {
+        "line": 1959,
+        "operation": "bi06-original-ages"
+      },
+      {
+        "line": 2093,
+        "operation": "bi06-original-source-resolution",
+        "http": 200
+      },
+      {
+        "line": 2153,
+        "operation": "bi-data-original-acquisition",
+        "phase": "original-request-completed",
+        "http": 200
+      },
+      {
+        "line": 2155,
+        "operation": "bi-data-original-acquisition",
+        "http": 200
+      },
+      {
+        "line": 2157,
+        "operation": "bi-source-binding-readback"
+      },
+      {
+        "line": 2159,
+        "operation": "bi-original-scalar-dom"
+      },
+      {
+        "line": 2161,
+        "operation": "bi-data-readback",
+        "http": 200
+      }
+    ],
+    "scope": {
+      "line": 2197,
+      "surfaces": [
+        "UI45",
+        "UI46"
+      ],
+      "catalogViews": 11,
+      "originalFinancialRead": true,
+      "originalOperationalRead": true,
+      "originalSourceResolution": true,
+      "originalOperationalSourceResolution": true,
+      "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+      "originalSensitivityChoices": 0,
+      "invalidatedOnPeriodChange": true,
+      "fabricatedResult": false
+    },
+    "spans": {
+      "bindingMs": 14661.9,
+      "validationMs": 4408.2,
+      "validationReturnToReadbackReturnMs": 9067.8,
+      "persistCloseMs": 60467.9
+    },
+    "artifact": {
+      "total_count": 1,
+      "artifacts": [
+        {
+          "id": 15258196107,
+          "node_id": "MDg6QXJ0aWZhY3QxNTI1ODE5NjEwNw==",
+          "name": "playwright-ubuntu-24.04-1",
+          "size_in_bytes": 45835820,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15258196107",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15258196107/zip",
+          "expired": false,
+          "digest": "sha256:95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2",
+          "created_at": "2026-11-28T09:42:03Z",
+          "updated_at": "2026-11-28T09:42:03Z",
+          "expires_at": "2026-12-05T09:42:00Z",
+          "workflow_run": {
+            "id": 46130942119,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "ci-run-sf613e15a",
+            "head_sha": "908dab0b3124cea5aa4015fa6a5b96128e730c77"
+          }
+        }
+      ]
+    }
+  },
+  "interpretation": {
+    "originalJourney": "1 failed / 1 passed (8.2m); original preview waiter 60000 ms failed at spec line 72:32; BI passed",
+    "ui42": "Six partial list/configure capture declarations only",
+    "ui43": "No qualified result",
+    "ui44": "Not reached/qualified",
+    "bi": "40 UI45/UI46 capture declarations; original financial and operational readbacks, original source resolutions, exact-source negative 403; operational scalar triplets in en-US and pt-BR. Financial scalar observation array is empty, do not claim 14 published scalar oracles.",
+    "route": "Two root-absent preparation lookups take full/top-level copy; four comparator lookups take actual decisionResults child/projected path with five native gates true.",
+    "persistence": "Native transaction and COMMIT return near 32.21 s. Binding spans 14.6619 s, validation 4.4082 s; validation-return to binding-read-return interval 9.0678 s includes all intervening work. Persistence closes at 60.4679 s; last phase-close at 60.4681 s.",
+    "limits": [
+      "Markers are diagnostic and not qualification",
+      "No request-close, HTTP terminal preview response, unit-close chain or analysis-bind phase appears",
+      "Measured intervals include nested work, scheduling and instrumentation; not exclusive CPU or independent read-only timings",
+      "Logs and upload metadata do not constitute image/ZIP inspection",
+      "150 upload-source files is not a ZIP entry count",
+      "Configured full Bun revision is not directly observed full revision; stdout gives 1.3.14+0d9b296af",
+      "No exclusive source/database/queue cause asserted",
+      "No automatic rerun or diagnostic merge permitted"
+    ]
+  },
+  "qualification": {
+    "historicalQualifiedAreas": 12,
+    "total": 15,
+    "newlyAccepted": 0,
+    "finalCandidate": null,
+    "finalTree": null,
+    "productionApproval": false
+  }
+}

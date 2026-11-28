@@ -1,0 +1,927 @@
+﻿2026-11-28T09:17:02.3538216Z Current runner version: '2.338.2'
+2026-11-28T09:17:02.3575362Z ##[group]Runner Image Provisioner
+2026-11-28T09:17:02.3576107Z Hosted Compute Agent
+2026-11-28T09:17:02.3576538Z Version: 20261111.635
+2026-11-28T09:17:02.3577039Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+2026-11-28T09:17:02.3577623Z Build Date: 2026-11-11T01:49:01Z
+2026-11-28T09:17:02.3578169Z Worker ID: {e3a602e0-7b0d-43b9-b7ce-f607545f4bdf}
+2026-11-28T09:17:02.3578701Z Region: us-west-2
+2026-11-28T09:17:02.3579102Z Cloud: AWS
+2026-11-28T09:17:02.3579489Z ##[endgroup]
+2026-11-28T09:17:02.3580446Z ##[group]Operating System
+2026-11-28T09:17:02.3580897Z Ubuntu
+2026-11-28T09:17:02.3581284Z 24.04.5
+2026-11-28T09:17:02.3581643Z LTS
+2026-11-28T09:17:02.3582010Z ##[endgroup]
+2026-11-28T09:17:02.3582437Z ##[group]Runner Image
+2026-11-28T09:17:02.3583096Z Image: ubuntu-24.04
+2026-11-28T09:17:02.3583538Z Version: 20261122.23.1
+2026-11-28T09:17:02.3584499Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261122.23/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-28T09:17:02.3585719Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261122.23
+2026-11-28T09:17:02.3586505Z ##[endgroup]
+2026-11-28T09:17:02.3587342Z ##[group]GITHUB_TOKEN Permissions
+2026-11-28T09:17:02.3589061Z Contents: read
+2026-11-28T09:17:02.3589510Z Metadata: read
+2026-11-28T09:17:02.3589924Z ##[endgroup]
+2026-11-28T09:17:02.3591407Z Secret source: Actions
+2026-11-28T09:17:02.3592073Z Cache mode: write
+2026-11-28T09:17:02.3592918Z Prepare workflow directory
+2026-11-28T09:17:02.3856654Z Prepare all required actions
+2026-11-28T09:17:02.3891808Z Getting action download info
+2026-11-28T09:17:02.7295680Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-28T09:17:03.8754401Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-28T09:17:03.9760922Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-11-28T09:17:04.0707031Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-28T09:17:04.3529929Z Complete job name: test (ubuntu-24.04)
+2026-11-28T09:17:04.4267801Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-28T09:17:04.4268900Z with:
+2026-11-28T09:17:04.4269555Z   repository: gustavomhss/Orchestra-SF
+2026-11-28T09:17:04.4273896Z   token: ***
+2026-11-28T09:17:04.4274643Z   ssh-strict: true
+2026-11-28T09:17:04.4275267Z   ssh-user: git
+2026-11-28T09:17:04.4275894Z   persist-credentials: true
+2026-11-28T09:17:04.4276565Z   clean: true
+2026-11-28T09:17:04.4277258Z   sparse-checkout-cone-mode: true
+2026-11-28T09:17:04.4278096Z   fetch-depth: 1
+2026-11-28T09:17:04.4278710Z   fetch-tags: false
+2026-11-28T09:17:04.4279339Z   show-progress: true
+2026-11-28T09:17:04.4280104Z   lfs: false
+2026-11-28T09:17:04.4281330Z   submodules: false
+2026-11-28T09:17:04.4282039Z   set-safe-directory: true
+2026-11-28T09:17:04.4283478Z ##[endgroup]
+2026-11-28T09:17:07.3424558Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-28T09:17:07.3426055Z ##[group]Getting Git version info
+2026-11-28T09:17:07.3426590Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-28T09:17:07.3427640Z [command]/usr/bin/git version
+2026-11-28T09:17:07.4798411Z git version 2.56.1
+2026-11-28T09:17:07.4811422Z ##[endgroup]
+2026-11-28T09:17:07.4821901Z Temporarily overriding HOME='/home/runner/work/_temp/bee06090-aa45-43c2-a5f8-f4a2a5ce4fec' before making global git config changes
+2026-11-28T09:17:07.4822949Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-28T09:17:07.4825885Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-28T09:17:07.5163726Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-28T09:17:07.5166214Z ##[group]Initializing the repository
+2026-11-28T09:17:07.5170001Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-28T09:17:07.5555962Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-28T09:17:07.5556560Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-28T09:17:07.5557033Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-28T09:17:07.5557476Z hint: call:
+2026-11-28T09:17:07.5557716Z hint:
+2026-11-28T09:17:07.5558068Z hint: 	git config --global init.defaultBranch <name>
+2026-11-28T09:17:07.5558535Z hint:
+2026-11-28T09:17:07.5558912Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-28T09:17:07.5559490Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-28T09:17:07.5559951Z hint:
+2026-11-28T09:17:07.5560269Z hint: 	git branch -m <name>
+2026-11-28T09:17:07.5560834Z hint:
+2026-11-28T09:17:07.5561251Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-28T09:17:07.5571960Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-28T09:17:07.5579491Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-28T09:17:07.5629488Z ##[endgroup]
+2026-11-28T09:17:07.5630044Z ##[group]Disabling automatic garbage collection
+2026-11-28T09:17:07.5631313Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-28T09:17:07.5653104Z ##[endgroup]
+2026-11-28T09:17:07.5653680Z ##[group]Setting up auth
+2026-11-28T09:17:07.5657555Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-28T09:17:07.5683589Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-28T09:17:07.8840137Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-28T09:17:07.8864233Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-28T09:17:07.9011499Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-28T09:17:07.9037789Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-28T09:17:07.9185971Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-28T09:17:07.9210803Z ##[endgroup]
+2026-11-28T09:17:07.9211162Z ##[group]Fetching the repository
+2026-11-28T09:17:07.9222446Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f:refs/remotes/origin/ci-run-sf613e15f
+2026-11-28T09:17:14.2297003Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-28T09:17:14.2297772Z  * [new ref]           7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f -> origin/ci-run-sf613e15f
+2026-11-28T09:17:14.2301131Z ##[endgroup]
+2026-11-28T09:17:14.2301824Z ##[group]Determining the checkout info
+2026-11-28T09:17:14.2303833Z ##[endgroup]
+2026-11-28T09:17:14.2308417Z [command]/usr/bin/git sparse-checkout disable
+2026-11-28T09:17:14.2374859Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-28T09:17:14.2398132Z ##[group]Checking out the ref
+2026-11-28T09:17:14.2401291Z [command]/usr/bin/git checkout --progress --force -B ci-run-sf613e15f refs/remotes/origin/ci-run-sf613e15f
+2026-11-28T09:17:15.2582236Z Updating files:  73% (13173/17892)
+2026-11-28T09:17:15.2645178Z Updating files:  74% (13241/17892)
+2026-11-28T09:17:15.2725724Z Updating files:  75% (13419/17892)
+2026-11-28T09:17:15.2797098Z Updating files:  76% (13598/17892)
+2026-11-28T09:17:15.2888528Z Updating files:  77% (13777/17892)
+2026-11-28T09:17:15.2952174Z Updating files:  78% (13956/17892)
+2026-11-28T09:17:15.3021633Z Updating files:  79% (14135/17892)
+2026-11-28T09:17:15.3098815Z Updating files:  80% (14314/17892)
+2026-11-28T09:17:15.3184566Z Updating files:  81% (14493/17892)
+2026-11-28T09:17:15.3240410Z Updating files:  82% (14672/17892)
+2026-11-28T09:17:15.3284357Z Updating files:  83% (14851/17892)
+2026-11-28T09:17:15.3344995Z Updating files:  84% (15030/17892)
+2026-11-28T09:17:15.3402831Z Updating files:  85% (15209/17892)
+2026-11-28T09:17:15.3457791Z Updating files:  86% (15388/17892)
+2026-11-28T09:17:15.3508486Z Updating files:  87% (15567/17892)
+2026-11-28T09:17:15.3610768Z Updating files:  88% (15745/17892)
+2026-11-28T09:17:15.3645405Z Updating files:  89% (15924/17892)
+2026-11-28T09:17:15.3680205Z Updating files:  90% (16103/17892)
+2026-11-28T09:17:15.3711830Z Updating files:  91% (16282/17892)
+2026-11-28T09:17:15.3744794Z Updating files:  92% (16461/17892)
+2026-11-28T09:17:15.3777284Z Updating files:  93% (16640/17892)
+2026-11-28T09:17:15.3815445Z Updating files:  94% (16819/17892)
+2026-11-28T09:17:15.3901662Z Updating files:  95% (16998/17892)
+2026-11-28T09:17:15.3970111Z Updating files:  96% (17177/17892)
+2026-11-28T09:17:15.4036342Z Updating files:  97% (17356/17892)
+2026-11-28T09:17:15.4119973Z Updating files:  98% (17535/17892)
+2026-11-28T09:17:15.4310150Z Updating files:  99% (17714/17892)
+2026-11-28T09:17:15.4310519Z Updating files: 100% (17892/17892)
+2026-11-28T09:17:15.4310943Z Updating files: 100% (17892/17892), done.
+2026-11-28T09:17:15.4512250Z Switched to a new branch 'ci-run-sf613e15f'
+2026-11-28T09:17:15.4521274Z branch 'ci-run-sf613e15f' set up to track 'origin/ci-run-sf613e15f'.
+2026-11-28T09:17:15.4544264Z ##[endgroup]
+2026-11-28T09:17:15.4584572Z [command]/usr/bin/git log -1 --format=%H
+2026-11-28T09:17:15.4604924Z 7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f
+2026-11-28T09:17:15.4824992Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-28T09:17:15.4825346Z with:
+2026-11-28T09:17:15.4825581Z   node-version: 24.15
+2026-11-28T09:17:15.4825806Z   always-auth: false
+2026-11-28T09:17:15.4826054Z   check-latest: false
+2026-11-28T09:17:15.4827754Z   token: ***
+2026-11-28T09:17:15.4827966Z ##[endgroup]
+2026-11-28T09:17:15.7667836Z Attempting to download 24.15...
+2026-11-28T09:17:15.8168432Z (node:2152) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:17:15.8169220Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:17:16.4281029Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-11-28T09:17:17.1197357Z Extracting ...
+2026-11-28T09:17:17.1299598Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/d573acd3-3045-4e1b-a355-d648c29836f1 -f /home/runner/work/_temp/5740dfca-d70e-40bc-b247-794bd4b9cc5f
+2026-11-28T09:17:18.1440084Z Adding to the cache ...
+2026-11-28T09:17:19.0269955Z ##[group]Environment details
+2026-11-28T09:17:19.6016832Z node: v24.15.0
+2026-11-28T09:17:19.6017219Z npm: 11.12.1
+2026-11-28T09:17:19.6017590Z yarn: 1.22.22
+2026-11-28T09:17:19.6018239Z ##[endgroup]
+2026-11-28T09:17:19.6147874Z ##[group]Run node --input-type=module <<'NODE'
+2026-11-28T09:17:19.6148360Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-28T09:17:19.6148820Z [36;1mimport { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-28T09:17:19.6149254Z [36;1mimport path from 'node:path'[0m
+2026-11-28T09:17:19.6149616Z [36;1mimport { omniControlScope, validateRequest } from './script/test-ci-request.ts'[0m
+2026-11-28T09:17:19.6150047Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-28T09:17:19.6150479Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-28T09:17:19.6151085Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-28T09:17:19.6151472Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-28T09:17:19.6151832Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-28T09:17:19.6152263Z [36;1mwriteFileSync('.ci-run.json', JSON.stringify(request))[0m
+2026-11-28T09:17:19.6152945Z [36;1mmkdirSync('test-ci-evidence', { recursive: true })[0m
+2026-11-28T09:17:19.6153346Z [36;1mwriteFileSync('test-ci-evidence/request.json', JSON.stringify({ request,[0m
+2026-11-28T09:17:19.6153814Z [36;1m  platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))[0m
+2026-11-28T09:17:19.6154215Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT,[0m
+2026-11-28T09:17:19.6154749Z [36;1m  `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)[0m
+2026-11-28T09:17:19.6155365Z [36;1mconst filesPair = request.package === 'app' && request.directory === 'packages/app-shell' &&[0m
+2026-11-28T09:17:19.6155881Z [36;1m  request.runner === 'playwright' && request.config === 'e2e/playwright.production.config.ts' &&[0m
+2026-11-28T09:17:19.6156369Z [36;1m  request.args.length === 1 && request.args[0] === 'e2e/sucafina/operations.spec.ts'[0m
+2026-11-28T09:17:19.6156813Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT, `sf_files_pair=${filesPair}\n`)[0m
+2026-11-28T09:17:19.6157194Z [36;1mNODE[0m
+2026-11-28T09:17:20.0827566Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:20.0828074Z ##[endgroup]
+2026-11-28T09:17:20.1524946Z (node:2188) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/src/module-catalog.ts is not specified and it doesn't parse as CommonJS.
+2026-11-28T09:17:20.1526123Z Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+2026-11-28T09:17:20.1526977Z To eliminate this warning, add "type": "module" to /home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/package.json.
+2026-11-28T09:17:20.1527569Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-11-28T09:17:20.1920246Z Prepare all required actions
+2026-11-28T09:17:20.1920810Z Getting action download info
+2026-11-28T09:17:20.3259218Z Download action repository 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-11-28T09:17:20.6296617Z Download action repository 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-28T09:17:20.7751468Z ##[group]Run ./.github/actions/setup-bun
+2026-11-28T09:17:20.7751763Z with:
+2026-11-28T09:17:20.7751972Z   reuse-node: false
+2026-11-28T09:17:20.7752219Z   save: false
+2026-11-28T09:17:20.7752426Z ##[endgroup]
+2026-11-28T09:17:20.7810996Z ##[start-action display=Validate prepared Node;id=__self.__run]
+2026-11-28T09:17:20.7834026Z ##[group]Run case "$REUSE_NODE" in
+2026-11-28T09:17:20.7834378Z [36;1mcase "$REUSE_NODE" in[0m
+2026-11-28T09:17:20.7834893Z [36;1m  true) node -e 'if (process.versions.node.split(".")[0] !== "24") throw new Error("CACHE_NODE_24_REQUIRED")' ;;[0m
+2026-11-28T09:17:20.7835346Z [36;1m  false) ;;[0m
+2026-11-28T09:17:20.7835646Z [36;1m  *) echo "::error::reuse-node must be true or false"; exit 2 ;;[0m
+2026-11-28T09:17:20.7835963Z [36;1mesac[0m
+2026-11-28T09:17:20.7859465Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:20.7859791Z env:
+2026-11-28T09:17:20.7859988Z   REUSE_NODE: false
+2026-11-28T09:17:20.7860205Z ##[endgroup]
+2026-11-28T09:17:20.7910841Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=9]
+2026-11-28T09:17:20.7913032Z ##[start-action display=Setup Node;id=__self.__actions_setup-node]
+2026-11-28T09:17:20.7956958Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-28T09:17:20.7957311Z with:
+2026-11-28T09:17:20.7957611Z   node-version: 24
+2026-11-28T09:17:20.7957814Z   always-auth: false
+2026-11-28T09:17:20.7958070Z   check-latest: false
+2026-11-28T09:17:20.7959665Z   token: ***
+2026-11-28T09:17:20.7959867Z ##[endgroup]
+2026-11-28T09:17:20.9021696Z Found in cache @ /opt/hostedtoolcache/node/24.22.3/x64
+2026-11-28T09:17:20.9025007Z (node:2200) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:17:20.9025865Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:17:20.9026542Z ##[group]Environment details
+2026-11-28T09:17:24.6077673Z node: v24.22.3
+2026-11-28T09:17:24.6078338Z npm: 11.19.1
+2026-11-28T09:17:24.6078600Z yarn: 1.22.22
+2026-11-28T09:17:24.6079201Z ##[endgroup]
+2026-11-28T09:17:24.6138115Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=3822]
+2026-11-28T09:17:24.6140646Z ##[start-action display=Get baseline download URL;id=__self.bun-url]
+2026-11-28T09:17:24.6155673Z ##[group]Run if [ "$RUNNER_ARCH" = "X64" ]; then
+2026-11-28T09:17:24.6156058Z [36;1mif [ "$RUNNER_ARCH" = "X64" ]; then[0m
+2026-11-28T09:17:24.6156423Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-28T09:17:24.6156766Z [36;1m  case "$RUNNER_OS" in[0m
+2026-11-28T09:17:24.6157038Z [36;1m    macOS)   OS=darwin ;;[0m
+2026-11-28T09:17:24.6157287Z [36;1m    Linux)   OS=linux ;;[0m
+2026-11-28T09:17:24.6157572Z [36;1m    Windows) OS=windows ;;[0m
+2026-11-28T09:17:24.6157825Z [36;1m  esac[0m
+2026-11-28T09:17:24.6158214Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-${OS}-x64-baseline.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:24.6158714Z [36;1melif [ "$RUNNER_OS-$RUNNER_ARCH" = "Windows-ARM64" ]; then[0m
+2026-11-28T09:17:24.6159086Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-28T09:17:24.6159586Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-windows-aarch64.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:24.6160021Z [36;1mfi[0m
+2026-11-28T09:17:24.6465576Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:24.6466029Z ##[endgroup]
+2026-11-28T09:17:24.6770446Z ##[end-action id=__self.bun-url;outcome=success;conclusion=success;duration_ms=62]
+2026-11-28T09:17:24.6772739Z ##[start-action display=Setup Bun;id=__self.__oven-sh_setup-bun]
+2026-11-28T09:17:24.6808407Z ##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+2026-11-28T09:17:24.6808731Z with:
+2026-11-28T09:17:24.6809128Z   bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-28T09:17:24.6809536Z   no-cache: false
+2026-11-28T09:17:24.6811263Z   token: ***
+2026-11-28T09:17:24.6811482Z ##[endgroup]
+2026-11-28T09:17:24.7960953Z Obtained version 1.3.14 from package.json
+2026-11-28T09:17:24.7968428Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-28T09:17:25.1360680Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/6b1e3af7-29a4-4fa1-bbdb-51f5ef3769bd.zip
+2026-11-28T09:17:25.7247663Z [command]/home/runner/.bun/bin/bun --revision
+2026-11-28T09:17:25.7283520Z 1.3.14+0d9b296af
+2026-11-28T09:17:25.7340555Z ##[end-action id=__self.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=1056]
+2026-11-28T09:17:25.7343181Z ##[start-action display=Get cache directory;id=__self.cache]
+2026-11-28T09:17:25.7356992Z ##[group]Run echo "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"
+2026-11-28T09:17:25.7357390Z [36;1mecho "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:25.7383037Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:25.7383419Z ##[endgroup]
+2026-11-28T09:17:25.7453517Z ##[end-action id=__self.cache;outcome=success;conclusion=success;duration_ms=10]
+2026-11-28T09:17:25.7456808Z ##[start-action display=Fingerprint installed dependency inputs;id=__self.fingerprint]
+2026-11-28T09:17:25.7477160Z ##[group]Run ORCHESTRA_CACHE_NODE_ABI="$(node -p 'process.versions.modules')" bun script/ci-cache-inputs.ts >> "$GITHUB_OUTPUT"
+2026-11-28T09:17:25.7478271Z [36;1mORCHESTRA_CACHE_NODE_ABI="$(node -p 'process.versions.modules')" bun script/ci-cache-inputs.ts >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:25.7498897Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:25.7499224Z ##[endgroup]
+2026-11-28T09:17:25.8095464Z ##[end-action id=__self.fingerprint;outcome=success;conclusion=success;duration_ms=63]
+2026-11-28T09:17:25.8097902Z ##[start-action display=Compute dependency cache keys;id=__self.keys]
+2026-11-28T09:17:25.8590670Z ##[group]Run echo "bun=Linux-X64-bun-v3-0dd96d80905a8063eb8e0620cf65bee3ebe8dbc83f252b9a2fad742f6856ea84" >> "$GITHUB_OUTPUT"
+2026-11-28T09:17:25.8591413Z [36;1mecho "bun=Linux-X64-bun-v3-0dd96d80905a8063eb8e0620cf65bee3ebe8dbc83f252b9a2fad742f6856ea84" >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:25.8592059Z [36;1mecho "modules=Linux-X64-modules-v5-aead27baa969c86956dee1a192cc57788dd4617d15e01cbd3a576ba8eba8122c" >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:25.8616159Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:25.8616568Z ##[endgroup]
+2026-11-28T09:17:25.8661552Z ##[end-action id=__self.keys;outcome=success;conclusion=success;duration_ms=56]
+2026-11-28T09:17:25.8663875Z ##[start-action display=Restore node_modules;id=__self.modules-cache]
+2026-11-28T09:17:25.8692804Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-28T09:17:25.8693175Z with:
+2026-11-28T09:17:25.8695927Z   path: apps/cli/node_modules
+apps/desktop/node_modules
+apps/storybook/node_modules
+apps/web/node_modules
+modules/app-dock/node_modules
+modules/atlas/boundary/node_modules
+modules/capability-assets/node_modules
+modules/continuity/node_modules
+modules/engine-adapters/claude-code/node_modules
+modules/janitor/node_modules
+modules/maestro/arsenal/node_modules
+modules/maestro/coordination/node_modules
+modules/rag-studio/node_modules
+modules/relay/node_modules
+modules/sucafina/node_modules
+native/omni/bindings/node/node_modules
+native/omni/campaign/node_modules
+node_modules
+packages/app-shell/node_modules
+packages/client/node_modules
+packages/codemode/node_modules
+packages/core/node_modules
+packages/effect-drizzle-sqlite/node_modules
+packages/effect-sqlite-node/node_modules
+packages/llm/node_modules
+packages/plugin/node_modules
+packages/protocol/node_modules
+packages/schema/node_modules
+packages/script/node_modules
+packages/sdk-next/node_modules
+packages/server/node_modules
+packages/session-ui/node_modules
+packages/tui/node_modules
+packages/ui/node_modules
+tooling/http-recorder/node_modules
+tooling/httpapi-codegen/node_modules
+2026-11-28T09:17:25.8698921Z   key: Linux-X64-modules-v5-aead27baa969c86956dee1a192cc57788dd4617d15e01cbd3a576ba8eba8122c
+2026-11-28T09:17:25.8699334Z   enableCrossOsArchive: false
+2026-11-28T09:17:25.8699621Z   fail-on-cache-miss: false
+2026-11-28T09:17:25.8699860Z   lookup-only: false
+2026-11-28T09:17:25.8700103Z ##[endgroup]
+2026-11-28T09:17:25.9525395Z (node:2288) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:17:25.9526267Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:17:26.1945878Z Cache hit for: Linux-X64-modules-v5-aead27baa969c86956dee1a192cc57788dd4617d15e01cbd3a576ba8eba8122c
+2026-11-28T09:17:26.2020792Z (node:2288) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-28T09:17:27.5438910Z Received 0 of 540670661 (0.0%), 0.0 MBs/sec
+2026-11-28T09:17:28.5445842Z Received 71303168 of 540670661 (13.2%), 34.0 MBs/sec
+2026-11-28T09:17:29.5451719Z Received 213909504 of 540670661 (39.6%), 68.0 MBs/sec
+2026-11-28T09:17:30.5469578Z Received 348127232 of 540670661 (64.4%), 82.9 MBs/sec
+2026-11-28T09:17:31.5470346Z Received 402653184 of 540670661 (74.5%), 76.8 MBs/sec
+2026-11-28T09:17:32.5473547Z Received 532676608 of 540670661 (98.5%), 84.6 MBs/sec
+2026-11-28T09:17:33.0001798Z Received 540670661 of 540670661 (100.0%), 79.9 MBs/sec
+2026-11-28T09:17:33.0003789Z Cache Size: ~516 MB (540670661 B)
+2026-11-28T09:17:33.0117022Z [command]/usr/bin/tar -xf /home/runner/work/_temp/78ae8a39-1388-4cd1-8d5b-3207c91ab0cb/cache.tzst -P -C /home/runner/work/Orchestra-SF/Orchestra-SF --use-compress-program unzstd
+2026-11-28T09:17:37.9828734Z Cache restored successfully
+2026-11-28T09:17:38.2804238Z Cache restored from key: Linux-X64-modules-v5-aead27baa969c86956dee1a192cc57788dd4617d15e01cbd3a576ba8eba8122c
+2026-11-28T09:17:38.2869739Z ##[end-action id=__self.modules-cache;outcome=success;conclusion=success;duration_ms=12420]
+2026-11-28T09:17:38.2872477Z ##[start-action display=Restore Bun dependencies;id=__self.bun-cache]
+2026-11-28T09:17:38.2881570Z ##[end-action id=__self.bun-cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:38.2883928Z ##[start-action display=Install setuptools for distutils compatibility;id=__self.__run_2]
+2026-11-28T09:17:38.2888290Z ##[end-action id=__self.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:38.2889755Z ##[start-action display=Install dependencies;id=__self.install]
+2026-11-28T09:17:38.2894289Z ##[end-action id=__self.install;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:38.2896020Z ##[start-action display=Save Bun dependencies;id=__self.bun-save]
+2026-11-28T09:17:38.3023183Z ##[end-action id=__self.bun-save;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:38.3024659Z ##[start-action display=Save node_modules;id=__self.modules-save]
+2026-11-28T09:17:38.3029571Z ##[end-action id=__self.modules-save;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:38.3033866Z ##[start-action display=Report dependency cache reuse;id=__self.__run_3]
+2026-11-28T09:17:38.3158528Z ##[group]Run {
+2026-11-28T09:17:38.3158755Z [36;1m{[0m
+2026-11-28T09:17:38.3158930Z [36;1m  printf '### Dependency cache\n\n'[0m
+2026-11-28T09:17:38.3159384Z [36;1m  printf 'Save requested: %s. Install step: %s.\n\n' "$CACHE_SAVE_REQUESTED" "$INSTALL_OUTCOME"[0m
+2026-11-28T09:17:38.3159776Z [36;1m  printf '| Cache | Exact hit | Save step | Key |\n| --- | --- | --- | --- |\n'[0m
+2026-11-28T09:17:38.3160147Z [36;1m  printf '| node_modules | %s | %s | %s |\n' "$MODULES_HIT" "$MODULES_SAVE_OUTCOME" "$MODULES_KEY"[0m
+2026-11-28T09:17:38.3160537Z [36;1m  printf '| Bun packages | %s | %s | %s |\n' "$BUN_HIT" "$BUN_SAVE_OUTCOME" "$BUN_KEY"[0m
+2026-11-28T09:17:38.3160822Z [36;1m} >> "$GITHUB_STEP_SUMMARY"[0m
+2026-11-28T09:17:38.3184546Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:38.3184803Z env:
+2026-11-28T09:17:38.3184951Z   MODULES_HIT: true
+2026-11-28T09:17:38.3185112Z   BUN_HIT: not-restored
+2026-11-28T09:17:38.3185283Z   CACHE_SAVE_REQUESTED: false
+2026-11-28T09:17:38.3185636Z   MODULES_KEY: Linux-X64-modules-v5-aead27baa969c86956dee1a192cc57788dd4617d15e01cbd3a576ba8eba8122c
+2026-11-28T09:17:38.3186139Z   BUN_KEY: Linux-X64-bun-v3-0dd96d80905a8063eb8e0620cf65bee3ebe8dbc83f252b9a2fad742f6856ea84
+2026-11-28T09:17:38.3186482Z   INSTALL_OUTCOME: skipped
+2026-11-28T09:17:38.3186664Z   MODULES_SAVE_OUTCOME: skipped
+2026-11-28T09:17:38.3186851Z   BUN_SAVE_OUTCOME: skipped
+2026-11-28T09:17:38.3187014Z ##[endgroup]
+2026-11-28T09:17:38.3458677Z ##[end-action id=__self.__run_3;outcome=success;conclusion=success;duration_ms=42]
+2026-11-28T09:17:38.3540003Z Prepare all required actions
+2026-11-28T09:17:38.3540483Z Getting action download info
+2026-11-28T09:17:38.5093545Z ##[group]Run ./.github/actions/ripgrep
+2026-11-28T09:17:38.5093775Z with:
+2026-11-28T09:17:38.5093927Z   save: false
+2026-11-28T09:17:38.5094080Z ##[endgroup]
+2026-11-28T09:17:38.5098874Z ##[start-action display=Select ripgrep release;id=__self_2.release]
+2026-11-28T09:17:38.5111817Z ##[group]Run version=15.2.0
+2026-11-28T09:17:38.5112120Z [36;1mversion=15.2.0[0m
+2026-11-28T09:17:38.5112465Z [36;1mcase "$RUNNER_OS-$RUNNER_ARCH" in[0m
+2026-11-28T09:17:38.5113135Z [36;1m  Linux-X64) platform=x86_64-unknown-linux-musl; ext=tar.gz; sha=33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c ;;[0m
+2026-11-28T09:17:38.5113778Z [36;1m  Linux-ARM64) platform=aarch64-unknown-linux-gnu; ext=tar.gz; sha=a740b91c82eaf9914cfedd353572f2791cbe0162c84101ee0951058f4dcbc90d ;;[0m
+2026-11-28T09:17:38.5114425Z [36;1m  macOS-ARM64) platform=aarch64-apple-darwin; ext=tar.gz; sha=3750b2e93f37e0c692657da574d7019a101c0084da05a790c83fd335bad973e4 ;;[0m
+2026-11-28T09:17:38.5115011Z [36;1m  macOS-X64) platform=x86_64-apple-darwin; ext=tar.gz; sha=af7825fcc69a2afc7a7aea55fc9af90e26421d8f20fe59df32e233c0b8a231c1 ;;[0m
+2026-11-28T09:17:38.5115607Z [36;1m  Windows-X64) platform=x86_64-pc-windows-msvc; ext=zip; sha=71b2fef860abe467217a538ff31de02f5258807c0129f771846f87bd029aafc5 ;;[0m
+2026-11-28T09:17:38.5116229Z [36;1m  Windows-ARM64) platform=aarch64-pc-windows-msvc; ext=zip; sha=e4abca10c3a64ebea742667dd7009449d49403db5460dd6873e389fa2945360f ;;[0m
+2026-11-28T09:17:38.5116717Z [36;1m  *) echo "::error::no pinned ripgrep for $RUNNER_OS-$RUNNER_ARCH"; exit 1 ;;[0m
+2026-11-28T09:17:38.5116982Z [36;1mesac[0m
+2026-11-28T09:17:38.5117132Z [36;1m{[0m
+2026-11-28T09:17:38.5117284Z [36;1m  echo "version=$version"[0m
+2026-11-28T09:17:38.5117499Z [36;1m  echo "root=ripgrep-$version-$platform"[0m
+2026-11-28T09:17:38.5117714Z [36;1m  echo "ext=$ext"[0m
+2026-11-28T09:17:38.5117897Z [36;1m  echo "sha=$sha"[0m
+2026-11-28T09:17:38.5118102Z [36;1m  echo "archives=$RUNNER_TEMP/ripgrep-archives"[0m
+2026-11-28T09:17:38.5118352Z [36;1m  echo "bin=$RUNNER_TEMP/ripgrep-$version"[0m
+2026-11-28T09:17:38.5118570Z [36;1m} >> "$GITHUB_OUTPUT"[0m
+2026-11-28T09:17:38.5144116Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:38.5144372Z ##[endgroup]
+2026-11-28T09:17:38.5193445Z ##[end-action id=__self_2.release;outcome=success;conclusion=success;duration_ms=9]
+2026-11-28T09:17:38.5194920Z ##[start-action display=Restore ripgrep archive;id=__self_2.restore]
+2026-11-28T09:17:38.5220557Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-28T09:17:38.5220971Z with:
+2026-11-28T09:17:38.5221258Z   path: /home/runner/work/_temp/ripgrep-archives
+2026-11-28T09:17:38.5221933Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-28T09:17:38.5222876Z   enableCrossOsArchive: false
+2026-11-28T09:17:38.5223150Z   fail-on-cache-miss: false
+2026-11-28T09:17:38.5223382Z   lookup-only: false
+2026-11-28T09:17:38.5223596Z ##[endgroup]
+2026-11-28T09:17:38.6052167Z (node:2308) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:17:38.6052918Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:17:38.8743008Z Cache hit for: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-28T09:17:38.8819898Z (node:2308) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-28T09:17:40.1391329Z Received 2259919 of 2259919 (100.0%), 2.4 MBs/sec
+2026-11-28T09:17:40.1391712Z Cache Size: ~2 MB (2259919 B)
+2026-11-28T09:17:40.1411883Z [command]/usr/bin/tar -xf /home/runner/work/_temp/ca2e747a-8c84-4aac-8c50-4508205b5ba9/cache.tzst -P -C /home/runner/work/Orchestra-SF/Orchestra-SF --use-compress-program unzstd
+2026-11-28T09:17:40.1472951Z Cache restored successfully
+2026-11-28T09:17:40.1528087Z Cache restored from key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-28T09:17:40.1566311Z ##[end-action id=__self_2.restore;outcome=success;conclusion=success;duration_ms=1637]
+2026-11-28T09:17:40.1570054Z ##[start-action display=Download ripgrep archive (cache miss);id=__self_2.__run]
+2026-11-28T09:17:40.1574697Z ##[end-action id=__self_2.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:40.1577797Z ##[start-action display=Verify and extract ripgrep;id=__self_2.__run_2]
+2026-11-28T09:17:40.1611877Z ##[group]Run set -euo pipefail
+2026-11-28T09:17:40.1612223Z [36;1mset -euo pipefail[0m
+2026-11-28T09:17:40.1612516Z [36;1marchive="$ARCHIVES/$ROOT.$EXT"[0m
+2026-11-28T09:17:40.1613267Z [36;1m# Hashed from stdin: given a Windows path, sha256sum escapes its output with a leading backslash.[0m
+2026-11-28T09:17:40.1613865Z [36;1mactual=$( (sha256sum 2>/dev/null || shasum -a 256) < "$archive" | cut -d' ' -f1)[0m
+2026-11-28T09:17:40.1614295Z [36;1mif [ "$actual" != "$SHA" ]; then[0m
+2026-11-28T09:17:40.1614725Z [36;1m  echo "::error::ripgrep archive sha256 $actual does not match the pinned $SHA"[0m
+2026-11-28T09:17:40.1615167Z [36;1m  exit 1[0m
+2026-11-28T09:17:40.1615496Z [36;1mfi[0m
+2026-11-28T09:17:40.1615722Z [36;1mwork=$(mktemp -d)[0m
+2026-11-28T09:17:40.1616005Z [36;1mcp "$archive" "$work/"[0m
+2026-11-28T09:17:40.1616352Z [36;1mif [ "$EXT" = zip ] && command -v unzip >/dev/null; then[0m
+2026-11-28T09:17:40.1616755Z [36;1m  (cd "$work" && unzip -q "$ROOT.$EXT")[0m
+2026-11-28T09:17:40.1617081Z [36;1melif [ "$EXT" = zip ]; then[0m
+2026-11-28T09:17:40.1617421Z [36;1m  (cd "$work" && 7z x -y "$ROOT.$EXT" >/dev/null)[0m
+2026-11-28T09:17:40.1617757Z [36;1melse[0m
+2026-11-28T09:17:40.1618011Z [36;1m  (cd "$work" && tar -xzf "$ROOT.$EXT")[0m
+2026-11-28T09:17:40.1618309Z [36;1mfi[0m
+2026-11-28T09:17:40.1618520Z [36;1mrm -rf "$BIN"[0m
+2026-11-28T09:17:40.1618758Z [36;1mmkdir -p "$BIN"[0m
+2026-11-28T09:17:40.1619008Z [36;1mcp "$work/$ROOT/rg"* "$BIN/"[0m
+2026-11-28T09:17:40.1619289Z [36;1mrm -rf "$work"[0m
+2026-11-28T09:17:40.1646045Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:40.1646420Z env:
+2026-11-28T09:17:40.1646722Z   ROOT: ripgrep-15.2.0-x86_64-unknown-linux-musl
+2026-11-28T09:17:40.1647033Z   EXT: tar.gz
+2026-11-28T09:17:40.1647373Z   SHA: 33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-28T09:17:40.1647836Z   ARCHIVES: /home/runner/work/_temp/ripgrep-archives
+2026-11-28T09:17:40.1648203Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-28T09:17:40.1648518Z ##[endgroup]
+2026-11-28T09:17:40.2230827Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=65]
+2026-11-28T09:17:40.2232852Z ##[start-action display=Save ripgrep archive;id=__self_2.__actions_cache]
+2026-11-28T09:17:40.2235981Z ##[end-action id=__self_2.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:17:40.2237594Z ##[start-action display=Put ripgrep on PATH;id=__self_2.__run_3]
+2026-11-28T09:17:40.2275365Z ##[group]Run set -euo pipefail
+2026-11-28T09:17:40.2275615Z [36;1mset -euo pipefail[0m
+2026-11-28T09:17:40.2275855Z [36;1m[ "$RUNNER_OS" = Windows ] || chmod +x "$BIN/rg"[0m
+2026-11-28T09:17:40.2276137Z [36;1mreported=$("$BIN/rg" --version | head -1)[0m
+2026-11-28T09:17:40.2276367Z [36;1mcase "$reported" in[0m
+2026-11-28T09:17:40.2276597Z [36;1m  "ripgrep $VERSION"*) echo "$reported" ;;[0m
+2026-11-28T09:17:40.2276884Z [36;1m  *) echo "::error::expected ripgrep $VERSION, got: $reported"; exit 1 ;;[0m
+2026-11-28T09:17:40.2277154Z [36;1mesac[0m
+2026-11-28T09:17:40.2277318Z [36;1mecho "$BIN" >> "$GITHUB_PATH"[0m
+2026-11-28T09:17:40.2277706Z [36;1mecho "ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD=1" >> "$GITHUB_ENV"[0m
+2026-11-28T09:17:40.2301800Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:40.2302064Z env:
+2026-11-28T09:17:40.2302225Z   VERSION: 15.2.0
+2026-11-28T09:17:40.2302421Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-28T09:17:40.2302836Z ##[endgroup]
+2026-11-28T09:17:40.2448462Z ripgrep 15.2.0 (rev e89fff89ac)
+2026-11-28T09:17:40.2457863Z ##[end-action id=__self_2.__run_3;outcome=success;conclusion=success;duration_ms=21]
+2026-11-28T09:17:40.2536673Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-28T09:17:40.2537178Z [36;1m# Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that[0m
+2026-11-28T09:17:40.2537623Z [36;1m# name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.[0m
+2026-11-28T09:17:40.2537942Z [36;1minstall_sandbox() {[0m
+2026-11-28T09:17:40.2538142Z [36;1m  sudo apt-get update -qq[0m
+2026-11-28T09:17:40.2538378Z [36;1m  sudo apt-get install -y -qq bubblewrap socat[0m
+2026-11-28T09:17:40.2538596Z [36;1m}[0m
+2026-11-28T09:17:40.2538764Z [36;1mif ! install_sandbox; then[0m
+2026-11-28T09:17:40.2539155Z [36;1m  for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do[0m
+2026-11-28T09:17:40.2539560Z [36;1m    [ -f "$file" ] || continue[0m
+2026-11-28T09:17:40.2539873Z [36;1m    sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"[0m
+2026-11-28T09:17:40.2540157Z [36;1m  done[0m
+2026-11-28T09:17:40.2540315Z [36;1m  install_sandbox[0m
+2026-11-28T09:17:40.2540491Z [36;1mfi[0m
+2026-11-28T09:17:40.2540762Z [36;1m# Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.[0m
+2026-11-28T09:17:40.2541145Z [36;1msudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0[0m
+2026-11-28T09:17:40.2562035Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:17:40.2562282Z env:
+2026-11-28T09:17:40.2562454Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:17:40.2562828Z ##[endgroup]
+2026-11-28T09:17:57.3232994Z Selecting previously unselected package bubblewrap.
+2026-11-28T09:17:57.7192958Z (Reading database ... 
+2026-11-28T09:17:57.7193285Z (Reading database ... 5%
+2026-11-28T09:17:57.7193501Z (Reading database ... 10%
+2026-11-28T09:17:57.7193709Z (Reading database ... 15%
+2026-11-28T09:17:57.7193918Z (Reading database ... 20%
+2026-11-28T09:17:57.7194219Z (Reading database ... 25%
+2026-11-28T09:17:57.7194664Z (Reading database ... 30%
+2026-11-28T09:17:57.7194933Z (Reading database ... 35%
+2026-11-28T09:17:57.7195203Z (Reading database ... 40%
+2026-11-28T09:17:57.7195439Z (Reading database ... 45%
+2026-11-28T09:17:57.7195700Z (Reading database ... 50%
+2026-11-28T09:17:57.7942160Z (Reading database ... 55%
+2026-11-28T09:17:58.2506987Z (Reading database ... 60%
+2026-11-28T09:17:58.3149265Z (Reading database ... 65%
+2026-11-28T09:17:58.4014036Z (Reading database ... 70%
+2026-11-28T09:17:58.5156827Z (Reading database ... 75%
+2026-11-28T09:17:59.1920205Z (Reading database ... 80%
+2026-11-28T09:17:59.7229274Z (Reading database ... 85%
+2026-11-28T09:18:00.7609484Z (Reading database ... 90%
+2026-11-28T09:18:01.9932459Z (Reading database ... 95%
+2026-11-28T09:18:01.9933132Z (Reading database ... 100%
+2026-11-28T09:18:01.9933578Z (Reading database ... 216824 files and directories currently installed.)
+2026-11-28T09:18:01.9973547Z Preparing to unpack .../bubblewrap_0.9.0-1ubuntu0.3_amd64.deb ...
+2026-11-28T09:18:01.9985956Z Unpacking bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-28T09:18:02.0220682Z Selecting previously unselected package socat.
+2026-11-28T09:18:02.0320656Z Preparing to unpack .../socat_1.8.0.0-4ubuntu0.1_amd64.deb ...
+2026-11-28T09:18:02.0324915Z Unpacking socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-28T09:18:02.1380585Z Setting up bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-28T09:18:02.1418992Z Setting up socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-28T09:18:02.1434634Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-11-28T09:18:02.1812767Z Not building database; man-db/auto-update is not 'true'.
+2026-11-28T09:18:03.1582946Z 
+2026-11-28T09:18:03.1585656Z Running kernel seems to be up-to-date.
+2026-11-28T09:18:03.1585868Z 
+2026-11-28T09:18:03.1585990Z No services need to be restarted.
+2026-11-28T09:18:03.1586120Z 
+2026-11-28T09:18:03.1586231Z No containers need to be restarted.
+2026-11-28T09:18:03.1586367Z 
+2026-11-28T09:18:03.1586956Z No user sessions are running outdated binaries.
+2026-11-28T09:18:03.1587129Z 
+2026-11-28T09:18:03.1587330Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-28T09:18:04.0163749Z kernel.apparmor_restrict_unprivileged_userns = 0
+2026-11-28T09:18:04.0201251Z ##[group]Run git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+2026-11-28T09:18:04.0201888Z [36;1mgit config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"[0m
+2026-11-28T09:18:04.0202439Z [36;1mgit config --global user.name "github-actions[bot]"[0m
+2026-11-28T09:18:04.0227549Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:18:04.0227807Z env:
+2026-11-28T09:18:04.0227986Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:04.0228182Z ##[endgroup]
+2026-11-28T09:18:04.0311375Z ##[group]Run jq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do
+2026-11-28T09:18:04.0312131Z [36;1mjq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do[0m
+2026-11-28T09:18:04.0312889Z [36;1m  key=${line%%=*}[0m
+2026-11-28T09:18:04.0313155Z [36;1m  value=${line#*=}[0m
+2026-11-28T09:18:04.0313413Z [36;1m  case "$key" in[0m
+2026-11-28T09:18:04.0313792Z [36;1m    ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;[0m
+2026-11-28T09:18:04.0314309Z [36;1m    ORCHESTRA_CHANNEL) pattern='^prod$' ;;[0m
+2026-11-28T09:18:04.0314779Z [36;1m    *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;[0m
+2026-11-28T09:18:04.0315196Z [36;1m  esac[0m
+2026-11-28T09:18:04.0315606Z [36;1m  # Omni permits only its two on states; channel checks permit only the production value.[0m
+2026-11-28T09:18:04.0316191Z [36;1m  if ! printf '%s' "$value" | grep -Eq "$pattern"; then[0m
+2026-11-28T09:18:04.0316619Z [36;1m    echo "::error::.ci-run.json env value for $key is not allowed"[0m
+2026-11-28T09:18:04.0317004Z [36;1m    exit 2[0m
+2026-11-28T09:18:04.0317237Z [36;1m  fi[0m
+2026-11-28T09:18:04.0317485Z [36;1m  echo "$key=$value" >> "$GITHUB_ENV"[0m
+2026-11-28T09:18:04.0317801Z [36;1mdone[0m
+2026-11-28T09:18:04.0342446Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:18:04.0342939Z env:
+2026-11-28T09:18:04.0343121Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:04.0343336Z ##[endgroup]
+2026-11-28T09:18:04.0472888Z Prepare all required actions
+2026-11-28T09:18:04.0473380Z Getting action download info
+2026-11-28T09:18:04.1807999Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-28T09:18:04.5229468Z ##[group]Run ./.github/actions/omni-binaries
+2026-11-28T09:18:04.5229791Z with:
+2026-11-28T09:18:04.5230000Z   save: false
+2026-11-28T09:18:04.5230205Z env:
+2026-11-28T09:18:04.5230425Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:04.5230752Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-28T09:18:04.5231109Z   ORCHESTRA_CHANNEL: prod
+2026-11-28T09:18:04.5231368Z ##[endgroup]
+2026-11-28T09:18:04.5237549Z ##[start-action display=Download same-run omni binaries;id=__self_3.__actions_download-artifact]
+2026-11-28T09:18:04.5241335Z ##[end-action id=__self_3.__actions_download-artifact;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:18:04.5243711Z ##[start-action display=Restore omni binaries;id=__self_3.restore]
+2026-11-28T09:18:04.6596697Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-28T09:18:04.6596986Z with:
+2026-11-28T09:18:04.6597281Z   path: native/omni/target/release/*hugr_omni_node.*
+native/omni/target/release/hugr-omni-supervisor*
+
+2026-11-28T09:18:04.6597754Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-28T09:18:04.6598090Z   enableCrossOsArchive: false
+2026-11-28T09:18:04.6598286Z   fail-on-cache-miss: false
+2026-11-28T09:18:04.6598474Z   lookup-only: false
+2026-11-28T09:18:04.6598745Z env:
+2026-11-28T09:18:04.6598904Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:04.6599138Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-28T09:18:04.6599354Z   ORCHESTRA_CHANNEL: prod
+2026-11-28T09:18:04.6599533Z ##[endgroup]
+2026-11-28T09:18:04.7403382Z (node:2819) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:18:04.7404004Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:18:04.9829224Z Cache hit for: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-28T09:18:04.9913673Z (node:2819) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-28T09:18:06.2080837Z Received 1107569 of 1107569 (100.0%), 1.2 MBs/sec
+2026-11-28T09:18:06.2081194Z Cache Size: ~1 MB (1107569 B)
+2026-11-28T09:18:06.2102449Z [command]/usr/bin/tar -xf /home/runner/work/_temp/794e7ff7-665c-4f16-a7a8-180613083c90/cache.tzst -P -C /home/runner/work/Orchestra-SF/Orchestra-SF --use-compress-program unzstd
+2026-11-28T09:18:06.2190892Z Cache restored successfully
+2026-11-28T09:18:06.2244538Z Cache restored from key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-28T09:18:06.2288785Z ##[end-action id=__self_3.restore;outcome=success;conclusion=success;duration_ms=1704]
+2026-11-28T09:18:06.2290575Z ##[start-action display=Build omni binaries (cache miss);id=__self_3.__run]
+2026-11-28T09:18:06.2296103Z ##[end-action id=__self_3.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:18:06.2297465Z ##[start-action display=Save omni binaries;id=__self_3.__actions_cache]
+2026-11-28T09:18:06.2300701Z ##[end-action id=__self_3.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-28T09:18:06.2301841Z ##[start-action display=Export omni paths;id=__self_3.__run_2]
+2026-11-28T09:18:06.2313389Z ##[group]Run dir="$GITHUB_WORKSPACE/native/omni/target/release"
+2026-11-28T09:18:06.2313734Z [36;1mdir="$GITHUB_WORKSPACE/native/omni/target/release"[0m
+2026-11-28T09:18:06.2313986Z [36;1mcase "$RUNNER_OS" in[0m
+2026-11-28T09:18:06.2314263Z [36;1m  Linux) addon=libhugr_omni_node.so; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-28T09:18:06.2314722Z [36;1m  macOS) addon=libhugr_omni_node.dylib; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-28T09:18:06.2315097Z [36;1m  Windows) addon=hugr_omni_node.dll; supervisor=hugr-omni-supervisor.exe ;;[0m
+2026-11-28T09:18:06.2315464Z [36;1m  *) echo "::error::unsupported omni runner: $RUNNER_OS"; exit 1 ;;[0m
+2026-11-28T09:18:06.2315724Z [36;1mesac[0m
+2026-11-28T09:18:06.2315928Z [36;1mfor file in "$dir/$addon" "$dir/$supervisor"; do[0m
+2026-11-28T09:18:06.2316297Z [36;1m  if [ ! -f "$file" ] || [ ! -s "$file" ]; then echo "::error::omni binary missing or empty: $file"; exit 1; fi[0m
+2026-11-28T09:18:06.2316615Z [36;1mdone[0m
+2026-11-28T09:18:06.2316866Z [36;1m# upload/download-artifact transfers file bytes, not Unix execute bits.[0m
+2026-11-28T09:18:06.2317162Z [36;1mif [ "$RUNNER_OS" != Windows ]; then[0m
+2026-11-28T09:18:06.2317437Z [36;1m  chmod +x "$dir/$supervisor"[0m
+2026-11-28T09:18:06.2317751Z [36;1m  [ -x "$dir/$supervisor" ] || { echo "::error::omni supervisor is not executable"; exit 1; }[0m
+2026-11-28T09:18:06.2318049Z [36;1mfi[0m
+2026-11-28T09:18:06.2318251Z [36;1mecho "HUGR_OMNI_ADDON=$dir/$addon" >> "$GITHUB_ENV"[0m
+2026-11-28T09:18:06.2318560Z [36;1mecho "HUGR_OMNI_SUPERVISOR=$dir/$supervisor" >> "$GITHUB_ENV"[0m
+2026-11-28T09:18:06.2342452Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:18:06.2342895Z env:
+2026-11-28T09:18:06.2343078Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:06.2343319Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-28T09:18:06.2343539Z   ORCHESTRA_CHANNEL: prod
+2026-11-28T09:18:06.2343832Z ##[endgroup]
+2026-11-28T09:18:06.2396365Z ##[end-action id=__self_3.__run_2;outcome=success;conclusion=success;duration_ms=9]
+2026-11-28T09:18:06.2420798Z ##[group]Run nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-28T09:18:06.2421305Z [36;1mnonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")[0m
+2026-11-28T09:18:06.2421706Z [36;1mecho "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"[0m
+2026-11-28T09:18:06.2421981Z [36;1mecho "omni control nonce: $nonce"[0m
+2026-11-28T09:18:06.2440571Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:18:06.2440829Z env:
+2026-11-28T09:18:06.2441009Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:06.2441244Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-28T09:18:06.2441475Z   ORCHESTRA_CHANNEL: prod
+2026-11-28T09:18:06.2441817Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-28T09:18:06.2442384Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-28T09:18:06.2442956Z ##[endgroup]
+2026-11-28T09:18:06.2736374Z omni control nonce: e8b023a454644c7d93e48fb726d8cca9
+2026-11-28T09:18:06.2755915Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-28T09:18:06.2756259Z [36;1mif [ "$RUNNER" = playwright ]; then[0m
+2026-11-28T09:18:06.2756499Z [36;1m  node --input-type=module <<'NODE'[0m
+2026-11-28T09:18:06.2756843Z [36;1mimport { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-28T09:18:06.2757160Z [36;1mimport path from 'node:path'[0m
+2026-11-28T09:18:06.2757413Z [36;1mimport { spawnSync } from 'node:child_process'[0m
+2026-11-28T09:18:06.2757852Z [36;1mimport { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'[0m
+2026-11-28T09:18:06.2758327Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-28T09:18:06.2758730Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-28T09:18:06.2759124Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-28T09:18:06.2759503Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-28T09:18:06.2759803Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-28T09:18:06.2760077Z [36;1mconst cwd = path.resolve(request.directory)[0m
+2026-11-28T09:18:06.2760445Z [36;1mconst benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)[0m
+2026-11-28T09:18:06.2760911Z [36;1mwriteFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))[0m
+2026-11-28T09:18:06.2761267Z [36;1mconst env = { ...process.env, ...benchmark }[0m
+2026-11-28T09:18:06.2761626Z [36;1mconst filesPair = request.config === 'e2e/playwright.production.config.ts' &&[0m
+2026-11-28T09:18:06.2762161Z [36;1m  request.args.length === 1 && request.args[0] === 'e2e/sucafina/operations.spec.ts'[0m
+2026-11-28T09:18:06.2762807Z [36;1mconst args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', filesPair ? 'off' : 'retain-on-failure'][0m
+2026-11-28T09:18:06.2763313Z [36;1mconst listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })[0m
+2026-11-28T09:18:06.2763827Z [36;1mif (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)[0m
+2026-11-28T09:18:06.2764306Z [36;1mwriteFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)[0m
+2026-11-28T09:18:06.2764645Z [36;1mconst report = JSON.parse(listed.stdout)[0m
+2026-11-28T09:18:06.2765029Z [36;1mconst hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)[0m
+2026-11-28T09:18:06.2765476Z [36;1mvalidateSelection(request.args.map((file) => path.resolve(cwd, file)),[0m
+2026-11-28T09:18:06.2765982Z [36;1m  report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))[0m
+2026-11-28T09:18:06.2766433Z [36;1m// The flaky reporter lists tests that passed only on a retry in the log and the job summary.[0m
+2026-11-28T09:18:06.2766828Z [36;1mconst flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')[0m
+2026-11-28T09:18:06.2767237Z [36;1mconst reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'[0m
+2026-11-28T09:18:06.2767694Z [36;1mconst run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',[0m
+2026-11-28T09:18:06.2768112Z [36;1m  env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),[0m
+2026-11-28T09:18:06.2768607Z [36;1m    PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })[0m
+2026-11-28T09:18:06.2769096Z [36;1mif (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)[0m
+2026-11-28T09:18:06.2769468Z [36;1mprocess.exit(run.status)[0m
+2026-11-28T09:18:06.2769675Z [36;1mNODE[0m
+2026-11-28T09:18:06.2769840Z [36;1m  exit $?[0m
+2026-11-28T09:18:06.2770015Z [36;1mfi[0m
+2026-11-28T09:18:06.2770236Z [36;1margs=()[0m
+2026-11-28T09:18:06.2770521Z [36;1mwhile IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')[0m
+2026-11-28T09:18:06.2770826Z [36;1mcd "$DIRECTORY"[0m
+2026-11-28T09:18:06.2771018Z [36;1mcase "$RUNNER" in[0m
+2026-11-28T09:18:06.2771282Z [36;1m  pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;[0m
+2026-11-28T09:18:06.2771541Z [36;1m  bun)[0m
+2026-11-28T09:18:06.2771810Z [36;1m    # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a[0m
+2026-11-28T09:18:06.2772192Z [36;1m    # browser-only export that fails under bun's default (`node`) conditions.[0m
+2026-11-28T09:18:06.2772721Z [36;1m    # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx[0m
+2026-11-28T09:18:06.2773123Z [36;1m    # source, which does not make that import. test-ci bypasses the package's own[0m
+2026-11-28T09:18:06.2773513Z [36;1m    # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.[0m
+2026-11-28T09:18:06.2773909Z [36;1m    # test-browser/ files follow `test:browser` instead: solid-js has no `solid`[0m
+2026-11-28T09:18:06.2774293Z [36;1m    # export, so under `solid` it falls through to `node` and loads its server build,[0m
+2026-11-28T09:18:06.2774686Z [36;1m    # where memos never recompute and onMount never runs. They also preload happydom.[0m
+2026-11-28T09:18:06.2775152Z [36;1m    if [ "$DIRECTORY" = "packages/app-shell" ]; then[0m
+2026-11-28T09:18:06.2775415Z [36;1m      unit=()[0m
+2026-11-28T09:18:06.2775599Z [36;1m      browser=()[0m
+2026-11-28T09:18:06.2775794Z [36;1m      common=()[0m
+2026-11-28T09:18:06.2776070Z [36;1m      # Only generated --timeout, -t and --test-name-pattern consume the next[0m
+2026-11-28T09:18:06.2776466Z [36;1m      # entry, including an empty name pattern. Other dash-prefixed tokens are[0m
+2026-11-28T09:18:06.2776821Z [36;1m      # one common token each; this is not a Bun CLI parser.[0m
+2026-11-28T09:18:06.2777135Z [36;1m      for ((index=0; index<${#args[@]}; index=index+1)); do[0m
+2026-11-28T09:18:06.2777386Z [36;1m        arg="${args[$index]}"[0m
+2026-11-28T09:18:06.2777587Z [36;1m        case "$arg" in[0m
+2026-11-28T09:18:06.2777817Z [36;1m          --timeout|-t|--test-name-pattern)[0m
+2026-11-28T09:18:06.2778044Z [36;1m            index=$((index+1))[0m
+2026-11-28T09:18:06.2778284Z [36;1m            if [ "$index" -ge "${#args[@]}" ]; then[0m
+2026-11-28T09:18:06.2778547Z [36;1m              echo "::error::$arg needs a following value"[0m
+2026-11-28T09:18:06.2778800Z [36;1m              exit 2[0m
+2026-11-28T09:18:06.2778980Z [36;1m            fi[0m
+2026-11-28T09:18:06.2779183Z [36;1m            common+=("$arg" "${args[$index]}")[0m
+2026-11-28T09:18:06.2779450Z [36;1m            ;;[0m
+2026-11-28T09:18:06.2779620Z [36;1m          -*)[0m
+2026-11-28T09:18:06.2779800Z [36;1m            common+=("$arg")[0m
+2026-11-28T09:18:06.2780002Z [36;1m            ;;[0m
+2026-11-28T09:18:06.2780266Z [36;1m          test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;[0m
+2026-11-28T09:18:06.2780551Z [36;1m          *) unit+=("$arg") ;;[0m
+2026-11-28T09:18:06.2780755Z [36;1m        esac[0m
+2026-11-28T09:18:06.2780921Z [36;1m      done[0m
+2026-11-28T09:18:06.2781093Z [36;1m      status=0[0m
+2026-11-28T09:18:06.2781315Z [36;1m      if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then[0m
+2026-11-28T09:18:06.2781688Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?[0m
+2026-11-28T09:18:06.2781998Z [36;1m      fi[0m
+2026-11-28T09:18:06.2782190Z [36;1m      if [ ${#browser[@]} -gt 0 ]; then[0m
+2026-11-28T09:18:06.2782816Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?[0m
+2026-11-28T09:18:06.2783301Z [36;1m      fi[0m
+2026-11-28T09:18:06.2783466Z [36;1m      exit $status[0m
+2026-11-28T09:18:06.2783703Z [36;1m    fi[0m
+2026-11-28T09:18:06.2783904Z [36;1m    GITHUB_ACTIONS=false bun test "${args[@]}"[0m
+2026-11-28T09:18:06.2784123Z [36;1m    ;;[0m
+2026-11-28T09:18:06.2784282Z [36;1m  node)[0m
+2026-11-28T09:18:06.2784453Z [36;1m    for file in "${args[@]}"; do[0m
+2026-11-28T09:18:06.2784671Z [36;1m      case "$file" in[0m
+2026-11-28T09:18:06.2784866Z [36;1m        *.node-smoke.mjs) ;;[0m
+2026-11-28T09:18:06.2785182Z [36;1m        *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;[0m
+2026-11-28T09:18:06.2785477Z [36;1m      esac[0m
+2026-11-28T09:18:06.2785639Z [36;1m    done[0m
+2026-11-28T09:18:06.2785853Z [36;1m    node --experimental-strip-types --test "${args[@]}"[0m
+2026-11-28T09:18:06.2786099Z [36;1m    ;;[0m
+2026-11-28T09:18:06.2786252Z [36;1mesac[0m
+2026-11-28T09:18:06.2804525Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-28T09:18:06.2804777Z env:
+2026-11-28T09:18:06.2804957Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-28T09:18:06.2805203Z   ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict
+2026-11-28T09:18:06.2805435Z   ORCHESTRA_CHANNEL: prod
+2026-11-28T09:18:06.2805781Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-28T09:18:06.2806300Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-28T09:18:06.2806719Z   ORCHESTRA_OMNI_CONTROL_NONCE: e8b023a454644c7d93e48fb726d8cca9
+2026-11-28T09:18:06.2807013Z   ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false
+2026-11-28T09:18:06.2807247Z   ORCHESTRA_OMNI_CONTROL: declared
+2026-11-28T09:18:06.2807450Z   PACKAGE: cli
+2026-11-28T09:18:06.2807619Z   DIRECTORY: apps/cli
+2026-11-28T09:18:06.2807796Z   RUNNER: bun
+2026-11-28T09:18:06.2807952Z ##[endgroup]
+2026-11-28T09:18:06.2877692Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:18:06.2987742Z 
+2026-11-28T09:18:06.2988154Z test/sucafina-proof-verification.test.ts:
+2026-11-28T09:18:06.5429165Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:18:06.5437758Z {"e15DiagnosticManifest":{"source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","qualification":false,"cleanBase":"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb","cleanBaseTree":"fe8221e56daf5fd7de8a79b29d2d485055b8c45a","diagnosticSourceDelta":{"modified":16,"added":2,"includesOriginalAnalyticsRequest":true},"sourceCodePaths":30,"focalControlPaths":2,"workingFilePins":32,"expectedGroups":10,"expectedCommands":16,"functionalProcessesLaunched":6,"staticDeclarationSites":{"casesContract":7,"projection":5,"portfolioSelection":3,"scenarioLookup":1,"nativeScenarioSelection":1,"routeDiagnostic":1},"expectedControlReports":9,"routeDiagnosticChildModes":10,"nameFilter":null,"mechanism":"observe the first canonical route, exact callback links, native selection and first persistence tail; no added product authorization, selection, read or business callback","identityBoundary":"source and sourceTree identify the diagnostic parent; observer event source and sourceTree identify the clean S21 base; .ci-run.json is intentionally replaced in this focal snapshot","assertions":"five retained whole-file C21 functional controls plus one E15 observer family; actual test, assertion and subprocess totals require received footers and receipts","casesControlsMs":{"cooperativePerTest":12000,"bunPerTest":15000,"declaredTests":7,"nominalSum":105000,"process":120000,"parent":180000},"projectionControlsMs":{"inheritedC14":{"cooperativePerTest":110000,"bunPerTest":120000,"selectedTests":2},"inheritedC15":{"cooperativePerTest":18000,"bunPerTest":20000,"selectedTests":2},"retainedC16":{"cooperativePerTest":8000,"bunPerTest":10000,"selectedTests":1},"selectedTests":5,"nominalSum":290000,"process":300000,"parent":360000},"portfolioControlsMs":{"inheritedCooperative":[12000,12000],"inheritedBun":[15000,15000],"addedCooperative":18000,"addedBun":20000,"declaredTests":3,"nominalSum":50000,"process":120000,"parent":180000},"scenarioControlsMs":{"cooperative":18000,"bun":20000,"declaredTests":1,"internalInvocations":14,"nominalSum":20000,"process":45000,"parent":60000},"nativeScenarioControlsMs":{"cooperative":18000,"bun":20000,"declaredTests":1,"nominalSum":20000,"process":45000,"parent":60000},"routeDiagnosticControlsMs":{"child":3000,"childKillGrace":1000,"sequentialChildren":10,"bun":45000,"declaredTests":1,"process":60000,"parent":90000,"childStdoutCap":65536,"childStderrCap":65536,"reportCap":16384},"typecheckMs":{"process":240000,"parent":300000},"guardsMs":{"defaultProcess":180000,"parent":600000},"snapshotOverlays":[".ci-run.json","apps/cli/test/sucafina-proof-verification.test.ts","apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts","apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts"]}}
+2026-11-28T09:18:06.9008723Z {"gate":"fetch source parent","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","fetch","--no-tags","--depth=2","origin","7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f"],"cwd":".","exitCode":0,"durationMs":358,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:06.9010353Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-28T09:18:06.9010824Z  * branch              7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f -> FETCH_HEAD
+2026-11-28T09:18:06.9011095Z 
+2026-11-28T09:18:06.9040373Z {"gate":"snapshot identity","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","rev-parse","HEAD"],"cwd":".","exitCode":0,"durationMs":3,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:06.9041562Z 7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f
+2026-11-28T09:18:06.9041722Z 
+2026-11-28T09:18:06.9199132Z {"gate":"source identity","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","show","-s","--format=%H%n%T","HEAD^"],"cwd":".","exitCode":0,"durationMs":16,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:06.9200052Z 908dab0b3124cea5aa4015fa6a5b96128e730c77
+2026-11-28T09:18:06.9200322Z 6b2065d3d159b0b4c3cad54f646bd109426f3b43
+2026-11-28T09:18:06.9200472Z 
+2026-11-28T09:18:06.9237776Z {"gate":"reviewed source blobs","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","files":[{"path":"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","sha":"d00519c139524b8b1b2699ac40868a40f1a18d02"},{"path":"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","sha":"3942f378f6d94f53b5622df2a459e127d410f543"},{"path":"modules/sucafina/Sucafinav1/runtime/local-store.ts","sha":"637913f32c8b5489c2c90b78d309d52e2f3ee94c"},{"path":"apps/cli/src/sucafina-product/planner-calculation-root.ts","sha":"244d46ee41e9ce288a7260938174a57161137bab"},{"path":"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts","sha":"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"},{"path":"modules/sucafina/Sucafinav1/product/integration/source-projections.ts","sha":"ccc5ea87046144843e1751b1288e907974d24ca5"},{"path":"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts","sha":"f183dd1049ef205c38395bda99c83efa8eddc80a"},{"path":"modules/sucafina/Sucafinav1/product/integration/product-authority.ts","sha":"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"},{"path":"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts","sha":"c9a887ede73e2ebf72b4c7c25c01c2396708454a"},{"path":"modules/sucafina/Sucafinav1/runtime/contract.ts","sha":"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"},{"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","sha":"6bef21db9129db064b018f5f0bf632306e3a16ec"},{"path":"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts","sha":"11661b32f4dc782558b39902c0f396145cbe8a4a"},{"path":"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts","sha":"44cff7d70fca11ca022f863d7811b9a2610186fd"},{"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts","sha":"b6938565cb8b468a454178688ea88a4ec88da9fa"},{"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts","sha":"68ae48f9a039180824f5471a1de27c0ca34be088"},{"path":"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts","sha":"cd71a9d8440cdc94cf6663928063c38449a25721"},{"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts","sha":"1c4b73e4d170a358c0065bd674817f98edd6e86f"},{"path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts","sha":"b62d93080073964d7adc993c3a5c02277abab38a"},{"path":"apps/cli/src/sucafina-product/portfolio-http.ts","sha":"9cbbba7a3292f22e766aad41e6066eb69ae6424a"},{"path":"modules/sucafina/Sucafinav1/product/portfolio/port.ts","sha":"9267e181901f4bf9d33f85de0b223f18dbc1df17"},{"path":"modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts","sha":"8d4e1583efe5611114cd495b71197c7e1bb690df"},{"path":"modules/sucafina/Sucafinav1/product/portfolio/analysis.ts","sha":"90146429a3a264f4d66f5b74d1502715a58c1099"},{"path":"modules/sucafina/Sucafinav1/product/portfolio/production.ts","sha":"a3f69c5d987769a2ad66685f447002bf4307b2e1"},{"path":"apps/cli/test/fixture/sucafina-native-installation.ts","sha":"8df288b2386618a7961ba20c1054e466cff39c95"},{"path":"packages/app-shell/e2e/sucafina/design-support/installation.ts","sha":"5989de182f65c2a6faf20218adf8b20af6dfa000"},{"path":"apps/cli/src/sucafina-product/portfolio-authority.ts","sha":"ff0f95cb0edef96bda838f35712599e449d45031"},{"path":"apps/cli/src/sucafina-product/finance-pair-observation.ts","sha":"2eed03d569ffe4c558cf3f737affb88899062629"},{"path":"modules/sucafina/Sucafinav1/product/decisions/result-store.ts","sha":"8fce115635205bf07f2727cb3782677ee98ef482"},{"path":"modules/sucafina/Sucafinav1/product/planner/persistence.ts","sha":"e0d5decb4aa4e5f94885cd11c5afbbffbd96d279"},{"path":"modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts","sha":"19948fe790a44f66b18775c34ac3df8ffc1228a4"},{"path":"apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts","sha":"06ad7e879bf15e4c2e1287a70f07524a618fd052"},{"path":"apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts","sha":"6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"}],"expectedGroups":10,"expectedCommands":16,"functionalProcessesLaunched":6,"sourceCodePaths":30,"focalControlPaths":2,"staticDeclarationSites":{"casesContract":7,"projection":5,"portfolioSelection":3,"scenarioLookup":1,"nativeScenarioSelection":1,"routeDiagnostic":1},"expectedControlReports":9}
+2026-11-28T09:18:06.9250777Z (pass) snapshot identifies the exact reviewed E15 diagnostic source and tree [390.18ms]
+2026-11-28T09:18:06.9252298Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:18:07.1835098Z {"gate":"complete cases read-set contract whole-file","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/product/wp10/integration/cases-read-contract.test.ts"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":259,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:07.1836995Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:18:07.1837189Z 
+2026-11-28T09:18:07.1837465Z test/product/wp10/integration/cases-read-contract.test.ts:
+2026-11-28T09:18:07.1838261Z (pass) Cases declaration preserves callback identity and both consumers' late opaque guards and IDs [8.57ms]
+2026-11-28T09:18:07.1839121Z (pass) C08 cases read-set clones the complete reachable graph and detaches every admission [18.67ms]
+2026-11-28T09:18:07.1839924Z (pass) C08 cases read-set keeps opaque context, callback, namespace and map fallback [12.60ms]
+2026-11-28T09:18:07.1840814Z (pass) C08 cases read-set preserves every reachable clone error and callback exception without replay [11.20ms]
+2026-11-28T09:18:07.1841691Z (pass) C08 cases read-set retains admission and egress authority around asynchronous callbacks [7.91ms]
+2026-11-28T09:18:07.1842824Z (pass) Baseline cases reads preserve late IDs, two fresh admissions, revocation and cancellation [41.80ms]
+2026-11-28T09:18:07.1843719Z (pass) Criterion cases reads preserve late IDs, two fresh admissions, revocation and cancellation [20.93ms]
+2026-11-28T09:18:07.1844154Z 
+2026-11-28T09:18:07.1844252Z  7 pass
+2026-11-28T09:18:07.1844481Z  0 fail
+2026-11-28T09:18:07.1844722Z  843 expect() calls
+2026-11-28T09:18:07.1845041Z Ran 7 tests across 1 file. [253.00ms]
+2026-11-28T09:18:07.1845256Z 
+2026-11-28T09:18:07.1845914Z (pass) complete cases read-set preserves original guards and late case lookups [260.66ms]
+2026-11-28T09:18:07.1851141Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:18:07.8200745Z {"gate":"C14/C15/C16/C17 snapshot projection and closed case selection","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/product/wp10/integration/c08-snapshot-projection.test.ts"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":635,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:07.8202153Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:18:07.8202985Z (pass) C14/C15/C16/C17 C08 projection and closed case selection preserve authorization and full-path equivalence [636.43ms]
+2026-11-28T09:18:07.8204987Z SF_C14_SNAPSHOT_CONTROL {"scenario":"complete-product-and-fresh-authorization","qualification":false,"outcomes":[{"mode":"readonly","callbacks":3,"authentication":18,"opaqueAuthorizationSnapshots":2},{"mode":"preimage","callbacks":3,"authentication":18,"opaqueAuthorizationSnapshots":2},{"mode":"top-level","callbacks":3,"authentication":18,"opaqueAuthorizationSnapshots":2}],"subsequentPreferenceVersion":2,"createIdReceiver":"original mutable C08 input","projector":"installed original","limit":"top-level stays full; no parse count, domain-size ratio or performance qualification"}
+2026-11-28T09:18:07.8210832Z SF_C14_SNAPSHOT_CONTROL {"scenario":"opaque-equivalence-and-live-refusal","qualification":false,"outcomes":[{"scenario":"readonly-projected-drift","callbacks":0,"authentication":3,"replacementCalls":0},{"scenario":"readonly-opaque-drift","callbacks":1,"authentication":6,"replacementCalls":1},{"scenario":"preimage-projected-drift","callbacks":0,"authentication":3,"replacementCalls":0},{"scenario":"preimage-opaque-drift","callbacks":1,"authentication":6,"replacementCalls":1},{"scenario":"readonly-source-checks-projected-drift","callbacks":0,"authentication":3,"replacementCalls":0},{"scenario":"readonly-source-checks-opaque-drift","callbacks":1,"authentication":6,"replacementCalls":1},{"scenario":"source-accessor-full-fallback","callbacks":1},{"scenario":"driver-drift-before-body","callbacks":0,"authentication":0},{"scenario":"CurrentChoice-scoped-full-fallback","callbacks":2,"authentication":18},{"scenario":"real-authority-revoked-after-body","callbacks":1,"authentication":6},{"scenario":"callback-error-without-replay-or-poison","callbacks":1},{"scenario":"request-abort-after-body","callbacks":1,"authentication":3},{"scenario":"caught-nested-write-still-poisons-owner","callbacks":1},{"scenario":"early-prototype-full","callbacks":1,"authentication":6},{"scenario":"late-prototype-projected","callbacks":0,"authentication":3},{"scenario":"late-prototype-opaque","callbacks":1,"authentication":6},{"scenario":"opaque-native-driver-full-fallback","callbacks":2}],"limit":"functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"}
+2026-11-28T09:18:07.8216634Z SF_C15_SELECTION_CONTROL {"scenario":"whole-graphs-and-shape","qualification":false,"outcomes":[{"mode":"readonly","namespace":"cases","callbacks":3,"authentication":18},{"mode":"readonly","namespace":"preferences","callbacks":3,"authentication":18},{"mode":"preimage","namespace":"cases","callbacks":3,"authentication":18},{"mode":"preimage","namespace":"preferences","callbacks":3,"authentication":18}],"aliases":"custom full path retained; each selected callback receives its own graph","limit":"native structural copy and functional composition; no latency or current Analytics result"}
+2026-11-28T09:18:07.8223803Z SF_C15_SELECTION_CONTROL {"scenario":"shape-precedence-and-drift","qualification":false,"outcomes":[{"scenario":"readonly-cases-narrow-drift","callbacks":0,"authentication":3,"outcome":"refused before callback"},{"scenario":"readonly-preferences-narrow-drift","callbacks":0,"authentication":3,"outcome":"refused before callback"},{"scenario":"preimage-cases-narrow-drift","callbacks":0,"authentication":3,"outcome":"refused before callback"},{"scenario":"preimage-preferences-narrow-drift","callbacks":0,"authentication":3,"outcome":"refused before callback"},{"scenario":"active-source-checks-narrow-drift","callbacks":0,"authentication":3,"outcome":"refused before callback"},{"scenario":"narrow-second-authorization-drift","callbacks":1,"authentication":6,"outcome":"returned body withheld"},{"scenario":"case-precedence","callbacks":null,"authentication":6,"outcome":"factory callback returned; not wrapped to count"},{"scenario":"namespace-mismatch","callbacks":1,"authentication":6,"outcome":"original full fallback and selection order"},{"scenario":"late-registration","callbacks":1,"authentication":6,"outcome":"original full fallback and selection order"},{"scenario":"invalid-map","callbacks":0,"authentication":3,"outcome":"original invalid-product-state"},{"scenario":"invalid-version","callbacks":0,"authentication":3,"outcome":"original invalid-product-state"},{"scenario":"invalid-additive","callbacks":0,"authentication":3,"outcome":"original invalid-product-state"},{"scenario":"legacy","callbacks":1,"authentication":6,"outcome":"original legacy normalization"},{"scenario":"throw-sentinel","callbacks":1,"authentication":9,"outcome":"original exception; next child remains usable"},{"scenario":"throw-undefined","callbacks":1,"authentication":9,"outcome":"original exception; next child remains usable"}],"limit":"narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"}
+2026-11-28T09:18:07.8246477Z SF_C16_SELECTION_CONTROL {"scenario":"closed-case-factories","qualification":false,"outcomes":[{"scenario":"case-readonly-fresh-values","authentication":18,"outcome":"same values and metadata; independent copies; both real authorizations"},{"scenario":"case-readonly-c16Missing","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"case-readonly-c16Malformed","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"case-preimage-fresh-values","authentication":18,"outcome":"same values and metadata; independent copies; both real authorizations"},{"scenario":"case-preimage-c16Missing","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"case-preimage-c16Malformed","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"identity-readonly-fresh-values","authentication":18,"outcome":"same values and metadata; independent copies; both real authorizations"},{"scenario":"identity-readonly-c16Missing","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"identity-readonly-c16Malformed","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"identity-preimage-fresh-values","authentication":18,"outcome":"same values and metadata; independent copies; both real authorizations"},{"scenario":"identity-preimage-c16Missing","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"identity-preimage-c16Malformed","authentication":12,"outcome":"closed factory matches the original full fallback"},{"scenario":"case-first-prototype","authentication":3,"outcome":"projected result withheld without replay"},{"scenario":"case-first-concurrent-declaration","authentication":3,"outcome":"projected result withheld without replay"},{"scenario":"case-second-prototype","authentication":6,"outcome":"projected result withheld without replay"},{"scenario":"case-second-concurrent-declaration","authentication":6,"outcome":"projected result withheld without replay"},{"scenario":"identity-first-prototype","authentication":3,"outcome":"projected result withheld without replay"},{"scenario":"identity-first-concurrent-declaration","authentication":3,"outcome":"projected result withheld without replay"},{"scenario":"identity-second-prototype","authentication":6,"outcome":"projected result withheld without replay"},{"scenario":"identity-second-concurrent-declaration","authentication":6,"outcome":"projected result withheld without replay"},{"scenario":"case-concurrent","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"case-opaque-context","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"case-namespace","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"identity-concurrent","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"identity-opaque-context","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"identity-namespace","authentication":6,"outcome":"complete fallback preserved"},{"scenario":"identity-key-observed-after-first-authorization","authentication":6,"outcome":"no key read at registration, native selection or reauthorization"},{"scenario":"identity-throw-sentinel","authentication":9,"outcome":"original throw preserved; next child remains usable"},{"scenario":"identity-throw-undefined","authentication":9,"outcome":"original throw preserved; next child remains usable"},{"scenario":"identity-request-abort","authentication":3,"outcome":"original abort refuses the root"},{"scenario":"poisoned-native-root","authentication":0,"outcome":"no child result or root accepted after caught commit:true"}],"identityProjection":{"cases":["mixed-map-and-detached-readonly","mixed-map-and-detached-preimage","composed-identity-first-authorization-drift","composed-identity-second-authorization-drift","restored-codec-birth-keeps-complete-case","restored-codec-exposure-keeps-complete-case","cold-plan-birth-survives-restore-and-memo","owner-weakmap-escape-latches-across-roots","owner-als-escape-latches-across-roots"],"limit":"readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"},"limits":"composed functional and refusal oracles; no latency or current Analytics qualification"}
+2026-11-28T09:18:07.8261540Z 
+2026-11-28T09:18:07.8261841Z test/product/wp10/integration/c08-snapshot-projection.test.ts:
+2026-11-28T09:18:07.8262534Z (pass) C14 C08 child reads preserve the complete product graph, ACL, fresh copies and both real authorizations [57.48ms]
+2026-11-28T09:18:07.8263791Z (pass) C14 projection refuses live drift and preserves opaque, scoped, abort, error and poison semantics [65.31ms]
+2026-11-28T09:18:07.8264795Z (pass) C15 whole graph selections preserve complete shape, metadata, authorization and detached values [35.25ms]
+2026-11-28T09:18:07.8265674Z (pass) C15 selections refuse drift and preserve invalid, legacy, late and competing read decisions [41.32ms]
+2026-11-28T09:18:07.8266406Z (pass) C16 closed case factories preserve selection, fallback, late observations and readonly fences [92.94ms]
+2026-11-28T09:18:07.8266783Z 
+2026-11-28T09:18:07.8266894Z  5 pass
+2026-11-28T09:18:07.8267090Z  0 fail
+2026-11-28T09:18:07.8267289Z  757 expect() calls
+2026-11-28T09:18:07.8267552Z Ran 5 tests across 1 file. [625.00ms]
+2026-11-28T09:18:07.8267723Z 
+2026-11-28T09:18:07.8268950Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:18:35.2502357Z {"gate":"CLI package typecheck","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","run","typecheck"],"cwd":"apps/cli","exitCode":0,"durationMs":27429,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:18:35.2503874Z $ tsgo --noEmit
+2026-11-28T09:18:35.2504027Z 
+2026-11-28T09:18:35.2506304Z (pass) the CLI package preserves its original types [27430.41ms]
+2026-11-28T09:18:35.2517620Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:05.2004470Z {"gate":"Sucafina package typecheck","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","run","typecheck"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":29948,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:05.2006103Z $ tsgo --noEmit
+2026-11-28T09:19:05.2006258Z 
+2026-11-28T09:19:05.2006938Z (pass) the Sucafina package preserves its original types [29949.89ms]
+2026-11-28T09:19:05.2024592Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:05.2071620Z {"gate":"inspect history completeness","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","rev-parse","--is-shallow-repository"],"cwd":".","exitCode":0,"durationMs":5,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:05.2072762Z true
+2026-11-28T09:19:05.2072883Z 
+2026-11-28T09:19:32.0528254Z {"gate":"fetch current dev and source ancestry","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","fetch","--no-tags","--unshallow","origin","+refs/heads/dev:refs/remotes/origin/dev","7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f"],"cwd":".","exitCode":0,"durationMs":26846,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:32.0530701Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-28T09:19:32.0531621Z  * [new branch]            dev        -> origin/dev
+2026-11-28T09:19:32.0532879Z  * branch                  7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f -> FETCH_HEAD
+2026-11-28T09:19:32.0533294Z 
+2026-11-28T09:19:32.0561181Z {"gate":"current dev identity","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","rev-parse","--verify","refs/remotes/origin/dev^{commit}"],"cwd":".","exitCode":0,"durationMs":3,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:32.0563194Z c0bc0f22a4f2f5a2bdfa64407cd35769fd877886
+2026-11-28T09:19:32.0563763Z 
+2026-11-28T09:19:32.0638813Z {"gate":"actual guard merge base","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["git","merge-base","HEAD","origin/dev"],"cwd":".","exitCode":0,"durationMs":8,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:32.0639799Z 490a1e1352081d28c0eb22afcd05fffea8b5323f
+2026-11-28T09:19:32.0639959Z 
+2026-11-28T09:19:32.0640945Z {"gate":"guard ancestry","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","dev":"c0bc0f22a4f2f5a2bdfa64407cd35769fd877886","mergeBase":"490a1e1352081d28c0eb22afcd05fffea8b5323f","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc","command":"bun run check:guards --base origin/dev --json"}
+2026-11-28T09:19:34.3383352Z {"gate":"canonical guardrails","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","run","check:guards","--base","origin/dev","--json"],"cwd":".","exitCode":0,"durationMs":2274,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:34.3435036Z {"base":"490a1e1352081d28c0eb22afcd05fffea8b5323f","bootstrap":false,"rules":78,"files":871,"findings":[{"rule":"test-globalthis","severity":"warn","path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts","line":89,"message":"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.","excerpt":"    globalThis.structuredClone = (value, options) => {","match":[4,33]},{"rule":"test-globalthis","severity":"warn","path":"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts","line":95,"message":"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.","excerpt":"    finally { globalThis.structuredClone = original }","match":[14,43]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts","line":110,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      }, { timeout: 60_000 })","match":[9,28]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts","line":218,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      }, { timeout: 60_000 })","match":[9,28]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":13,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  analyticsTest.setTimeout(780_000)","match":[16,34]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":14,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(20_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":72,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })","match":[124,143]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":89,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })","match":[124,143]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":98,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })","match":[126,145]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":156,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))","match":[5,24]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":203,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })","match":[129,149]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":438,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })","match":[113,132]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":444,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  analyticsTest.setTimeout(660_000)","match":[16,34]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":445,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(20_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":471,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })","match":[125,144]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":486,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })","match":[116,135]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":527,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })","match":[126,145]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":616,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"    }, { timeout: 60_000 })","match":[7,26]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts","line":661,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(","match":[5,24]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":20,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  collabTest.setTimeout(900_000)","match":[13,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":21,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(20_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":103,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })","match":[109,128]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":142,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),","match":[68,87]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":263,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  waveFourTest.setTimeout(600_000)","match":[15,33]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts","line":264,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(20_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":66,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  }, { timeout: 40_000 }).then(async (response) => {","match":[5,24]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":79,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })","match":[66,85]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":101,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })","match":[105,124]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":113,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })","match":[100,119]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":124,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  await expect(preview).toBeVisible({ timeout: 40_000 })","match":[36,55]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":128,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  await expect(confirmed).toBeVisible({ timeout: 40_000 })","match":[38,57]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":135,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  waveFourTest.setTimeout(420_000)","match":[15,33]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":136,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(15_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":153,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })","match":[78,97]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":218,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  waveFourTest.setTimeout(720_000)","match":[15,33]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":219,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  page.setDefaultTimeout(15_000)","match":[7,31]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":237,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })","match":[69,88]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":326,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })","match":[139,158]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":405,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })","match":[83,102]},{"rule":"test-timeout-raised","severity":"warn","path":"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts","line":437,"message":"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.","excerpt":"        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })","match":[90,109]}],"errors":[],"approved":[],"touchesGuards":false}
+2026-11-28T09:19:34.3476884Z (pass) canonical guards use current origin dev and its actual merge base [29138.01ms]
+2026-11-28T09:19:34.3477520Z $ bun run script/guards/run.ts --base origin/dev --json
+2026-11-28T09:19:34.3477778Z 
+2026-11-28T09:19:34.3479304Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:34.5759501Z {"gate":"Portfolio selection cases and preferences whole-file","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":236,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:34.5761281Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:19:34.5761977Z SF_C19_PORTFOLIO_CASES {"schema":"sf-c19-portfolio-cases-v1","customCaptures":6,"nativeReads":9,"reachableFailures":6,"revocations":3,"mixedReads":1}
+2026-11-28T09:19:34.5762394Z 
+2026-11-28T09:19:34.5763069Z test/product/wp10/integration/portfolio-selection-preferences-read.test.ts:
+2026-11-28T09:19:34.5763764Z (pass) Portfolio selection callback preserves its authority gate, port lookup and late selection key on custom ports [7.71ms]
+2026-11-28T09:19:34.5764425Z (pass) Portfolio selection uses fresh whole-preferences C08 reads and detects changes and revocation between comparisons [57.01ms]
+2026-11-28T09:19:34.5765069Z (pass) Portfolio selection declares cases at read, inspect and register while preserving guards and mixed reads [42.77ms]
+2026-11-28T09:19:34.5765370Z 
+2026-11-28T09:19:34.5765454Z  3 pass
+2026-11-28T09:19:34.5765606Z  0 fail
+2026-11-28T09:19:34.5765774Z  503 expect() calls
+2026-11-28T09:19:34.5765986Z Ran 3 tests across 1 file. [228.00ms]
+2026-11-28T09:19:34.5766135Z 
+2026-11-28T09:19:34.5766411Z (pass) Portfolio selection preserves its cases and preferences read contracts [237.38ms]
+2026-11-28T09:19:34.5768146Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:34.7489349Z (pass) Scenario lookup preserves complete candidate reads, fallback and fresh authority [172.67ms]
+2026-11-28T09:19:34.7491833Z {"gate":"Scenario lookup complete candidates whole-file","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/product/wp10/integration/scenario-lookup-selection.test.ts"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":171,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:34.7494269Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:19:34.7497086Z SF_C20_SCENARIO_LOOKUP {"schema":"sf-c20-scenario-lookup-v1","checks":["consumer-selects-complete-detached-results","opaque-wrapper-keeps-full-state","mutable-context-uses-opaque-fallback","proxy-context-uses-opaque-fallback","map-prototype-uses-opaque-fallback","request-key-remains-late-after-admission","mutable-binding-is-observed-after-admission","admission-denied-does-not-disclose","egress-revoked-does-not-disclose","abort-does-not-disclose","unmatched-getter-selected","unmatched-getter-opaque","unmatched-function-selected","unmatched-function-opaque"]}
+2026-11-28T09:19:34.7498654Z 
+2026-11-28T09:19:34.7498886Z test/product/wp10/integration/scenario-lookup-selection.test.ts:
+2026-11-28T09:19:34.7499417Z (pass) Scenario lookup selects the complete candidate graph and retains late reads, fallback and fresh authority [31.18ms]
+2026-11-28T09:19:34.7499731Z 
+2026-11-28T09:19:34.7499814Z  1 pass
+2026-11-28T09:19:34.7499973Z  0 fail
+2026-11-28T09:19:34.7500136Z  147 expect() calls
+2026-11-28T09:19:34.7500349Z Ran 1 test across 1 file. [163.00ms]
+2026-11-28T09:19:34.7500485Z 
+2026-11-28T09:19:34.7501546Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:35.1970879Z {"gate":"Native scenario candidates selection whole-file","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"],"cwd":"modules/sucafina/Sucafinav1","exitCode":0,"durationMs":447,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:35.1973281Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:19:35.1977598Z SF_C21_NATIVE_SCENARIO_SELECTION {"schema":"sf-c21-native-scenario-selection-v1","outcomes":["native-whole-collection-readonly","composed-fresh-candidates-readonly","native-whole-collection-preimage","composed-fresh-candidates-preimage","request-key-after-first-authorize","composed-prototype-first","composed-declaration-first","composed-prototype-second","composed-declaration-second","full-fallback-mutable-context","full-fallback-wrapped-callback","full-fallback-concurrent-declaration","full-fallback-namespace","full-fallback-top-level","full-fallback-CurrentChoice-scoped","full-shape-fallback-absent","full-shape-fallback-own-undefined","full-shape-fallback-array","empty-collection-is-a-real-selection"],"contexts":["readonly","preimage"],"originalProjectionControlsPreserved":5,"claim":"physical child selection and fallback only; no installed latency measurement"}
+2026-11-28T09:19:35.1980824Z 
+2026-11-28T09:19:35.1981210Z test/product/wp10/integration/scenario-candidates-native-projection.test.ts:
+2026-11-28T09:19:35.1981972Z (pass) C21 native scenario candidates retain the whole result graph and installed selection fences [102.56ms]
+2026-11-28T09:19:35.1982440Z 
+2026-11-28T09:19:35.1982546Z  1 pass
+2026-11-28T09:19:35.1983006Z  0 fail
+2026-11-28T09:19:35.1983213Z  157 expect() calls
+2026-11-28T09:19:35.1983501Z Ran 1 test across 1 file. [435.00ms]
+2026-11-28T09:19:35.1983688Z 
+2026-11-28T09:19:35.1984142Z (pass) Native scenario candidates retain complete results and refuse changed authority [448.36ms]
+2026-11-28T09:19:35.1985822Z {"verification":"sf613-e15-route-persistence-diagnostic-focal","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","historicalCompositionBase":"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"}
+2026-11-28T09:19:36.3017795Z {"gate":"E15 route observer controls whole-file","source":"908dab0b3124cea5aa4015fa6a5b96128e730c77","sourceTree":"6b2065d3d159b0b4c3cad54f646bd109426f3b43","snapshot":"7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f","run":"46129731679","command":["/home/runner/.bun/bin/bun","test","./test/sucafina-preview-route-e15-diagnostic.test.ts"],"cwd":"apps/cli","exitCode":0,"durationMs":1103,"stdoutTruncated":false,"stderrTruncated":false}
+2026-11-28T09:19:36.3019502Z bun test v1.3.14 (0d9b296a)
+2026-11-28T09:19:36.3020211Z (pass) E15 route controls preserve ownership, native forwarding and persistence boundaries [1104.75ms]
+2026-11-28T09:19:36.3050587Z SF_E15_ROUTE_CONTROL {"schema":"sf-preview-e15-control-v1","synthetic":true,"childModes":["route-owner","work-links","native-chain","persistence-tail","capacity","mechanism","sink-zero","sink-partial","sink-throw","forwarder"],"reports":[{"pid":3165,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"route-owner","pid":3165,"synthetic":true,"checks":["first-canonical-private-owner-across-suspension","second-canonical-and-Finance-cannot-steal","two-preparation-four-comparator-lookups","undefined-and-closed-route-mask-ambient","real-LF-prefix-before-completion","exact-Promise-and-thenable-no-assimilation","body-return-is-not-Promise-settlement-or-phase-close"],"records":90,"stdoutAttempts":90,"stdoutBytes":50173,"stdoutSha256":"dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0","fileAttempts":90,"fileBytes":50173,"fileSha256":"dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0","terminal":{"kind":"request-close","sequence":90,"outcome":"returned","openUnits":0,"openPhases":0,"compareBodies":[1,1,0,0,0,0],"routeCoverage":[1,2,4,0,0,0],"faultsBefore":[0,0,0,0,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3175,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"work-links","pid":3175,"synthetic":true,"checks":["exact-work-links-no-callback-invocation","wrapped-work-requires-explicit-link","provider-missing-and-foreign-callback-no-view","comparator-Finance-cannot-claim-preparation-owner","not-evaluated-false-true-nonboolean-gates","throw-undefined-copy-has-no-returned-view"],"records":78,"stdoutAttempts":78,"stdoutBytes":43326,"stdoutSha256":"ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c","fileAttempts":78,"fileBytes":43326,"fileSha256":"ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c","terminal":{"kind":"request-close","sequence":78,"outcome":"returned","openUnits":0,"openPhases":0,"compareBodies":[0,0,0,0,0,0],"routeCoverage":[1,2,4,0,0,0],"faultsBefore":[0,0,0,0,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3185,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"native-chain","pid":3185,"synthetic":true,"checks":["real-native-top-level-versus-held-root","real-native-direct-and-wrapped-C08-identities","real-native-preimage-keeps-selection","real-native-queue-prefix-before-release","real-native-write-and-post-write-boundaries-distinct"],"records":113,"stdoutAttempts":113,"stdoutBytes":63228,"stdoutSha256":"21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23","fileAttempts":113,"fileBytes":63228,"fileSha256":"21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23","terminal":{"kind":"request-close","sequence":113,"outcome":"returned","openUnits":0,"openPhases":0,"compareBodies":[0,0,0,0,0,0],"routeCoverage":[1,2,4,1,0,0],"faultsBefore":[0,0,0,0,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3198,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"persistence-tail","pid":3198,"synthetic":true,"checks":["first-persistence-requires-first-analysis-phase","operation-true-is-not-transaction-identity","queue-prefix-does-not-fabricate-BEGIN-or-commit","post-write-binding-remains-distinct","reentrant-terminal-freezes-open-prefix-without-late-close"],"records":43,"stdoutAttempts":43,"stdoutBytes":24224,"stdoutSha256":"6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1","fileAttempts":43,"fileBytes":24224,"fileSha256":"6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1","terminal":{"kind":"request-close","sequence":43,"outcome":"returned","openUnits":1,"openPhases":1,"compareBodies":[0,0,0,0,0,0],"routeCoverage":[0,0,0,1,0,0],"faultsBefore":[0,0,0,0,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3208,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"capacity","pid":3208,"synthetic":true,"checks":["six-hundred-works-survive-general-detail-cap","critical-sites-and-tail-survive-general-cap","global-four-body-checkpoints-survive-cap","exact-191-line-reservation-model","terminal-reserved-at-full-cap"],"records":191,"stdoutAttempts":191,"stdoutBytes":110968,"stdoutSha256":"0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4","fileAttempts":191,"fileBytes":110968,"fileSha256":"0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4","terminal":{"kind":"request-close","sequence":191,"outcome":"returned","openUnits":0,"openPhases":0,"compareBodies":[128,128,0,0,0,0],"routeCoverage":[1,2,4,1,0,0],"faultsBefore":[0,0,0,0,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3218,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"mechanism","pid":3218,"synthetic":true,"checks":["Finance-observation-return-does-not-invent-work","duplicate-and-tardy-thunk-never-replay","mechanism-result-and-swallowed-error-not-authoritative","before-noinvoke-after-faults-preserve-work","scope-fallback-disables-attribution"],"records":7,"stdoutAttempts":7,"stdoutBytes":4012,"stdoutSha256":"418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed","fileAttempts":7,"fileBytes":4012,"fileSha256":"418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed","terminal":{"kind":"request-close","sequence":7,"outcome":"returned","openUnits":0,"openPhases":0,"compareBodies":[0,0,0,0,0,0],"routeCoverage":[1,0,0,0,0,0],"faultsBefore":[0,0,1,1,0,0],"saturated":false},"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3227,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"sink-zero","pid":3227,"synthetic":true,"checks":["sink-zero-latches-once","restored-sink-is-not-retried","product-undefined-throw-survives-sink-fault","incomplete-prefix-has-no-fabricated-terminal"],"records":1,"stdoutAttempts":2,"stdoutBytes":518,"stdoutSha256":"974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb","fileAttempts":2,"fileBytes":518,"fileSha256":"974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb","terminal":null,"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3236,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"sink-partial","pid":3236,"synthetic":true,"checks":["sink-partial-latches-once","restored-sink-is-not-retried","product-undefined-throw-survives-sink-fault","incomplete-prefix-has-no-fabricated-terminal"],"records":1,"stdoutAttempts":2,"stdoutBytes":518,"stdoutSha256":"fdc3ceced64994ae3033d0df20b5f1647c398005d1848b3654746edd44026208","fileAttempts":2,"fileBytes":731,"fileSha256":"260f596b4d15f7db537ff60e1b572279c80540fff6f917dfd7839de84cac4d78","terminal":null,"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3245,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"sink-throw","pid":3245,"synthetic":true,"checks":["sink-throw-latches-once","restored-sink-is-not-retried","product-undefined-throw-survives-sink-fault","incomplete-prefix-has-no-fabricated-terminal"],"records":1,"stdoutAttempts":2,"stdoutBytes":518,"stdoutSha256":"df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef","fileAttempts":2,"fileBytes":518,"fileSha256":"df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef","terminal":null,"requestGets":0},"omniSpawns":1,"omniDelegations":0},{"pid":3254,"report":{"schema":"sf-preview-e15-control-child-v1","mode":"forwarder","pid":3254,"synthetic":true,"checks":["forwarder-real-chunk-identity-and-multilines","forwarder-only-real-LF-no-EOF-promotion","forwarder-ASCII-byte-bound-before-LF","forwarder-invalid-diagnostic-latches","forwarder-unrelated-long-lines-ignored","forwarder-zero-partial-undefined-throw-no-retry","forwarder-191-events-and-191KiB","forwarder-one-disabled-and-exclusive-mode"],"framingOnly":true,"stdoutAttempts":200,"completeLines":197,"partialFragments":1,"terminal":null,"requestGets":0},"omniSpawns":1,"omniDelegations":0}]}
+2026-11-28T09:19:36.3077741Z 
+2026-11-28T09:19:36.3077985Z test/sucafina-preview-route-e15-diagnostic.test.ts:
+2026-11-28T09:19:36.3078570Z (pass) E15 route observation preserves lexical ownership and the first persistence tail [1066.74ms]
+2026-11-28T09:19:36.3078907Z 
+2026-11-28T09:19:36.3078989Z  1 pass
+2026-11-28T09:19:36.3079188Z  0 fail
+2026-11-28T09:19:36.3079393Z  53 expect() calls
+2026-11-28T09:19:36.3079669Z Ran 1 test across 1 file. [1095.00ms]
+2026-11-28T09:19:36.3079865Z 
+2026-11-28T09:19:36.3079924Z 
+2026-11-28T09:19:36.3080035Z  10 pass
+2026-11-28T09:19:36.3080242Z  0 fail
+2026-11-28T09:19:36.3080464Z  57 expect() calls
+2026-11-28T09:19:36.3080772Z Ran 10 tests across 1 file. [90.01s]
+2026-11-28T09:19:36.3081642Z omni positive control [e8b023a454644c7d93e48fb726d8cca9]: pass (declared: 10 test(s) in test/sucafina-proof-verification.test.ts); 16 omni spawn(s), 0 delegated.
+2026-11-28T09:19:36.3654237Z Post job cleanup.
+2026-11-28T09:19:36.3657617Z ##[start-action display=Setup Bun;id=__0096e1e6-e67c-47fe-9c3f-21cb4aeee65d.__oven-sh_setup-bun]
+2026-11-28T09:19:36.3682805Z Post job cleanup.
+2026-11-28T09:19:36.4880089Z ##[end-action id=__0096e1e6-e67c-47fe-9c3f-21cb4aeee65d.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=122]
+2026-11-28T09:19:36.4882153Z ##[start-action display=Setup Node;id=__0096e1e6-e67c-47fe-9c3f-21cb4aeee65d.__actions_setup-node]
+2026-11-28T09:19:36.4911611Z Post job cleanup.
+2026-11-28T09:19:36.5956598Z (node:3283) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:19:36.5957166Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:19:36.6049715Z ##[end-action id=__0096e1e6-e67c-47fe-9c3f-21cb4aeee65d.__actions_setup-node;outcome=success;conclusion=success;duration_ms=116]
+2026-11-28T09:19:36.6108698Z Post job cleanup.
+2026-11-28T09:19:36.7079306Z (node:3291) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-28T09:19:36.7080053Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-28T09:19:36.7191600Z Post job cleanup.
+2026-11-28T09:19:36.7885152Z [command]/usr/bin/git version
+2026-11-28T09:19:36.7947532Z git version 2.56.1
+2026-11-28T09:19:36.7968616Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/e3e6ed36-ec58-44a5-b3be-b3f608079390/.gitconfig'
+2026-11-28T09:19:36.7975591Z Temporarily overriding HOME='/home/runner/work/_temp/e3e6ed36-ec58-44a5-b3be-b3f608079390' before making global git config changes
+2026-11-28T09:19:36.7976789Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-28T09:19:36.7978767Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-28T09:19:36.8014133Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-28T09:19:36.8036438Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-28T09:19:36.8292525Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-28T09:19:36.8311170Z http.https://github.com/.extraheader
+2026-11-28T09:19:36.8331814Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-28T09:19:36.8351978Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-28T09:19:36.8542072Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-28T09:19:36.8567110Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-28T09:19:36.8876385Z Cleaning up orphan processes
+2026-11-28T09:19:36.9139952Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

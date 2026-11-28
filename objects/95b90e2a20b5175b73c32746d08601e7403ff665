@@ -1,0 +1,2405 @@
+{
+  "schema": "sf613-e15-focal-received-extraction-v1",
+  "source": {
+    "commit": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "diagnostic": true,
+    "delta": {
+      "added": 2,
+      "modified": 16
+    },
+    "manifest": {
+      "gitBlob": "67e22c1ae78a57659e520e2a38b7e1fe8c2502f3",
+      "bytes": 36896,
+      "sha256": "32879dd88b78c8947e4db98d16da61bb210dbfd70a2dc4ad426a363bf7677276",
+      "lf": 1077,
+      "endsWithLF": true
+    },
+    "review": {
+      "gitBlob": "2e82c34f4c1b8f3fb57e794cd7beb18a3a1f3f8a",
+      "bytes": 24763,
+      "sha256": "b67c87fcdc5f381c1340a92ffc7224100c150356edd5ed551c51aa952b185676",
+      "lf": 666,
+      "endsWithLF": true
+    },
+    "helperTransportReview": {
+      "gitBlob": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+      "bytes": 25602,
+      "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+      "lf": 563,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "31f6e0e98773bb644634445e25cd3c57c54a73f6",
+      "bytes": 58090,
+      "sha256": "3d792295aaa907346fd7ba8bfd84daf154f611cbe16431ac5ed799513bfbc20b",
+      "lf": 1151,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+    "tree": "a11006ec7afbfcbc693abcf469e5833e0c0f2844",
+    "soleParent": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "delta": {
+      "added": 3,
+      "modified": 1
+    },
+    "rootObjectReview": {
+      "gitBlob": "4b0333f6cd2f684fa2aca2f150e0f10e6e90ce52",
+      "bytes": 85005,
+      "sha256": "905780aa58dec0fb3acfa53b632d864a4f08e8fbb3cf0c42e2021b24e62cf639",
+      "lf": 2248,
+      "endsWithLF": true
+    }
+  },
+  "run": 46129731679,
+  "attempt": 1,
+  "mainOriginal": {
+    "gitBlob": "6351127ada1494283b35201c8e42d9fdcacdded9",
+    "bytes": 123734,
+    "sha256": "847c8bb8ac0c42627993c26df0ae553188fef70f2a4d0ec461c639d398ff3f42",
+    "lf": 927,
+    "endsWithLF": true
+  },
+  "cleanupOriginal": {
+    "gitBlob": "c7af4a321d3e67d125d04e35ac4cd7c7b79eb42e",
+    "bytes": 2281,
+    "sha256": "ff1b0427d996328336215c0c59e2f78a5aa48210ccb9d4db6b641306aa9cca90",
+    "lf": 39,
+    "endsWithLF": true
+  },
+  "closure": {
+    "at": "2026-11-28 09:21:13 UTC",
+    "run": 46129731679,
+    "attempt": 1,
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "irreversible": true
+  },
+  "commands": [
+    {
+      "line": 750,
+      "value": {
+        "gate": "fetch source parent",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--depth=2",
+          "origin",
+          "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 358,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 754,
+      "value": {
+        "gate": "snapshot identity",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 757,
+      "value": {
+        "gate": "source identity",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "show",
+          "-s",
+          "--format=%H%n%T",
+          "HEAD^"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 16,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 764,
+      "value": {
+        "gate": "complete cases read-set contract whole-file",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/cases-read-contract.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 259,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 783,
+      "value": {
+        "gate": "C14/C15/C16/C17 snapshot projection and closed case selection",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 635,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 805,
+      "value": {
+        "gate": "CLI package typecheck",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 27429,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 810,
+      "value": {
+        "gate": "Sucafina package typecheck",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "typecheck"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 29948,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 815,
+      "value": {
+        "gate": "inspect history completeness",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "rev-parse",
+          "--is-shallow-repository"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 5,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 818,
+      "value": {
+        "gate": "fetch current dev and source ancestry",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "fetch",
+          "--no-tags",
+          "--unshallow",
+          "origin",
+          "+refs/heads/dev:refs/remotes/origin/dev",
+          "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 26846,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 823,
+      "value": {
+        "gate": "current dev identity",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "rev-parse",
+          "--verify",
+          "refs/remotes/origin/dev^{commit}"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 3,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 826,
+      "value": {
+        "gate": "actual guard merge base",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "git",
+          "merge-base",
+          "HEAD",
+          "origin/dev"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 8,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 830,
+      "value": {
+        "gate": "canonical guardrails",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev",
+          "--json"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "durationMs": 2274,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 836,
+      "value": {
+        "gate": "Portfolio selection cases and preferences whole-file",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 236,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 853,
+      "value": {
+        "gate": "Scenario lookup complete candidates whole-file",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/scenario-lookup-selection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 171,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 866,
+      "value": {
+        "gate": "Native scenario candidates selection whole-file",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/product/wp10/integration/scenario-candidates-native-projection.test.ts"
+        ],
+        "cwd": "modules/sucafina/Sucafinav1",
+        "exitCode": 0,
+        "durationMs": 447,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    },
+    {
+      "line": 880,
+      "value": {
+        "gate": "E15 route observer controls whole-file",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "command": [
+          "/home/runner/.bun/bin/bun",
+          "test",
+          "./test/sucafina-preview-route-e15-diagnostic.test.ts"
+        ],
+        "cwd": "apps/cli",
+        "exitCode": 0,
+        "durationMs": 1103,
+        "stdoutTruncated": false,
+        "stderrTruncated": false
+      }
+    }
+  ],
+  "hosts": [
+    {
+      "line": 748,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 763,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 782,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 804,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 809,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 814,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 835,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 851,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 865,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    },
+    {
+      "line": 879,
+      "value": {
+        "verification": "sf613-e15-route-persistence-diagnostic-focal",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "run": "46129731679",
+        "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+      }
+    }
+  ],
+  "pins": [
+    {
+      "line": 761,
+      "value": {
+        "gate": "reviewed source blobs",
+        "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+        "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+        "snapshot": "7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+            "sha": "d00519c139524b8b1b2699ac40868a40f1a18d02"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+            "sha": "3942f378f6d94f53b5622df2a459e127d410f543"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "sha": "637913f32c8b5489c2c90b78d309d52e2f3ee94c"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+            "sha": "244d46ee41e9ce288a7260938174a57161137bab"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+            "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+            "sha": "ccc5ea87046144843e1751b1288e907974d24ca5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+            "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+            "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "sha": "c9a887ede73e2ebf72b4c7c25c01c2396708454a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+            "sha": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+            "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+            "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+            "sha": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+            "sha": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+            "sha": "68ae48f9a039180824f5471a1de27c0ca34be088"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+            "sha": "cd71a9d8440cdc94cf6663928063c38449a25721"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+            "sha": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+            "sha": "b62d93080073964d7adc993c3a5c02277abab38a"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+            "sha": "9cbbba7a3292f22e766aad41e6066eb69ae6424a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "sha": "9267e181901f4bf9d33f85de0b223f18dbc1df17"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+            "sha": "8d4e1583efe5611114cd495b71197c7e1bb690df"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+            "sha": "90146429a3a264f4d66f5b74d1502715a58c1099"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+            "sha": "a3f69c5d987769a2ad66685f447002bf4307b2e1"
+          },
+          {
+            "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+            "sha": "8df288b2386618a7961ba20c1054e466cff39c95"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+            "sha": "5989de182f65c2a6faf20218adf8b20af6dfa000"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+            "sha": "ff0f95cb0edef96bda838f35712599e449d45031"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+            "sha": "2eed03d569ffe4c558cf3f737affb88899062629"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+            "sha": "8fce115635205bf07f2727cb3782677ee98ef482"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+            "sha": "e0d5decb4aa4e5f94885cd11c5afbbffbd96d279"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts",
+            "sha": "19948fe790a44f66b18775c34ac3df8ffc1228a4"
+          },
+          {
+            "path": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+            "sha": "06ad7e879bf15e4c2e1287a70f07524a618fd052"
+          },
+          {
+            "path": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts",
+            "sha": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"
+          }
+        ],
+        "expectedGroups": 10,
+        "expectedCommands": 16,
+        "functionalProcessesLaunched": 6,
+        "sourceCodePaths": 30,
+        "focalControlPaths": 2,
+        "staticDeclarationSites": {
+          "casesContract": 7,
+          "projection": 5,
+          "portfolioSelection": 3,
+          "scenarioLookup": 1,
+          "nativeScenarioSelection": 1,
+          "routeDiagnostic": 1
+        },
+        "expectedControlReports": 9
+      }
+    }
+  ],
+  "guard": {
+    "from": 831,
+    "to": 831,
+    "value": {
+      "base": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "bootstrap": false,
+      "rules": 78,
+      "files": 871,
+      "findings": [
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 89,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    globalThis.structuredClone = (value, options) => {",
+          "match": [
+            4,
+            33
+          ]
+        },
+        {
+          "rule": "test-globalthis",
+          "severity": "warn",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts",
+          "line": 95,
+          "message": "Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.",
+          "excerpt": "    finally { globalThis.structuredClone = original }",
+          "match": [
+            14,
+            43
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 110,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      }, { timeout: 60_000 })",
+          "match": [
+            9,
+            28
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 13,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(780_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 14,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 72,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 89,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-preview\"), { timeout: 60_000 })",
+          "match": [
+            124,
+            143
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 98,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-portfolio-evaluate\"), { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 156,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 203,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \"decision-sensitivity-evaluate\"), { timeout: 120_000 })",
+          "match": [
+            129,
+            149
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 438,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\"sf\") === \"bi-options\", { timeout: 60_000 })",
+          "match": [
+            113,
+            132
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 444,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  analyticsTest.setTimeout(660_000)",
+          "match": [
+            16,
+            34
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 445,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 471,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            125,
+            144
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 486,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-data\", { timeout: 60_000 })",
+          "match": [
+            116,
+            135
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 527,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"bi-source\", { timeout: 60_000 })",
+          "match": [
+            126,
+            145
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 616,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    }, { timeout: 60_000 })",
+          "match": [
+            7,
+            26
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+          "line": 661,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 20,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  collabTest.setTimeout(900_000)",
+          "match": [
+            13,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 21,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 103,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      \"/api/ui/pages/CAP18?\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })",
+          "match": [
+            109,
+            128
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 142,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      expect(surface).toHaveAttribute(\"data-sf-phase\", \"reviewing\", { timeout: 90_000 }),",
+          "match": [
+            68,
+            87
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 263,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(600_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts",
+          "line": 264,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(20_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 66,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  }, { timeout: 40_000 }).then(async (response) => {",
+          "match": [
+            5,
+            24
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 79,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })",
+          "match": [
+            66,
+            85
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 101,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", selected.state, { timeout: 40_000 })",
+          "match": [
+            105,
+            124
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 113,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "    await expect(root.locator(\".sf-state-panel\").first()).toHaveAttribute(\"data-sf-state\", \"ready\", { timeout: 40_000 })",
+          "match": [
+            100,
+            119
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 124,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(preview).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            36,
+            55
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 128,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(confirmed).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            38,
+            57
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 135,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(420_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 136,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 153,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(initialSource).not.toHaveAttribute(\"data-sf-state\", \"loading\", { timeout: 40_000 })",
+          "match": [
+            78,
+            97
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 218,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  waveFourTest.setTimeout(720_000)",
+          "match": [
+            15,
+            33
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 219,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  page.setDefaultTimeout(15_000)",
+          "match": [
+            7,
+            31
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 237,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "  await expect(page.locator(\"[data-sf-agenda-preview]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            69,
+            88
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 326,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toHaveAttribute(\"data-sf-comparison-compatibility\", \"compatible\", { timeout: 40_000 })",
+          "match": [
+            139,
+            158
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 405,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "      await expect(page.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            83,
+            102
+          ]
+        },
+        {
+          "rule": "test-timeout-raised",
+          "severity": "warn",
+          "path": "packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts",
+          "line": 437,
+          "message": "Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+          "excerpt": "        await expect(localized.locator(\"[data-sf-comparison-compatibility]\")).toBeVisible({ timeout: 40_000 })",
+          "match": [
+            90,
+            109
+          ]
+        }
+      ],
+      "errors": [],
+      "approved": [],
+      "touchesGuards": false
+    },
+    "body": "{\"base\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"bootstrap\":false,\"rules\":78,\"files\":871,\"findings\":[{\"rule\":\"test-globalthis\",\"severity\":\"warn\",\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts\",\"line\":89,\"message\":\"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.\",\"excerpt\":\"    globalThis.structuredClone = (value, options) => {\",\"match\":[4,33]},{\"rule\":\"test-globalthis\",\"severity\":\"warn\",\"path\":\"modules/sucafina/Sucafinav1/test/product/wp10/integration/coverage-case-selection.test.ts\",\"line\":95,\"message\":\"Test assigns to globalThis. Exercise the real implementation or inject a dependency; patch the global only when nothing else works.\",\"excerpt\":\"    finally { globalThis.structuredClone = original }\",\"match\":[14,43]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts\",\"line\":110,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      }, { timeout: 60_000 })\",\"match\":[9,28]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics-acquisition.spec.ts\",\"line\":218,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      }, { timeout: 60_000 })\",\"match\":[9,28]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":13,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(780_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":14,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":72,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const previewResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":89,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const repeatedPreview = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-preview\\\"), { timeout: 60_000 })\",\"match\":[124,143]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":98,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const recordedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-portfolio-evaluate\\\"), { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":156,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: object(await response.json()) }))\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":203,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const evaluatedResponse = page.waitForResponse((response) => isOperation(response.request(), \\\"decision-sensitivity-evaluate\\\"), { timeout: 120_000 })\",\"match\":[129,149]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":438,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const response = page.waitForResponse((entry) => new URL(entry.url()).searchParams.get(\\\"sf\\\") === \\\"bi-options\\\", { timeout: 60_000 })\",\"match\":[113,132]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":444,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  analyticsTest.setTimeout(660_000)\",\"match\":[16,34]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":445,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":471,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const financialResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[125,144]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":486,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  const readData = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-data\\\", { timeout: 60_000 })\",\"match\":[116,135]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":527,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    const sourceResponse = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\\\"sf\\\") === \\\"bi-source\\\", { timeout: 60_000 })\",\"match\":[126,145]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":616,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    }, { timeout: 60_000 })\",\"match\":[7,26]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts\",\"line\":661,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 60_000 }).then(async (response) => ({ response, body: await response.json().then(\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":20,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  collabTest.setTimeout(900_000)\",\"match\":[13,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":21,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":103,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      \\\"/api/ui/pages/CAP18?\\\" + new URLSearchParams({ year: String(installation.year), version: versionId }), { timeout: 40_000 })\",\"match\":[109,128]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":142,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      expect(surface).toHaveAttribute(\\\"data-sf-phase\\\", \\\"reviewing\\\", { timeout: 90_000 }),\",\"match\":[68,87]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":263,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(600_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-collab.spec.ts\",\"line\":264,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(20_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":66,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  }, { timeout: 40_000 }).then(async (response) => {\",\"match\":[5,24]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":79,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      const reread = await page.request.fetch(response.request(), { timeout: 40_000 })\",\"match\":[66,85]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":101,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", selected.state, { timeout: 40_000 })\",\"match\":[105,124]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":113,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"    await expect(root.locator(\\\".sf-state-panel\\\").first()).toHaveAttribute(\\\"data-sf-state\\\", \\\"ready\\\", { timeout: 40_000 })\",\"match\":[100,119]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":124,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(preview).toBeVisible({ timeout: 40_000 })\",\"match\":[36,55]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":128,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(confirmed).toBeVisible({ timeout: 40_000 })\",\"match\":[38,57]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":135,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(420_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":136,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":153,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(initialSource).not.toHaveAttribute(\\\"data-sf-state\\\", \\\"loading\\\", { timeout: 40_000 })\",\"match\":[78,97]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":218,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  waveFourTest.setTimeout(720_000)\",\"match\":[15,33]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":219,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  page.setDefaultTimeout(15_000)\",\"match\":[7,31]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":237,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"  await expect(page.locator(\\\"[data-sf-agenda-preview]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[69,88]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":326,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toHaveAttribute(\\\"data-sf-comparison-compatibility\\\", \\\"compatible\\\", { timeout: 40_000 })\",\"match\":[139,158]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":405,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"      await expect(page.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[83,102]},{\"rule\":\"test-timeout-raised\",\"severity\":\"warn\",\"path\":\"packages/app-shell/e2e/sucafina/design-wave-five-reviews.spec.ts\",\"line\":437,\"message\":\"Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.\",\"excerpt\":\"        await expect(localized.locator(\\\"[data-sf-comparison-compatibility]\\\")).toBeVisible({ timeout: 40_000 })\",\"match\":[90,109]}],\"errors\":[],\"approved\":[],\"touchesGuards\":false}"
+  },
+  "ancestry": {
+    "line": 829,
+    "raw": "2026-11-28T09:19:32.0640945Z {\"gate\":\"guard ancestry\",\"source\":\"908dab0b3124cea5aa4015fa6a5b96128e730c77\",\"sourceTree\":\"6b2065d3d159b0b4c3cad54f646bd109426f3b43\",\"dev\":\"c0bc0f22a4f2f5a2bdfa64407cd35769fd877886\",\"mergeBase\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\",\"command\":\"bun run check:guards --base origin/dev --json\"}",
+    "body": "{\"gate\":\"guard ancestry\",\"source\":\"908dab0b3124cea5aa4015fa6a5b96128e730c77\",\"sourceTree\":\"6b2065d3d159b0b4c3cad54f646bd109426f3b43\",\"dev\":\"c0bc0f22a4f2f5a2bdfa64407cd35769fd877886\",\"mergeBase\":\"490a1e1352081d28c0eb22afcd05fffea8b5323f\",\"historicalCompositionBase\":\"4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc\",\"command\":\"bun run check:guards --base origin/dev --json\"}",
+    "value": {
+      "gate": "guard ancestry",
+      "source": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+      "sourceTree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "mergeBase": "490a1e1352081d28c0eb22afcd05fffea8b5323f",
+      "historicalCompositionBase": "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc",
+      "command": "bun run check:guards --base origin/dev --json"
+    }
+  },
+  "footers": [
+    {
+      "line": 776,
+      "body": " 7 pass"
+    },
+    {
+      "line": 777,
+      "body": " 0 fail"
+    },
+    {
+      "line": 778,
+      "body": " 843 expect() calls"
+    },
+    {
+      "line": 779,
+      "body": "Ran 7 tests across 1 file. [253.00ms]"
+    },
+    {
+      "line": 799,
+      "body": " 5 pass"
+    },
+    {
+      "line": 800,
+      "body": " 0 fail"
+    },
+    {
+      "line": 801,
+      "body": " 757 expect() calls"
+    },
+    {
+      "line": 802,
+      "body": "Ran 5 tests across 1 file. [625.00ms]"
+    },
+    {
+      "line": 845,
+      "body": " 3 pass"
+    },
+    {
+      "line": 846,
+      "body": " 0 fail"
+    },
+    {
+      "line": 847,
+      "body": " 503 expect() calls"
+    },
+    {
+      "line": 848,
+      "body": "Ran 3 tests across 1 file. [228.00ms]"
+    },
+    {
+      "line": 860,
+      "body": " 1 pass"
+    },
+    {
+      "line": 861,
+      "body": " 0 fail"
+    },
+    {
+      "line": 862,
+      "body": " 147 expect() calls"
+    },
+    {
+      "line": 863,
+      "body": "Ran 1 test across 1 file. [163.00ms]"
+    },
+    {
+      "line": 873,
+      "body": " 1 pass"
+    },
+    {
+      "line": 874,
+      "body": " 0 fail"
+    },
+    {
+      "line": 875,
+      "body": " 157 expect() calls"
+    },
+    {
+      "line": 876,
+      "body": "Ran 1 test across 1 file. [435.00ms]"
+    },
+    {
+      "line": 888,
+      "body": " 1 pass"
+    },
+    {
+      "line": 889,
+      "body": " 0 fail"
+    },
+    {
+      "line": 890,
+      "body": " 53 expect() calls"
+    },
+    {
+      "line": 891,
+      "body": "Ran 1 test across 1 file. [1095.00ms]"
+    },
+    {
+      "line": 894,
+      "body": " 10 pass"
+    },
+    {
+      "line": 895,
+      "body": " 0 fail"
+    },
+    {
+      "line": 896,
+      "body": " 57 expect() calls"
+    },
+    {
+      "line": 897,
+      "body": "Ran 10 tests across 1 file. [90.01s]"
+    }
+  ],
+  "reports": [
+    {
+      "line": 786,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "payload": "{\"scenario\":\"complete-product-and-fresh-authorization\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"preimage\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2},{\"mode\":\"top-level\",\"callbacks\":3,\"authentication\":18,\"opaqueAuthorizationSnapshots\":2}],\"subsequentPreferenceVersion\":2,\"createIdReceiver\":\"original mutable C08 input\",\"projector\":\"installed original\",\"limit\":\"top-level stays full; no parse count, domain-size ratio or performance qualification\"}",
+      "value": {
+        "scenario": "complete-product-and-fresh-authorization",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "preimage",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          },
+          {
+            "mode": "top-level",
+            "callbacks": 3,
+            "authentication": 18,
+            "opaqueAuthorizationSnapshots": 2
+          }
+        ],
+        "subsequentPreferenceVersion": 2,
+        "createIdReceiver": "original mutable C08 input",
+        "projector": "installed original",
+        "limit": "top-level stays full; no parse count, domain-size ratio or performance qualification"
+      }
+    },
+    {
+      "line": 787,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "payload": "{\"scenario\":\"opaque-equivalence-and-live-refusal\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"preimage-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"preimage-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"readonly-source-checks-projected-drift\",\"callbacks\":0,\"authentication\":3,\"replacementCalls\":0},{\"scenario\":\"readonly-source-checks-opaque-drift\",\"callbacks\":1,\"authentication\":6,\"replacementCalls\":1},{\"scenario\":\"source-accessor-full-fallback\",\"callbacks\":1},{\"scenario\":\"driver-drift-before-body\",\"callbacks\":0,\"authentication\":0},{\"scenario\":\"CurrentChoice-scoped-full-fallback\",\"callbacks\":2,\"authentication\":18},{\"scenario\":\"real-authority-revoked-after-body\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"callback-error-without-replay-or-poison\",\"callbacks\":1},{\"scenario\":\"request-abort-after-body\",\"callbacks\":1,\"authentication\":3},{\"scenario\":\"caught-nested-write-still-poisons-owner\",\"callbacks\":1},{\"scenario\":\"early-prototype-full\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"late-prototype-projected\",\"callbacks\":0,\"authentication\":3},{\"scenario\":\"late-prototype-opaque\",\"callbacks\":1,\"authentication\":6},{\"scenario\":\"opaque-native-driver-full-fallback\",\"callbacks\":2}],\"limit\":\"functional route and refusal evidence only; no latency, parse-count or clean Analytics claim\"}",
+      "value": {
+        "scenario": "opaque-equivalence-and-live-refusal",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "preimage-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "preimage-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "readonly-source-checks-projected-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "replacementCalls": 0
+          },
+          {
+            "scenario": "readonly-source-checks-opaque-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "replacementCalls": 1
+          },
+          {
+            "scenario": "source-accessor-full-fallback",
+            "callbacks": 1
+          },
+          {
+            "scenario": "driver-drift-before-body",
+            "callbacks": 0,
+            "authentication": 0
+          },
+          {
+            "scenario": "CurrentChoice-scoped-full-fallback",
+            "callbacks": 2,
+            "authentication": 18
+          },
+          {
+            "scenario": "real-authority-revoked-after-body",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "callback-error-without-replay-or-poison",
+            "callbacks": 1
+          },
+          {
+            "scenario": "request-abort-after-body",
+            "callbacks": 1,
+            "authentication": 3
+          },
+          {
+            "scenario": "caught-nested-write-still-poisons-owner",
+            "callbacks": 1
+          },
+          {
+            "scenario": "early-prototype-full",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "late-prototype-projected",
+            "callbacks": 0,
+            "authentication": 3
+          },
+          {
+            "scenario": "late-prototype-opaque",
+            "callbacks": 1,
+            "authentication": 6
+          },
+          {
+            "scenario": "opaque-native-driver-full-fallback",
+            "callbacks": 2
+          }
+        ],
+        "limit": "functional route and refusal evidence only; no latency, parse-count or clean Analytics claim"
+      }
+    },
+    {
+      "line": 788,
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "payload": "{\"scenario\":\"whole-graphs-and-shape\",\"qualification\":false,\"outcomes\":[{\"mode\":\"readonly\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"readonly\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"cases\",\"callbacks\":3,\"authentication\":18},{\"mode\":\"preimage\",\"namespace\":\"preferences\",\"callbacks\":3,\"authentication\":18}],\"aliases\":\"custom full path retained; each selected callback receives its own graph\",\"limit\":\"native structural copy and functional composition; no latency or current Analytics result\"}",
+      "value": {
+        "scenario": "whole-graphs-and-shape",
+        "qualification": false,
+        "outcomes": [
+          {
+            "mode": "readonly",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "readonly",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "cases",
+            "callbacks": 3,
+            "authentication": 18
+          },
+          {
+            "mode": "preimage",
+            "namespace": "preferences",
+            "callbacks": 3,
+            "authentication": 18
+          }
+        ],
+        "aliases": "custom full path retained; each selected callback receives its own graph",
+        "limit": "native structural copy and functional composition; no latency or current Analytics result"
+      }
+    },
+    {
+      "line": 789,
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "payload": "{\"scenario\":\"shape-precedence-and-drift\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"readonly-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"readonly-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-cases-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"preimage-preferences-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"active-source-checks-narrow-drift\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"refused before callback\"},{\"scenario\":\"narrow-second-authorization-drift\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"returned body withheld\"},{\"scenario\":\"case-precedence\",\"callbacks\":null,\"authentication\":6,\"outcome\":\"factory callback returned; not wrapped to count\"},{\"scenario\":\"namespace-mismatch\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"late-registration\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original full fallback and selection order\"},{\"scenario\":\"invalid-map\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-version\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"invalid-additive\",\"callbacks\":0,\"authentication\":3,\"outcome\":\"original invalid-product-state\"},{\"scenario\":\"legacy\",\"callbacks\":1,\"authentication\":6,\"outcome\":\"original legacy normalization\"},{\"scenario\":\"throw-sentinel\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"},{\"scenario\":\"throw-undefined\",\"callbacks\":1,\"authentication\":9,\"outcome\":\"original exception; next child remains usable\"}],\"limit\":\"narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores\"}",
+      "value": {
+        "scenario": "shape-precedence-and-drift",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "readonly-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "readonly-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-cases-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "preimage-preferences-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "active-source-checks-narrow-drift",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "refused before callback"
+          },
+          {
+            "scenario": "narrow-second-authorization-drift",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "returned body withheld"
+          },
+          {
+            "scenario": "case-precedence",
+            "callbacks": null,
+            "authentication": 6,
+            "outcome": "factory callback returned; not wrapped to count"
+          },
+          {
+            "scenario": "namespace-mismatch",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "late-registration",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original full fallback and selection order"
+          },
+          {
+            "scenario": "invalid-map",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-version",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "invalid-additive",
+            "callbacks": 0,
+            "authentication": 3,
+            "outcome": "original invalid-product-state"
+          },
+          {
+            "scenario": "legacy",
+            "callbacks": 1,
+            "authentication": 6,
+            "outcome": "original legacy normalization"
+          },
+          {
+            "scenario": "throw-sentinel",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          },
+          {
+            "scenario": "throw-undefined",
+            "callbacks": 1,
+            "authentication": 9,
+            "outcome": "original exception; next child remains usable"
+          }
+        ],
+        "limit": "narrow admission is proven by behavior; C14 preserves write poison, wrappers, abort and opaque stores"
+      }
+    },
+    {
+      "line": 790,
+      "prefix": "SF_C16_SELECTION_CONTROL",
+      "payload": "{\"scenario\":\"closed-case-factories\",\"qualification\":false,\"outcomes\":[{\"scenario\":\"case-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"case-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-readonly-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-readonly-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-fresh-values\",\"authentication\":18,\"outcome\":\"same values and metadata; independent copies; both real authorizations\"},{\"scenario\":\"identity-preimage-c16Missing\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"identity-preimage-c16Malformed\",\"authentication\":12,\"outcome\":\"closed factory matches the original full fallback\"},{\"scenario\":\"case-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-prototype\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-first-concurrent-declaration\",\"authentication\":3,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-prototype\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"identity-second-concurrent-declaration\",\"authentication\":6,\"outcome\":\"projected result withheld without replay\"},{\"scenario\":\"case-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"case-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-concurrent\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-opaque-context\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-namespace\",\"authentication\":6,\"outcome\":\"complete fallback preserved\"},{\"scenario\":\"identity-key-observed-after-first-authorization\",\"authentication\":6,\"outcome\":\"no key read at registration, native selection or reauthorization\"},{\"scenario\":\"identity-throw-sentinel\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-throw-undefined\",\"authentication\":9,\"outcome\":\"original throw preserved; next child remains usable\"},{\"scenario\":\"identity-request-abort\",\"authentication\":3,\"outcome\":\"original abort refuses the root\"},{\"scenario\":\"poisoned-native-root\",\"authentication\":0,\"outcome\":\"no child result or root accepted after caught commit:true\"}],\"identityProjection\":{\"cases\":[\"mixed-map-and-detached-readonly\",\"mixed-map-and-detached-preimage\",\"composed-identity-first-authorization-drift\",\"composed-identity-second-authorization-drift\",\"restored-codec-birth-keeps-complete-case\",\"restored-codec-exposure-keeps-complete-case\",\"cold-plan-birth-survives-restore-and-memo\",\"owner-weakmap-escape-latches-across-roots\",\"owner-als-escape-latches-across-roots\"],\"limit\":\"readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases\"},\"limits\":\"composed functional and refusal oracles; no latency or current Analytics qualification\"}",
+      "value": {
+        "scenario": "closed-case-factories",
+        "qualification": false,
+        "outcomes": [
+          {
+            "scenario": "case-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "case-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-readonly-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-readonly-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-fresh-values",
+            "authentication": 18,
+            "outcome": "same values and metadata; independent copies; both real authorizations"
+          },
+          {
+            "scenario": "identity-preimage-c16Missing",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "identity-preimage-c16Malformed",
+            "authentication": 12,
+            "outcome": "closed factory matches the original full fallback"
+          },
+          {
+            "scenario": "case-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-prototype",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-first-concurrent-declaration",
+            "authentication": 3,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-prototype",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "identity-second-concurrent-declaration",
+            "authentication": 6,
+            "outcome": "projected result withheld without replay"
+          },
+          {
+            "scenario": "case-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "case-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-concurrent",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-opaque-context",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-namespace",
+            "authentication": 6,
+            "outcome": "complete fallback preserved"
+          },
+          {
+            "scenario": "identity-key-observed-after-first-authorization",
+            "authentication": 6,
+            "outcome": "no key read at registration, native selection or reauthorization"
+          },
+          {
+            "scenario": "identity-throw-sentinel",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-throw-undefined",
+            "authentication": 9,
+            "outcome": "original throw preserved; next child remains usable"
+          },
+          {
+            "scenario": "identity-request-abort",
+            "authentication": 3,
+            "outcome": "original abort refuses the root"
+          },
+          {
+            "scenario": "poisoned-native-root",
+            "authentication": 0,
+            "outcome": "no child result or root accepted after caught commit:true"
+          }
+        ],
+        "identityProjection": {
+          "cases": [
+            "mixed-map-and-detached-readonly",
+            "mixed-map-and-detached-preimage",
+            "composed-identity-first-authorization-drift",
+            "composed-identity-second-authorization-drift",
+            "restored-codec-birth-keeps-complete-case",
+            "restored-codec-exposure-keeps-complete-case",
+            "cold-plan-birth-survives-restore-and-memo",
+            "owner-weakmap-escape-latches-across-roots",
+            "owner-als-escape-latches-across-roots"
+          ],
+          "limit": "readonly birth/plan/owner and mixed-map oracles; preimage keeps complete cases"
+        },
+        "limits": "composed functional and refusal oracles; no latency or current Analytics qualification"
+      }
+    },
+    {
+      "line": 838,
+      "prefix": "SF_C19_PORTFOLIO_CASES",
+      "payload": "{\"schema\":\"sf-c19-portfolio-cases-v1\",\"customCaptures\":6,\"nativeReads\":9,\"reachableFailures\":6,\"revocations\":3,\"mixedReads\":1}",
+      "value": {
+        "schema": "sf-c19-portfolio-cases-v1",
+        "customCaptures": 6,
+        "nativeReads": 9,
+        "reachableFailures": 6,
+        "revocations": 3,
+        "mixedReads": 1
+      }
+    },
+    {
+      "line": 855,
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "payload": "{\"schema\":\"sf-c20-scenario-lookup-v1\",\"checks\":[\"consumer-selects-complete-detached-results\",\"opaque-wrapper-keeps-full-state\",\"mutable-context-uses-opaque-fallback\",\"proxy-context-uses-opaque-fallback\",\"map-prototype-uses-opaque-fallback\",\"request-key-remains-late-after-admission\",\"mutable-binding-is-observed-after-admission\",\"admission-denied-does-not-disclose\",\"egress-revoked-does-not-disclose\",\"abort-does-not-disclose\",\"unmatched-getter-selected\",\"unmatched-getter-opaque\",\"unmatched-function-selected\",\"unmatched-function-opaque\"]}",
+      "value": {
+        "schema": "sf-c20-scenario-lookup-v1",
+        "checks": [
+          "consumer-selects-complete-detached-results",
+          "opaque-wrapper-keeps-full-state",
+          "mutable-context-uses-opaque-fallback",
+          "proxy-context-uses-opaque-fallback",
+          "map-prototype-uses-opaque-fallback",
+          "request-key-remains-late-after-admission",
+          "mutable-binding-is-observed-after-admission",
+          "admission-denied-does-not-disclose",
+          "egress-revoked-does-not-disclose",
+          "abort-does-not-disclose",
+          "unmatched-getter-selected",
+          "unmatched-getter-opaque",
+          "unmatched-function-selected",
+          "unmatched-function-opaque"
+        ]
+      }
+    },
+    {
+      "line": 868,
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+      "payload": "{\"schema\":\"sf-c21-native-scenario-selection-v1\",\"outcomes\":[\"native-whole-collection-readonly\",\"composed-fresh-candidates-readonly\",\"native-whole-collection-preimage\",\"composed-fresh-candidates-preimage\",\"request-key-after-first-authorize\",\"composed-prototype-first\",\"composed-declaration-first\",\"composed-prototype-second\",\"composed-declaration-second\",\"full-fallback-mutable-context\",\"full-fallback-wrapped-callback\",\"full-fallback-concurrent-declaration\",\"full-fallback-namespace\",\"full-fallback-top-level\",\"full-fallback-CurrentChoice-scoped\",\"full-shape-fallback-absent\",\"full-shape-fallback-own-undefined\",\"full-shape-fallback-array\",\"empty-collection-is-a-real-selection\"],\"contexts\":[\"readonly\",\"preimage\"],\"originalProjectionControlsPreserved\":5,\"claim\":\"physical child selection and fallback only; no installed latency measurement\"}",
+      "value": {
+        "schema": "sf-c21-native-scenario-selection-v1",
+        "outcomes": [
+          "native-whole-collection-readonly",
+          "composed-fresh-candidates-readonly",
+          "native-whole-collection-preimage",
+          "composed-fresh-candidates-preimage",
+          "request-key-after-first-authorize",
+          "composed-prototype-first",
+          "composed-declaration-first",
+          "composed-prototype-second",
+          "composed-declaration-second",
+          "full-fallback-mutable-context",
+          "full-fallback-wrapped-callback",
+          "full-fallback-concurrent-declaration",
+          "full-fallback-namespace",
+          "full-fallback-top-level",
+          "full-fallback-CurrentChoice-scoped",
+          "full-shape-fallback-absent",
+          "full-shape-fallback-own-undefined",
+          "full-shape-fallback-array",
+          "empty-collection-is-a-real-selection"
+        ],
+        "contexts": [
+          "readonly",
+          "preimage"
+        ],
+        "originalProjectionControlsPreserved": 5,
+        "claim": "physical child selection and fallback only; no installed latency measurement"
+      }
+    },
+    {
+      "line": 883,
+      "prefix": "SF_E15_ROUTE_CONTROL",
+      "payload": "{\"schema\":\"sf-preview-e15-control-v1\",\"synthetic\":true,\"childModes\":[\"route-owner\",\"work-links\",\"native-chain\",\"persistence-tail\",\"capacity\",\"mechanism\",\"sink-zero\",\"sink-partial\",\"sink-throw\",\"forwarder\"],\"reports\":[{\"pid\":3165,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"route-owner\",\"pid\":3165,\"synthetic\":true,\"checks\":[\"first-canonical-private-owner-across-suspension\",\"second-canonical-and-Finance-cannot-steal\",\"two-preparation-four-comparator-lookups\",\"undefined-and-closed-route-mask-ambient\",\"real-LF-prefix-before-completion\",\"exact-Promise-and-thenable-no-assimilation\",\"body-return-is-not-Promise-settlement-or-phase-close\"],\"records\":90,\"stdoutAttempts\":90,\"stdoutBytes\":50173,\"stdoutSha256\":\"dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0\",\"fileAttempts\":90,\"fileBytes\":50173,\"fileSha256\":\"dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":90,\"outcome\":\"returned\",\"openUnits\":0,\"openPhases\":0,\"compareBodies\":[1,1,0,0,0,0],\"routeCoverage\":[1,2,4,0,0,0],\"faultsBefore\":[0,0,0,0,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3175,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"work-links\",\"pid\":3175,\"synthetic\":true,\"checks\":[\"exact-work-links-no-callback-invocation\",\"wrapped-work-requires-explicit-link\",\"provider-missing-and-foreign-callback-no-view\",\"comparator-Finance-cannot-claim-preparation-owner\",\"not-evaluated-false-true-nonboolean-gates\",\"throw-undefined-copy-has-no-returned-view\"],\"records\":78,\"stdoutAttempts\":78,\"stdoutBytes\":43326,\"stdoutSha256\":\"ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c\",\"fileAttempts\":78,\"fileBytes\":43326,\"fileSha256\":\"ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":78,\"outcome\":\"returned\",\"openUnits\":0,\"openPhases\":0,\"compareBodies\":[0,0,0,0,0,0],\"routeCoverage\":[1,2,4,0,0,0],\"faultsBefore\":[0,0,0,0,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3185,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"native-chain\",\"pid\":3185,\"synthetic\":true,\"checks\":[\"real-native-top-level-versus-held-root\",\"real-native-direct-and-wrapped-C08-identities\",\"real-native-preimage-keeps-selection\",\"real-native-queue-prefix-before-release\",\"real-native-write-and-post-write-boundaries-distinct\"],\"records\":113,\"stdoutAttempts\":113,\"stdoutBytes\":63228,\"stdoutSha256\":\"21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23\",\"fileAttempts\":113,\"fileBytes\":63228,\"fileSha256\":\"21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":113,\"outcome\":\"returned\",\"openUnits\":0,\"openPhases\":0,\"compareBodies\":[0,0,0,0,0,0],\"routeCoverage\":[1,2,4,1,0,0],\"faultsBefore\":[0,0,0,0,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3198,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"persistence-tail\",\"pid\":3198,\"synthetic\":true,\"checks\":[\"first-persistence-requires-first-analysis-phase\",\"operation-true-is-not-transaction-identity\",\"queue-prefix-does-not-fabricate-BEGIN-or-commit\",\"post-write-binding-remains-distinct\",\"reentrant-terminal-freezes-open-prefix-without-late-close\"],\"records\":43,\"stdoutAttempts\":43,\"stdoutBytes\":24224,\"stdoutSha256\":\"6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1\",\"fileAttempts\":43,\"fileBytes\":24224,\"fileSha256\":\"6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":43,\"outcome\":\"returned\",\"openUnits\":1,\"openPhases\":1,\"compareBodies\":[0,0,0,0,0,0],\"routeCoverage\":[0,0,0,1,0,0],\"faultsBefore\":[0,0,0,0,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3208,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"capacity\",\"pid\":3208,\"synthetic\":true,\"checks\":[\"six-hundred-works-survive-general-detail-cap\",\"critical-sites-and-tail-survive-general-cap\",\"global-four-body-checkpoints-survive-cap\",\"exact-191-line-reservation-model\",\"terminal-reserved-at-full-cap\"],\"records\":191,\"stdoutAttempts\":191,\"stdoutBytes\":110968,\"stdoutSha256\":\"0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4\",\"fileAttempts\":191,\"fileBytes\":110968,\"fileSha256\":\"0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":191,\"outcome\":\"returned\",\"openUnits\":0,\"openPhases\":0,\"compareBodies\":[128,128,0,0,0,0],\"routeCoverage\":[1,2,4,1,0,0],\"faultsBefore\":[0,0,0,0,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3218,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"mechanism\",\"pid\":3218,\"synthetic\":true,\"checks\":[\"Finance-observation-return-does-not-invent-work\",\"duplicate-and-tardy-thunk-never-replay\",\"mechanism-result-and-swallowed-error-not-authoritative\",\"before-noinvoke-after-faults-preserve-work\",\"scope-fallback-disables-attribution\"],\"records\":7,\"stdoutAttempts\":7,\"stdoutBytes\":4012,\"stdoutSha256\":\"418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed\",\"fileAttempts\":7,\"fileBytes\":4012,\"fileSha256\":\"418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed\",\"terminal\":{\"kind\":\"request-close\",\"sequence\":7,\"outcome\":\"returned\",\"openUnits\":0,\"openPhases\":0,\"compareBodies\":[0,0,0,0,0,0],\"routeCoverage\":[1,0,0,0,0,0],\"faultsBefore\":[0,0,1,1,0,0],\"saturated\":false},\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3227,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"sink-zero\",\"pid\":3227,\"synthetic\":true,\"checks\":[\"sink-zero-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"records\":1,\"stdoutAttempts\":2,\"stdoutBytes\":518,\"stdoutSha256\":\"974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb\",\"fileAttempts\":2,\"fileBytes\":518,\"fileSha256\":\"974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb\",\"terminal\":null,\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3236,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"sink-partial\",\"pid\":3236,\"synthetic\":true,\"checks\":[\"sink-partial-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"records\":1,\"stdoutAttempts\":2,\"stdoutBytes\":518,\"stdoutSha256\":\"fdc3ceced64994ae3033d0df20b5f1647c398005d1848b3654746edd44026208\",\"fileAttempts\":2,\"fileBytes\":731,\"fileSha256\":\"260f596b4d15f7db537ff60e1b572279c80540fff6f917dfd7839de84cac4d78\",\"terminal\":null,\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3245,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"sink-throw\",\"pid\":3245,\"synthetic\":true,\"checks\":[\"sink-throw-latches-once\",\"restored-sink-is-not-retried\",\"product-undefined-throw-survives-sink-fault\",\"incomplete-prefix-has-no-fabricated-terminal\"],\"records\":1,\"stdoutAttempts\":2,\"stdoutBytes\":518,\"stdoutSha256\":\"df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef\",\"fileAttempts\":2,\"fileBytes\":518,\"fileSha256\":\"df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef\",\"terminal\":null,\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0},{\"pid\":3254,\"report\":{\"schema\":\"sf-preview-e15-control-child-v1\",\"mode\":\"forwarder\",\"pid\":3254,\"synthetic\":true,\"checks\":[\"forwarder-real-chunk-identity-and-multilines\",\"forwarder-only-real-LF-no-EOF-promotion\",\"forwarder-ASCII-byte-bound-before-LF\",\"forwarder-invalid-diagnostic-latches\",\"forwarder-unrelated-long-lines-ignored\",\"forwarder-zero-partial-undefined-throw-no-retry\",\"forwarder-191-events-and-191KiB\",\"forwarder-one-disabled-and-exclusive-mode\"],\"framingOnly\":true,\"stdoutAttempts\":200,\"completeLines\":197,\"partialFragments\":1,\"terminal\":null,\"requestGets\":0},\"omniSpawns\":1,\"omniDelegations\":0}]}",
+      "value": {
+        "schema": "sf-preview-e15-control-v1",
+        "synthetic": true,
+        "childModes": [
+          "route-owner",
+          "work-links",
+          "native-chain",
+          "persistence-tail",
+          "capacity",
+          "mechanism",
+          "sink-zero",
+          "sink-partial",
+          "sink-throw",
+          "forwarder"
+        ],
+        "reports": [
+          {
+            "pid": 3165,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "route-owner",
+              "pid": 3165,
+              "synthetic": true,
+              "checks": [
+                "first-canonical-private-owner-across-suspension",
+                "second-canonical-and-Finance-cannot-steal",
+                "two-preparation-four-comparator-lookups",
+                "undefined-and-closed-route-mask-ambient",
+                "real-LF-prefix-before-completion",
+                "exact-Promise-and-thenable-no-assimilation",
+                "body-return-is-not-Promise-settlement-or-phase-close"
+              ],
+              "records": 90,
+              "stdoutAttempts": 90,
+              "stdoutBytes": 50173,
+              "stdoutSha256": "dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0",
+              "fileAttempts": 90,
+              "fileBytes": 50173,
+              "fileSha256": "dce53883d266e6ef442ecdea2e8d29ceed5970ed60680c69d11a7700f5dc3cd0",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 90,
+                "outcome": "returned",
+                "openUnits": 0,
+                "openPhases": 0,
+                "compareBodies": [
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  1,
+                  2,
+                  4,
+                  0,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3175,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "work-links",
+              "pid": 3175,
+              "synthetic": true,
+              "checks": [
+                "exact-work-links-no-callback-invocation",
+                "wrapped-work-requires-explicit-link",
+                "provider-missing-and-foreign-callback-no-view",
+                "comparator-Finance-cannot-claim-preparation-owner",
+                "not-evaluated-false-true-nonboolean-gates",
+                "throw-undefined-copy-has-no-returned-view"
+              ],
+              "records": 78,
+              "stdoutAttempts": 78,
+              "stdoutBytes": 43326,
+              "stdoutSha256": "ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c",
+              "fileAttempts": 78,
+              "fileBytes": 43326,
+              "fileSha256": "ccb1f21547245d75769ee6fefbdebe099828975a7cf02b58daa2eeea34f1a02c",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 78,
+                "outcome": "returned",
+                "openUnits": 0,
+                "openPhases": 0,
+                "compareBodies": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  1,
+                  2,
+                  4,
+                  0,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3185,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "native-chain",
+              "pid": 3185,
+              "synthetic": true,
+              "checks": [
+                "real-native-top-level-versus-held-root",
+                "real-native-direct-and-wrapped-C08-identities",
+                "real-native-preimage-keeps-selection",
+                "real-native-queue-prefix-before-release",
+                "real-native-write-and-post-write-boundaries-distinct"
+              ],
+              "records": 113,
+              "stdoutAttempts": 113,
+              "stdoutBytes": 63228,
+              "stdoutSha256": "21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23",
+              "fileAttempts": 113,
+              "fileBytes": 63228,
+              "fileSha256": "21f2da829ef1353aed85f033326717630e37fe86cbb2f2183204efe7b04c0e23",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 113,
+                "outcome": "returned",
+                "openUnits": 0,
+                "openPhases": 0,
+                "compareBodies": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  1,
+                  2,
+                  4,
+                  1,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3198,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "persistence-tail",
+              "pid": 3198,
+              "synthetic": true,
+              "checks": [
+                "first-persistence-requires-first-analysis-phase",
+                "operation-true-is-not-transaction-identity",
+                "queue-prefix-does-not-fabricate-BEGIN-or-commit",
+                "post-write-binding-remains-distinct",
+                "reentrant-terminal-freezes-open-prefix-without-late-close"
+              ],
+              "records": 43,
+              "stdoutAttempts": 43,
+              "stdoutBytes": 24224,
+              "stdoutSha256": "6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1",
+              "fileAttempts": 43,
+              "fileBytes": 24224,
+              "fileSha256": "6042d432e8370f54453c23d86722e86940902d7bf63fb535a5c2f8507aa5d5d1",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 43,
+                "outcome": "returned",
+                "openUnits": 1,
+                "openPhases": 1,
+                "compareBodies": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3208,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "capacity",
+              "pid": 3208,
+              "synthetic": true,
+              "checks": [
+                "six-hundred-works-survive-general-detail-cap",
+                "critical-sites-and-tail-survive-general-cap",
+                "global-four-body-checkpoints-survive-cap",
+                "exact-191-line-reservation-model",
+                "terminal-reserved-at-full-cap"
+              ],
+              "records": 191,
+              "stdoutAttempts": 191,
+              "stdoutBytes": 110968,
+              "stdoutSha256": "0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4",
+              "fileAttempts": 191,
+              "fileBytes": 110968,
+              "fileSha256": "0494b74c312b476c62312b99600e1d873181dec41370b5941c20752c9bb9f0b4",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 191,
+                "outcome": "returned",
+                "openUnits": 0,
+                "openPhases": 0,
+                "compareBodies": [
+                  128,
+                  128,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  1,
+                  2,
+                  4,
+                  1,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3218,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "mechanism",
+              "pid": 3218,
+              "synthetic": true,
+              "checks": [
+                "Finance-observation-return-does-not-invent-work",
+                "duplicate-and-tardy-thunk-never-replay",
+                "mechanism-result-and-swallowed-error-not-authoritative",
+                "before-noinvoke-after-faults-preserve-work",
+                "scope-fallback-disables-attribution"
+              ],
+              "records": 7,
+              "stdoutAttempts": 7,
+              "stdoutBytes": 4012,
+              "stdoutSha256": "418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed",
+              "fileAttempts": 7,
+              "fileBytes": 4012,
+              "fileSha256": "418c3cebea9ca459f2afafbb1ea8379ca90b819c0be475769d88b4d8ea73b4ed",
+              "terminal": {
+                "kind": "request-close",
+                "sequence": 7,
+                "outcome": "returned",
+                "openUnits": 0,
+                "openPhases": 0,
+                "compareBodies": [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "routeCoverage": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "faultsBefore": [
+                  0,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0
+                ],
+                "saturated": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3227,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "sink-zero",
+              "pid": 3227,
+              "synthetic": true,
+              "checks": [
+                "sink-zero-latches-once",
+                "restored-sink-is-not-retried",
+                "product-undefined-throw-survives-sink-fault",
+                "incomplete-prefix-has-no-fabricated-terminal"
+              ],
+              "records": 1,
+              "stdoutAttempts": 2,
+              "stdoutBytes": 518,
+              "stdoutSha256": "974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb",
+              "fileAttempts": 2,
+              "fileBytes": 518,
+              "fileSha256": "974c18dc490f15abb68e18ba4160e6b1c3be8fca6975b1967f2ab66e3f6398cb",
+              "terminal": null,
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3236,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "sink-partial",
+              "pid": 3236,
+              "synthetic": true,
+              "checks": [
+                "sink-partial-latches-once",
+                "restored-sink-is-not-retried",
+                "product-undefined-throw-survives-sink-fault",
+                "incomplete-prefix-has-no-fabricated-terminal"
+              ],
+              "records": 1,
+              "stdoutAttempts": 2,
+              "stdoutBytes": 518,
+              "stdoutSha256": "fdc3ceced64994ae3033d0df20b5f1647c398005d1848b3654746edd44026208",
+              "fileAttempts": 2,
+              "fileBytes": 731,
+              "fileSha256": "260f596b4d15f7db537ff60e1b572279c80540fff6f917dfd7839de84cac4d78",
+              "terminal": null,
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3245,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "sink-throw",
+              "pid": 3245,
+              "synthetic": true,
+              "checks": [
+                "sink-throw-latches-once",
+                "restored-sink-is-not-retried",
+                "product-undefined-throw-survives-sink-fault",
+                "incomplete-prefix-has-no-fabricated-terminal"
+              ],
+              "records": 1,
+              "stdoutAttempts": 2,
+              "stdoutBytes": 518,
+              "stdoutSha256": "df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef",
+              "fileAttempts": 2,
+              "fileBytes": 518,
+              "fileSha256": "df9a24e483a23c8d4da43ff7e8e1cd8c1d2bd7e1936cf6127ea13942782844ef",
+              "terminal": null,
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 3254,
+            "report": {
+              "schema": "sf-preview-e15-control-child-v1",
+              "mode": "forwarder",
+              "pid": 3254,
+              "synthetic": true,
+              "checks": [
+                "forwarder-real-chunk-identity-and-multilines",
+                "forwarder-only-real-LF-no-EOF-promotion",
+                "forwarder-ASCII-byte-bound-before-LF",
+                "forwarder-invalid-diagnostic-latches",
+                "forwarder-unrelated-long-lines-ignored",
+                "forwarder-zero-partial-undefined-throw-no-retry",
+                "forwarder-191-events-and-191KiB",
+                "forwarder-one-disabled-and-exclusive-mode"
+              ],
+              "framingOnly": true,
+              "stdoutAttempts": 200,
+              "completeLines": 197,
+              "partialFragments": 1,
+              "terminal": null,
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          }
+        ]
+      }
+    }
+  ],
+  "oldReportComparison": [
+    {
+      "index": 1,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 584,
+      "newLength": 584,
+      "oldSuffix": "\"on\\\"}\""
+    },
+    {
+      "index": 2,
+      "prefix": "SF_C14_SNAPSHOT_CONTROL",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 1580,
+      "newLength": 1580,
+      "oldSuffix": "\"im\\\"}\""
+    },
+    {
+      "index": 3,
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 590,
+      "newLength": 590,
+      "oldSuffix": "\"lt\\\"}\""
+    },
+    {
+      "index": 4,
+      "prefix": "SF_C15_SELECTION_CONTROL",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 1936,
+      "newLength": 1936,
+      "oldSuffix": "\"es\\\"}\""
+    },
+    {
+      "index": 5,
+      "prefix": "SF_C16_SELECTION_CONTROL",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 4406,
+      "newLength": 4406,
+      "oldSuffix": "\"on\\\"}\""
+    },
+    {
+      "index": 6,
+      "prefix": "SF_C19_PORTFOLIO_CASES",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 149,
+      "newLength": 149,
+      "oldSuffix": "\"\\\":1}\""
+    },
+    {
+      "index": 7,
+      "prefix": "SF_C20_SCENARIO_LOOKUP",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 563,
+      "newLength": 563,
+      "oldSuffix": "\"e\\\"]}\""
+    },
+    {
+      "index": 8,
+      "prefix": "SF_C21_NATIVE_SCENARIO_SELECTION",
+      "equalPrefix": true,
+      "literalPayloadWithoutTimestamp": true,
+      "oldLength": 875,
+      "newLength": 875,
+      "oldSuffix": "\"nt\\\"}\""
+    }
+  ],
+  "reportUnion": {
+    "gitBlob": "b76b693cea0cc460a91e0e532f5a54ff05102dd5",
+    "bytes": 18610,
+    "sha256": "e8a05a9be415f12899e3946d7860d730aacd0acec47ace7c4abe17c1f7804360",
+    "lf": 9,
+    "endsWithLF": true
+  },
+  "artifactMetadata": {
+    "total_count": 0,
+    "artifacts": []
+  },
+  "branchRefsAfterCleanup": [],
+  "notes": [
+    "Report payload fields here exclude the prefix; literal lines reconstruct as prefix + one ASCII space + payload + LF.",
+    "C21 report payload fields in older extraction included prefix and space. The comparison accounts for this representation difference without changing the JSON literal.",
+    "Guard40 findings array is literal C21, with2globalThis/38timeout warnings and no errors/approved entries."
+  ]
+}

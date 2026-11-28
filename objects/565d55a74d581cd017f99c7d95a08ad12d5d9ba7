@@ -1,0 +1,750 @@
+{
+  "schema": "sf613-e15-control-bounds-v1",
+  "status": "STATIC_PROPOSAL_NO_EXECUTION",
+  "scope": {
+    "ownedFiles": [
+      "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+      "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts"
+    ],
+    "placement": "D only, two new files; no source overlay, request, wrapper, tree or ref authored here",
+    "baseCleanSource": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "baseCleanTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "diagnosticSource": "UNBOUND",
+    "diagnosticSourceTree": "UNBOUND",
+    "driverSnapshot": "UNBOUND",
+    "run": "UNBOUND"
+  },
+  "dependencies": {
+    "helper": {
+      "git": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+      "bytes": 47324,
+      "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "api": {
+      "git": "fdbab600e56af5c9fcc5bb40eb84d7a67e7780bf",
+      "bytes": 3272,
+      "sha256": "faee326027f2ee82a3b14301d8fb1884bc17578cb67460324f2003b6233a8362",
+      "lf": 35,
+      "endsWithLF": true
+    },
+    "provider": {
+      "git": "c9a887ede73e2ebf72b4c7c25c01c2396708454a"
+    },
+    "source": {
+      "git": "3942f378f6d94f53b5622df2a459e127d410f543",
+      "bytes": 61828,
+      "sha256": "c969cd95ef44a34012858e534a85248a8b64bcae7ebdc5747ed7f0cd803a0f02",
+      "lf": 904,
+      "endsWithLF": true
+    },
+    "choice": {
+      "git": "d00519c139524b8b1b2699ac40868a40f1a18d02"
+    },
+    "local": {
+      "git": "637913f32c8b5489c2c90b78d309d52e2f3ee94c",
+      "bytes": 99097,
+      "sha256": "1f7d696be534c6054a712d7eabe5033d4dd93c315f194842b5ce3bc6f7614561",
+      "lf": 1730,
+      "endsWithLF": true
+    },
+    "finance": {
+      "git": "2eed03d569ffe4c558cf3f737affb88899062629",
+      "bytes": 17534,
+      "sha256": "a7992c7617af020b3818a2613b679e72c04fec9e2c59d330f1204c3353fd4971",
+      "lf": 233,
+      "endsWithLF": true
+    }
+  },
+  "selection": {
+    "wholeFile": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts",
+    "declarations": 1,
+    "title": "E15 route observation preserves lexical ownership and the first persistence tail",
+    "prefix": "SF_E15_ROUTE_CONTROL ",
+    "schema": "sf-preview-e15-control-v1",
+    "reports": 1,
+    "modes": [
+      "route-owner",
+      "work-links",
+      "native-chain",
+      "persistence-tail",
+      "capacity",
+      "mechanism",
+      "sink-zero",
+      "sink-partial",
+      "sink-throw",
+      "forwarder"
+    ],
+    "expectedChildReceipts": 10,
+    "checkLabels": {
+      "route-owner": [
+        "first-canonical-private-owner-across-suspension",
+        "second-canonical-and-Finance-cannot-steal",
+        "two-preparation-four-comparator-lookups",
+        "undefined-and-closed-route-mask-ambient",
+        "real-LF-prefix-before-completion",
+        "exact-Promise-and-thenable-no-assimilation",
+        "body-return-is-not-Promise-settlement-or-phase-close"
+      ],
+      "work-links": [
+        "exact-work-links-no-callback-invocation",
+        "wrapped-work-requires-explicit-link",
+        "provider-missing-and-foreign-callback-no-view",
+        "comparator-Finance-cannot-claim-preparation-owner",
+        "not-evaluated-false-true-nonboolean-gates",
+        "throw-undefined-copy-has-no-returned-view"
+      ],
+      "native-chain": [
+        "real-native-top-level-versus-held-root",
+        "real-native-direct-and-wrapped-C08-identities",
+        "real-native-preimage-keeps-selection",
+        "real-native-queue-prefix-before-release",
+        "real-native-write-and-post-write-boundaries-distinct"
+      ],
+      "persistence-tail": [
+        "first-persistence-requires-first-analysis-phase",
+        "operation-true-is-not-transaction-identity",
+        "queue-prefix-does-not-fabricate-BEGIN-or-commit",
+        "post-write-binding-remains-distinct",
+        "reentrant-terminal-freezes-open-prefix-without-late-close"
+      ],
+      "capacity": [
+        "six-hundred-works-survive-general-detail-cap",
+        "critical-sites-and-tail-survive-general-cap",
+        "global-four-body-checkpoints-survive-cap",
+        "exact-191-line-reservation-model",
+        "terminal-reserved-at-full-cap"
+      ],
+      "mechanism": [
+        "Finance-observation-return-does-not-invent-work",
+        "duplicate-and-tardy-thunk-never-replay",
+        "mechanism-result-and-swallowed-error-not-authoritative",
+        "before-noinvoke-after-faults-preserve-work",
+        "scope-fallback-disables-attribution"
+      ],
+      "forwarder": [
+        "forwarder-real-chunk-identity-and-multilines",
+        "forwarder-only-real-LF-no-EOF-promotion",
+        "forwarder-ASCII-byte-bound-before-LF",
+        "forwarder-invalid-diagnostic-latches",
+        "forwarder-unrelated-long-lines-ignored",
+        "forwarder-zero-partial-undefined-throw-no-retry",
+        "forwarder-191-events-and-191KiB",
+        "forwarder-one-disabled-and-exclusive-mode"
+      ],
+      "sink-zero": [
+        "sink-zero-latches-once",
+        "restored-sink-is-not-retried",
+        "product-undefined-throw-survives-sink-fault",
+        "incomplete-prefix-has-no-fabricated-terminal"
+      ],
+      "sink-partial": [
+        "sink-partial-latches-once",
+        "restored-sink-is-not-retried",
+        "product-undefined-throw-survives-sink-fault",
+        "incomplete-prefix-has-no-fabricated-terminal"
+      ],
+      "sink-throw": [
+        "sink-throw-latches-once",
+        "restored-sink-is-not-retried",
+        "product-undefined-throw-survives-sink-fault",
+        "incomplete-prefix-has-no-fabricated-terminal"
+      ]
+    },
+    "checkLabelEntries": 53,
+    "staticNodeAssertSites": 248,
+    "staticAwaitTokens": 54,
+    "parentExpectSites": 8,
+    "observedAssertions": null,
+    "observedOutcome": null,
+    "doesNotReplaceFiveC21Files": true
+  },
+  "process": {
+    "engine": "Original E14 AppProcess/LayerNode/expectSpawn/Omni runner, only E14/e14→E15/e15 textual retarget",
+    "childArgv": [
+      "process.execPath",
+      "import.meta.path",
+      "mode"
+    ],
+    "cwd": "import.meta.dir",
+    "extendEnv": true,
+    "stdin": "ignore",
+    "stdout": "pipe",
+    "stderr": "pipe",
+    "perChildTimeoutMs": 3000,
+    "perChildStdoutCapBytes": 65536,
+    "perChildStderrCapBytes": 65536,
+    "killSignal": "SIGTERM",
+    "forceKillAfterMs": 1000,
+    "sequentialChildren": 10,
+    "nominalTimeoutSumMs": 30000,
+    "nominalKillGraceSumMs": 10000,
+    "bunTestDeadlineMs": 45000,
+    "nominalRemainderAfterTimeoutAndGraceMs": 5000,
+    "focalProcessProposedMs": 60000,
+    "focalParentProposedMs": 90000,
+    "wholeWorkflowUnchangedMs": 2700000,
+    "limitsNote": "The 5-second remainder is nominal shared overhead, not a latency guarantee. Root owns the actual focal process/parent and its other groups. These 10 children are one named family, not the total universal subprocess population.",
+    "failureHandling": "Any nonzero exit or either truncation flag fails with both bounded streams; no retry or JSON fallback. Each successful child JSON is validated and <=16384 bytes; the combined parent report is separately <=16384 bytes.",
+    "childTruncationFlagsRequiredFalse": 20,
+    "wrapperOmniPopulation": "Root-owned outer driver counters remain separate from these ten explicit children."
+  },
+  "observations": {
+    "routeOwner": "One immutable first canonical route, two preparation/four comparator lookup slots. A concurrent second canonical receives undefined, cannot inherit route or Finance owner. Closed route cannot resume attribution.",
+    "finance": "External owner only in preparation. Comparator without owner is a negative. Observation-returned/body-exit do not establish work execution, Promise settlement or root lifetime; no canonical-close event exists.",
+    "workLinks": "Synthetic exact callback/Source execute/CC forwarding/Local operation identities are retained, never wrapped/invoked by the tap. Missing, nonfunction and foreign callback cannot emit provider-view. Explicit gate values -1/0/1/2 mean not-evaluated/false/true/evaluated-nonboolean; a hostile object is not coerced.",
+    "nativeFixture": "Actual LocalStore→CurrentChoice→Source→ProductAuthority/C08 factories with controlled authenticate/environment/clock/launcher. Two top-level reads, three readonly reads including one real CurrentChoice.run wrapper, and one sealed preimage. Empty but present decisionResults is the fixture map. These are six exact scoped reads, not six installed Analytics observations.",
+    "nativeWrite": "A real LocalStore writer blocks queue admission while the selected C08 transaction is pending. The prefix is checked before release. Its original transaction writes one fixture field and the wire order is checked through Source finish/dispose, local scope close, encode/SQL/COMMIT and returns. The outer canonical/persistence/store-write/state-transaction markers are explicitly controlled; this does not execute createPlannerPersistence, result-store.write, installed Finance or the full preview.",
+    "postWrite": "Binding, validation and binding-read markers in the controlled persistence cases are synthetic boundaries. They remain after the real COMMIT in native-chain, and are not evidence of real binding storage execution.",
+    "prefix": "The first persistence is privately tied to the first analysis-persist scope. operation(true) by itself has no selected identity. Reentrant Request close during a line freezes a cut with open work; later work still executes but no late terminal/close is invented.",
+    "mechanism": "Preserves exact values, receivers, Promise/thenable identity, once-only invocation, throw undefined and observer-ALS-failure fallback; no observer await or Promise assimilation is added.",
+    "sinks": "Each of zero/partial/throw is isolated in a fresh process. File mirror and stdout faults latch separately with one attempt, no replay after restoration. The control intercepts the exact named node:fs writeSync sink using a synchronous Bun module mock and a detached original module snapshot; real non-diagnostic writes/file operations remain real.",
+    "forwarder": "Exercises the exact createSfE15Forwarder export imported by both bridges before splitLines, not a reimplementation. Tests fragmented/multiline chunks, real LF only, EOF tail without LF, ASCII and byte ceiling during assembly, unrelated long Unicode lines, independent zero/partial/throw latches, 191 event rows or one disabled row, exclusive mode, and exact chunk return. It validates framing only; its deliberately synthetic strings are not semantic event validation."
+  },
+  "quotas": {
+    "base": {
+      "criticalPairs": 10,
+      "globalCheckpoints": 4,
+      "firstAnalysisEntry": 1,
+      "general": 17,
+      "detailTotal": 32,
+      "unitCloses": 28,
+      "requestEnterCloseOverflow": 3,
+      "total": 63
+    },
+    "extra": {
+      "tail": 12,
+      "lookupRoutes": 6,
+      "perLookup": 12,
+      "lookupTotal": 72,
+      "canonicalFinance": 8,
+      "persistence": 36,
+      "total": 128
+    },
+    "streamTotalRecords": 191,
+    "perLineBytesIncludingPrefixLF": 1024,
+    "streamByteCeiling": 195584,
+    "extraBIDisabledRows": 1,
+    "originalSelectionCombinedRecordCeiling": 192,
+    "originalSelectionCombinedByteCeiling": 196608,
+    "capacityControl": "Synthetic maximum exercises all 191 public reserved places after 600 general works and 128 compare bodies, with 28 unit closes. Canonical/Finance slot sequence is an adversarial protocol model; it does not claim all Finance branches co-occur in production.",
+    "clockAndCounts": "Body exits and checkpoints are not outer Promise settlement. Stage and compare lineage stay distinct. saturated means an attempted increment at an already capped counter, not simply equality to 65535.",
+    "forwarderBuffer": "At most 1023 ASCII bytes of retained tail. No bound claimed for the caller-provided chunk or unrelated pipeline storage. Invalid diagnostics latch without promoting an EOF fragment.",
+    "notCapsOnWholeLog": true
+  },
+  "reportModel": {
+    "kind": "PURE_DATA_UPPER_WIDTH_MODEL_NOT_RUNTIME_NOT_PERSISTED_AS_OBJECT",
+    "git": "2855d08acdd94abea625496670443f018251e5a0",
+    "bytes": 8411,
+    "sha256": "95123659446a9e28affa479662385ecaa3fe81b963f98024eaa521e3fca15259",
+    "lf": 1,
+    "endsWithLF": true,
+    "capBytes": 16384,
+    "headroomBytes": 7973,
+    "assumptions": "Fixed actual label strings and mode order; maximum-safe-integer PIDs, 64-character digests, counter caps, conservative attempt/count widths; exact JSON+prefix+LF framing.",
+    "value": {
+      "schema": "sf-preview-e15-control-v1",
+      "synthetic": true,
+      "childModes": [
+        "route-owner",
+        "work-links",
+        "native-chain",
+        "persistence-tail",
+        "capacity",
+        "mechanism",
+        "sink-zero",
+        "sink-partial",
+        "sink-throw",
+        "forwarder"
+      ],
+      "reports": [
+        {
+          "pid": 9007199254740991,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "route-owner",
+            "pid": 9007199254740991,
+            "synthetic": true,
+            "checks": [
+              "first-canonical-private-owner-across-suspension",
+              "second-canonical-and-Finance-cannot-steal",
+              "two-preparation-four-comparator-lookups",
+              "undefined-and-closed-route-mask-ambient",
+              "real-LF-prefix-before-completion",
+              "exact-Promise-and-thenable-no-assimilation",
+              "body-return-is-not-Promise-settlement-or-phase-close"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740990,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "work-links",
+            "pid": 9007199254740990,
+            "synthetic": true,
+            "checks": [
+              "exact-work-links-no-callback-invocation",
+              "wrapped-work-requires-explicit-link",
+              "provider-missing-and-foreign-callback-no-view",
+              "comparator-Finance-cannot-claim-preparation-owner",
+              "not-evaluated-false-true-nonboolean-gates",
+              "throw-undefined-copy-has-no-returned-view"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740989,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "native-chain",
+            "pid": 9007199254740989,
+            "synthetic": true,
+            "checks": [
+              "real-native-top-level-versus-held-root",
+              "real-native-direct-and-wrapped-C08-identities",
+              "real-native-preimage-keeps-selection",
+              "real-native-queue-prefix-before-release",
+              "real-native-write-and-post-write-boundaries-distinct"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740988,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "persistence-tail",
+            "pid": 9007199254740988,
+            "synthetic": true,
+            "checks": [
+              "first-persistence-requires-first-analysis-phase",
+              "operation-true-is-not-transaction-identity",
+              "queue-prefix-does-not-fabricate-BEGIN-or-commit",
+              "post-write-binding-remains-distinct",
+              "reentrant-terminal-freezes-open-prefix-without-late-close"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740987,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "capacity",
+            "pid": 9007199254740987,
+            "synthetic": true,
+            "checks": [
+              "six-hundred-works-survive-general-detail-cap",
+              "critical-sites-and-tail-survive-general-cap",
+              "global-four-body-checkpoints-survive-cap",
+              "exact-191-line-reservation-model",
+              "terminal-reserved-at-full-cap"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740986,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "mechanism",
+            "pid": 9007199254740986,
+            "synthetic": true,
+            "checks": [
+              "Finance-observation-return-does-not-invent-work",
+              "duplicate-and-tardy-thunk-never-replay",
+              "mechanism-result-and-swallowed-error-not-authoritative",
+              "before-noinvoke-after-faults-preserve-work",
+              "scope-fallback-disables-attribution"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": {
+              "kind": "request-close",
+              "sequence": 191,
+              "outcome": "returned",
+              "openUnits": 28,
+              "openPhases": 28,
+              "compareBodies": [
+                65535,
+                65535,
+                65535,
+                64,
+                63,
+                65535
+              ],
+              "routeCoverage": [
+                1,
+                2,
+                4,
+                1,
+                65535,
+                1
+              ],
+              "faultsBefore": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "saturated": false
+            }
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740985,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "sink-zero",
+            "pid": 9007199254740985,
+            "synthetic": true,
+            "checks": [
+              "sink-zero-latches-once",
+              "restored-sink-is-not-retried",
+              "product-undefined-throw-survives-sink-fault",
+              "incomplete-prefix-has-no-fabricated-terminal"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": null
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740984,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "sink-partial",
+            "pid": 9007199254740984,
+            "synthetic": true,
+            "checks": [
+              "sink-partial-latches-once",
+              "restored-sink-is-not-retried",
+              "product-undefined-throw-survives-sink-fault",
+              "incomplete-prefix-has-no-fabricated-terminal"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": null
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740983,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "sink-throw",
+            "pid": 9007199254740983,
+            "synthetic": true,
+            "checks": [
+              "sink-throw-latches-once",
+              "restored-sink-is-not-retried",
+              "product-undefined-throw-survives-sink-fault",
+              "incomplete-prefix-has-no-fabricated-terminal"
+            ],
+            "requestGets": 0,
+            "records": 191,
+            "stdoutAttempts": 65535,
+            "stdoutBytes": 195584,
+            "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "fileAttempts": 65535,
+            "fileBytes": 195584,
+            "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "terminal": null
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        },
+        {
+          "pid": 9007199254740982,
+          "report": {
+            "schema": "sf-preview-e15-control-child-v1",
+            "mode": "forwarder",
+            "pid": 9007199254740982,
+            "synthetic": true,
+            "checks": [
+              "forwarder-real-chunk-identity-and-multilines",
+              "forwarder-only-real-LF-no-EOF-promotion",
+              "forwarder-ASCII-byte-bound-before-LF",
+              "forwarder-invalid-diagnostic-latches",
+              "forwarder-unrelated-long-lines-ignored",
+              "forwarder-zero-partial-undefined-throw-no-retry",
+              "forwarder-191-events-and-191KiB",
+              "forwarder-one-disabled-and-exclusive-mode"
+            ],
+            "requestGets": 0,
+            "framingOnly": true,
+            "stdoutAttempts": 65535,
+            "completeLines": 65535,
+            "partialFragments": 65535,
+            "terminal": null
+          },
+          "omniSpawns": 1,
+          "omniDelegations": 0
+        }
+      ]
+    }
+  },
+  "syntheticBoundaries": [
+    "Launcher binding/nonce/snapshot/runId and observer clock are controlled, actual Bun.version/revision are not mocked.",
+    "The production runtime admission guard is exercised only if this proposal later runs; no current runtime result exists.",
+    "The native fixture uses real C08/Source/CC/LS and controlled identities/authentication. This is not installed UI acceptance, complete graph coverage, or a performance claim.",
+    "Node assertion sites and label entries are static code facts, not received Bun assertion totals.",
+    "No local repository code, typecheck, test, diagnostic run or original artifact was executed/acquired.",
+    "writeSync may block in a real host; deterministic zero/partial/throw faults do not bound real I/O latency.",
+    "No terminal is guaranteed on process death. A censored or absent record cannot establish zero work, root lifetime or exclusive cause."
+  ],
+  "teardown": {
+    "perProcess": true,
+    "restores": [
+      "AsyncLocalStorage.run",
+      "AsyncLocalStorage.getStore",
+      "performance.now",
+      "process.argv",
+      "process.cwd",
+      "two E15 env values"
+    ],
+    "native": "Release the controlled writer; await writer/pending selected write; finish UI lease and dispose store.",
+    "observer": "Close admitted observation before deleting only its own evidence directory and private temporary directory.",
+    "moduleMock": "Confined to child process; no helper reset API and no shared parent mock."
+  },
+  "authorization": {
+    "originalGets": 0,
+    "zipGets": 0,
+    "treeCommitRefRunMutations": 0,
+    "onlyGitBlobsCreated": true
+  }
+}

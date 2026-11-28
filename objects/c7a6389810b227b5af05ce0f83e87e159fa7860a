@@ -1,0 +1,1048 @@
+{
+  "schema": "sf613-r9-root-object-review-v1",
+  "status": "ACTUAL_OBJECTS_PASS_PENDING_PEER_AND_REF_CAS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "atUtc": "2026-11-28 08:27:37 UTC",
+  "commit": "b74255922a58b649eca522d4427192040d49a079",
+  "tree": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+  "objectsTree": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c",
+  "orderedParents": [
+    "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "98174738fea48b3fe75e8d6684e2edd35574e75e",
+    "241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+  ],
+  "commitMessage": "docs(qa): archive C21 closed evidence\n\nPreserve R8 and retain the reviewed C21 source, focal pass, negative original Analytics, D30 unbound static package, and composition preparation map.\n\nThis own-tree archive does not qualify a final candidate or authorize production.",
+  "package": {
+    "catalog": {
+      "gitBlob": "06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+      "bytes": 159675,
+      "sha256": "77776c9611784f10c12dd1ab1ad116e6b88693fd8f01e586d0546efb2969f537",
+      "lf": 5124,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "84b0c6cd395ad966fea2914ce4c0936d637e1637",
+      "bytes": 1339991,
+      "sha256": "14f77ef56da9d71c390347ccc7001e36ae1d8e815e7fcdfb82517ac0415ca901",
+      "lf": 40027,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "05ecd9ed7d337c1b161408ef4c41af8092fa1b1f",
+      "bytes": 77617,
+      "sha256": "8491d58554c36113b3018b049714c542c58e6c332694aa933feacbd926576d78",
+      "lf": 656,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "7b82127069281aad46d241dd40bf0ccb239b013e",
+      "bytes": 383792,
+      "sha256": "11f854febb693a6dcd1d4a2e6df257708d68db224b69616604c32c8fa2d35241",
+      "lf": 8437,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "b6a3b80dc6f495877613b3d6817823873dd6a7e2",
+      "bytes": 56443,
+      "sha256": "21d9c23895f2e71370d48c8681be0fefcf4ac5a6d491b46cb8455a6161e08be0",
+      "lf": 1636,
+      "endsWithLF": true
+    }
+  },
+  "dataReviews": {
+    "root": {
+      "gitBlob": "61e6d8239de616c9b079decbfb9b0ce2a05a5775",
+      "bytes": 7144,
+      "sha256": "559db6db5b6bcc5e172d5fb05f3367c0c945ca7533530098d03222121a1af927",
+      "lf": 224,
+      "endsWithLF": true
+    },
+    "peer": {
+      "gitBlob": "9b43504386b44613a38957faad978ff15210e88e",
+      "bytes": 38293,
+      "sha256": "a5174eeaad0affb6a1a92d38eab14212f0b32788b0462282b999e5581755f55d",
+      "lf": 1936,
+      "endsWithLF": true
+    }
+  },
+  "actualTreeVerification": {
+    "completeGitTreeReadback": true,
+    "ownGitHashRecomputed": true,
+    "all925ObjectEntriesAndThreeRootEntriesMatched": true,
+    "rootPaths": [
+      "README.md",
+      "index.json",
+      "objects"
+    ],
+    "executableRepositoryLayout": false
+  },
+  "delta": {
+    "before": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+    "after": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+    "pairs": [
+      {
+        "path": "",
+        "before": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+        "after": "e127aaadd99782433852ed0020c816f5cef0b0b7"
+      },
+      {
+        "path": "objects",
+        "before": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+        "after": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c"
+      }
+    ],
+    "literalSiblings": 817,
+    "added": 108,
+    "modified": 2,
+    "deleted": 0,
+    "changes": [
+      {
+        "path": "README.md",
+        "kind": "M",
+        "before": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+        "after": "05ecd9ed7d337c1b161408ef4c41af8092fa1b1f",
+        "mode": "100644",
+        "bytes": 77617
+      },
+      {
+        "path": "index.json",
+        "kind": "M",
+        "before": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+        "after": "84b0c6cd395ad966fea2914ce4c0936d637e1637",
+        "mode": "100644",
+        "bytes": 1339991
+      },
+      {
+        "path": "objects/0367d758bb7ab142a3e7fa0883ed753056a036fa",
+        "kind": "A",
+        "before": null,
+        "after": "0367d758bb7ab142a3e7fa0883ed753056a036fa",
+        "mode": "100644",
+        "bytes": 43811
+      },
+      {
+        "path": "objects/0573492f51f7f09daec14b91a6bca05c3639c6ea",
+        "kind": "A",
+        "before": null,
+        "after": "0573492f51f7f09daec14b91a6bca05c3639c6ea",
+        "mode": "100644",
+        "bytes": 1618
+      },
+      {
+        "path": "objects/068a1f2777031757b3acbb1ab8845ba80a3e670d",
+        "kind": "A",
+        "before": null,
+        "after": "068a1f2777031757b3acbb1ab8845ba80a3e670d",
+        "mode": "100644",
+        "bytes": 10123
+      },
+      {
+        "path": "objects/06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+        "kind": "A",
+        "before": null,
+        "after": "06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+        "mode": "100644",
+        "bytes": 159675
+      },
+      {
+        "path": "objects/087cc6348a6d987910544c150ea70c8189db580b",
+        "kind": "A",
+        "before": null,
+        "after": "087cc6348a6d987910544c150ea70c8189db580b",
+        "mode": "100644",
+        "bytes": 36905
+      },
+      {
+        "path": "objects/0d35a47010791fec0ccd17a2a140d7233635ad84",
+        "kind": "A",
+        "before": null,
+        "after": "0d35a47010791fec0ccd17a2a140d7233635ad84",
+        "mode": "100644",
+        "bytes": 1388
+      },
+      {
+        "path": "objects/0d4a09646a44e34ff991a337b3c84f4f2af800f2",
+        "kind": "A",
+        "before": null,
+        "after": "0d4a09646a44e34ff991a337b3c84f4f2af800f2",
+        "mode": "100644",
+        "bytes": 7586
+      },
+      {
+        "path": "objects/10a9013919d425b9b914c67d24cc2ac1c25a7b05",
+        "kind": "A",
+        "before": null,
+        "after": "10a9013919d425b9b914c67d24cc2ac1c25a7b05",
+        "mode": "100644",
+        "bytes": 4791
+      },
+      {
+        "path": "objects/1146627d16bc4d327477435d8721aa9b273d93a5",
+        "kind": "A",
+        "before": null,
+        "after": "1146627d16bc4d327477435d8721aa9b273d93a5",
+        "mode": "100644",
+        "bytes": 130010
+      },
+      {
+        "path": "objects/118e5def28c27edf5420fa2c89f8b4a936cc3ecc",
+        "kind": "A",
+        "before": null,
+        "after": "118e5def28c27edf5420fa2c89f8b4a936cc3ecc",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/14aba0efe34816b2a8333e0a94768e82556185d1",
+        "kind": "A",
+        "before": null,
+        "after": "14aba0efe34816b2a8333e0a94768e82556185d1",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+        "kind": "A",
+        "before": null,
+        "after": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+        "mode": "100644",
+        "bytes": 13791
+      },
+      {
+        "path": "objects/15b1365f2326ec75ba905664687ed1ba81811a02",
+        "kind": "A",
+        "before": null,
+        "after": "15b1365f2326ec75ba905664687ed1ba81811a02",
+        "mode": "100644",
+        "bytes": 10301
+      },
+      {
+        "path": "objects/164c699a321e6c15eac16ca8a8634ac7833c49e2",
+        "kind": "A",
+        "before": null,
+        "after": "164c699a321e6c15eac16ca8a8634ac7833c49e2",
+        "mode": "100644",
+        "bytes": 7995
+      },
+      {
+        "path": "objects/18869d2df316b4ff89fd2a47d7b02fb4a8381fab",
+        "kind": "A",
+        "before": null,
+        "after": "18869d2df316b4ff89fd2a47d7b02fb4a8381fab",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/19852650b4ea9b4ac4e94a72ed835456fbbf579c",
+        "kind": "A",
+        "before": null,
+        "after": "19852650b4ea9b4ac4e94a72ed835456fbbf579c",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/19f8c37a616afd0c2285652d1778b9b4d1510f7a",
+        "kind": "A",
+        "before": null,
+        "after": "19f8c37a616afd0c2285652d1778b9b4d1510f7a",
+        "mode": "100644",
+        "bytes": 18453
+      },
+      {
+        "path": "objects/1c79f46bc4e74d2e76a3f7e2ab69fb3c99258dd9",
+        "kind": "A",
+        "before": null,
+        "after": "1c79f46bc4e74d2e76a3f7e2ab69fb3c99258dd9",
+        "mode": "100644",
+        "bytes": 1822
+      },
+      {
+        "path": "objects/1d7be69f56b9992c91cdc0c468ad0ea1efcc8ae0",
+        "kind": "A",
+        "before": null,
+        "after": "1d7be69f56b9992c91cdc0c468ad0ea1efcc8ae0",
+        "mode": "100644",
+        "bytes": 14258
+      },
+      {
+        "path": "objects/1dd07dded36b3211c7457f814c49e2f203d6a259",
+        "kind": "A",
+        "before": null,
+        "after": "1dd07dded36b3211c7457f814c49e2f203d6a259",
+        "mode": "100644",
+        "bytes": 96626
+      },
+      {
+        "path": "objects/22c491cc73b170c884948149aa0d78e97290ef38",
+        "kind": "A",
+        "before": null,
+        "after": "22c491cc73b170c884948149aa0d78e97290ef38",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/23f1dc7a71271ded2ccf6d7e0d73d84ef201390f",
+        "kind": "A",
+        "before": null,
+        "after": "23f1dc7a71271ded2ccf6d7e0d73d84ef201390f",
+        "mode": "100644",
+        "bytes": 33421
+      },
+      {
+        "path": "objects/2486a067c3846afd008c3ece8a1a04654943c585",
+        "kind": "A",
+        "before": null,
+        "after": "2486a067c3846afd008c3ece8a1a04654943c585",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/29cc3314e9bda9eebcbcacba8890f6ea856a985a",
+        "kind": "A",
+        "before": null,
+        "after": "29cc3314e9bda9eebcbcacba8890f6ea856a985a",
+        "mode": "100644",
+        "bytes": 8637
+      },
+      {
+        "path": "objects/29f7d0bd9066d4478d78a26d0e4d584077c01358",
+        "kind": "A",
+        "before": null,
+        "after": "29f7d0bd9066d4478d78a26d0e4d584077c01358",
+        "mode": "100644",
+        "bytes": 1824
+      },
+      {
+        "path": "objects/2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+        "kind": "A",
+        "before": null,
+        "after": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+        "mode": "100644",
+        "bytes": 2280
+      },
+      {
+        "path": "objects/2e8289b6fcd9f445c21ed2099c65425f976d8a0a",
+        "kind": "A",
+        "before": null,
+        "after": "2e8289b6fcd9f445c21ed2099c65425f976d8a0a",
+        "mode": "100644",
+        "bytes": 8742
+      },
+      {
+        "path": "objects/300b149a033dc978b85af57023ddab7d23b4af09",
+        "kind": "A",
+        "before": null,
+        "after": "300b149a033dc978b85af57023ddab7d23b4af09",
+        "mode": "100644",
+        "bytes": 47700
+      },
+      {
+        "path": "objects/3112537da9f2aeab82e05d3e27f9dcbc0e3b8ee1",
+        "kind": "A",
+        "before": null,
+        "after": "3112537da9f2aeab82e05d3e27f9dcbc0e3b8ee1",
+        "mode": "100644",
+        "bytes": 10711
+      },
+      {
+        "path": "objects/32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "kind": "A",
+        "before": null,
+        "after": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "mode": "100644",
+        "bytes": 4225
+      },
+      {
+        "path": "objects/325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+        "kind": "A",
+        "before": null,
+        "after": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+        "mode": "100644",
+        "bytes": 112586
+      },
+      {
+        "path": "objects/335588b02c079f2c936dc8da58645942d31e65b7",
+        "kind": "A",
+        "before": null,
+        "after": "335588b02c079f2c936dc8da58645942d31e65b7",
+        "mode": "100644",
+        "bytes": 9203
+      },
+      {
+        "path": "objects/34040d4018e5b2b2434511770cf712c736092d01",
+        "kind": "A",
+        "before": null,
+        "after": "34040d4018e5b2b2434511770cf712c736092d01",
+        "mode": "100644",
+        "bytes": 1814
+      },
+      {
+        "path": "objects/34059e0d4f9bfc66edfa4ab4bec5e2ef31a56e82",
+        "kind": "A",
+        "before": null,
+        "after": "34059e0d4f9bfc66edfa4ab4bec5e2ef31a56e82",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/3644bd66eb49cc52956e2c5d96c45061d007431d",
+        "kind": "A",
+        "before": null,
+        "after": "3644bd66eb49cc52956e2c5d96c45061d007431d",
+        "mode": "100644",
+        "bytes": 18110
+      },
+      {
+        "path": "objects/37a35af5ebdab98f046f395e8cf777fb41b20aeb",
+        "kind": "A",
+        "before": null,
+        "after": "37a35af5ebdab98f046f395e8cf777fb41b20aeb",
+        "mode": "100644",
+        "bytes": 96627
+      },
+      {
+        "path": "objects/3864ebf7ee0bccce857264832e4731da685e3fb6",
+        "kind": "A",
+        "before": null,
+        "after": "3864ebf7ee0bccce857264832e4731da685e3fb6",
+        "mode": "100644",
+        "bytes": 14082
+      },
+      {
+        "path": "objects/3865560d88636917d080015e91a714537cfa35af",
+        "kind": "A",
+        "before": null,
+        "after": "3865560d88636917d080015e91a714537cfa35af",
+        "mode": "100644",
+        "bytes": 15782
+      },
+      {
+        "path": "objects/3893a7019ba4ccc189ac83074be89278dc6703db",
+        "kind": "A",
+        "before": null,
+        "after": "3893a7019ba4ccc189ac83074be89278dc6703db",
+        "mode": "100644",
+        "bytes": 4537
+      },
+      {
+        "path": "objects/3b87252042526f65ea363b0e0c83522061b049de",
+        "kind": "A",
+        "before": null,
+        "after": "3b87252042526f65ea363b0e0c83522061b049de",
+        "mode": "100644",
+        "bytes": 470378
+      },
+      {
+        "path": "objects/41ab14ff94b8f9a0f5201f333eaaf2cf735ba6f5",
+        "kind": "A",
+        "before": null,
+        "after": "41ab14ff94b8f9a0f5201f333eaaf2cf735ba6f5",
+        "mode": "100644",
+        "bytes": 32574
+      },
+      {
+        "path": "objects/43ae6aab50a63fc4dbc349c6fef5071a42fbc954",
+        "kind": "A",
+        "before": null,
+        "after": "43ae6aab50a63fc4dbc349c6fef5071a42fbc954",
+        "mode": "100644",
+        "bytes": 15262
+      },
+      {
+        "path": "objects/451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+        "kind": "A",
+        "before": null,
+        "after": "451a79b8c3aa04b0bd67f301931f9e61c05efe94",
+        "mode": "100644",
+        "bytes": 12947
+      },
+      {
+        "path": "objects/46fe9d126f0a64c328e1b98dca0c1cf1b2214680",
+        "kind": "A",
+        "before": null,
+        "after": "46fe9d126f0a64c328e1b98dca0c1cf1b2214680",
+        "mode": "100644",
+        "bytes": 6890
+      },
+      {
+        "path": "objects/473bb8e8ec349e7f6d1a01352dbb3616087b2320",
+        "kind": "A",
+        "before": null,
+        "after": "473bb8e8ec349e7f6d1a01352dbb3616087b2320",
+        "mode": "100644",
+        "bytes": 27017
+      },
+      {
+        "path": "objects/4a35518647080e174e5f5acf455ace003cf8937d",
+        "kind": "A",
+        "before": null,
+        "after": "4a35518647080e174e5f5acf455ace003cf8937d",
+        "mode": "100644",
+        "bytes": 29406
+      },
+      {
+        "path": "objects/4a4aa6ddfdecad1442d7060b1567fc9495f6b15e",
+        "kind": "A",
+        "before": null,
+        "after": "4a4aa6ddfdecad1442d7060b1567fc9495f6b15e",
+        "mode": "100644",
+        "bytes": 29213
+      },
+      {
+        "path": "objects/4df4591cd4bca56926601f691a30479b958d8144",
+        "kind": "A",
+        "before": null,
+        "after": "4df4591cd4bca56926601f691a30479b958d8144",
+        "mode": "100644",
+        "bytes": 3083
+      },
+      {
+        "path": "objects/4e0cf472a09e6d72ddded366ce24865bdcc89b87",
+        "kind": "A",
+        "before": null,
+        "after": "4e0cf472a09e6d72ddded366ce24865bdcc89b87",
+        "mode": "100644",
+        "bytes": 7207
+      },
+      {
+        "path": "objects/5007e48270b80c83eb719d35cec9e6343206a195",
+        "kind": "A",
+        "before": null,
+        "after": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "mode": "100644",
+        "bytes": 17001
+      },
+      {
+        "path": "objects/509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+        "kind": "A",
+        "before": null,
+        "after": "509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+        "mode": "100644",
+        "bytes": 10209
+      },
+      {
+        "path": "objects/50cfa806e399238a8730bf1c4c58203932c8676b",
+        "kind": "A",
+        "before": null,
+        "after": "50cfa806e399238a8730bf1c4c58203932c8676b",
+        "mode": "100644",
+        "bytes": 80067
+      },
+      {
+        "path": "objects/50df11d4be37f2990bc7d26095f2515292db959b",
+        "kind": "A",
+        "before": null,
+        "after": "50df11d4be37f2990bc7d26095f2515292db959b",
+        "mode": "100644",
+        "bytes": 13830
+      },
+      {
+        "path": "objects/52951b9a107deb880285a24d3ed7ea81bfb3f26a",
+        "kind": "A",
+        "before": null,
+        "after": "52951b9a107deb880285a24d3ed7ea81bfb3f26a",
+        "mode": "100644",
+        "bytes": 17618
+      },
+      {
+        "path": "objects/5597d480277d6e2d114abea53a1eb6212e67cf82",
+        "kind": "A",
+        "before": null,
+        "after": "5597d480277d6e2d114abea53a1eb6212e67cf82",
+        "mode": "100644",
+        "bytes": 1458
+      },
+      {
+        "path": "objects/56ebab415ec5f9a4bb119129b9c2234a7d41270e",
+        "kind": "A",
+        "before": null,
+        "after": "56ebab415ec5f9a4bb119129b9c2234a7d41270e",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/5acebf5c8578b66b04ffd6f44b221b1eb102cf23",
+        "kind": "A",
+        "before": null,
+        "after": "5acebf5c8578b66b04ffd6f44b221b1eb102cf23",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+        "kind": "A",
+        "before": null,
+        "after": "5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+        "mode": "100644",
+        "bytes": 2280
+      },
+      {
+        "path": "objects/5bcef21547c90bd62fbd2f720c1db0cd2127385a",
+        "kind": "A",
+        "before": null,
+        "after": "5bcef21547c90bd62fbd2f720c1db0cd2127385a",
+        "mode": "100644",
+        "bytes": 139131
+      },
+      {
+        "path": "objects/5c922015a1b475249500015c52c69c1d6e7dc7f8",
+        "kind": "A",
+        "before": null,
+        "after": "5c922015a1b475249500015c52c69c1d6e7dc7f8",
+        "mode": "100644",
+        "bytes": 9361
+      },
+      {
+        "path": "objects/5eeda9b322b13033cf254de2645a2e64bf64db16",
+        "kind": "A",
+        "before": null,
+        "after": "5eeda9b322b13033cf254de2645a2e64bf64db16",
+        "mode": "100644",
+        "bytes": 34315
+      },
+      {
+        "path": "objects/5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "kind": "A",
+        "before": null,
+        "after": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+        "mode": "100644",
+        "bytes": 21102
+      },
+      {
+        "path": "objects/6287eedc5387f5e7495963a12364bc31157a7789",
+        "kind": "A",
+        "before": null,
+        "after": "6287eedc5387f5e7495963a12364bc31157a7789",
+        "mode": "100644",
+        "bytes": 67954
+      },
+      {
+        "path": "objects/63ca6b9c3b9b502942d185ee9e2c866530f51255",
+        "kind": "A",
+        "before": null,
+        "after": "63ca6b9c3b9b502942d185ee9e2c866530f51255",
+        "mode": "100644",
+        "bytes": 361856
+      },
+      {
+        "path": "objects/66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+        "kind": "A",
+        "before": null,
+        "after": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+        "mode": "100644",
+        "bytes": 1165347
+      },
+      {
+        "path": "objects/73046411c1f0a84ddab4e15bbb41453e402421bb",
+        "kind": "A",
+        "before": null,
+        "after": "73046411c1f0a84ddab4e15bbb41453e402421bb",
+        "mode": "100644",
+        "bytes": 21170
+      },
+      {
+        "path": "objects/74cec078755a98d3e9fa3922d517f6933883515f",
+        "kind": "A",
+        "before": null,
+        "after": "74cec078755a98d3e9fa3922d517f6933883515f",
+        "mode": "100644",
+        "bytes": 19332
+      },
+      {
+        "path": "objects/803ec37a6c2cc4789b2aa9b7bf95a9d154029f01",
+        "kind": "A",
+        "before": null,
+        "after": "803ec37a6c2cc4789b2aa9b7bf95a9d154029f01",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/8324bfb9a293824fe3d0661ecb6833c9ab924ad6",
+        "kind": "A",
+        "before": null,
+        "after": "8324bfb9a293824fe3d0661ecb6833c9ab924ad6",
+        "mode": "100644",
+        "bytes": 17646
+      },
+      {
+        "path": "objects/86195b9ba4261fdb38013da7c121f931170e0fef",
+        "kind": "A",
+        "before": null,
+        "after": "86195b9ba4261fdb38013da7c121f931170e0fef",
+        "mode": "100644",
+        "bytes": 21736
+      },
+      {
+        "path": "objects/86535669bc169d67e12857bfc4eb9de893851099",
+        "kind": "A",
+        "before": null,
+        "after": "86535669bc169d67e12857bfc4eb9de893851099",
+        "mode": "100644",
+        "bytes": 27884
+      },
+      {
+        "path": "objects/884465e92d497d24bf6237f2ef51f5cd5f44a000",
+        "kind": "A",
+        "before": null,
+        "after": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+        "mode": "100644",
+        "bytes": 6597
+      },
+      {
+        "path": "objects/8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+        "kind": "A",
+        "before": null,
+        "after": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+        "mode": "100644",
+        "bytes": 63369
+      },
+      {
+        "path": "objects/8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+        "kind": "A",
+        "before": null,
+        "after": "8dd74e0edd9939cf2cac9f4ed5c89704611f6ea4",
+        "mode": "100644",
+        "bytes": 25911
+      },
+      {
+        "path": "objects/912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "kind": "A",
+        "before": null,
+        "after": "912db68cfd2068128890f19eaeff7d7acf2669aa",
+        "mode": "100644",
+        "bytes": 15525
+      },
+      {
+        "path": "objects/91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "kind": "A",
+        "before": null,
+        "after": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+        "mode": "100644",
+        "bytes": 96632
+      },
+      {
+        "path": "objects/96a4cb561fd2df562ffd1464f2cd45abc6628550",
+        "kind": "A",
+        "before": null,
+        "after": "96a4cb561fd2df562ffd1464f2cd45abc6628550",
+        "mode": "100644",
+        "bytes": 1130
+      },
+      {
+        "path": "objects/9741a440e3fc172cf56a738ae11789c2aed1ebf1",
+        "kind": "A",
+        "before": null,
+        "after": "9741a440e3fc172cf56a738ae11789c2aed1ebf1",
+        "mode": "100644",
+        "bytes": 4585
+      },
+      {
+        "path": "objects/9f087dbd1e4451d5479101e85a0f62f689a0d05a",
+        "kind": "A",
+        "before": null,
+        "after": "9f087dbd1e4451d5479101e85a0f62f689a0d05a",
+        "mode": "100644",
+        "bytes": 17630
+      },
+      {
+        "path": "objects/a1656109e5822e785e95f4695cab01a9258b2216",
+        "kind": "A",
+        "before": null,
+        "after": "a1656109e5822e785e95f4695cab01a9258b2216",
+        "mode": "100644",
+        "bytes": 28731
+      },
+      {
+        "path": "objects/a32b28e3cc6ce8edf282c48cca0f911f31f34255",
+        "kind": "A",
+        "before": null,
+        "after": "a32b28e3cc6ce8edf282c48cca0f911f31f34255",
+        "mode": "100644",
+        "bytes": 8795
+      },
+      {
+        "path": "objects/a33016cbd4fb1d95bea1e31c59ead5244d490dbb",
+        "kind": "A",
+        "before": null,
+        "after": "a33016cbd4fb1d95bea1e31c59ead5244d490dbb",
+        "mode": "100644",
+        "bytes": 71216
+      },
+      {
+        "path": "objects/a52880bc314b3159aaf768457f2ab34e38837a11",
+        "kind": "A",
+        "before": null,
+        "after": "a52880bc314b3159aaf768457f2ab34e38837a11",
+        "mode": "100644",
+        "bytes": 38092
+      },
+      {
+        "path": "objects/a5f40832125658cbae2b58b565c266750fa0b125",
+        "kind": "A",
+        "before": null,
+        "after": "a5f40832125658cbae2b58b565c266750fa0b125",
+        "mode": "100644",
+        "bytes": 26839
+      },
+      {
+        "path": "objects/a84d6314611e22b72cbfc59152779747a22a04b9",
+        "kind": "A",
+        "before": null,
+        "after": "a84d6314611e22b72cbfc59152779747a22a04b9",
+        "mode": "100644",
+        "bytes": 399168
+      },
+      {
+        "path": "objects/b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "kind": "A",
+        "before": null,
+        "after": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "mode": "100644",
+        "bytes": 10691
+      },
+      {
+        "path": "objects/b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "kind": "A",
+        "before": null,
+        "after": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "mode": "100644",
+        "bytes": 8993
+      },
+      {
+        "path": "objects/b62d93080073964d7adc993c3a5c02277abab38a",
+        "kind": "A",
+        "before": null,
+        "after": "b62d93080073964d7adc993c3a5c02277abab38a",
+        "mode": "100644",
+        "bytes": 27916
+      },
+      {
+        "path": "objects/b6c0b5d81683e96607ae22629e84f88f3c916628",
+        "kind": "A",
+        "before": null,
+        "after": "b6c0b5d81683e96607ae22629e84f88f3c916628",
+        "mode": "100644",
+        "bytes": 47650
+      },
+      {
+        "path": "objects/b9031c29a9b01b067a63e5eec3271b95eaad2897",
+        "kind": "A",
+        "before": null,
+        "after": "b9031c29a9b01b067a63e5eec3271b95eaad2897",
+        "mode": "100644",
+        "bytes": 202713
+      },
+      {
+        "path": "objects/bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "kind": "A",
+        "before": null,
+        "after": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+        "mode": "100644",
+        "bytes": 719
+      },
+      {
+        "path": "objects/bfc3b69edaf4b2ff4023a25389b8a1bda040bd46",
+        "kind": "A",
+        "before": null,
+        "after": "bfc3b69edaf4b2ff4023a25389b8a1bda040bd46",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/ca87f507fc2f1ae22d99c2f6278d390aeb231c8d",
+        "kind": "A",
+        "before": null,
+        "after": "ca87f507fc2f1ae22d99c2f6278d390aeb231c8d",
+        "mode": "100644",
+        "bytes": 89533
+      },
+      {
+        "path": "objects/cbaa61929c7c1100f8976690f44316fca3092283",
+        "kind": "A",
+        "before": null,
+        "after": "cbaa61929c7c1100f8976690f44316fca3092283",
+        "mode": "100644",
+        "bytes": 67187
+      },
+      {
+        "path": "objects/cbf2dc3785698cf995c8b8a4506db024531f50d4",
+        "kind": "A",
+        "before": null,
+        "after": "cbf2dc3785698cf995c8b8a4506db024531f50d4",
+        "mode": "100644",
+        "bytes": 103687
+      },
+      {
+        "path": "objects/cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+        "kind": "A",
+        "before": null,
+        "after": "cdb091f94d4b1bf56d13ff1cba9c3ae70cd3237a",
+        "mode": "100644",
+        "bytes": 14496
+      },
+      {
+        "path": "objects/d171a6bf6ed7f358f07fcbfced94fb62d37b11b6",
+        "kind": "A",
+        "before": null,
+        "after": "d171a6bf6ed7f358f07fcbfced94fb62d37b11b6",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/d344e95a6213b455fbffd7a7e379726af5d24eb8",
+        "kind": "A",
+        "before": null,
+        "after": "d344e95a6213b455fbffd7a7e379726af5d24eb8",
+        "mode": "100644",
+        "bytes": 5047
+      },
+      {
+        "path": "objects/dbe69ca2c14d3aa3b386611aef0b2b8ac49d6085",
+        "kind": "A",
+        "before": null,
+        "after": "dbe69ca2c14d3aa3b386611aef0b2b8ac49d6085",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/e1d2737ba91cb6d0bdd38462087e5cc55d9f2a03",
+        "kind": "A",
+        "before": null,
+        "after": "e1d2737ba91cb6d0bdd38462087e5cc55d9f2a03",
+        "mode": "100644",
+        "bytes": 37610
+      },
+      {
+        "path": "objects/e621eba542908c977cb9abbcdec7eb5ae3492b24",
+        "kind": "A",
+        "before": null,
+        "after": "e621eba542908c977cb9abbcdec7eb5ae3492b24",
+        "mode": "100644",
+        "bytes": 320012
+      },
+      {
+        "path": "objects/e63e19506a7bc8fd7520a64432a93ea6969c14ab",
+        "kind": "A",
+        "before": null,
+        "after": "e63e19506a7bc8fd7520a64432a93ea6969c14ab",
+        "mode": "100644",
+        "bytes": 57788
+      },
+      {
+        "path": "objects/ecf9e78377de9b23da3cffadfe3af4e613d4f860",
+        "kind": "A",
+        "before": null,
+        "after": "ecf9e78377de9b23da3cffadfe3af4e613d4f860",
+        "mode": "100644",
+        "bytes": 21310
+      },
+      {
+        "path": "objects/f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+        "kind": "A",
+        "before": null,
+        "after": "f7bb946dae2a7f216cf42d2157c29567d5b61ab4",
+        "mode": "100644",
+        "bytes": 13969
+      },
+      {
+        "path": "objects/fb80649ecd264545446a1d809ff7b220d6845b69",
+        "kind": "A",
+        "before": null,
+        "after": "fb80649ecd264545446a1d809ff7b220d6845b69",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/fe0583ce868dc64e3325bdf27899b3735bf5efb6",
+        "kind": "A",
+        "before": null,
+        "after": "fe0583ce868dc64e3325bdf27899b3735bf5efb6",
+        "mode": "100644",
+        "bytes": 46520
+      },
+      {
+        "path": "objects/feb407aa1a827fbdefda8c8358ca8734f1f25c4d",
+        "kind": "A",
+        "before": null,
+        "after": "feb407aa1a827fbdefda8c8358ca8734f1f25c4d",
+        "mode": "100644",
+        "bytes": 300000
+      },
+      {
+        "path": "objects/ff5de7ee99aba36456b0b872bfca48dffea9b984",
+        "kind": "A",
+        "before": null,
+        "after": "ff5de7ee99aba36456b0b872bfca48dffea9b984",
+        "mode": "100644",
+        "bytes": 300000
+      }
+    ]
+  },
+  "totals": {
+    "objects": 925,
+    "objectBytes": 89287662,
+    "memberships": 1120,
+    "groups": 58,
+    "streams": 85,
+    "partReferences": 273,
+    "inheritedObjects": 817,
+    "inheritedObjectBytes": 78974893,
+    "inheritedMembershipPrefixes": 967,
+    "inheritedGroups": 52,
+    "inheritedStreams": 77,
+    "inheritedPartReferences": 249,
+    "newObjects": 108,
+    "newObjectBytes": 10312769,
+    "newMemberships": 153,
+    "newGroups": 6,
+    "newStreams": 8,
+    "newPartReferences": 24,
+    "inheritedObjectsReceivingMemberships": 36,
+    "newMembershipsOnInheritedObjects": 38,
+    "membershipsOnNewObjects": 115,
+    "totalFilesIncludingRootDocs": 927,
+    "totalLogicalTreeFileBytes": 90705270,
+    "physicalBlobDeduplication": "Count by actual Git SHA, never multiplying blob bytes for additional memberships. The reused context union is one object with a separate C21 logical stream."
+  },
+  "preObjectRefs": [
+    {
+      "branch": "sf613-evidence",
+      "sha": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78"
+    },
+    {
+      "branch": "sf613-ledger",
+      "sha": "b6278bcd02c544a5583d978a8b48583798bf6ebe"
+    },
+    {
+      "branch": "dev",
+      "sha": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886"
+    },
+    {
+      "branch": "sf-design-next",
+      "sha": "0a1247db9a16f9eead04788a76d25723672c7e6a"
+    },
+    {
+      "branch": "sf613-astra-finish",
+      "sha": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2"
+    }
+  ],
+  "refState": {
+    "updated": false,
+    "expected": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "force": false,
+    "peerObjectReviewPending": true,
+    "freshRefCASRequired": true
+  },
+  "scope": {
+    "documentaryOnly": true,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryCodeExecution": false,
+    "runRequested": false,
+    "productRefsChanged": false,
+    "qualificationTransferred": false,
+    "finalC613": false,
+    "productionAuthorized": false
+  },
+  "findings": []
+}

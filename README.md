@@ -1,3 +1,103 @@
+# sf613-evidence — R10 documentary proposal
+
+**E15's diagnostic focal is closed PASS within its tested scope. Its original Analytics suite is closed negative: one preview journey failed at the original 60-second waiter and the BI journey passed.** This increment retains that diagnostic evidence and two independently reviewed, static Migration reconciliation proposals on clean S21. It adds no qualified area and makes no performance-gain or production claim.
+
+Documentary cut: **2026-11-28 10:05:47 UTC**. The clean product remains S21, `29374ab6a0f38dd9ff8848a083c61ea35dcecdfb`, tree `fe8221e56daf5fd7de8a79b29d2d485055b8c45a`. E15 is an observational overlay and is not promoted into the clean product lineage. Historical qualification remains **12/15, with zero new areas accepted**. Final C613, its tree/tar, UI6 execution and production authorization remain unbound or absent.
+
+Root alone may create and publish the archive tree/commit/ref after independent review and a fresh lease. This package contains documentary blobs only; it creates no archive tree, commit, ref, workflow, run, PR or comment.
+
+## Closed evidence and static proposals
+
+| Scope | State retained by R10 | Authoritative input |
+|---|---|---|
+| E15 source | Reviewed diagnostic overlay, 2 additions and 16 modifications over clean S21; historical actual drafts retained separately | `67e22c1ae78a57659e520e2a38b7e1fe8c2502f3` |
+| E15 focal | PASS in six functional processes: 18 tests / 2,460 assertions; outer 10 / 57; 16 commands and 32 false truncation flags; nine reports | `fde3ff40abcb500d1232377804e39786c6a76338` |
+| E15 Analytics | Closed negative: one failed preview and one passed BI journey; no new qualification | `202fc2defc6bffcfe9d4f096d4fb1b731356ba92` |
+| Analytics reception | Root 67 checks and independent ACK are separate from the negative product result | Root `2c543ab9c3c27991510866929291a09184f3ac32`; peer `7e9fefa609440fa8337120f5b1478dd492f435ef` |
+| Migration two-seam proposals | Static S21 proposals with Cfinal and Tfinal null; two hunks, +11/-0; independent review has 112 checks | Derivation `347917389482e8c89fbdde3c82357d1ef3cb3251`; peer `380ce3ba2513ffef839d154726958f9d22c9f19b` |
+| R9 archive | Published historical archive, retained whole and in order | Publication `50da09766fe2ca397bef0525bc48d3110ba1670f` |
+
+The current finite input catalog is **`30a65577427401543b56b6d1368f4119cc17f7a3`**, 188,867 B, SHA256 `04de8a48d2076b8442709455b479778381f926654f7f74905d919a1208b9a6eb`. It lists 156 actual input blobs and 189 memberships, excluding itself. Of those inputs, 121 are new against R9 and 35 are reused. The index then adds the actual catalog once.
+
+## Identity and retention
+
+| Role | Commit | Tree or parent |
+|---|---|---|
+| Published R9 | `b74255922a58b649eca522d4427192040d49a079` | Tree `e127aaadd99782433852ed0020c816f5cef0b0b7` |
+| Executed E15 source and Analytics snapshot | `908dab0b3124cea5aa4015fa6a5b96128e730c77` | Tree `6b2065d3d159b0b4c3cad54f646bd109426f3b43`; sole parent clean S21 |
+| Executed E15 focal snapshot | `7468fb2c7ab9bd38c4a7838a1fbd8d603a6b102f` | Tree `a11006ec7afbfcbc693abcf469e5833e0c0f2844`; sole parent the executed E15 source |
+
+The proposed ordered archive parents are **[R9, DfE15]**. Their actual commit metadata was read. DfE15 already retains its sole parent, which is both the E15 source and the Analytics snapshot, and that commit retains clean S21. No redundant parent for E15 source or S21 is proposed. Commits and trees are retention metadata, never `objects/` blob entries.
+
+Textual SHA references alone do not establish Git reachability. Durable reachability depends on the future archive tree/commit/ref that root will audit and publish. This proposal asserts no garbage-collection deadline. The historical ledger and all product, source, focal and Analytics refs remain untouched by this author.
+
+## What the installed diagnostic actually established
+
+Analytics run **46130942119/1** executed the E15 source itself. Main job **140935705301** failed; cleanup **140938044223** succeeded. The original two-test selection, worker/retry/repeat settings and preview waiter were unchanged. The first preview timed out at the original **60,000 ms** waiter, spec line **72:32**, with request sequence 3 and no retained terminal preview response. History requests 1 and 2 completed HTTP 200/status ok.
+
+There are six partial UI42 capture declarations; UI43 and UI44 were not newly qualified. The BI journey passed with 40 capture declarations. The closed receipt records original BI01 data (36 rows, 14 numeric, 22 missing, 48 bindings) and BI06 data (three rows and three native scalar comparisons per locale, 17 bindings each, source HTTP 200 and negative-scope HTTP 403). These remain observations of this diagnostic run, not clean-candidate or Migration acceptance.
+
+The retained event union is a **contiguous 134-record prefix, 76,525 B**. Its last retained record is an `analysis-persist` phase close at **60,468.1 ms**. No request terminal or complete unit-close chain is present. The receipt distinguishes two preparation full/top-level fallbacks from four comparator child/projected `decisionResults` paths in the recorded invocations. It does not generalize those observed admissions to all product calls.
+
+Intervals include nested work, scheduling and instrumentation. They are not exclusive CPU, isolated database time or a demonstrated saving. Absence of a terminal in the retained prefix is not a claim of zero later work, a final server state or an exclusive cause. No CPU profile, image, internal event file or artifact ZIP was acquired for this archive.
+
+Artifact **15258196107** is metadata only: **45,835,820 B**, SHA256 `95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2`. The declared 150 upload-source files are not an inspected ZIP entry count. ZIP GETs for this evidence remain zero.
+
+## Exact streams retained
+
+| Stream | Bytes | LF / parts | Actual storage |
+|---|---:|---:|---|
+| E15 focal main | 123,734 | 927 / 1 | `6351127ada1494283b35201c8e42d9fdcacdded9` |
+| E15 focal cleanup | 2,281 | 39 / 1 | `c7af4a321d3e67d125d04e35ac4cd7c7b79eb42e` |
+| E15 focal report union | 18,610 | 9 / 1 | `b76b693cea0cc460a91e0e532f5a54ff05102dd5` |
+| E15 Analytics main | 4,951,586 | 2,268 / 17 | Parts enumerated in `b907e7aae121c6a92d9812620b5143cd396693d3` |
+| E15 Analytics cleanup | 2,281 | 39 / 1 | `2814939e44f3eee93e0bd1e1714b740429399c95` |
+| E15 Analytics event union | 76,525 | 134 / 1 | `f80c2745ee085608e47f7120bd8f007d655e3327` |
+| E15 Analytics core union | 34,168 | 96 / 1 | `f58aee9a18aafec45e1931334f0405987fe81ec3` |
+| E15 Analytics context union | 5,428 | 2 / 1 | Reused `06a75371595556bef3ce1302df8eaaedb68a5d20` |
+| E15 Analytics discovery/owner union | 1,452 | 10 / 1 | `be48167c0118b7c2ebac0f5086a8809c85fb9c57` |
+
+All nine streams and 25 part references were checked as data. The 17 Analytics main parts concatenate exactly to SHA256 `9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2`, including BOM byte offsets **0, 2,107,842 and 4,211,566**. The whole Git fingerprint `28882b074b5030d2fa677093f11edee4158e4330` is calculated only: it is not a blob entry and was never fetched or materialized. Each of the five derived unions is literal and ordered within its preserved main.
+
+Root acquired each focal original once and closed them at **09:21:13 UTC**, and each Analytics original once and closed them irreversibly at **09:43:59 UTC**. This author used only already preserved Git copies. The raw parts retain BOM, CR and LF; derived unions remove only the carrier prefix and preserve original payload bytes and order.
+
+## Two S21 reconciliation proposals for #673
+
+| Proposed path | Clean S21 preimage | Proposed postimage |
+|---|---|---|
+| `modules/sucafina/Sucafinav1/runtime/contract.ts` | `b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149` | `dc1bd081ee3b10c585b53c09a99ad29c2e2fb795` |
+| `modules/sucafina/Sucafinav1/local/entry.ts` | `ee287d491a217113298e51af20dfe2a77f60aa38` | `3c07a434fadfd3bc25cd0f45e73611d060953dce` |
+
+The frozen donor is #673 head `b2f97817a82dc55a66298428107c30d5e3d97354`. The contract proposal preserves C21's `dashboardProductRead` union and adds `sfPlannerMonthlyReceipts`. The entry proposal adds only the three late availability callbacks inside the existing conditional spread; its 54 awaits remain unchanged. The short diff is `f7efa03bb1c26add39e8a58fe48f9268f02acac5`. LocalStore, E15 and the other overlapping paths are outside these two buffers.
+
+These proposals do not bind an integrated Cfinal. Before their use in the sole #673 composition route after #613 acceptance, root must resolve the actual candidate preimages and rederive/review if either differs from S21. Neither a contract field nor these callbacks prove persistence, service availability, installed behavior or a performance gain.
+
+The four candidate-bound baselines **CI-SF, APP-SRC, UI-OPERATIONS and UI-DECISIONS** remain pending. The technical scopes and historical acceptances of **#349, #588 and G09 remain closed**; preserving and binding their existing evidence to the actual final candidate does not reopen them. This package makes no new QA/G08 or recovery/G10 confirmation.
+
+## Preservation and finite scope
+
+| Retention measure | R9 preserved | R10 proposed total |
+|---|---:|---:|
+| Actual objects | 925 | 1,047 |
+| Object bytes, deduplicated by Git SHA | 89,287,662 | 100,228,804 |
+| Ordered logical memberships | 1,120 | 1,310 |
+| Groups | 58 | 64 |
+| Streams | 85 | 94 |
+| Stream part references | 273 | 298 |
+
+The increment adds **122 objects / 10,941,142 B**, including catalog R2 exactly once. Thirty-five inherited objects receive 38 additional memberships; their prior metadata and membership prefixes remain literal. The 122 new objects have 152 memberships. The proposed own tree has **1,049 files**: root `README.md`, root `index.json` and 1,047 `objects/<sha>` entries, all mode `100644`. Original source paths are metadata only. There is no root `.github`, `.ci-run.json`, `apps`, `modules` or `packages` executable layout.
+
+The 121 new input bodies were authenticated against actual Git content, and 35 reused entries were compared with R9 metadata. The 925 historical bodies were not reacquired. The index preserves their order, every old membership prefix, all 58 old groups, 85 old streams, prior history records and documentary snapshots. Prior pending labels remain historical; the separately appended R9 publication record resolves the old R9 archive-anchor entry.
+
+D30 remains the inherited static package with four final bindings **UNBOUND**, no execution and no global functional/assertion/report total claimed. **C22, future D31, future final candidate/bindings, UI6, checkpoints, orchestration helpers, calculated models/fragments/wholes and unacquired ZIP contents are outside this increment.** The finite catalog does not recursively close every SHA cited by a support document.
+
+Catalog R1 `da146db2a0281ae884617068a43b4de775e46b87` is a superseded documentary draft, not execution proof. R2 changes only the sentence clarifying that #349/#588/G09 remain closed; the exact inverse is retained in the package derivation. R1's locator/status is documented without recursively adding that current-package draft as an input or claiming reachability from text.
+
+The complete prior R9 README follows exactly once, without edits. Its historical proposal language is preserved as its original cut; the R9 publication receipt above records its later publication.
+
+<details>
+<summary>Complete R9 README, preserved literally</summary>
+
 # sf613-evidence — R9 documentary proposal
 
 **C21's focal qualification is closed PASS within its tested scope. Its original installed Analytics suite is closed negative: one failed preview journey and one passed BI journey.** R9 proposes retention of those distinct results, D30's unbound static package and the composition preparation map. It does not qualify a final C613 candidate, UI6, Migration, Release or production.
@@ -654,3 +754,5 @@ The JSON derivation supplied separately records every index operation, exact pre
 <!-- R7 literal README ends; R8 documentary wrapper only. -->
 
 <!-- R8 literal README ends; R9 documentary wrapper only. -->
+
+</details>

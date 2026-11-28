@@ -1,0 +1,237 @@
+{
+  "schema": "sf613-e15-analytics-final-receipt-v1",
+  "at": "2026-11-28 10:04:47 UTC",
+  "status": "CLOSED_NEGATIVE_PREVIEW_TIMEOUT_BI_PASS_NO_NEW_QUALIFICATION",
+  "run": {
+    "id": 46130942119,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46130942119",
+    "conclusion": "failure",
+    "workflow": 416464764,
+    "mainJob": 140935705301,
+    "mainConclusion": "failure",
+    "cleanupJob": 140938044223,
+    "cleanupConclusion": "success",
+    "branch": "ci-run-sf613e15a",
+    "branchAbsentObserved": true
+  },
+  "source": {
+    "sha": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "role": "clean source identity declared by diagnostic events"
+  },
+  "executed": {
+    "sha": "908dab0b3124cea5aa4015fa6a5b96128e730c77",
+    "tree": "6b2065d3d159b0b4c3cad54f646bd109426f3b43",
+    "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "role": "executed diagnostic source and Analytics snapshot are one actual object"
+  },
+  "pins": {
+    "e15_analytics_selection_receipt": {
+      "gitBlob": "b8b70d007cb6574602a618491c7e8c4f1eb6dbea",
+      "bytes": 14360,
+      "sha256": "6a9130f5249ead53cead78d2e0d053eedb8a4ce034632072b5098570f6e80eb7",
+      "lf": 373,
+      "endsWithLF": true
+    },
+    "e15_analytics_execution_authority": {
+      "gitBlob": "3e871d777e66afbbaf0c3491e9367041dc8707f8",
+      "bytes": 16632,
+      "sha256": "c98dd8e06357d05583d8332574f0c37221e54c672aae94d91302e6df07dadb94",
+      "lf": 431,
+      "endsWithLF": true
+    },
+    "e15_analytics_activation": {
+      "gitBlob": "3b9e7a1b81d95156315e69f9891e3e86cf7830c1",
+      "bytes": 3384,
+      "sha256": "50a6c40ac4afcb79e7c40e0fe4a769865b099e327847c04372b5c4e1a56324fa",
+      "lf": 104,
+      "endsWithLF": true
+    },
+    "e15_analytics_run_binding": {
+      "gitBlob": "5ba1cdb8930936aa339d67e1ab48a9cfbc09edce",
+      "bytes": 1766,
+      "sha256": "fb7a36d608802ddc1304a39322884a4c063aabac774392fdcb057ca6f7c0f2e2",
+      "lf": 53,
+      "endsWithLF": true
+    },
+    "e15_analytics_intake_context": {
+      "gitBlob": "f4f65eaedcf7651cea76fadfb8a83c26718d31fc",
+      "bytes": 25286,
+      "sha256": "e8c68dd44ee8ec6dc96d7cea7f553fbc1b51a53959ec32b836137946881c8e4e",
+      "lf": 548,
+      "endsWithLF": true
+    },
+    "e15_analytics_main_preservation_manifest": {
+      "gitBlob": "b907e7aae121c6a92d9812620b5143cd396693d3",
+      "bytes": 7997,
+      "sha256": "d51e4f357c245014038df222a8a78db50cb8c22d6f98191aaf669ea10210d3d9",
+      "lf": 274,
+      "endsWithLF": true
+    },
+    "e15_analytics_cleanup_whole": {
+      "gitBlob": "2814939e44f3eee93e0bd1e1714b740429399c95",
+      "bytes": 2281,
+      "sha256": "cad673a7b15dbc94a4a09dfd3bf6470731e568f3d043e8caad7622c8e9fdb710",
+      "lf": 39,
+      "endsWithLF": true
+    },
+    "e15_analytics_cleanup_preservation_manifest": {
+      "gitBlob": "2e3585727e4ccc8d3b63e3461016e5a199780a1c",
+      "bytes": 1822,
+      "sha256": "4a6e620124cc3bedbc17628eb46d4c30649a8dd43229a353a58c761339a6be24",
+      "lf": 62,
+      "endsWithLF": true
+    },
+    "e15_analytics_event_union": {
+      "gitBlob": "f80c2745ee085608e47f7120bd8f007d655e3327",
+      "bytes": 76525,
+      "sha256": "8c25530af2cc8566ca2e1df5d11c6966d51524ff69c6ac2c90f85731883b3db3",
+      "lf": 134,
+      "endsWithLF": true
+    },
+    "e15_analytics_core_union": {
+      "gitBlob": "f58aee9a18aafec45e1931334f0405987fe81ec3",
+      "bytes": 34168,
+      "sha256": "f890276dc2e8b78e9a11dfaf2d155dfc4ffb82ba8612c63cf7b2b240cf96e1a6",
+      "lf": 96,
+      "endsWithLF": true
+    },
+    "e15_analytics_context_union": {
+      "gitBlob": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+      "bytes": 5428,
+      "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+      "lf": 2,
+      "endsWithLF": true
+    },
+    "e15_analytics_discovery_owner_union": {
+      "gitBlob": "be48167c0118b7c2ebac0f5086a8809c85fb9c57",
+      "bytes": 1452,
+      "sha256": "55b5e3d16d4f429c7f38f8082fc78e776995d1b9d96201344c95f5ca1f16ed52",
+      "lf": 10,
+      "endsWithLF": true
+    },
+    "e15_analytics_extraction": {
+      "gitBlob": "4c9121054af660b98785bd303cb7182f05e091de",
+      "bytes": 74268,
+      "sha256": "c26e710bc362c629bd76cb2298a8e32a8a1a940bbdecb2345b8d122acc507da3",
+      "lf": 3519,
+      "endsWithLF": true
+    },
+    "e15_analytics_root_intake": {
+      "gitBlob": "2c543ab9c3c27991510866929291a09184f3ac32",
+      "bytes": 11211,
+      "sha256": "d0e760cc92da5b9750c7fac0e2759deeb3ebacfd61a6acead2f1ceeca5a37177",
+      "lf": 400,
+      "endsWithLF": true
+    },
+    "e15_analytics_peer_intake": {
+      "gitBlob": "7e9fefa609440fa8337120f5b1478dd492f435ef",
+      "bytes": 19989,
+      "sha256": "7708ba2d321ffa93ac8c1f61b7699eed01d42b018729994bc1f37473b37d891d",
+      "lf": 663,
+      "endsWithLF": true
+    }
+  },
+  "main": {
+    "actualParts": 17,
+    "bytes": 4951586,
+    "lf": 2268,
+    "sha256": "9cb049c962797022e7ceab11a1c480b59fc3734f331032ee45e9dce1e47b7ea2",
+    "wholeGitCalculatedOnly": "28882b074b5030d2fa677093f11edee4158e4330",
+    "wholeBlobCreated": false,
+    "wholeGitGetForbidden": true,
+    "bomCodeUnitOffsets": [
+      0,
+      2103029,
+      4206745
+    ],
+    "bomByteOffsets": [
+      0,
+      2107842,
+      4211566
+    ]
+  },
+  "originalsClosed": {
+    "at": "2026-11-28 09:43:59 UTC",
+    "run": 46130942119,
+    "attempt": 1,
+    "mainGets": 1,
+    "cleanupGets": 1,
+    "zipGets": 0,
+    "irreversible": true
+  },
+  "rootChecks": {
+    "total": 67,
+    "passed": 67
+  },
+  "peer": {
+    "status": "ACK_RECEPTION_PREVIEW_TIMEOUT_BI_PASS_NO_NEW_QUALIFICATION",
+    "materialDivergence": false
+  },
+  "results": {
+    "selected": 2,
+    "failed": 1,
+    "passed": 1,
+    "footer": "1 failed / 1 passed (8.2m)",
+    "preview": "Original 60000 ms waiter timed out at spec line 72:32; request sequence 3 only, no terminal response",
+    "history": "Sequences 1 and 2 complete HTTP 200/status ok",
+    "ui42PartialCaptures": 6,
+    "ui43NewQualification": false,
+    "ui44NewQualification": false,
+    "biCaptureDeclarations": 40,
+    "biOriginalData": "BI01 36 rows/14 numeric/22 missing and 48 bindings; empty scalar observation array. BI06 3 rows and 3 native scalar comparisons per locale, 17 bindings each, source HTTP200 and negative HTTP403.",
+    "biOriginalSourceNegative": "denied/bi-source-outside-selected-value"
+  },
+  "eventPrefix": {
+    "records": 134,
+    "contiguous": true,
+    "bytes": 76525,
+    "maxLineBytes": 654,
+    "request": 1,
+    "pid": 3746,
+    "parentPid": 3687,
+    "nonce": "sf613-e15-event-mdoIvu",
+    "last": "analysis-persist phase-close at 60468.1 ms",
+    "requestTerminal": false,
+    "lookupResult": "Two preparation full/top-level fallbacks; four comparator child/projected decisionResults paths with five gates true",
+    "persistence": {
+      "transactionReturnedMs": 32210.9,
+      "bindingMs": 14661.9,
+      "validationMs": 4408.2,
+      "validationReturnToReadbackReturnIntervalMs": 9067.8,
+      "persistCloseMs": 60467.9
+    },
+    "exclusiveCauseProven": false
+  },
+  "artifact": {
+    "id": 15258196107,
+    "name": "playwright-ubuntu-24.04-1",
+    "size": 45835820,
+    "sha256": "95843a26aa387d631ed582f032ed1cc7095a89bb9b63c0697439a67732b213c2",
+    "metadataOnly": true,
+    "zipGets": 0,
+    "uploadSourceFilesDeclared": 150,
+    "zipEntryCount": null
+  },
+  "limitations": [
+    "Markers are diagnostic and not qualification",
+    "No request-close, HTTP terminal preview response, unit-close chain or analysis-bind phase appears",
+    "Measured intervals include nested work, scheduling and instrumentation; not exclusive CPU or independent read-only timings",
+    "Logs and upload metadata do not constitute image/ZIP inspection",
+    "150 upload-source files is not a ZIP entry count",
+    "Configured full Bun revision is not directly observed full revision; stdout gives 1.3.14+0d9b296af",
+    "No exclusive source/database/queue cause asserted",
+    "No automatic rerun or diagnostic merge permitted"
+  ],
+  "qualification": {
+    "historicalAccepted": 12,
+    "total": 15,
+    "newlyAccepted": 0,
+    "finalCandidate": null,
+    "finalTree": null,
+    "finalTar": null,
+    "productionAuthorized": false
+  },
+  "next": "Separately author, independently review and test a minimal clean S21 correction. No E15 code merge, no original rerun, no timeout/seed/spec change. Preserve R9, close R10 inventory and update coordination."
+}

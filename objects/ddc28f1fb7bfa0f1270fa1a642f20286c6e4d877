@@ -1,0 +1,270 @@
+{
+  "schema": "sf613-e15-controls-independent-root-review-v1",
+  "status": "STATIC_ACK_CONTROLS_R2_EXECUTION_PENDING",
+  "reviewer": "/root",
+  "author": "/root/focal_migration",
+  "reviewedAt": "2026-11-28 09:04:54 UTC",
+  "package": {
+    "gitBlob": "a9d92ca1d90ff1ed855c104642cc81e1fd8394bb",
+    "bytes": 13227,
+    "sha256": "96bcbee6dbf74f9463bd9ea9f60cc5c7f1ec8aa172a1ffa7c9bde4f5a788ad8a",
+    "lf": 328,
+    "endsWithLF": true
+  },
+  "fixture": {
+    "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052",
+    "bytes": 63845,
+    "sha256": "257aa9837e05e1c3ad4dfca58eede8042ad11871ad2cdfa23b039e5a074dd914",
+    "lf": 987,
+    "endsWithLF": true
+  },
+  "test": {
+    "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e",
+    "bytes": 1167,
+    "sha256": "916a8b92febaf78a90bfec2191d557affc8645ba87b3df0552b1ae8971e654e6",
+    "lf": 24,
+    "endsWithLF": true
+  },
+  "derivation": {
+    "gitBlob": "b3caba9a99f048461424266857e0f5f0576650e1",
+    "bytes": 94092,
+    "sha256": "f2bcdbcfb08d059467ba7599184786b4b49ffe2c790cf4a772975f601ec03ec1",
+    "lf": 225,
+    "endsWithLF": true
+  },
+  "diff": {
+    "gitBlob": "a5da17e56e59b67863e40593049d86643cbc463f",
+    "bytes": 66585,
+    "sha256": "337240b24791c93aea04576a99bcd0a1d4c1fae4bb05837ac712a5768d8b7555",
+    "lf": 1023,
+    "endsWithLF": true
+  },
+  "bounds": {
+    "gitBlob": "565d55a74d581cd017f99c7d95a08ad12d5d9ba7",
+    "bytes": 29425,
+    "sha256": "420759bcbf84b6445f4fa7e2687afe228dc07cc3e31df19eb6f7ac0cc6269433",
+    "lf": 750,
+    "endsWithLF": true
+  },
+  "dependency": {
+    "helper": {
+      "gitBlob": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+      "bytes": 47324,
+      "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "api": {
+      "gitBlob": "fdbab600e56af5c9fcc5bb40eb84d7a67e7780bf",
+      "bytes": 3272,
+      "sha256": "faee326027f2ee82a3b14301d8fb1884bc17578cb67460324f2003b6233a8362",
+      "lf": 35,
+      "endsWithLF": true
+    },
+    "sourceManifest": {
+      "gitBlob": "67e22c1ae78a57659e520e2a38b7e1fe8c2502f3",
+      "bytes": 36896,
+      "sha256": "32879dd88b78c8947e4db98d16da61bb210dbfd70a2dc4ad426a363bf7677276",
+      "lf": 1077,
+      "endsWithLF": true
+    },
+    "sourceBoundsCurrent": {
+      "gitBlob": "31f6e0e98773bb644634445e25cd3c57c54a73f6",
+      "bytes": 58090,
+      "sha256": "3d792295aaa907346fd7ba8bfd84daf154f611cbe16431ac5ed799513bfbc20b",
+      "lf": 1151,
+      "endsWithLF": true
+    },
+    "oldSourceBoundsInControlManifest": {
+      "gitBlob": "6d7ffec9fb8d1a06caad167a8482b41f4c3e1a2a",
+      "bytes": 57292,
+      "sha256": "e93f66c866800ba1eeac77965a3ad2747015c9c391f2a4a1a2a1db05eeec22d7",
+      "lf": 1142,
+      "endsWithLF": true
+    },
+    "helperTransportReview": {
+      "gitBlob": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+      "bytes": 25602,
+      "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+      "lf": 563,
+      "endsWithLF": true
+    }
+  },
+  "checks": [
+    {
+      "name": "two whole additions",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts literal",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts fingerprint",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts absent clean base",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts diff path",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts forward",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts inverse",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts literal",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts fingerprint",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts absent clean base",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts diff path",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts forward",
+      "pass": true
+    },
+    {
+      "name": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts inverse",
+      "pass": true
+    },
+    {
+      "name": "R1 to R2 exact two anchors",
+      "pass": true
+    },
+    {
+      "name": "R2 to R1 exact",
+      "pass": true
+    },
+    {
+      "name": "runner preimage actual",
+      "pass": true
+    },
+    {
+      "name": "runner retarget exact",
+      "pass": true
+    },
+    {
+      "name": "runner exact in final",
+      "pass": true
+    },
+    {
+      "name": "parent preimage exact",
+      "pass": true
+    },
+    {
+      "name": "parent postimage exact",
+      "pass": true
+    },
+    {
+      "name": "native scaffold preimage",
+      "pass": true
+    },
+    {
+      "name": "native scaffold adaptation",
+      "pass": true
+    },
+    {
+      "name": "native scaffold final literal",
+      "pass": true
+    },
+    {
+      "name": "ten modes",
+      "pass": true
+    },
+    {
+      "name": "single declaration",
+      "pass": true
+    },
+    {
+      "name": "single report emission",
+      "pass": true
+    },
+    {
+      "name": "Bun bound45s",
+      "pass": true
+    },
+    {
+      "name": "parent report cap16KiB",
+      "pass": true
+    },
+    {
+      "name": "no request observer getters",
+      "pass": true
+    },
+    {
+      "name": "callbacks do not replay checked",
+      "pass": true
+    },
+    {
+      "name": "preparation owner negative",
+      "pass": true
+    },
+    {
+      "name": "actual native imports",
+      "pass": true
+    },
+    {
+      "name": "actual native queued write",
+      "pass": true
+    }
+  ],
+  "semanticReview": [
+    "Read the complete final fixture and parent. All child invocation uses the retained AppProcess/LayerNode/expectSpawn runner; no direct child_process or Bun.spawn added.",
+    "Whole-file one-test family exercises ten independent processes. Production process selection latch is not reset. Mutable globals and temporary paths are restored in finally; child hard deadline remains separate from cooperative fixture cleanup.",
+    "Real shared helper and forwarding implementation are imported. node:fs mock intercepts only prefixed diagnostic writes and retains actual file operations; zero/partial/throw faults are deliberate isolated controls.",
+    "Native chain imports actual Provider/Source/CurrentChoice/LocalStore and authorization composition. Authentication inputs and outer phase scopes are controlled; binding/validation boundaries after native write are explicitly synthetic.",
+    "Compared native pending queue inspection to synchronous transaction dispatch: provider command construction reaches Source and LocalStore operation before the first queued admission await. The test releases the blocker before awaiting pending write; failure cleanup releases and disposes.",
+    "Exact callback identity, receiver, non-coercion, throw undefined, Promise/thenable identity, first-owner selection, Finance preparation-only negative, native direct/wrapped/preimage routes and copy/write distinction are asserted.",
+    "Capacity mode adversarially fills reservations with branches that need not coexist in an installed path. It tests finite protocol caps and preserved work, not installed completeness.",
+    "Forwarder mode verifies literal chunks/LF, non-ASCII/oversize handling, sink failure latch and finite quota using multiple independent scanner instances; its synthetic total is not a one-installation stream.",
+    "Read static C21 focal receipt: prior whole native file completed in481ms; this is context only and does not prove the3s child bound on E15. All future process outcomes must come from Actions.",
+    "Source bounds revision changes descriptive semantics only; the reviewed control code is unchanged and current helper dependency is the R6 blob."
+  ],
+  "observed": {
+    "localRepositoryExecution": 0,
+    "tests": 0,
+    "typechecks": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "treeCreates": 0,
+    "commitCreates": 0,
+    "refMutations": 0,
+    "runs": 0
+  },
+  "expected": {
+    "declaredTests": 1,
+    "namedChildren": 10,
+    "childBudgetMs": 3000,
+    "childKillMs": 1000,
+    "bunBudgetMs": 45000,
+    "driverProcessMs": 60000,
+    "driverParentMs": 90000,
+    "nominalParentBunExpectEvaluations": 53,
+    "actualAssertions": null,
+    "actualOutcomes": null,
+    "globalOmniTotals": null
+  },
+  "limits": [
+    "This is an independent static review, not a runtime or UI qualification receipt.",
+    "Ten synthetic child receipts do not replace the installed original Analytics journey.",
+    "The final driver/source identity and actual CI receipt remain unbound.",
+    "No complete authentication, Microsoft, G08, G10 or production readiness is claimed."
+  ],
+  "remainingFindings": []
+}

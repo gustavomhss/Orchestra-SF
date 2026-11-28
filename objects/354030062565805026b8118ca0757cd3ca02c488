@@ -1,0 +1,336 @@
+{
+  "schema": "sf613-e15-independent-focal-template-review-v1",
+  "status": "ACK_STATIC_TEMPLATE_PENDING_EXACT_SOURCE_BINDING_AND_EXECUTION",
+  "reviewer": "/root/review_archive",
+  "author": "/root",
+  "reviewedUtc": "2026-11-28 09:08:19 UTC",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "scope": {
+    "reviewed": [
+      "complete E15 driver template",
+      "eight literal derivation anchors and their inverses",
+      "complete unified diff",
+      "retained C21 command engine and command/group limits",
+      "working file pin coverage and intended request replacement",
+      "new E15 control group and declared nested limits"
+    ],
+    "excluded": [
+      "semantic review or authoring of the two Focal control files",
+      "reopening product taps",
+      "compilation or repository execution",
+      "actual source/snapshot object identity or parent cardinality",
+      "CI result, test/assertion totals, installed qualification or go-live"
+    ],
+    "noTreeCommitRefRunMutation": true,
+    "noOriginalLogOrZipAcquisition": true,
+    "receiptBlobOnly": true
+  },
+  "pins": {
+    "c21Template": {
+      "gitBlob": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+      "bytes": 13791,
+      "sha256": "71dfb151e2dbebb14d27b496b23a04eb9f8c16ea5e31ac363cd186f72f3d91ef",
+      "lf": 204,
+      "endsWithLF": true
+    },
+    "e15Template": {
+      "gitBlob": "27273d07dbd0419ceeada8895009b7809444277c",
+      "bytes": 16447,
+      "sha256": "9664ce1c76166ee909ff89b16f9f671d864ef0cdc2607d50262c9c674eb63d6f",
+      "lf": 231,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "2584b253570d12371fa22c52bee0ea62a67f0d28",
+      "bytes": 28692,
+      "sha256": "cb58c85de357de96a470c9ef57c883c30fdde8912ecb2d2a11576163aa5bbd6f",
+      "lf": 411,
+      "endsWithLF": true
+    },
+    "fullDiff": {
+      "gitBlob": "9a8e9bb71361e40e5289b90cbb24a0a556bb3cb8",
+      "bytes": 30920,
+      "sha256": "f119625aff8a903df29fc9762cb1878113cc5c6ec2def08887a89f3d47a8242d",
+      "lf": 439,
+      "endsWithLF": true
+    },
+    "sourceSupportCrossCheck": {
+      "gitBlob": "6bb16fcd982f7f167e5e5a421f39951544865c52",
+      "bytes": 306067,
+      "sha256": "1be409300e0cb158033b4944f3ea415a7e2f460175b4f86848acd1563bba4567",
+      "lf": 2980,
+      "endsWithLF": true
+    },
+    "helperTransportPeerReview": {
+      "gitBlob": "ce39a65d5e7b6576d93f6709c9a5043d2dfbf42a",
+      "bytes": 25602,
+      "sha256": "e378124718cbdddf895eccb8fc36878da0a169e0deccb5b9185d2d312ac36a14",
+      "lf": 563,
+      "endsWithLF": true
+    },
+    "newControls": [
+      {
+        "path": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+        "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052"
+      },
+      {
+        "path": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts",
+        "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"
+      }
+    ]
+  },
+  "method": {
+    "authenticatedLiteralGitBlobs": true,
+    "independentGitBlobSha1AndSha256": true,
+    "independentByteLfAndFinalLf": true,
+    "templateReadInFull": true,
+    "ownJavascriptTextAndJsonDataOnly": true,
+    "repositorySourceExecuted": false,
+    "allEightAnchorsUniqueForwardAndInverse": true,
+    "allFragmentFingerprintsChecked": true,
+    "completeDiffParsedAsData": true,
+    "independentMinimalDiffHunks": 13
+  },
+  "derivationAudit": {
+    "anchorCount": 8,
+    "forwardLiteral": true,
+    "inverseLiteral": true,
+    "fragmentFingerprintsChecked": 32,
+    "fullDiffBeforeLines": 204,
+    "fullDiffAfterLines": 231,
+    "fullDiffLiteralBothWays": true,
+    "runCommandLiteral": true,
+    "independentHunks": 13,
+    "operationNames": [
+      "diagnostic header",
+      "host guard identity",
+      "report family",
+      "outer identity title",
+      "focal manifest",
+      "working file pins",
+      "observed blob manifest",
+      "append E15 control group"
+    ]
+  },
+  "groupAudit": {
+    "oldGroups": 9,
+    "newGroups": 10,
+    "retainedGroups2Through9BodiesLiteral": true,
+    "appendedGroupSeparator": "one additional LF after the former final group",
+    "retainedFirstGroupCommandsLiteral": true,
+    "allOld15CommandCallsLiteral": true,
+    "commandCount": 16,
+    "plannedTruncationFlags": 32,
+    "commandLabels": [
+      "fetch source parent",
+      "snapshot identity",
+      "source identity",
+      "complete cases read-set contract whole-file",
+      "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "CLI package typecheck",
+      "Sucafina package typecheck",
+      "inspect history completeness",
+      "fetch current dev and source ancestry",
+      "current dev identity",
+      "actual guard merge base",
+      "canonical guardrails",
+      "Portfolio selection cases and preferences whole-file",
+      "Scenario lookup complete candidates whole-file",
+      "Native scenario candidates selection whole-file",
+      "E15 route observer controls whole-file"
+    ],
+    "expectedFunctionalWholeFileProcessCount": 6,
+    "newGroup": "checks.live(\"E15 route controls preserve ownership, native forwarding and persistence boundaries\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"E15 route observer controls whole-file\", process.execPath,\n    [\"test\", \"./test/sucafina-preview-route-e15-diagnostic.test.ts\"], path.join(repository, \"apps/cli\"), 60_000)\n  expect(output).toContain(\"SF_E15_ROUTE_CONTROL \")\n}), 90_000)\n",
+    "oldParentTimeouts": [
+      "180_000",
+      "180_000",
+      "360_000",
+      "300_000",
+      "300_000",
+      "600_000",
+      "180_000",
+      "60_000",
+      "60_000"
+    ],
+    "newGroupParentMs": 90000,
+    "newGroupCommandProcessMs": 60000,
+    "newGroupOnlyCall": "runCommand(\"E15 route observer controls whole-file\", process.execPath,\n    [\"test\", \"./test/sucafina-preview-route-e15-diagnostic.test.ts\"], path.join(repository, \"apps/cli\"), 60_000)",
+    "noNameFilterInDriver": true
+  },
+  "pinAudit": {
+    "workingPins": 32,
+    "sourcePins": 30,
+    "controlPins": 2,
+    "sourceEntryPinsMatchedSupport": 17,
+    "allOldPathsRetained": true,
+    "oldPinsUnchanged": 13,
+    "changedOldPins": [
+      "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts"
+    ],
+    "sourceTokens": {
+      "source": 1,
+      "tree": 1
+    },
+    "requestLiteralMeta": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "requestBeforeMatchesSourceAnalytics": true,
+    "requestExcludedFromWorkingPins": true,
+    "expectedOverlay": {
+      "added": 3,
+      "modified": 1,
+      "paths": [
+        ".ci-run.json",
+        "apps/cli/test/sucafina-proof-verification.test.ts",
+        "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+        "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts"
+      ]
+    }
+  },
+  "findingsRemaining": [],
+  "conclusions": {
+    "commandEngine": [
+      "runCommand is literal against the C21 template, including argv construction, cwd, GUARDRAIL_APPROVED empty override, inherited environment, ignored stdin and piped stdout/stderr.",
+      "Each completed runCommand result reports exitCode, elapsed duration, stdoutTruncated and stderrTruncated; either truncation flag causes failure, and exitCode must be zero.",
+      "The engine keeps per-command stdout and stderr capture limits of 1,048,576 bytes each, SIGTERM, and a five-second force-kill grace.",
+      "All fifteen prior runCommand call expressions are literal, including command arguments, cwd and process limits. The new whole-file E15 test invocation is the sixteenth.",
+      "A timeout or process exception may prevent a normal receipt from being emitted. Sixteen calls and thirty-two truncation flags describe the planned successful execution path, not evidence already received."
+    ],
+    "retainedGroups": [
+      "Nine original groups remain present; the first receives E15 identity/manifest/pin updates while retaining its commands. Bodies of the other eight groups are literal.",
+      "Appending the tenth group introduces only a separator LF after the former last group; this is not a changed command or limit.",
+      "The five retained functional controls are still whole-file invocations with no name filter. They require fresh E15 execution outcomes.",
+      "Both package typechecks and the current-dev canonical guards remain. The guard group fetches actual origin/dev, obtains its merge base, and requires the guard report to match that merge base with bootstrap false, errors empty, approved empty and a positive rules count.",
+      "Historical C21 outcomes do not certify the E15 instrumentation or its future source/snapshot."
+    ],
+    "identity": [
+      "The source SHA token and tree token each occur exactly once. Both remain unbound in this reviewed template.",
+      "requireHostedCandidate rejects non-40-hex source/tree identities and requires CI true, Linux RUNNER_OS, the exact repository, numeric run ID and a 40-hex GITHUB_SHA.",
+      "At runtime, the identity group fetches the Actions snapshot at depth two, compares checkout HEAD to GITHUB_SHA, and compares HEAD^ commit/tree output to the bound diagnostic source.",
+      "HEAD^ addresses the first parent. Single-parent cardinality is a condition of the later actual Git object review; this template alone does not prove that cardinality.",
+      "Bound source/sourceTree must identify the actual reviewed diagnostic parent, distinct from clean S21 labels in observer telemetry. The clean source identity remains 29374ab6a0f38dd9ff8848a083c61ea35dcecdfb / fe8221e56daf5fd7de8a79b29d2d485055b8c45a.",
+      "Only exact one-time substitution of the two identity tokens is covered by the intended binding step. Any other source, pin, command or limit change requires a new comparison and review."
+    ],
+    "workingPins": [
+      "The parsed literal array has thirty-two unique paths and valid full Git blob IDs: thirty source paths and two focal control paths.",
+      "All seventeen code/helper entries from the R6 source support are represented with the exact postimage pin. The source request is intentionally handled separately.",
+      "All eighteen C21 working source paths remain. Thirteen prior pins are unchanged; five have E15 postimages. Twelve additional source paths and two control paths produce the thirty-two-entry array.",
+      "Working files are read as bytes and hashed with the Git blob header plus bytes. Each hash is asserted before the observed-files receipt is emitted.",
+      "This coverage is a specified set of working files, not a claim that the driver computes or validates the complete working tree. Complete source/snapshot inventories remain part of actual object review.",
+      "The two control pins match the derivation metadata, but their internal code and assertions were not independently reviewed in this driver recorte."
+    ],
+    "requestAndOverlay": {
+      "sourceExpectedDelta": {
+        "added": 2,
+        "modified": 16,
+        "base": "S21"
+      },
+      "focalExpectedDelta": {
+        "added": 3,
+        "modified": 1,
+        "paths": [
+          ".ci-run.json",
+          "apps/cli/test/sucafina-proof-verification.test.ts",
+          "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+          "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts"
+        ]
+      },
+      "requestBefore": {
+        "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "requestAfter": {
+        "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "bytes": 247,
+        "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "requestLiteralAuthenticatedByIndependentHash": true,
+      "parentAnalyticsRequestPinMatchesR6Support": true,
+      "focalRequestReused": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "requestArgs": [
+        "./test/sucafina-proof-verification.test.ts",
+        "--timeout",
+        "600000"
+      ],
+      "requestEnvironment": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "requestExcludedFromImmutableWorkingPins": true,
+      "reason": "The focal snapshot intentionally replaces the parent's original Analytics .ci-run.json with the focal verification request. This focal request selects the CLI verification file, not the installed Analytics journey.",
+      "actualOverlayPending": "The 3-add/1-modify focal overlay and 2-add/16-modify source overlay are declared constructions. Their actual Git trees and parent links still need object review."
+    },
+    "limits": {
+      "outerCommandCapture": {
+        "stdoutBytes": 1048576,
+        "stderrBytes": 1048576,
+        "killGraceMs": 5000
+      },
+      "retainedParentMs": [
+        180000,
+        180000,
+        360000,
+        300000,
+        300000,
+        600000,
+        180000,
+        60000,
+        60000
+      ],
+      "newOuterGroup": {
+        "processMs": 60000,
+        "parentMs": 90000,
+        "command": "process.execPath test ./test/sucafina-preview-route-e15-diagnostic.test.ts",
+        "cwd": "apps/cli",
+        "requiredOutputMarker": "SF_E15_ROUTE_CONTROL "
+      },
+      "declaredControlInternals": {
+        "bunMs": 45000,
+        "childMs": 3000,
+        "childKillGraceMs": 1000,
+        "sequentialChildren": 10,
+        "childStdoutBytes": 65536,
+        "childStderrBytes": 65536,
+        "reportBytes": 16384,
+        "approvalBoundary": "These values are declared by the driver and derivation; their implementation belongs to the independent control-source review by root."
+      },
+      "nominalNestedOrdering": "Ten sequential children at nominal three seconds plus one-second grace allow up to forty seconds before process startup/report overhead; the declared Bun test limit is forty-five seconds, driver process sixty seconds and parent ninety seconds. This is budget nesting, not a guarantee of completion.",
+      "workflowLimit": "The original workflow is outside this template change. No assertion is made that the sum of all individual worst-case limits fits the shared workflow deadline.",
+      "logLimit": "Per-command capture bounds do not establish a bound on the whole Actions main log, framework output, timestamps, ANSI wrapping or all subprocess output outside the captured result."
+    },
+    "populations": {
+      "outerGroups": 10,
+      "runCommandCalls": 16,
+      "plannedRunCommandTruncationFlags": 32,
+      "functionalWholeFileProcesses": 6,
+      "declaredControlReports": 9,
+      "explicitE15ChildModes": 10,
+      "declaredChildTruncationFlags": 20,
+      "globalOmniTotals": null,
+      "actualTestTotals": null,
+      "actualAssertionTotals": null,
+      "explanation": "The groups, command calls, functional processes, control reports and E15 children are separate populations. No aggregate subprocess count, Omni total or observed success is inferred from their static declaration."
+    }
+  },
+  "requiredBeforeExecutionAcceptance": [
+    "Independent review of Focal's two exact control blobs and completion of the product-tap reviews.",
+    "Creation and readback audit of the actual diagnostic source commit/tree, with the intended clean parent and exact 2A16M inventory.",
+    "Exact replacement of the two tokens with that actual source SHA/tree and comparison of the final bound driver to this template.",
+    "Actual focal snapshot object review: one diagnostic source parent, 3A1M overlay, expected request, bound driver and exact control blobs.",
+    "Fresh CI receipts for all planned groups and command outcomes, including six whole-file functional processes, actual control reports and all returned truncation flags.",
+    "Observed footers and receipts before reporting test/assertion/Omni totals or deciding on a rerun."
+  ]
+}

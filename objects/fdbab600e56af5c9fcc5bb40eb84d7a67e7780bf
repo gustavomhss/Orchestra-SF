@@ -1,0 +1,35 @@
+// E15 handoff: proposal API, no repository execution.
+type RouteKind = "canonical" | "lookup" | "persistence"
+type RoutePhase = "preparation" | "comparator" | "candidate-read" | "persist-body" | "store-write" | "state-transaction"
+type WorkLink = "provider-read" | "provider-write" | "source-work" | "choice-wrapped" | "local-operation"
+type Layer = "source" | "choice" | "local" | "operation"
+type Gate = "source-root-current" | "callback-equal" | "store-current" | "view-current" | "product-condition"
+type FinancePoint = "entered" | "fallback-before-root" | "fallback-no-selection" | "prepare-refused" | "unsupported-criteria" | "witness-refused" | "witness-unsupported" | "owned-records" | "owned-direct" | "outside-root" | "work-enter" | "observation-returned" | "returned"
+type RoutePoint =
+  "source-enter" | "source-selection" | "choice-forward" | "local-enter" | "native-gates" | "copy-enter" | "copy-close" |
+  "candidate-read-returned" | "prewrite" | "store-write-returned" | "state-transaction-enter" | "state-transaction-returned" |
+  "queue-enter" | "queue-returned" | "begin-enter" | "begin-returned" | "materialize-enter" | "materialize-returned" |
+  "source-work-enter" | "source-work-returned" | "source-finish-enter" | "source-finish-returned" |
+  "source-dispose-enter" | "source-dispose-returned" | "local-scope-closed" |
+  "encode-enter" | "encode-returned" | "decode-returned" | "sql-returned" | "commit-enter" | "commit-returned" |
+  "local-returning" | "operation-returned" | "binding-enter" | "binding-returned" | "validation-enter" | "validation-returned" | "binding-read-returned"
+declare function enterSfE15Route(kind: RouteKind): unknown
+declare function runSfE15Route<T>(handle: unknown, phase: RoutePhase, work: () => T): T
+declare function finishSfE15Route(handle: unknown, threw: boolean): void
+declare function currentSfE15Route(): unknown
+declare function linkSfE15Work<T>(handle: unknown, point: WorkLink, value: T, callback?: unknown): T
+declare function enterSfE15Layer(layer: Layer, work: unknown): unknown
+declare function markSfE15Route(handle: unknown, point: RoutePoint, detail?: unknown): void
+declare function returnedSfE15Route<T>(handle: unknown, point: RoutePoint, value: T): T
+declare function tapSfE15Gate<T>(handle: unknown, gate: Gate, value: T): T
+declare function tapSfE15ProviderSelection<T>(callback: unknown, value: T): T
+declare function markSfE15Finance(point: FinancePoint, owner?: unknown): unknown
+declare function createSfE15Forwarder(): (chunk: string) => string
+// E14 public API retained with E15 names, argument/return types unchanged:
+// start/markHttp/runObservation/finishObservation; enterUnit/runPhase/returnedAwait/markBranch/finishUnit;
+// enterCompare/runCompare/finishCompare.
+// Helper never returns or serializes a product value except identity taps returning that exact argument.
+// WorkLink retains exact callback references privately only until selected route/request cleanup.
+// An undefined handle means no match; currentSfE15Route is explicit when a caller needs current scope.
+// mark's optional detail accepts only finite known literal codes; arbitrary objects/functions/errors are ignored.
+// returned taps never assimilate thenables. Threw flags are separate from any thrown value.

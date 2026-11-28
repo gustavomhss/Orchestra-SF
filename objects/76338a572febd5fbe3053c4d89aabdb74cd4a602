@@ -1,0 +1,1927 @@
+{
+  "schema": "sf613-e15-reuse-history-v1",
+  "status": "STATIC_DERIVATION_ONLY",
+  "meaning": "This support records existing E14 copies and superseded proposal blobs. Only final helper R6 and source full derivation are current. No repository code was evaluated.",
+  "current": {
+    "helper": {
+      "gitSha": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+      "bytes": 47324,
+      "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "sourceDerivation": {
+      "gitSha": "6bb16fcd982f7f167e5e5a421f39951544865c52",
+      "bytes": 306067,
+      "sha256": "1be409300e0cb158033b4944f3ea415a7e2f460175b4f86848acd1563bba4567",
+      "lf": 2980,
+      "endsWithLF": true
+    },
+    "sourceFullDiff": {
+      "gitSha": "169d9b062e35fcbef398af087f948e14a03d2356",
+      "bytes": 179552,
+      "sha256": "0e26717f333dfbb03afe2027327092c05b9785ec55ed11d5e2bf5944b8e6c12b",
+      "lf": 2147,
+      "endsWithLF": true
+    }
+  },
+  "supersededHelpers": [
+    {
+      "version": "R1",
+      "gitSha": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+      "bytes": 44246,
+      "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+      "lf": 747,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_NO_EXECUTION"
+    },
+    {
+      "version": "R2",
+      "gitSha": "83219e5647237dbc70f4c8720795ed94e88f82de",
+      "bytes": 46849,
+      "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+      "lf": 807,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_NO_EXECUTION"
+    },
+    {
+      "version": "R3",
+      "gitSha": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+      "bytes": 47256,
+      "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+      "lf": 814,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_NO_EXECUTION"
+    },
+    {
+      "version": "R4",
+      "gitSha": "ba6b54f57bb517fa092545c061b203180b7074fe",
+      "bytes": 47286,
+      "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+      "lf": 814,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_NO_EXECUTION"
+    },
+    {
+      "version": "R5",
+      "gitSha": "bccde934773e78e54cd930e8d874bd6a3d066052",
+      "bytes": 47289,
+      "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+      "lf": 814,
+      "endsWithLF": true,
+      "status": "SUPERSEDED_NO_EXECUTION"
+    }
+  ],
+  "helperStages": [
+    {
+      "name": "E14 to E15 R1",
+      "preimage": {
+        "gitSha": "7ab9f42564bef7d023f2588aed86cd2db3f6ba10",
+        "bytes": 26983,
+        "sha256": "6efb7c185cb73acf14e699c091a5bf89ff9f113b10105a73c60ebc9d2ac343e6",
+        "lf": 456,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+        "bytes": 44246,
+        "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+        "lf": 747,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "source",
+          "before": "const source = \"7393cd010086f4a12d61ae9bb5db13534bd18aa0\"",
+          "after": "const source = \"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\"",
+          "beforeMeta": {
+            "gitSha": "1b47ab578b402389b8dc1c8bad61a5790607d8ba",
+            "bytes": 57,
+            "sha256": "74667b398a90799a4b46dc61252fe1efa4006db3d32f3e53ef2a56bdb78af3ef",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "453946370c7c8f475420ca44c82c06aa92ca9db8",
+            "bytes": 57,
+            "sha256": "8bfba5a168711d6ca68ef10a2ae752d5627e1a26e89802c062bec2c781fd18bc",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "tree",
+          "before": "const sourceTree = \"31954cfe7df07455d8b137f6f4f1e4d94a316fc3\"",
+          "after": "const sourceTree = \"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\"",
+          "beforeMeta": {
+            "gitSha": "40c6141c1177c2c65826f3636a6ea4096c78e5b5",
+            "bytes": 61,
+            "sha256": "55e1da237b764ac33fd6c469896d54248ceb845da9a3e704d3646125120c4682",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "fd3aa4050ade704250d26cb904d2a2f952c4832d",
+            "bytes": 61,
+            "sha256": "e80fb6cb3be10bd029caa990bd4ec3991f33fbd42f8db63acef17de35c6145f2",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "token:E14",
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 16,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "token:sf-preview-causal-e14-event-v1",
+          "beforeToken": "sf-preview-causal-e14-event-v1",
+          "afterToken": "sf-preview-causal-e15-event-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "bb27ebd2df6bbff7ed5865310abb92bb79bf90bf",
+            "bytes": 30,
+            "sha256": "f363afcd3e37db18aa34912c83158ad102d3e3587ccc3519b2f4ca5d36a5df55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "ea4029c3bfd5b9965a1054fea061465988ad3f57",
+            "bytes": 30,
+            "sha256": "25e2af910f9b204f1f97ea57baa78bb2cc4187d7360115a469cea35bf3283107",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "token:sf-preview-e14-event-launch-v1",
+          "beforeToken": "sf-preview-e14-event-launch-v1",
+          "afterToken": "sf-preview-e15-event-launch-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "d8a9d0d415b453ad5826390ad10a39c8c610c572",
+            "bytes": 30,
+            "sha256": "0e136e2ada74c4fb12eb0be3c9764f0703419e7db63ecb704a0d5c713907981d",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "eb6f747bd049093b8478561f3e0af1e9faf3966a",
+            "bytes": 30,
+            "sha256": "c819286eb3fb5c730701012d556284411790d613176e5fe322fbbb06e0074fc2",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "token:sf613-e14-event-",
+          "beforeToken": "sf613-e14-event-",
+          "afterToken": "sf613-e15-event-",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "a12b60ecf37413f57406d89b83690eff572c5320",
+            "bytes": 16,
+            "sha256": "37411f3a3b3d94e497a22a2239b25ecfa6145a6919a700fda06ba016312214d2",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "1a811400e3407c94f58f15ac8f6f294ebb8eaf1f",
+            "bytes": 16,
+            "sha256": "3bc1deea00c170b0c800ab4f49455385accf274b386136d153dd5b5f1437ea43",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "limits",
+          "before": "const maxEvents = 63, maxBytes = 63 * 1024",
+          "after": "const maxEvents = 191, maxBytes = 191 * 1024",
+          "beforeMeta": {
+            "gitSha": "795c847c816583b0af4cdc130ae34b1b1376afe5",
+            "bytes": 42,
+            "sha256": "0f3daa14f5600a63b3e0a342af5cfee9454c1f3c2668000da3417e01d02ef96b",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "f93d748590390663a01bd58c120825673b6c4f07",
+            "bytes": 44,
+            "sha256": "a3f966832c26b89017bb396beff47014a42f51c8407cefd145645a3f208531d8",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "frame",
+          "before": "  overflowWritten: boolean; emissionFault: boolean; fileFault: boolean; scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean; backpressure: boolean; emitting: boolean\n",
+          "after": "  overflowWritten: boolean; emissionFault: boolean; fileFault: boolean; scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean; backpressure: boolean; emitting: boolean\n  stdoutFailed: boolean; routeDisabled: boolean; routeScopes: number; routeOmitted: number; tailUsed: number;\n  firstPort: Unit | undefined; firstProductionRevalidation: Unit | undefined; tailMask: number;\n",
+          "beforeMeta": {
+            "gitSha": "3e142be9b83026c7ecf7d6a9a60e553e68cc9a12",
+            "bytes": 179,
+            "sha256": "0a11b43d2eb77f1ff983daaae1739efe49b60f884832966b1421ed281b771577",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "494a8261649268c9821e7448080f5e4e2bb88e6f",
+            "bytes": 385,
+            "sha256": "8fd0d2d05567e60f4286a76905c49eef0753c8daa8daf70442c98c4177fad7b5",
+            "lf": 3,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "sync-sink",
+          "before": "  try { if (!process.stdout.write(line)) frame.backpressure = true }\n  catch { frame.emissionFault = true }",
+          "after": "  // One synchronous attempt per line. A partial/zero write or throw permanently\n  // disables this sink; no reconstruction/replay can turn a fragment into a row.\n  if (!frame.stdoutFailed) {\n    try { if (writeSync(1, line, undefined, \"utf8\") !== bytes) { frame.stdoutFailed = true; frame.emissionFault = true } }\n    catch { frame.stdoutFailed = true; frame.emissionFault = true }\n  }",
+          "beforeMeta": {
+            "gitSha": "e5a64afc19bfb041063e7368edb911c55c0aa92c",
+            "bytes": 107,
+            "sha256": "dbeb6bcae2b758f758d6316fff509eba3ac477c291435cb6b43aedc32862e0f0",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "fe9c29b010d82593abea28165126fd45481b1eba",
+            "bytes": 386,
+            "sha256": "4448a2620b3ff991937067ba82ac60160140a7b0f8fff37a0860f9fd5dd72150",
+            "lf": 5,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "tail-reservation",
+          "before": "function reservePhase(unit: Unit, point: PhasePoint) {\n",
+          "after": "function reservePhase(unit: Unit, point: PhasePoint) {\n  const tail = tailIndex(unit, point)\n  if (tail >= 0 && claimTail(unit.frame, tail)) return true\n",
+          "beforeMeta": {
+            "gitSha": "c475c43019f334c9651949580d83a441856ae7a7",
+            "bytes": 55,
+            "sha256": "07afc2adc6f559af23f58c0d428f3a2df573a6a455e0795744fdcff60954e220",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "cdedfe34d3593a5fb73d65968f7beba921095411",
+            "bytes": 153,
+            "sha256": "1b017f930e445903f67cfb0c102aa4cb1d207b2e295c67f1f650998ebbd3e5c0",
+            "lf": 3,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "frame-init",
+          "before": "      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false }",
+          "after": "      overflowWritten: false, emissionFault: false, fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false, backpressure: false, emitting: false,\n      stdoutFailed: false, routeDisabled: false, routeScopes: 0, routeOmitted: 0, tailUsed: 0,\n      firstPort: undefined, firstProductionRevalidation: undefined, tailMask: 0 }",
+          "beforeMeta": {
+            "gitSha": "4b685c39872a227768f82f7ff77e28fea3fd47a3",
+            "bytes": 168,
+            "sha256": "0c076669e69f65308c829b2c54506e446449b700e68ba38970cd5887d2d7012f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "ce5b7d80af25be3611de1e6ffcb534ce9955ba55",
+            "bytes": 344,
+            "sha256": "74be92652d1d86d3d670a27b0a58a11f9b0387e2b74844a291440b608553e99b",
+            "lf": 2,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "http-tail",
+          "before": "    if (!general(frame, 1)) { omit(frame, \"detail\"); return }\n    emit(frame, \"http-boundary\", { point })",
+          "after": "    const tail = point === \"with-case-returned\" ? 5 : point === \"egress-passed\" ? 6 : -1\n    if (!(tail >= 0 && claimTail(frame, tail)) && !general(frame, 1)) { omit(frame, \"detail\"); return }\n    emit(frame, \"http-boundary\", { point })",
+          "beforeMeta": {
+            "gitSha": "911a2843b42ab7a298107d022f71abf8a655978b",
+            "bytes": 105,
+            "sha256": "b98b70ba164f943b28a56fb2a1a613970f73751fdce140a22a83c7fac343e6c2",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "d8d826a4d7897a8b98c179260edb300184551306",
+            "bytes": 236,
+            "sha256": "dc0e9a01b8565635125cc81496ce95168c7b56f7f92a9e45bb786c52ca7c8db0",
+            "lf": 2,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "tail-owners",
+          "before": "    if (firstAnalysis) frame.firstAnalysis = unit\n",
+          "after": "    if (firstAnalysis) frame.firstAnalysis = unit\n    if (kind === \"port\" && !frame.firstPort) frame.firstPort = unit\n    if (kind === \"production-revalidation\" && !frame.firstProductionRevalidation) frame.firstProductionRevalidation = unit\n",
+          "beforeMeta": {
+            "gitSha": "4b888fe7f3dd660edbd48d96dea589172d227420",
+            "bytes": 50,
+            "sha256": "63ca59551804a06fb3cd171454edd894dd703e3c20a15b8f6ba9ec83c653a9bf",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "bea1c263c6ccd5023e566e0170022ffd9ad82cb3",
+            "bytes": 241,
+            "sha256": "36ce7b845948725db7333755575d05c3432a4de742459847eb0c85572d5cba7e",
+            "lf": 3,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "close-faults",
+          "before": "      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.backpressure)] })",
+          "after": "      faultsBefore: [Number(frame.emissionFault), Number(frame.fileFault), Number(frame.scopeFault), Number(frame.scopeDisabled), Number(frame.clockFault), Number(frame.stdoutFailed)],\n      routeCoverage: [canonicalRoute ? 1 : 0, preparedLookups, comparatorLookups, persistenceRoute ? 1 : 0, frame.routeOmitted, Number(frame.routeDisabled)] })",
+          "beforeMeta": {
+            "gitSha": "293c4a9959d6f4a8a14e9316d4ce46697d0a0b1b",
+            "bytes": 186,
+            "sha256": "0170e5386bf591a851422c9af46cd41e01066f5c35243139d47fbfeff251b7b8",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "430afe87f28f6527a9f3f7f6f1cf28d809554f85",
+            "bytes": 344,
+            "sha256": "d16a3e183dc5151e918f4c38fc90917bf8058b47f4dfe44116b8069f61d324f9",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "route-cleanup",
+          "before": "    compares = undefined\n",
+          "after": "    compares = undefined\n    routes = undefined\n    routeScopes = undefined\n    canonicalRoute = undefined\n    persistenceRoute = undefined\n",
+          "beforeMeta": {
+            "gitSha": "ed649a1805c0b0d614b988c8fa34bf4845f6daa5",
+            "bytes": 25,
+            "sha256": "2589454b4ef2bf613bf5f1c018a84645035836aac87cabeb6b6cc8696bd08666",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "94e869b1b6f0275373d0c8317a537af837ac7e41",
+            "bytes": 140,
+            "sha256": "4d1c65bb2251d539f60a01615ec7b5843943138826642ee9ed43a6ce45fc33df",
+            "lf": 5,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "quota-comment",
+          "before": "// Request enter/close and one overflow add three: at most 63 rows / 63 KiB.",
+          "after": "// Request enter/close and one overflow add three: 63 base rows.\n// E15 independently reserves 12 tail rows, 6*12 lookup rows, 8 canonical/Finance\n// rows and 36 persistence rows: 191 stream rows / 191 KiB including prefix+LF.\n// One BI launcher-disabled row gives <=192 rows/192 KiB of diagnostic payload,\n// not a bound on the complete Actions log or its timestamp/ANSI encapsulation.",
+          "beforeMeta": {
+            "gitSha": "17256f340bc3bb8b31f07d323bd300d8dca1b456",
+            "bytes": 76,
+            "sha256": "a59150cf26e281226503fae105cdf2d6d67ca31c5544c448359c212aec99a03b",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "03d1fe8057d10671ba4430de65ac7485dc345ed0",
+            "bytes": 386,
+            "sha256": "cdb032a5db62a8d1a70cb8e8ecd3970db43589093548a47c807201d5a86d8f4f",
+            "lf": 4,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "private route implementation",
+          "before": "\nfunction hash(value: string)",
+          "after": "\ntype RouteKind = \"canonical\" | \"lookup\" | \"persistence\"\ntype RoutePhase = \"preparation\" | \"comparator\" | \"candidate-read\" | \"persist-body\" | \"store-write\" | \"state-transaction\"\ntype WorkLink = \"provider-read\" | \"provider-write\" | \"source-work\" | \"choice-wrapped\" | \"local-operation\"\ntype Layer = \"source\" | \"choice\" | \"local\" | \"operation\"\ntype Gate = \"source-root-current\" | \"callback-equal\" | \"store-current\" | \"view-current\" | \"product-condition\"\ntype FinancePoint = \"entered\" | \"fallback-before-root\" | \"fallback-no-selection\" | \"prepare-refused\" | \"unsupported-criteria\" | \"witness-refused\" | \"witness-unsupported\" | \"owned-records\" | \"owned-direct\" | \"outside-root\" | \"returned\"\ntype RoutePoint =\n  \"source-enter\" | \"source-selection\" | \"choice-forward\" | \"local-enter\" | \"native-gates\" | \"copy-enter\" | \"copy-close\" |\n  \"candidate-read-returned\" | \"prewrite\" | \"store-write-returned\" | \"state-transaction-enter\" | \"state-transaction-returned\" |\n  \"queue-enter\" | \"queue-returned\" | \"begin-enter\" | \"begin-returned\" | \"materialize-enter\" | \"materialize-returned\" |\n  \"source-work-enter\" | \"source-work-returned\" | \"source-finish-enter\" | \"source-finish-returned\" |\n  \"source-dispose-enter\" | \"source-dispose-returned\" | \"local-scope-closed\" |\n  \"encode-enter\" | \"encode-returned\" | \"decode-returned\" | \"sql-returned\" | \"commit-enter\" | \"commit-returned\" |\n  \"local-returning\" | \"operation-returned\" | \"binding-enter\" | \"binding-returned\" | \"validation-enter\" | \"validation-returned\" | \"binding-read-returned\"\ntype Route = {\n  handle: object; frame: Frame; birth: Scope; kind: RouteKind; id: number; phase: RoutePhase; closed: boolean;\n  points: number; phaseMask: number; providerWork: unknown; callback: unknown; sourceWork: unknown; forwardedWork: unknown; operationWork: unknown;\n  sourceSeen: boolean; choiceSeen: boolean; localSeen: boolean; operationSeen: boolean; gates: number[]; next: Route | undefined\n}\ntype RouteScope = { scope: Scope; route: Route | undefined; phase: RoutePhase; next: RouteScope | undefined }\nconst lookupPoints = [\"lookup-enter\", \"candidate-read-enter\", \"source-enter\", \"source-selection\", \"choice-forward\", \"local-enter\",\n  \"native-gates\", \"copy-enter\", \"copy-close\", \"provider-view\", \"candidate-read-returned\", \"lookup-close\"]\nconst persistencePoints = [\"persist-enter\", \"prewrite\", \"store-write-returned\", \"persist-close\", \"state-transaction-enter\", \"state-transaction-returned\",\n  \"source-enter\", \"source-selection\", \"choice-forward\", \"local-enter\", \"queue-enter\", \"queue-returned\", \"begin-enter\", \"begin-returned\",\n  \"materialize-enter\", \"materialize-returned\", \"source-work-enter\", \"source-work-returned\", \"source-finish-enter\", \"source-finish-returned\",\n  \"source-dispose-enter\", \"source-dispose-returned\", \"local-scope-closed\", \"encode-enter\", \"encode-returned\", \"decode-returned\",\n  \"sql-returned\", \"commit-enter\", \"commit-returned\", \"local-returning\", \"operation-returned\", \"binding-enter\", \"binding-returned\",\n  \"validation-enter\", \"validation-returned\", \"binding-read-returned\"]\nconst canonicalPoints = [\"canonical-enter\", \"comparator-enter\", \"finance-enter\", \"finance-branch\", \"finance-work-enter\", \"finance-work-returned\", \"finance-returned\", \"route-facts\"]\nlet routes: Route | undefined, routeScopes: RouteScope | undefined, canonicalRoute: Route | undefined, persistenceRoute: Route | undefined\nlet preparedLookups = 0, comparatorLookups = 0\n\nfunction tailIndex(unit: Unit, point: PhasePoint) {\n  if (unit === unit.frame.firstAnalysis && point === \"analysis-compare\") return 0\n  if (unit === unit.frame.firstProductionRevalidation && point === \"production-analysis-revalidate\") return 1\n  if (unit !== unit.frame.firstPort) return -1\n  return point === \"port-authority-final\" ? 2 : point === \"evaluations-recheck\" ? 3 : point === \"candidates-final\" ? 4 : -1\n}\nfunction claimTail(frame: Frame, index: number) {\n  const bit = 2 ** index\n  if (frame.tailMask % (bit * 2) >= bit) return false\n  frame.tailMask += bit\n  frame.tailUsed += index < 5 ? 2 : 1\n  return true\n}\nfunction routeContext(birth = currentScope()): RouteScope | undefined {\n  if (!birth || birth.frame.routeDisabled) return\n  for (let at: Scope | undefined = birth; at; at = at.parent) {\n    for (let item = routeScopes; item; item = item.next) {\n      if (item.scope !== at) continue\n      if (!item.route || item.route.closed || item.route.frame !== birth.frame) return\n      return item\n    }\n  }\n}\nfunction routeFor(handle: unknown): Route | undefined {\n  const birth = currentScope()\n  if (!birth || birth.frame.routeDisabled) return\n  for (let route = routes; route; route = route.next) {\n    if (route.handle !== handle || route.closed || route.frame !== birth.frame) continue\n    if (route.birth === birth || routeContext(birth)?.route === route) return route\n  }\n}\nfunction routeScope(route: Route | undefined, phase: RoutePhase, birth: Scope) {\n  const frame = birth.frame\n  // Two canonical scopes, six read scopes and three persistence scopes fit.\n  // Bounded neutral masks cover reentrancy; exhaustion disables attribution.\n  if (frame.routeDisabled || frame.routeScopes >= 32) { frame.routeDisabled = true; frame.scopeFault = true; return undefined }\n  frame.routeScopes++\n  const scope: Scope = { token: {}, frame, parent: birth, owner: birth.owner, phase: undefined, compare: undefined, stage: birth.stage, next: scopes }\n  const item: RouteScope = { scope, route, phase, next: routeScopes }\n  scopes = scope\n  routeScopes = item\n  return scope\n}\nfunction selectedDetail(value: unknown) {\n  if (value === undefined) return \"none\"\n  if (value === true) return \"true\"\n  if (value === false) return \"false\"\n  if (typeof value !== \"string\") return \"unknown\"\n  return [\"cases\", \"preferences\", \"case-identities\", \"decisionResults\", \"direct\", \"wrapped\", \"child\", \"top-level\", \"projected\", \"full\",\n    \"returned\", \"threw\", \"abandoned\", \"product-refused\", \"options-refused\", \"root-absent\", \"root-refused\", \"not-requested\",\n    \"fallback-before-root\", \"fallback-no-selection\", \"prepare-refused\", \"unsupported-criteria\", \"witness-refused\", \"witness-unsupported\",\n    \"owned-records\", \"owned-direct\", \"outside-root\"].includes(value) ? value : \"unknown\"\n}\nfunction routeEmit(route: Route, point: string, detail?: unknown) {\n  if (route.closed || route.frame.closed || route.frame.routeDisabled || route.frame.emitting) return\n  const points = route.kind === \"lookup\" ? lookupPoints : route.kind === \"persistence\" ? persistencePoints : canonicalPoints\n  const index = points.indexOf(point)\n  if (index < 0) return\n  const bit = 2 ** index\n  if (route.points % (bit * 2) >= bit) return\n  // Claim before serialization/clock/sink: reentrancy cannot reuse a place.\n  route.points += bit\n  emit(route.frame, \"route\", { routeKind: route.kind, route: route.id, routePhase: route.phase, point, detail: selectedDetail(detail),\n    gates: route.gates, parentUnit: route.birth.owner?.id ?? 0, parentPhase: route.birth.phase?.id ?? 0 })\n}\nfunction newRoute(kind: RouteKind, phase: RoutePhase, birth: Scope, id: number) {\n  const route: Route = { handle: {}, frame: birth.frame, birth, kind, id, phase, closed: false, points: 0, phaseMask: 0,\n    providerWork: undefined, callback: undefined, sourceWork: undefined, forwardedWork: undefined, operationWork: undefined,\n    sourceSeen: false, choiceSeen: false, localSeen: false, operationSeen: false, gates: [-1, -1, -1, -1, -1], next: routes }\n  routes = route\n  return route\n}\nexport function enterSfE15Route(kind: RouteKind): unknown {\n  try {\n    const birth = currentScope()\n    if (!birth || birth.frame.routeDisabled) return undefined\n    const frame = birth.frame, context = routeContext(birth)\n    if (kind === \"canonical\") {\n      if (canonicalRoute) return undefined\n      const route = newRoute(kind, \"preparation\", birth, 1)\n      canonicalRoute = route\n      routeEmit(route, \"canonical-enter\")\n      return route.handle\n    }\n    if (kind === \"lookup\") {\n      if (!context || context.route !== canonicalRoute || context.phase !== \"preparation\" && context.phase !== \"comparator\") return undefined\n      const preparation = context.phase === \"preparation\"\n      if (preparation ? preparedLookups >= 2 : comparatorLookups >= 4) {\n        frame.routeOmitted = bump(frame, frame.routeOmitted); omit(frame, \"detail\"); return undefined\n      }\n      const id = preparation ? ++preparedLookups : 2 + ++comparatorLookups\n      const route = newRoute(kind, context.phase, birth, id)\n      routeEmit(route, \"lookup-enter\")\n      return route.handle\n    }\n    if (kind === \"persistence\") {\n      if (persistenceRoute) return undefined\n      let owner = false\n      for (let at: Scope | undefined = birth; at; at = at.parent)\n        if (at.phase?.point === \"analysis-persist\" && at.owner === frame.firstAnalysis) { owner = true; break }\n      if (!owner) return undefined\n      const route = newRoute(kind, \"persist-body\", birth, 1)\n      persistenceRoute = route\n      routeEmit(route, \"persist-enter\")\n      return route.handle\n    }\n  } catch { /* A diagnostic handle never grants product authority. */ }\n  return undefined\n}\nexport function currentSfE15Route(): unknown {\n  try { return routeContext()?.route?.handle } catch { return undefined }\n}\nexport function runSfE15Route<T>(handle: unknown, phase: RoutePhase, work: () => T): T {\n  let frame: Frame | undefined, scope: Scope | undefined\n  try {\n    const birth = currentScope(), route = routeFor(handle)\n    if (birth) {\n      frame = birth.frame\n      const index = [\"preparation\", \"comparator\", \"candidate-read\", \"persist-body\", \"store-write\", \"state-transaction\"].indexOf(phase)\n      const context = routeContext(birth)\n      const valid = route && index >= 0 && (route.kind === \"canonical\" && (phase === \"preparation\" || phase === \"comparator\") ||\n        route.kind === \"lookup\" && phase === \"candidate-read\" ||\n        route.kind === \"persistence\" && (phase === \"persist-body\" || phase === \"store-write\" || phase === \"state-transaction\" && context?.phase === \"store-write\"))\n      const bit = index >= 0 ? 2 ** index : 0\n      if (valid && route.phaseMask % (bit * 2) < bit) {\n        route.phaseMask += bit\n        scope = routeScope(route, phase, birth)\n        if (phase === \"comparator\") routeEmit(route, \"comparator-enter\")\n        if (phase === \"candidate-read\") routeEmit(route, \"candidate-read-enter\")\n        if (phase === \"store-write\") routeEmit(route, \"prewrite\")\n        if (phase === \"state-transaction\") routeEmit(route, \"state-transaction-enter\")\n      } else {\n        // Preserve E14's lexical stage while masking an ambient selected route.\n        scope = context ? routeScope(undefined, phase, birth) : birth\n      }\n    }\n  } catch { if (selected) { selected.scopeFault = true; selected.routeDisabled = true } }\n  return runOnce(frame ?? selected, scope, work)\n}\nexport function finishSfE15Route(handle: unknown, threw: boolean) {\n  try {\n    const route = routeFor(handle)\n    if (!route) return\n    routeEmit(route, route.kind === \"lookup\" ? \"lookup-close\" : route.kind === \"persistence\" ? \"persist-close\" : \"route-facts\", threw ? \"threw\" : \"returned\")\n    route.closed = true\n    route.providerWork = undefined\n    route.callback = undefined\n    route.sourceWork = undefined\n    route.forwardedWork = undefined\n    route.operationWork = undefined\n  } catch { /* The original caught/thrown value is not passed to the observer. */ }\n}\nexport function linkSfE15Work<T>(handle: unknown, point: WorkLink, value: T, callback?: unknown): T {\n  try {\n    const route = routeFor(handle), context = routeContext()\n    if (!route || context?.route !== route || typeof value !== \"function\") return value\n    if (point === \"provider-read\" && route.kind === \"lookup\" && context.phase === \"candidate-read\" && route.providerWork === undefined) {\n      route.providerWork = value\n      route.callback = callback\n    } else if (point === \"provider-write\" && route.kind === \"persistence\" && context.phase === \"state-transaction\" && route.providerWork === undefined) {\n      route.providerWork = value\n    } else if (point === \"source-work\" && route.sourceSeen && route.sourceWork === undefined) {\n      route.sourceWork = value\n    } else if (point === \"choice-wrapped\" && route.choiceSeen && route.forwardedWork === undefined) {\n      route.forwardedWork = value\n    } else if (point === \"local-operation\" && route.localSeen && route.operationWork === undefined) {\n      route.operationWork = value\n    }\n  } catch { /* No original callback is wrapped, invoked, or inspected. */ }\n  return value\n}\nexport function enterSfE15Layer(layer: Layer, work: unknown): unknown {\n  try {\n    const context = routeContext(), route = context?.route\n    if (!route || route.kind === \"canonical\" || typeof work !== \"function\") return undefined\n    if (layer === \"source\" && !route.sourceSeen && work === route.providerWork) {\n      route.sourceSeen = true\n      routeEmit(route, \"source-enter\")\n      return route.handle\n    }\n    if (layer === \"choice\" && !route.choiceSeen && route.sourceSeen && work === route.sourceWork) {\n      route.choiceSeen = true\n      return route.handle\n    }\n    if (layer === \"local\" && !route.localSeen && route.sourceSeen && work === (route.forwardedWork ?? route.sourceWork)) {\n      route.localSeen = true\n      return route.handle\n    }\n    if (layer === \"operation\" && !route.operationSeen && route.localSeen && work === route.operationWork) {\n      route.operationSeen = true\n      return route.handle\n    }\n  } catch { /* Unknown, reused, foreign and late work cannot join the selected chain. */ }\n  return undefined\n}\nexport function markSfE15Route(handle: unknown, point: RoutePoint, detail?: unknown) {\n  try {\n    const route = routeFor(handle)\n    if (!route) return\n    if (point === \"choice-forward\" && detail === \"direct\" && route.choiceSeen && route.forwardedWork === undefined)\n      route.forwardedWork = route.sourceWork\n    routeEmit(route, point, detail)\n  } catch { /* Only bounded local facts are emitted. */ }\n}\nexport function returnedSfE15Route<T>(handle: unknown, point: RoutePoint, value: T): T {\n  markSfE15Route(handle, point, point === \"copy-close\" ? value : \"returned\")\n  return value\n}\nexport function tapSfE15Gate<T>(handle: unknown, gate: Gate, value: T): T {\n  try {\n    const route = routeFor(handle)\n    if (route) {\n      const index = [\"source-root-current\", \"callback-equal\", \"store-current\", \"view-current\", \"product-condition\"].indexOf(gate)\n      // -1 means no tap evaluated; 2 means an evaluated nonboolean result.\n      // Optional source-root absence is identified separately by its branch row.\n      if (index >= 0 && route.gates[index] === -1) route.gates[index] = value === true ? 1 : value === false ? 0 : 2\n    }\n  } catch { /* A tap returns the original predicate result without coercing it. */ }\n  return value\n}\nexport function tapSfE15ProviderSelection<T>(callback: unknown, value: T): T {\n  try {\n    const route = routeContext()?.route\n    if (route?.kind === \"lookup\" && callback === route.callback) routeEmit(route, \"provider-view\", value)\n  } catch { /* Preserve the already performed optional selection lookup. */ }\n  return value\n}\nexport function markSfE15Finance(point: FinancePoint) {\n  try {\n    const context = routeContext(), route = context?.route\n    if (!route || route !== canonicalRoute) return\n    if (point === \"entered\") routeEmit(route, \"finance-enter\")\n    else if (point === \"returned\") routeEmit(route, \"finance-returned\")\n    else routeEmit(route, \"finance-branch\", point)\n  } catch { /* Records an existing branch; it never reads a witness or grant. */ }\n}\n\nfunction hash(value: string)",
+          "beforeMeta": {
+            "gitSha": "803c285a35383e74769ee2ae815fb6bcd0ec2f5c",
+            "bytes": 29,
+            "sha256": "c5d02171db6cf17f33304aa7c02e4d146ce585a5d1b909ad06357950fd64949b",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "ee85e10b9fa9c41df43309da8f0e4047edd5dfce",
+            "bytes": 15626,
+            "sha256": "d190a5b05b1275fa4b4bc44f0755a4b003d3d67007b78512c675c6bd47de1370",
+            "lf": 270,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "E15 R1 to R2",
+      "preimage": {
+        "gitSha": "6c78bd8fc92c14e7b7c3a55f0af459fc587f25eb",
+        "bytes": 44246,
+        "sha256": "ea45fbf5bb6817421ae1a7aa1b5ea490cee257979779951a54c0086df97530cf",
+        "lf": 747,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "83219e5647237dbc70f4c8720795ed94e88f82de",
+        "bytes": 46849,
+        "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+        "lf": 807,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "finance-enum",
+          "before": "type FinancePoint = \"entered\" | \"fallback-before-root\" | \"fallback-no-selection\" | \"prepare-refused\" | \"unsupported-criteria\" | \"witness-refused\" | \"witness-unsupported\" | \"owned-records\" | \"owned-direct\" | \"outside-root\" | \"returned\"",
+          "after": "type FinancePoint = \"entered\" | \"fallback-before-root\" | \"fallback-no-selection\" | \"prepare-refused\" | \"unsupported-criteria\" | \"witness-refused\" | \"witness-unsupported\" | \"owned-records\" | \"owned-direct\" | \"outside-root\" | \"work-enter\" | \"work-returned\" | \"returned\"",
+          "beforeMeta": {
+            "gitSha": "4abfb3b4630432fd04c27adb712c24bc2976a187",
+            "bytes": 234,
+            "sha256": "22e3258518767eb62c0d23c407521944be648905df8f677abad63c4bdb01aff6",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "be725c2b25fb80117cc8a61c70090192f49b2125",
+            "bytes": 267,
+            "sha256": "bcb5fc717267677d9806fffe391b3cf394520997dc845e1f9646016f3ca3a03b",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "finance-owner",
+          "before": "let preparedLookups = 0, comparatorLookups = 0",
+          "after": "let preparedLookups = 0, comparatorLookups = 0\nlet financeOwner: object | undefined",
+          "beforeMeta": {
+            "gitSha": "00c0416e84239aecb5209c0efc3cf8a7e48df945",
+            "bytes": 46,
+            "sha256": "64ffd937274cdc6e90c2d46553edfc123f9c140d6d31fec516f1afe08089a54a",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "8d50f2d84ef8339d5170cf8f5e540bb37ad58851",
+            "bytes": 83,
+            "sha256": "087009cf81c105b1d370adb253c304f4a36565a06a7423ee5718728353469aa4",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "actual-work",
+          "before": "if (phase === \"comparator\") routeEmit(route, \"comparator-enter\")",
+          "after": "if (phase === \"comparator\") {\n          routeEmit(route, \"comparator-enter\")\n          if (financeOwner) routeEmit(route, \"finance-work-enter\")\n        }",
+          "beforeMeta": {
+            "gitSha": "21a8cfc62fb550c276809b1ee4e86e36e9dc4cb6",
+            "bytes": 64,
+            "sha256": "0afb69c51fe02b615de34b2687be0924771b9b4589ebca3ea5b2981bdaaed61f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "c749338a96ebb60dfaa44daafef337355ad52fa7",
+            "bytes": 153,
+            "sha256": "31757ec148dde3f189be458cbecef43b37315525da19db799fbfa2a2042295e7",
+            "lf": 3,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "finance-cleanup",
+          "before": "    persistenceRoute = undefined\n",
+          "after": "    persistenceRoute = undefined\n    financeOwner = undefined\n",
+          "beforeMeta": {
+            "gitSha": "53343a189b0e4aa1ad47e9378d127ca52683474b",
+            "bytes": 33,
+            "sha256": "6139e1bebd7546863c85ba4149c87ce62263ffe022a33a4d69dd395306544797",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "ce0581a7bf82676950622935f952a1e59a72c541",
+            "bytes": 62,
+            "sha256": "9aa3ff77882a8bbb5189f482b98543553e47dcea8492783ac1a9e5700d9c91c4",
+            "lf": 2,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "finance-owned-and-forwarder",
+          "before": "export function markSfE15Finance(point: FinancePoint) {\n  try {\n    const context = routeContext(), route = context?.route\n    if (!route || route !== canonicalRoute) return\n    if (point === \"entered\") routeEmit(route, \"finance-enter\")\n    else if (point === \"returned\") routeEmit(route, \"finance-returned\")\n    else routeEmit(route, \"finance-branch\", point)\n  } catch { /* Records an existing branch; it never reads a witness or grant. */ }\n}\n",
+          "after": "export function markSfE15Finance(point: FinancePoint, owner?: unknown): unknown {\n  try {\n    const context = routeContext(), route = context?.route\n    if (!route || route !== canonicalRoute) return undefined\n    if (point === \"entered\") {\n      if (financeOwner) return undefined\n      financeOwner = {}\n      routeEmit(route, \"finance-enter\")\n      return financeOwner\n    }\n    if (!financeOwner || owner !== financeOwner) return undefined\n    if (point === \"returned\") routeEmit(route, \"finance-returned\")\n    else if (point === \"work-enter\") routeEmit(route, \"finance-work-enter\")\n    else if (point === \"work-returned\") routeEmit(route, \"finance-work-returned\")\n    else routeEmit(route, \"finance-branch\", point)\n  } catch { /* Records an existing branch; it never reads a witness or grant. */ }\n  return undefined\n}\n\n// The bridges feed decoded chunks here BEFORE their unchanged splitLines/readiness\n// pipeline. Only observed LF completes a diagnostic row; EOF never invents one.\nexport function createSfE15Forwarder(): (chunk: string) => string {\n  const state = { tail: \"\", discarding: false, diagnostic: false, failed: false, events: 0, bytes: 0, mode: \"\" }\n  return (chunk) => {\n    try {\n      if (state.failed || typeof chunk !== \"string\") return chunk\n      for (let index = 0; index < chunk.length; index++) {\n        const character = chunk[index]!\n        if (character !== \"\\n\") {\n          if (!state.discarding) {\n            if (state.tail.length < maxLineBytes - 1) state.tail += character\n            else {\n              state.diagnostic = state.tail.startsWith(prefix) || state.tail.startsWith(\"SF_PREVIEW_E15_LAUNCHER \")\n              state.tail = \"\"\n              state.discarding = true\n            }\n          }\n          continue\n        }\n        const line = state.tail\n        const discarded = state.discarding, diagnostic = state.diagnostic\n        state.tail = \"\"\n        state.discarding = false\n        state.diagnostic = false\n        if (discarded) { if (diagnostic) { state.failed = true; break } else continue }\n        const mode = line.startsWith(prefix) ? \"events\" : line.startsWith(\"SF_PREVIEW_E15_LAUNCHER \") ? \"disabled\" : \"\"\n        if (!mode) continue\n        if (!/^[\\x20-\\x7e]*$/.test(line) || state.mode && mode !== state.mode ||\n            state.events >= (mode === \"events\" ? maxEvents : 1) || state.bytes + line.length + 1 > (mode === \"events\" ? maxBytes : maxLineBytes)) {\n          state.failed = true\n          break\n        }\n        state.mode = mode\n        const complete = line + \"\\n\", bytes = line.length + 1\n        state.events++\n        state.bytes += bytes\n        try { if (writeSync(1, complete, undefined, \"utf8\") !== bytes) state.failed = true }\n        catch { state.failed = true }\n        if (state.failed) break\n      }\n    } catch { state.failed = true }\n    return chunk\n  }\n}\n",
+          "beforeMeta": {
+            "gitSha": "935bb5e3ebdfb998205000e7b21987b831c9e3e9",
+            "bytes": 445,
+            "sha256": "dea208670bb99889de02bb557431db4ee099eb0874b282ae9e7dd01c6ac0acf8",
+            "lf": 9,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "617ce1678b1e6364fdbc54878d6f666b4baa5187",
+            "bytes": 2860,
+            "sha256": "961b6adc6499e8bd11f7af65bec7f94fbc23cdda21a641f0b5ee7ed0fb7573ce",
+            "lf": 64,
+            "endsWithLF": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "E15 R2 to R3",
+      "preimage": {
+        "gitSha": "83219e5647237dbc70f4c8720795ed94e88f82de",
+        "bytes": 46849,
+        "sha256": "c81de729005d3f71f18816ef84213e9067c9341e7669ca82772fa6f86ab5b39e",
+        "lf": 807,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+        "bytes": 47256,
+        "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "provider-function-identity",
+          "before": "    if (route?.kind === \"lookup\" && callback === route.callback) routeEmit(route, \"provider-view\", value)",
+          "after": "    if (route?.kind === \"lookup\" && typeof callback === \"function\" && callback === route.callback) routeEmit(route, \"provider-view\", value)",
+          "beforeMeta": {
+            "gitSha": "cefef9cc24763458ba7bb992c1ccf953b5673513",
+            "bytes": 105,
+            "sha256": "559e5a72a2d16c6fe795af9ebfc338860f4fc3c377f9210fa3ff3d814568f7c2",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "795fb305f4d81df003ac6f8b1c9de556dd088222",
+            "bytes": 139,
+            "sha256": "afe250f75d085da8005743eda45f8b5d5b14b6301cc3ea76cb9ade9cf734dbd0",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "finance-outside-transition",
+          "before": "    else if (point === \"work-returned\") routeEmit(route, \"finance-work-returned\")\n    else routeEmit(route, \"finance-branch\", point)",
+          "after": "    else if (point === \"work-returned\") routeEmit(route, \"finance-work-returned\")\n    else if (point === \"outside-root\") routeEmit(route, \"route-facts\", point)\n    else routeEmit(route, \"finance-branch\", point)",
+          "beforeMeta": {
+            "gitSha": "c95a91dd5e6b11d33fe03017da9991051edfe63a",
+            "bytes": 132,
+            "sha256": "fd8dcd9b9747ad7385963bcdc2480e6c8c3fcb1d5bf213766d4cd7516db784b4",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "e948a6e583fb7817364fc22822648147f2c66a0e",
+            "bytes": 210,
+            "sha256": "e016b6f385de3669978ae4931fec9696dd42021bcf397e52af78c7e86d237202",
+            "lf": 2,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "ascii-buffer-bound",
+          "before": "        if (character !== \"\\n\") {\n          if (!state.discarding) {",
+          "after": "        if (character !== \"\\n\") {\n          if (character.charCodeAt(0) > 127) {\n            if (state.diagnostic || state.tail.startsWith(prefix) || state.tail.startsWith(\"SF_PREVIEW_E15_LAUNCHER \")) { state.failed = true; break }\n            state.tail = \"\"\n            state.discarding = true\n            continue\n          }\n          if (!state.discarding) {",
+          "beforeMeta": {
+            "gitSha": "623b43f43c89b24f7753514a87a1643c1b23da1c",
+            "bytes": 68,
+            "sha256": "166e25e6a008988d2d66303a28ad16832ec9a8f6efb263a33c849e68d1b9270e",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "5b6860810f1f357b8edf449b955767e91b2d5e95",
+            "bytes": 363,
+            "sha256": "0b0a9aade06b513efcc97aa0dd9cfd403a6e7adb4db97efa9b0758ff8d204576",
+            "lf": 7,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "E15 R3 to R4",
+      "preimage": {
+        "gitSha": "2fc1f078fbc4dc48fbb276bc7b6f8f1b7bae31be",
+        "bytes": 47256,
+        "sha256": "a3f9f111f18823f0bad969ab3a28e451404c58badd22d80ab3d720f1b1d477ed",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "ba6b54f57bb517fa092545c061b203180b7074fe",
+        "bytes": 47286,
+        "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "\"work-returned\"",
+          "afterToken": "\"observation-returned\"",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "5617e990c15916e170789732d96e77be208eb60f",
+            "bytes": 15,
+            "sha256": "ffa6b5860e3c6d8326ed965b4d3d185a169db39b9b25fc384fc40246d718a7af",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "5d416e18fdbea8afae29eb46c5b9019cebc330ce",
+            "bytes": 22,
+            "sha256": "09f374d61c7e311e421a62be5b177e7971bc5a95b2b522d5eb8a73454df75fe7",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "\"finance-work-returned\"",
+          "afterToken": "\"finance-observation-returned\"",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "8946b52e84843cc0238b61bd97879a11cf38491d",
+            "bytes": 23,
+            "sha256": "89b69f337fdc5fe24628c0b382bb003e9087efa874df7b5ff93ad20bc2ba1c01",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "3ca9ffaf4731f940f312d572761548d8c1a51946",
+            "bytes": 30,
+            "sha256": "37216e7a55be6036961bef90d1dcbd18215c684ef168cc55155b87db82689c8f",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "\"finance-returned\"",
+          "afterToken": "\"finance-body-exit\"",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "c27950437e1a11de76b2d3178fe26cd3320f7452",
+            "bytes": 18,
+            "sha256": "fadca87a3db849b60014de726f80bebc0e835231a45bcdf1cfbe93c0e1832151",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4279869b416905bf12ef54e01b3e3f9c16e27e44",
+            "bytes": 19,
+            "sha256": "e83a2895b5d9d7729e3399f7afdc3a5591288e3018f8fa8fd400af0124cd932c",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "E15 R4 to R5",
+      "preimage": {
+        "gitSha": "ba6b54f57bb517fa092545c061b203180b7074fe",
+        "bytes": 47286,
+        "sha256": "37f17f95d449b5f601db2c655e165026064fe02a375e124fdf42475c243256e3",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "bccde934773e78e54cd930e8d874bd6a3d066052",
+        "bytes": 47289,
+        "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "dedicated outside-root slot",
+          "before": "\"finance-body-exit\", \"route-facts\"]",
+          "after": "\"finance-body-exit\", \"finance-outside-root\"]",
+          "beforeMeta": {
+            "gitSha": "a37510cfb3f31d7c4de130daf8917fd057606a49",
+            "bytes": 35,
+            "sha256": "cb5df9937b19ac776440c2ffd1303eafec29c96db05d93db04b2a34248179236",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "e5896a65870bf8263c624483c9cff9bd113f4713",
+            "bytes": 44,
+            "sha256": "fcaf4eabd0cc1c8a6ad9515fa7ebd3e0b97cc88b5e97bcebde6cbde2dfa64341",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "canonical cleanup does not fabricate close",
+          "before": "    routeEmit(route, route.kind === \"lookup\" ? \"lookup-close\" : route.kind === \"persistence\" ? \"persist-close\" : \"route-facts\", threw ? \"threw\" : \"returned\")",
+          "after": "    if (route.kind !== \"canonical\") routeEmit(route, route.kind === \"lookup\" ? \"lookup-close\" : \"persist-close\", threw ? \"threw\" : \"returned\")",
+          "beforeMeta": {
+            "gitSha": "ca7e2e2d04ba87fd1d36734ab66cd68f6c444ebf",
+            "bytes": 157,
+            "sha256": "7aa2fb10eb4995b5833bfd582986e3ec1a80674bad8037762a6d7ca2ab53e8c7",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "13a7956374ef879eeb37a9359763da545a156ccc",
+            "bytes": 142,
+            "sha256": "3ddca5a15191d578bfcb813a4b26ff703107b343345f07abd64d20b150ddb266",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "outside-root named boundary",
+          "before": "    else if (point === \"outside-root\") routeEmit(route, \"route-facts\", point)",
+          "after": "    else if (point === \"outside-root\") routeEmit(route, \"finance-outside-root\", point)",
+          "beforeMeta": {
+            "gitSha": "3707b2a4bf09c7e456abad76d0b24898a94d7d12",
+            "bytes": 77,
+            "sha256": "714853d1dc976754f8b6c990615520049248a73dc2c5976a82afbffe0c611c21",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "c72de2aa3ff9bf7581c2591b45a45a5c4c80db32",
+            "bytes": 86,
+            "sha256": "e02aba96e16e812cb7614f3b19bae5a89f82223ade6fd1fea8a6946e323e0546",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "E15 R5 to R6",
+      "preimage": {
+        "gitSha": "bccde934773e78e54cd930e8d874bd6a3d066052",
+        "bytes": 47289,
+        "sha256": "74b180c23ef471b3aa95931b553c060af7523df75b90f6c933c01713eb28e072",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+        "bytes": 47324,
+        "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+        "lf": 814,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "label": "only lexical outer Finance",
+          "before": "    if (point === \"entered\") {\n      if (financeOwner) return undefined",
+          "after": "    if (point === \"entered\") {\n      if (context.phase !== \"preparation\" || financeOwner) return undefined",
+          "beforeMeta": {
+            "gitSha": "00c78a754a28a783a05e388bdac9bddcdeede8c7",
+            "bytes": 71,
+            "sha256": "718337de369304353eb1d09d246dd5d607c1a7664a1ad00cf1142e2248c0ba14",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "c8b3840b12ec2e88ec940080e6894db13f9cfcd9",
+            "bytes": 106,
+            "sha256": "841a28088738df2a97e268e6d77b33234c7d9063a7eb45890d12ecbc0a5ecc89",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        }
+      ]
+    }
+  ],
+  "reusedCallers": [
+    {
+      "role": "http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "preimage": {
+        "gitSha": "d5cb9fff2fc1a725250f9710449f9d13f3a942c7",
+        "bytes": 14101,
+        "sha256": "2cb60a140ee06191f3794211c4c5b4ea686cfde7306f0c07508aa30ec14890ee",
+        "lf": 145,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "9cbbba7a3292f22e766aad41e6066eb69ae6424a",
+        "bytes": 14101,
+        "sha256": "de4414c0c4af396a8be85861d333edb8bd4e887782649f324aaced6eebf657c5",
+        "lf": 145,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 12,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Rejected",
+          "afterToken": "e15Rejected",
+          "count": 3,
+          "beforeMeta": {
+            "gitSha": "3d948021eca69311e9619f291a8a76a646c56b74",
+            "bytes": 11,
+            "sha256": "cfd6fa577a9b5be170ea514faea7799438d5e2b0b4f078b3537f63ce51193985",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "af3b2c68bd3c0d04c06d1f2356829b959b26d438",
+            "bytes": 11,
+            "sha256": "572f66191bb568bccf9d78c0b50129dd2880fb623ce608d96774688ce1ce51da",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Error",
+          "afterToken": "e15Error",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "e62e78ac2607331ca975031590cd20da831d5b4f",
+            "bytes": 8,
+            "sha256": "c7e83acad0ad6cfff8f918bb02a3ec36a8b387108781fe0cd02c9956307e7ec9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14c57e844db746de35215eb0e2f532ba0495ce70",
+            "bytes": 8,
+            "sha256": "ef4b181d924c71368cb7726be7fc1cea649f907af1967e8d8b7322ba3f28a49e",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "preview-progress-e14-diagnostic.ts",
+          "afterToken": "preview-progress-e15-diagnostic.ts",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "163e501ce8bc2effd8bf8e8cec285e8e4ac599bf",
+            "bytes": 34,
+            "sha256": "3dd4853e71931064448445306f80daf61c86f27fcffb0031a357df2b5f2a9d55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4deec0c49b051699481150237af7d25f03df7acd",
+            "bytes": 34,
+            "sha256": "32a7e58dbd1872a48320976de184cb99449a49de4dd137edecb9566c77cdf0c9",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "port",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "preimage": {
+        "gitSha": "094f788a27d01b91d6601333a4e8f99ac40db556",
+        "bytes": 18817,
+        "sha256": "892f9a5b7f1f46dffff3f4cec6f612e7b83bbca153da968d166904f7b4829c5f",
+        "lf": 140,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "9267e181901f4bf9d33f85de0b223f18dbc1df17",
+        "bytes": 18817,
+        "sha256": "e58e35513e631f96a8285d954eb1f6f2640be5299e63b321be59c4bc81e81cea",
+        "lf": 140,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 20,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Rejected",
+          "afterToken": "e15Rejected",
+          "count": 3,
+          "beforeMeta": {
+            "gitSha": "3d948021eca69311e9619f291a8a76a646c56b74",
+            "bytes": 11,
+            "sha256": "cfd6fa577a9b5be170ea514faea7799438d5e2b0b4f078b3537f63ce51193985",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "af3b2c68bd3c0d04c06d1f2356829b959b26d438",
+            "bytes": 11,
+            "sha256": "572f66191bb568bccf9d78c0b50129dd2880fb623ce608d96774688ce1ce51da",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Error",
+          "afterToken": "e15Error",
+          "count": 4,
+          "beforeMeta": {
+            "gitSha": "e62e78ac2607331ca975031590cd20da831d5b4f",
+            "bytes": 8,
+            "sha256": "c7e83acad0ad6cfff8f918bb02a3ec36a8b387108781fe0cd02c9956307e7ec9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14c57e844db746de35215eb0e2f532ba0495ce70",
+            "bytes": 8,
+            "sha256": "ef4b181d924c71368cb7726be7fc1cea649f907af1967e8d8b7322ba3f28a49e",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Unit",
+          "afterToken": "e15Unit",
+          "count": 12,
+          "beforeMeta": {
+            "gitSha": "3a5a74b1c201ee521f25756cd362a4b00138f678",
+            "bytes": 7,
+            "sha256": "b56f276a0e68099b7848a90f431431c38661c9c3ee34b4f2467c425ab7c3fa65",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "581b48903cf4e101569dcfd516d02fbf58f7486e",
+            "bytes": 7,
+            "sha256": "b7317b44f5fac3c53757b40e92343ca4581058112b5eae087893badb3343a83f",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Combination",
+          "afterToken": "e15Combination",
+          "count": 7,
+          "beforeMeta": {
+            "gitSha": "07e147fc8cae8fbb29b5b8fe8a2c77efa3604d19",
+            "bytes": 14,
+            "sha256": "129d3ad27d5523357413033b61b56192763c08bbd3999f91e995872d81456119",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "bb34fefe4aa1e426b1171fd4428f048af7d1d8d0",
+            "bytes": 14,
+            "sha256": "9053bb3eef7369b832e836af094044aa077abfce68ccd37d451f43c7cb807e0f",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "preview-progress-e14-diagnostic.ts",
+          "afterToken": "preview-progress-e15-diagnostic.ts",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "163e501ce8bc2effd8bf8e8cec285e8e4ac599bf",
+            "bytes": 34,
+            "sha256": "3dd4853e71931064448445306f80daf61c86f27fcffb0031a357df2b5f2a9d55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4deec0c49b051699481150237af7d25f03df7acd",
+            "bytes": 34,
+            "sha256": "32a7e58dbd1872a48320976de184cb99449a49de4dd137edecb9566c77cdf0c9",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "compare",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "preimage": {
+        "gitSha": "03859dbbf10fd6ca551f987736e445d2ff8b3431",
+        "bytes": 9455,
+        "sha256": "ecb47e6efc32b98a2f0ca7e70702d5b593c06b9bea088856019088da8b8d05d2",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "8d4e1583efe5611114cd495b71197c7e1bb690df",
+        "bytes": 9455,
+        "sha256": "508dad85406218725414c8a8189f6b39d4ed24a9a0846314ab47258a77bf149c",
+        "lf": 91,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 18,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Rejected",
+          "afterToken": "e15Rejected",
+          "count": 3,
+          "beforeMeta": {
+            "gitSha": "3d948021eca69311e9619f291a8a76a646c56b74",
+            "bytes": 11,
+            "sha256": "cfd6fa577a9b5be170ea514faea7799438d5e2b0b4f078b3537f63ce51193985",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "af3b2c68bd3c0d04c06d1f2356829b959b26d438",
+            "bytes": 11,
+            "sha256": "572f66191bb568bccf9d78c0b50129dd2880fb623ce608d96774688ce1ce51da",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Error",
+          "afterToken": "e15Error",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "e62e78ac2607331ca975031590cd20da831d5b4f",
+            "bytes": 8,
+            "sha256": "c7e83acad0ad6cfff8f918bb02a3ec36a8b387108781fe0cd02c9956307e7ec9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14c57e844db746de35215eb0e2f532ba0495ce70",
+            "bytes": 8,
+            "sha256": "ef4b181d924c71368cb7726be7fc1cea649f907af1967e8d8b7322ba3f28a49e",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Compare",
+          "afterToken": "e15Compare",
+          "count": 15,
+          "beforeMeta": {
+            "gitSha": "328a8532afe8f21fee9d43309b1c0c0ddb609b04",
+            "bytes": 10,
+            "sha256": "384ac6d6fcaad7b9db0ee1522a004cabadcc4e40ccac5567e681be0e328dd67f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "85e72f0b69f65eb84cedd6efb608ace03fbf8c63",
+            "bytes": 10,
+            "sha256": "4d079e3ead420837880bcc93b46562ce4e0aebc0484568dc453cd11fb438b813",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "preview-progress-e14-diagnostic.ts",
+          "afterToken": "preview-progress-e15-diagnostic.ts",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "163e501ce8bc2effd8bf8e8cec285e8e4ac599bf",
+            "bytes": 34,
+            "sha256": "3dd4853e71931064448445306f80daf61c86f27fcffb0031a357df2b5f2a9d55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4deec0c49b051699481150237af7d25f03df7acd",
+            "bytes": 34,
+            "sha256": "32a7e58dbd1872a48320976de184cb99449a49de4dd137edecb9566c77cdf0c9",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "analysis",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "preimage": {
+        "gitSha": "4b1d4578d558456772ab04e05e33d13231ca7502",
+        "bytes": 10956,
+        "sha256": "a26d486a7d26375de77772c3497920a945df794351299fdc6da77cd2bccd09cc",
+        "lf": 102,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "90146429a3a264f4d66f5b74d1502715a58c1099",
+        "bytes": 10956,
+        "sha256": "6323e7ddecb3bcc0e21d382b9b56069b5f3795f5995705a24d64e1c14a0cbfcd",
+        "lf": 102,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 23,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Analysis",
+          "afterToken": "e15Analysis",
+          "count": 16,
+          "beforeMeta": {
+            "gitSha": "acdc2d020faa8e7287c12b39f170f0cb8f6362d3",
+            "bytes": 11,
+            "sha256": "82e88fb2eb163038b7e3322b3fe730a127c2f0146232845d188507f0d11018ac",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "51d995851ddf21e62a3e194279cce37ed5291180",
+            "bytes": 11,
+            "sha256": "b37708b84a6515a6e09fea24c6cd6813639c61fc98564319e823024461433a8f",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Rejected",
+          "afterToken": "e15Rejected",
+          "count": 6,
+          "beforeMeta": {
+            "gitSha": "3d948021eca69311e9619f291a8a76a646c56b74",
+            "bytes": 11,
+            "sha256": "cfd6fa577a9b5be170ea514faea7799438d5e2b0b4f078b3537f63ce51193985",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "af3b2c68bd3c0d04c06d1f2356829b959b26d438",
+            "bytes": 11,
+            "sha256": "572f66191bb568bccf9d78c0b50129dd2880fb623ce608d96774688ce1ce51da",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Error",
+          "afterToken": "e15Error",
+          "count": 4,
+          "beforeMeta": {
+            "gitSha": "e62e78ac2607331ca975031590cd20da831d5b4f",
+            "bytes": 8,
+            "sha256": "c7e83acad0ad6cfff8f918bb02a3ec36a8b387108781fe0cd02c9956307e7ec9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14c57e844db746de35215eb0e2f532ba0495ce70",
+            "bytes": 8,
+            "sha256": "ef4b181d924c71368cb7726be7fc1cea649f907af1967e8d8b7322ba3f28a49e",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Revalidation",
+          "afterToken": "e15Revalidation",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "3c98e53dfe7609871fd2955f943b894318111f02",
+            "bytes": 15,
+            "sha256": "90237d50cde956973ea6e70a6ba929a818d64c807f0cf9d8c9b451969396d8ca",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "071a4e45e41c56fa0646f1f53b1491e4be492aff",
+            "bytes": 15,
+            "sha256": "a067a95d214f21aa43aa9594f52e64f6f180c46c4eba890cf027cbeb1ac5b4b6",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "preview-progress-e14-diagnostic.ts",
+          "afterToken": "preview-progress-e15-diagnostic.ts",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "163e501ce8bc2effd8bf8e8cec285e8e4ac599bf",
+            "bytes": 34,
+            "sha256": "3dd4853e71931064448445306f80daf61c86f27fcffb0031a357df2b5f2a9d55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4deec0c49b051699481150237af7d25f03df7acd",
+            "bytes": 34,
+            "sha256": "32a7e58dbd1872a48320976de184cb99449a49de4dd137edecb9566c77cdf0c9",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "production",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "preimage": {
+        "gitSha": "27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6",
+        "bytes": 12548,
+        "sha256": "13afa93fc0101564a70700bb4871402db00bf83a81ce109c2850f4c2bcb4e5ee",
+        "lf": 126,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "a3f69c5d987769a2ad66685f447002bf4307b2e1",
+        "bytes": 12548,
+        "sha256": "f5c483828c21d1a910340f8c4d22f880362b98a1f6ec52ada1dfd21a129fc321",
+        "lf": 126,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 12,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Rejected",
+          "afterToken": "e15Rejected",
+          "count": 6,
+          "beforeMeta": {
+            "gitSha": "3d948021eca69311e9619f291a8a76a646c56b74",
+            "bytes": 11,
+            "sha256": "cfd6fa577a9b5be170ea514faea7799438d5e2b0b4f078b3537f63ce51193985",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "af3b2c68bd3c0d04c06d1f2356829b959b26d438",
+            "bytes": 11,
+            "sha256": "572f66191bb568bccf9d78c0b50129dd2880fb623ce608d96774688ce1ce51da",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Error",
+          "afterToken": "e15Error",
+          "count": 4,
+          "beforeMeta": {
+            "gitSha": "e62e78ac2607331ca975031590cd20da831d5b4f",
+            "bytes": 8,
+            "sha256": "c7e83acad0ad6cfff8f918bb02a3ec36a8b387108781fe0cd02c9956307e7ec9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "14c57e844db746de35215eb0e2f532ba0495ce70",
+            "bytes": 8,
+            "sha256": "ef4b181d924c71368cb7726be7fc1cea649f907af1967e8d8b7322ba3f28a49e",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14Assess",
+          "afterToken": "e15Assess",
+          "count": 4,
+          "beforeMeta": {
+            "gitSha": "516a8a0ebff98a632f67ea8c056aec9faf9806c2",
+            "bytes": 9,
+            "sha256": "f14993cf61105d4f1675e8a8c0faebed149433c20d79e3bc324bc30e9df4e007",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4552f4729b0f83e34d0760374b5bd3e28cd5481d",
+            "bytes": 9,
+            "sha256": "d9d8dfe21cbf50831a43e92e7da6d93d6cfd1747e2399dc5245cffda67077646",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "e14EvaluationRevalidation",
+          "afterToken": "e15EvaluationRevalidation",
+          "count": 4,
+          "beforeMeta": {
+            "gitSha": "588ccfaef514b309f0c4ae8d18a74d5b012ce235",
+            "bytes": 25,
+            "sha256": "f55a3a684c5c4d413fa24fe6b1c886eca37b068ebd734f92702282ce44f92a3f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "5b4420d8bd96e5f83387714392d93b01ba295fba",
+            "bytes": 25,
+            "sha256": "6e69998c364ac571ede657a268a844891a8ee36bcb3102931af2d36723a68cdb",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "preview-progress-e14-diagnostic.ts",
+          "afterToken": "preview-progress-e15-diagnostic.ts",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "163e501ce8bc2effd8bf8e8cec285e8e4ac599bf",
+            "bytes": 34,
+            "sha256": "3dd4853e71931064448445306f80daf61c86f27fcffb0031a357df2b5f2a9d55",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "4deec0c49b051699481150237af7d25f03df7acd",
+            "bytes": 34,
+            "sha256": "32a7e58dbd1872a48320976de184cb99449a49de4dd137edecb9566c77cdf0c9",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "inner",
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "preimage": {
+        "gitSha": "4dce572e3fdace2042ae3c9a1102606b300f6d8d",
+        "bytes": 10356,
+        "sha256": "5deececcefcf4391d76d1612b143bb7091b5ecbd8beddbd63fab7c4f28688cd3",
+        "lf": 184,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "8df288b2386618a7961ba20c1054e466cff39c95",
+        "bytes": 10249,
+        "sha256": "e6470534bca50e04efcf7d032f275ee432a2d88c71a9a41f1b0eaf6f9bcdb2f4",
+        "lf": 182,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 7,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf-preview-causal-e14-launcher-v1",
+          "afterToken": "sf-preview-causal-e15-launcher-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "ddc03365dc99dbca1307f78e4c83e69118908f62",
+            "bytes": 33,
+            "sha256": "614c8e339495adae014f0f7e32c083824e555165f3c46bcf82a3772df951fe45",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "aece872b74107f28d681bd9662d24e17404190d9",
+            "bytes": 33,
+            "sha256": "b863cc512d994d96507d282171b50ae4024136c388cf2fcfaeb44a64af648ae6",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf-preview-e14-event-launch-v1",
+          "afterToken": "sf-preview-e15-event-launch-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "d8a9d0d415b453ad5826390ad10a39c8c610c572",
+            "bytes": 30,
+            "sha256": "0e136e2ada74c4fb12eb0be3c9764f0703419e7db63ecb704a0d5c713907981d",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "eb6f747bd049093b8478561f3e0af1e9faf3966a",
+            "bytes": 30,
+            "sha256": "c819286eb3fb5c730701012d556284411790d613176e5fe322fbbb06e0074fc2",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf613-e14-event-",
+          "afterToken": "sf613-e15-event-",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "a12b60ecf37413f57406d89b83690eff572c5320",
+            "bytes": 16,
+            "sha256": "37411f3a3b3d94e497a22a2239b25ecfa6145a6919a700fda06ba016312214d2",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "1a811400e3407c94f58f15ac8f6f294ebb8eaf1f",
+            "bytes": 16,
+            "sha256": "3bc1deea00c170b0c800ab4f49455385accf274b386136d153dd5b5f1437ea43",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+          "afterToken": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "f18484cea12597679580dd597ed70bd72813433a",
+            "bytes": 40,
+            "sha256": "1b0dc6dbd48963640b2e7235124fe671795d5ed5b3eeec0ed17f210383f796f0",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "dcc7d242e30e4987f9bbb847a165765e1261164d",
+            "bytes": 40,
+            "sha256": "c29acfa2b0b69bb21386f343f91df034a553e9d58fe4c6f54182ed50b99dbb73",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+          "afterToken": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "c755101de5e2f983c207a6355fa8d7fbfcb6704d",
+            "bytes": 40,
+            "sha256": "a2e0a69bf2f6c95e056b8a7c25fb8b9383becb865178aa7f6dbbe9fceead176f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "f84ce08aa788f5b72a43258cd85b96d1ea7527aa",
+            "bytes": 40,
+            "sha256": "02923c0599e38fe7d8571f1a669470309235e0c0e624b106ec078ed684274a56",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "import",
+          "before": "import { mkdtemp, realpath, rm } from \"node:fs/promises\"\n",
+          "after": "import { createSfE15Forwarder } from \"../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts\"\nimport { mkdtemp, realpath, rm } from \"node:fs/promises\"\n",
+          "beforeMeta": {
+            "gitSha": "c66146b8da4f43939d896a033f03e78c61dd1fd5",
+            "bytes": 57,
+            "sha256": "c12f669119de567215776715bc74c5218e787a038f9cb2de64b5e0f4998242aa",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "924619bde374826d24811a3c76c961f5964bc437",
+            "bytes": 179,
+            "sha256": "7b97c4e69dcdb94f498e2e0379249de9922041a87c448c55b232bad9f93a0200",
+            "lf": 2,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "forwarder",
+          "before": "    const ready = yield* Deferred.make<void>()",
+          "after": "    const e15Forward = createSfE15Forwarder()\n    const ready = yield* Deferred.make<void>()",
+          "beforeMeta": {
+            "gitSha": "5802e71bb0a01a185bcf73ef008a5168fc155fec",
+            "bytes": 46,
+            "sha256": "376623a52bcdd6346090ca4e78180bd6005e76286015e6fba3b012d9039b0380",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "57b6c139c848a78eda5aeb23cea60346663b5b6d",
+            "bytes": 92,
+            "sha256": "d08572dd3d930a8ccdab87f792342c0806611689f5ed1db3d0bab30910524315",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "raw-complete-lines",
+          "before": "child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n      if (((line.startsWith(\"SF_PREVIEW_E15_EVENT \") && line.length + 1 <= 1024) ||\n          (line.startsWith(\"SF_PREVIEW_E15_LAUNCHER \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n        try { console.info(line) } catch { /* The bounded observer cannot replace fixture readiness. */ }\n      }\n",
+          "after": "child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {\n",
+          "beforeMeta": {
+            "gitSha": "1f27dc312b10b7c5d0f469c9cb8b8ba8ccdda73c",
+            "bytes": 402,
+            "sha256": "dfb9afe9eaebe07e697ab59465242ba77f8ad3d198e0248b69303f36158fdd7d",
+            "lf": 5,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "fcadf0a11ae82ad8e3c8bd855df7e5f5181c63ef",
+            "bytes": 110,
+            "sha256": "d5ede88c663c93e9ee0090166ed0552530909565231279aaa5d4a54f3b5a0080",
+            "lf": 1,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "disabled-sync",
+          "before": "      console.info(\"SF_PREVIEW_E15_LAUNCHER \" + JSON.stringify({ schema: \"sf-preview-causal-e15-launcher-v1\", source, sourceTree,\n        qualification: false, role: \"native-launcher\", kind: \"disabled\", reason: stage }))",
+          "after": "      createSfE15Forwarder()(\"SF_PREVIEW_E15_LAUNCHER \" + JSON.stringify({ schema: \"sf-preview-causal-e15-launcher-v1\", source, sourceTree,\n        qualification: false, role: \"native-launcher\", kind: \"disabled\", reason: stage }) + \"\\n\")",
+          "beforeMeta": {
+            "gitSha": "1903dccc919c28f3608ab2e12f06e1f8694a228c",
+            "bytes": 220,
+            "sha256": "cbe209af9a56a1f0cc487f929cb00831c4d68ef0407ae3a09dd5d72e749fcdde",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "b1109f625c215bd4235f19649bb1a41c227c20be",
+            "bytes": 237,
+            "sha256": "e05a549e8be77684b96f03e641f727c92fb5a75ee249d226ff23d514e36fc23d",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        }
+      ]
+    },
+    {
+      "role": "outer",
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "preimage": {
+        "gitSha": "a9fb4f79968e3c753424f01534b1f7b5e61895fe",
+        "bytes": 16468,
+        "sha256": "81725bd498f02eab5cb903057fc96abdd7e36c2f0238af2b3ccef378b81fa19f",
+        "lf": 267,
+        "endsWithLF": true
+      },
+      "postimage": {
+        "gitSha": "5989de182f65c2a6faf20218adf8b20af6dfa000",
+        "bytes": 16353,
+        "sha256": "919c99cf8a10e8fafa888f50bd13e53e563e0c6a2ac7248ec086d015286324cb",
+        "lf": 265,
+        "endsWithLF": true
+      },
+      "operations": [
+        {
+          "beforeToken": "E14",
+          "afterToken": "E15",
+          "count": 7,
+          "beforeMeta": {
+            "gitSha": "5379724a2aef436d100948ad94241b0ed572174f",
+            "bytes": 3,
+            "sha256": "b7f456e6e397d34ebb3f2c6f6e8ca7d82c6aa18406e03474cfc0a082110e7439",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "33ac735cae6591679f0d9954b53e736af03a2e15",
+            "bytes": 3,
+            "sha256": "6dc97c07113e932d11f5c068a50eefe1c129d9d3246ddc593fbf619ab9cb8e79",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf-preview-causal-e14-launcher-v1",
+          "afterToken": "sf-preview-causal-e15-launcher-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "ddc03365dc99dbca1307f78e4c83e69118908f62",
+            "bytes": 33,
+            "sha256": "614c8e339495adae014f0f7e32c083824e555165f3c46bcf82a3772df951fe45",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "aece872b74107f28d681bd9662d24e17404190d9",
+            "bytes": 33,
+            "sha256": "b863cc512d994d96507d282171b50ae4024136c388cf2fcfaeb44a64af648ae6",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf-preview-e14-event-launch-v1",
+          "afterToken": "sf-preview-e15-event-launch-v1",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "d8a9d0d415b453ad5826390ad10a39c8c610c572",
+            "bytes": 30,
+            "sha256": "0e136e2ada74c4fb12eb0be3c9764f0703419e7db63ecb704a0d5c713907981d",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "eb6f747bd049093b8478561f3e0af1e9faf3966a",
+            "bytes": 30,
+            "sha256": "c819286eb3fb5c730701012d556284411790d613176e5fe322fbbb06e0074fc2",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "sf613-e14-event-",
+          "afterToken": "sf613-e15-event-",
+          "count": 2,
+          "beforeMeta": {
+            "gitSha": "a12b60ecf37413f57406d89b83690eff572c5320",
+            "bytes": 16,
+            "sha256": "37411f3a3b3d94e497a22a2239b25ecfa6145a6919a700fda06ba016312214d2",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "1a811400e3407c94f58f15ac8f6f294ebb8eaf1f",
+            "bytes": 16,
+            "sha256": "3bc1deea00c170b0c800ab4f49455385accf274b386136d153dd5b5f1437ea43",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "7393cd010086f4a12d61ae9bb5db13534bd18aa0",
+          "afterToken": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "f18484cea12597679580dd597ed70bd72813433a",
+            "bytes": 40,
+            "sha256": "1b0dc6dbd48963640b2e7235124fe671795d5ed5b3eeec0ed17f210383f796f0",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "dcc7d242e30e4987f9bbb847a165765e1261164d",
+            "bytes": 40,
+            "sha256": "c29acfa2b0b69bb21386f343f91df034a553e9d58fe4c6f54182ed50b99dbb73",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "beforeToken": "31954cfe7df07455d8b137f6f4f1e4d94a316fc3",
+          "afterToken": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+          "count": 1,
+          "beforeMeta": {
+            "gitSha": "c755101de5e2f983c207a6355fa8d7fbfcb6704d",
+            "bytes": 40,
+            "sha256": "a2e0a69bf2f6c95e056b8a7c25fb8b9383becb865178aa7f6dbbe9fceead176f",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "f84ce08aa788f5b72a43258cd85b96d1ea7527aa",
+            "bytes": 40,
+            "sha256": "02923c0599e38fe7d8571f1a669470309235e0c0e624b106ec078ed684274a56",
+            "lf": 0,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "import",
+          "before": "import type { BrowserContext } from \"@playwright/test\"\n",
+          "after": "import { createSfE15Forwarder } from \"../../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts\"\nimport type { BrowserContext } from \"@playwright/test\"\n",
+          "beforeMeta": {
+            "gitSha": "97c0f24a52bb72a3b6e15c4c7cfe4d4b992354eb",
+            "bytes": 55,
+            "sha256": "0adcf9f310d9a83135c222fb5f90a3acdc9f0291cced312c435b7dc2442e7970",
+            "lf": 1,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "e8e801f362f048dc3c5e5e9c700fe60f74e5bb2e",
+            "bytes": 180,
+            "sha256": "c03f79b9cd255f35a080d5f32ed9fbf71c7c4f4c69b63bd6453ef66982526fc2",
+            "lf": 2,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "forwarder",
+          "before": "      const ready = yield* Deferred.make<void, Error>()",
+          "after": "      const e15Forward = createSfE15Forwarder()\n      const ready = yield* Deferred.make<void, Error>()",
+          "beforeMeta": {
+            "gitSha": "ac88a1e784f106d5e85f18ddc8cac6dc098027d2",
+            "bytes": 55,
+            "sha256": "9ce3e40fe335c629425f82dacae1905a1860964932bc32383beb4bfdd01a83f9",
+            "lf": 0,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "8988bdcacec0ba7793f412a10f8356c63c166288",
+            "bytes": 103,
+            "sha256": "3a7e72e9aa6f6d33335d247ce9787c5192717662e8c058e8fd4654d85a1fa80c",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        },
+        {
+          "label": "raw-complete-lines",
+          "before": "child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.runForEach((line) => {\n        if (((line.startsWith(\"SF_PREVIEW_E15_EVENT \") && line.length + 1 <= 1024) ||\n          (line.startsWith(\"SF_PREVIEW_E15_LAUNCHER \") && line.length + 1 <= 1024)) && /^[\\x20-\\x7e]*$/.test(line)) {\n          try { console.info(line) } catch { /* The bounded observer cannot replace the original output path. */ }\n        }\n",
+          "after": "child.stdout.pipe(Stream.decodeText, Stream.map(e15Forward), Stream.splitLines, Stream.runForEach((line) => {\n",
+          "beforeMeta": {
+            "gitSha": "b1ac861412187ccb8ed0b26569e593865939bf0b",
+            "bytes": 415,
+            "sha256": "fcafcf8f3fa6b51ef6701484b30805c9d142ea00a22c9b2e3f47a2600d3597e9",
+            "lf": 5,
+            "endsWithLF": true
+          },
+          "afterMeta": {
+            "gitSha": "fcadf0a11ae82ad8e3c8bd855df7e5f5181c63ef",
+            "bytes": 110,
+            "sha256": "d5ede88c663c93e9ee0090166ed0552530909565231279aaa5d4a54f3b5a0080",
+            "lf": 1,
+            "endsWithLF": true
+          }
+        },
+        {
+          "label": "disabled-sync",
+          "before": "      console.info(\"SF_PREVIEW_E15_LAUNCHER \" + JSON.stringify({ schema: \"sf-preview-causal-e15-launcher-v1\", source, sourceTree,\n        qualification: false, role: \"playwright-launcher\", kind: \"disabled\", reason: stage }))",
+          "after": "      createSfE15Forwarder()(\"SF_PREVIEW_E15_LAUNCHER \" + JSON.stringify({ schema: \"sf-preview-causal-e15-launcher-v1\", source, sourceTree,\n        qualification: false, role: \"playwright-launcher\", kind: \"disabled\", reason: stage }) + \"\\n\")",
+          "beforeMeta": {
+            "gitSha": "22a6213d52308835309fd4312c2518e908c404ad",
+            "bytes": 224,
+            "sha256": "f35d600b333d7608baffb05e06044ec0baeeb26cd8786ced344373c6728e2fd2",
+            "lf": 1,
+            "endsWithLF": false
+          },
+          "afterMeta": {
+            "gitSha": "1eb9ef1a607d2f534f7093336e20b6ac0ce2185c",
+            "bytes": 241,
+            "sha256": "63df728cbf24e357e193ce30339cac36f9750bc49fd26731ac42cdaafbe4fe66",
+            "lf": 1,
+            "endsWithLF": false
+          }
+        }
+      ]
+    }
+  ],
+  "patchedProductHistory": [
+    {
+      "role": "finance",
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "history": [
+        {
+          "gitSha": "edb57e119356cb6daea595cc4e3ef3c9dd1e5aa5",
+          "bytes": 17527,
+          "sha256": "dd7690caaaa76c01bee5bc34b591194814135a3433db6154c79f67b9a62f560a",
+          "lf": 233,
+          "endsWithLF": true,
+          "status": "SUPERSEDED_NO_EXECUTION"
+        }
+      ],
+      "current": {
+        "gitSha": "2eed03d569ffe4c558cf3f737affb88899062629",
+        "bytes": 17534,
+        "sha256": "a7992c7617af020b3818a2613b679e72c04fec9e2c59d330f1204c3353fd4971",
+        "lf": 233,
+        "endsWithLF": true
+      }
+    },
+    {
+      "role": "source",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "history": [
+        {
+          "gitSha": "04b5beec845fec13afc235ff10fe0703071b7e1c",
+          "bytes": 61827,
+          "sha256": "56deb2756a666597c0b28888bce56e80f9ab2bc5435ebce85d8caac62674ee79",
+          "lf": 904,
+          "endsWithLF": true,
+          "status": "SUPERSEDED_NO_EXECUTION"
+        }
+      ],
+      "current": {
+        "gitSha": "3942f378f6d94f53b5622df2a459e127d410f543",
+        "bytes": 61828,
+        "sha256": "c969cd95ef44a34012858e534a85248a8b64bcae7ebdc5747ed7f0cd803a0f02",
+        "lf": 904,
+        "endsWithLF": true
+      }
+    },
+    {
+      "role": "local",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "history": [
+        {
+          "gitSha": "c5d19bce90a3af66aa090edef403d6aba99e3187",
+          "bytes": 99023,
+          "sha256": "cb376d3311d7aa9bcfb09f81085d4d0472e27a5b5bd462fe0f61798b176e6395",
+          "lf": 1729,
+          "endsWithLF": true,
+          "status": "SUPERSEDED_NO_EXECUTION"
+        }
+      ],
+      "current": {
+        "gitSha": "637913f32c8b5489c2c90b78d309d52e2f3ee94c",
+        "bytes": 99097,
+        "sha256": "1f7d696be534c6054a712d7eabe5033d4dd93c315f194842b5ce3bc6f7614561",
+        "lf": 1730,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "reuseDiff": {
+    "gitSha": "70f32988561710bb0999be07c69633d0d87de88e",
+    "bytes": 80948,
+    "sha256": "c1abb5d791194abd43259f480baf40051a8a5d24aa89aecf50097285432375b7",
+    "lf": 1069,
+    "endsWithLF": true,
+    "files": 8,
+    "hunks": 53,
+    "added": 473,
+    "removed": 119
+  },
+  "constraints": {
+    "noGlobalE11E14ReplacementAcrossHashes": true,
+    "namedTokensAndExplicitFullHashPairsOnly": true,
+    "allForwardAndInverseLiteral": true,
+    "intermediateMetadataHashesAreNotCreatedBlobs": true
+  },
+  "supersedes": {
+    "gitSha": "80cd6f1fd5e082de40366f655344802975fd3fe2",
+    "bytes": 93689,
+    "sha256": "821a2aabb5c9946ff556565da23fd8f9824cafa6a914a6132844910957279dbe",
+    "lf": 1873,
+    "endsWithLF": true
+  }
+}

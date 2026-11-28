@@ -1,0 +1,1936 @@
+{
+  "schema": "sf613-r9-independent-data-review-v1",
+  "status": "ACK_R9_DOCUMENTARY_DATA_NO_FINDING_PENDING_OBJECT_REVIEW",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "atUtc": "2026-11-28 08:25:45 UTC",
+  "authority": {
+    "rootDelegatedFinalDataReview": true,
+    "author": "/root/teams_product",
+    "independence": "This reviewer did not author the catalog, index, README, derivation or manifesto.",
+    "reviewerAssignment": "Root reassigned final R9 data review from /root/focal_migration so Focal can author the disjoint E15 controls. The proposed manifest's earlier pending reviewer assignment remains a literal historical authoring cut; it is not treated as final approval."
+  },
+  "package": {
+    "catalog": {
+      "gitBlob": "06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+      "bytes": 159675,
+      "sha256": "77776c9611784f10c12dd1ab1ad116e6b88693fd8f01e586d0546efb2969f537",
+      "lf": 5124,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "84b0c6cd395ad966fea2914ce4c0936d637e1637",
+      "bytes": 1339991,
+      "sha256": "14f77ef56da9d71c390347ccc7001e36ae1d8e815e7fcdfb82517ac0415ca901",
+      "lf": 40027,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "05ecd9ed7d337c1b161408ef4c41af8092fa1b1f",
+      "bytes": 77617,
+      "sha256": "8491d58554c36113b3018b049714c542c58e6c332694aa933feacbd926576d78",
+      "lf": 656,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "7b82127069281aad46d241dd40bf0ccb239b013e",
+      "bytes": 383792,
+      "sha256": "11f854febb693a6dcd1d4a2e6df257708d68db224b69616604c32c8fa2d35241",
+      "lf": 8437,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "b6a3b80dc6f495877613b3d6817823873dd6a7e2",
+      "bytes": 56443,
+      "sha256": "21d9c23895f2e71370d48c8681be0fefcf4ac5a6d491b46cb8455a6161e08be0",
+      "lf": 1636,
+      "endsWithLF": true
+    }
+  },
+  "base": {
+    "commit": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "tree": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+    "index": {
+      "gitBlob": "66b68cec45ee5335bf1b2e8aa41eeaf86681c330",
+      "bytes": 1165347,
+      "sha256": "9e711efcd23303012322e39a8a87b78361e13d7cfd0b1e6cd30f9a9fa019037f",
+      "lf": 34774,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "8d7d53cbc3ed437701f3f6916c39f22e7137147d",
+      "bytes": 63369,
+      "sha256": "24eca7da2b7d777b5d8c150f83e58d34ff039b3e751b7eafd429a95680769b07",
+      "lf": 535,
+      "endsWithLF": true
+    }
+  },
+  "relatedRootDataReview": {
+    "gitBlob": "61e6d8239de616c9b079decbfb9b0ce2a05a5775",
+    "bytes": 7144,
+    "sha256": "559db6db5b6bcc5e172d5fb05f3367c0c945ca7533530098d03222121a1af927",
+    "lf": 224,
+    "endsWithLF": true
+  },
+  "verdict": {
+    "data": "PASS",
+    "independentChecks": 395,
+    "allChecksPassed": true,
+    "findings": [],
+    "treeCommitObjectReview": "PENDING_ACTUAL_OBJECTS",
+    "refPublication": "NOT_PERFORMED_OR_APPROVED_BY_THIS_RECEIPT",
+    "runtimeQualification": false,
+    "productionAuthorized": false
+  },
+  "method": {
+    "repositoryCodeExecuted": false,
+    "ownPureDataJavaScriptOnly": true,
+    "allFivePackageBodiesAuthenticated": true,
+    "baseDocumentsAuthenticated": true,
+    "catalogPinsChecked": 143,
+    "reusedR8PinsChecked": 36,
+    "actualEnumeratedInputBodiesReadByThisReviewer": 32,
+    "actualStreamPartBodiesRead": 24,
+    "actualFinalReceiptBodiesRead": 6,
+    "baseDocumentsIncludedAsCatalogInputs": 2,
+    "all107NewInputBodyHashesNotReacquiredByThisReviewer": true,
+    "priorFullNewBodyAuthentication": "Root data review 61e6d8239de616c9b079decbfb9b0ce2a05a5775 reports all107 new bodies. Focal also reported its completed107-body authentication in a handoff message; that is not counted as this reviewer's own body checks.",
+    "old817BodiesNotReacquired": true,
+    "actualRetentionCommitMetadataRead": 4,
+    "noOriginalEndpointCalls": true,
+    "noZipCalls": true,
+    "noCalculatedOnlyBlobCalls": true
+  },
+  "derivation": {
+    "forward": {
+      "operations": 153,
+      "fingerprints": 275,
+      "replace": 79,
+      "append": 43,
+      "add": 31
+    },
+    "inverse": {
+      "operations": 153,
+      "fingerprints": 275,
+      "replace": 79,
+      "append": 43,
+      "add": 31
+    },
+    "indexForwardLiteral": true,
+    "indexInverseLiteral": true,
+    "readmeForwardLiteral": true,
+    "readmeInverseLiteral": true,
+    "oldReadmeExactlyOnce": true,
+    "fingerprintsTotal": 550,
+    "readmeSegmentBytes": {
+      "prefix": 14185,
+      "base": 63369,
+      "suffix": 63
+    },
+    "intermediateFingerprintsAreNotGitBlobs": true
+  },
+  "preservation": {
+    "originalObjectRecords": 817,
+    "objectOrderPreserved": true,
+    "oldMembershipPrefixes": 967,
+    "oldGroups": 52,
+    "oldStreams": 77,
+    "oldPartReferences": 249,
+    "allOldObjectMetadataLiteral": true,
+    "allOldMembershipPrefixesLiteral": true,
+    "allOldGroupsAndStreamsLiteral": true,
+    "priorDocumentarySnapshotsRevisionHistoryUnresolvedResolvedDerivedEvidenceAndExclusionsPreserved": true,
+    "newMembershipsPointToActualCatalogRows": true
+  },
+  "totals": {
+    "objects": 925,
+    "objectBytes": 89287662,
+    "memberships": 1120,
+    "groups": 58,
+    "streams": 85,
+    "partReferences": 273,
+    "newObjectsIncludingCatalog": 108,
+    "newObjectBytes": 10312769,
+    "newMemberships": 153,
+    "delta": {
+      "added": 108,
+      "modified": 2,
+      "deleted": 0
+    },
+    "files": 927,
+    "logicalTreeFileBytes": 90705270
+  },
+  "streams": {
+    "count": 8,
+    "partReferences": 24,
+    "literalOrderedUnions": 4,
+    "analyticsNonPreviewRecords": 109,
+    "results": [
+      {
+        "id": "C21-focal-main",
+        "parts": 1,
+        "bytes": 112586,
+        "sha256": "43ee43db92077281068da30bc060be89329c6c789425e790d5bd423df11ceca2",
+        "gitBlobCalculated": "325f39ca9133905ba2ff2499d3ed5d8ce06fbed6",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": [
+          0
+        ]
+      },
+      {
+        "id": "C21-focal-cleanup",
+        "parts": 1,
+        "bytes": 2280,
+        "sha256": "2e4def2cd3446322f08537e8648c105a31ce82920621e62530f0c1ef9981a544",
+        "gitBlobCalculated": "2cb400bc20e9173ee3b295e608a9cfcd4d67a8fb",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": [
+          0
+        ]
+      },
+      {
+        "id": "C21-focal-reports",
+        "parts": 1,
+        "bytes": 10691,
+        "sha256": "6521259718943d63b0bbbd49d0c70a3460dbf28473e7881c87a515a038329c70",
+        "gitBlobCalculated": "b00b7bce817291a3cf9b5f119bc5841eaf6a407d",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": []
+      },
+      {
+        "id": "C21-Analytics-main",
+        "parts": 17,
+        "bytes": 4867187,
+        "sha256": "02abf885d905d2a6219939d25c3d65ea5d51f050ef23209980d4b578f94b0689",
+        "gitBlobCalculated": "0e7e5bdf937c63b23913ab8230cf5e6526d601da",
+        "wholeBlobPersisted": false,
+        "bomByteOffsets": [
+          0,
+          2104805,
+          4223348
+        ]
+      },
+      {
+        "id": "C21-Analytics-cleanup",
+        "parts": 1,
+        "bytes": 2280,
+        "sha256": "aa45ccc75fe8e047038edeb4065db6244f08e674ecb254eef0f4d6dffe5cc9b0",
+        "gitBlobCalculated": "5af1f83d8b9aeadda1b2b921625b7781f5d2042f",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": [
+          0
+        ]
+      },
+      {
+        "id": "C21-Analytics-markers",
+        "parts": 1,
+        "bytes": 34315,
+        "sha256": "b1c4a1ed95989c318bad1df2bc1b859e8675e4ef760af43f7113e863b6d402f5",
+        "gitBlobCalculated": "5eeda9b322b13033cf254de2645a2e64bf64db16",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": []
+      },
+      {
+        "id": "C21-Analytics-contexts",
+        "parts": 1,
+        "bytes": 5428,
+        "sha256": "8179c5f5351bd2dbc0472fad160b540ca66fabb62046351e4b085c23d3b28897",
+        "gitBlobCalculated": "06a75371595556bef3ce1302df8eaaedb68a5d20",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": []
+      },
+      {
+        "id": "C21-Analytics-discovery-owner",
+        "parts": 1,
+        "bytes": 1458,
+        "sha256": "1fcee9d73f2ec30be4213d683a4046dcb498a10b257373d79f1bfa67d665da09",
+        "gitBlobCalculated": "5597d480277d6e2d114abea53a1eb6212e67cf82",
+        "wholeBlobPersisted": true,
+        "bomByteOffsets": []
+      }
+    ],
+    "analyticsWholeIsCalculatedOnly": "0e7e5bdf937c63b23913ab8230cf5e6526d601da"
+  },
+  "sourceReceipts": [
+    {
+      "gitBlob": "884465e92d497d24bf6237f2ef51f5cd5f44a000",
+      "bytes": 6597,
+      "sha256": "15983232827dfe1d579b8ac6edbd858680256cf8daafb2a047c8f63305ffe31c",
+      "lf": 186,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "509b1b8f188bce0a8c4a92ed9e908095e1ad7cdb",
+      "bytes": 10209,
+      "sha256": "d9aee72816d879a4d224b8f56944c83b2a8b421a0ff62b461f788601aa8aeaec",
+      "lf": 362,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "15b1365f2326ec75ba905664687ed1ba81811a02",
+      "bytes": 10301,
+      "sha256": "3a29c0ab7d2b2c49701f56eaa4afb6d99019cd043d689e8d5321f9673b4ce0d8",
+      "lf": 345,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "43ae6aab50a63fc4dbc349c6fef5071a42fbc954",
+      "bytes": 15262,
+      "sha256": "446048fe679bf54382cccccb5b4c5154b4cf2d7adcf95545788d93e544ae4498",
+      "lf": 704,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "63ca6b9c3b9b502942d185ee9e2c866530f51255",
+      "bytes": 361856,
+      "sha256": "9e127ea90dc8c63261304426328cfb8a49092ac64acb42842237332effcbc537",
+      "lf": 11439,
+      "endsWithLF": true
+    },
+    {
+      "gitBlob": "10a9013919d425b9b914c67d24cc2ac1c25a7b05",
+      "bytes": 4791,
+      "sha256": "c433987df8a64b8c8b11ae4cd14c9967d7579556dbdbd1a4f0ebd6557128872e",
+      "lf": 147,
+      "endsWithLF": true
+    }
+  ],
+  "retentionParents": [
+    {
+      "order": 1,
+      "type": "commit",
+      "sha": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+      "tree": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+      "role": "published R8 archive"
+    },
+    {
+      "order": 2,
+      "type": "commit",
+      "sha": "98174738fea48b3fe75e8d6684e2edd35574e75e",
+      "tree": "0dae9eb8d10924150e0418be355be0ee5a6c504f",
+      "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "role": "executed C21 focal; retains clean S21"
+    },
+    {
+      "order": 3,
+      "type": "commit",
+      "sha": "241c8db64c355756d15ec4b7b456ff1bcf30d51a",
+      "tree": "7076a79663700b540e24f79c378fb8b90f5d7e5e",
+      "soleParent": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+      "role": "executed C21 original Analytics; retains clean S21"
+    }
+  ],
+  "acceptedBoundaries": {
+    "C21Focal": "CLOSED_FOCAL_PASS_ONLY_17_FUNCTIONAL_2407_ASSERTIONS",
+    "C21Analytics": "CLOSED_NEGATIVE_FIRST_PREVIEW_TIMEOUT_ONE_FAILED_ONE_CURRENT_BI_PASSED",
+    "priorBIAbortCauseUnresolved": true,
+    "installedNativeProjectionAdmissionNotObserved": true,
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAcceptedAreas": 0,
+    "D30": "STATIC_REVIEWED_FOUR_FINAL_BINDINGS_UNBOUND",
+    "C21CompositionMap": "PREPARATION_ONLY_NOT_FINAL_CANDIDATE_OR_ANALYTICS_ACCEPTANCE",
+    "E15Excluded": true,
+    "finalC613": false,
+    "UI6": false,
+    "migrationFinal": false,
+    "releaseFinal": false,
+    "G08G10Closed": false,
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "checks": [
+    {
+      "id": "base-counts",
+      "pass": true
+    },
+    {
+      "id": "new-counts",
+      "pass": true
+    },
+    {
+      "id": "old-object-order",
+      "pass": true
+    },
+    {
+      "id": "all-old-object-metadata",
+      "pass": true
+    },
+    {
+      "id": "all-old-membership-prefixes",
+      "pass": true
+    },
+    {
+      "id": "preserved-array-groups",
+      "pass": true
+    },
+    {
+      "id": "preserved-array-streams",
+      "pass": true
+    },
+    {
+      "id": "preserved-object-documentarySnapshots",
+      "pass": true
+    },
+    {
+      "id": "preserved-array-revisionHistory",
+      "pass": true
+    },
+    {
+      "id": "preserved-array-unresolvedReferences",
+      "pass": true
+    },
+    {
+      "id": "preserved-array-resolvedReferences",
+      "pass": true
+    },
+    {
+      "id": "preserved-object-derivedEvidence",
+      "pass": true
+    },
+    {
+      "id": "preserved-object-excluded",
+      "pass": true
+    },
+    {
+      "id": "exact-object-union",
+      "pass": true
+    },
+    {
+      "id": "all-objects-paths-mode",
+      "pass": true
+    },
+    {
+      "id": "catalog-143-152",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-0",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-0",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-1",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-1",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-2",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-2",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-3",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-3",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-4",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-4",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-5",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-5",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-6",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-6",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-7",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-7",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-8",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-8",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-9",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-9",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-10",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-10",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-11",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-11",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-12",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-12",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-13",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-13",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-14",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-14",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-15",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-15",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-16",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-16",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-17",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-17",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-18",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-18",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-19",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-19",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-20",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-20",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-21",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-21",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-22",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-22",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-23",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-23",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-24",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-24",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-25",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-25",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-26",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-26",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-27",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-27",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-28",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-28",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-29",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-29",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-30",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-30",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-31",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-31",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-32",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-32",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-33",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-33",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-34",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-34",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-35",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-35",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-36",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-36",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-37",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-37",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-38",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-38",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-39",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-39",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-40",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-40",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-41",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-41",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-42",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-42",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-43",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-43",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-44",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-44",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-45",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-45",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-46",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-46",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-47",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-47",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-48",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-48",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-49",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-49",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-50",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-50",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-51",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-51",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-52",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-52",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-53",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-53",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-54",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-54",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-55",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-55",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-56",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-56",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-57",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-57",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-58",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-58",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-59",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-59",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-60",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-60",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-61",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-61",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-62",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-62",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-63",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-63",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-64",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-64",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-65",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-65",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-66",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-66",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-67",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-67",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-68",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-68",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-69",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-69",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-70",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-70",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-71",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-71",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-72",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-72",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-73",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-73",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-74",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-74",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-75",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-75",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-76",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-76",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-77",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-77",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-78",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-78",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-79",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-79",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-80",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-80",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-81",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-81",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-82",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-82",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-83",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-83",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-84",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-84",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-85",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-85",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-86",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-86",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-87",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-87",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-88",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-88",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-89",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-89",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-90",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-90",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-91",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-91",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-92",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-92",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-93",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-93",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-94",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-94",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-95",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-95",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-96",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-96",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-97",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-97",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-98",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-98",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-99",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-99",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-100",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-100",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-101",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-101",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-102",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-102",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-103",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-103",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-104",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-104",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-105",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-105",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-106",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-106",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-107",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-107",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-108",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-108",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-109",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-109",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-110",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-110",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-111",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-111",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-112",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-112",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-113",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-113",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-114",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-114",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-115",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-115",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-116",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-116",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-117",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-117",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-118",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-118",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-119",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-119",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-120",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-120",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-121",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-121",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-122",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-122",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-123",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-123",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-124",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-124",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-125",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-125",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-126",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-126",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-127",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-127",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-128",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-128",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-129",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-129",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-130",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-130",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-131",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-131",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-132",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-132",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-133",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-133",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-134",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-134",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-135",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-135",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-136",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-136",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-137",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-137",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-138",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-138",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-139",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-139",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-140",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-140",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-141",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-141",
+      "pass": true
+    },
+    {
+      "id": "catalog-pin-142",
+      "pass": true
+    },
+    {
+      "id": "catalog-memberships-142",
+      "pass": true
+    },
+    {
+      "id": "catalog-new-reused-bytes",
+      "pass": true
+    },
+    {
+      "id": "catalog-single-actual-self-object",
+      "pass": true
+    },
+    {
+      "id": "tree-size-delta",
+      "pass": true
+    },
+    {
+      "id": "final-scope-unqualified",
+      "pass": true
+    },
+    {
+      "id": "parents-ordered",
+      "pass": true
+    },
+    {
+      "id": "documentary-no-executable-layout",
+      "pass": true
+    },
+    {
+      "id": "calculated-only-not-objects",
+      "pass": true
+    },
+    {
+      "id": "no-checkpoint-helper-objects",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-0",
+      "pass": true
+    },
+    {
+      "id": "stream-part-0-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-0",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-0",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-1",
+      "pass": true
+    },
+    {
+      "id": "stream-part-1-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-1",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-1",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-2",
+      "pass": true
+    },
+    {
+      "id": "stream-part-2-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-2",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-2",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-3",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-0",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-1",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-2",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-3",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-4",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-5",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-6",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-7",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-8",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-9",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-10",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-11",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-12",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-13",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-14",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-15",
+      "pass": true
+    },
+    {
+      "id": "stream-part-3-16",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-3",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-3",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-4",
+      "pass": true
+    },
+    {
+      "id": "stream-part-4-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-4",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-4",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-5",
+      "pass": true
+    },
+    {
+      "id": "stream-part-5-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-5",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-5",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-6",
+      "pass": true
+    },
+    {
+      "id": "stream-part-6-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-6",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-6",
+      "pass": true
+    },
+    {
+      "id": "indexed-stream-7",
+      "pass": true
+    },
+    {
+      "id": "stream-part-7-0",
+      "pass": true
+    },
+    {
+      "id": "stream-whole-7",
+      "pass": true
+    },
+    {
+      "id": "stream-bom-7",
+      "pass": true
+    },
+    {
+      "id": "focal-report-union-literal",
+      "pass": true
+    },
+    {
+      "id": "analytics-record-count",
+      "pass": true
+    },
+    {
+      "id": "union-C21-Analytics-markers",
+      "pass": true
+    },
+    {
+      "id": "union-C21-Analytics-contexts",
+      "pass": true
+    },
+    {
+      "id": "union-C21-Analytics-discovery-owner",
+      "pass": true
+    },
+    {
+      "id": "manifest-file-catalog",
+      "pass": true
+    },
+    {
+      "id": "manifest-file-index",
+      "pass": true
+    },
+    {
+      "id": "manifest-file-readme",
+      "pass": true
+    },
+    {
+      "id": "manifest-file-derivation",
+      "pass": true
+    },
+    {
+      "id": "derivation-index-pre-pin",
+      "pass": true
+    },
+    {
+      "id": "derivation-index-post-pin",
+      "pass": true
+    },
+    {
+      "id": "derivation-readme-pre-pin",
+      "pass": true
+    },
+    {
+      "id": "derivation-readme-post-pin",
+      "pass": true
+    },
+    {
+      "id": "manifest-five-blobs",
+      "pass": true
+    },
+    {
+      "id": "actual-parent-1",
+      "pass": true
+    },
+    {
+      "id": "actual-parent-2",
+      "pass": true
+    },
+    {
+      "id": "actual-parent-3",
+      "pass": true
+    },
+    {
+      "id": "actual-clean-source",
+      "pass": true
+    },
+    {
+      "id": "focal-literal-fact-source",
+      "pass": true
+    },
+    {
+      "id": "focal-literal-fact-snapshot",
+      "pass": true
+    },
+    {
+      "id": "focal-literal-fact-run",
+      "pass": true
+    },
+    {
+      "id": "focal-literal-fact-observed",
+      "pass": true
+    },
+    {
+      "id": "focal-literal-fact-originalsClosed",
+      "pass": true
+    },
+    {
+      "id": "focal-closed-status-and-scope",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-tuple",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-observations",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-precision",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-qualification",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-rootOriginalPreservation",
+      "pass": true
+    },
+    {
+      "id": "analytics-literal-fact-limits",
+      "pass": true
+    },
+    {
+      "id": "analytics-negative-no-acceptance",
+      "pass": true
+    },
+    {
+      "id": "D30-unbound-no-run",
+      "pass": true
+    },
+    {
+      "id": "D30-counts",
+      "pass": true
+    },
+    {
+      "id": "composition-literal-identities",
+      "pass": true
+    },
+    {
+      "id": "composition-no-final-source",
+      "pass": true
+    },
+    {
+      "id": "manifest-zero-execution-effects",
+      "pass": true
+    },
+    {
+      "id": "manifest-acceptance-boundaries",
+      "pass": true
+    }
+  ],
+  "effects": {
+    "createdBlobs": "This documentary review only, with literal Git readback after tool return.",
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "comments": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0
+  },
+  "nextStep": "Root may create the reviewed documentary trees/commit. Review the actual returned objects and exact ordered parents before a separate nonforce CAS publication. No candidate or go-live qualification is granted."
+}

@@ -1,0 +1,1142 @@
+{
+  "schema": "sf613-e15-diagnostic-source-bounds-v1",
+  "status": "STATIC_PROPOSAL_CURRENT_HELPER_R6_NO_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "cleanBase": {
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+  },
+  "diagnosticSource": {
+    "commit": "UNBOUND",
+    "tree": "UNBOUND",
+    "authority": "Root only; source creation and execution are separate from these proposal blobs."
+  },
+  "helper": {
+    "gitSha": "19948fe790a44f66b18775c34ac3df8ffc1228a4",
+    "bytes": 47324,
+    "sha256": "1b306f8a4a5342f176bfa8276adaf603bc7e04677ee616788db2ad262f7b71c1",
+    "lf": 814,
+    "endsWithLF": true
+  },
+  "purpose": "Locate the first canonical comparison and first persistence of the first preview Request, retaining the outer preview lifecycle. This is observational instrumentation, not an optimization or installed qualification.",
+  "questionCuts": [
+    "First canonical compare: preparation candidate lookups versus comparator candidate lookups; outer Finance branch and actual comparator entry.",
+    "For up to two preparation and four comparator lookup admissions: Provider callback identity, Source before driver, CurrentChoice forwarding, LocalStore child/top-level and gates, copy outcome and effective selection.",
+    "First comparison persistence: prewrite and the exact state.transaction invocation in result-store, queue/BEGIN, preparation, target/preimage, work/finish/dispose, LocalStore scope close, serialization/SQL/COMMIT, subsequent binding/validation/read, outer lifecycle."
+  ],
+  "quota": {
+    "layer": "One native producer's emitted diagnostic payload, including ASCII prefix and LF. A complete forwarded row is literal. This is not a byte/line cap on the full Actions main log or its timestamps, ANSI prefixes, framework envelopes, or mirrored representations.",
+    "maxLineBytes": 1024,
+    "streamRecordsMaximum": 191,
+    "streamBytesMaximum": 195584,
+    "campaignLogicalRecordsMaximum": 192,
+    "campaignLogicalBytesMaximum": 196608,
+    "partition": [
+      {
+        "name": "E14 core",
+        "records": 63,
+        "derivation": "32 detail reservations (10 critical+4 checkpoints+1 first-analysis entry+17 general),28 reserved unit closes,request-enter/request-close/overflow3"
+      },
+      {
+        "name": "protected outer tail",
+        "records": 12,
+        "derivation": "Five pairs: first analysis compare,first production revalidation,first port final authority/evaluations/candidates;HTTP with-case/egress2"
+      },
+      {
+        "name": "lookup routes",
+        "records": 72,
+        "derivation": "At most2 preparation+4 comparator invocations,12 immutable points each"
+      },
+      {
+        "name": "outer Finance/canonical",
+        "records": 8,
+        "derivation": "Eight named single-claim points;no canonical-close is emitted"
+      },
+      {
+        "name": "first persistence",
+        "records": 36,
+        "derivation": "36 immutable point slots reserved for first persistence owner"
+      }
+    ],
+    "noBorrowing": "Each route uses its own point bitset, claimed before clock/serialization/output; later calls cannot reuse a claimed place. Repeated tail/critical calls may use remaining core general places but cannot consume another named reservation.",
+    "overflow": "The core has one reserved overflow record. Dropped and routeOmitted counters are finite and censored at65535; saturated becomes true only on an attempted increment beyond an already full counter. Route-scope exhaustion separately sets routeDisabled/scopeFault. No missing row is fabricated.",
+    "terminal": "Request close is separately reserved and serialized against current emission. It is never implied by contiguous sequence, overflow, budget exhaustion, elapsed time, or a missing unit/phase close."
+  },
+  "identities": {
+    "selection": "One setup attempt per module lifetime, latched before admission; Request is checked by exact object identity. Rejected/foreign/late Request scopes execute the product once with neutral observation and cannot reselect.",
+    "bindingFields": [
+      "source",
+      "sourceTree",
+      "snapshot",
+      "runId",
+      "attempt",
+      "nonce",
+      "pid",
+      "parentPid",
+      "request",
+      "sequence"
+    ],
+    "sourceMeaning": "source/sourceTree name clean S21; snapshot/runId/attempt name the future diagnostic run and remain runtime-bound by the launcher. PID/PPID/nonce are actual producer fields, not invented here.",
+    "scope": "Private ALS tokens carry immutable lexical scope/parent. runOnce validates raw token installation, preserves original return/Promise or exact thrown value including undefined, and latches before product invocation. Scope loss disables attribution, not the product.",
+    "canonical": "First canonical compare admitted in the selected Request. Its original synchronous authority expression keeps the original returned Promise. No new await/then/finally is attached and no canonical settlement or canonical-close is observed.",
+    "finance": "Only an entered marker in the selected canonical preparation scope may claim the private first Finance owner. Finance invoked inside comparator is outside this cut. Observation-returned describes the existing observeRecords/work awaited expression; it can be a cached terminal without work. Body-exit is the Finance body finally, possibly before async return adoption. Actual comparator entry has its own event.",
+    "lookup": "IDs1..2 are admitted preparation invocations;IDs3..6 comparator invocations. IDs identify admission ordinals, not case/alternative/business identifiers. Every admitted lookup owns its12 slots and callback links. Additional/reentrant starts beyond these finite populations are omitted, not reassigned or inferred as the fixed baseline/candidate.",
+    "persistence": "First route under analysis-persist owned by the first analysis. Only the lexical result-store state.transaction call opens state-transaction scope. operation(true),BEGIN or an unrelated preparatory read alone cannot select the transaction.",
+    "callbackLinks": "Identity taps return the same original callable and retain its reference privately; they never wrap or invoke it. Source accepts the linked Provider work;CC records direct/wrapped and links the already-created wrapper;LS matches the actual forwarded work;operation matches the exact already-created LocalStore callback. Provider-view also requires a function and the registered callback identity."
+  },
+  "finiteMetadata": {
+    "routesMaximum": 8,
+    "lookupRoutesMaximum": 6,
+    "canonicalRoutesMaximum": 1,
+    "persistenceRoutesMaximum": 1,
+    "financeOwnersMaximum": 1,
+    "routeScopesMaximum": 32,
+    "unitAdmissionsMaximum": 28,
+    "activeComparesMaximum": 64,
+    "compareAdmissionOrdinalMaximum": 65535,
+    "phaseOrdinalMaximum": 65535,
+    "liveParentChainCheckMaximum": 128,
+    "fixedNumericArrays": {
+      "critical": 5,
+      "checkpoints": 4,
+      "compareTotals": 3,
+      "stages": 33,
+      "lineage": 3,
+      "gatesPerRoute": 5
+    },
+    "callbackSlotsPerRoute": 5,
+    "conservativeCallbackSlotsMaximum": 40,
+    "retention": "Routes initialize callback slots as own properties and clear them on observed route close;Request cleanup releases all route/scope registries. Missing close may retain finite extra callback references untilRequest cleanup/process exit. This bounds metadata/slot counts,not bytes of arbitrary graphs reachable from existing callbacks.",
+    "forwarderTailBytesMaximum": 1023,
+    "forwarderExtraState": "ASCII tail and fixed scalar fields only;incoming decoded stream chunk is not copied as a queue or retained. Each pump returns the exact same chunk."
+  },
+  "gateInterpretation": {
+    "order": [
+      "source-root-current",
+      "callback-equal",
+      "store-current",
+      "view-current",
+      "product-condition"
+    ],
+    "codes": {
+      "0": "original evaluated boolean false",
+      "1": "original evaluated boolean true",
+      "2": "original expression evaluated to a nonboolean value",
+      "-1": "tap not evaluated/observed"
+    },
+    "optionalSource": "source-root-current taps the original optional-call expression once;root-absent branch distinguishes absence. A yielded undefined does not prove the optional method ran.",
+    "populations": "Source requested tag,CC forwarding,LS productRoot/projected/effective selection,copy returned/threw andProvider projection are separate observations. No conservation,rate,or pairing by equal counts is inferred.",
+    "broad": "selection none/full means that projection selection was absent at that point. It is not universal full-snapshot equivalence;the existing broad product view may still be used. Only observed fields/gates establish that invocation's path.",
+    "copy": "copy-enter marks the original target/copy expression boundary;copy-close returned follows its successful snapshot/registry construction. Failure uses an explicit boolean independent of thrown value. Missing close is unknown,never proof of a lock/failure/open operation at60s.",
+    "missing": "Unknown/mismatched callbacks,foreign handles,disabled scope,early return,short-circuit,output fault,and kill can all leave a point absent. The observer does not repeat a predicate to classify absence."
+  },
+  "clocks": {
+    "timeUnit": "elapsedTenthMs: integer tenths of a millisecond from one native performance.now origin",
+    "monotonic": "Non-number,out-of-range,backwards clock yields null and clockFault;no wall-clock normalization.",
+    "intervals": "A before/after await boundary covers the whole original expression including synchronous work and scheduling. Queue/BEGIN interval is not exclusive wait/lock time. Nested/concurrent spans are not added as exclusive CPU/request cost.",
+    "cap": 999999999
+  },
+  "nativeTail": {
+    "prewrite": "Persistence prewrite precedes the original input.store.write expression;result-store still performs its original clone/authority/case/proof checks before its transaction.",
+    "materialize": "materialize-enter is at the start of the existing top-level LocalStore operation callback, before SQL read/observeSnapshot/plans;materialize-returned follows original target/preimage construction. copy-enter separately marks target/preimage construction. An earlier failure does not fabricate copy-close.",
+    "operation": "Queue enter/returned bracket existing admission await;BEGIN brackets existing retryLock await. operation-returned follows the original work(db) awaited expression. No new wait or retry is added.",
+    "commit": "Source finish/dispose and LocalStore scope cleanup precede original encode/decode/SQL/COMMIT. A first COMMIT does not close persistence:binding105,validation108,and binding read111 remain separately marked. Binding can use transactionAll outside the first write transaction detail population.",
+    "resultStoreReturned": "state-transaction-returned is fulfillment of the exact original expression including its existing catch;it is not by itself commit proof."
+  },
+  "transport": {
+    "import": "Named writeSync from node:fs in the helper;used by native producer and shared createSfE15Forwarder in both bridges.",
+    "writer": "One synchronous writeSync attempt per admitted line,quota consumed before I/O. File andstdout sinks have independent irreversible fault latches. Zero/short write or any thrown value,including undefined,causes no reconstruction,retry or replay. Metadata/clock/serialization exceptions cannot replace product result or error.",
+    "forwardOrder": [
+      "native fd1",
+      "inner existing child.stdout decodeText -> shared forwarder -> original splitLines/readiness",
+      "outer existing child.stdout decodeText -> shared forwarder -> original splitLines/readiness",
+      "worker fd1 /runner main output"
+    ],
+    "carrierChange": "Direct fd1 forwarding occurs before splitLines. Do not assume E14 Playwright report case/result/stdout arrays contain the same events or infer their membership. Main log is the intended receipt carrier;outer framework representation and actual bytes require later intake.",
+    "scanner": "Only actual LF completes a row. Split chunks may finish an observed row;tail without LF is never flushed.Only ASCII-prefixed allowlisted lines within1024B are forwarded. NonASCII/oversized diagnostic line or a mixed/over-budget mode faults that forwarder permanently;unrelated lines are discarded observationally and all original chunks still flow to readiness.",
+    "receiptRule": "Preserve main bytes first;validate complete LF records and exact prefix/schema/identity/sequence,retain any trailing partial/invalid data separately. No syntheticLF,strip,Unicode splitlines,or inferred close. Missing terminal remains a prefix even if all retained rows agree.",
+    "sinkLimit": "Synchronous I/O can perturb scheduling and can block;this byte cap is not a duration bound. SIGKILL,aborted pumps,partial writes,framework loss or kernel/runtime behavior can prevent delivery. No guaranteed receipt at timeout is claimed.",
+    "mirrors": {
+      "optionalNativeFile": "test-ci-evidence/<nonce>/preview-events.jsonl",
+      "nativeFileMaximumBytes": 195584,
+      "launcherJsonMaximumBytesEach": 8192,
+      "launcherJsonMaximumCountForFixedSelection": 2,
+      "launcherPreparationNotCaptureProof": true,
+      "mirrorNotRequiredForMainObservation": true
+    },
+    "lineCopies": "At most191 producer event attempts and the same finite logical rows through each bridge are separate physical attempts. The191/192 logical cap does not count all mirrored intermediary copies as a single disk/network byte total."
+  },
+  "campaign": {
+    "originalRequest": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitSha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lf": 814,
+      "endsWithLF": true
+    },
+    "cases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "previewWaitMs": 60000,
+    "sensitivityWaitMs": 120000,
+    "selectionMemo": {
+      "gitSha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    },
+    "selectionPinsInS21": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+        "entry": {
+          "path": "design-wave-five-analytics.spec.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+          "size": 56661,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f8a62baf167a1a4374122552a770f1ec49f56313"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "app-shell",
+            "entry": {
+              "path": "app-shell",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+            }
+          },
+          {
+            "tree": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+            "name": "e2e",
+            "entry": {
+              "path": "e2e",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+            }
+          },
+          {
+            "tree": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/70a27499a675203fefe9733f4c8de6be66d27b8b"
+            }
+          },
+          {
+            "tree": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+            "name": "design-wave-five-analytics.spec.ts",
+            "entry": {
+              "path": "design-wave-five-analytics.spec.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+              "size": 56661,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f8a62baf167a1a4374122552a770f1ec49f56313"
+            }
+          }
+        ],
+        "expected": "f8a62baf167a1a4374122552a770f1ec49f56313"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "entry": {
+          "path": "index.tsx",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75",
+          "size": 25041,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "app-shell",
+            "entry": {
+              "path": "app-shell",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+            }
+          },
+          {
+            "tree": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+            "name": "src",
+            "entry": {
+              "path": "src",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a7175c52b6866a73859921f961c325e9427a2a0a",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a7175c52b6866a73859921f961c325e9427a2a0a"
+            }
+          },
+          {
+            "tree": "a7175c52b6866a73859921f961c325e9427a2a0a",
+            "name": "orchestra",
+            "entry": {
+              "path": "orchestra",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "f69da777998acca8d53f29bb063f166fee6ed9a2",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/f69da777998acca8d53f29bb063f166fee6ed9a2"
+            }
+          },
+          {
+            "tree": "f69da777998acca8d53f29bb063f166fee6ed9a2",
+            "name": "chapters",
+            "entry": {
+              "path": "chapters",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "b9f149674bc52599feb78f48d0a367abe4d3c933",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/b9f149674bc52599feb78f48d0a367abe4d3c933"
+            }
+          },
+          {
+            "tree": "b9f149674bc52599feb78f48d0a367abe4d3c933",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "ba0029a676dc4f042d432527f2ceb03026ecb618",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/ba0029a676dc4f042d432527f2ceb03026ecb618"
+            }
+          },
+          {
+            "tree": "ba0029a676dc4f042d432527f2ceb03026ecb618",
+            "name": "bi",
+            "entry": {
+              "path": "bi",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "f9423601209ecb93add41a58b6d2a08ad8818f24",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/f9423601209ecb93add41a58b6d2a08ad8818f24"
+            }
+          },
+          {
+            "tree": "f9423601209ecb93add41a58b6d2a08ad8818f24",
+            "name": "catalog",
+            "entry": {
+              "path": "catalog",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "bc558cbe66bc00ef4b43f496cefe04e2066b7236",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/bc558cbe66bc00ef4b43f496cefe04e2066b7236"
+            }
+          },
+          {
+            "tree": "bc558cbe66bc00ef4b43f496cefe04e2066b7236",
+            "name": "index.tsx",
+            "entry": {
+              "path": "index.tsx",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75",
+              "size": 25041,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75"
+            }
+          }
+        ],
+        "expected": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75"
+      },
+      {
+        "path": "packages/client/src/sucafina/bi.ts",
+        "entry": {
+          "path": "bi.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "396d7120e6db25be1dae4255edaa7e87f8544def",
+          "size": 2603,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/396d7120e6db25be1dae4255edaa7e87f8544def"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "client",
+            "entry": {
+              "path": "client",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "9c33894ee533637476c93d1d24468c8da2cb09da",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/9c33894ee533637476c93d1d24468c8da2cb09da"
+            }
+          },
+          {
+            "tree": "9c33894ee533637476c93d1d24468c8da2cb09da",
+            "name": "src",
+            "entry": {
+              "path": "src",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "17ce72d4bb0663dd56e28fa8ad74d8879183522f",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/17ce72d4bb0663dd56e28fa8ad74d8879183522f"
+            }
+          },
+          {
+            "tree": "17ce72d4bb0663dd56e28fa8ad74d8879183522f",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "011caa3cb9b8b7db49e888b625484d938aa03b17",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/011caa3cb9b8b7db49e888b625484d938aa03b17"
+            }
+          },
+          {
+            "tree": "011caa3cb9b8b7db49e888b625484d938aa03b17",
+            "name": "bi.ts",
+            "entry": {
+              "path": "bi.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "396d7120e6db25be1dae4255edaa7e87f8544def",
+              "size": 2603,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/396d7120e6db25be1dae4255edaa7e87f8544def"
+            }
+          }
+        ],
+        "expected": "396d7120e6db25be1dae4255edaa7e87f8544def"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+        "entry": {
+          "path": "wave-four.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+          "size": 719,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/bb08f6bb1f131682cd2b53cab17ced3909808e0c"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "app-shell",
+            "entry": {
+              "path": "app-shell",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+            }
+          },
+          {
+            "tree": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+            "name": "e2e",
+            "entry": {
+              "path": "e2e",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+            }
+          },
+          {
+            "tree": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/70a27499a675203fefe9733f4c8de6be66d27b8b"
+            }
+          },
+          {
+            "tree": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+            "name": "design-support",
+            "entry": {
+              "path": "design-support",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+            }
+          },
+          {
+            "tree": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+            "name": "wave-four.ts",
+            "entry": {
+              "path": "wave-four.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+              "size": 719,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/bb08f6bb1f131682cd2b53cab17ced3909808e0c"
+            }
+          }
+        ],
+        "expected": "bb08f6bb1f131682cd2b53cab17ced3909808e0c"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+        "entry": {
+          "path": "wave-five-analytics.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+          "size": 21102,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "app-shell",
+            "entry": {
+              "path": "app-shell",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+            }
+          },
+          {
+            "tree": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+            "name": "e2e",
+            "entry": {
+              "path": "e2e",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+            }
+          },
+          {
+            "tree": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/70a27499a675203fefe9733f4c8de6be66d27b8b"
+            }
+          },
+          {
+            "tree": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+            "name": "design-support",
+            "entry": {
+              "path": "design-support",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+            }
+          },
+          {
+            "tree": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+            "name": "wave-five-analytics.ts",
+            "entry": {
+              "path": "wave-five-analytics.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+              "size": 21102,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e"
+            }
+          }
+        ],
+        "expected": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+        "entry": {
+          "path": "wave-three.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b3c02539245cce5091e0f200e84d3021016074ea",
+          "size": 10068,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b3c02539245cce5091e0f200e84d3021016074ea"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "app-shell",
+            "entry": {
+              "path": "app-shell",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8"
+            }
+          },
+          {
+            "tree": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+            "name": "e2e",
+            "entry": {
+              "path": "e2e",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f"
+            }
+          },
+          {
+            "tree": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/70a27499a675203fefe9733f4c8de6be66d27b8b"
+            }
+          },
+          {
+            "tree": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+            "name": "design-support",
+            "entry": {
+              "path": "design-support",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/e94e1ee43a44bd71e3623d79bb6ac69dedab83a7"
+            }
+          },
+          {
+            "tree": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+            "name": "wave-three.ts",
+            "entry": {
+              "path": "wave-three.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "b3c02539245cce5091e0f200e84d3021016074ea",
+              "size": 10068,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b3c02539245cce5091e0f200e84d3021016074ea"
+            }
+          }
+        ],
+        "expected": "b3c02539245cce5091e0f200e84d3021016074ea"
+      },
+      {
+        "path": "packages/schema/src/sucafina/bi.ts",
+        "entry": {
+          "path": "bi.ts",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "02504f838da6680a5fff1d1f9f6a337d075d68ca",
+          "size": 4237,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/02504f838da6680a5fff1d1f9f6a337d075d68ca"
+        },
+        "nodes": [
+          {
+            "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+            "name": "packages",
+            "entry": {
+              "path": "packages",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5"
+            }
+          },
+          {
+            "tree": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+            "name": "schema",
+            "entry": {
+              "path": "schema",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "65ad5f67d9a5f35054f77e78bd475f8c584167ae",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/65ad5f67d9a5f35054f77e78bd475f8c584167ae"
+            }
+          },
+          {
+            "tree": "65ad5f67d9a5f35054f77e78bd475f8c584167ae",
+            "name": "src",
+            "entry": {
+              "path": "src",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "734c119500eee1119f56f67d508b4b1c9360af63",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/734c119500eee1119f56f67d508b4b1c9360af63"
+            }
+          },
+          {
+            "tree": "734c119500eee1119f56f67d508b4b1c9360af63",
+            "name": "sucafina",
+            "entry": {
+              "path": "sucafina",
+              "mode": "040000",
+              "type": "tree",
+              "sha": "49a08ec10ca3bf01454a98bb213f8dc5b2ce72ec",
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/49a08ec10ca3bf01454a98bb213f8dc5b2ce72ec"
+            }
+          },
+          {
+            "tree": "49a08ec10ca3bf01454a98bb213f8dc5b2ce72ec",
+            "name": "bi.ts",
+            "entry": {
+              "path": "bi.ts",
+              "mode": "100644",
+              "type": "blob",
+              "sha": "02504f838da6680a5fff1d1f9f6a337d075d68ca",
+              "size": 4237,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/02504f838da6680a5fff1d1f9f6a337d075d68ca"
+            }
+          }
+        ],
+        "expected": "02504f838da6680a5fff1d1f9f6a337d075d68ca"
+      }
+    ],
+    "bound": "max(191 capturing-preview records +1 noncapturing BI disabled,2 disabled)=192;max(191KiB+1KiB,2KiB)=192KiB.",
+    "condition": "Original closed two-journey fixture/client flow,one installation per test,no restart/extra traffic. BI's locally named preview calls bi-data,not portfolio-preview. This is not an endpoint barrier or globalcross-process latch.",
+    "bridgeFailureCases": "Outer refusal clears bothenv keys,so inner emits no second disabled. Outer success plus inner refusal emits at mostone disabled and clears helper env. Disabled and capture are mutually exclusive per installation under these gates.",
+    "unchangedSpawn": "Original commands,argv,cwd,service runtime,lifecycle/readiness/cleanup remain outside the explicit environment and forwarder additions. No new timer/process/worker."
+  },
+  "unchanged": {
+    "additionalAwaitTokens": 0,
+    "additionalThenTokens": 0,
+    "perFile": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "awaitCounts": [
+          7,
+          7
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "awaitCounts": [
+          11,
+          11
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "awaitCounts": [
+          18,
+          18
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "awaitCounts": [
+          19,
+          19
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "awaitCounts": [
+          22,
+          22
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+        "awaitCounts": [
+          13,
+          13
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+        "awaitCounts": [
+          16,
+          16
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "awaitCounts": [
+          20,
+          20
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+        "awaitCounts": [
+          30,
+          30
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+        "awaitCounts": [
+          7,
+          7
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "awaitCounts": [
+          48,
+          48
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "awaitCounts": [
+          36,
+          36
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "awaitCounts": [
+          21,
+          21
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "awaitCounts": [
+          56,
+          56
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "awaitCounts": [
+          21,
+          21
+        ],
+        "thenCounts": [
+          7,
+          7
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+        "awaitCounts": [
+          18,
+          18
+        ],
+        "thenCounts": [
+          0,
+          0
+        ]
+      }
+    ],
+    "originalAssertionsAndSeeds": true,
+    "originalSpecConfigurationAndRetryPolicy": true,
+    "authorizationsAndFencesRemain": true,
+    "clonesAndBusinessReadsNotAdded": true,
+    "productCallbacksNotWrappedForWorkIdentity": true,
+    "noCPUProfile": true
+  },
+  "models": {
+    "method": "Own pure JavaScript constructed literal protocol records and counted UTF-8 bytes;no TypeScript/repository code was executed. These are conservative envelopes,not observed events or standaloneGit blobs. Some jointly maximal fields are intentionally not asserted reachable together.",
+    "admittedFieldMaxima": {
+      "runIdDigits": 20,
+      "sourceHex": 40,
+      "sourceTreeHex": 40,
+      "snapshotHex": 40,
+      "nonceCharacters": 22,
+      "pidAndParentPid": 2147483647,
+      "elapsedTenthMs": 999999999,
+      "counterSlots": 65535,
+      "saturatedForMaximumLength": false,
+      "sequence": 191
+    },
+    "records": [
+      {
+        "label": "request-enter",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"request-enter\",\"elapsedTenthMs\":999999999,\"maxEvents\":191,\"maxBytes\":195584,\"maxLineBytes\":1024,\"detailSlots\":32,\"unitCloseSlots\":28,\"activeCompareSlots\":64}\n",
+        "bytes": 559,
+        "sha256": "ac5392d8d646c31dd74a4cf29abd2ca8983a6d5a96693ec5cd6dcfb7424db5c3",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "http-boundary",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"http-boundary\",\"elapsedTenthMs\":999999999,\"point\":\"case-callback-entered\"}\n",
+        "bytes": 476,
+        "sha256": "a8564e64540edb1baa48219102cf69d6a2b10fa1c4466b2f9a89baac78a05063",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "unit-enter",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"unit-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"parentUnit\":28,\"parentPhase\":65535}\n",
+        "bytes": 524,
+        "sha256": "be6e920294ae58ce5d050719669dcf373d4760cbfb30869a66ec85b9da9cfb0e",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "phase-enter",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"phase-enter\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 829,
+        "sha256": "ff8cc786f70900ae3104d317373fe99c852285148e15f210a84e57b1a9c01b1f",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "phase-close",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"phase-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"phase\":65535,\"point\":\"production-analysis-revalidate\",\"stage\":10,\"outcome\":\"await-returned\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 856,
+        "sha256": "e9569d2beb964c304faa6064bf8c0f743aaa1461a32c35bca0dfd65da7397fe4",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "branch",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"branch\",\"elapsedTenthMs\":999999999,\"unit\":28,\"point\":\"analysis-persist\",\"branch\":\"binding-present\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 812,
+        "sha256": "9b1254d20bf050310a66d3e683dfc6e34dabfb1c1aaf06b26a0f228574827383",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "unit-close",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"unit-close\",\"elapsedTenthMs\":999999999,\"unit\":28,\"unitKind\":\"production-revalidation\",\"entryReserved\":false,\"outcome\":\"body-returned\",\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 847,
+        "sha256": "f106ee5b1e37cd73d8c57ce4c94e74b95974976c5608fe27ab20747dfdba3ab8",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "compare-body-checkpoint",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"compare-body-checkpoint\",\"elapsedTenthMs\":999999999,\"bodyExits\":128,\"compare\":65535,\"parentCompare\":65535,\"depth\":63,\"stage\":10,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false}\n",
+        "bytes": 841,
+        "sha256": "f24180ffc8f57a2466e72e55f00b5c5d93b77090bae7824a42e369af9468d40e",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "overflow",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"overflow\",\"elapsedTenthMs\":999999999,\"reason\":\"compare\",\"generalUsed\":17,\"unitsAdmitted\":28,\"dropped\":65535}\n",
+        "bytes": 510,
+        "sha256": "1b3703b5ffd0ae2325f8ec31d370d964039cf2ce0fd003cb023e8fbd5fdfbe58",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "route",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"route\",\"elapsedTenthMs\":999999999,\"routeKind\":\"persistence\",\"route\":6,\"routePhase\":\"state-transaction\",\"point\":\"state-transaction-returned\",\"detail\":\"fallback-no-selection\",\"gates\":[-1,-1,-1,-1,-1],\"parentUnit\":28,\"parentPhase\":65535}\n",
+        "bytes": 636,
+        "sha256": "e48c3aa4cc97230d2c5574888aa1df4fd80dfb08844e5f04d45163aaaeb4f10d",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      },
+      {
+        "label": "request-close",
+        "wire": "SF_PREVIEW_E15_EVENT {\"schema\":\"sf-preview-causal-e15-event-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":191,\"kind\":\"request-close\",\"elapsedTenthMs\":999999999,\"outcome\":\"returned\",\"eventsBefore\":190,\"bytesBefore\":194560,\"dropped\":65535,\"openUnits\":28,\"openPhases\":28,\"compareBodies\":[65535,65535,65535,65535,65535,65535],\"stages\":[65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535],\"lineage\":[65535,65535,65535],\"saturated\":false,\"faultsBefore\":[1,1,1,1,1,1],\"routeCoverage\":[1,2,4,1,65535,1]}\n",
+        "bytes": 926,
+        "sha256": "768d754b7953f98e56c4f117c311b029e4d2a75fbdff999aa6d88c8693ceb6f0",
+        "lf": 1,
+        "endsWithLF": true,
+        "calculatedOnly": true,
+        "standaloneBlobCreated": false
+      }
+    ],
+    "maximumConservativeRecordBytes": 926,
+    "minimumHeadroomBytes": 98,
+    "launcherDisabled": {
+      "wire": "SF_PREVIEW_E15_LAUNCHER {\"schema\":\"sf-preview-causal-e15-launcher-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"qualification\":false,\"role\":\"playwright-launcher\",\"kind\":\"disabled\",\"reason\":\"directory\"}\n",
+      "bytes": 269,
+      "sha256": "0748001a2450fbd5f73ce53b840d1998785871923a44e006c34ef63fde8859be",
+      "lf": 1,
+      "endsWithLF": true,
+      "calculatedOnly": true,
+      "standaloneBlobCreated": false
+    },
+    "launcherPrepared": {
+      "wire": "{\"schema\":\"sf-preview-e15-event-launch-v1\",\"source\":\"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\",\"sourceTree\":\"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e15-event-ZZZZZZ\",\"qualification\":false,\"state\":\"prepared\",\"processRole\":\"native-cli\",\"entry\":\"apps/cli/src/index.ts\",\"command\":\"serve\",\"streamName\":\"preview-events.jsonl\",\"relativeDirectory\":\"test-ci-evidence/sf613-e15-event-ZZZZZZ\",\"createdUtcMs\":10000000000000000,\"childGraceMs\":2000,\"adapterGraceMs\":10000,\"limits\":\"Preparation is not proof of Request selection, phase completion, event transport or successful fsync.\"}\n",
+      "bytes": 689,
+      "sha256": "e251ad6a1cd65be28f38c89020d58af125f557f60d7a94dcda81a9bda10651a8",
+      "lf": 1,
+      "endsWithLF": true,
+      "calculatedOnly": true,
+      "standaloneBlobCreated": false,
+      "boundEnforcedByCode": 8192
+    },
+    "arithmetic": {
+      "core": 63,
+      "tail": 12,
+      "lookups": 72,
+      "canonical": 8,
+      "persistence": 36,
+      "streamSum": 191,
+      "campaignMaximum": 192,
+      "streamBytes": 195584,
+      "campaignBytes": 196608
+    }
+  },
+  "pending": [
+    "Final independent source/helper/control review and root driver binding",
+    "Actual diagnostic source/tree and run identity",
+    "One future root-authorized execution if separately activated",
+    "Original main preservation/transport evidence and installed causal interpretation"
+  ],
+  "effects": {
+    "repositoryExecution": false,
+    "testsExecuted": false,
+    "originalLogGets": 0,
+    "zipGets": 0,
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsWritten": 0,
+    "runsStarted": 0,
+    "proposalBlobsOnly": true
+  },
+  "interpretationLimits": [
+    "Diagnostic overlay is not clean product or final #613 qualification.",
+    "No elapsed gain is inferred from static code,synthetic controls,E12 samples,E14 timing,or the A21 timeout.",
+    "No C21 admission/denial is inferred from19 synthetic outcomes or absent markers.",
+    "The observer preserves existing product work/error flow but adds finite bookkeeping and synchronous I/O;timing equivalence is not claimed."
+  ]
+}

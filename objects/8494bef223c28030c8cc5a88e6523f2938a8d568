@@ -1,0 +1,237 @@
+{
+  "schema": "sf613-r9-independent-object-review-v1",
+  "status": "ACK_ACTUAL_R9_OBJECTS_FOR_NONFORCE_PUBLICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": "/root/review_archive",
+  "atUtc": "2026-11-28 08:30:09 UTC",
+  "commit": "b74255922a58b649eca522d4427192040d49a079",
+  "tree": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+  "objectsTree": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c",
+  "orderedParents": [
+    "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "98174738fea48b3fe75e8d6684e2edd35574e75e",
+    "241c8db64c355756d15ec4b7b456ff1bcf30d51a"
+  ],
+  "commitMessage": "docs(qa): archive C21 closed evidence\n\nPreserve R8 and retain the reviewed C21 source, focal pass, negative original Analytics, D30 unbound static package, and composition preparation map.\n\nThis own-tree archive does not qualify a final candidate or authorize production.",
+  "package": {
+    "catalog": {
+      "gitBlob": "06d429ea1b938c868ec9fdf1ad0a5c7416cdcbdd",
+      "bytes": 159675,
+      "sha256": "77776c9611784f10c12dd1ab1ad116e6b88693fd8f01e586d0546efb2969f537",
+      "lf": 5124,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "84b0c6cd395ad966fea2914ce4c0936d637e1637",
+      "bytes": 1339991,
+      "sha256": "14f77ef56da9d71c390347ccc7001e36ae1d8e815e7fcdfb82517ac0415ca901",
+      "lf": 40027,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "05ecd9ed7d337c1b161408ef4c41af8092fa1b1f",
+      "bytes": 77617,
+      "sha256": "8491d58554c36113b3018b049714c542c58e6c332694aa933feacbd926576d78",
+      "lf": 656,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "7b82127069281aad46d241dd40bf0ccb239b013e",
+      "bytes": 383792,
+      "sha256": "11f854febb693a6dcd1d4a2e6df257708d68db224b69616604c32c8fa2d35241",
+      "lf": 8437,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "b6a3b80dc6f495877613b3d6817823873dd6a7e2",
+      "bytes": 56443,
+      "sha256": "21d9c23895f2e71370d48c8681be0fefcf4ac5a6d491b46cb8455a6161e08be0",
+      "lf": 1636,
+      "endsWithLF": true
+    }
+  },
+  "dataReview": {
+    "gitBlob": "9b43504386b44613a38957faad978ff15210e88e",
+    "bytes": 38293,
+    "sha256": "a5174eeaad0affb6a1a92d38eab14212f0b32788b0462282b999e5581755f55d",
+    "lf": 1936,
+    "endsWithLF": true
+  },
+  "rootObjectReview": {
+    "gitBlob": "c7a6389810b227b5af05ce0f83e87e159fa7860a",
+    "bytes": 31712,
+    "sha256": "058549a4d4917344d4ad19431c6b6c87708b2db5503ba842bf2b1030cfebb89c",
+    "lf": 1048,
+    "endsWithLF": true
+  },
+  "method": {
+    "actualGitCommitResourceRead": true,
+    "commitTreeAndOrderedParentsMatched": true,
+    "commitVerification": "GitHub Git commit resource identity, tree, ordered parents and exact message checked. No claim of raw commit-object byte rehash.",
+    "completeNonrecursiveTreesRead": 4,
+    "canonicalGitTreeHashesRecomputed": 4,
+    "treesTruncated": false,
+    "actualRootEntriesChecked": 3,
+    "actualObjectEntriesChecked": 925,
+    "actualBaseObjectEntriesChecked": 817,
+    "actualBlobSizesComparedToApprovedIndex": true,
+    "originalAndZipEndpointsRead": false,
+    "repositoryCodeExecuted": false
+  },
+  "actualTrees": {
+    "root": {
+      "sha": "e127aaadd99782433852ed0020c816f5cef0b0b7",
+      "entries": 3
+    },
+    "objects": {
+      "sha": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c",
+      "entries": 925
+    },
+    "baseRoot": {
+      "sha": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+      "entries": 3
+    },
+    "baseObjects": {
+      "sha": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+      "entries": 817
+    }
+  },
+  "delta": {
+    "complete": true,
+    "treePairs": [
+      {
+        "path": "",
+        "before": "7bbf02b20da74af54277f1e1f2e24d05b307be06",
+        "after": "e127aaadd99782433852ed0020c816f5cef0b0b7"
+      },
+      {
+        "path": "objects",
+        "before": "c796af4f4ff510c21069678c1fc34438eb12c99d",
+        "after": "33c1e26c45eb242f34c877a9bbeb77b347f3f99c"
+      }
+    ],
+    "literalSiblings": 817,
+    "added": 108,
+    "modified": 2,
+    "deleted": 0,
+    "modifiedPaths": [
+      "README.md",
+      "index.json"
+    ],
+    "allAddedPathsEqualApprovedIndexNewObjects": true,
+    "allOldEntriesLiteral": true,
+    "newObjectBytes": 10312769
+  },
+  "totals": {
+    "objectFiles": 925,
+    "objectBytes": 89287662,
+    "ownFiles": 927,
+    "logicalTreeFileBytes": 90705270,
+    "memberships": 1120,
+    "groups": 58,
+    "streams": 85,
+    "partReferences": 273
+  },
+  "checks": [
+    {
+      "id": "commit-exact-sha-tree",
+      "pass": true
+    },
+    {
+      "id": "ordered-three-parents",
+      "pass": true
+    },
+    {
+      "id": "root-three-exact-entries",
+      "pass": true
+    },
+    {
+      "id": "root-document-sizes",
+      "pass": true
+    },
+    {
+      "id": "objects-exact-925",
+      "pass": true
+    },
+    {
+      "id": "all-object-entries-match-index",
+      "pass": true
+    },
+    {
+      "id": "base-actual-root-matches-approved-docs",
+      "pass": true
+    },
+    {
+      "id": "base-actual-817",
+      "pass": true
+    },
+    {
+      "id": "all-old-entries-literal",
+      "pass": true
+    },
+    {
+      "id": "audit-complete-two-pairs",
+      "pass": true
+    },
+    {
+      "id": "delta-108A2M0D",
+      "pass": true
+    },
+    {
+      "id": "only-two-root-documents-modified",
+      "pass": true
+    },
+    {
+      "id": "exact-new-object-paths",
+      "pass": true
+    },
+    {
+      "id": "added-object-bytes",
+      "pass": true
+    },
+    {
+      "id": "logical-tree-size",
+      "pass": true
+    },
+    {
+      "id": "mode-and-no-executable-layout",
+      "pass": true
+    },
+    {
+      "id": "four-complete-tree-hashes",
+      "pass": true
+    }
+  ],
+  "checkCount": 17,
+  "findings": [],
+  "publication": {
+    "targetRef": "refs/heads/sf613-evidence",
+    "expectedBefore": "ecc10cbe01a71a0da1f9cac1a999c16915eebc78",
+    "targetAfter": "b74255922a58b649eca522d4427192040d49a079",
+    "force": false,
+    "reviewerChangedRef": false,
+    "rootMustPerformFreshRefPreflightAndLiteralReadback": true,
+    "leaseNotObservedByThisReviewer": true,
+    "scope": "Documentary archive only. This receipt approves the exact reviewed immutable objects for the already authorized nonforce evidence publication, conditional on root's fresh expected-ref check."
+  },
+  "qualification": {
+    "finalC613": false,
+    "UI6": false,
+    "migrationFinal": false,
+    "releaseFinal": false,
+    "G08": false,
+    "G10": false,
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "effects": {
+    "blobs": "This review receipt only, with literal Git readback after creation.",
+    "treesCreated": 0,
+    "commitsCreated": 0,
+    "refsChanged": 0,
+    "runsDispatched": 0,
+    "originalGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0
+  }
+}

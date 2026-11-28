@@ -1,0 +1,430 @@
+{
+  "schema": "sf673-two-seam-proposal-s21-v1",
+  "status": "PROPOSED_BLOBS_CREATED_READBACK_PEER_REVIEW_PENDING",
+  "observedAtUtc": "2026-11-28T09:36:25Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "qualification": false,
+  "authority": {
+    "writer": "/root/teams_product",
+    "coordinator": "/root",
+    "independentReviewer": "/root/focal_migration",
+    "authorizedScope": "Two proposed postimage blobs and their literal derivation/short diff. Integration remains the sole #673 route after #613.",
+    "treeCommitRefRunAuthorized": false
+  },
+  "source": {
+    "role": "clean S21 preimages only",
+    "commit": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+    "parent": "2228172b29080b411850ec98a4cdaa66020db5e6"
+  },
+  "donor": {
+    "role": "frozen Migration PR #673",
+    "commit": "b2f97817a82dc55a66298428107c30d5e3d97354",
+    "tree": "289fd8ac1792a103bfea3e57ce9c8c4283cc6b92",
+    "commonAncestor": "b7776698e61934ed2cb820658408ff8a8207ec62",
+    "comments": [
+      "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7153461744",
+      "https://github.com/gustavomhss/Orchestra-SF/pull/673#issuecomment-7152753459"
+    ],
+    "migrationHunksTakenLiterally": true
+  },
+  "observedDev": {
+    "ref": "refs/heads/dev",
+    "commit": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+    "tree": "7b279387c295f03917b880d6d54657068c49a9af",
+    "meaning": "Read-only comparison context. Not an implicit replacement for the S21 proposal base. PR payload base.sha is separate."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "kind": "M",
+      "purpose": "Retain C21 dashboardProductRead union exactly and add the original Migration sfPlannerMonthlyReceipts optional Snapshot field.",
+      "preimage": {
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "lf": 187
+      },
+      "donor": {
+        "bytes": 9061,
+        "sha256": "c98907158216ac472ba8619405966e016ac74919515b00b6d047064dd0f3db14",
+        "gitBlob": "e3479e52b50cf61289c58674d599533124671111"
+      },
+      "postimage": {
+        "bytes": 9367,
+        "sha256": "bfdf83b9af6a9764f28f7524cd2829a20b427aa60329ee6e63b261998a00d175",
+        "gitBlob": "dc1bd081ee3b10c585b53c09a99ad29c2e2fb795",
+        "lf": 195
+      },
+      "actualBlobCreated": true,
+      "literalReadback": true,
+      "anchor": {
+        "before": "  audit: Audit[]\n  notices: Notice[]\n  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>\n  // Host-private blob generations survive deletion and are updated atomically with blob bytes.\n  sfBlobGenerations?: Record<string, number>\n  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.\n",
+        "after": "  audit: Audit[]\n  notices: Notice[]\n  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>\n  // Host-private monthly outcomes commit with the Planner rows they acknowledge.\n  sfPlannerMonthlyReceipts?: Record<string, {\n    requestDigest: string\n    authorityDigest: string\n    // Pre-fence receipts remain consumed, but cannot acknowledge a current result.\n    resultDigest?: string\n    rows: import(\"../product/planner/monthly-host.ts\").MonthlyResult[\"rows\"]\n  }>\n  // Host-private blob generations survive deletion and are updated atomically with blob bytes.\n  sfBlobGenerations?: Record<string, number>\n  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.\n",
+        "beforeOccurrences": 1,
+        "afterOccurrences": 1,
+        "oldLine": 31,
+        "oldCount": 6,
+        "newCount": 14
+      },
+      "addedLines": 8,
+      "removedLines": 0,
+      "byteDelta": 374,
+      "lexicalAwaitTokens": {
+        "before": 0,
+        "after": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "kind": "M",
+      "purpose": "Retain current S21 installation and add only the three original late availability callbacks inside the existing runtime-conditional spread.",
+      "preimage": {
+        "bytes": 35725,
+        "sha256": "fa2adb2a7367b81afbc76bdd1e091839cb58b15cd5d67f4fed9375084fa5e2ad",
+        "gitBlob": "ee287d491a217113298e51af20dfe2a77f60aa38",
+        "lf": 494
+      },
+      "donor": {
+        "bytes": 34460,
+        "sha256": "bfde46ebc8b6d3e2f6145758a4af89539b1b27f27c0e2c59e25c859e04fdd2dd",
+        "gitBlob": "310ddd0f9a58d8fe29e7b5a35b449f9af280e991"
+      },
+      "postimage": {
+        "bytes": 35985,
+        "sha256": "0663941d52427aa971e75f56cd9f2de5de52b678e9f9ab675e3230951f6e4b12",
+        "gitBlob": "3c07a434fadfd3bc25cd0f45e73611d060953dce",
+        "lf": 497
+      },
+      "actualBlobCreated": true,
+      "literalReadback": true,
+      "anchor": {
+        "before": "      authenticate: identity.authenticate,\n      environment: environmentFor,\n      ...(runtime ? { product,\n        productView: async (request: Request, surface: Surface, page: string | undefined) =>\n          runtime?.services?.()?.productView?.(request, surface, page),\n      } : {}),\n",
+        "after": "      authenticate: identity.authenticate,\n      environment: environmentFor,\n      ...(runtime ? { product,\n        plannerMonthlyAvailable: () => Boolean(runtime?.services?.()?.plannerMonthly),\n        personalViewsAvailable: () => Boolean(runtime?.services?.()?.personalViews),\n        dashboardWorkbenchAvailable: () => Boolean(runtime?.services?.()?.productHttp),\n        productView: async (request: Request, surface: Surface, page: string | undefined) =>\n          runtime?.services?.()?.productView?.(request, surface, page),\n      } : {}),\n",
+        "beforeOccurrences": 1,
+        "afterOccurrences": 1,
+        "oldLine": 211,
+        "oldCount": 6,
+        "newCount": 9
+      },
+      "addedLines": 3,
+      "removedLines": 0,
+      "byteDelta": 260,
+      "lexicalAwaitTokens": {
+        "before": 54,
+        "after": 54
+      }
+    }
+  ],
+  "operations": [
+    {
+      "ordinal": 1,
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "operation": "unique-literal-replace",
+      "before": "  audit: Audit[]\n  notices: Notice[]\n  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>\n  // Host-private blob generations survive deletion and are updated atomically with blob bytes.\n  sfBlobGenerations?: Record<string, number>\n  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.\n",
+      "after": "  audit: Audit[]\n  notices: Notice[]\n  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>\n  // Host-private monthly outcomes commit with the Planner rows they acknowledge.\n  sfPlannerMonthlyReceipts?: Record<string, {\n    requestDigest: string\n    authorityDigest: string\n    // Pre-fence receipts remain consumed, but cannot acknowledge a current result.\n    resultDigest?: string\n    rows: import(\"../product/planner/monthly-host.ts\").MonthlyResult[\"rows\"]\n  }>\n  // Host-private blob generations survive deletion and are updated atomically with blob bytes.\n  sfBlobGenerations?: Record<string, number>\n  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.\n",
+      "beforeValueHash": {
+        "bytes": 478,
+        "sha256": "271066231d6f0326a3574dbb507b57889490acc1b77f4b4a731a03783328d93e",
+        "gitBlob": "51664c4c9d996ed12a034bbeb566cd0c401d0328"
+      },
+      "afterValueHash": {
+        "bytes": 852,
+        "sha256": "6b927e4e8245c749277abb04bdc24b498c5e6de3286820f13d191ddeacdd6635",
+        "gitBlob": "fdd515bbfacc71c895205278ef75bfb57b7dc762"
+      },
+      "input": {
+        "bytes": 8993,
+        "sha256": "cd5534eca1bf0072085bd864d2287d3643c6f447b151db3b441820d68dbdd801",
+        "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149",
+        "lf": 187
+      },
+      "output": {
+        "bytes": 9367,
+        "sha256": "bfdf83b9af6a9764f28f7524cd2829a20b427aa60329ee6e63b261998a00d175",
+        "gitBlob": "dc1bd081ee3b10c585b53c09a99ad29c2e2fb795",
+        "lf": 195
+      },
+      "forwardOccurrences": 1,
+      "inverseOccurrences": 1,
+      "fullForwardEqualsPostimage": true,
+      "fullInverseEqualsPreimage": true
+    },
+    {
+      "ordinal": 2,
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "operation": "unique-literal-replace",
+      "before": "      authenticate: identity.authenticate,\n      environment: environmentFor,\n      ...(runtime ? { product,\n        productView: async (request: Request, surface: Surface, page: string | undefined) =>\n          runtime?.services?.()?.productView?.(request, surface, page),\n      } : {}),\n",
+      "after": "      authenticate: identity.authenticate,\n      environment: environmentFor,\n      ...(runtime ? { product,\n        plannerMonthlyAvailable: () => Boolean(runtime?.services?.()?.plannerMonthly),\n        personalViewsAvailable: () => Boolean(runtime?.services?.()?.personalViews),\n        dashboardWorkbenchAvailable: () => Boolean(runtime?.services?.()?.productHttp),\n        productView: async (request: Request, surface: Surface, page: string | undefined) =>\n          runtime?.services?.()?.productView?.(request, surface, page),\n      } : {}),\n",
+      "beforeValueHash": {
+        "bytes": 289,
+        "sha256": "36cde3394bc19ed52ddcd668aaaefceb4231072847fef637d3ee3efd7b1a64eb",
+        "gitBlob": "8dff19d27e629ca2c87c395f4b6d388de2096fe2"
+      },
+      "afterValueHash": {
+        "bytes": 549,
+        "sha256": "14c6ac01276433f54b75961c4dd9a3fc3b002f2dfa87e69bd59c24b007fb11bc",
+        "gitBlob": "e78f9067436ed6de87a13994614fdd2909f7cb85"
+      },
+      "input": {
+        "bytes": 35725,
+        "sha256": "fa2adb2a7367b81afbc76bdd1e091839cb58b15cd5d67f4fed9375084fa5e2ad",
+        "gitBlob": "ee287d491a217113298e51af20dfe2a77f60aa38",
+        "lf": 494
+      },
+      "output": {
+        "bytes": 35985,
+        "sha256": "0663941d52427aa971e75f56cd9f2de5de52b678e9f9ab675e3230951f6e4b12",
+        "gitBlob": "3c07a434fadfd3bc25cd0f45e73611d060953dce",
+        "lf": 497
+      },
+      "forwardOccurrences": 1,
+      "inverseOccurrences": 1,
+      "fullForwardEqualsPostimage": true,
+      "fullInverseEqualsPreimage": true
+    }
+  ],
+  "fullDiff": {
+    "bytes": 1881,
+    "sha256": "db97e8c2d9ae5c76f547a22129de2d6072aa91446a9a1ebe4af73e2f57742469",
+    "gitBlob": "f7efa03bb1c26add39e8a58fe48f9268f02acac5",
+    "lf": 31,
+    "hunks": 2,
+    "added": 11,
+    "removed": 0,
+    "actualBlobCreated": true,
+    "literalReadback": true,
+    "verifiedAsDataForwardAndInverse": true,
+    "patchPaths": [
+      "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "modules/sucafina/Sucafinav1/local/entry.ts"
+    ]
+  },
+  "invariants": {
+    "contract": {
+      "c21DashboardProductReadRetainedLiteral": true,
+      "selectionUnion": [
+        "cases",
+        "preferences",
+        "case-identities",
+        "decisionResults"
+      ],
+      "monthlyReceiptAddedAtSnapshotTopLevel": true,
+      "receiptFields": [
+        "requestDigest",
+        "authorityDigest",
+        "resultDigest?",
+        "rows"
+      ],
+      "monthlyRowsReferenceTypeOnly": true,
+      "allOtherBytesLiteralByReverseAnchor": true
+    },
+    "localEntry": {
+      "actualPreimage": "ee287d491a217113298e51af20dfe2a77f60aa38",
+      "callbacks": [
+        "plannerMonthlyAvailable",
+        "personalViewsAvailable",
+        "dashboardWorkbenchAvailable"
+      ],
+      "callbacksInsideOriginalRuntimeConditionalSpread": true,
+      "runtimeServicesResolvedAtCallbackCallTime": true,
+      "originalProductViewAndNativeInstallationRemainingBytesLiteral": true,
+      "awaitsUnchanged": 54
+    },
+    "localStore": {
+      "notModified": true,
+      "currentS21Pin": "91413a24723c27cc5102368c3fe9a6090d9cdcea",
+      "meaning": "Prior read-only review found no need to replace this implementation for these two hunks. No new LocalStore or persistence qualification is claimed."
+    },
+    "otherTwelveOverlapsUntouched": true,
+    "e15Excluded": true,
+    "bootstrapDriverExcluded": true
+  },
+  "instructions": {
+    "rootAgents": {
+      "gitBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9"
+    },
+    "ancestorTrees": [
+      {
+        "path": ".",
+        "tree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a",
+        "agents": [
+          "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+        ]
+      },
+      {
+        "path": "modules",
+        "tree": "09eaa36e4d55e4ab31cf1413eaf0d57a7c504578",
+        "agents": []
+      },
+      {
+        "path": "modules/sucafina",
+        "tree": "49d7e83274da0732236d777f855684573042dce1",
+        "agents": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1",
+        "tree": "eeea457cafcfa3ea0bc1d644a19acf400c547f62",
+        "agents": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime",
+        "tree": "5c569c9ea017eb57cebe851ec394fcd20e744f8c",
+        "agents": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local",
+        "tree": "527da3011a680af99d915f09bfd47d4768db57e9",
+        "agents": []
+      }
+    ],
+    "execution": "No repository code, tests, typecheck, guard command or CI executed. Validation is data-only byte/anchor/diff comparison."
+  },
+  "checks": {
+    "count": 25,
+    "failed": 0,
+    "items": [
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:S21-preimage-hash",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:one-forward-anchor",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:one-inverse-anchor",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:full-forward-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:full-inverse-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:donor-block-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:create-and-readback",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:await-sites-preserved",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:LF-only-preserved",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:S21-preimage-hash",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:one-forward-anchor",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:one-inverse-anchor",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:full-forward-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:full-inverse-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:donor-block-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:create-and-readback",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:await-sites-preserved",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:LF-only-preserved",
+        "pass": true
+      },
+      {
+        "name": "C21-read-selection-block-literal-once",
+        "pass": true
+      },
+      {
+        "name": "contract-only-eight-added-lines",
+        "pass": true
+      },
+      {
+        "name": "entry-only-three-added-lines",
+        "pass": true
+      },
+      {
+        "name": "late-callback-names-once",
+        "pass": true
+      },
+      {
+        "name": "callbacks-inside-runtime-spread",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/runtime/contract.ts:unified-diff-forward-and-inverse-literal",
+        "pass": true
+      },
+      {
+        "name": "modules/sucafina/Sucafinav1/local/entry.ts:unified-diff-forward-and-inverse-literal",
+        "pass": true
+      }
+    ]
+  },
+  "bounds": {
+    "postimageFiles": 2,
+    "postimageBytes": 45352,
+    "postimageLines": 692,
+    "totalByteDelta": 634,
+    "totalAddedLines": 11,
+    "totalRemovedLines": 0,
+    "anchors": 2,
+    "diffHunks": 2,
+    "diffBytes": 1881,
+    "diffLF": 31,
+    "treeCommitRefRunCount": 0,
+    "newSourceQualification": false
+  },
+  "futureIntegration": {
+    "route": "Only the existing #673 composition, after accepted/integrated #613.",
+    "finalCandidate": null,
+    "finalTree": null,
+    "requiredPreflight": [
+      "Resolve both actual final candidate paths and compare their full preimage bytes to this S21 package.",
+      "If either preimage differs, rederive the relevant hunk against that exact candidate and obtain review; do not overwrite a changed whole file with these S21 postimages.",
+      "Keep dashboardProductRead C21 and sfPlannerMonthlyReceipts together, along with the latest native installation and late service availability callbacks.",
+      "Bind the resulting effective LocalStore/catalog/source in the future reviewed Bootstrap package; this proposal does not bind or qualify C0, C1 or Cgo."
+    ],
+    "stillPending": [
+      "#613 final acceptance and integration",
+      "Actual #673 composition and complete source review",
+      "CI-SF, CI-APP-SRC, CI-UI-OPERATIONS and CI-UI-DECISIONS complete source-bound baselines",
+      "Original Migration/Release and #349/#588/G09 obligations"
+    ]
+  },
+  "limitations": [
+    "Postimage blobs are reviewable proposals only; no tree, commit, ref, PR update or run was created.",
+    "No result from S21 focal/Analytics or E15 is transferred to the future composition.",
+    "No original log or ZIP was acquired.",
+    "Existing historical reviews and comments remain unchanged; independent peer review of this package is pending at this document cut."
+  ]
+}

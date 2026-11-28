@@ -1,0 +1,411 @@
+{
+  "schema": "sf613-e15-focal-template-derivation-v1",
+  "status": "STATIC_TEMPLATE_TWO_FINAL_BINDINGS_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "gitBlob": "1530ab888de5b5d6818f66e07fc3e6cdfbc8319c",
+    "bytes": 13791,
+    "sha256": "71dfb151e2dbebb14d27b496b23a04eb9f8c16ea5e31ac363cd186f72f3d91ef",
+    "lf": 204,
+    "endsWithLF": true
+  },
+  "postimage": {
+    "gitBlob": "27273d07dbd0419ceeada8895009b7809444277c",
+    "bytes": 16447,
+    "sha256": "9664ce1c76166ee909ff89b16f9f671d864ef0cdc2607d50262c9c674eb63d6f",
+    "lf": 231,
+    "endsWithLF": true
+  },
+  "fullDiff": {
+    "gitBlob": "9a8e9bb71361e40e5289b90cbb24a0a556bb3cb8",
+    "bytes": 30920,
+    "sha256": "f119625aff8a903df29fc9762cb1878113cc5c6ec2def08887a89f3d47a8242d",
+    "lf": 439,
+    "endsWithLF": true
+  },
+  "operations": [
+    {
+      "name": "diagnostic header",
+      "before": "// Snapshot-only verification. This driver is not part of the #613 product candidate.",
+      "after": "// Snapshot-only E15 diagnostic verification. This driver and overlay do not qualify or belong to the #613 product candidate.",
+      "beforeMeta": {
+        "gitBlob": "9b3144fb748caf30db3f5bae4906573ccd3d4f01",
+        "bytes": 85,
+        "sha256": "642844e203c4696cedbf8a3a9fb6ce1fb17bfb2c2e42bb0846b17947269b58b5",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "adab025c9f572073d7c8f88eaaad252a5ec49fbb",
+        "bytes": 125,
+        "sha256": "3d1169153a7ca485c5b1310046fab3f40ab6dda119c99ce87430f75e92168ffc",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "host guard identity",
+      "before": "C21 source and tree must be bound to reviewed Git objects before execution",
+      "after": "E15 diagnostic source and tree must be bound to reviewed Git objects before execution",
+      "beforeMeta": {
+        "gitBlob": "1402976e35a1814ec569419e3eb566a0c6abf2b5",
+        "bytes": 74,
+        "sha256": "2718df2151d555745cb182321135508a37891949b56dea590dba55f24a558da0",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "68959f0a0edd69869efacd97eddec7d03fc86c4d",
+        "bytes": 85,
+        "sha256": "64a887c2cd8bf34d04ae69f6b7f3761d1d714209c680cc48ee0187826093feb3",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "report family",
+      "before": "verification: \"sf613-c21-native-scenario-candidates-focal\", source, sourceTree,",
+      "after": "verification: \"sf613-e15-route-persistence-diagnostic-focal\", source, sourceTree,",
+      "beforeMeta": {
+        "gitBlob": "d26e67b2933ff09e95a687d8d42cf26b5f7a707c",
+        "bytes": 79,
+        "sha256": "67c1af203bf0be13825b21c03bd2b5fd055e99d4a4c12b6c40dc9a95073e27fd",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "7b4848430768240d33a3535d3adbc10a6f241edd",
+        "bytes": 81,
+        "sha256": "893aad52dc14514ddd99b8815b6c729a4eec9b9699c1df93c3012db1b40df786",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "outer identity title",
+      "before": "\"snapshot identifies the exact reviewed product source and tree\"",
+      "after": "\"snapshot identifies the exact reviewed E15 diagnostic source and tree\"",
+      "beforeMeta": {
+        "gitBlob": "05113322c680ce132ffcfb4ec48773dd51d15ca0",
+        "bytes": 64,
+        "sha256": "8bd15ec7317848339344acbde1606b64306c8e29ac69c1b7b6c70009290cc78b",
+        "lf": 0,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "fb52be03be2fed3ec97cd0ddc441aa1432ebdeb8",
+        "bytes": 71,
+        "sha256": "fc7acea0de0bb5e91d15e788ebf919d3f715c02ed5f239c71164e43dfa8073e3",
+        "lf": 0,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "focal manifest",
+      "before": "  process.stdout.write(JSON.stringify({ scenarioCandidatesManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 18, productDeltaPaths: 3, candidateDeltaPaths: 4,\n    deltaBase: \"2228172b29080b411850ec98a4cdaa66020db5e6\",\n    expectedGroups: 9, expectedCommands: 15, functionalProcessesLaunched: 5,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1 },\n    expectedControlReports: 8, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"closed scenario-candidates factory admits a native decisionResults selection only for its exact authorized read path; the complete collection is still cloned before filtering, with opaque and wrapped fallbacks preserved\",\n    callbackIdentity: \"existing C20 factory and consumer callbacks remain unchanged; native admission requires the exact forwarded transaction callback\",\n    assertions: \"whole-file cases contract, C08 projection, Portfolio, scenario lookup and native scenario selection controls; observed test and assertion totals require actual footers\",\n    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n    scenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, internalInvocations: 14, nominalSum: 20000, process: 45000, parent: 60000 },\n    nativeScenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, nominalSum: 20000, process: 45000, parent: 60000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "after": "  process.stdout.write(JSON.stringify({ e15DiagnosticManifest: {\n    source, sourceTree, qualification: false,\n    cleanBase: \"29374ab6a0f38dd9ff8848a083c61ea35dcecdfb\", cleanBaseTree: \"fe8221e56daf5fd7de8a79b29d2d485055b8c45a\",\n    diagnosticSourceDelta: { modified: 16, added: 2, includesOriginalAnalyticsRequest: true },\n    sourceCodePaths: 30, focalControlPaths: 2, workingFilePins: 32,\n    expectedGroups: 10, expectedCommands: 16, functionalProcessesLaunched: 6,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1, routeDiagnostic: 1 },\n    expectedControlReports: 9, routeDiagnosticChildModes: 10, nameFilter: null,\n    mechanism: \"observe the first canonical route, exact callback links, native selection and first persistence tail; no added product authorization, selection, read or business callback\",\n    identityBoundary: \"source and sourceTree identify the diagnostic parent; observer event source and sourceTree identify the clean S21 base; .ci-run.json is intentionally replaced in this focal snapshot\",\n    assertions: \"five retained whole-file C21 functional controls plus one E15 observer family; actual test, assertion and subprocess totals require received footers and receipts\",\n    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },\n    scenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, internalInvocations: 14, nominalSum: 20000, process: 45000, parent: 60000 },\n    nativeScenarioControlsMs: { cooperative: 18000, bun: 20000, declaredTests: 1, nominalSum: 20000, process: 45000, parent: 60000 },\n    routeDiagnosticControlsMs: { child: 3000, childKillGrace: 1000, sequentialChildren: 10, bun: 45000, declaredTests: 1, process: 60000, parent: 90000, childStdoutCap: 65536, childStderrCap: 65536, reportCap: 16384 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\",\n      \"apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts\", \"apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts\"],\n  } }) + \"\\n\")\n",
+      "beforeMeta": {
+        "gitBlob": "f6de57dc4fdc99347b6f607f7449d75cf9a97e6d",
+        "bytes": 2339,
+        "sha256": "b406c269c4b9ac90c8d4a1cbadb299109b62541eb4fb11caa815ad4587cec751",
+        "lf": 18,
+        "endsWithLF": true
+      },
+      "afterMeta": {
+        "gitBlob": "ebdf6b9b259c8f0259dcd2b812dda4b7fadbe15c",
+        "bytes": 2841,
+        "sha256": "4b99a2df2e8eef72f0e9e08b79963574820feb1b80474787b95203c70f4f8962",
+        "lf": 22,
+        "endsWithLF": true
+      }
+    },
+    {
+      "name": "working file pins",
+      "before": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"1017609000bdbdb39fc0510b045dc6dfde371faf\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"b7de9404461591ce0162d496ec917a47fb72a479\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"91413a24723c27cc5102368c3fe9a6090d9cdcea\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"6287eedc5387f5e7495963a12364bc31157a7789\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"6bef21db9129db064b018f5f0bf632306e3a16ec\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"11661b32f4dc782558b39902c0f396145cbe8a4a\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts\",\"44cff7d70fca11ca022f863d7811b9a2610186fd\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts\",\"b6938565cb8b468a454178688ea88a4ec88da9fa\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"68ae48f9a039180824f5471a1de27c0ca34be088\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts\",\"c8dd1c26b46ea7c287db80d0ca5746205e45f1ef\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts\",\"b62d93080073964d7adc993c3a5c02277abab38a\"],\n  ] as const",
+      "after": "  const sourceFiles = [\n    [\"modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts\",\"d00519c139524b8b1b2699ac40868a40f1a18d02\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts\",\"3942f378f6d94f53b5622df2a459e127d410f543\"],\n    [\"modules/sucafina/Sucafinav1/runtime/local-store.ts\",\"637913f32c8b5489c2c90b78d309d52e2f3ee94c\"],\n    [\"apps/cli/src/sucafina-product/planner-calculation-root.ts\",\"244d46ee41e9ce288a7260938174a57161137bab\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-inventory.ts\",\"eac8e0b28e591b7cc50ef5cb7fb1ebe768526509\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/source-projections.ts\",\"ccc5ea87046144843e1751b1288e907974d24ca5\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts\",\"f183dd1049ef205c38395bda99c83efa8eddc80a\"],\n    [\"modules/sucafina/Sucafinav1/product/integration/product-authority.ts\",\"dc483ab92936e410f529bf5c5d2bd52fbc6ffffb\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts\",\"c9a887ede73e2ebf72b4c7c25c01c2396708454a\"],\n    [\"modules/sucafina/Sucafinav1/runtime/contract.ts\",\"b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts\",\"6bef21db9129db064b018f5f0bf632306e3a16ec\"],\n    [\"modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts\",\"11661b32f4dc782558b39902c0f396145cbe8a4a\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts\",\"44cff7d70fca11ca022f863d7811b9a2610186fd\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts\",\"b6938565cb8b468a454178688ea88a4ec88da9fa\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts\",\"68ae48f9a039180824f5471a1de27c0ca34be088\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts\",\"cd71a9d8440cdc94cf6663928063c38449a25721\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts\",\"1c4b73e4d170a358c0065bd674817f98edd6e86f\"],\n    [\"modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts\",\"b62d93080073964d7adc993c3a5c02277abab38a\"],\n    [\"apps/cli/src/sucafina-product/portfolio-http.ts\",\"9cbbba7a3292f22e766aad41e6066eb69ae6424a\"],\n    [\"modules/sucafina/Sucafinav1/product/portfolio/port.ts\",\"9267e181901f4bf9d33f85de0b223f18dbc1df17\"],\n    [\"modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts\",\"8d4e1583efe5611114cd495b71197c7e1bb690df\"],\n    [\"modules/sucafina/Sucafinav1/product/portfolio/analysis.ts\",\"90146429a3a264f4d66f5b74d1502715a58c1099\"],\n    [\"modules/sucafina/Sucafinav1/product/portfolio/production.ts\",\"a3f69c5d987769a2ad66685f447002bf4307b2e1\"],\n    [\"apps/cli/test/fixture/sucafina-native-installation.ts\",\"8df288b2386618a7961ba20c1054e466cff39c95\"],\n    [\"packages/app-shell/e2e/sucafina/design-support/installation.ts\",\"5989de182f65c2a6faf20218adf8b20af6dfa000\"],\n    [\"apps/cli/src/sucafina-product/portfolio-authority.ts\",\"ff0f95cb0edef96bda838f35712599e449d45031\"],\n    [\"apps/cli/src/sucafina-product/finance-pair-observation.ts\",\"2eed03d569ffe4c558cf3f737affb88899062629\"],\n    [\"modules/sucafina/Sucafinav1/product/decisions/result-store.ts\",\"8fce115635205bf07f2727cb3782677ee98ef482\"],\n    [\"modules/sucafina/Sucafinav1/product/planner/persistence.ts\",\"e0d5decb4aa4e5f94885cd11c5afbbffbd96d279\"],\n    [\"modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts\",\"19948fe790a44f66b18775c34ac3df8ffc1228a4\"],\n    [\"apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts\",\"06ad7e879bf15e4c2e1287a70f07524a618fd052\"],\n    [\"apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts\",\"6a5bdff45c61e1c17e31ee3d9ce43c320d30104e\"],\n  ] as const",
+      "beforeMeta": {
+        "gitBlob": "b7c4a092851f03acfdd96b316e334cf2425080c5",
+        "bytes": 2302,
+        "sha256": "10c07f9b041d090bb0be17f1f9083a5a76aa10c1e5ad77fb9e571c5bd588acdb",
+        "lf": 19,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "319caab1e8d6768f41aa8973bd7e58fb14818148",
+        "bytes": 3865,
+        "sha256": "8d6fc1ac782e817e3b5754ad83c5b22e9685de4c458999c8c43ddae6eb9c5518",
+        "lf": 33,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "observed blob manifest",
+      "before": "snapshot, files: observed, expectedGroups: 9, expectedCommands: 15,\n    functionalProcessesLaunched: 5, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1 },\n    expectedControlReports: 8",
+      "after": "snapshot, files: observed, expectedGroups: 10, expectedCommands: 16,\n    functionalProcessesLaunched: 6, sourceCodePaths: 30, focalControlPaths: 2,\n    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, scenarioLookup: 1, nativeScenarioSelection: 1, routeDiagnostic: 1 },\n    expectedControlReports: 9",
+      "beforeMeta": {
+        "gitBlob": "d82a573f9f5a9daa24af4f84d97c621bee622d48",
+        "bytes": 264,
+        "sha256": "eef4701d165cab8406405c9916783ab38414f231a7dc46d6dc1066d83f93a865",
+        "lf": 2,
+        "endsWithLF": false
+      },
+      "afterMeta": {
+        "gitBlob": "aee4b1a58d7a3aab8be2dc686c9b402775dcf91d",
+        "bytes": 332,
+        "sha256": "2926b9b8e13ed3bbf999912a6e97618559c33d35cad9abc57d79d5d9854c4219",
+        "lf": 3,
+        "endsWithLF": false
+      }
+    },
+    {
+      "name": "append E15 control group",
+      "before": "checks.live(\"Native scenario candidates retain complete results and refuse changed authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Native scenario candidates selection whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C21_NATIVE_SCENARIO_SELECTION \")\n}), 60_000)\n",
+      "after": "checks.live(\"Native scenario candidates retain complete results and refuse changed authority\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"Native scenario candidates selection whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/scenario-candidates-native-projection.test.ts\"], module, 45_000)\n  expect(output).toContain(\"SF_C21_NATIVE_SCENARIO_SELECTION \")\n}), 60_000)\n\nchecks.live(\"E15 route controls preserve ownership, native forwarding and persistence boundaries\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"E15 route observer controls whole-file\", process.execPath,\n    [\"test\", \"./test/sucafina-preview-route-e15-diagnostic.test.ts\"], path.join(repository, \"apps/cli\"), 60_000)\n  expect(output).toContain(\"SF_E15_ROUTE_CONTROL \")\n}), 90_000)\n",
+      "beforeMeta": {
+        "gitBlob": "905896099e8adb4ab3552c7d9b0b4b0c63aa40cf",
+        "bytes": 477,
+        "sha256": "bb12a55a48fccca9de4fe5face0c19153f732c41db62f7cc8417996cb23ff20a",
+        "lf": 7,
+        "endsWithLF": true
+      },
+      "afterMeta": {
+        "gitBlob": "acd1bd133bc8789954f5d31e4b8e36f1910b9dea",
+        "bytes": 940,
+        "sha256": "c0022602a7318b49c70cdd13d834a6aeff9c96fd64fcfc5f4b3f69886caeea18",
+        "lf": 15,
+        "endsWithLF": true
+      }
+    }
+  ],
+  "inverseExact": true,
+  "forwardExact": true,
+  "commandEngineLiteral": true,
+  "sourceCodePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "gitBlob": "d00519c139524b8b1b2699ac40868a40f1a18d02"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "gitBlob": "3942f378f6d94f53b5622df2a459e127d410f543"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "gitBlob": "637913f32c8b5489c2c90b78d309d52e2f3ee94c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "gitBlob": "244d46ee41e9ce288a7260938174a57161137bab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "gitBlob": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "gitBlob": "ccc5ea87046144843e1751b1288e907974d24ca5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "gitBlob": "f183dd1049ef205c38395bda99c83efa8eddc80a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "gitBlob": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "gitBlob": "c9a887ede73e2ebf72b4c7c25c01c2396708454a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "gitBlob": "b3bcbd8e9842ce3e8f966eb7e988474e3ba3f149"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "gitBlob": "6bef21db9129db064b018f5f0bf632306e3a16ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "gitBlob": "44cff7d70fca11ca022f863d7811b9a2610186fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts",
+      "gitBlob": "b6938565cb8b468a454178688ea88a4ec88da9fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts",
+      "gitBlob": "68ae48f9a039180824f5471a1de27c0ca34be088"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "gitBlob": "cd71a9d8440cdc94cf6663928063c38449a25721"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-lookup-selection.test.ts",
+      "gitBlob": "1c4b73e4d170a358c0065bd674817f98edd6e86f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-candidates-native-projection.test.ts",
+      "gitBlob": "b62d93080073964d7adc993c3a5c02277abab38a"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "gitBlob": "9cbbba7a3292f22e766aad41e6066eb69ae6424a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "gitBlob": "9267e181901f4bf9d33f85de0b223f18dbc1df17"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "gitBlob": "8d4e1583efe5611114cd495b71197c7e1bb690df"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "gitBlob": "90146429a3a264f4d66f5b74d1502715a58c1099"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "gitBlob": "a3f69c5d987769a2ad66685f447002bf4307b2e1"
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "gitBlob": "8df288b2386618a7961ba20c1054e466cff39c95"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "gitBlob": "5989de182f65c2a6faf20218adf8b20af6dfa000"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "gitBlob": "ff0f95cb0edef96bda838f35712599e449d45031"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/finance-pair-observation.ts",
+      "gitBlob": "2eed03d569ffe4c558cf3f737affb88899062629"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "gitBlob": "8fce115635205bf07f2727cb3782677ee98ef482"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "gitBlob": "e0d5decb4aa4e5f94885cd11c5afbbffbd96d279"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts",
+      "gitBlob": "19948fe790a44f66b18775c34ac3df8ffc1228a4"
+    }
+  ],
+  "focalControlPins": [
+    {
+      "path": "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+      "gitBlob": "06ad7e879bf15e4c2e1287a70f07524a618fd052"
+    },
+    {
+      "path": "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts",
+      "gitBlob": "6a5bdff45c61e1c17e31ee3d9ce43c320d30104e"
+    }
+  ],
+  "identity": {
+    "sourceToken": "__SF613_SOURCE_SHA__",
+    "treeToken": "__SF613_SOURCE_TREE__",
+    "futureParent": "Actual reviewed E15 diagnostic source commit/tree; not clean S21",
+    "observerEvents": "source/sourceTree remain clean S21/S21 tree by helper contract",
+    "parentCardinality": 1,
+    "sourceCleanBase": "29374ab6a0f38dd9ff8848a083c61ea35dcecdfb",
+    "sourceCleanBaseTree": "fe8221e56daf5fd7de8a79b29d2d485055b8c45a"
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "before": {
+      "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "after": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    },
+    "literal": "{\"package\":\"cli\",\"directory\":\"apps/cli\",\"packageSelector\":\"@orchestra/cli\",\"runner\":\"bun\",\"args\":[\"./test/sucafina-proof-verification.test.ts\",\"--timeout\",\"600000\"],\"env\":{\"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\":\"strict\",\"ORCHESTRA_CHANNEL\":\"prod\"}}",
+    "overwritesParentAnalyticsRequest": true,
+    "notCheckedAsUnchangedWorkingSource": true
+  },
+  "expectedOverlay": {
+    "added": 3,
+    "modified": 1,
+    "paths": [
+      ".ci-run.json",
+      "apps/cli/test/sucafina-proof-verification.test.ts",
+      "apps/cli/test/fixture/sucafina-preview-route-e15-diagnostic.ts",
+      "apps/cli/test/sucafina-preview-route-e15-diagnostic.test.ts"
+    ]
+  },
+  "counts": {
+    "groups": 10,
+    "commands": 16,
+    "functionalProcesses": 6,
+    "sourcePins": 30,
+    "controlPins": 2,
+    "workingPins": 32,
+    "expectedReports": 9,
+    "outerRunCommandTruncationFlags": 32,
+    "childModes": 10,
+    "childTruncationFlags": 20,
+    "globalOmniTotals": null,
+    "actualTestTotals": null,
+    "actualAssertionTotals": null
+  },
+  "bounds": {
+    "commandStdout": 1048576,
+    "commandStderr": 1048576,
+    "forceKillAfterMs": 5000,
+    "identityParentMs": 180000,
+    "newControl": {
+      "processMs": 60000,
+      "parentMs": 90000,
+      "bunMs": 45000,
+      "childMs": 3000,
+      "childKillMs": 1000,
+      "children": 10,
+      "stdoutCap": 65536,
+      "stderrCap": 65536,
+      "reportCap": 16384
+    },
+    "retainedGroups": "All nine existing group process and parent limits, argv and cwd remain literal.",
+    "workflow": "Original workflow unchanged; no claim that sums of all individual maxima fit the shared workflow limit."
+  },
+  "scope": {
+    "diagnostic": true,
+    "qualification": false,
+    "originalAnalyticsSpecUnchanged": true,
+    "originalPlaywrightDeadlineUnchanged": true,
+    "noProductAuthorizationChanges": true,
+    "localExecution": false,
+    "sourceCommit": null,
+    "sourceTree": null,
+    "snapshotCommit": null,
+    "snapshotTree": null,
+    "branch": null,
+    "run": null,
+    "originalGets": 0,
+    "zipGets": 0
+  },
+  "limits": [
+    "This template does not certify the final source or controls independently.",
+    "Two identity tokens must be replaced exactly once only after actual source objects exist and are audited.",
+    "Existing C21 positive evidence is historical; E15 needs its own six received whole-file process outcomes.",
+    "Ten explicit observer children are a separate population from six functional driver processes and sixteen runCommand calls. No aggregate subprocess count is asserted."
+  ]
+}
