@@ -1,0 +1,205 @@
+// Snapshot-only verification. This driver is not part of the #613 product candidate.
+import { expect } from "bun:test"
+import path from "node:path"
+import { readFile } from "node:fs/promises"
+import { AppProcess } from "@orchestra/core/process"
+import { LayerNode } from "@orchestra/core/effect/layer-node"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { testEffect } from "@orchestra/core/test/lib/effect"
+import { Effect } from "effect"
+import { ChildProcess } from "effect/unstable/process"
+
+const repository = path.resolve(import.meta.dir, "../../..")
+const module = path.join(repository, "modules/sucafina/Sucafinav1")
+const source = "38255d2d11cfdff4214803b4606dd3fd7e83869f"
+const sourceTree = "7a63ef33cec01383bee1aa7c8ab37b188c957f3b"
+const cleanSource = "7393cd010086f4a12d61ae9bb5db13534bd18aa0"
+const cleanTree = "31954cfe7df07455d8b137f6f4f1e4d94a316fc3"
+const historicalCompositionBase = "4b62fa9f8ef2e29d1b0e2470045c459487b9c0cc"
+const checks = testEffect(LayerNode.compile(AppProcess.node))
+
+function requireHostedCandidate() {
+  if (!/^[a-f0-9]{40}$/.test(source) || !/^[a-f0-9]{40}$/.test(sourceTree))
+    throw new Error("E14 source and tree must be bound to reviewed Git objects before execution")
+  if (process.env.CI !== "true" || process.env.RUNNER_OS !== "Linux" ||
+      process.env.GITHUB_REPOSITORY !== "gustavomhss/Orchestra-SF" ||
+      !/^\d+$/.test(process.env.GITHUB_RUN_ID ?? "") ||
+      !/^[a-f0-9]{40}$/.test(process.env.GITHUB_SHA ?? "")) {
+    throw new Error("This verification requires its actual Linux GitHub Actions snapshot")
+  }
+  process.stdout.write(JSON.stringify({
+    verification: "sf613-e14-observation-focal", source, sourceTree, cleanSource, cleanTree,
+    snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+    historicalCompositionBase,
+  }) + "\n")
+}
+
+function runCommand(label: string, executable: string, args: readonly string[], cwd: string, timeout = 180_000, printOutput = true) {
+  return Effect.gen(function* () {
+    const processes = yield* AppProcess.Service
+    const started = performance.now()
+    const result = yield* processes.run(ChildProcess.make(executable, [...args], {
+      cwd, env: { GUARDRAIL_APPROVED: "" }, extendEnv: true,
+      stdin: "ignore", stdout: "pipe", stderr: "pipe",
+      killSignal: "SIGTERM", forceKillAfter: "5 seconds",
+    }), { timeout, maxOutputBytes: 1_048_576, maxErrorBytes: 1_048_576 })
+    const output = result.stdout.toString("utf8")
+    const error = result.stderr.toString("utf8")
+    process.stdout.write(JSON.stringify({
+      gate: label, source, sourceTree, snapshot: process.env.GITHUB_SHA, run: process.env.GITHUB_RUN_ID,
+      command: [executable, ...args], cwd: path.relative(repository, cwd) || ".",
+      exitCode: result.exitCode, durationMs: Math.round(performance.now() - started),
+      stdoutTruncated: result.stdoutTruncated, stderrTruncated: result.stderrTruncated,
+    }) + "\n" + (printOutput ? output : "") + error + "\n")
+    if (result.stdoutTruncated || result.stderrTruncated)
+      throw new Error(label + " exceeded the bounded evidence capture")
+    expect(result.exitCode, label).toBe(0)
+    return output
+  })
+}
+
+checks.live("snapshot identifies the exact reviewed diagnostic source, tree and clean parent", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  process.stdout.write(JSON.stringify({ e14ObservationManifest: {
+    source, sourceTree, cleanSource, cleanTree, qualification: false,
+    sourcePaths: 23, workingPaths: 25, diagnosticSourceDeltaPaths: 9, deltaBase: cleanSource,
+    expectedGroups: 8, expectedCommands: 14, functionalProcessesLaunched: 4,
+    staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, diagnostic: 1 },
+    expectedControlReports: 7, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,
+    mechanism: "bounded first-Request observation with first-analysis critical reservations, lexical stages and compare body exits",
+    assertions: "existing cases, projection and Portfolio consumer files remain whole; the diagnostic uses real analysis with controlled ports and synthetic observer mechanisms; actual totals require the run footers",
+    casesControlsMs: { cooperativePerTest: 12000, bunPerTest: 15000, declaredTests: 7, nominalSum: 105000, process: 120000, parent: 180000 },
+    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },
+    portfolioControlsMs: { inheritedCooperative: [12000, 12000], inheritedBun: [15000, 15000], addedCooperative: 18000, addedBun: 20000, declaredTests: 3, nominalSum: 50000, process: 120000, parent: 180000 },
+    diagnosticControlsMs: { declaredTests: 1, isolatedModes: 8, childProcess: 3000, childNominalSum: 24000, bun: 35000, process: 60000, parent: 90000, childStdoutBytes: 65536, childStderrBytes: 65536, parentReportBytes: 16384 },
+    typecheckMs: { process: 240000, parent: 300000 },
+    guardsMs: { defaultProcess: 180000, parent: 600000 },
+    snapshotOverlays: [".ci-run.json", "apps/cli/test/sucafina-proof-verification.test.ts",
+      "apps/cli/test/sf613-preview-e14-observation.test.ts", "apps/cli/test/fixture/sf613-preview-e14-observation.ts"],
+    overlayDelta: { added: 3, modified: 1, analyticsRequestReplacedByFocalRequest: true },
+  } }) + "\n")
+  yield* runCommand("fetch source parent", "git", [
+    "fetch", "--no-tags", "--depth=3", "origin", process.env.GITHUB_SHA!,
+  ], repository, 60_000)
+  const head = yield* runCommand("snapshot identity", "git", ["rev-parse", "HEAD"], repository, 30_000)
+  const snapshot = process.env.GITHUB_SHA
+  if (typeof snapshot !== "string") throw new Error("The Actions snapshot SHA is required")
+  expect(head.trim()).toBe(snapshot)
+  const candidate = yield* runCommand("source identity", "git", [
+    "show", "-s", "--format=%H%n%T%n%P", "HEAD^",
+  ], repository, 30_000)
+  expect(candidate.trim().split("\n")).toEqual([source, sourceTree, cleanSource])
+  const sourceFiles = [
+    ["modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts","1017609000bdbdb39fc0510b045dc6dfde371faf"],
+    ["modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts","b7de9404461591ce0162d496ec917a47fb72a479"],
+    ["modules/sucafina/Sucafinav1/runtime/local-store.ts","5fc0028474aa52c148a30c093d39bc9a471f9a24"],
+    ["apps/cli/src/sucafina-product/planner-calculation-root.ts","244d46ee41e9ce288a7260938174a57161137bab"],
+    ["modules/sucafina/Sucafinav1/product/integration/source-inventory.ts","eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"],
+    ["modules/sucafina/Sucafinav1/product/integration/source-projections.ts","ccc5ea87046144843e1751b1288e907974d24ca5"],
+    ["modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts","f183dd1049ef205c38395bda99c83efa8eddc80a"],
+    ["modules/sucafina/Sucafinav1/product/integration/product-authority.ts","dc483ab92936e410f529bf5c5d2bd52fbc6ffffb"],
+    ["modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts","5b453e1672aa98616e814ac64900517d1ae4f60a"],
+    ["modules/sucafina/Sucafinav1/runtime/contract.ts","39e6da84a3dd815721484affaf8315731ded073b"],
+    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts","6bef21db9129db064b018f5f0bf632306e3a16ec"],
+    ["modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts","11661b32f4dc782558b39902c0f396145cbe8a4a"],
+    ["modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts","44cff7d70fca11ca022f863d7811b9a2610186fd"],
+    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/cases-read-contract.test.ts","b6938565cb8b468a454178688ea88a4ec88da9fa"],
+    ["modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-selection-preferences-read.test.ts","68ae48f9a039180824f5471a1de27c0ca34be088"],
+    ["modules/sucafina/Sucafinav1/runtime/preview-progress-e14-diagnostic.ts","7ab9f42564bef7d023f2588aed86cd2db3f6ba10"],
+    ["apps/cli/src/sucafina-product/portfolio-http.ts","d5cb9fff2fc1a725250f9710449f9d13f3a942c7"],
+    ["modules/sucafina/Sucafinav1/product/portfolio/port.ts","094f788a27d01b91d6601333a4e8f99ac40db556"],
+    ["modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts","03859dbbf10fd6ca551f987736e445d2ff8b3431"],
+    ["modules/sucafina/Sucafinav1/product/portfolio/analysis.ts","4b1d4578d558456772ab04e05e33d13231ca7502"],
+    ["modules/sucafina/Sucafinav1/product/portfolio/production.ts","27da2bf94a24ce99c6032cdf1d9bff060d9d5bf6"],
+    ["apps/cli/test/fixture/sucafina-native-installation.ts","4dce572e3fdace2042ae3c9a1102606b300f6d8d"],
+    ["packages/app-shell/e2e/sucafina/design-support/installation.ts","a9fb4f79968e3c753424f01534b1f7b5e61895fe"],
+    ["apps/cli/test/sf613-preview-e14-observation.test.ts","2e6cc75ca3a99ee2a38ad2924240d87fa25b3066"],
+    ["apps/cli/test/fixture/sf613-preview-e14-observation.ts","542861d14c872c679ab1f41a9ed88d26a8085426"],
+  ] as const
+  const observed: { path: string; sha: string }[] = []
+  const gitBlob = (bytes: Uint8Array) => new Bun.CryptoHasher("sha1")
+    .update("blob " + bytes.byteLength + "\0").update(bytes).digest("hex")
+  for (const [file, expected] of sourceFiles) {
+    const bytes = yield* Effect.promise(() => readFile(path.join(repository, file)))
+    const actual = gitBlob(bytes)
+    expect(actual, file).toBe(expected)
+    observed.push({ path: file, sha: actual })
+  }
+  process.stdout.write(JSON.stringify({ gate: "reviewed source blobs", source, sourceTree,
+    snapshot, files: observed, expectedGroups: 8, expectedCommands: 14,
+    functionalProcessesLaunched: 4, staticDeclarationSites: { casesContract: 7, projection: 5, portfolioSelection: 3, diagnostic: 1 },
+    expectedControlReports: 7 }) + "\n")
+}), 180_000)
+
+checks.live("complete cases read-set preserves original guards and late case lookups", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("complete cases read-set contract whole-file", process.execPath,
+    ["test", "./test/product/wp10/integration/cases-read-contract.test.ts"], module, 120_000)
+}), 180_000)
+
+checks.live("C14/C15/C16/C17 C08 projection and closed case selection preserve authorization and full-path equivalence", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("C14/C15/C16/C17 snapshot projection and closed case selection", process.execPath,
+    ["test", "./test/product/wp10/integration/c08-snapshot-projection.test.ts"], module, 300_000)
+}), 360_000)
+
+checks.live("the CLI package preserves its original types", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("CLI package typecheck", process.execPath, ["run", "typecheck"], path.join(repository, "apps/cli"), 240_000)
+}), 300_000)
+
+checks.live("the Sucafina package preserves its original types", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  yield* runCommand("Sucafina package typecheck", process.execPath, ["run", "typecheck"], module, 240_000)
+}), 300_000)
+
+checks.live("canonical guards use current origin dev and its actual merge base", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const shallow = yield* runCommand("inspect history completeness", "git", [
+    "rev-parse", "--is-shallow-repository",
+  ], repository, 30_000)
+  yield* runCommand("fetch current dev and source ancestry", "git", [
+    "fetch", "--no-tags", ...(shallow.trim() === "true" ? ["--unshallow"] : []),
+    "origin", "+refs/heads/dev:refs/remotes/origin/dev", process.env.GITHUB_SHA!,
+  ], repository, 120_000)
+  const dev = (yield* runCommand("current dev identity", "git", [
+    "rev-parse", "--verify", "refs/remotes/origin/dev^{commit}",
+  ], repository, 30_000)).trim()
+  const mergeBase = (yield* runCommand("actual guard merge base", "git", [
+    "merge-base", "HEAD", "origin/dev",
+  ], repository, 30_000)).trim()
+  expect(dev).toMatch(/^[a-f0-9]{40}$/)
+  expect(mergeBase).toMatch(/^[a-f0-9]{40}$/)
+  process.stdout.write(JSON.stringify({ gate: "guard ancestry", source, sourceTree, dev, mergeBase,
+    historicalCompositionBase, command: "bun run check:guards --base origin/dev --json" }) + "\n")
+  const output = yield* runCommand("canonical guardrails", process.execPath, [
+    "run", "check:guards", "--base", "origin/dev", "--json",
+  ], repository)
+  const report: unknown = JSON.parse(output)
+  expect(report).toMatchObject({ base: mergeBase, bootstrap: false, errors: [], approved: [] })
+  if (!report || typeof report !== "object" || !("rules" in report) ||
+      typeof report.rules !== "number" || report.rules < 1)
+    throw new Error("Canonical guards did not evaluate rules from the actual merge base")
+}), 600_000)
+
+checks.live("Portfolio selection preserves its cases and preferences read contracts", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const output = yield* runCommand("Portfolio selection cases and preferences whole-file", process.execPath,
+    ["test", "./test/product/wp10/integration/portfolio-selection-preferences-read.test.ts"], module, 120_000)
+  expect(output).toContain("SF_C19_PORTFOLIO_CASES ")
+}), 180_000)
+
+checks.live("E14 observation preserves first-analysis reservations and real analysis calls", () => Effect.gen(function* () {
+  requireHostedCandidate()
+  expectSpawn(import.meta.path)
+  const output = yield* runCommand("E14 first-analysis observation whole-file", process.execPath,
+    ["test", "./test/sf613-preview-e14-observation.test.ts"], path.join(repository, "apps/cli"), 60_000)
+  expect(output).toContain("SF_E14_OBSERVATION_CONTROL ")
+}), 90_000)
