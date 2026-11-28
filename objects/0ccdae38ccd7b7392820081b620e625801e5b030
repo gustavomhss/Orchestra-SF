@@ -1,0 +1,731 @@
+{
+  "schema": "sf613-e13-focal-bounds-v1",
+  "status": "STATIC_UNBOUND_TEMPLATE_NO_EXECUTION",
+  "dateUtc": "2026-11-27",
+  "author": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "driver": {
+      "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+      "bytes": 12024,
+      "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+      "lf": 182,
+      "finalLF": true
+    },
+    "package": {
+      "git": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+      "bytes": 31420,
+      "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed",
+      "lf": 784,
+      "finalLF": true
+    },
+    "bounds": {
+      "git": "7c8f78f2cae4b09a01690b3eb364242c8fb58df9",
+      "bytes": 22701,
+      "sha256": "edfb2faa9317eec915cfe61651c2b76da1eb858c47061f2de690b3495a7c62ac",
+      "lf": 729,
+      "finalLF": true
+    },
+    "historyOnly": true
+  },
+  "template": {
+    "git": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+    "bytes": 14109,
+    "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+    "lf": 203,
+    "finalLF": true
+  },
+  "sourceContext": {
+    "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "delta": "2A5M",
+    "templateSourceBound": false
+  },
+  "refs": {
+    "sourceManifest": {
+      "git": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "finalLF": true
+    },
+    "sourceBounds": {
+      "git": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "finalLF": true
+    },
+    "controlManifest": {
+      "git": "552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+      "bytes": 6453,
+      "sha256": "41899cfaacc5e767511279284979e8f0bba3549e684b1f3678391d4b78e20964",
+      "lf": 149,
+      "finalLF": true
+    },
+    "controlBounds": {
+      "git": "50763473ec52deacc01981e18d553c2839d274ff",
+      "bytes": 20922,
+      "sha256": "f6cefced2a20ce306fce3ef5c62c5cac15a03b901a6ba0c20f8e3dbfc2b02cd2",
+      "lf": 527,
+      "finalLF": true
+    },
+    "BISelectionMemo": {
+      "git": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "finalLF": true
+    },
+    "derivation": {
+      "git": "ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+      "bytes": 25529,
+      "sha256": "0822120957412f672e178981066f71f5f6588efec6925da2dc0fb0b2431c5ab9",
+      "lf": 523,
+      "finalLF": true
+    }
+  },
+  "commandPlan": [
+    {
+      "group": 1,
+      "label": "fetch source parent",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "--depth=3",
+        "origin",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "timeoutMs": 60000
+    },
+    {
+      "group": 1,
+      "label": "snapshot identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 1,
+      "label": "source identity",
+      "executable": "git",
+      "args": [
+        "show",
+        "-s",
+        "--format=%H%n%T%n%P",
+        "HEAD^"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 2,
+      "label": "CurrentChoice readonly composition",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/current-choice-readonly.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 360000
+    },
+    {
+      "group": 3,
+      "label": "C14/C15/C16/C17 snapshot projection and closed case selection",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/c08-snapshot-projection.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 300000
+    },
+    {
+      "group": 4,
+      "label": "CLI package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "apps/cli",
+      "timeoutMs": 240000
+    },
+    {
+      "group": 5,
+      "label": "Sucafina package typecheck",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 240000
+    },
+    {
+      "group": 6,
+      "label": "inspect history completeness",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "fetch current dev and source ancestry",
+      "executable": "git",
+      "args": [
+        "fetch",
+        "--no-tags",
+        "<--unshallow iff preceding stdout.trim() equals true>",
+        "origin",
+        "+refs/heads/dev:refs/remotes/origin/dev",
+        "$GITHUB_SHA"
+      ],
+      "cwd": ".",
+      "timeoutMs": 120000
+    },
+    {
+      "group": 6,
+      "label": "current dev identity",
+      "executable": "git",
+      "args": [
+        "rev-parse",
+        "--verify",
+        "refs/remotes/origin/dev^{commit}"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "actual guard merge base",
+      "executable": "git",
+      "args": [
+        "merge-base",
+        "HEAD",
+        "origin/dev"
+      ],
+      "cwd": ".",
+      "timeoutMs": 30000
+    },
+    {
+      "group": 6,
+      "label": "canonical guardrails",
+      "executable": "process.execPath",
+      "args": [
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev",
+        "--json"
+      ],
+      "cwd": ".",
+      "timeoutMs": 180000
+    },
+    {
+      "group": 7,
+      "label": "C18 captured context identity whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/product/wp10/integration/captured-context-identity.test.ts"
+      ],
+      "cwd": "modules/sucafina/Sucafinav1",
+      "timeoutMs": 180000
+    },
+    {
+      "group": 8,
+      "label": "E13 causal observation whole-file",
+      "executable": "process.execPath",
+      "args": [
+        "test",
+        "./test/sf613-preview-e13-observation.test.ts"
+      ],
+      "cwd": "apps/cli",
+      "timeoutMs": 60000
+    }
+  ],
+  "commands": {
+    "groups": 8,
+    "effectiveCalls": 14,
+    "lexicalOccurrencesIncludingDeclaration": 15,
+    "requiredFalseTruncationFlags": 28,
+    "flagNames": [
+      "stdoutTruncated",
+      "stderrTruncated"
+    ],
+    "workingPins": 24,
+    "sourceWorkingPins": 22,
+    "focalOnlyPins": 2,
+    "wholeFunctionalProcesses": 4,
+    "expectedOuterOmni": {
+      "declaredContexts": 8,
+      "spawnedProcesses": 14,
+      "delegatedSpawns": 0
+    },
+    "outcome": "Future current-run requirement only"
+  },
+  "selection": {
+    "expectedFunctionalCases": 40,
+    "preservedFunctionalCases": 39,
+    "newFunctionalDeclarations": 1,
+    "expectedPublicReports": 10,
+    "preservedPublicReports": 9,
+    "runtimeAssertionCount": null,
+    "assertionCountSource": "Current executed Bun footers only",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+        "git": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+        "bytes": 42018,
+        "sha256": "b716b6ab198354a5d74755dbd3c542475f5560a869794410b10a543129a1f82d",
+        "wholeFile": true,
+        "expandedCases": 7,
+        "reportCount": 3,
+        "reportFamilies": {
+          "SF_C13_UNFENCED_CONTROL": 3
+        },
+        "bunPerTestMs": 45000,
+        "bunNominalMs": 315000,
+        "inheritedTimeoutsUnchanged": true,
+        "processMs": 360000,
+        "parentMs": 420000
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+        "git": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+        "bytes": 87176,
+        "sha256": "1482f9b799b923b7427f0291888a7154e842d6d615bca40c6ac29034426cee69",
+        "wholeFile": true,
+        "expandedCases": 5,
+        "reportCount": 5,
+        "reportFamilies": {
+          "SF_C14_SNAPSHOT_CONTROL": 2,
+          "SF_C15_SELECTION_CONTROL": 2,
+          "SF_C16_SELECTION_CONTROL": 1
+        },
+        "bunPerTestMs": [
+          120000,
+          120000,
+          20000,
+          20000,
+          10000
+        ],
+        "bunNominalMs": 290000,
+        "inheritedTimeoutsUnchanged": true,
+        "processMs": 300000,
+        "parentMs": 360000
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+        "git": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+        "bytes": 23870,
+        "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+        "wholeFile": true,
+        "expandedCases": 27,
+        "reportCount": 1,
+        "reportFamilies": {
+          "SF_C18_CAPTURE_LAZY": 1
+        },
+        "bunPerTestMs": null,
+        "bunNominalMs": null,
+        "inheritedTimeoutsUnchanged": true,
+        "processMs": 180000,
+        "parentMs": 240000
+      },
+      {
+        "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+        "role": "isolated observer control",
+        "sha": "00389741844e45cd1a507a7e07c370edcf891f93",
+        "bytes": 1102,
+        "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+        "wholeFile": true,
+        "expandedCases": 1,
+        "reportCount": 1,
+        "reportFamilies": {
+          "SF_E13_OBSERVATION_CONTROL": 1
+        },
+        "title": "E13 causal observation preserves work and bounds its Request phase stream",
+        "bunPerTestMs": 35000,
+        "processMs": 60000,
+        "parentMs": 90000
+      }
+    ],
+    "existingC15OutcomeCounts": [
+      4,
+      15
+    ],
+    "retainedC16Outcomes": 31,
+    "c17IdentityProjectionNames": [
+      "mixed-map-and-detached-readonly",
+      "mixed-map-and-detached-preimage",
+      "composed-identity-first-authorization-drift",
+      "composed-identity-second-authorization-drift",
+      "restored-codec-birth-keeps-complete-case",
+      "restored-codec-exposure-keeps-complete-case",
+      "cold-plan-birth-survives-restore-and-memo",
+      "owner-weakmap-escape-latches-across-roots",
+      "owner-als-escape-latches-across-roots"
+    ],
+    "c18LazyOracleNames": [
+      "deferred",
+      "primitiveUndefined",
+      "allocationFailure",
+      "undefinedFailure",
+      "hashRetry",
+      "prebuildDrift",
+      "constructionDrift",
+      "setterIsolation"
+    ],
+    "e13Modes": [
+      "flow",
+      "mechanism",
+      "foreign-noop",
+      "get-store",
+      "output",
+      "overflow",
+      "unavailable"
+    ],
+    "e13OracleLabelsReference": {
+      "controlBounds": "50763473ec52deacc01981e18d553c2839d274ff",
+      "labels": 23,
+      "exactPayloadRequiresCurrentIntake": true
+    },
+    "nameFilter": null,
+    "retryAdded": false,
+    "globalNestedBunTimeoutAdded": false,
+    "reportCounts": "G8 checks prefix presence only. Full current payloads and all ten report families/counts remain intake requirements; no new report parser."
+  },
+  "parentDeadlines": [
+    {
+      "group": 1,
+      "ms": 180000
+    },
+    {
+      "group": 2,
+      "ms": 420000
+    },
+    {
+      "group": 3,
+      "ms": 360000
+    },
+    {
+      "group": 4,
+      "ms": 300000
+    },
+    {
+      "group": 5,
+      "ms": 300000
+    },
+    {
+      "group": 6,
+      "ms": 600000
+    },
+    {
+      "group": 7,
+      "ms": 240000
+    },
+    {
+      "group": 8,
+      "ms": 90000
+    }
+  ],
+  "arithmetic": {
+    "commandsMs": 1890000,
+    "parentsMs": 2490000,
+    "mainJobMs": 2700000,
+    "nominalSharedOverheadMs": 210000,
+    "parentDuration": "41 minutes 30 seconds",
+    "mainJobDuration": "45 minutes",
+    "remaining": "3 minutes 30 seconds",
+    "oldParentDeadlinesUnchanged": true,
+    "oldCommandTimeoutsUnchanged": true,
+    "noLatencyForecast": true,
+    "noGuaranteedReserve": true,
+    "overheadScope": "Checkout, tool/setup/install, outer Bun loading/hooks, process creation/reaping, report emission, finalization and runner exit all share the remaining nominal job time; command and child budgets are nested, not additive to parent deadlines.",
+    "cleanup": "The existing always cleanup job is separate. It cannot extend main or guarantee evidence after main cancellation."
+  },
+  "mainWorkflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "git": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "bytes": 18476,
+    "sha256": "f8554fed390d2c1b1e40cc433abc0fddde95fea8b346c3b0bdc1eaee628b6a44",
+    "lf": 337,
+    "finalLF": true,
+    "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "jobTimeoutMs": 2700000,
+    "timeoutLine": 28,
+    "runnerLine": 289,
+    "overheadGuaranteed": false,
+    "changed": false,
+    "cleanup": {
+      "separateJob": true,
+      "needs": "test",
+      "condition": "always()",
+      "scope": "Deletes snapshot branch; does not extend or reserve time inside the 45 minute main."
+    },
+    "eightParentsSumMs": 2490000,
+    "nominalSetupHooksExitAllowanceMs": 210000
+  },
+  "runnerNoAdditionalWallTimer": {
+    "path": "script/test-ci.ts",
+    "git": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "bytes": 19419,
+    "sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b",
+    "lf": 391,
+    "finalLF": true,
+    "followWaitMs": 3600000,
+    "followWaitIsNotJobBudget": true
+  },
+  "outerRequest": {
+    "path": ".ci-run.json",
+    "git": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+    "bytes": 247,
+    "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+    "lf": 0,
+    "finalLF": false,
+    "existingBlobReused": true,
+    "readbackLiteral": true,
+    "timeoutArgumentMs": 600000,
+    "scope": "Unchanged outer wrapper test timeout argument, not a new global timeout for nested whole-file tests"
+  },
+  "newGroup": {
+    "label": "E13 isolated causal observation preserves work and bounded Request phases",
+    "test": "E13 causal observation preserves work and bounds its Request phase stream",
+    "bunMs": 35000,
+    "processMs": 60000,
+    "parentMs": 90000,
+    "processToParentNominalMs": 30000,
+    "childProcessesSequential": 7,
+    "individualChildMs": 3000,
+    "individualKillGraceMs": 1000,
+    "childTimeoutSumMs": 21000,
+    "childKillGraceArithmeticMs": 7000,
+    "childTimeoutOnlyToBunNominalRemainderMs": 14000,
+    "withAllKillGraceToBunNominalRemainderMs": 7000,
+    "caveat": "Child startup, teardown and Bun/runtime overhead are not guaranteed by the arithmetic. The seven children run inside the one 35s test and its60s process, not in addition to those deadlines."
+  },
+  "capture": {
+    "runCommandLiteral": true,
+    "perCommandStdoutCapBytes": 1048576,
+    "perCommandStderrCapBytes": 1048576,
+    "arithmeticFourteenCommandStreamCeilingBytes": 29360128,
+    "aggregateOriginalMainCap": null,
+    "truncationFailsBeforeExitAssertion": true,
+    "killSignal": "SIGTERM",
+    "forceKillAfterMs": 5000,
+    "noEmitterChange": true,
+    "noReportParserAdded": true,
+    "printOutputUnchanged": true,
+    "approvedGuardEnvironment": "",
+    "newParentReportCapBytes": 16384,
+    "childParsedReceiptCapBytes": 16384,
+    "controlReportDataModelBytes": 8121,
+    "controlReportDataModelSource": "50763473ec52deacc01981e18d553c2839d274ff",
+    "outputModelIsNotObservedOutput": true,
+    "controlEventFileByteCap": 261120,
+    "controlEventLineCapIncludingLF": 1024,
+    "controlEventMaxRecords": 511,
+    "quotasScope": "The E13 helper stream/file caps and original-two-journey campaign budget are separate from AppProcess captured stdout/stderr caps."
+  },
+  "namedChildFamilies": {
+    "population": "Only the three named loading/lazy/E13 families; not a universal count of subprocesses in the job. Other controls' private receipts and outer Omni remain separate.",
+    "loading": {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+      "git": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+      "bytes": 10087,
+      "sha256": "65d27049c422b388b91a6030440725e2b8e8e4e3f4dd2a7cbd49eddd16b687bc",
+      "lf": 198,
+      "finalLF": true,
+      "count": 11,
+      "modeNames": [
+        "clean",
+        "object-tojson",
+        "array-tojson",
+        "stateful-map",
+        "stateful-keys",
+        "copy-descriptors",
+        "reflection-descriptor",
+        "proxy-checker",
+        "stateful-hasher",
+        "bootstrap-api-absent",
+        "bootstrap-api-accessor"
+      ],
+      "command": [
+        "process.execPath",
+        "import.meta.path",
+        "mode"
+      ],
+      "cwd": "apps/cli/test/fixture",
+      "processMs": 3000,
+      "forceKillAfterMs": 1000,
+      "stdoutCapBytes": 65536,
+      "stderrCapBytes": 65536,
+      "truncationFlagsCheckedFalse": 22,
+      "checks": [
+        "exitCode===0",
+        "stdoutTruncated===false",
+        "stderrTruncated===false",
+        "JSON mode equals selected mode",
+        "per-test receipt assertions"
+      ],
+      "privateJsonEmittedByChild": true,
+      "privateJsonPrintedByParent": false,
+      "reportedAsNewReport": false,
+      "expectedOmniDeltaPerTest": {
+        "spawns": 1,
+        "delegations": 0
+      }
+    },
+    "lazy": {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+      "git": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "bytes": 13598,
+      "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+      "lf": 231,
+      "finalLF": true,
+      "count": 1,
+      "command": [
+        "process.execPath",
+        "import.meta.path"
+      ],
+      "cwd": "apps/cli/test/fixture",
+      "processMs": 3000,
+      "forceKillAfterMs": 1000,
+      "stdoutCapBytes": 65536,
+      "stderrCapBytes": 65536,
+      "truncationFlagsCheckedFalse": 2,
+      "checks": [
+        "exitCode===0",
+        "stdoutTruncated===false",
+        "stderrTruncated===false",
+        "mode deferred-baseline",
+        "safe positive PID",
+        "five parent expects including exact full receipt"
+      ],
+      "reportFamily": "SF_C18_CAPTURE_LAZY",
+      "reportCount": 1,
+      "expectedOmniDelta": {
+        "spawns": 1,
+        "delegations": 0
+      },
+      "syntheticBootstrap": true
+    },
+    "e13": {
+      "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "role": "isolated child fixture",
+      "sha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "bytes": 27993,
+      "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+      "count": 7,
+      "modes": [
+        "flow",
+        "mechanism",
+        "foreign-noop",
+        "get-store",
+        "output",
+        "overflow",
+        "unavailable"
+      ],
+      "command": [
+        "process.execPath",
+        "import.meta.path",
+        "mode"
+      ],
+      "cwd": "apps/cli/test/fixture",
+      "processMs": 3000,
+      "forceKillAfterMs": 1000,
+      "stdoutCapBytes": 65536,
+      "stderrCapBytes": 65536,
+      "parsedReceiptCapBytes": 16384,
+      "localTruncationFlagsCheckedFalse": 14,
+      "uniquePidsRequired": 7,
+      "eachExpectedOmni": {
+        "spawns": 1,
+        "delegations": 0
+      },
+      "privateJsonConsumed": true,
+      "privateJsonIsAdditionalPublicReport": false,
+      "parentReportCount": 1
+    },
+    "countSum": 19,
+    "streamCapArithmeticBytes": 2490368,
+    "localTruncationFlagCheckSum": 38,
+    "timeoutsMsArithmetic": 57000,
+    "killGracesMsArithmetic": 19000,
+    "notAdditiveToOuterOmni": true,
+    "notAdditiveToParentDeadlines": true,
+    "notUniversalJobTotals": true
+  },
+  "originalJourneyObservation": {
+    "qualifiedProduct": false,
+    "CPUProfile": false,
+    "noNewTimers": true,
+    "sourceBound": {
+      "git": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "finalLF": true
+    },
+    "selectionMemo": {
+      "git": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "finalLF": true
+    },
+    "processLocalHelperCap": {
+      "events": 511,
+      "bytes": 261120,
+      "lineBytes": 1024
+    },
+    "fixedTwoJourneyCampaignConditionalCap": {
+      "events": 512,
+      "bytes": 262144
+    },
+    "conditions": [
+      "The exact original two journeys/one worker/retries0/repeat1 are preserved.",
+      "The fixed BI source path does not invoke portfolio preview; it is not a universal traffic barrier.",
+      "A refused installation emits at most one launcher-disabled; it cannot also capture. Outer failure passes empty env to inner; inner failure clears helper env.",
+      "A process-local latch prevents reselection after first selection failure/close; restarts/additional installations are outside this proof."
+    ],
+    "noExtrapolationToFocalReportsOrArbitraryTraffic": true,
+    "clockLimits": [
+      "Durations are observational and overlapping phases do not produce exclusive time.",
+      "Request-close describes the boundary and pre-terminal faults, not complete business work or fsync success.",
+      "Missing stdout rows do not prove missing file records; actual reader parity remains necessary."
+    ]
+  },
+  "binding": {
+    "tokens": [
+      "__E13_SOURCE_SHA_UNBOUND__",
+      "__E13_SOURCE_TREE_UNBOUND__"
+    ],
+    "count": 2,
+    "guardBeforeAnyProcess": true,
+    "boundWidthOnlyBytes": 14136,
+    "D": null,
+    "rootOnlyBindingAndExecution": true
+  },
+  "limits": [
+    "No repository code, compiler, test, workflow or original log/ZIP acquisition was executed to derive these data.",
+    "All source and control pins are authenticated literal Git copies. Semantic source/control review belongs to root/Teams; this package only selects and bounds those bytes.",
+    "The new control uses actual helper and files but synthetic launch binding/Request/context/clock/faults; real port/compare paths are only early-return, denial and rejection. No installed complete business journey is proved.",
+    "Partial write, fsync and close failures remain static review limits of the source/control package. No durability or entire-stream claim is created by prefix presence.",
+    "The full E13 runtime gate is diagnostic-specific; no focal PASS transfers to clean product Analytics, UI42-44, latency, Release Bun1.4.1, Migration or D27.",
+    "Expected40 cases/10 reports and outer8/14/0 require actual current receipt. All assertions and guard warning counts are unknown before execution.",
+    "Only root may bind source tokens, create/approve D, trigger a run and acquire original main/cleanup once after terminal. Peer intake uses preserved Git copies."
+  ]
+}

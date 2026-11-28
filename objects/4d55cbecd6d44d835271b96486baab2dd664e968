@@ -1,0 +1,82 @@
+{
+  "schema": "sf613-e13-analytics-terminal-intake-context-v1",
+  "status": "TERMINAL_NEW_RUN_READY_FOR_ORIGINALS",
+  "at": {
+    "current_time": "2026-11-28 00:18:22 UTC"
+  },
+  "authority": {
+    "gitBlob": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+    "bytes": 24118,
+    "sha256": "afb549aa28accb490a85c1d62ac98375b777cd40f25a030ac56a9ecf7c86535c",
+    "lf": 572,
+    "endsWithLF": true
+  },
+  "peerPreflight": {
+    "gitBlob": "d479ac686d0e90fd4594247cb62750d519b489a7",
+    "bytes": 1956,
+    "sha256": "40cec63be0d539e77698081c0c932cd6a7b1a29a64eb4f20ca7cadbea35d53bc",
+    "lf": 61,
+    "endsWithLF": true
+  },
+  "run": {
+    "id": 46086157237,
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46086157237"
+  },
+  "jobs": [
+    {
+      "id": 140796091682,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-28T00:07:08Z",
+      "completed_at": "2026-11-28T00:17:03Z"
+    },
+    {
+      "id": 140798957063,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T00:17:05Z",
+      "completed_at": "2026-11-28T00:17:08Z"
+    }
+  ],
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849"
+  },
+  "snapshot": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "sameAsSource": true
+  },
+  "artifactMetadata": {
+    "total_count": 1,
+    "artifacts": [
+      {
+        "id": 15239671856,
+        "node_id": "MDg6QXJ0aWZhY3QxNTIzOTY3MTg1Ng==",
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 45860595,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15239671856",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15239671856/zip",
+        "expired": false,
+        "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+        "created_at": "2026-11-28T00:16:59Z",
+        "updated_at": "2026-11-28T00:16:59Z",
+        "expires_at": "2026-12-05T00:16:56Z",
+        "workflow_run": {
+          "id": 46086157237,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-sf613e13a",
+          "head_sha": "dffc62a08bdba74f1a9322d49cde095e81535f55"
+        }
+      }
+    ]
+  },
+  "zipGets": 0
+}

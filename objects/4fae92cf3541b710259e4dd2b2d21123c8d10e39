@@ -1,0 +1,66 @@
+{
+  "kind": "E13-helper-R3-to-R4",
+  "pre": {
+    "gitSha": "27200494b81e7394ca9034b034a735cea1b08dac",
+    "bytes": 17672,
+    "sha256": "6afe9c125150de5b3ba86f81ef86e3cd3b604c11d9a1af9e40e8698730ae6f06",
+    "lf": 302
+  },
+  "post": {
+    "gitSha": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+    "bytes": 17964,
+    "sha256": "c41db9ba45684612c7daa2089602687b9174e033562fc71ad65c7364237ed872",
+    "lf": 303
+  },
+  "operations": [
+    {
+      "before": "scopeFault: boolean; clockFault: boolean;",
+      "after": "scopeFault: boolean; scopeDisabled: boolean; clockFault: boolean;"
+    },
+    {
+      "before": "let selectionTried = false, selected:",
+      "after": "const neutralToken = {}\nlet selectionTried = false, selected:"
+    },
+    {
+      "before": "    if (!frame || frame.closed) return\n    const token = frame.storage.getStore()",
+      "after": "    if (!frame || frame.closed || frame.scopeDisabled) return\n    const token = frame.storage.getStore()"
+    },
+    {
+      "before": "  } catch { if (selected) selected.scopeFault = true }",
+      "after": "  } catch { if (selected) { selected.scopeFault = true; selected.scopeDisabled = true } }"
+    },
+    {
+      "before": "    if (frame && scope && currentScope() !== scope) frame.scopeFault = true",
+      "after": "    if (frame && scope && currentScope() !== scope) { frame.scopeFault = true; frame.scopeDisabled = true }"
+    },
+    {
+      "before": "  if (frame && scope) {\n    try { frame.storage.run(scope.token, once) }\n    catch { if (!threw) frame.scopeFault = true }\n  }",
+      "after": "  if (frame) {\n    try { frame.storage.run(scope?.token ?? neutralToken, once) }\n    catch { if (!threw) { frame.scopeFault = true; frame.scopeDisabled = true } }\n  }"
+    },
+    {
+      "before": "    if (frame) frame.scopeFault = true\n    try { once() }",
+      "after": "    if (frame) { frame.scopeFault = true; frame.scopeDisabled = true }\n    try { once() }"
+    },
+    {
+      "before": "fileFault: false, scopeFault: false, clockFault: false,",
+      "after": "fileFault: false, scopeFault: false, scopeDisabled: false, clockFault: false,"
+    },
+    {
+      "before": "  return runOnce(frame, scope, work)\n}\nexport function enterSfE13Unit",
+      "after": "  return runOnce(frame ?? selected, scope, work)\n}\nexport function enterSfE13Unit"
+    },
+    {
+      "before": "  return runOnce(frame, scope, work, phase)",
+      "after": "  return runOnce(frame ?? selected, scope, work, phase)"
+    },
+    {
+      "before": "scopeFault: frame.scopeFault, clockFault: frame.clockFault, backpressureBefore:",
+      "after": "scopeFault: frame.scopeFault, scopeDisabled: frame.scopeDisabled, clockFault: frame.clockFault, backpressureBefore:"
+    }
+  ],
+  "limits": [
+    "A rejected nested Request runs once in the observer's neutral scope.",
+    "Loss of scope guarantee irreversibly disables attribution for the selected frame, not product work.",
+    "No Request reselection, ALS enterWith, Promise assimilation or callback replay."
+  ]
+}

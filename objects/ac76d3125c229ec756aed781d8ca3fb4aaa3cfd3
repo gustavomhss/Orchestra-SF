@@ -1,0 +1,523 @@
+{
+  "schema": "sf613-e13-focal-derivation-v1",
+  "status": "STATIC_TEMPLATE_ONLY_UNBOUND",
+  "repository": "gustavomhss/Orchestra-SF",
+  "author": "/root/focal_migration",
+  "dateUtc": "2026-11-27",
+  "scope": "Only focal wrapper retarget and its prospective D diff. No source, tree, commit, ref, run, original log or ZIP acquisition.",
+  "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+  "base": {
+    "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+    "bytes": 12024,
+    "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+    "lf": 182,
+    "finalLF": true,
+    "createdPreviously": true
+  },
+  "postimage": {
+    "git": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+    "bytes": 14109,
+    "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+    "lf": 203,
+    "finalLF": true,
+    "created": true,
+    "literalReadback": true
+  },
+  "basePackage": {
+    "git": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+    "bytes": 31420,
+    "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed",
+    "lf": 784,
+    "finalLF": true
+  },
+  "operations": [
+    {
+      "order": 1,
+      "label": "unbound diagnostic source/tree plus clean source parent",
+      "preimage": "const source = \"455c02a7a05a6dd3262ae15b184419897366fde4\"\nconst sourceTree = \"ae1c0977057e45853f3dc240140e5f221057f49d\"",
+      "postimage": "const source = \"__E13_SOURCE_SHA_UNBOUND__\"\nconst sourceTree = \"__E13_SOURCE_TREE_UNBOUND__\"\nconst sourceBase = \"455c02a7a05a6dd3262ae15b184419897366fde4\"",
+      "before": {
+        "git": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+        "lf": 182,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "7f563d07ef3693fc4be2ca739eb6b0425ed89a36",
+        "bytes": 12059,
+        "sha256": "40c844feca499a5ac3091f475324bf97fef6286cbcb0ae6268b083171ca5b0e8",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 2,
+      "label": "refuse unbound E13 identities",
+      "preimage": "\"C18 source and tree must be bound to reviewed Git objects before execution\"",
+      "postimage": "\"E13 diagnostic source and tree must be bound to reviewed Git objects before execution\"",
+      "before": {
+        "git": "7f563d07ef3693fc4be2ca739eb6b0425ed89a36",
+        "bytes": 12059,
+        "sha256": "40c844feca499a5ac3091f475324bf97fef6286cbcb0ae6268b083171ca5b0e8",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "f28804f2827b8b10e60400295f74e4ea59f63a7b",
+        "bytes": 12070,
+        "sha256": "77cdaf7daf65430e08e6a300863034d1f6ec034c378526662f97e49549cb6250",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 3,
+      "label": "diagnostic identity label",
+      "preimage": "verification: \"sf613-c18-captured-context-identity-focal\", source, sourceTree,",
+      "postimage": "verification: \"sf613-e13-preview-causal-focal\", source, sourceTree,",
+      "before": {
+        "git": "f28804f2827b8b10e60400295f74e4ea59f63a7b",
+        "bytes": 12070,
+        "sha256": "77cdaf7daf65430e08e6a300863034d1f6ec034c378526662f97e49549cb6250",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "dae8316bc390f7ec67b89c0794dfbff0dec84d29",
+        "bytes": 12059,
+        "sha256": "a015a2049bad16c6c4452aaea57a982b9f2c09a332e599b0fa40ce37b4743211",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 4,
+      "label": "diagnostic source identity group title",
+      "preimage": "checks.live(\"snapshot identifies the exact reviewed product source and tree\",",
+      "postimage": "checks.live(\"snapshot identifies the exact reviewed E13 diagnostic source, tree and parent\",",
+      "before": {
+        "git": "dae8316bc390f7ec67b89c0794dfbff0dec84d29",
+        "bytes": 12059,
+        "sha256": "a015a2049bad16c6c4452aaea57a982b9f2c09a332e599b0fa40ce37b4743211",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "a5a91598e9acab1887e4a4dd869056a2bfadcd88",
+        "bytes": 12074,
+        "sha256": "ca0ef97273cfae2e4cea89c0731c2e5f35a49e0337ce7034dfbe88f4097b03bc",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 5,
+      "label": "E13 observation metadata and concrete inherited/new selection",
+      "preimage": "  process.stdout.write(JSON.stringify({ capturedContextIdentityManifest: {\n    source, sourceTree, qualification: false, sourcePaths: 16, productDeltaPaths: 1, candidateDeltaPaths: 3,\n    deltaBase: \"7cbf68a88a5ee18127e0ca254ef78f2347a33598\",\n    expectedGroups: 7, expectedCommands: 13, functionalProcessesLaunched: 3,\n    expectedTestDeclarations: 39, preservedTestDeclarations: 12, newlySelectedExistingTestDeclarations: 26, addedTestDeclarations: 1,\n    expectedControlReports: 9, preservedC16Outcomes: 31, identityProjectionOracles: 9, nameFilter: null,\n    mechanism: \"reviewed captured-context identity change with preserved canonical fallback, whole-file capture regressions and an isolated lazy-capture control; clean C17 composition remains selected\",\n    assertions: \"C13/C14/C15/C16/C17 controls remain literal; capture selection includes 15 original direct cases, 11 original loading modes and one C18 case with eight declared oracles; no latency or current Analytics qualification\",\n    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    captureControlsMs: { preservedTests: 26, addedTests: 1, selectedTests: 27, inheritedTimeoutsUnchanged: true, addedBunPerTest: 10000, loadingChildren: 11, addedChildren: 1, childProcess: 3000, process: 180000, parent: 240000 },\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\"],\n  } }) + \"\\n\")\n",
+      "postimage": "  process.stdout.write(JSON.stringify({ previewE13Manifest: {\n    source, sourceTree, sourceBase, qualification: false, productChange: false,\n    sourceOverlayPaths: 7, sourceWorkingPins: 22, workingPins: 24, focalControlPaths: 2,\n    sourceOverlay: { added: 2, modified: 5 }, snapshotDelta: { added: 3, modified: 1 },\n    sourceRequest: { path: \".ci-run.json\", git: \"eda49a023c07599de00f5af9642ee92b9d9adf3b\", bytes: 295 },\n    expectedGroups: 8, expectedCommands: 14, functionalProcessesLaunched: 4,\n    expectedTestDeclarations: 40, preservedTestDeclarations: 39, addedTestDeclarations: 1,\n    expectedControlReports: 10, preservedControlReports: 9, preservedC16Outcomes: 31, identityProjectionOracles: 9, captureLazyOracles: 8, nameFilter: null,\n    mechanism: \"temporary E13 Request phase observation over clean C18; inherited functional controls and an isolated synthetic observer control remain separate\",\n    assertions: \"C13/C14/C15/C16/C17 and C18 whole-file controls remain literal; E13 covers seven isolated mechanism modes with synthetic inputs and real denial/early-return callers; no current Analytics, CPU or latency qualification\",\n    readonlyControlsMs: { bunPerTest: 45000, selectedTests: 7, nominalSum: 315000, process: 360000, parent: 420000 },\n    projectionControlsMs: { inheritedC14: { cooperativePerTest: 110000, bunPerTest: 120000, selectedTests: 2 }, inheritedC15: { cooperativePerTest: 18000, bunPerTest: 20000, selectedTests: 2 }, retainedC16: { cooperativePerTest: 8000, bunPerTest: 10000, selectedTests: 1 }, selectedTests: 5, nominalSum: 290000, process: 300000, parent: 360000 },\n    captureControlsMs: { preservedTests: 26, addedTests: 1, selectedTests: 27, inheritedTimeoutsUnchanged: true, addedBunPerTest: 10000, loadingChildren: 11, addedChildren: 1, childProcess: 3000, process: 180000, parent: 240000 },\n    observationControlsMs: { bunPerTest: 35000, selectedTests: 1, childModes: 7, childProcess: 3000, childForceKillAfter: 1000, childOutputBytes: 65536, childErrorBytes: 65536, reportBytes: 16384, process: 60000, parent: 90000 },\n    observationModes: [\"flow\", \"mechanism\", \"foreign-noop\", \"get-store\", \"output\", \"overflow\", \"unavailable\"],\n    typecheckMs: { process: 240000, parent: 300000 },\n    guardsMs: { defaultProcess: 180000, parent: 600000 },\n    snapshotOverlays: [\".ci-run.json\", \"apps/cli/test/sucafina-proof-verification.test.ts\", \"apps/cli/test/sf613-preview-e13-observation.test.ts\", \"apps/cli/test/fixture/sf613-preview-e13-observation.ts\"],\n  } }) + \"\\n\")\n",
+      "before": {
+        "git": "a5a91598e9acab1887e4a4dd869056a2bfadcd88",
+        "bytes": 12074,
+        "sha256": "ca0ef97273cfae2e4cea89c0731c2e5f35a49e0337ce7034dfbe88f4097b03bc",
+        "lf": 183,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "340ca9439da523bb448476feb76bd6dc30f0b31c",
+        "bytes": 12680,
+        "sha256": "329a6920621685c4d13025eb92e6fcf57f3d5a235fca664a90a4a76a316c9d08",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 6,
+      "label": "fetch diagnostic source and its sole clean parent",
+      "preimage": "\"fetch\", \"--no-tags\", \"--depth=2\", \"origin\", process.env.GITHUB_SHA!,",
+      "postimage": "\"fetch\", \"--no-tags\", \"--depth=3\", \"origin\", process.env.GITHUB_SHA!,",
+      "before": {
+        "git": "340ca9439da523bb448476feb76bd6dc30f0b31c",
+        "bytes": 12680,
+        "sha256": "329a6920621685c4d13025eb92e6fcf57f3d5a235fca664a90a4a76a316c9d08",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "5028d45969d82910d74d3fbc018f4cef040acf2e",
+        "bytes": 12680,
+        "sha256": "fa21e12d71b1182b522ddbe6630f3441388f3bb4d533db6888bd99fd3fd15e12",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 7,
+      "label": "read source parent identity without another command",
+      "preimage": "\"show\", \"-s\", \"--format=%H%n%T\", \"HEAD^\",",
+      "postimage": "\"show\", \"-s\", \"--format=%H%n%T%n%P\", \"HEAD^\",",
+      "before": {
+        "git": "5028d45969d82910d74d3fbc018f4cef040acf2e",
+        "bytes": 12680,
+        "sha256": "fa21e12d71b1182b522ddbe6630f3441388f3bb4d533db6888bd99fd3fd15e12",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "d828fa61d25f8b3b8205db1a24d2ee84765aa6d0",
+        "bytes": 12684,
+        "sha256": "fb2d49c41e9ecf25aa45b651b09e883b7df764f6575c54fdfb0c5f8e86c34ab0",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 8,
+      "label": "check three exact source identity fields",
+      "preimage": "expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree])",
+      "postimage": "expect(candidate.trim().split(\"\\n\")).toEqual([source, sourceTree, sourceBase])",
+      "before": {
+        "git": "d828fa61d25f8b3b8205db1a24d2ee84765aa6d0",
+        "bytes": 12684,
+        "sha256": "fb2d49c41e9ecf25aa45b651b09e883b7df764f6575c54fdfb0c5f8e86c34ab0",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "3157812c22db9f6b78b02915bfd2dfc4133cbb5b",
+        "bytes": 12696,
+        "sha256": "5ce8505fd1fdda0fe0691251b3904cca0fe9820b4080ea9b51ede7509da14162",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 9,
+      "label": "append six diagnostic source pins and two focal-only control pins",
+      "preimage": "    [\"apps/cli/test/fixture/sucafina-captured-context-lazy.ts\",\"b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56\"],\n  ] as const",
+      "postimage": "    [\"apps/cli/test/fixture/sucafina-captured-context-lazy.ts\",\"b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56\"],\n    [\"modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts\",\"470bf3d86370e145ae5b0f54dc8bc5eff01d20d0\"],\n    [\"apps/cli/src/sucafina-product/portfolio-http.ts\",\"138cd8c8a09ac36549ae503f457f81dd0ee95f12\"],\n    [\"modules/sucafina/Sucafinav1/product/portfolio/port.ts\",\"dc0df7519a9a4ab57273e8695398240a13e1d12d\"],\n    [\"modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts\",\"729e8d1ac7ad326fa8c2d94871b03e0a28801079\"],\n    [\"apps/cli/test/fixture/sucafina-native-installation.ts\",\"4f50466a5a00a6e3e0f781c244ae3df6f72510f8\"],\n    [\"packages/app-shell/e2e/sucafina/design-support/installation.ts\",\"47e13f21e5d00fc8689123d7b87175960288b029\"],\n    [\"apps/cli/test/sf613-preview-e13-observation.test.ts\",\"00389741844e45cd1a507a7e07c370edcf891f93\"],\n    [\"apps/cli/test/fixture/sf613-preview-e13-observation.ts\",\"19d732eb4f2d46f9d769e078489ff09fc6701102\"],\n  ] as const",
+      "before": {
+        "git": "3157812c22db9f6b78b02915bfd2dfc4133cbb5b",
+        "bytes": 12696,
+        "sha256": "5ce8505fd1fdda0fe0691251b3904cca0fe9820b4080ea9b51ede7509da14162",
+        "lf": 187,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "9db37586bcf0291eec7d8a56127848e4c7ad62ec",
+        "bytes": 13581,
+        "sha256": "806469852bc62d1ee015a70da6ff94821c8f32b2df79efd734b053320410e2bc",
+        "lf": 195,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 10,
+      "label": "working blob receipt metadata",
+      "preimage": "  process.stdout.write(JSON.stringify({ gate: \"reviewed source blobs\", source, sourceTree,\n    snapshot, files: observed, expectedGroups: 7, expectedCommands: 13,\n    functionalProcessesLaunched: 3, expectedTestDeclarations: 39, expectedControlReports: 9 }) + \"\\n\")",
+      "postimage": "  process.stdout.write(JSON.stringify({ gate: \"reviewed working blobs\", source, sourceTree, sourceBase,\n    snapshot, files: observed, sourceOverlayPaths: 7, sourceWorkingPins: 22, focalControlPaths: 2, expectedGroups: 8, expectedCommands: 14,\n    functionalProcessesLaunched: 4, expectedTestDeclarations: 40, expectedControlReports: 10 }) + \"\\n\")",
+      "before": {
+        "git": "9db37586bcf0291eec7d8a56127848e4c7ad62ec",
+        "bytes": 13581,
+        "sha256": "806469852bc62d1ee015a70da6ff94821c8f32b2df79efd734b053320410e2bc",
+        "lf": 195,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "3f2d4d8f3bf808927ed94f494c1dd7e92be0c9ab",
+        "bytes": 13663,
+        "sha256": "d15a984cbfd3f1f91131b6ef3c6ffeb84d8461dc6bf628750e2533cb842262f8",
+        "lf": 195,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      }
+    },
+    {
+      "order": 11,
+      "label": "append G8 whole-file observer control while preserving G7 literal",
+      "preimage": "checks.live(\"C18 whole-file captured context identity preserves canonical fallback and lazy capture\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"C18 captured context identity whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/captured-context-identity.test.ts\"], module, 180_000)\n  expect(output).toContain(\"SF_C18_CAPTURE_LAZY \")\n}), 240_000)\n",
+      "postimage": "checks.live(\"C18 whole-file captured context identity preserves canonical fallback and lazy capture\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"C18 captured context identity whole-file\", process.execPath,\n    [\"test\", \"./test/product/wp10/integration/captured-context-identity.test.ts\"], module, 180_000)\n  expect(output).toContain(\"SF_C18_CAPTURE_LAZY \")\n}), 240_000)\n\nchecks.live(\"E13 isolated causal observation preserves work and bounded Request phases\", () => Effect.gen(function* () {\n  requireHostedCandidate()\n  expectSpawn(import.meta.path)\n  const output = yield* runCommand(\"E13 causal observation whole-file\", process.execPath,\n    [\"test\", \"./test/sf613-preview-e13-observation.test.ts\"], path.join(repository, \"apps/cli\"), 60_000)\n  expect(output).toContain(\"SF_E13_OBSERVATION_CONTROL \")\n}), 90_000)\n",
+      "before": {
+        "git": "3f2d4d8f3bf808927ed94f494c1dd7e92be0c9ab",
+        "bytes": 13663,
+        "sha256": "d15a984cbfd3f1f91131b6ef3c6ffeb84d8461dc6bf628750e2533cb842262f8",
+        "lf": 195,
+        "endsWithLF": true,
+        "identityRole": "calculated intermediate; not claimed as a separately created blob"
+      },
+      "after": {
+        "git": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+        "bytes": 14109,
+        "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+        "lf": 203,
+        "endsWithLF": true,
+        "identityRole": "created and literally read back final template"
+      }
+    }
+  ],
+  "operationChecks": {
+    "count": 11,
+    "uniquePreimages": true,
+    "uniquePostimages": true,
+    "orderedForwardWholeTextEqual": true,
+    "reverseWholeTextEqual": true
+  },
+  "diffs": {
+    "retarget": {
+      "git": "cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+      "bytes": 9875,
+      "sha256": "309fb2f24e5d4e216dd11c5e7fb58619d8d1206521134591d3eb7cbea7f17bb6",
+      "lf": 125,
+      "finalLF": true,
+      "hunks": 6,
+      "added": 41,
+      "removed": 20,
+      "created": true,
+      "literalReadback": true,
+      "forwardInverseExact": true
+    },
+    "prospectiveSnapshot": {
+      "git": "f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+      "bytes": 45625,
+      "sha256": "3ade1005084cbeb825c864fe8a394817024180586bc22a89aa7c0f01f321f783",
+      "lf": 696,
+      "finalLF": true,
+      "hunks": 4,
+      "added": 670,
+      "removed": 1,
+      "created": true,
+      "literalReadback": true,
+      "forwardInverseExact": true,
+      "delta": "3A1M",
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "change": "M",
+          "old": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+          "new": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+          "hunks": 1,
+          "added": 1,
+          "removed": 1
+        },
+        {
+          "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+          "change": "A",
+          "old": null,
+          "new": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+          "hunks": 1,
+          "added": 203,
+          "removed": 0
+        },
+        {
+          "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+          "change": "A",
+          "old": null,
+          "new": "00389741844e45cd1a507a7e07c370edcf891f93",
+          "hunks": 1,
+          "added": 24,
+          "removed": 0
+        },
+        {
+          "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+          "change": "A",
+          "old": null,
+          "new": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+          "hunks": 1,
+          "added": 442,
+          "removed": 0
+        }
+      ]
+    }
+  },
+  "sourceObjectContext": {
+    "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "rootReview": {
+      "git": "226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+      "bytes": 9047,
+      "sha256": "16b951fd31bc2822719aa65d5171dc91e94e14470a73d54505a6d2588de60789",
+      "lf": 288,
+      "finalLF": true
+    },
+    "auditAttribution": "Root reports 19 tree pairs/614 literal siblings and exact2A5M; commit metadata independently received.",
+    "boundIntoTemplate": false
+  },
+  "binding": {
+    "sourceToken": "__E13_SOURCE_SHA_UNBOUND__",
+    "treeToken": "__E13_SOURCE_TREE_UNBOUND__",
+    "tokenCount": 2,
+    "guardBeforeAnyProcess": true,
+    "actualWidthOnlyBytes": 14136,
+    "rootOwnsBindingAndObjects": true
+  },
+  "preservation": {
+    "runCommand": "literal",
+    "groupsG2ThroughG7": "literal",
+    "inheritedPinTuples": 16,
+    "inheritedPinTuplesLiteral": true,
+    "changesToExistingFunctionalArgvCwdTimeouts": 0,
+    "changesToTypesOrGuards": 0,
+    "acceptedIdentityChanges": [
+      "fetch --depth=3",
+      "HEAD^ --format=%H%n%T%n%P and exact [source,sourceTree,sourceBase] comparison"
+    ],
+    "addedGroup": "G8 whole-file E13 test, process60000/parent90000, prefix presence only",
+    "newReportParser": false,
+    "newFilters": false,
+    "newRetries": false,
+    "changedRequestRunner": false
+  },
+  "checks": [
+    {
+      "id": "base-sha-bytes-hash",
+      "pass": true
+    },
+    {
+      "id": "engine-runCommand-literal",
+      "pass": true
+    },
+    {
+      "id": "G2-G7-literal",
+      "pass": true
+    },
+    {
+      "id": "base-sixteen-pins-literal-prefix",
+      "pass": true
+    },
+    {
+      "id": "twenty-four-pins-unique",
+      "pass": true
+    },
+    {
+      "id": "source22-control2",
+      "pass": true
+    },
+    {
+      "id": "source-pins-current",
+      "pass": true
+    },
+    {
+      "id": "control-pins-R4",
+      "pass": true
+    },
+    {
+      "id": "two-unbound-tokens-only",
+      "pass": true
+    },
+    {
+      "id": "unbound-rejected-before-processes",
+      "pass": true
+    },
+    {
+      "id": "depth3-one-command",
+      "pass": true
+    },
+    {
+      "id": "HEAD-parent-three-fields",
+      "pass": true
+    },
+    {
+      "id": "source-parent-S18-literal",
+      "pass": true
+    },
+    {
+      "id": "eight-groups-fourteen-commands",
+      "pass": true
+    },
+    {
+      "id": "all-twenty-eight-truncation-flags-required-false",
+      "pass": true
+    },
+    {
+      "id": "whole-file-new-control-no-filter",
+      "pass": true
+    },
+    {
+      "id": "new-group-prefix-only-no-parser",
+      "pass": true
+    },
+    {
+      "id": "test-one-declaration-one-report",
+      "pass": true
+    },
+    {
+      "id": "test35-process60-parent90",
+      "pass": true
+    },
+    {
+      "id": "seven-child-modes-sequential",
+      "pass": true
+    },
+    {
+      "id": "seven-local-child-caps",
+      "pass": true
+    },
+    {
+      "id": "control-report-16KiB",
+      "pass": true
+    },
+    {
+      "id": "current-control-overflow600-invocations",
+      "pass": true
+    },
+    {
+      "id": "forty-cases-ten-reports",
+      "pass": true
+    },
+    {
+      "id": "sum-of-three-named-child-families-only-11-loading-plus1-lazy-plus7-E13",
+      "pass": true
+    },
+    {
+      "id": "total-parent-budget41m30",
+      "pass": true
+    },
+    {
+      "id": "unchanged-outer-request",
+      "pass": true
+    },
+    {
+      "id": "parent-analytics-request295-noLF",
+      "pass": true
+    },
+    {
+      "id": "eleven-anchors-roundtrip",
+      "pass": true
+    },
+    {
+      "id": "retarget-diff-full-roundtrip",
+      "pass": true
+    },
+    {
+      "id": "snapshot-diff3A1M-full-roundtrip",
+      "pass": true
+    }
+  ],
+  "limits": [
+    "Intermediate hashes describe exact pure text transformations; no intermediate Git object existence is asserted.",
+    "The full snapshot diff is prospective and includes the final R4 control bytes; it does not create D, bind source tokens, or authorize execution.",
+    "Forty functional cases and ten reports are selection requirements, not executed results. Runtime assertion totals remain unknown until current footers.",
+    "Nineteen is the sum of the named loading/lazy/E13 child families only, not a universal subprocess total for the job.",
+    "Current source object identity is documentary context; the template still fails before processes while either source token is unbound."
+  ]
+}

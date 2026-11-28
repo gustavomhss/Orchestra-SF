@@ -1,0 +1,50 @@
+{
+  "kind": "E13-helper-R2-to-R3",
+  "pre": {
+    "gitSha": "f9099fde19cc3d444da68317f5e2207561c82e06",
+    "bytes": 17097,
+    "sha256": "59758e2e2ddf4a203258c6979674f37b44cb92eb41a52184f1ae85c2327ddead",
+    "lf": 289
+  },
+  "post": {
+    "gitSha": "27200494b81e7394ca9034b034a735cea1b08dac",
+    "bytes": 17672,
+    "sha256": "6afe9c125150de5b3ba86f81ef86e3cd3b604c11d9a1af9e40e8698730ae6f06",
+    "lf": 302
+  },
+  "operations": [
+    {
+      "before": "start: number; last: number; fd: number | undefined; closed: boolean; events:",
+      "after": "start: number; last: number; fd: number | undefined; closed: boolean; pendingClose: boolean; closeRejected: boolean; events:"
+    },
+    {
+      "before": "  if (frame.emitting) { frame.emissionFault = true; return }\n  frame.emitting = true",
+      "after": "  if (frame.closed) return\n  if (frame.emitting) { frame.emissionFault = true; return }\n  frame.emitting = true"
+    },
+    {
+      "before": "  finally { frame.emitting = false }\n}\n// This thunk",
+      "after": "  finally { frame.emitting = false; if (frame.pendingClose) closeFrame(frame) }\n}\n// This thunk"
+    },
+    {
+      "before": "      closed: false, events: 0,",
+      "after": "      closed: false, pendingClose: false, closeRejected: false, events: 0,"
+    },
+    {
+      "before": "if (frame.overflow || frame.nextUnit >= countCap) return undefined",
+      "after": "if (frame.overflow || frame.emissionFault || frame.nextUnit >= maxEvents) return undefined"
+    },
+    {
+      "before": "if (unit && !unit.phase && !unit.frame.overflow && unit.frame.nextPhase < countCap &&",
+      "after": "if (unit && !unit.phase && !unit.frame.overflow && !unit.frame.emissionFault && unit.frame.nextPhase < maxEvents &&"
+    },
+    {
+      "before": "export function finishSfE13Observation(handle: unknown, request: Request, rejected: boolean) {\n  try {\n    const frame = selected\n    if (!frame || frame.closed || frame.handle !== handle || frame.request !== request) return\n    frame.closed = true\n    frame.request = undefined\n    try {\n      if (append(frame, \"request-close\", { outcome: rejected ? \"rejected\" : \"returned\", eventsBefore: frame.events, bytesBefore: frame.bytes,\n        dropped: frame.dropped, overflow: frame.overflow, openUnits: frame.openUnits, openPhases: frame.openPhases,\n        emissionFaultBefore: frame.emissionFault, fileFaultBefore: frame.fileFault, scopeFault: frame.scopeFault, clockFault: frame.clockFault, backpressureBefore: frame.backpressure }, 0) !== \"attempted\") frame.emissionFault = true\n    } catch { frame.emissionFault = true }\n    const fd = frame.fd\n    frame.fd = undefined\n    if (fd !== undefined) {\n      try { fsyncSync(fd); const info = fstatSync(fd); if (!info.isFile() || (!frame.fileFault && info.size !== frame.bytes)) frame.fileFault = true } catch { frame.fileFault = true }\n      finally { try { closeSync(fd) } catch { frame.fileFault = true } }\n    }\n    scopes = undefined\n    units = undefined\n    // request-close is a boundary record, not an attestation of subsequent fsync/close success.\n  } catch { /* Preserve the HTTP return/rejection, even if the observer cannot close. */ }\n}\n",
+      "after": "function closeFrame(frame: Frame) {\n  if (!frame.pendingClose || frame.emitting) return\n  frame.pendingClose = false\n  frame.emitting = true\n  try {\n    if (append(frame, \"request-close\", { outcome: frame.closeRejected ? \"rejected\" : \"returned\", eventsBefore: frame.events, bytesBefore: frame.bytes,\n      dropped: frame.dropped, overflow: frame.overflow, openUnits: frame.openUnits, openPhases: frame.openPhases,\n      emissionFaultBefore: frame.emissionFault, fileFaultBefore: frame.fileFault, scopeFault: frame.scopeFault, clockFault: frame.clockFault, backpressureBefore: frame.backpressure }, 0) !== \"attempted\") frame.emissionFault = true\n  } catch { frame.emissionFault = true }\n  finally {\n    const fd = frame.fd\n    frame.fd = undefined\n    if (fd !== undefined) {\n      try { fsyncSync(fd); const info = fstatSync(fd); if (!info.isFile() || (!frame.fileFault && info.size !== frame.bytes)) frame.fileFault = true } catch { frame.fileFault = true }\n      finally { try { closeSync(fd) } catch { frame.fileFault = true } }\n    }\n    frame.emitting = false\n    scopes = undefined\n    units = undefined\n  }\n  // request-close is a boundary record, not an attestation of subsequent fsync/close success.\n}\nexport function finishSfE13Observation(handle: unknown, request: Request, rejected: boolean) {\n  try {\n    const frame = selected\n    if (!frame || frame.closed || frame.handle !== handle || frame.request !== request) return\n    frame.closed = true\n    frame.request = undefined\n    frame.closeRejected = rejected\n    frame.pendingClose = true\n    // A reentrant close invalidates ownership immediately, but follows the current row.\n    closeFrame(frame)\n  } catch { /* Preserve the HTTP return/rejection, even if the observer cannot close. */ }\n}\n"
+    }
+  ],
+  "limits": [
+    "Single pending close follows the current row; ownership closes immediately.",
+    "Units and phase metadata bounded independently of failed serialization.",
+    "No callback body, await, timer or business value changed."
+  ]
+}

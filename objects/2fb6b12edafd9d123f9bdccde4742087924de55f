@@ -1,0 +1,308 @@
+{
+  "schema": "sf613-e13-source-manifest-v1",
+  "status": "ROOT_OBJECT_REPORTED_STATIC_SOURCE_REVIEWED_CI_PENDING",
+  "purpose": "Observe only the selected first preview Request's port/compare units and awaited boundaries, without a CPU sampler or product optimization.",
+  "cleanParent": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d"
+  },
+  "rootReportedObject": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "parents": [
+      "455c02a7a05a6dd3262ae15b184419897366fde4"
+    ],
+    "delta": {
+      "added": 2,
+      "modified": 5,
+      "deleted": 0,
+      "totalPaths": 7
+    },
+    "treeAudit": {
+      "pairs": 19,
+      "unchangedSiblings": 614
+    },
+    "receipt": {
+      "gitSha": "226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+      "bytes": 9047,
+      "sha256": "16b951fd31bc2822719aa65d5171dc91e94e14470a73d54505a6d2588de60789"
+    },
+    "operator": "root; writer did not create trees/commits/refs/runs"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+        "bytes": 18129,
+        "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+        "lf": 307
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134
+      },
+      "postimage": {
+        "gitSha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+        "bytes": 14101,
+        "sha256": "2b18f550e8165a40ef7a3bfdd1d365dfc2bf0b20b98c1a1186c74d9e27cb99fb",
+        "lf": 145
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "lf": 129
+      },
+      "postimage": {
+        "gitSha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+        "bytes": 18458,
+        "sha256": "f3c90f93f0aeb73f755fe61ee1debf30ab31aae356d9caa61ced7fc99ffb71c2",
+        "lf": 135
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "lf": 85
+      },
+      "postimage": {
+        "gitSha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+        "bytes": 10047,
+        "sha256": "510b1c5f5fa77eb3b79bfefbd62bc2d7d1890bcbbe68b502f7c4d0032770c997",
+        "lf": 91
+      }
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121
+      },
+      "postimage": {
+        "gitSha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+        "bytes": 10356,
+        "sha256": "dee56ea5cd0be05e644ce5b1a152263115c17444c5c237cc23d3edab80fdb7d0",
+        "lf": 184
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "status": "M",
+      "mode": "100644",
+      "preimage": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206
+      },
+      "postimage": {
+        "gitSha": "47e13f21e5d00fc8689123d7b87175960288b029",
+        "bytes": 16468,
+        "sha256": "86a93b56cf5b722d88353d4a46e92d411bbabce87d646a12d835e2cca5779d80",
+        "lf": 267
+      }
+    },
+    {
+      "path": ".ci-run.json",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "bytes": 295,
+        "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+        "lf": 0
+      }
+    }
+  ],
+  "derivation": {
+    "source": {
+      "gitSha": "674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+      "bytes": 97171,
+      "sha256": "b3e6c512a23aa2907752ad1e9f2d7e41a1a9895c0a2d6a62841bba40621576e5",
+      "lf": 381
+    },
+    "fullDiff": {
+      "gitSha": "2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+      "bytes": 84455,
+      "sha256": "47f333d15ba426530d2514daa2e92c446088832a13b7cc49faaec72fc318a7be",
+      "lf": 886
+    },
+    "metrics": {
+      "anchors": 14,
+      "literalAdditions": 2,
+      "hunks": 16,
+      "insertions": 612,
+      "deletions": 157
+    },
+    "method": "Pure text/data transforms only; every anchor, addition and unified diff applies/inverts to the exact authenticated Git bytes. No repository execution.",
+    "callers": {
+      "gitSha": "c977fb96b97b5c3831c1fc03a2cf655bf5fedf9a",
+      "bytes": 61580,
+      "sha256": "b98d55de3c59ff4bece0e9814155dd4173cbc21e9908ba64daeb034340ea58d2",
+      "outerAnchors": 6,
+      "internalSubstitutions": 20,
+      "awaits": [
+        7,
+        11,
+        18
+      ],
+      "asyncTokens": [
+        3,
+        4,
+        4
+      ]
+    },
+    "bridges": {
+      "gitSha": "f519247ddd71ecaf5b70d8656785b9e70ef701aa",
+      "bytes": 6621,
+      "sha256": "d9e28ec0be73ecc483754c1b97a12f7a8c426aa885c204201267943eaab1bdec",
+      "innerOperations": 13,
+      "outerOperations": 14,
+      "innerOccurrences": 15,
+      "outerOccurrences": 17,
+      "awaits": [
+        13,
+        16
+      ]
+    },
+    "admissionReuse": {
+      "gitSha": "399cb934c5b13976cd8dc82fa6c567d824b3b53f",
+      "bytes": 10758,
+      "sha256": "5b5e85b5117b3e3ec4bdcdd801fa72c881c02f5d9d4e4c1ea90f6b45ab0f7e40",
+      "lf": 207
+    }
+  },
+  "bounds": {
+    "gitSha": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+    "bytes": 21216,
+    "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+    "lf": 384
+  },
+  "boundsStatePrecision": "Bounds were preserved immediately before the root object was reported. Their source-object UNBOUND statement is historical and resolved only by rootReportedObject here; no byte, cap or payload changed.",
+  "protocol": {
+    "markerFamilies": [
+      "SF_PREVIEW_E13_EVENT",
+      "SF_PREVIEW_E13_LAUNCHER"
+    ],
+    "requestSelection": "Process-local first eligible portfolio-preview HTTP entry after the original guards/mode; exact Request object identity, before body parsing/admission. It does not claim authorization.",
+    "lifetime": "One latch, no reselection after admission failure, error or close. Units/phases are scoped through empty private ALS tokens; foreign/late work runs once with neutral/disabled observation.",
+    "work": "Synchronous runOnce records invocation/return/throw separately and takes only the thunk's captured result as authority. It never wraps/assimilates the returned Promise, adds an await, replays work, or inspects an error.",
+    "phase": "Each unit captures parentUnit/parentPhase at entry. The Promise.all phase scopes the existing whole expression and preserves all original async callbacks. Compound compare short-circuits remain literal.",
+    "noDomainData": "Events use fixed enums and local integers/booleans/null only. No Request property, payload/result/actor/error tag, business getter, grant or digest is read for observation.",
+    "closure": "Reentrant request-close is deferred behind the active emission while frame ownership closes immediately. Terminal describes boundary outcome, outstanding units/phases, overflow and pre-terminal faults; it does not prove own transport/fsync success.",
+    "transport": "ASCII JSON+prefix+LF, bound by UTF-8 bytes. Stream file is created once wx0600 outside private installation cleanup; appends are bounded. End fsync/fstat/close is best effort and never changes product outcome.",
+    "runtime": "Linux x64/Bun1.3.14 and exact original revision gate retained only for this observation. Clean source/release pins are unchanged."
+  },
+  "untouched": {
+    "productFinal": "Clean S18 remains immutable; none of the seven diagnostic overlays is authorized for final product.",
+    "originalJourney": "Same original spec, assertions/order, seed, two journeys/one worker/no retry/repeat1; preview60s and sensitivity120s; no spec patch.",
+    "algorithms": "No domain algorithm, authoritative callback identity, grant, authorization, digest, cache, clone, abort/poison contract, deadline, worker, timer or await changed.",
+    "sourceControls": "All C13–C18 controls/fixtures remain the clean-parent bytes. New diagnostic controls belong only to D.",
+    "workflow": "No new workflow in S. Existing test-ci route is used only by a separate root authority."
+  },
+  "helperReviewHistory": [
+    {
+      "version": "R1",
+      "gitSha": "9fc171ad604397032997c0523f9f3deb012b9f78",
+      "state": "superseded"
+    },
+    {
+      "version": "R2",
+      "gitSha": "f9099fde19cc3d444da68317f5e2207561c82e06",
+      "support": "b7f6bac96c80922347517434b3ac263009a3f68b",
+      "state": "superseded: reentrant close pending"
+    },
+    {
+      "version": "R3",
+      "gitSha": "27200494b81e7394ca9034b034a735cea1b08dac",
+      "support": "658b41be0cf80b1fb7bd9e9ea417ff6aff9173e2",
+      "state": "superseded: nested foreign scope pending"
+    },
+    {
+      "version": "R4",
+      "gitSha": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+      "support": "4fae92cf3541b710259e4dd2b2d21123c8d10e39",
+      "state": "superseded: neutral no-op mechanism pending"
+    },
+    {
+      "version": "R5",
+      "gitSha": "85067173418a441977f377175280ba789bec85e3",
+      "support": "095e12f87d896200f640201ab7c1d26502e78339",
+      "state": "superseded: exact neutral token check required"
+    },
+    {
+      "version": "R6",
+      "gitSha": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+      "support": "2d5b771c9a0b4b8b753b3c643415f12103497b15",
+      "state": "static mechanism ACK; superseded only by quota reservation"
+    },
+    {
+      "version": "R7",
+      "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+      "bytes": 18129,
+      "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+      "lf": 307,
+      "support": "fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+      "state": "current; same R6 mechanism, 511/255 quota"
+    }
+  ],
+  "repositoryInstructions": {
+    "path": "AGENTS.md",
+    "gitSha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "bytes": 16583,
+    "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+    "lf": 223,
+    "localAncestors": "Root previously audited the applicable ancestors; only root AGENTS exists.",
+    "application": "No aliased imports, no generated code, actual AppProcess/Omni for test children, tests/typechecks/guards only by authorized Actions focal."
+  },
+  "next": {
+    "focalComposition": "D sole this diagnostic S: 3A(driver,test,fixture)+1M(Analytics request replaced by focal request).",
+    "fixture": {
+      "gitSha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "bytes": 27993,
+      "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+      "lf": 442
+    },
+    "test": {
+      "gitSha": "00389741844e45cd1a507a7e07c370edcf891f93",
+      "bytes": 1102,
+      "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+      "lf": 24
+    },
+    "controlStatus": "Independent/root review in progress; source object does not imply execution authority.",
+    "run": "UNBOUND",
+    "attempt": "UNBOUND",
+    "jobs": "UNBOUND",
+    "actualPid": "UNBOUND",
+    "actualNonce": "UNBOUND",
+    "artifact": "UNBOUND",
+    "result": "UNBOUND",
+    "activation": "Requires complete controls/driver/package audit and separate root authority. No original log/ZIP obtained by writer."
+  }
+}

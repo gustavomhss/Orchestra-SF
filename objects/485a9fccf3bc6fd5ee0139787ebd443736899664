@@ -1,0 +1,221 @@
+{
+  "schema": "sf613-e13-helper-callers-static-review-v1",
+  "at": "2026-11-27 23:22:13 UTC",
+  "status": "STATIC_PASS_HELPER_AND_THREE_CALLERS_ONLY",
+  "reviewers": [
+    "/root",
+    "/root/teams_product"
+  ],
+  "author": "/root/close_pr613",
+  "sourceBase": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d"
+  },
+  "helper": {
+    "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts",
+    "gitBlob": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+    "bytes": 18129,
+    "sha256": "7b0dc25080ec105ac0383971c1331f748b9641bd08ff3a42b90360d273fb02af",
+    "lf": 307,
+    "endsWithLF": true
+  },
+  "helperDerivation": [
+    {
+      "before": "9fc171ad604397032997c0523f9f3deb012b9f78",
+      "after": "f9099fde19cc3d444da68317f5e2207561c82e06",
+      "anchors": 10,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "before": "f9099fde19cc3d444da68317f5e2207561c82e06",
+      "after": "27200494b81e7394ca9034b034a735cea1b08dac",
+      "anchors": 7,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "before": "27200494b81e7394ca9034b034a735cea1b08dac",
+      "after": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+      "anchors": 11,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "before": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+      "after": "85067173418a441977f377175280ba789bec85e3",
+      "anchors": 1,
+      "forward": true,
+      "inverse": true
+    },
+    {
+      "before": "85067173418a441977f377175280ba789bec85e3",
+      "after": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+      "anchors": 1,
+      "forward": true,
+      "inverse": true
+    }
+  ],
+  "callers": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "pre": {
+        "gitSha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "bytes": 13217,
+        "sha256": "89da60939a76e30af818514de88490fdd5239d9dc71500d8d469cd217005be68",
+        "lf": 134
+      },
+      "post": {
+        "gitSha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+        "bytes": 14101,
+        "sha256": "2b18f550e8165a40ef7a3bfdd1d365dfc2bf0b20b98c1a1186c74d9e27cb99fb",
+        "lf": 145
+      },
+      "derivation": {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "forward": true,
+        "inverse": true,
+        "anchors": 2,
+        "substitutions": 5,
+        "indentedOriginalBodyWithOnlyListedReplacements": true,
+        "wrapperBefore": "    const e13Handle = mode === \"decision-portfolio-preview\" ? startSfE13Observation(request) : undefined\n    let e13Rejected = false\n    try {\n",
+        "wrapperAfter": "\n    } catch (e13Error) { e13Rejected = true; throw e13Error }\n    finally { finishSfE13Observation(e13Handle, request, e13Rejected) }",
+        "await": 7,
+        "async": 3
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "pre": {
+        "gitSha": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "bytes": 17484,
+        "sha256": "2874442e59d8612d4fe890848627d22cbceb9f789818258dff34635443503413",
+        "lf": 129
+      },
+      "post": {
+        "gitSha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+        "bytes": 18458,
+        "sha256": "f3c90f93f0aeb73f755fe61ee1debf30ab31aae356d9caa61ced7fc99ffb71c2",
+        "lf": 135
+      },
+      "derivation": {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "forward": true,
+        "inverse": true,
+        "anchors": 2,
+        "substitutions": 6,
+        "indentedOriginalBodyWithOnlyListedReplacements": true,
+        "wrapperBefore": "    const e13Unit = enterSfE13Unit(\"port\")\n    let e13Rejected = false\n    try {\n",
+        "wrapperAfter": "\n    } catch (e13Error) { e13Rejected = true; throw e13Error }\n    finally { finishSfE13Unit(e13Unit, e13Rejected) }",
+        "await": 11,
+        "async": 4
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "pre": {
+        "gitSha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "bytes": 8591,
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "lf": 85
+      },
+      "post": {
+        "gitSha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+        "bytes": 10047,
+        "sha256": "510b1c5f5fa77eb3b79bfefbd62bc2d7d1890bcbbe68b502f7c4d0032770c997",
+        "lf": 91
+      },
+      "derivation": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "forward": true,
+        "inverse": true,
+        "anchors": 2,
+        "substitutions": 9,
+        "indentedOriginalBodyWithOnlyListedReplacements": true,
+        "wrapperBefore": "  const e13Unit = enterSfE13Unit(\"compare\")\n  let e13Rejected = false\n  try {\n",
+        "wrapperAfter": "\n  } catch (e13Error) { e13Rejected = true; throw e13Error }\n  finally { finishSfE13Unit(e13Unit, e13Rejected) }",
+        "await": 18,
+        "async": 4
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "REENTRANT_CLOSE",
+      "status": "STATIC_RESOLVED",
+      "finding": "finish could bypass emission serialization, duplicate sequence or emit a row after the terminal",
+      "resolution": "pendingClose invalidates lifetime immediately, then closes only after current emit; emit refuses closed frames"
+    },
+    {
+      "id": "FOREIGN_NESTED_REQUEST",
+      "status": "STATIC_RESOLVED",
+      "finding": "A mismatched nested Request could inherit the selected Request ALS store",
+      "resolution": "A neutral private token is installed for unmatched scope; getStore must exactly equal the intended positive or neutral token before work"
+    },
+    {
+      "id": "NEUTRAL_NOOP_INSTALL",
+      "status": "STATIC_RESOLVED",
+      "finding": "The neutral branch initially skipped installation verification when ALS.run invoked without changing the current store",
+      "resolution": "Exact raw token verification in R6; missing guarantee permanently disables unit and phase attribution before work"
+    }
+  ],
+  "mechanism": {
+    "singleWorkInvocation": true,
+    "originalReturnAndPromiseIdentity": true,
+    "exactThrownValueIncludingUndefined": true,
+    "noNewAwaitOrThen": true,
+    "noDomainOrErrorPropertiesReadForEvents": true,
+    "opaqueRequestAndPhaseIdentity": true,
+    "firstSelectionLatch": true,
+    "scopeFaultMeansCoverageUnavailable": true,
+    "noLateOrForeignReassignment": true
+  },
+  "observationLimits": {
+    "events": 512,
+    "bytesIncludingLF": 262144,
+    "maxLineBytes": 1024,
+    "normalEventReserve": {
+      "events": 2,
+      "bytes": 2048
+    },
+    "overflowReserve": {
+      "events": 1,
+      "bytes": 1024
+    },
+    "privateUnitAndPhaseCountersEachAtMost": 512,
+    "requestCloseDoesNotAttestSubsequentFsync": true,
+    "HTTPReturnedMayBeOriginalUnavailableResponse": true,
+    "ioMayPerturbDuration": true,
+    "noExclusiveTimingFromOverlappingIntervals": true,
+    "rootEnvelopeModel": {
+      "kind": "PURE_DATA_NOT_EXECUTION",
+      "pidAndParentPid": 2147483647,
+      "runIdChars": 20,
+      "nonceChars": 22,
+      "elapsedTenthMs": 999999999,
+      "requestCloseUpperModelBytes": 714,
+      "limit": 1024
+    },
+    "peerEnvelopeModel": {
+      "kind": "PURE_DATA_NOT_EXECUTION",
+      "largestBytesReported": 710,
+      "notSameInputModelAsRoot": true
+    }
+  },
+  "pending": [
+    "Installation bridges and their derivation",
+    "Concrete isolated controls covering the reviewed findings and boundaries",
+    "Complete source manifest/diff/bounds and independent review",
+    "Bound focal wrapper and actual source/tree identities",
+    "Root execution authorization for a new reviewed scope"
+  ],
+  "effects": {
+    "repositoryExecution": 0,
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "sourceTreeOrCommitCreated": 0,
+    "refsChanged": 0,
+    "runs": 0,
+    "productionAuthorized": false
+  }
+}

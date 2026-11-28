@@ -1,0 +1,205 @@
+{
+  "schema": "sf613-e13-root-concrete-focal-binding-v1",
+  "status": "BOUND_OBJECTS_STATIC_REVIEW_ONLY_NO_REF_RUN",
+  "at": {
+    "current_time": "2026-11-27 23:52:27 UTC"
+  },
+  "owner": "/root",
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "parent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "package": {
+      "gitBlob": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "endsWithLF": true
+    }
+  },
+  "driver": {
+    "template": {
+      "gitBlob": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+      "bytes": 14109,
+      "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+      "lf": 203,
+      "endsWithLF": true
+    },
+    "bound": {
+      "gitBlob": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+      "bytes": 14136,
+      "sha256": "5172e0f2db3181a1183efefd3e82a4da95239004e7e1fb7ef329f8d3d68cb22a",
+      "lf": 203,
+      "endsWithLF": true
+    },
+    "operations": [
+      {
+        "before": "__E13_SOURCE_SHA_UNBOUND__",
+        "after": "dffc62a08bdba74f1a9322d49cde095e81535f55"
+      },
+      {
+        "before": "__E13_SOURCE_TREE_UNBOUND__",
+        "after": "0da48e0d15de780d981a5bce3e49e382a6e61849"
+      }
+    ],
+    "forwardInverseExact": true,
+    "unboundTokensRemaining": 0
+  },
+  "snapshot": {
+    "commit": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+    "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+    "parents": [
+      "dffc62a08bdba74f1a9322d49cde095e81535f55"
+    ],
+    "delta": "3A1M",
+    "entries": [
+      {
+        "path": ".ci-run.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5"
+      },
+      {
+        "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0dd3983758a600772e3177907c1430e0c2c4fc87"
+      },
+      {
+        "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "00389741844e45cd1a507a7e07c370edcf891f93"
+      },
+      {
+        "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "19d732eb4f2d46f9d769e078489ff09fc6701102"
+      }
+    ],
+    "audit": {
+      "before": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "after": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+          "after": "6508c42f4957adefcd2de55fb9b51ceef6fe318f"
+        },
+        {
+          "path": "apps",
+          "before": "212be7ea5ae76c0b1be2a839ba0caa0fce022cb2",
+          "after": "490ccafc450b7bebd1b40c345f1ed9e01109d595"
+        },
+        {
+          "path": "apps/cli",
+          "before": "098570c3ff4359da5d4b7e786cca52e2674b2d1d",
+          "after": "1d8a8ea45f6ef63e19c0578496ff3e61bd7bb318"
+        },
+        {
+          "path": "apps/cli/test",
+          "before": "1ffe9bdb289a848f77c25f7c7f82f61307f6dc59",
+          "after": "b28edda55635d2a827dd8d5604f6e3dbe8ee8273"
+        },
+        {
+          "path": "apps/cli/test/fixture",
+          "before": "1e7dd14949d25d97290a51661a1c905a2ca38f71",
+          "after": "bacf164c7c8b521f9217859321b3f2d1d2417164"
+        }
+      ],
+      "literalSiblings": 149,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "kind": "M",
+          "before": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+            "size": 295,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+          },
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+            "size": 247,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4a7b64a8392138f1b79d386557e48ac4453617f5"
+          }
+        },
+        {
+          "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": "sf613-preview-e13-observation.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+            "size": 27993,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/19d732eb4f2d46f9d769e078489ff09fc6701102"
+          }
+        },
+        {
+          "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": "sf613-preview-e13-observation.test.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "00389741844e45cd1a507a7e07c370edcf891f93",
+            "size": 1102,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/00389741844e45cd1a507a7e07c370edcf891f93"
+          }
+        },
+        {
+          "path": "apps/cli/test/sucafina-proof-verification.test.ts",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": "sucafina-proof-verification.test.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+            "size": 14136,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0dd3983758a600772e3177907c1430e0c2c4fc87"
+          }
+        }
+      ]
+    }
+  },
+  "review": {
+    "gitBlob": "f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+    "bytes": 27653,
+    "sha256": "7004bb216c84433c5e80bee4dcfff85e0885c6fd2c7fb4dbd1dfae8260786807",
+    "lf": 836,
+    "endsWithLF": true
+  },
+  "focalManifest": {
+    "gitBlob": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+    "bytes": 33967,
+    "sha256": "8afaae3ca18b0b5cc11dd07eba8228808b638d7c076cdfa8a3138b5c39d652fd",
+    "lf": 921,
+    "endsWithLF": true
+  },
+  "focalBounds": {
+    "gitBlob": "0ccdae38ccd7b7392820081b620e625801e5b030",
+    "bytes": 23076,
+    "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+    "lf": 731,
+    "endsWithLF": true
+  },
+  "state": {
+    "branch": null,
+    "run": null,
+    "originalAcquisition": 0,
+    "execution": false,
+    "production": false
+  },
+  "next": "Independent actual-object acknowledgement and a separate root execution authority before creating the sole focal branch."
+}

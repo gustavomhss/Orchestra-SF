@@ -1,0 +1,384 @@
+{
+  "schema": "sf613-e13-bounds-v1",
+  "status": "STATIC_DATA_MODELS_NOT_RUNTIME_RESULTS",
+  "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "sourceTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+  "helper": {
+    "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+    "bytes": 18129,
+    "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+    "lf": 307
+  },
+  "scope": "Only the diagnostic EVENT/LAUNCHER families at the final forwarded stdout stream. Other original Analytics stdout is excluded. The duplicate on-disk event stream and fixed launcher files are accounted separately.",
+  "singleCapture": {
+    "maxEvents": 511,
+    "maxUtf8BytesIncludingLf": 261120,
+    "maxLineUtf8BytesIncludingLf": 1024,
+    "reserveForOrdinary": {
+      "events": 2,
+      "bytes": 2048
+    },
+    "reserveForOverflow": {
+      "events": 1,
+      "bytes": 1024
+    },
+    "overflowRecordsAtMost": 1,
+    "requestCloseRecordsAtMost": 1,
+    "droppedCountCap": 65535,
+    "dropCountMeaning": "Attempts rejected after capacity or encoding failure, saturated; not a claim of exact excess above the cap.",
+    "maxUnitMetadata": 511,
+    "maxPhaseMetadata": 511,
+    "maxScopeMetadataIncludingRoot": 512,
+    "failedSerialization": "IDs are bounded independently of successful rows; emissionFault stops new units/phases. HTTP boundaries remain finite by unchanged caller.",
+    "perInvocationAfterOverflow": "Work still executes once and the existing await/tap is retained; no new timers or rescheduling."
+  },
+  "campaign": {
+    "originalTests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "atMostOneSelectedPreviewProcess": true,
+    "premise": "The first original journey alone issues portfolio preview POST. The second BI journey has a local preview method that calls only bi.bi-data, and its pt-BR context reuses the same installation. The per-process first-selection latch does not reopen after failure/close. This is a proof of the closed selected test flow, not a universal endpoint restriction.",
+    "proof": {
+      "gitSha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96"
+    },
+    "launcherDisabledPerInstallationAtMost": 1,
+    "launcherDisabledReason": "Outer failure clears both environment keys; inner then emits none. Inner failure after outer success clears capture keys, so that installation cannot also start a stream.",
+    "stdoutMaximumFormula": "max(511 EVENT + 1 LAUNCHER disabled, 2 LAUNCHER disabled)",
+    "stdoutMaximumRecords": 512,
+    "stdoutMaximumUtf8BytesIncludingLf": 262144,
+    "bytesFormula": "max(261120 + 1024, 2 * 1024) = 262144",
+    "disk": {
+      "eventStreamMaxBytes": 261120,
+      "launcherFilesAtMost": 2,
+      "launcherPerFileCapBytes": 8192,
+      "launcherTotalCapBytes": 16384,
+      "allDiagnosticPayloadFilesMaxBytes": 277504,
+      "formula": "261120 + 2 * 8192; event stream bytes duplicate stdout EVENT payload when both writes succeed.",
+      "combinedLogicalStdoutPlusDiskMaxBytes": 539648,
+      "excludes": "Filesystem allocation/metadata, original application logs, original test evidence, and process overhead."
+    }
+  },
+  "models": {
+    "method": "Literal JSON data models only, not imported/executed helper. Prefix and LF included; ASCII equals UTF-8 for all allowed fields.",
+    "limits": {
+      "sourceHexChars": 40,
+      "treeHexChars": 40,
+      "snapshotHexChars": 40,
+      "runIdDecimalChars": 20,
+      "attempt": "1",
+      "nonce": "sf613-e13-event-XXXXXX",
+      "nonceChars": 22,
+      "pid": 2147483647,
+      "parentPid": 2147483647,
+      "request": 1,
+      "sequence": 511,
+      "elapsedTenthMs": 999999999,
+      "unit": 511,
+      "phase": 511,
+      "ordinal": 511,
+      "parentUnit": 511,
+      "parentPhase": 511,
+      "openUnits": 511,
+      "openPhases": 511,
+      "bytesBefore": 261120,
+      "eventsBefore": 511,
+      "dropped": 65535,
+      "booleanModel": false,
+      "booleanReason": "false is one byte longer than true; combinations may be unreachable but conservatively bound serialized size."
+    },
+    "events": [
+      {
+        "kind": "request-enter",
+        "bytes": 498,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "request-enter",
+          "elapsedTenthMs": 999999999,
+          "maxEvents": 511,
+          "maxBytes": 261120,
+          "maxLineBytes": 1024
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"request-enter\",\"elapsedTenthMs\":999999999,\"maxEvents\":511,\"maxBytes\":261120,\"maxLineBytes\":1024}\n"
+      },
+      {
+        "kind": "http-boundary",
+        "bytes": 476,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "http-boundary",
+          "elapsedTenthMs": 999999999,
+          "point": "case-callback-entered"
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"http-boundary\",\"elapsedTenthMs\":999999999,\"point\":\"case-callback-entered\"}\n"
+      },
+      {
+        "kind": "unit-enter",
+        "bytes": 522,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "unit-enter",
+          "elapsedTenthMs": 999999999,
+          "unit": 511,
+          "unitKind": "compare",
+          "ordinal": 511,
+          "parentUnit": 511,
+          "parentPhase": 511
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"unit-enter\",\"elapsedTenthMs\":999999999,\"unit\":511,\"unitKind\":\"compare\",\"ordinal\":511,\"parentUnit\":511,\"parentPhase\":511}\n"
+      },
+      {
+        "kind": "phase-enter",
+        "bytes": 533,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "phase-enter",
+          "elapsedTenthMs": 999999999,
+          "unit": 511,
+          "phase": 511,
+          "point": "compare-authority-initial",
+          "ordinal": 511,
+          "parentPhase": 511
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"phase-enter\",\"elapsedTenthMs\":999999999,\"unit\":511,\"phase\":511,\"point\":\"compare-authority-initial\",\"ordinal\":511,\"parentPhase\":511}\n"
+      },
+      {
+        "kind": "phase-close",
+        "bytes": 523,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "phase-close",
+          "elapsedTenthMs": 999999999,
+          "unit": 511,
+          "phase": 511,
+          "point": "compare-authority-initial",
+          "outcome": "abandoned"
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"phase-close\",\"elapsedTenthMs\":999999999,\"unit\":511,\"phase\":511,\"point\":\"compare-authority-initial\",\"outcome\":\"abandoned\"}\n"
+      },
+      {
+        "kind": "unit-close",
+        "bytes": 508,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "unit-close",
+          "elapsedTenthMs": 999999999,
+          "unit": 511,
+          "unitKind": "compare",
+          "ordinal": 511,
+          "outcome": "rejected"
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"unit-close\",\"elapsedTenthMs\":999999999,\"unit\":511,\"unitKind\":\"compare\",\"ordinal\":511,\"outcome\":\"rejected\"}\n"
+      },
+      {
+        "kind": "overflow",
+        "bytes": 495,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "overflow",
+          "elapsedTenthMs": 999999999,
+          "eventsBefore": 511,
+          "bytesBefore": 261120,
+          "dropped": 65535
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"overflow\",\"elapsedTenthMs\":999999999,\"eventsBefore\":511,\"bytesBefore\":261120,\"dropped\":65535}\n"
+      },
+      {
+        "kind": "request-close",
+        "bytes": 710,
+        "record": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+          "runId": "99999999999999999999",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-XXXXXX",
+          "pid": 2147483647,
+          "parentPid": 2147483647,
+          "request": 1,
+          "sequence": 511,
+          "kind": "request-close",
+          "elapsedTenthMs": 999999999,
+          "outcome": "rejected",
+          "eventsBefore": 511,
+          "bytesBefore": 261120,
+          "dropped": 65535,
+          "overflow": false,
+          "openUnits": 511,
+          "openPhases": 511,
+          "emissionFaultBefore": false,
+          "fileFaultBefore": false,
+          "scopeFault": false,
+          "scopeDisabled": false,
+          "clockFault": false,
+          "backpressureBefore": false
+        },
+        "line": "SF_PREVIEW_E13_EVENT {\"schema\":\"sf-preview-causal-e13-event-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffff\",\"runId\":\"99999999999999999999\",\"attempt\":\"1\",\"nonce\":\"sf613-e13-event-XXXXXX\",\"pid\":2147483647,\"parentPid\":2147483647,\"request\":1,\"sequence\":511,\"kind\":\"request-close\",\"elapsedTenthMs\":999999999,\"outcome\":\"rejected\",\"eventsBefore\":511,\"bytesBefore\":261120,\"dropped\":65535,\"overflow\":false,\"openUnits\":511,\"openPhases\":511,\"emissionFaultBefore\":false,\"fileFaultBefore\":false,\"scopeFault\":false,\"scopeDisabled\":false,\"clockFault\":false,\"backpressureBefore\":false}\n"
+      }
+    ],
+    "launchers": [
+      {
+        "role": "native-launcher",
+        "record": {
+          "schema": "sf-preview-causal-e13-launcher-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "role": "native-launcher",
+          "kind": "disabled",
+          "reason": "directory"
+        },
+        "line": "SF_PREVIEW_E13_LAUNCHER {\"schema\":\"sf-preview-causal-e13-launcher-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"role\":\"native-launcher\",\"kind\":\"disabled\",\"reason\":\"directory\"}\n",
+        "bytes": 265
+      },
+      {
+        "role": "playwright-launcher",
+        "record": {
+          "schema": "sf-preview-causal-e13-launcher-v1",
+          "source": "ffffffffffffffffffffffffffffffffffffffff",
+          "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+          "qualification": false,
+          "role": "playwright-launcher",
+          "kind": "disabled",
+          "reason": "directory"
+        },
+        "line": "SF_PREVIEW_E13_LAUNCHER {\"schema\":\"sf-preview-causal-e13-launcher-v1\",\"source\":\"ffffffffffffffffffffffffffffffffffffffff\",\"sourceTree\":\"ffffffffffffffffffffffffffffffffffffffff\",\"qualification\":false,\"role\":\"playwright-launcher\",\"kind\":\"disabled\",\"reason\":\"directory\"}\n",
+        "bytes": 269
+      }
+    ],
+    "eventMaximumBytes": 710,
+    "allModelsBelowLineCap": true,
+    "rootIndependentConservativeTerminalModelBytes": 714
+  },
+  "semantics": {
+    "request": "Exact Request identity at the first eligible portfolio-preview HTTP boundary, after original route/mode guards and before body/admit; entry does not prove authorization or producer entry.",
+    "units": "Each entered port/compare unit retains its own ordinal and explicit parent unit/phase from the captured private ALS token; no ambient last-unit association.",
+    "phaseEntry": "Boundary reached before the original callee lookup/receiver/argument evaluation. It is not proof that a callee started or an awaited operation is blocked.",
+    "phaseClose": "returned only at the post-await identity tap; abrupt is a synchronous expression failure; rejected follows an awaited rejection; abandoned means that no return/rejection of that phase was established.",
+    "concurrent": "Unit catch/finally closes only its own active phase. Pending siblings remain open; nested/concurrent durations are never exclusive or additive.",
+    "scope": "Missing or foreign tokens use a neutral private scope. Mechanism faults or failed exact installation disable attribution permanently before work/fallback; no reselection.",
+    "terminal": "request-close records boundary outcome and pre-terminal transport flags. It cannot attest its own output, subsequent fsync/close, all unit completion, or an untruncated trace.",
+    "partial": "Killed/aborted process or I/O failure may leave only a prefix, a partial trailing line, or no stream. No terminal is fabricated. Entries can survive without a unit close.",
+    "overflow": "A full successful comparison can use many phases; the bounded prefix is deliberately allowed to truncate before the journey ends. This is not a promise that all comparisons fit.",
+    "clock": "Only server performance.now, in integer tenths of milliseconds from selection. Invalid/backward clock yields null plus clockFault; no comparison with browser/runtime-report UTC clocks.",
+    "errors": "Observer errors are contained; product work result/Promise identity and exact thrown value, including undefined, remain authoritative.",
+    "io": "One file write and one stdout attempt per admitted row; write(false) is recorded as backpressure and is never retried. Failed/partial file writes stop file appends. fsync/fstat/close only at request-close."
+  },
+  "perturbation": {
+    "boundedDataNotDuration": true,
+    "costs": "Synchronous event serialization, file append and stdout append, private ALS.run/getStore, fixed capped list lookup, and close-time fsync add overhead. Byte/event caps do not bound syscall latency.",
+    "noNew": "No CPU sampler, timer, await, worker, retry, deadline, domain read, digest, authority call, cache or producer change.",
+    "noPrediction": "No runtime performance or completion within 60 seconds is established by these data models."
+  },
+  "unchanged": {
+    "analyticsRequest": {
+      "gitSha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "bytes": 295,
+      "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+      "lf": 0
+    },
+    "previewWaitMs": 60000,
+    "sensitivityWaitMs": 120000,
+    "firstTestMs": 780000,
+    "secondTestMs": 660000,
+    "spec": {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitSha": "f8a62baf167a1a4374122552a770f1ec49f56313"
+    },
+    "productAwaitCounts": {
+      "http": 7,
+      "port": 11,
+      "compare": 18
+    },
+    "launcherAwaitCounts": {
+      "inner": 13,
+      "outer": 16
+    }
+  },
+  "pending": [
+    "No E13 source commit/tree/run/artifact/tuple/outcome exists in this proposal; root object authority is separate.",
+    "No original log or ZIP acquisition by this writer.",
+    "Controls are still reviewed separately, with synthetic ports/clock/ALS and no claim of native authority or syscall fault qualification."
+  ]
+}

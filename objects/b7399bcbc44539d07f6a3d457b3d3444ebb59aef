@@ -1,0 +1,388 @@
+{
+  "schema": "sf613-e13-control-derivation-v1",
+  "status": "STATIC_REVIEWED_PROPOSAL_NO_EXECUTION",
+  "cleanSource": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "files": [
+    {
+      "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "absence": {
+        "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+        "result": "GET contents NOT_FOUND 404"
+      },
+      "postimage": {
+        "gitSha": "00389741844e45cd1a507a7e07c370edcf891f93",
+        "bytes": 1102,
+        "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+        "lf": 24
+      },
+      "addition": "import { expect, test } from \"bun:test\"\nimport { Buffer } from \"node:buffer\"\nimport { e13Modes, runSfE13Control } from \"./fixture/sf613-preview-e13-observation.ts\"\n\n/** Synthetic observer mechanisms and real denial/early-return callers; no CPU or latency claim. */\ntest(\"E13 causal observation preserves work and bounds its Request phase stream\", async () => {\n  const reports = []\n  for (const mode of e13Modes) {\n    const result = await runSfE13Control(import.meta.path, mode)\n    expect(result.report.mode).toBe(mode)\n    expect(result.report.synthetic).toBe(true)\n    expect(result.report.requestGets).toBe(0)\n    expect(result.omniSpawns).toBe(1)\n    expect(result.omniDelegations).toBe(0)\n    reports.push(result)\n  }\n  expect(reports.length).toBe(7)\n  expect(new Set(reports.map((item) => item.pid)).size).toBe(7)\n  const line = \"SF_E13_OBSERVATION_CONTROL \" + JSON.stringify({\n    schema: \"sf-preview-e13-control-v1\", synthetic: true, childModes: [...e13Modes], reports,\n  }) + \"\\n\"\n  expect(Buffer.byteLength(line, \"utf8\")).toBeLessThanOrEqual(16_384)\n  process.stdout.write(line)\n}, 35_000)\n",
+      "diffMetrics": {
+        "hunks": 1,
+        "insertions": 24,
+        "deletions": 0
+      }
+    },
+    {
+      "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "status": "A",
+      "mode": "100644",
+      "preimage": null,
+      "absence": {
+        "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+        "result": "GET contents NOT_FOUND 404"
+      },
+      "postimage": {
+        "gitSha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+        "bytes": 27993,
+        "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+        "lf": 442
+      },
+      "addition": "import assert from \"node:assert/strict\"\nimport { AsyncLocalStorage } from \"node:async_hooks\"\nimport { createHash } from \"node:crypto\"\nimport { Buffer } from \"node:buffer\"\nimport { closeSync, fsyncSync, mkdirSync, mkdtempSync, openSync, readFileSync, realpathSync, rmSync, statSync, writeSync } from \"node:fs\"\nimport os from \"node:os\"\nimport path from \"node:path\"\nimport { fileURLToPath } from \"node:url\"\n\nexport const e13Modes = [\"flow\", \"mechanism\", \"foreign-noop\", \"get-store\", \"output\", \"overflow\", \"unavailable\"] as const\nexport type E13Mode = typeof e13Modes[number]\nfunction record(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === \"object\" && !Array.isArray(value) }\nfunction sha256(value: string) { return createHash(\"sha256\").update(value, \"utf8\").digest(\"hex\") }\n\n/** Process isolation is required by the production selection latch; there is no reset API. */\nexport async function runSfE13Control(file: string, mode: E13Mode) {\n  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n    import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n    import(\"@orchestra/core/test/fixture/omni-expect\"), import(\"effect\"), import(\"effect/unstable/process\"),\n    import(\"@orchestra/core/omni\"),\n  ])\n  expectSpawn(file)\n  const before = Omni.snapshot()\n  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n    const processes = yield* AppProcess.Service\n    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {\n      cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n      killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n    }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })\n  }), LayerNode.compile(AppProcess.node))))\n  const after = Omni.snapshot()\n  const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n    throw new Error(\"E13 observer control did not complete: \" + JSON.stringify({\n      mode, exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n      stderrTruncated: result.stderrTruncated, stdout, stderr,\n    }))\n  const receipt: unknown = JSON.parse(stdout)\n  if (!record(receipt) || receipt.schema !== \"sf-preview-e13-control-child-v1\" || receipt.mode !== mode ||\n    typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0 ||\n    receipt.synthetic !== true || !Array.isArray(receipt.checks) || !receipt.checks.length ||\n    receipt.checks.some((item: unknown) => typeof item !== \"string\") || Buffer.byteLength(stdout, \"utf8\") > 16_384)\n    throw new Error(\"E13 observer control returned an invalid receipt\")\n  return { pid: receipt.pid, report: receipt,\n    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n}\n\nasync function child(mode: E13Mode) {\n  const property = Object.getOwnPropertyDescriptor, define = Object.defineProperty, remove = Reflect.deleteProperty\n  const apply = Reflect.apply, parse = JSON.parse, stringify = JSON.stringify\n  const savedRun = property(AsyncLocalStorage.prototype, \"run\"), savedGet = property(AsyncLocalStorage.prototype, \"getStore\")\n  const savedNow = property(performance, \"now\"), savedWrite = property(process.stdout, \"write\"), savedStringify = property(JSON, \"stringify\")\n  const originalWrite = process.stdout.write\n  assert.ok(savedRun && savedGet && savedStringify)\n  const nativeRun = savedRun.value, nativeGet = savedGet.value\n  assert.equal(typeof nativeRun, \"function\")\n  assert.equal(typeof nativeGet, \"function\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../\", import.meta.url)))\n  const evidenceBase = path.join(repository, \"test-ci-evidence\")\n  mkdirSync(evidenceBase, { recursive: true })\n  const directory = mkdtempSync(path.join(evidenceBase, \"sf613-e13-event-\"))\n  const privateDirectory = mkdtempSync(path.join(os.tmpdir(), \"sf613-e13-control-\"))\n  const directoryKey = \"SF_PREVIEW_E13_EVENT_EVIDENCE_DIR\", bindingKey = \"SF_PREVIEW_E13_EVENT_EVIDENCE_BINDING\"\n  const oldDirectory = process.env[directoryKey], oldBinding = process.env[bindingKey]\n  const argv = [...process.argv], cwd = process.cwd()\n  const source = \"455c02a7a05a6dd3262ae15b184419897366fde4\", sourceTree = \"ae1c0977057e45853f3dc240140e5f221057f49d\"\n  const launcher = { schema: \"sf-preview-e13-event-launch-v1\", source, sourceTree, snapshot: \"f\".repeat(40),\n    runId: \"1\", attempt: \"1\", nonce: path.basename(directory), processRole: \"native-cli\", streamName: \"preview-events.jsonl\" }\n  const launcherRaw = stringify(launcher) + \"\\n\", launcherPath = path.join(directory, \"launcher.json\")\n  const launcherFd = openSync(launcherPath, \"wx\", 0o600)\n  try { writeSync(launcherFd, launcherRaw, undefined, \"utf8\"); fsyncSync(launcherFd) } finally { closeSync(launcherFd) }\n  const binding = stringify({ ...launcher, launcherBytes: Buffer.byteLength(launcherRaw, \"utf8\"), launcherSha256: sha256(launcherRaw) })\n  const prefix = \"SF_PREVIEW_E13_EVENT \", eventFile = path.join(directory, \"preview-events.jsonl\")\n  const lines: string[] = [], checks: string[] = []\n  let clock = 1_000, clockAction: (() => void) | undefined, invalidClock = false\n  let writeFalse = false, writeThrow = false, stdoutAttempts = 0, requestGets = 0\n  const outputError = new Error(\"synthetic-output\")\n  const request = new Proxy(new Request(\"https://example.invalid/selected\"), { get() { requestGets++; throw new Error(\"Request member read\") } })\n  const foreign = new Proxy(new Request(\"https://example.invalid/foreign\"), { get() { requestGets++; throw new Error(\"Foreign Request member read\") } })\n  function rows() {\n    return lines.map((line) => {\n      assert.ok(line.startsWith(prefix) && line.endsWith(\"\\n\"))\n      assert.ok(Buffer.byteLength(line, \"utf8\") <= 1_024)\n      const value: unknown = parse(line.slice(prefix.length))\n      assert.ok(record(value))\n      return value\n    })\n  }\n  function one(kind: string) { const values = rows().filter((item) => item.kind === kind); assert.equal(values.length, 1); return values[0]! }\n  function restore(owner: object, key: string, descriptor: PropertyDescriptor | undefined) {\n    if (descriptor) define(owner, key, descriptor); else remove(owner, key)\n  }\n  function installRun(implementation: (this: unknown, token: unknown, callback: unknown) => unknown) {\n    define(AsyncLocalStorage.prototype, \"run\", { ...savedRun, value: implementation })\n  }\n  let finalReceipt: Record<string, unknown> | undefined\n  try {\n    process.chdir(privateDirectory)\n    process.argv.splice(1, process.argv.length - 1, path.join(repository, \"apps/cli/src/index.ts\"), \"serve\")\n    process.env[directoryKey] = directory\n    process.env[bindingKey] = mode === \"unavailable\" ? \"{}\" : binding\n    define(performance, \"now\", { configurable: true, value: () => {\n      const action = clockAction\n      clockAction = undefined\n      action?.()\n      clock += 0.1\n      return invalidClock ? Number.NaN : clock\n    } })\n    define(process.stdout, \"write\", { configurable: true, value: function (this: unknown, chunk: unknown, ...args: unknown[]) {\n      if (typeof chunk === \"string\" && chunk.startsWith(prefix)) {\n        stdoutAttempts++\n        if (writeThrow) throw outputError\n        lines.push(chunk)\n        return !writeFalse\n      }\n      return apply(originalWrite, this, [chunk, ...args])\n    } })\n    const observer = await import(\"../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts\")\n    const handle = observer.startSfE13Observation(request)\n    if (mode === \"unavailable\") {\n      assert.equal(handle, undefined)\n      process.env[bindingKey] = binding\n      assert.equal(observer.startSfE13Observation(request), undefined)\n      let calls = 0\n      const value = {}\n      assert.equal(observer.runSfE13Observation(handle, request, () => { calls++; return value }), value)\n      let threw = false, caught: unknown = value\n      try { observer.runSfE13Observation(handle, request, () => { calls++; throw undefined }) } catch (error) { threw = true; caught = error }\n      assert.equal(threw, true); assert.equal(caught, undefined); assert.equal(calls, 2)\n      assert.equal(observer.enterSfE13Unit(\"compare\"), undefined)\n      observer.markSfE13Http(handle, request, \"body-returned\"); observer.finishSfE13Observation(handle, request, false)\n      assert.equal(lines.length, 0)\n      checks.push(\"invalid-binding-latches-without-reselection\", \"unavailable-keeps-value-and-undefined\")\n    } else {\n      assert.ok(handle)\n      assert.equal(observer.startSfE13Observation(foreign), undefined)\n      assert.equal(observer.enterSfE13Unit(\"compare\"), undefined)\n      assert.equal(one(\"request-enter\").maxEvents, 511)\n      assert.equal(one(\"request-enter\").maxBytes, 261_120)\n      if (mode === \"flow\") {\n        writeFalse = true\n        observer.markSfE13Http(handle, request, \"body-returned\")\n        writeFalse = false\n        const value = {}, promise = Promise.resolve(value)\n        assert.equal(observer.runSfE13Observation(handle, request, () => promise), promise)\n        assert.equal(await promise, value)\n        let thenGets = 0\n        const thenable = { get then() { thenGets++; throw outputError } }\n        assert.equal(observer.runSfE13Observation(handle, request, () => thenable), thenable)\n        assert.equal(thenGets, 0)\n        let foreignCalls = 0\n        observer.runSfE13Observation(handle, request, () => {\n          const before = lines.length\n          assert.equal(observer.runSfE13Observation(handle, foreign, () => { foreignCalls++; return observer.enterSfE13Unit(\"compare\") }), undefined)\n          assert.equal(observer.runSfE13Observation({}, request, () => { foreignCalls++; return observer.enterSfE13Unit(\"compare\") }), undefined)\n          assert.equal(lines.length, before)\n        })\n        assert.equal(foreignCalls, 2)\n        checks.push(\"exact-promise-and-unassimilated-value\", \"foreign-and-wrong-handle-use-neutral-scope\")\n\n        await observer.runSfE13Observation(handle, request, async () => {\n          const first = observer.enterSfE13Unit(\"port\"), second = observer.enterSfE13Unit(\"port\")\n          assert.ok(first && second)\n          let releaseFirst = () => {}, releaseSecond = () => {}\n          const firstGate = new Promise<void>((resolve) => { releaseFirst = resolve })\n          const secondGate = new Promise<void>((resolve) => { releaseSecond = resolve })\n          const firstValue = {}, secondValue = {}\n          const firstPromise = observer.runSfE13Phase(first, \"combination-evaluate\", async () => {\n            const unit = observer.enterSfE13Unit(\"compare\"); assert.ok(unit)\n            await firstGate\n            observer.finishSfE13Unit(unit, false)\n            return firstValue\n          })\n          const secondPromise = observer.runSfE13Phase(second, \"evaluations-recheck\", async () => {\n            const unit = observer.enterSfE13Unit(\"compare\"); assert.ok(unit)\n            await secondGate\n            observer.finishSfE13Unit(unit, false)\n            return secondValue\n          })\n          const prefixRows = rows()\n          const firstPhase = prefixRows.find((item) => item.kind === \"phase-enter\" && item.point === \"combination-evaluate\")\n          const secondPhase = prefixRows.find((item) => item.kind === \"phase-enter\" && item.point === \"evaluations-recheck\")\n          assert.ok(firstPhase && secondPhase)\n          const children = prefixRows.filter((item) => item.kind === \"unit-enter\" && item.unitKind === \"compare\")\n          assert.equal(children.length, 2)\n          assert.deepEqual(children.map((item) => [item.parentUnit, item.parentPhase]),\n            [[firstPhase.unit, firstPhase.phase], [secondPhase.unit, secondPhase.phase]])\n          assert.equal(prefixRows.filter((item) => item.kind === \"unit-close\").length, 0)\n          assert.equal(readFileSync(eventFile, \"utf8\"), lines.join(\"\"))\n          releaseSecond()\n          assert.equal(observer.returnedSfE13Await(second, await secondPromise), secondValue)\n          observer.finishSfE13Unit(second, false)\n          releaseFirst()\n          assert.equal(observer.returnedSfE13Await(first, await firstPromise), firstValue)\n          observer.finishSfE13Unit(first, false)\n        })\n        checks.push(\"entries-persist-before-units-return\", \"overlapping-phases-keep-explicit-parent\")\n\n        const { compareScenarios } = await import(\"../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts\")\n        const { createPortfolioPort } = await import(\"../../../../modules/sucafina/Sucafinav1/product/portfolio/port.ts\")\n        const opaqueContext = {}, earlyInput = { host: { revalidate: () => Promise.resolve(false) } }\n        await observer.runSfE13Observation(handle, request, async () => {\n          const early: unknown = await apply(compareScenarios, undefined, [earlyInput, { scenarioRefs: [], criteria: [] }, opaqueContext])\n          assert.deepEqual(early, { status: \"needs-input\", reason: \"two-distinct-scenarios-required\" })\n          const denied: unknown = await apply(compareScenarios, undefined, [earlyInput, { scenarioRefs: [\"left\", \"right\"], criteria: [] }, opaqueContext])\n          assert.deepEqual(denied, { status: \"denied\", reason: \"invalid-binding\" })\n          const order: string[] = []\n          const abruptHost = { get revalidate() { order.push(\"lookup\"); return function (this: unknown, context: unknown) {\n            assert.equal(this, abruptHost); assert.equal(context, opaqueContext); order.push(\"call\"); throw undefined\n          } } }\n          let threw = false, caught: unknown = opaqueContext\n          try { await apply(compareScenarios, undefined, [{ host: abruptHost }, { scenarioRefs: [\"left\", \"right\"], criteria: [] }, opaqueContext]) }\n          catch (error) { threw = true; caught = error }\n          assert.equal(threw, true); assert.equal(caught, undefined)\n          assert.deepEqual(order, [\"lookup\", \"call\"])\n          const rejection = {}\n          threw = false; caught = undefined\n          try { await apply(compareScenarios, undefined, [{ host: { revalidate: () => Promise.reject(rejection) } },\n            { scenarioRefs: [\"left\", \"right\"], criteria: [] }, opaqueContext]) }\n          catch (error) { threw = true; caught = error }\n          assert.equal(threw, true); assert.equal(caught, rejection)\n          const port = createPortfolioPort({ revalidate: () => Promise.resolve(false),\n            resolveCandidate: () => { throw outputError }, evaluate: () => { throw outputError },\n            sensitivity: () => { throw outputError }, revalidateEvaluation: () => { throw outputError } })\n          const portDenied: unknown = await apply(port.evaluate, port, [{ scope: { horizon: { start: \"2026-01-01\", end: \"2026-01-02\" }, currency: \"USD\" },\n            candidateRefs: [], operations: [], constraints: [], priorities: [], explorationLimit: 4 }, opaqueContext])\n          assert.deepEqual(portDenied, { status: \"denied\", reason: \"invalid-binding\" })\n        })\n        const outcomes = rows().filter((item) => item.kind === \"phase-close\").map((item) => item.outcome)\n        assert.ok(outcomes.includes(\"returned\") && outcomes.includes(\"abrupt\") && outcomes.includes(\"rejected\"))\n        checks.push(\"real-callers-early-return-denial-and-exact-rejection\", \"lookup-receiver-arguments-once\")\n\n        let releaseLate = () => {}, latePromise: Promise<void> | undefined\n        await observer.runSfE13Observation(handle, request, async () => {\n          const parent = observer.enterSfE13Unit(\"port\")\n          const lateGate = new Promise<void>((resolve) => { releaseLate = resolve })\n          const combined = observer.runSfE13Phase(parent, \"evaluations-recheck\", () => {\n            const rejected = (async () => {\n              const unit = observer.enterSfE13Unit(\"compare\")\n              let failed = false\n              try { await Promise.reject(undefined) } catch (error) { failed = true; throw error }\n              finally { observer.finishSfE13Unit(unit, failed) }\n            })()\n            latePromise = (async () => { const unit = observer.enterSfE13Unit(\"compare\"); await lateGate; observer.finishSfE13Unit(unit, false) })()\n            return Promise.all([rejected, latePromise])\n          })\n          let threw = false, caught: unknown = outputError\n          try { await combined } catch (error) { threw = true; caught = error }\n          assert.equal(threw, true); assert.equal(caught, undefined)\n          observer.finishSfE13Unit(parent, true)\n        })\n        assert.equal(rows().filter((item) => item.kind === \"unit-enter\").length -\n          rows().filter((item) => item.kind === \"unit-close\").length, 1)\n        clockAction = () => observer.finishSfE13Observation(handle, request, false)\n        observer.markSfE13Http(handle, request, \"egress-passed\")\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.openUnits, 1)\n        assert.equal(terminal.openPhases, 0)\n        assert.equal(terminal.backpressureBefore, true)\n        assert.equal(terminal.scopeDisabled, false)\n        assert.equal(rows().at(-2)?.kind, \"http-boundary\")\n        const closedLines = lines.length\n        releaseLate()\n        assert.ok(latePromise)\n        await latePromise\n        observer.markSfE13Http(handle, request, \"body-returned\"); observer.finishSfE13Observation(handle, request, true)\n        assert.equal(observer.runSfE13Observation(handle, request, () => observer.enterSfE13Unit(\"compare\")), undefined)\n        assert.equal(lines.length, closedLines)\n        checks.push(\"parent-rejection-does-not-close-sibling\", \"reentrant-close-serialized-and-late-ignored\")\n      } else if (mode === \"mechanism\") {\n        let calls = 0, delayed: unknown\n        const value = {}, mechanismValue = {}\n        installRun(function (token, callback) {\n          assert.ok(typeof callback === \"function\")\n          delayed = callback\n          apply(nativeRun, this, [token, callback])\n          apply(nativeRun, this, [token, callback])\n          return mechanismValue\n        })\n        assert.equal(observer.runSfE13Observation(handle, request, () => { calls++; return value }), value)\n        assert.ok(typeof delayed === \"function\")\n        apply(delayed, undefined, [])\n        assert.equal(calls, 1)\n        for (const thrown of [outputError, undefined]) {\n          let caught: unknown = value, didThrow = false\n          installRun(function (token, callback) {\n            try { apply(nativeRun, this, [token, callback]) } catch { /* The mechanism deliberately swallows product rejection. */ }\n            return mechanismValue\n          })\n          try { observer.runSfE13Observation(handle, request, () => { calls++; throw thrown }) } catch (error) { didThrow = true; caught = error }\n          assert.equal(didThrow, true); assert.equal(caught, thrown)\n        }\n        assert.equal(calls, 3)\n        let entries = 0\n        installRun(function () { throw outputError })\n        assert.equal(observer.runSfE13Observation(handle, request, () => { calls++; if (observer.enterSfE13Unit(\"compare\")) entries++; return value }), value)\n        assert.equal(calls, 4); assert.equal(entries, 0)\n        installRun(function () { return mechanismValue })\n        assert.equal(observer.runSfE13Observation(handle, request, () => { calls++; return undefined }), undefined)\n        assert.equal(calls, 5)\n        installRun(function (token, callback) { apply(nativeRun, this, [token, callback]); throw outputError })\n        const promise = Promise.resolve(value)\n        assert.equal(observer.runSfE13Observation(handle, request, () => { calls++; return promise }), promise)\n        assert.equal(await promise, value); assert.equal(calls, 6)\n        define(AsyncLocalStorage.prototype, \"run\", savedRun)\n        observer.finishSfE13Observation(handle, request, false)\n        assert.equal(one(\"request-close\").scopeDisabled, true)\n        assert.equal(one(\"request-close\").scopeFault, true)\n        assert.equal(rows().filter((item) => item.kind === \"unit-enter\").length, 0)\n        checks.push(\"duplicate-and-tardy-thunk-never-replay\", \"mechanism-result-and-swallowed-error-not-authoritative\",\n          \"before-noinvoke-after-faults-preserve-work\", \"fallback-disables-attribution\")\n      } else if (mode === \"foreign-noop\" || mode === \"get-store\") {\n        let calls = 0\n        observer.runSfE13Observation(handle, request, () => {\n          const parent = observer.enterSfE13Unit(\"port\"); assert.ok(parent)\n          if (mode === \"foreign-noop\") installRun(function (_token, callback) {\n            assert.ok(typeof callback === \"function\")\n            return apply(callback, undefined, [])\n          })\n          else define(AsyncLocalStorage.prototype, \"getStore\", { ...savedGet, value: () => { throw undefined } })\n          const value = {}\n          assert.equal(observer.runSfE13Observation(handle, mode === \"foreign-noop\" ? foreign : request, () => {\n            calls++\n            assert.equal(observer.enterSfE13Unit(\"compare\"), undefined)\n            return value\n          }), value)\n          define(AsyncLocalStorage.prototype, \"run\", savedRun)\n          define(AsyncLocalStorage.prototype, \"getStore\", savedGet)\n          assert.equal(observer.enterSfE13Unit(\"compare\"), undefined)\n          observer.finishSfE13Unit(parent, false)\n        })\n        observer.finishSfE13Observation(handle, request, false)\n        assert.equal(calls, 1)\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.scopeDisabled, true); assert.equal(terminal.scopeFault, true)\n        assert.equal(terminal.openUnits, 1)\n        assert.equal(rows().filter((item) => item.kind === \"unit-enter\").length, 1)\n        checks.push(mode === \"foreign-noop\" ? \"nested-foreign-noop-does-not-inherit-selected\" : \"getstore-fault-disables-before-work\",\n          \"restore-cannot-reenable-attribution\")\n      } else if (mode === \"output\") {\n        writeFalse = true\n        observer.markSfE13Http(handle, request, \"body-returned\")\n        writeFalse = false\n        const beforeThrow = stdoutAttempts\n        writeThrow = true\n        const value = {}\n        assert.equal(observer.runSfE13Observation(handle, request, () => { observer.markSfE13Http(handle, request, \"admit-returned\"); return value }), value)\n        writeThrow = false\n        assert.equal(stdoutAttempts, beforeThrow + 1)\n        define(JSON, \"stringify\", { configurable: true, writable: true, value: () => { throw undefined } })\n        let threw = false, caught: unknown = value\n        try { observer.runSfE13Observation(handle, request, () => { observer.markSfE13Http(handle, request, \"case-callback-entered\"); throw undefined }) }\n        catch (error) { threw = true; caught = error }\n        define(JSON, \"stringify\", savedStringify)\n        assert.equal(threw, true); assert.equal(caught, undefined)\n        invalidClock = true\n        observer.markSfE13Http(handle, request, \"with-case-returned\")\n        invalidClock = false\n        observer.finishSfE13Observation(handle, request, true)\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.outcome, \"rejected\")\n        assert.equal(terminal.backpressureBefore, true)\n        assert.equal(terminal.emissionFaultBefore, true)\n        assert.equal(terminal.clockFault, true)\n        assert.equal(rows().find((item) => item.point === \"with-case-returned\")?.elapsedTenthMs, null)\n        const disk = readFileSync(eventFile, \"utf8\")\n        assert.ok(disk.includes('\"point\":\"admit-returned\"'))\n        assert.equal(lines.some((line) => line.includes('\"point\":\"admit-returned\"')), false)\n        assert.equal(disk.includes('\"point\":\"case-callback-entered\"'), false)\n        checks.push(\"write-false-consumed-once-without-replay\", \"writer-serializer-clock-faults-preserve-product\",\n          \"stdout-loss-not-promoted-to-complete-stream\")\n      } else if (mode === \"overflow\") {\n        const value = {}\n        let phaseCalls = 0\n        observer.runSfE13Observation(handle, request, () => {\n          const parent = observer.enterSfE13Unit(\"port\"); assert.ok(parent)\n          for (let index = 0; index < 600; index++) {\n            assert.equal(observer.runSfE13Phase(parent, \"combination-evaluate\", () => { phaseCalls++; return value }), value)\n            assert.equal(observer.returnedSfE13Await(parent, value), value)\n          }\n          observer.finishSfE13Unit(parent, false)\n        })\n        assert.equal(phaseCalls, 600)\n        observer.finishSfE13Observation(handle, request, false)\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.overflow, true)\n        assert.ok(typeof terminal.dropped === \"number\" && terminal.dropped > 0 && terminal.dropped <= 65_535)\n        assert.equal(rows().filter((item) => item.kind === \"overflow\").length, 1)\n        assert.ok(lines.length <= 511)\n        assert.ok(Buffer.byteLength(lines.join(\"\"), \"utf8\") <= 261_120)\n        assert.equal(rows().at(-1)?.kind, \"request-close\")\n        checks.push(\"event-byte-reserves-survive-overflow\", \"work-and-tap-identities-survive-capacity\")\n      }\n      const all = rows(), disk = readFileSync(eventFile, \"utf8\")\n      assert.equal(all.at(-1)?.kind, \"request-close\")\n      assert.equal(all.filter((item) => item.kind === \"request-close\").length, 1)\n      assert.ok(lines.length <= 511 && Buffer.byteLength(lines.join(\"\"), \"utf8\") <= 261_120)\n      for (let index = 1; index < all.length; index++) {\n        const previous = all[index - 1]!.sequence, current = all[index]!.sequence\n        assert.ok(typeof previous === \"number\" && typeof current === \"number\" && current > previous)\n      }\n      if (mode !== \"output\") {\n        assert.equal(disk, lines.join(\"\"))\n        assert.deepEqual(all.map((item) => item.sequence), all.map((_item, index) => index + 1))\n      }\n      assert.equal(statSync(eventFile).mode & 0o777, 0o600)\n      assert.ok(Buffer.byteLength(disk, \"utf8\") <= 261_120)\n      const terminal = one(\"request-close\")\n      const closedCount = lines.length\n      observer.markSfE13Http(handle, request, \"egress-passed\"); observer.finishSfE13Observation(handle, request, false)\n      assert.equal(observer.startSfE13Observation(request), undefined)\n      assert.equal(lines.length, closedCount)\n      finalReceipt = { schema: \"sf-preview-e13-control-child-v1\", mode, pid: process.pid, synthetic: true, checks,\n        records: all.length, stdoutAttempts, stdoutBytes: Buffer.byteLength(lines.join(\"\"), \"utf8\"), stdoutSha256: sha256(lines.join(\"\")),\n        fileBytes: Buffer.byteLength(disk, \"utf8\"), fileSha256: sha256(disk), terminal }\n    }\n    assert.equal(requestGets, 0)\n    if (!finalReceipt) finalReceipt = { schema: \"sf-preview-e13-control-child-v1\", mode, pid: process.pid, synthetic: true, checks, records: 0, requestGets }\n    else finalReceipt.requestGets = requestGets\n  } finally {\n    restore(AsyncLocalStorage.prototype, \"run\", savedRun)\n    restore(AsyncLocalStorage.prototype, \"getStore\", savedGet)\n    restore(performance, \"now\", savedNow)\n    restore(process.stdout, \"write\", savedWrite)\n    define(JSON, \"stringify\", savedStringify)\n    process.argv.splice(0, process.argv.length, ...argv)\n    process.chdir(cwd)\n    if (oldDirectory === undefined) delete process.env[directoryKey]; else process.env[directoryKey] = oldDirectory\n    if (oldBinding === undefined) delete process.env[bindingKey]; else process.env[bindingKey] = oldBinding\n    rmSync(directory, { recursive: true, force: true })\n    rmSync(privateDirectory, { recursive: true, force: true })\n  }\n  assert.ok(finalReceipt)\n  return finalReceipt\n}\n\nif (import.meta.main) {\n  const mode = e13Modes.find((value) => value === process.argv[2])\n  assert.ok(mode)\n  const receipt = await child(mode)\n  process.stdout.write(JSON.stringify(receipt) + \"\\n\")\n}\n",
+      "diffMetrics": {
+        "hunks": 1,
+        "insertions": 442,
+        "deletions": 0
+      }
+    }
+  ],
+  "runnerReuse": {
+    "base": {
+      "gitSha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "bytes": 13598,
+      "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+      "lf": 231
+    },
+    "baseRange": "runSfCaptureLazyControl declaration up to child declaration, exclusive",
+    "before": "export async function runSfCaptureLazyControl(file: string) {\n  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n    import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n    import(\"@orchestra/core/test/fixture/omni-expect\"), import(\"effect\"), import(\"effect/unstable/process\"),\n    import(\"@orchestra/core/omni\"),\n  ])\n  expectSpawn(file)\n  const before = Omni.snapshot()\n  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n    const processes = yield* AppProcess.Service\n    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path], {\n      cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n      killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n    }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })\n  }), LayerNode.compile(AppProcess.node))))\n  const after = Omni.snapshot()\n  const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n    throw new Error(\"Captured context lazy child did not complete: \" + JSON.stringify({\n      exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n      stderrTruncated: result.stderrTruncated, stdout, stderr,\n    }))\n  const receipt: unknown = JSON.parse(stdout)\n  if (!receipt || typeof receipt !== \"object\" || !(\"mode\" in receipt) || receipt.mode !== \"deferred-baseline\" ||\n    !(\"pid\" in receipt) || typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0)\n    throw new Error(\"Captured context lazy child returned an invalid receipt\")\n  return { pid: receipt.pid, report: receipt,\n    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n}\n\n",
+    "after": "export async function runSfE13Control(file: string, mode: E13Mode) {\n  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n    import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n    import(\"@orchestra/core/test/fixture/omni-expect\"), import(\"effect\"), import(\"effect/unstable/process\"),\n    import(\"@orchestra/core/omni\"),\n  ])\n  expectSpawn(file)\n  const before = Omni.snapshot()\n  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n    const processes = yield* AppProcess.Service\n    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {\n      cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n      killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n    }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })\n  }), LayerNode.compile(AppProcess.node))))\n  const after = Omni.snapshot()\n  const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n    throw new Error(\"E13 observer control did not complete: \" + JSON.stringify({\n      mode, exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n      stderrTruncated: result.stderrTruncated, stdout, stderr,\n    }))\n  const receipt: unknown = JSON.parse(stdout)\n  if (!record(receipt) || receipt.schema !== \"sf-preview-e13-control-child-v1\" || receipt.mode !== mode ||\n    typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0 ||\n    receipt.synthetic !== true || !Array.isArray(receipt.checks) || !receipt.checks.length ||\n    receipt.checks.some((item: unknown) => typeof item !== \"string\") || Buffer.byteLength(stdout, \"utf8\") > 16_384)\n    throw new Error(\"E13 observer control returned an invalid receipt\")\n  return { pid: receipt.pid, report: receipt,\n    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n}\n\n",
+    "anchors": [
+      {
+        "id": "runner-extract#1",
+        "before": "export async function runSfCaptureLazyControl(file: string) {\n  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n    import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n",
+        "after": "export async function runSfE13Control(file: string, mode: E13Mode) {\n  const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n    import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n"
+      },
+      {
+        "id": "runner-extract#2",
+        "before": "  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n    const processes = yield* AppProcess.Service\n    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path], {\n      cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n      killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n",
+        "after": "  const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n    const processes = yield* AppProcess.Service\n    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {\n      cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n      killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n"
+      },
+      {
+        "id": "runner-extract#3",
+        "before": "  const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n    throw new Error(\"Captured context lazy child did not complete: \" + JSON.stringify({\n      exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n      stderrTruncated: result.stderrTruncated, stdout, stderr,\n    }))\n  const receipt: unknown = JSON.parse(stdout)\n  if (!receipt || typeof receipt !== \"object\" || !(\"mode\" in receipt) || receipt.mode !== \"deferred-baseline\" ||\n    !(\"pid\" in receipt) || typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0)\n    throw new Error(\"Captured context lazy child returned an invalid receipt\")\n  return { pid: receipt.pid, report: receipt,\n    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n",
+        "after": "  const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n  if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n    throw new Error(\"E13 observer control did not complete: \" + JSON.stringify({\n      mode, exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n      stderrTruncated: result.stderrTruncated, stdout, stderr,\n    }))\n  const receipt: unknown = JSON.parse(stdout)\n  if (!record(receipt) || receipt.schema !== \"sf-preview-e13-control-child-v1\" || receipt.mode !== mode ||\n    typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0 ||\n    receipt.synthetic !== true || !Array.isArray(receipt.checks) || !receipt.checks.length ||\n    receipt.checks.some((item: unknown) => typeof item !== \"string\") || Buffer.byteLength(stdout, \"utf8\") > 16_384)\n    throw new Error(\"E13 observer control returned an invalid receipt\")\n  return { pid: receipt.pid, report: receipt,\n    omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n"
+      }
+    ],
+    "changes": "Function/mode argument and child argv, diagnostic labels and receipt schema/cap. AppProcess/Effect scoped provider/Omni lifecycle/killSignal/forceKillAfter, 3s and64KiB limits remain literal.",
+    "forwardExact": true,
+    "inverseExact": true,
+    "diff": "diff --git a/runner-extract b/runner-extract\n--- a/runner-extract\n+++ b/runner-extract\n@@ -1,4 +1,4 @@\n-export async function runSfCaptureLazyControl(file: string) {\n+export async function runSfE13Control(file: string, mode: E13Mode) {\n   const [{ AppProcess }, { LayerNode }, { expectSpawn }, { Effect }, { ChildProcess }, { Omni }] = await Promise.all([\n     import(\"@orchestra/core/process\"), import(\"@orchestra/core/effect/layer-node\"),\n     import(\"@orchestra/core/test/fixture/omni-expect\"), import(\"effect\"), import(\"effect/unstable/process\"),\n@@ -8,7 +8,7 @@\n   const before = Omni.snapshot()\n   const result = await Effect.runPromise(Effect.scoped(Effect.provide(Effect.gen(function* () {\n     const processes = yield* AppProcess.Service\n-    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path], {\n+    return yield* processes.run(ChildProcess.make(process.execPath, [import.meta.path, mode], {\n       cwd: import.meta.dir, extendEnv: true, stdin: \"ignore\", stdout: \"pipe\", stderr: \"pipe\",\n       killSignal: \"SIGTERM\", forceKillAfter: \"1 second\",\n     }), { timeout: 3_000, maxOutputBytes: 65_536, maxErrorBytes: 65_536 })\n@@ -16,14 +16,16 @@\n   const after = Omni.snapshot()\n   const stdout = result.stdout.toString(\"utf8\"), stderr = result.stderr.toString(\"utf8\")\n   if (result.exitCode !== 0 || result.stdoutTruncated || result.stderrTruncated)\n-    throw new Error(\"Captured context lazy child did not complete: \" + JSON.stringify({\n-      exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n+    throw new Error(\"E13 observer control did not complete: \" + JSON.stringify({\n+      mode, exitCode: result.exitCode, stdoutTruncated: result.stdoutTruncated,\n       stderrTruncated: result.stderrTruncated, stdout, stderr,\n     }))\n   const receipt: unknown = JSON.parse(stdout)\n-  if (!receipt || typeof receipt !== \"object\" || !(\"mode\" in receipt) || receipt.mode !== \"deferred-baseline\" ||\n-    !(\"pid\" in receipt) || typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0)\n-    throw new Error(\"Captured context lazy child returned an invalid receipt\")\n+  if (!record(receipt) || receipt.schema !== \"sf-preview-e13-control-child-v1\" || receipt.mode !== mode ||\n+    typeof receipt.pid !== \"number\" || !Number.isSafeInteger(receipt.pid) || receipt.pid <= 0 ||\n+    receipt.synthetic !== true || !Array.isArray(receipt.checks) || !receipt.checks.length ||\n+    receipt.checks.some((item: unknown) => typeof item !== \"string\") || Buffer.byteLength(stdout, \"utf8\") > 16_384)\n+    throw new Error(\"E13 observer control returned an invalid receipt\")\n   return { pid: receipt.pid, report: receipt,\n     omniSpawns: after.spawns - before.spawns, omniDelegations: after.delegations - before.delegations }\n }\n"
+  },
+  "reviewRepairs": {
+    "R1": {
+      "gitSha": "d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+      "bytes": 26559,
+      "sha256": "4d4cbd3dde8b0843aa2ba54d382a23ef0e9b9e9eda31aed05f33b7e76b609df8",
+      "lf": 443,
+      "state": "superseded import alias style"
+    },
+    "R2": {
+      "gitSha": "d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+      "bytes": 27928,
+      "sha256": "4ef61a9868845016fbe51f096877cf2f8d5e0c95186d258b9d40dcc8f0e0c789",
+      "lf": 440,
+      "state": "rejected: one AppProcess method incorrectly renamed"
+    },
+    "R3": {
+      "gitSha": "ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+      "bytes": 27903,
+      "sha256": "1f5bca8f411969dca6f74d23bf2e1a414346d2d55cde59b0a4b0dac6ce09ff74",
+      "lf": 440,
+      "state": "namespace qualified; AppProcess runner restored"
+    },
+    "R4": {
+      "gitSha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "bytes": 27993,
+      "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+      "lf": 442,
+      "state": "current; causal overflow work counter"
+    },
+    "R1toR3": {
+      "operations": [
+        {
+          "before": "    const { startSfE13Observation: start, markSfE13Http: mark, runSfE13Observation: run,\n      enterSfE13Unit: enter, runSfE13Phase: phase, returnedSfE13Await: returned,\n      finishSfE13Unit: finish, finishSfE13Observation: close } = observer\n",
+          "after": "",
+          "count": 1
+        },
+        {
+          "before": "start(",
+          "after": "observer.startSfE13Observation(",
+          "count": 4,
+          "beforeOffsets": [
+            7703,
+            7849,
+            8578,
+            24702
+          ],
+          "afterOffsets": [
+            7703,
+            7874,
+            8628,
+            24777
+          ]
+        },
+        {
+          "before": "mark(",
+          "after": "observer.markSfE13Http(",
+          "count": 9,
+          "beforeOffsets": [
+            8360,
+            8906,
+            16221,
+            16690,
+            20981,
+            21191,
+            21539,
+            21816,
+            24688
+          ],
+          "afterOffsets": [
+            8360,
+            8924,
+            16257,
+            16744,
+            21053,
+            21281,
+            21647,
+            21942,
+            24832
+          ]
+        },
+        {
+          "before": "run(",
+          "after": "observer.runSfE13Observation(",
+          "count": 21,
+          "beforeOffsets": [
+            7988,
+            8111,
+            9088,
+            9297,
+            9416,
+            9506,
+            9613,
+            9909,
+            12404,
+            15089,
+            16852,
+            17491,
+            18030,
+            18345,
+            18576,
+            18857,
+            19603,
+            20051,
+            21252,
+            21618,
+            22961
+          ],
+          "afterOffsets": [
+            7988,
+            8136,
+            9138,
+            9372,
+            9516,
+            9631,
+            9763,
+            10084,
+            12604,
+            15314,
+            17102,
+            17766,
+            18330,
+            18670,
+            18926,
+            19232,
+            20003,
+            20476,
+            21702,
+            22093,
+            23461
+          ]
+        },
+        {
+          "before": "enter(",
+          "after": "observer.enterSfE13Unit(",
+          "count": 17,
+          "beforeOffsets": [
+            8375,
+            8767,
+            9708,
+            9836,
+            10168,
+            10192,
+            10640,
+            10885,
+            15399,
+            15641,
+            15908,
+            17154,
+            18737,
+            20082,
+            20611,
+            20840,
+            23540
+          ],
+          "afterOffsets": [
+            8375,
+            8785,
+            9744,
+            9890,
+            10240,
+            10282,
+            10748,
+            11011,
+            15543,
+            15803,
+            16088,
+            17352,
+            18953,
+            20316,
+            20863,
+            21110,
+            23828
+          ]
+        },
+        {
+          "before": "phase(",
+          "after": "observer.runSfE13Phase(",
+          "count": 4,
+          "beforeOffsets": [
+            10672,
+            10935,
+            15687,
+            23958
+          ],
+          "afterOffsets": [
+            10672,
+            10952,
+            15721,
+            24009
+          ]
+        },
+        {
+          "before": "returned(",
+          "after": "observer.returnedSfE13Await(",
+          "count": 3,
+          "beforeOffsets": [
+            12081,
+            12213,
+            24110
+          ],
+          "afterOffsets": [
+            12081,
+            12232,
+            24148
+          ]
+        },
+        {
+          "before": "finish(",
+          "after": "observer.finishSfE13Unit(",
+          "count": 9,
+          "beforeOffsets": [
+            10857,
+            11138,
+            12162,
+            12310,
+            16083,
+            16229,
+            16541,
+            21256,
+            24221
+          ],
+          "afterOffsets": [
+            10857,
+            11156,
+            12198,
+            12364,
+            16155,
+            16319,
+            16649,
+            21382,
+            24365
+          ]
+        },
+        {
+          "before": "close(",
+          "after": "observer.finishSfE13Observation(",
+          "count": 8,
+          "beforeOffsets": [
+            8486,
+            16882,
+            17465,
+            19908,
+            21441,
+            23062,
+            24424,
+            26008
+          ],
+          "afterOffsets": [
+            8486,
+            16908,
+            17517,
+            19986,
+            21545,
+            23192,
+            24580,
+            26190
+          ]
+        }
+      ],
+      "method": "Remove unique destructuring then replace only unqualified calls at the listed intermediate offsets, descending per operation. Never touch processes.run. Invert mapped offsets descending in reverse order, then restore destructuring after the literal import line.",
+      "importLine": "    const observer = await import(\"../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts\")\n",
+      "helperCalls": 75,
+      "forwardExact": true,
+      "inverseExact": true
+    },
+    "R2toR3": {
+      "operation": {
+        "before": "processes.observer.runSfE13Observation(ChildProcess.make",
+        "after": "processes.run(ChildProcess.make"
+      },
+      "forwardExact": true,
+      "inverseExact": true
+    },
+    "R3toR4": {
+      "anchors": [
+        {
+          "before": "      } else if (mode === \"overflow\") {\n        const value = {}\n",
+          "after": "      } else if (mode === \"overflow\") {\n        const value = {}\n        let phaseCalls = 0\n"
+        },
+        {
+          "before": "assert.equal(observer.runSfE13Phase(parent, \"combination-evaluate\", () => value), value)",
+          "after": "assert.equal(observer.runSfE13Phase(parent, \"combination-evaluate\", () => { phaseCalls++; return value }), value)"
+        },
+        {
+          "before": "          observer.finishSfE13Unit(parent, false)\n        })\n        observer.finishSfE13Observation(handle, request, false)\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.overflow, true)",
+          "after": "          observer.finishSfE13Unit(parent, false)\n        })\n        assert.equal(phaseCalls, 600)\n        observer.finishSfE13Observation(handle, request, false)\n        const terminal = one(\"request-close\")\n        assert.equal(terminal.overflow, true)"
+        }
+      ],
+      "forwardExact": true,
+      "inverseExact": true
+    }
+  },
+  "counts": {
+    "testDeclarations": 1,
+    "testExpectSites": 8,
+    "fixtureAssertSites": 123,
+    "fixtureAwaitTokens": 24,
+    "testAwaitTokens": 1,
+    "isolatedModes": 7,
+    "reportFamilies": 1,
+    "reportPrefix": "SF_E13_OBSERVATION_CONTROL ",
+    "fixtureLines": 442,
+    "testLines": 24
+  },
+  "definitionCountsAreTextual": true
+}

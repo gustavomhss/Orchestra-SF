@@ -1,0 +1,22 @@
+{
+  "kind": "E13-helper-R5-to-R6",
+  "pre": {
+    "gitSha": "85067173418a441977f377175280ba789bec85e3",
+    "bytes": 17996,
+    "sha256": "8dea0a4f99a5b536e96cb6ff1300dcd89c878f01d38bb4786372c13ebd1a1909",
+    "lf": 303
+  },
+  "post": {
+    "gitSha": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+    "bytes": 18129,
+    "sha256": "7b0dc25080ec105ac0383971c1331f748b9641bd08ff3a42b90360d273fb02af",
+    "lf": 307
+  },
+  "operations": [
+    {
+      "before": "    if (frame && (scope ? currentScope() !== scope : currentScope() !== undefined)) { frame.scopeFault = true; frame.scopeDisabled = true }",
+      "after": "    if (frame) {\n      let installed = false\n      try { installed = frame.storage.getStore() === (scope?.token ?? neutralToken) } catch { /* A missing guarantee disables attribution. */ }\n      if (!installed) { frame.scopeFault = true; frame.scopeDisabled = true }\n    }"
+    }
+  ],
+  "reason": "Confirm exact raw token, including neutralToken; failure or absent installation latches scopeDisabled before work."
+}

@@ -1,0 +1,527 @@
+{
+  "schema": "sf613-e13-control-bounds-v1",
+  "status": "STATIC_REVIEWED_NOT_EXECUTED",
+  "fixture": {
+    "gitSha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+    "bytes": 27993,
+    "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+    "lf": 442
+  },
+  "test": {
+    "gitSha": "00389741844e45cd1a507a7e07c370edcf891f93",
+    "bytes": 1102,
+    "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+    "lf": 24
+  },
+  "helper": {
+    "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+    "bytes": 18129,
+    "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+    "lf": 307
+  },
+  "selection": {
+    "testDeclarations": 1,
+    "wholeFile": true,
+    "title": "E13 causal observation preserves work and bounds its Request phase stream",
+    "modes": [
+      "flow",
+      "mechanism",
+      "foreign-noop",
+      "get-store",
+      "output",
+      "overflow",
+      "unavailable"
+    ],
+    "children": 7,
+    "uniqueChildPidsRequired": 7,
+    "reportFamilies": 1,
+    "reportPrefix": "SF_E13_OBSERVATION_CONTROL ",
+    "childJsonReceiptsConsumed": 7
+  },
+  "causalOracles": {
+    "flow": [
+      "exact-promise-and-unassimilated-value",
+      "foreign-and-wrong-handle-use-neutral-scope",
+      "entries-persist-before-units-return",
+      "overlapping-phases-keep-explicit-parent",
+      "real-callers-early-return-denial-and-exact-rejection",
+      "lookup-receiver-arguments-once",
+      "parent-rejection-does-not-close-sibling",
+      "reentrant-close-serialized-and-late-ignored"
+    ],
+    "mechanism": [
+      "duplicate-and-tardy-thunk-never-replay",
+      "mechanism-result-and-swallowed-error-not-authoritative",
+      "before-noinvoke-after-faults-preserve-work",
+      "fallback-disables-attribution"
+    ],
+    "foreign-noop": [
+      "nested-foreign-noop-does-not-inherit-selected",
+      "restore-cannot-reenable-attribution"
+    ],
+    "get-store": [
+      "getstore-fault-disables-before-work",
+      "restore-cannot-reenable-attribution"
+    ],
+    "output": [
+      "write-false-consumed-once-without-replay",
+      "writer-serializer-clock-faults-preserve-product",
+      "stdout-loss-not-promoted-to-complete-stream"
+    ],
+    "overflow": [
+      "event-byte-reserves-survive-overflow",
+      "work-and-tap-identities-survive-capacity"
+    ],
+    "unavailable": [
+      "invalid-binding-latches-without-reselection",
+      "unavailable-keeps-value-and-undefined"
+    ]
+  },
+  "oracleLabels": 23,
+  "textualCounts": {
+    "fixtureAssertSites": 123,
+    "fixtureAwaitTokens": 24,
+    "testExpectSites": 8,
+    "testAwaitTokens": 1,
+    "warning": "Sites/tokens are not runtime assertion totals; repeated assertions execute in loops and each mode uses only its branch."
+  },
+  "deadlines": {
+    "eachChildProcessMs": 3000,
+    "childrenSequential": 7,
+    "individualChildBudgetSumMs": 21000,
+    "testMs": 35000,
+    "testNominalRemainderMs": 14000,
+    "proposedFocalProcessMs": 60000,
+    "proposedFocalParentMs": 90000,
+    "note": "Child budgets are inside the 35s test, not additive to it. Margins do not guarantee native process startup/cleanup latency. Historical C13-C18 timeouts remain literal."
+  },
+  "output": {
+    "perChildStdoutCapBytes": 65536,
+    "perChildStderrCapBytes": 65536,
+    "perChildParsedReceiptCapBytes": 16384,
+    "parentReportCapBytes": 16384,
+    "aggregateChildProcessOutputCapBytes": 917504,
+    "retainedNormalReports": "Only parsed finite JSON receipts; EVENT lines remain captured inside each child and are summarized by counts/hash.",
+    "sourceStreamCapBytes": 261120,
+    "sourceLineCapBytes": 1024,
+    "sourceEventsAtMost": 511,
+    "models": {
+      "method": "Literal conservative report data only; terminal model is copied from the source bounds. Each numeric count uses its source cap and each hash64chars. No repository code run.",
+      "children": [
+        {
+          "mode": "flow",
+          "jsonBytes": 1398
+        },
+        {
+          "mode": "mechanism",
+          "jsonBytes": 1237
+        },
+        {
+          "mode": "foreign-noop",
+          "jsonBytes": 1151
+        },
+        {
+          "mode": "get-store",
+          "jsonBytes": 1138
+        },
+        {
+          "mode": "output",
+          "jsonBytes": 1198
+        },
+        {
+          "mode": "overflow",
+          "jsonBytes": 1143
+        },
+        {
+          "mode": "unavailable",
+          "jsonBytes": 225
+        }
+      ],
+      "parentLineBytes": 8121,
+      "parentLineSha256": "c8136af5ab4afc8157d209ff4df5df73af8c37f05f738e64f69e1d0194def090",
+      "parentModel": {
+        "schema": "sf-preview-e13-control-v1",
+        "synthetic": true,
+        "childModes": [
+          "flow",
+          "mechanism",
+          "foreign-noop",
+          "get-store",
+          "output",
+          "overflow",
+          "unavailable"
+        ],
+        "reports": [
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "flow",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "exact-promise-and-unassimilated-value",
+                "foreign-and-wrong-handle-use-neutral-scope",
+                "entries-persist-before-units-return",
+                "overlapping-phases-keep-explicit-parent",
+                "real-callers-early-return-denial-and-exact-rejection",
+                "lookup-receiver-arguments-once",
+                "parent-rejection-does-not-close-sibling",
+                "reentrant-close-serialized-and-late-ignored"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "mechanism",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "duplicate-and-tardy-thunk-never-replay",
+                "mechanism-result-and-swallowed-error-not-authoritative",
+                "before-noinvoke-after-faults-preserve-work",
+                "fallback-disables-attribution"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "foreign-noop",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "nested-foreign-noop-does-not-inherit-selected",
+                "restore-cannot-reenable-attribution"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "get-store",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "getstore-fault-disables-before-work",
+                "restore-cannot-reenable-attribution"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "output",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "write-false-consumed-once-without-replay",
+                "writer-serializer-clock-faults-preserve-product",
+                "stdout-loss-not-promoted-to-complete-stream"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "overflow",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "event-byte-reserves-survive-overflow",
+                "work-and-tap-identities-survive-capacity"
+              ],
+              "records": 511,
+              "stdoutAttempts": 511,
+              "stdoutBytes": 261120,
+              "stdoutSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "fileBytes": 261120,
+              "fileSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+              "terminal": {
+                "schema": "sf-preview-causal-e13-event-v1",
+                "source": "ffffffffffffffffffffffffffffffffffffffff",
+                "sourceTree": "ffffffffffffffffffffffffffffffffffffffff",
+                "qualification": false,
+                "snapshot": "ffffffffffffffffffffffffffffffffffffffff",
+                "runId": "99999999999999999999",
+                "attempt": "1",
+                "nonce": "sf613-e13-event-XXXXXX",
+                "pid": 2147483647,
+                "parentPid": 2147483647,
+                "request": 1,
+                "sequence": 511,
+                "kind": "request-close",
+                "elapsedTenthMs": 999999999,
+                "outcome": "rejected",
+                "eventsBefore": 511,
+                "bytesBefore": 261120,
+                "dropped": 65535,
+                "overflow": false,
+                "openUnits": 511,
+                "openPhases": 511,
+                "emissionFaultBefore": false,
+                "fileFaultBefore": false,
+                "scopeFault": false,
+                "scopeDisabled": false,
+                "clockFault": false,
+                "backpressureBefore": false
+              },
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          },
+          {
+            "pid": 2147483647,
+            "report": {
+              "schema": "sf-preview-e13-control-child-v1",
+              "mode": "unavailable",
+              "pid": 2147483647,
+              "synthetic": true,
+              "checks": [
+                "invalid-binding-latches-without-reselection",
+                "unavailable-keeps-value-and-undefined"
+              ],
+              "records": 0,
+              "requestGets": 0
+            },
+            "omniSpawns": 1,
+            "omniDelegations": 0
+          }
+        ]
+      }
+    },
+    "modeledParentBelow16384": true
+  },
+  "capacityControl": {
+    "phaseAttempts": 600,
+    "phaseWorkInvocationsRequired": 600,
+    "workReturnsByIdentity": true,
+    "earlyEntryVisibleBeforeAwaitReturn": true,
+    "scopeResetExport": false
+  },
+  "lifecycle": {
+    "runnerBase": {
+      "gitSha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "bytes": 13598
+    },
+    "mechanism": "Same AppProcess.Service / Effect.scoped / LayerNode.compile / Omni.snapshot / expectSpawn lifecycle as the C18 isolated control, with mode argv. SIGTERM then forceKillAfter1s retained.",
+    "restoration": "ALS prototypes, performance.now, stdout.write, JSON.stringify descriptors; env, argv and cwd restored in finally. Only nonce directories created by that child are removed.",
+    "reports": "Receipts emitted only after assertions and cleanup; parent rejects nonzero exit/truncated output/schema mismatch and requires each child Omni spawn1/delegation0."
+  },
+  "limits": [
+    "Launcher source/run/snapshot and clock/ALS/writer fault mechanisms are synthetic; the actual helper checks its real Bun version/revision and operates real bounded files.",
+    "Real compare/port callers are invoked only for early-return, denial and rejection with opaque synthetic context/host inputs. This is not proof of installed product authorization or a complete business journey.",
+    "Native concurrent ALS propagation is exercised by controlled Promise gates, but there is no claim of runtime purity before bootstrap or adversarial global isolation.",
+    "Partial file write, fsync and close failure handling are static review only. Dynamic faults proposed here are stdout, serializer, clock and ALS.",
+    "No CPU profiling or latency/deadline qualification. Existing Analytics with its original60s preview remains the acceptance oracle.",
+    "The output-mode stdout intentionally misses a row that exists on disk; sequence is increasing, not contiguous. The terminal advertises pre-terminal emission fault and does not certify its own append or close."
+  ],
+  "futureFocal": {
+    "baseWrapper": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+    "newGroup": "G8 whole-file diagnostic test",
+    "existingGroupsLiteral": true,
+    "expectedFunctionalDeclarations": 40,
+    "expectedTopLevelReports": 10,
+    "expectedGroups": 8,
+    "expectedCommands": 14,
+    "expectedTruncationFlags": 28,
+    "status": "Expected by adding one declaration/group/command/report to the accepted C18 39/9/7/13/26. Focal owner must validate his actual wrapper; no outcome transferred."
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "kind": "E13-proposal-helper-R1-to-R2",
+  "status": "STATIC_PROPOSAL_NOT_EXECUTABLE",
+  "base": {
+    "gitSha": "9fc171ad604397032997c0523f9f3deb012b9f78",
+    "bytes": 16743,
+    "sha256": "de04fc30c015958a344ccc013a32facd5c4a82558af45748fd108cc1b07ba0e6",
+    "lf": 287
+  },
+  "post": {
+    "gitSha": "f9099fde19cc3d444da68317f5e2207561c82e06",
+    "bytes": 17097,
+    "sha256": "59758e2e2ddf4a203258c6979674f37b44cb92eb41a52184f1ae85c2327ddead",
+    "lf": 289
+  },
+  "operations": [
+    {
+      "before": "if (scope.token === token && scope.frame === frame) return scope",
+      "after": "if (scope.token === token && scope.frame === frame && !scope.owner?.closed && !scope.phase?.closed) return scope"
+    },
+    {
+      "before": "return false }\n  if (frame.events >= maxEvents - reserved || frame.bytes + bytes > maxBytes - reserved * maxLineBytes) return false",
+      "after": "return \"invalid\" }\n  if (frame.events >= maxEvents - reserved || frame.bytes + bytes > maxBytes - reserved * maxLineBytes) return \"capacity\""
+    },
+    {
+      "before": "  return true\n}\nfunction emit",
+      "after": "  return \"attempted\"\n}\nfunction emit"
+    },
+    {
+      "before": "    if (frame.overflow || !append(frame, kind, payload, 2)) {",
+      "after": "    const outcome = frame.overflow ? \"capacity\" : append(frame, kind, payload, 2)\n    if (outcome === \"capacity\") {"
+    },
+    {
+      "before": "if (!append(frame, \"overflow\", { eventsBefore: frame.events, bytesBefore: frame.bytes, dropped: frame.dropped }, 1))",
+      "after": "if (append(frame, \"overflow\", { eventsBefore: frame.events, bytesBefore: frame.bytes, dropped: frame.dropped }, 1) !== \"attempted\")"
+    },
+    {
+      "before": "  } catch { frame.emissionFault = true }\n  finally { frame.emitting = false }",
+      "after": "  } catch { frame.emissionFault = true; frame.dropped = increment(frame.dropped) }\n  finally { frame.emitting = false }"
+    },
+    {
+      "before": "    invoked = true\n    try {",
+      "after": "    invoked = true\n    if (frame && scope && currentScope() !== scope) frame.scopeFault = true\n    try {"
+    },
+    {
+      "before": "      if (!append(frame, \"request-close\",",
+      "after": "      if (append(frame, \"request-close\","
+    },
+    {
+      "before": "        emissionFault: frame.emissionFault, fileFault: frame.fileFault, scopeFault: frame.scopeFault, clockFault: frame.clockFault, backpressure: frame.backpressure }, 0)) frame.emissionFault = true",
+      "after": "        emissionFaultBefore: frame.emissionFault, fileFaultBefore: frame.fileFault, scopeFault: frame.scopeFault, clockFault: frame.clockFault, backpressureBefore: frame.backpressure }, 0) !== \"attempted\") frame.emissionFault = true"
+    },
+    {
+      "before": "      try { fsyncSync(fd); if (!fstatSync(fd).isFile()) frame.fileFault = true } catch { frame.fileFault = true }",
+      "after": "      try { fsyncSync(fd); const info = fstatSync(fd); if (!info.isFile() || (!frame.fileFault && info.size !== frame.bytes)) frame.fileFault = true } catch { frame.fileFault = true }"
+    }
+  ]
+}

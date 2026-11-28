@@ -1,0 +1,22 @@
+{
+  "kind": "E13-helper-R6-to-R7-budget-reservation",
+  "pre": {
+    "gitSha": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+    "bytes": 18129,
+    "sha256": "7b0dc25080ec105ac0383971c1331f748b9641bd08ff3a42b90360d273fb02af",
+    "lf": 307
+  },
+  "post": {
+    "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+    "bytes": 18129,
+    "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+    "lf": 307
+  },
+  "operations": [
+    {
+      "before": "const maxEvents = 512, maxBytes = 256 * 1024, maxLineBytes = 1024, countCap = 65_535",
+      "after": "const maxEvents = 511, maxBytes = 255 * 1024, maxLineBytes = 1024, countCap = 65_535"
+    }
+  ],
+  "reason": "Reserve one line/one KiB for the other original BI journey's possible launcher-disabled status. Main Request stream<=511events/255KiB; original two-journey campaign<=512records/256KiB. Original BI journey performs no preview POST; each installation emits at most one disabled launcher record."
+}

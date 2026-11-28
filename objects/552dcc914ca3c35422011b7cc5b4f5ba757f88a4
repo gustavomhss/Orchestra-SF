@@ -1,0 +1,149 @@
+{
+  "schema": "sf613-e13-control-manifest-v1",
+  "status": "STATIC_REVIEWED_CONTROLS_PENDING_EXECUTABLE_FOCAL",
+  "cleanBase": {
+    "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "tree": "ae1c0977057e45853f3dc240140e5f221057f49d"
+  },
+  "diagnosticSource": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "sourceManifest": {
+      "gitSha": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308
+    },
+    "sourceBounds": {
+      "gitSha": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384
+    }
+  },
+  "additions": [
+    {
+      "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "00389741844e45cd1a507a7e07c370edcf891f93",
+        "bytes": 1102,
+        "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+        "lf": 24
+      }
+    },
+    {
+      "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "gitSha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+        "bytes": 27993,
+        "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+        "lf": 442
+      }
+    }
+  ],
+  "membership": "Only in focal D, not in diagnostic S and never in clean product. D sole diagnostic S is planned3A(driver/test/fixture)+1M(replace inherited Analytics request by focal request).",
+  "derivation": {
+    "support": {
+      "gitSha": "b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+      "bytes": 51031,
+      "sha256": "c888df6c28dc4e0fde1c8728f45e62eb8cb8f785f5c85d530d2140fba4869c00",
+      "lf": 388
+    },
+    "fullDiff": {
+      "gitSha": "6013fbed858c5891a87da7e500751c9bb4f320e5",
+      "bytes": 30029,
+      "sha256": "86de01fe01578f1d37e3cf94d60ff51ec42d8698753ce9160203dd43c89cf136",
+      "lf": 476
+    },
+    "twoLiteralAdditions": true,
+    "hunks": 2,
+    "insertions": 466,
+    "deletions": 0,
+    "runnerExtractAnchors": 3,
+    "forwardExact": true,
+    "inverseExact": true,
+    "absence": "Both new paths returned NOT_FOUND404 when read against actual clean S18. Diagnostic S has exactly the audited seven source paths and no controls.",
+    "runnerBase": {
+      "gitSha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "bytes": 13598,
+      "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f"
+    }
+  },
+  "bounds": {
+    "gitSha": "50763473ec52deacc01981e18d553c2839d274ff",
+    "bytes": 20922,
+    "sha256": "f6cefced2a20ce306fce3ef5c62c5cac15a03b901a6ba0c20f8e3dbfc2b02cd2",
+    "lf": 527
+  },
+  "qualification": {
+    "kind": "Proposed isolated control of observation, not product qualification.",
+    "actual": "Real helper, real file creation/append, and actual instrumented port/compare early-return/denial/rejection callers.",
+    "synthetic": "Launcher binding, Request proxies, host inputs/opaque context, clock and deliberately faulty ALS/serializer/stdout. Context is supplied through Reflect.apply only for these known denial/early-return paths; this is not an installed authority fixture.",
+    "fileFailureLimit": "Partial write/fsync/close failures are static review only; no runtime injection or durability claim for those syscall faults.",
+    "traces": "Pending sibling/prefix and intentionally missing stdout row are tested as incomplete observation. Request-close is not a proof of complete units or own transport.",
+    "noExecution": "No repository code, test, compiler, runner or workflow executed by writer. Only pure text/data derivation and Git blob create/readback."
+  },
+  "selection": {
+    "wholeFile": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+    "title": "E13 causal observation preserves work and bounds its Request phase stream",
+    "declarations": 1,
+    "modes": [
+      "flow",
+      "mechanism",
+      "foreign-noop",
+      "get-store",
+      "output",
+      "overflow",
+      "unavailable"
+    ],
+    "childProcesses": 7,
+    "parentReportPrefix": "SF_E13_OBSERVATION_CONTROL ",
+    "reports": 1,
+    "oracleLabels": 23,
+    "testTimeoutMs": 35000,
+    "childTimeoutMs": 3000,
+    "childOutputCapBytes": 65536,
+    "childErrorCapBytes": 65536,
+    "stdoutAndStderrTruncationFlagsRequiredFalse": true,
+    "sourceStreamQuota": "511rows/261120UTF8bytes including LF",
+    "fixtureAssertionsTextualSites": 123,
+    "testExpectTextualSites": 8,
+    "noResultTransferred": true
+  },
+  "reviews": {
+    "root": "Source/objects/bridges reviewed and caller roundtrip complete. Controls under review independently; no CI authority here.",
+    "teams": "Static helperR7/callers/bridges/source package and controlR4/test003897 ACK received. Scope neutral token, queued close,75 qualified helper calls and600 overflow work invocations reviewed.",
+    "historicalFixtureRejections": [
+      {
+        "gitSha": "d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+        "reason": "Dynamic import export aliases violate AGENTS; cases otherwise unchanged."
+      },
+      {
+        "gitSha": "d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+        "reason": "A namespace rename accidentally reached processes.run; rejected without execution."
+      }
+    ],
+    "correctedFixtureBase": {
+      "gitSha": "ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+      "state": "AppProcess runner restored; then augmented with only the independent600-work counter in finalR4."
+    }
+  },
+  "focalOwner": {
+    "agent": "/root/focal_migration",
+    "baseWrapper": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+    "template": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+    "expected": "Preserve all prior seven groups/13commands/39functionals/9reports; add one whole-file group/command/declaration/report. The owner's concrete wrapper determines final24pins,8groups14commands28flags,40functionals10reports.",
+    "proposedNewProcessMs": 60000,
+    "proposedNewParentMs": 90000,
+    "boundDriver": "UNBOUND",
+    "driverCommit": "UNBOUND",
+    "run": "UNBOUND",
+    "attempt": "UNBOUND",
+    "outcome": "UNBOUND",
+    "authority": "Root creates/binds/audits objects and independently authorizes an execution only after complete package review."
+  }
+}

@@ -1,5 +1,79 @@
 # Evidências do Orchestra-SF — arquivo do #613
 
+Este quinto incremento documental preserva R4 e acrescenta o corpus E13 fechado e enumerado: fonte diagnóstica e sua revisão, controles, focal aprovado, Analytics original negativo, logs completos preservados em Git, uniões derivadas e os recibos finais de recepção. A proposta contém somente este README, o índice e os blobs em `objects/`. A raiz ainda precisa revisar e publicar os objetos Git do arquivo. Não há autorização de nova execução, alteração de produto, candidato final ou produção.
+
+## Conteúdo e preservação
+
+O [index.json](index.json) relaciona **535 blobs reais**, **56.651.409 B** em `objects/<git-sha>`, **584 memberships**, **35 grupos** e **48 streams**, com **177 referências de partes**. O incremento acrescenta **93 objetos**, **93 memberships**, **seis grupos** e **sete streams / 24 referências de partes**. Os 442 objetos, 491 memberships, 29 grupos e 41 streams de R4 permanecem literais e na mesma ordem.
+
+Os **92 objetos distintos / 7.526.020 B** do [catálogo final E13](objects/3aa1b45e76cc1341095d65beb1b25c6e295da1b6) foram autenticados por SHA-1 Git, SHA256, tamanho, LF e terminação. Não há sobreposição desses 92 objetos com R4. O próprio catálogo acrescenta 48.822 B como objeto real no grupo `E13-control-plane`, papel `actual-input-catalog`. O catálogo preparatório e as revisões anteriores do helper/controle continuam identificados como históricos; o catálogo final é o único input que governa esta proposta.
+
+Os sete streams novos foram recompostos a partir das 24 referências reais, sem separadores ou normalização de BOM/LF. Os 41 streams anteriores e suas 153 referências de partes conservam seus metadados literais e os recibos de autenticação históricos. Não se alega nova aquisição de todo o corpus anterior.
+
+| Grupo acrescentado | Objetos e memberships |
+| --- | ---: |
+| E13-source | 28 |
+| E13-control | 9 |
+| E13-focal | 18 |
+| E13-analytics | 30 |
+| E13-control-plane | 3 |
+| R4-archive-control | 5 |
+
+O grupo `R4-archive-control` preserva o [índice](objects/f4e3dfedb78c119d03a2acd4d8406a1175e7ab71), o [README](objects/05c3f2ddd758d1f6e122324620081e4594af65e2), o [pacote](objects/f0cc6f2712fa7298f6a4b8a385c5204e9989362c), a [revisão da raiz](objects/69712ea10c7c9cf5d24c8667a95023a46b65c2f9) e o [recibo de publicação](objects/3658ae015be3c1dc96535e61d444122057d4f3a6) de R4 como objetos reais. O README R4 inteiro também está preservado no bloco histórico ao final. O rótulo documental antigo `R5` existente no índice não designa esta quinta revisão do arquivo.
+
+## Resultado E13 e alcance
+
+| Evidência | Resultado recebido | Limite |
+| --- | --- | --- |
+| Focal 46085008328/1 | **40 casos / 1.470 assertions**, oito grupos externos / 45 assertions; 14 comandos, 28 flags de truncamento falsas, 24 pins e dez reports | Qualifica somente a seleção focal diagnóstica recebida. |
+| Analytics original 46086157237/1 | **Um caso falhou e um passou**; primeiro preview sem resposta correspondente no waiter original de 60.000 ms, spec 72:32; BI passou | UI42 teve seis capturas parciais. UI43 e UI44 não foram alcançadas. |
+| Observação causal E13 | **510 eventos**, último evento de overflow em **42,1839 s**, sem terminal do Request | Prefixo truncado pela quota; não identifica a operação em execução aos 60 s. |
+| Produto e pacote final | **12/15 áreas históricas**, zero novas; D27 com quatro bindings finais **UNBOUND** | Nenhum C613 final, aceite de Migração, execução D27, Release ou go-live é estabelecido. |
+
+O [recibo focal final](objects/d7c88e186e3469cb57f7673b227b4fba4cadb55c) e seu [ACK independente](objects/c6ad98dd23ddc9f906c0bfa66d60ccbb86689812) estão fechados. O teste E13 exercitou sete modos isolados e 23 rótulos. Os **19 filhos nomeados** são a soma de 11 loading, um lazy e sete E13; esse número não representa todos os subprocessos do job. Os nove reports herdados conservaram os respectivos contratos, com o PID do controle C18 observado neste run. Esses controles sintéticos não demonstram conclusão do preview instalado.
+
+O [recibo Analytics final](objects/ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26) e o [ACK independente](objects/1541b7542574ed9a522a82c864ba1c58f53e9637) preservam as duas respostas anteriores de results, ambas 200/ok, e o POST `decision-portfolio-preview` de sequência 3, sem resposta correspondente entre os marcadores recebidos. O caso BI recebeu 40 capturas, sete de UI45 e 33 de UI46, e passou somente nesta composição diagnóstica. Nenhuma causalidade ou melhora de desempenho é inferida da aprovação do BI.
+
+A fonte diagnóstica é `dffc62a08bdba74f1a9322d49cde095e81535f55`, árvore `0da48e0d15de780d981a5bce3e49e382a6e61849`, com pai único na fonte limpa S18 `455c02a7a05a6dd3262ae15b184419897366fde4`. O focal usa o snapshot `43f73297c2082ed4ea3a016bb1fd7bd970a53201`; o Analytics original executou diretamente a fonte diagnóstica. Essa fonte não constitui uma correção de produto para merge.
+
+## Prefixo causal e relógios
+
+A [união dos eventos E13](objects/88c30a2f090ce2aeae07883eb6cf44d26e271ac0) contém 510 linhas / 250.708 B e SHA256 `726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7`. O vínculo recebido é Request 1, PID 3778, parent PID 3733, nonce `sf613-e13-event-qmQKRg`, run 46086157237/1. Os campos source/sourceTree designam a base limpa S18; snapshot designa a fonte diagnóstica E13. São papéis distintos no protocolo.
+
+O [parecer causal preservado](objects/3f236afc6ff2d30c03816314dd3f20ec3734b6ff) e o recibo final mostram um port e 26 unidades de comparação no prefixo: dez comparadores diretos, dos quais nove retornaram, e 16 comparadores aninhados, todos retornados. A fase `combination-evaluate` não tem fechamento emitido no prefixo. O evento 510 é overflow; não houve terminal. Entradas sem fechamento descrevem a parte recebida, não o estado posterior ao evento descartado ou no instante do timeout.
+
+Os intervalos usam somente o relógio monotônico do servidor instrumentado, em décimos de milissegundo. Os intervalos aninhados já estão contidos nos diretos e não são somados como custo adicional. O resíduo canônico no recibo final é **182.136 décimos de ms**; o texto histórico do parecer conserva a representação IEEE `18213.600000000002 ms`. Nenhuma dessas medidas representa CPU exclusiva, espera exclusiva, custo não instrumentado ou uma causa demonstrada. Os relógios Actions, servidor e Playwright não são conciliados por inferência.
+
+## Bytes reais, inteiros calculados e artefato
+
+| Stream E13 | Partes reais | Bytes | Observação |
+| --- | ---: | ---: | --- |
+| Focal main | 1 | 122.802 | Blob inteiro real, recebido e fechado. |
+| Focal cleanup | 1 | 2.281 | Blob inteiro real, recebido e fechado. |
+| Focal reports | 1 | 19.660 | União derivada real de dez reports. |
+| Analytics main | 18 | 5.148.177 | Inteiro recomposto e autenticado; somente as 18 partes são objetos reais. |
+| Analytics cleanup | 1 | 2.283 | Blob inteiro real, recebido e fechado. |
+| Analytics markers | 1 | 34.163 | União derivada real de 96 linhas. |
+| Analytics events | 1 | 250.708 | União derivada real de 510 eventos, prefixo sem terminal. |
+
+O main Analytics tem SHA256 `89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381`, 2.986 LF e BOM nos offsets de bytes 0, 2.104.519 e 4.205.627. O SHA-1 Git `1eb15113536676c909a6de4a6294d18688d66bbf` é **calculado somente**: não foi adquirido nem inserido em `objects/`. A recomposição usa as 18 partes manifestadas, em ordem literal. A [união Analytics](objects/d6c235ba488c6f8121845bc184588937972c0b64) permanece separada do stream de eventos.
+
+O artefato **15239671856**, 45.860.595 B, digest `sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7`, é **metadata only**. Houve **zero aquisições de ZIP**. Não foram recebidos por este incremento arquivo físico de eventos, runtime JSON, PNG, trace ou membros do artefato. A existência da união de stdout não substitui esses arquivos nem prova um terminal ausente do prefixo.
+
+## Publicação proposta
+
+A raiz deve revisar uma árvore própria com apenas `README.md`, `index.json` e `objects/<sha>`, todos os arquivos em modo `100644`. Os dois pais planejados, nesta ordem, são:
+
+1. R4 publicado: `f0e031d8667f6b80dc417dbaddd39c3123b2ae52`, árvore `aaaac991b98c22035ef4d6b2749a5c8acfc96bce`.
+2. Focal E13 executado: `43f73297c2082ed4ea3a016bb1fd7bd970a53201`, árvore `6508c42f4957adefcd2de55fb9b51ceef6fe318f`.
+
+O segundo pai já alcança a fonte diagnóstica usada pelo Analytics; S18 permanece ancestral. Não há parent adicional de produto ou importação do layout executável para esta árvore. A ref esperada antes de eventual atualização nonforce é R4. Este autor produziu apenas os três blobs da proposta, sem árvore, commit, ref, workflow, run, comentário externo, GET original ou ZIP. A publicação e a auditoria final pertencem à raiz.
+
+<details>
+<summary>README R4 publicado — histórico literal</summary>
+
+# Evidências do Orchestra-SF — arquivo do #613
+
 Este quarto incremento documental preserva R3 e acrescenta o corpus C18 enumerado: fonte e controles, focal aprovado, Analytics original negativo, proposta estática D27, recepção e fundamento da próxima pergunta diagnóstica. A árvore de `sf613-evidence` contém apenas este README, o índice e blobs em `objects/`. O conteúdo não constitui candidato final de Release, instalação QA, aceite de Migração ou autorização de produção.
 
 ## Conteúdo e preservação
@@ -198,6 +272,8 @@ O índice distingue referências históricas de evidências efetivamente incluí
 A fonte limpa C16 é `0860b3404ca54235997c4cdaee63bbe0659d5a7a`, árvore `194690fc63c26ac7feb690e44d0fea70742da88c`. Os snapshots executados são o focal `30890fcdcfd4e255185f443d128fe85ba21299ff` e a Analytics `dfa5cca0f7e20b92c23ea45897301c2327dc60ea`. A publicação do arquivo manterá esses commits como pais da cadeia documental, além dos blobs como entradas reais de árvore.
 
 Esta ref deverá ser mantida enquanto as evidências forem necessárias. Atualizações avançam a mesma cadeia sem reescrever a história. O ledger histórico `sf613-ledger`, o PR #613 e as refs de produto permanecem separados. A integração em `dev` segue pelo PR revisado; qualquer virada de produção continua exigindo o aval explícito do usuário.
+
+</details>
 
 </details>
 

@@ -1,0 +1,193 @@
+{
+  "kind": "E13-launcher-retarget-from-reviewed-E12",
+  "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+  "files": [
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "originalClean": {
+        "gitSha": "9d2351aaed9549f876a072ced264d9429924ab61",
+        "bytes": 5823,
+        "sha256": "5b464b8263ad31c302f44d9c99663b83b9867568bca19b99237e211d9b7014ab",
+        "lf": 121
+      },
+      "reviewedE12": {
+        "gitSha": "0874435020bc8d000a99eb72db18f33f17010443",
+        "bytes": 10333,
+        "sha256": "ba43bfcea2c2fde2d6b14f23d99f1d9aa58abb854cef928705916a29b91a41df",
+        "lf": 184
+      },
+      "post": {
+        "gitSha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+        "bytes": 10356,
+        "sha256": "dee56ea5cd0be05e644ce5b1a152263115c17444c5c237cc23d3edab80fdb7d0",
+        "lf": 184
+      },
+      "operations": [
+        {
+          "before": "\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\"",
+          "after": "\"455c02a7a05a6dd3262ae15b184419897366fde4\"",
+          "count": 1
+        },
+        {
+          "before": "\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\"",
+          "after": "\"ae1c0977057e45853f3dc240140e5f221057f49d\"",
+          "count": 1
+        },
+        {
+          "before": "SF_PREVIEW_E12_CPU_EVIDENCE_DIR",
+          "after": "SF_PREVIEW_E13_EVENT_EVIDENCE_DIR",
+          "count": 1
+        },
+        {
+          "before": "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING",
+          "after": "SF_PREVIEW_E13_EVENT_EVIDENCE_BINDING",
+          "count": 1
+        },
+        {
+          "before": "sf-preview-e12-cpu-launch-v1",
+          "after": "sf-preview-e13-event-launch-v1",
+          "count": 1
+        },
+        {
+          "before": "sf613-e12-cpu-",
+          "after": "sf613-e13-event-",
+          "count": 1
+        },
+        {
+          "before": "sf-preview-causal-e12-cpu-v1",
+          "after": "sf-preview-causal-e13-launcher-v1",
+          "count": 1
+        },
+        {
+          "before": "console.info(\"SF_PREVIEW_E12_CPU \"",
+          "after": "console.info(\"SF_PREVIEW_E13_LAUNCHER \"",
+          "count": 1
+        },
+        {
+          "before": "cpuEnvironment",
+          "after": "eventEnvironment",
+          "count": 2
+        },
+        {
+          "before": "nativePreviewE11CpuEnvironment",
+          "after": "nativePreviewE13EventEnvironment",
+          "count": 2
+        },
+        {
+          "before": "(line.startsWith(\"SF_PREVIEW_E12_CPU \") && line.length + 1 <= 4096)",
+          "after": "(line.startsWith(\"SF_PREVIEW_E13_EVENT \") && line.length + 1 <= 1024)",
+          "count": 1
+        },
+        {
+          "before": "(line.startsWith(\"SF_PREVIEW_E12_PROGRESS \") && line.length + 1 <= 1024)",
+          "after": "(line.startsWith(\"SF_PREVIEW_E13_LAUNCHER \") && line.length + 1 <= 1024)",
+          "count": 1
+        },
+        {
+          "before": "launcher.profileName !== \"preview-first.cpuprofile\"",
+          "after": "launcher.streamName !== \"preview-events.jsonl\"",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "originalClean": {
+        "gitSha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+        "bytes": 12321,
+        "sha256": "bfe660d78a73a1deb75870803d213b04c2108070563449608db3265d6f4ce565",
+        "lf": 206
+      },
+      "reviewedE12": {
+        "gitSha": "21d20336212bee594b80d3cd8a6424064998bb67",
+        "bytes": 16431,
+        "sha256": "242bd4d232d16c76b2a67051d1a73a60bf89a513df613c59ba965d5f8a946928",
+        "lf": 267
+      },
+      "post": {
+        "gitSha": "47e13f21e5d00fc8689123d7b87175960288b029",
+        "bytes": 16468,
+        "sha256": "86a93b56cf5b722d88353d4a46e92d411bbabce87d646a12d835e2cca5779d80",
+        "lf": 267
+      },
+      "operations": [
+        {
+          "before": "\"7cbf68a88a5ee18127e0ca254ef78f2347a33598\"",
+          "after": "\"455c02a7a05a6dd3262ae15b184419897366fde4\"",
+          "count": 1
+        },
+        {
+          "before": "\"863ab8f2ba3e1d8fbcce9bf67c5ce1185f4b7906\"",
+          "after": "\"ae1c0977057e45853f3dc240140e5f221057f49d\"",
+          "count": 1
+        },
+        {
+          "before": "SF_PREVIEW_E12_CPU_EVIDENCE_DIR",
+          "after": "SF_PREVIEW_E13_EVENT_EVIDENCE_DIR",
+          "count": 1
+        },
+        {
+          "before": "SF_PREVIEW_E12_CPU_EVIDENCE_BINDING",
+          "after": "SF_PREVIEW_E13_EVENT_EVIDENCE_BINDING",
+          "count": 1
+        },
+        {
+          "before": "sf-preview-e12-cpu-launch-v1",
+          "after": "sf-preview-e13-event-launch-v1",
+          "count": 1
+        },
+        {
+          "before": "sf613-e12-cpu-",
+          "after": "sf613-e13-event-",
+          "count": 2
+        },
+        {
+          "before": "sf-preview-causal-e12-cpu-v1",
+          "after": "sf-preview-causal-e13-launcher-v1",
+          "count": 1
+        },
+        {
+          "before": "console.info(\"SF_PREVIEW_E12_CPU \"",
+          "after": "console.info(\"SF_PREVIEW_E13_LAUNCHER \"",
+          "count": 1
+        },
+        {
+          "before": "cpuEnvironment",
+          "after": "eventEnvironment",
+          "count": 2
+        },
+        {
+          "before": "preparePreviewE11CpuEnvironment",
+          "after": "preparePreviewE13EventEnvironment",
+          "count": 2
+        },
+        {
+          "before": "(line.startsWith(\"SF_PREVIEW_E12_CPU \") && line.length + 1 <= 4096)",
+          "after": "(line.startsWith(\"SF_PREVIEW_E13_EVENT \") && line.length + 1 <= 1024)",
+          "count": 1
+        },
+        {
+          "before": "(line.startsWith(\"SF_PREVIEW_E12_PROGRESS \") && line.length + 1 <= 1024)",
+          "after": "(line.startsWith(\"SF_PREVIEW_E13_LAUNCHER \") && line.length + 1 <= 1024)",
+          "count": 1
+        },
+        {
+          "before": "profileName: \"preview-first.cpuprofile\"",
+          "after": "streamName: \"preview-events.jsonl\"",
+          "count": 1
+        },
+        {
+          "before": "Preparation is not proof of selection, native start, profile flush or durable collection.",
+          "after": "Preparation is not proof of Request selection, phase completion, event transport or successful fsync.",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "No new process/timer/await or changed argv/cwd/timeout/cleanup.",
+    "Diagnostic launcher status has a separate bounded marker family; it is not a Request event.",
+    "Nonce directory and launcher wx0600/fsync/hash/close are inherited literally."
+  ]
+}

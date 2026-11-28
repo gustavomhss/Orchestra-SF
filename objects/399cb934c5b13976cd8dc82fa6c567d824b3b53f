@@ -1,0 +1,207 @@
+{
+  "schema": "sf613-e13-admission-reuse-v1",
+  "baseHelper": {
+    "gitSha": "11686520311978c09a66c1e5b1317d3a0a0347bc",
+    "bytes": 23524,
+    "sha256": "54303a8b88d170557b6002688d7f52ad7698bee0d61d5a6777712cfbb00dfa40",
+    "lf": 394
+  },
+  "postHelper": {
+    "gitSha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+    "bytes": 18129,
+    "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+    "lf": 307
+  },
+  "baseRanges": [
+    {
+      "from": "function cpuHash",
+      "toExclusive": "function cpuEmit"
+    },
+    {
+      "from": "function cpuAdmit",
+      "toExclusive": "function cpuWrite"
+    }
+  ],
+  "postRange": {
+    "from": "function hash",
+    "to": "EOF"
+  },
+  "before": "function cpuHash(value: string) { return createHash(\"sha256\").update(value, \"utf8\").digest(\"hex\") }\nfunction cpuWithin(parent: string, child: string) {\n  const relative = cpuPath.relative(parent, child)\n  return relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + cpuPath.sep) && !cpuPath.isAbsolute(relative)\n}\nfunction cpuObject(value: unknown): value is Record<string, unknown> {\n  return value !== null && typeof value === \"object\" && !Array.isArray(value)\n}\nfunction cpuAdmit(): { directory: string; binding: CpuBinding } | undefined {\n  const directory = process.env[cpuDirectoryKey], encoded = process.env[cpuBindingKey]\n  if (!directory || !encoded) return undefined\n  if (encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n      typeof Bun === \"undefined\" || Bun.version !== \"1.3.14\" || Bun.revision !== cpuRevision) throw new Error(\"cpu-runtime\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../\", import.meta.url)))\n  if (process.argv[1] !== cpuPath.join(repository, \"apps/cli/src/index.ts\") || process.argv[2] !== \"serve\")\n    throw new Error(\"cpu-process\")\n  const base = cpuPath.join(repository, \"test-ci-evidence\"), value: unknown = JSON.parse(encoded)\n  if (!cpuObject(value) || value.schema !== \"sf-preview-e12-cpu-launch-v1\" || value.source !== source ||\n      value.sourceTree !== sourceTree || typeof value.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||\n      typeof value.runId !== \"string\" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== \"1\" ||\n      typeof value.nonce !== \"string\" || !/^sf613-e12-cpu-[A-Za-z0-9]{6}$/.test(value.nonce) ||\n      typeof value.launcherBytes !== \"number\" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||\n      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))\n    throw new Error(\"cpu-binding\")\n  if (!cpuPath.isAbsolute(directory) || cpuPath.dirname(directory) !== base || cpuPath.basename(directory) !== value.nonce ||\n      realpathSync(base) !== base || realpathSync(directory) !== directory ||\n      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || cpuWithin(realpathSync(process.cwd()), directory))\n    throw new Error(\"cpu-directory\")\n  const launcherPath = cpuPath.join(directory, \"launcher.json\"), info = lstatSync(launcherPath)\n  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error(\"cpu-launcher\")\n  const text = readFileSync(launcherPath, \"utf8\"), launcher: unknown = JSON.parse(text)\n  if (Buffer.byteLength(text, \"utf8\") !== value.launcherBytes || cpuHash(text) !== value.launcherSha256 || !cpuObject(launcher))\n    throw new Error(\"cpu-launcher\")\n  for (const key of [\"schema\", \"source\", \"sourceTree\", \"snapshot\", \"runId\", \"attempt\", \"nonce\"] as const)\n    if (launcher[key] !== value[key]) throw new Error(\"cpu-launcher-binding\")\n  if (launcher.processRole !== \"native-cli\" || launcher.profileName !== \"preview-first.cpuprofile\")\n    throw new Error(\"cpu-launcher-role\")\n  return { directory, binding: value as CpuBinding }\n}\n",
+  "after": "function hash(value: string) { return createHash(\"sha256\").update(value, \"utf8\").digest(\"hex\") }\nfunction within(parent: string, child: string) {\n  const relative = path.relative(parent, child)\n  return relative === \"\" || relative !== \"..\" && !relative.startsWith(\"..\" + path.sep) && !path.isAbsolute(relative)\n}\nfunction object(value: unknown): value is Record<string, unknown> {\n  return value !== null && typeof value === \"object\" && !Array.isArray(value)\n}\nfunction admit(): { directory: string; binding: Binding } | undefined {\n  const directory = process.env[directoryKey], encoded = process.env[bindingKey]\n  if (!directory || !encoded) return undefined\n  if (encoded.length > 4096 || process.platform !== \"linux\" || process.arch !== \"x64\" ||\n      typeof Bun === \"undefined\" || Bun.version !== \"1.3.14\" || Bun.revision !== revision) throw new Error(\"cpu-runtime\")\n  const repository = realpathSync(fileURLToPath(new URL(\"../../../../\", import.meta.url)))\n  if (process.argv[1] !== path.join(repository, \"apps/cli/src/index.ts\") || process.argv[2] !== \"serve\")\n    throw new Error(\"cpu-process\")\n  const base = path.join(repository, \"test-ci-evidence\"), value: unknown = JSON.parse(encoded)\n  if (!object(value) || value.schema !== \"sf-preview-e13-event-launch-v1\" || value.source !== source ||\n      value.sourceTree !== sourceTree || typeof value.snapshot !== \"string\" || !/^[a-f0-9]{40}$/.test(value.snapshot) ||\n      typeof value.runId !== \"string\" || !/^[0-9]{1,20}$/.test(value.runId) || value.attempt !== \"1\" ||\n      typeof value.nonce !== \"string\" || !/^sf613-e13-event-[A-Za-z0-9]{6}$/.test(value.nonce) ||\n      typeof value.launcherBytes !== \"number\" || value.launcherBytes < 1 || value.launcherBytes > 8192 ||\n      value.launcherBytes % 1 !== 0 || typeof value.launcherSha256 !== \"string\" || !/^[a-f0-9]{64}$/.test(value.launcherSha256))\n    throw new Error(\"cpu-binding\")\n  if (!path.isAbsolute(directory) || path.dirname(directory) !== base || path.basename(directory) !== value.nonce ||\n      realpathSync(base) !== base || realpathSync(directory) !== directory ||\n      !lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink() || within(realpathSync(process.cwd()), directory))\n    throw new Error(\"cpu-directory\")\n  const launcherPath = path.join(directory, \"launcher.json\"), info = lstatSync(launcherPath)\n  if (!info.isFile() || info.isSymbolicLink() || info.size !== value.launcherBytes) throw new Error(\"cpu-launcher\")\n  const text = readFileSync(launcherPath, \"utf8\"), launcher: unknown = JSON.parse(text)\n  if (Buffer.byteLength(text, \"utf8\") !== value.launcherBytes || hash(text) !== value.launcherSha256 || !object(launcher))\n    throw new Error(\"cpu-launcher\")\n  for (const key of [\"schema\", \"source\", \"sourceTree\", \"snapshot\", \"runId\", \"attempt\", \"nonce\"] as const)\n    if (launcher[key] !== value[key]) throw new Error(\"cpu-launcher-binding\")\n  if (launcher.processRole !== \"native-cli\" || launcher.streamName !== \"preview-events.jsonl\")\n    throw new Error(\"cpu-launcher-role\")\n  return { directory, binding: value as Binding }\n}\n",
+  "operations": [
+    {
+      "before": "cpuHash",
+      "after": "hash",
+      "count": 2,
+      "match": "identifier",
+      "beforeOffsets": [
+        9,
+        2676
+      ],
+      "afterOffsets": [
+        9,
+        2673
+      ]
+    },
+    {
+      "before": "cpuWithin",
+      "after": "within",
+      "count": 2,
+      "match": "identifier",
+      "beforeOffsets": [
+        106,
+        2220
+      ],
+      "afterOffsets": [
+        106,
+        2217
+      ]
+    },
+    {
+      "before": "cpuObject",
+      "after": "object",
+      "count": 3,
+      "match": "identifier",
+      "beforeOffsets": [
+        331,
+        1238,
+        2707
+      ],
+      "afterOffsets": [
+        331,
+        1235,
+        2701
+      ]
+    },
+    {
+      "before": "cpuAdmit",
+      "after": "admit",
+      "count": 1,
+      "match": "identifier",
+      "beforeOffsets": [
+        479
+      ],
+      "afterOffsets": [
+        479
+      ]
+    },
+    {
+      "before": "CpuBinding",
+      "after": "Binding",
+      "count": 2,
+      "match": "identifier",
+      "beforeOffsets": [
+        518,
+        3117
+      ],
+      "afterOffsets": [
+        518,
+        3114
+      ]
+    },
+    {
+      "before": "cpuDirectoryKey",
+      "after": "directoryKey",
+      "count": 1,
+      "match": "identifier",
+      "beforeOffsets": [
+        574
+      ],
+      "afterOffsets": [
+        574
+      ]
+    },
+    {
+      "before": "cpuBindingKey",
+      "after": "bindingKey",
+      "count": 1,
+      "match": "identifier",
+      "beforeOffsets": [
+        611
+      ],
+      "afterOffsets": [
+        611
+      ]
+    },
+    {
+      "before": "cpuRevision",
+      "after": "revision",
+      "count": 1,
+      "match": "identifier",
+      "beforeOffsets": [
+        840
+      ],
+      "afterOffsets": [
+        840
+      ]
+    },
+    {
+      "before": "cpuPath",
+      "after": "path",
+      "count": 9,
+      "match": "identifier",
+      "beforeOffsets": [
+        165,
+        274,
+        291,
+        998,
+        1130,
+        1913,
+        1946,
+        1985,
+        2304
+      ],
+      "afterOffsets": [
+        165,
+        271,
+        285,
+        989,
+        1118,
+        1898,
+        1928,
+        1964,
+        2280
+      ]
+    },
+    {
+      "before": "\"sf-preview-e12-cpu-launch-v1\"",
+      "after": "\"sf-preview-e13-event-launch-v1\"",
+      "count": 1,
+      "match": "literal",
+      "beforeOffsets": [
+        1239
+      ],
+      "afterOffsets": [
+        1239
+      ]
+    },
+    {
+      "before": "sf613-e12-cpu-",
+      "after": "sf613-e13-event-",
+      "count": 1,
+      "match": "literal",
+      "beforeOffsets": [
+        1571
+      ],
+      "afterOffsets": [
+        1571
+      ]
+    },
+    {
+      "before": "launcher.profileName !== \"preview-first.cpuprofile\"",
+      "after": "launcher.streamName !== \"preview-events.jsonl\"",
+      "count": 1,
+      "match": "literal",
+      "beforeOffsets": [
+        2948
+      ],
+      "afterOffsets": [
+        2948
+      ]
+    }
+  ],
+  "offsetUnits": "UTF-16 indexes into each intermediate step; apply offsets descending per operation. Invert operations in reverse order using afterOffsets descending. This prevents inverse renames from touching string literals such as typeof === object.",
+  "forwardExact": true,
+  "inverseExact": true,
+  "note": "Exact reuse of hash/path/object/admission gates after delimiter-safe names/schema/stream retarget. E13 event/ALS/lifecycle is newly authored and separately reviewed; no cpuEmit, profiler, timer or CPU serialization copied."
+}

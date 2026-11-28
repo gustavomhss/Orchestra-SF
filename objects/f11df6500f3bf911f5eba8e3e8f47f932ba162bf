@@ -1,0 +1,836 @@
+{
+  "schema": "sf613-e13-root-static-focal-review-v1",
+  "status": "STATIC_REVIEW_ACCEPTED_NOT_EXECUTION",
+  "at": {
+    "current_time": "2026-11-27 23:52:02 UTC"
+  },
+  "reviewer": "/root",
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "delta": "2A5M",
+    "treeAudit": {
+      "before": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "after": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "complete": true,
+      "pairs": [
+        {
+          "path": "",
+          "before": "ae1c0977057e45853f3dc240140e5f221057f49d",
+          "after": "0da48e0d15de780d981a5bce3e49e382a6e61849"
+        },
+        {
+          "path": "apps",
+          "before": "97f6afed0e864fca3fad5302f28098863f0ec75c",
+          "after": "212be7ea5ae76c0b1be2a839ba0caa0fce022cb2"
+        },
+        {
+          "path": "apps/cli",
+          "before": "efeb9bbff12872095eb348700a38b1208df130d8",
+          "after": "098570c3ff4359da5d4b7e786cca52e2674b2d1d"
+        },
+        {
+          "path": "apps/cli/src",
+          "before": "70c44875126a2d732d2ad9f6af3ce25b7fc4c6ed",
+          "after": "4d17588bc2e670889461ffbae7b5c2383af102da"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product",
+          "before": "4b1162788f28a3d5df912868c08f6456c1069034",
+          "after": "a9d48c1ffd9cc905eb03e0430df6db343b40cb86"
+        },
+        {
+          "path": "apps/cli/test",
+          "before": "29adf3d3ce3e264321f60112c1d354313c5fa7a9",
+          "after": "1ffe9bdb289a848f77c25f7c7f82f61307f6dc59"
+        },
+        {
+          "path": "apps/cli/test/fixture",
+          "before": "f4d268326af2ae64a3c35d4c8c7e465eead81138",
+          "after": "1e7dd14949d25d97290a51661a1c905a2ca38f71"
+        },
+        {
+          "path": "modules",
+          "before": "fd3cc46d88a9042cf5d867478ae685e061d4edae",
+          "after": "df53da03e8c669149f244b3e3a27e1080889714f"
+        },
+        {
+          "path": "modules/sucafina",
+          "before": "43a72ca1224e3b63db9558072946fd5cad9669af",
+          "after": "dbac29693d3088692aac35f472561fc4dd40aba2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1",
+          "before": "d4eba2b42fa7707f385e7f9296d422ffbc2b632d",
+          "after": "8a29c7b964f14f76dde8fbd329a9745d8110e8c0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product",
+          "before": "9bf4fd7c374d9cdad1ee94a648869d34890848b7",
+          "after": "8ddb10a4ae92dc67e217c691b1e1f968ccafa6df"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner",
+          "before": "6b5ea237ef16554108044f1669dde0e727ebb3ff",
+          "after": "1dc32ab42994784b657b002788843c75366f7667"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio",
+          "before": "be4ed18594331771ae742f110adc790eb136b644",
+          "after": "480ab70971610b3111079f9e14599bebf26f1345"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime",
+          "before": "8057ba3633b379c8a4dfa7674121da1ded0bd5e2",
+          "after": "725519adff872c9385973d086eca3b13c798f294"
+        },
+        {
+          "path": "packages",
+          "before": "a2ae53c79ee905fafd5fae0a4116f3ff2570d6e5",
+          "after": "8d56566127054fb2e6104160eac244aeba53eca0"
+        },
+        {
+          "path": "packages/app-shell",
+          "before": "8d29eb009c7e2d6ddfa3f46b9597b0a4f2b741d8",
+          "after": "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f"
+        },
+        {
+          "path": "packages/app-shell/e2e",
+          "before": "54fec8ad1f271d7ef2aacc7f0b2f07b4fcfa3b4f",
+          "after": "793b548e7d4f8fa2704835bbef745b799c276a75"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina",
+          "before": "70a27499a675203fefe9733f4c8de6be66d27b8b",
+          "after": "f768151e80b254318d26edd10f20ecb558f9586f"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support",
+          "before": "e94e1ee43a44bd71e3623d79bb6ac69dedab83a7",
+          "after": "f0ddf96723b8e1b17ab1d2df30481e6aa117debd"
+        }
+      ],
+      "literalSiblings": 614,
+      "changes": [
+        {
+          "path": ".ci-run.json",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": ".ci-run.json",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+            "size": 295,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eda49a023c07599de00f5af9642ee92b9d9adf3b"
+          }
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "kind": "M",
+          "before": {
+            "path": "portfolio-http.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+            "size": 13217,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6cbfc373ea72a90351e4f9997f65663e0f5fc775"
+          },
+          "after": {
+            "path": "portfolio-http.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+            "size": 14101,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/138cd8c8a09ac36549ae503f457f81dd0ee95f12"
+          }
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+          "kind": "M",
+          "before": {
+            "path": "sucafina-native-installation.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "9d2351aaed9549f876a072ced264d9429924ab61",
+            "size": 5823,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/9d2351aaed9549f876a072ced264d9429924ab61"
+          },
+          "after": {
+            "path": "sucafina-native-installation.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+            "size": 10356,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4f50466a5a00a6e3e0f781c244ae3df6f72510f8"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "kind": "M",
+          "before": {
+            "path": "scenario-comparison-port.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+            "size": 8591,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1782c2094239c3712d3a895a6a25f4160fb429c7"
+          },
+          "after": {
+            "path": "scenario-comparison-port.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+            "size": 10047,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/729e8d1ac7ad326fa8c2d94871b03e0a28801079"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "kind": "M",
+          "before": {
+            "path": "port.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+            "size": 17484,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/452877ad2c82835fe883ea05dbf15f80f84f51c5"
+          },
+          "after": {
+            "path": "port.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+            "size": 18458,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/dc0df7519a9a4ab57273e8695398240a13e1d12d"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts",
+          "kind": "A",
+          "before": null,
+          "after": {
+            "path": "preview-progress-e13-diagnostic.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+            "size": 18129,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/470bf3d86370e145ae5b0f54dc8bc5eff01d20d0"
+          }
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+          "kind": "M",
+          "before": {
+            "path": "installation.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "1df7aed955af538ee08c40b54dd912e4b127d0e4",
+            "size": 12321,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1df7aed955af538ee08c40b54dd912e4b127d0e4"
+          },
+          "after": {
+            "path": "installation.ts",
+            "mode": "100644",
+            "type": "blob",
+            "sha": "47e13f21e5d00fc8689123d7b87175960288b029",
+            "size": 16468,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/47e13f21e5d00fc8689123d7b87175960288b029"
+          }
+        }
+      ]
+    }
+  },
+  "sourcePackage": {
+    "manifest": {
+      "gitBlob": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+      "bytes": 97171,
+      "sha256": "b3e6c512a23aa2907752ad1e9f2d7e41a1a9895c0a2d6a62841bba40621576e5",
+      "lf": 381,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+      "bytes": 84455,
+      "sha256": "47f333d15ba426530d2514daa2e92c446088832a13b7cc49faaec72fc318a7be",
+      "lf": 886,
+      "endsWithLF": true
+    },
+    "previousRootReview": {
+      "gitBlob": "485a9fccf3bc6fd5ee0139787ebd443736899664",
+      "bytes": 7946,
+      "sha256": "b093ad70aad1f6d32a649058ede72dcc633db9ab03a0b426adb6591330f479b4",
+      "lf": 221,
+      "endsWithLF": true
+    }
+  },
+  "controlPackage": {
+    "manifest": {
+      "gitBlob": "552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+      "bytes": 6453,
+      "sha256": "41899cfaacc5e767511279284979e8f0bba3549e684b1f3678391d4b78e20964",
+      "lf": 149,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "50763473ec52deacc01981e18d553c2839d274ff",
+      "bytes": 20922,
+      "sha256": "f6cefced2a20ce306fce3ef5c62c5cac15a03b901a6ba0c20f8e3dbfc2b02cd2",
+      "lf": 527,
+      "endsWithLF": true
+    },
+    "derivation": {
+      "gitBlob": "b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+      "bytes": 51031,
+      "sha256": "c888df6c28dc4e0fde1c8728f45e62eb8cb8f785f5c85d530d2140fba4869c00",
+      "lf": 388,
+      "endsWithLF": true
+    },
+    "diff": {
+      "gitBlob": "6013fbed858c5891a87da7e500751c9bb4f320e5",
+      "bytes": 30029,
+      "sha256": "86de01fe01578f1d37e3cf94d60ff51ec42d8698753ce9160203dd43c89cf136",
+      "lf": 476,
+      "endsWithLF": true
+    },
+    "fixture": {
+      "gitBlob": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "bytes": 27993,
+      "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+      "lf": 442,
+      "endsWithLF": true
+    },
+    "test": {
+      "gitBlob": "00389741844e45cd1a507a7e07c370edcf891f93",
+      "bytes": 1102,
+      "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+      "lf": 24,
+      "endsWithLF": true
+    }
+  },
+  "focalPackage": {
+    "template": {
+      "gitBlob": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+      "bytes": 14109,
+      "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+      "lf": 203,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+      "bytes": 33967,
+      "sha256": "8afaae3ca18b0b5cc11dd07eba8228808b638d7c076cdfa8a3138b5c39d652fd",
+      "lf": 921,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "0ccdae38ccd7b7392820081b620e625801e5b030",
+      "bytes": 23076,
+      "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+      "lf": 731,
+      "endsWithLF": true
+    },
+    "support": {
+      "gitBlob": "ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+      "bytes": 25529,
+      "sha256": "0822120957412f672e178981066f71f5f6588efec6925da2dc0fb0b2431c5ab9",
+      "lf": 523,
+      "endsWithLF": true
+    },
+    "retargetDiff": {
+      "gitBlob": "cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+      "bytes": 9875,
+      "sha256": "309fb2f24e5d4e216dd11c5e7fb58619d8d1206521134591d3eb7cbea7f17bb6",
+      "lf": 125,
+      "endsWithLF": true
+    },
+    "fullProspectiveDiff": {
+      "gitBlob": "f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+      "bytes": 45625,
+      "sha256": "3ade1005084cbeb825c864fe8a394817024180586bc22a89aa7c0f01f321f783",
+      "lf": 696,
+      "endsWithLF": true
+    }
+  },
+  "checks": [
+    {
+      "name": "helper base ranges concatenate",
+      "pass": true
+    },
+    {
+      "name": "helper gate post range",
+      "pass": true
+    },
+    {
+      "name": "helper admission offset forward",
+      "pass": true
+    },
+    {
+      "name": "helper admission offset inverse",
+      "pass": true
+    },
+    {
+      "name": "R3 R4 exact anchors forward",
+      "pass": true
+    },
+    {
+      "name": "R3 R4 exact anchors inverse",
+      "pass": true
+    },
+    {
+      "name": "control diff exactly two paths",
+      "pass": true
+    },
+    {
+      "name": "control diff forward apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "pass": true
+    },
+    {
+      "name": "control diff inverse apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "pass": true
+    },
+    {
+      "name": "control diff forward apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "pass": true
+    },
+    {
+      "name": "control diff inverse apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "pass": true
+    },
+    {
+      "name": "anchor 1 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 1 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 2 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 2 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 3 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 3 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 4 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 4 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 5 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 5 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 6 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 6 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 7 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 7 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 8 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 8 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 9 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 9 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 10 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 10 posthash",
+      "pass": true
+    },
+    {
+      "name": "anchor 11 prehash",
+      "pass": true
+    },
+    {
+      "name": "anchor 11 posthash",
+      "pass": true
+    },
+    {
+      "name": "focal 11 anchors forward",
+      "pass": true
+    },
+    {
+      "name": "focal 11 anchors inverse",
+      "pass": true
+    },
+    {
+      "name": "focal retarget one path",
+      "pass": true
+    },
+    {
+      "name": "focal retarget full forward",
+      "pass": true
+    },
+    {
+      "name": "focal retarget full inverse",
+      "pass": true
+    },
+    {
+      "name": "focal prospective four paths",
+      "pass": true
+    },
+    {
+      "name": "prospective full forward .ci-run.json",
+      "pass": true
+    },
+    {
+      "name": "prospective full inverse .ci-run.json",
+      "pass": true
+    },
+    {
+      "name": "prospective full forward apps/cli/test/sucafina-proof-verification.test.ts",
+      "pass": true
+    },
+    {
+      "name": "prospective full inverse apps/cli/test/sucafina-proof-verification.test.ts",
+      "pass": true
+    },
+    {
+      "name": "prospective full forward apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "pass": true
+    },
+    {
+      "name": "prospective full inverse apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "pass": true
+    },
+    {
+      "name": "prospective full forward apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "pass": true
+    },
+    {
+      "name": "prospective full inverse apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "pass": true
+    }
+  ],
+  "workingPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "sha": "1017609000bdbdb39fc0510b045dc6dfde371faf",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha": "b7de9404461591ce0162d496ec917a47fb72a479",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/current-choice-readonly.test.ts",
+      "sha": "8b01895b0f3b1623646d14a82adb66bf13ca841b",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "5fc0028474aa52c148a30c093d39bc9a471f9a24",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-root.ts",
+      "sha": "244d46ee41e9ce288a7260938174a57161137bab",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sha": "ccc5ea87046144843e1751b1288e907974d24ca5",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/acl-state-authorize.ts",
+      "sha": "f183dd1049ef205c38395bda99c83efa8eddc80a",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sha": "dc483ab92936e410f529bf5c5d2bd52fbc6ffffb",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "5b453e1672aa98616e814ac64900517d1ae4f60a",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "39e6da84a3dd815721484affaf8315731ded073b",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/c08-snapshot-projection.test.ts",
+      "sha": "6bef21db9129db064b018f5f0bf632306e3a16ec",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/captured-context-identity.ts",
+      "sha": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/captured-context-identity.test.ts",
+      "sha": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-loading.ts",
+      "sha": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-captured-context-lazy.ts",
+      "sha": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+      "membership": "source",
+      "origin": "literal inherited C18 tuple",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/preview-progress-e13-diagnostic.ts",
+      "sha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "sha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "sha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "sha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "sha": "47e13f21e5d00fc8689123d7b87175960288b029",
+      "membership": "source",
+      "origin": "E13 diagnostic source overlay",
+      "present": true,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/test/sf613-preview-e13-observation.test.ts",
+      "sha": null,
+      "membership": "focal-only-D",
+      "origin": "E13 isolated control",
+      "present": false,
+      "verified": true
+    },
+    {
+      "path": "apps/cli/test/fixture/sf613-preview-e13-observation.ts",
+      "sha": null,
+      "membership": "focal-only-D",
+      "origin": "E13 isolated control",
+      "present": false,
+      "verified": true
+    }
+  ],
+  "semanticReview": {
+    "runCommandLiteral": true,
+    "G2ThroughG7Literal": true,
+    "allTemplateLinesRead": true,
+    "expectedGroups": 8,
+    "commands": 14,
+    "falseFlags": 28,
+    "cases": 40,
+    "reports": 10,
+    "assertions": null,
+    "noNewFilter": true,
+    "noRetry": true,
+    "scopedChildren": "11 loading + 1 lazy + 7 E13, not total subprocess population",
+    "budgets": {
+      "bounds": {
+        "git": "0ccdae38ccd7b7392820081b620e625801e5b030",
+        "bytes": 23076,
+        "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+        "lf": 731,
+        "finalLF": true
+      },
+      "parentDeadlinesMs": [
+        180000,
+        420000,
+        360000,
+        300000,
+        300000,
+        600000,
+        240000,
+        90000
+      ],
+      "sumParentMs": 2490000,
+      "sumCommandMs": 1890000,
+      "mainJobMs": 2700000,
+      "nominalSharedOverheadMs": 210000,
+      "oldTimeoutChanges": 0,
+      "mainWorkflowChanged": false,
+      "runnerChanged": false,
+      "G8": {
+        "testMs": 35000,
+        "processMs": 60000,
+        "parentMs": 90000,
+        "childrenSequential": 7,
+        "childProcessMs": 3000,
+        "childForceKillAfterMs": 1000
+      },
+      "streamCaps": {
+        "stdoutPerOuterCommandBytes": 1048576,
+        "stderrPerOuterCommandBytes": 1048576,
+        "outerArithmeticCeilingBytes": 29360128,
+        "aggregateOriginalMainCap": null,
+        "newChildPerStreamBytes": 65536,
+        "newParsedChildReceiptBytes": 16384,
+        "newParentReportBytes": 16384
+      },
+      "scope": "Commands and local children are inside parent deadlines. The remaining210s are nominal shared overhead within the unchanged45-minute main, not a separate guarantee or finalizer reservation.",
+      "noGlobalNestedBunTimeout": true,
+      "noLatencyForecast": true
+    },
+    "qualifiedUIAreasAdded": 0
+  },
+  "peer": {
+    "reviewer": "/root/teams_product",
+    "sourceObjectAndControls": "independently authenticated source/controls/full deltas and bounds accepted",
+    "focal": "template, 11 anchors, both diffs, 24 pins, unchanged runCommand/G2-G7 and bounds accepted",
+    "manifest": "final documentary acknowledgement requested"
+  },
+  "authority": {
+    "bindingOnly": "exactly two guarded tokens to reviewed S/T; root creates actual bound blob and sole-parent D; no run until separate actual-object review",
+    "sourceProductMerge": false,
+    "execution": false,
+    "production": false
+  },
+  "limits": [
+    "This is a statically reviewed, unbound driver proposal with known real source context, not an executable authority or a PASS.",
+    "Source object contains only diagnostic overlay2A5M over cleanS18. New control/test and this wrapper are focal-only additions; source and product bytes are not rewritten here.",
+    "The new G8 prefix assertion is intentionally small. A prefix or exit alone does not validate all emitted payloads, file/stream parity, actual journey success, or latency.",
+    "Request-close does not guarantee successful transport of itself,fsync,all descendants completed,or a business result. Native event order/explicit parent IDs must be preserved; overlapping durations are not exclusive.",
+    "The original-selection campaign quota depends on the documented two journeys/one worker/no retry/repeat1 and bridge exclusion; it is not a universal network or process bound.",
+    "All31 derivation checks here concern pure data/text only. Runtime assertions, guard warning counts, nonce,report payloads and test footers remain future observations.",
+    "No original Actions logs, original artifact ZIP, audit ZIP, source tree,commit,ref or run was acquired/created by this focal author."
+  ]
+}

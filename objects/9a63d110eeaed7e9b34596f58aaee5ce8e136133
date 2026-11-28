@@ -1,0 +1,222 @@
+{
+  "schema": "sf613-e13-root-analytics-preflight-v1",
+  "status": "PREFLIGHT_ONLY_NO_ACTIVATION",
+  "at": {
+    "current_time": "2026-11-28 00:03:22 UTC"
+  },
+  "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+  "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+  "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "originalRequest": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "requestContent": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "@orchestra/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/design-wave-five-analytics.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "pinChecks": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "sha": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8d56566127054fb2e6104160eac244aeba53eca0",
+        "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f",
+        "793b548e7d4f8fa2704835bbef745b799c276a75",
+        "f768151e80b254318d26edd10f20ecb558f9586f"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha": "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8d56566127054fb2e6104160eac244aeba53eca0",
+        "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f",
+        "793b548e7d4f8fa2704835bbef745b799c276a75"
+      ]
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "sha": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8d56566127054fb2e6104160eac244aeba53eca0",
+        "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f"
+      ]
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "sha": "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "7663f4b9fe0fdee867137b9e719f29058339317d",
+        "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7"
+      ]
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "sha": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8260a6fff2f4a343e3b599b0056ebe3841e0c3b0"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "sha": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8d56566127054fb2e6104160eac244aeba53eca0",
+        "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f",
+        "793b548e7d4f8fa2704835bbef745b799c276a75",
+        "f768151e80b254318d26edd10f20ecb558f9586f",
+        "f0ddf96723b8e1b17ab1d2df30481e6aa117debd"
+      ]
+    },
+    {
+      "path": ".ci-run.json",
+      "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/installation.ts",
+      "sha": "47e13f21e5d00fc8689123d7b87175960288b029",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "8d56566127054fb2e6104160eac244aeba53eca0",
+        "c6a6dfda85d9de46ada09ed6dfb5223c6358c49f",
+        "793b548e7d4f8fa2704835bbef745b799c276a75",
+        "f768151e80b254318d26edd10f20ecb558f9586f",
+        "f0ddf96723b8e1b17ab1d2df30481e6aa117debd"
+      ]
+    },
+    {
+      "path": "apps/cli/test/fixture/sucafina-native-installation.ts",
+      "sha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+      "verified": true,
+      "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "trees": [
+        "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "212be7ea5ae76c0b1be2a839ba0caa0fce022cb2",
+        "098570c3ff4359da5d4b7e786cca52e2674b2d1d",
+        "1ffe9bdb289a848f77c25f7c7f82f61307f6dc59",
+        "1e7dd14949d25d97290a51661a1c905a2ca38f71"
+      ]
+    }
+  ],
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "firstPreviewMs": 60000,
+    "sensitivityMs": 120000,
+    "mainJobMinutes": 45,
+    "additionalTestFilter": null,
+    "observer": true,
+    "CPUProfiler": false
+  },
+  "protocol": {
+    "markerFamilies": [
+      "SF_PREVIEW_E13_EVENT",
+      "SF_PREVIEW_E13_LAUNCHER"
+    ],
+    "requestSelection": "Process-local first eligible portfolio-preview HTTP entry after the original guards/mode; exact Request object identity, before body parsing/admission. It does not claim authorization.",
+    "lifetime": "One latch, no reselection after admission failure, error or close. Units/phases are scoped through empty private ALS tokens; foreign/late work runs once with neutral/disabled observation.",
+    "work": "Synchronous runOnce records invocation/return/throw separately and takes only the thunk's captured result as authority. It never wraps/assimilates the returned Promise, adds an await, replays work, or inspects an error.",
+    "phase": "Each unit captures parentUnit/parentPhase at entry. The Promise.all phase scopes the existing whole expression and preserves all original async callbacks. Compound compare short-circuits remain literal.",
+    "noDomainData": "Events use fixed enums and local integers/booleans/null only. No Request property, payload/result/actor/error tag, business getter, grant or digest is read for observation.",
+    "closure": "Reentrant request-close is deferred behind the active emission while frame ownership closes immediately. Terminal describes boundary outcome, outstanding units/phases, overflow and pre-terminal faults; it does not prove own transport/fsync success.",
+    "transport": "ASCII JSON+prefix+LF, bound by UTF-8 bytes. Stream file is created once wx0600 outside private installation cleanup; appends are bounded. End fsync/fstat/close is best effort and never changes product outcome.",
+    "runtime": "Linux x64/Bun1.3.14 and exact original revision gate retained only for this observation. Clean source/release pins are unchanged."
+  },
+  "budgets": {
+    "sourceBounds": {
+      "gitBlob": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "endsWithLF": true
+    },
+    "selectionMemo": {
+      "gitBlob": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true
+    },
+    "streamMaxEvents": 511,
+    "streamMaxUtf8Bytes": 261120,
+    "conditionalTwoOriginalJourneyMaxLines": 512,
+    "conditionalTwoOriginalJourneyMaxUtf8Bytes": 262144,
+    "streamFileSeparatelyDuplicatesEvents": true,
+    "launcherFilesAtMost": 2,
+    "eachLauncherMaxBytes": 8192,
+    "noSynchronousIOLatencyBound": true
+  },
+  "focalPrerequisite": {
+    "status": "PASS",
+    "run": 46085008328,
+    "attempt": 1,
+    "receipt": {
+      "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+      "bytes": 69479,
+      "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+      "lf": 2105,
+      "endsWithLF": true
+    },
+    "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "sourceTree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "snapshot": "43f73297c2082ed4ea3a016bb1fd7bd970a53201"
+  },
+  "branch": {
+    "name": "ci-run-sf613e13a",
+    "absent": true,
+    "priorRuns": 0,
+    "run": null
+  },
+  "qualification": {
+    "newUIAreas": 0,
+    "finalC613": false,
+    "productionAuthorized": false
+  },
+  "next": "Independent source/selection preflight acknowledgement, then a separate root authority for one original Analytics activation on this source."
+}

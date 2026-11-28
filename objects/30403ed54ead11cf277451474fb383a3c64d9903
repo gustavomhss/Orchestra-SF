@@ -1,0 +1,143 @@
+{
+  "schema": "sf613-e13-original-selection-budget-review-v1",
+  "status": "STATIC_SELECTION_BOUND_GIT_ONLY",
+  "atUtc": "2026-11-27 23:29:07 UTC",
+  "author": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "cleanSource": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "question": "Can the original BI journey reach HTTP decision-portfolio-preview and create a second capturing installation?",
+  "conclusion": "The declared original two-journey flow reaches that HTTP operation only from the first journey. The BI catalog's locally named preview function calls bi.bi-data, not the portfolio preview operation. This is a bound on the fixed selection and its closed client contracts, not a universal prohibition on other traffic reaching the endpoint.",
+  "sources": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+      "gitBlob": "f8a62baf167a1a4374122552a770f1ec49f56313",
+      "bytes": 56661,
+      "sha256": "468767263b4495ce78204206d8ae3c33f836e6724ce7125afcbd79ae8c9a74f6",
+      "lines": "12-291 first case;72-91 two previews;443-814 BI case;807 POST assertion"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+      "gitBlob": "e11e9f2897e3eec6ca0537c44c7ab4fa9064fa75",
+      "bytes": 25041,
+      "sha256": "7c5c9c33432cf8c2d849094d29a7af31ecffa723896f752ec5755c7c159c45f6",
+      "lines": "153-166 closed BI client;197-210 preview calls bi.bi-data;179/250/284 other BI operations"
+    },
+    {
+      "path": "packages/client/src/sucafina/bi.ts",
+      "gitBlob": "396d7120e6db25be1dae4255edaa7e87f8544def",
+      "bytes": 2603,
+      "sha256": "d9fc6ed90457b1cff0baebdb9b1d3e87df9f1e763afa540f35b4e659abafbde1",
+      "lines": "22-49 four literal operation keys"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-four.ts",
+      "gitBlob": "bb08f6bb1f131682cd2b53cab17ced3909808e0c",
+      "bytes": 719,
+      "sha256": "8ce723391c29a693553a6d8fbc32ac98f1a30b68987534f3b562547c1d7787b9",
+      "lines": "6-8 one test-scoped installation fixture"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-five-analytics.ts",
+      "gitBlob": "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+      "bytes": 21102,
+      "sha256": "2e8ee6bc87cf0c7bac2c640c557194b093604eb6cef21210f4ed15d23a938ef6",
+      "lines": "5-6 analyticsTest alias;351-362 same-installation Portuguese context"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/design-support/wave-three.ts",
+      "gitBlob": "b3c02539245cce5091e0f200e84d3021016074ea",
+      "bytes": 10068,
+      "sha256": "8a36118cfd8a40dc4003c1c816c58a880c4bb670be858d452b0ef964a6e37cf4",
+      "lines": "8-20 browser context/owner use installation;24 retries0;63-110 owner-bound navigation"
+    },
+    {
+      "path": "packages/schema/src/sucafina/bi.ts",
+      "gitBlob": "02504f838da6680a5fff1d1f9f6a337d075d68ca",
+      "bytes": 4237,
+      "sha256": "dbcec03272bf14044576a457ab8ac930a9dea9fd5a110af6ff8a29d335a04d7b",
+      "lines": "104-137 closed BI operation identities"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "gitBlob": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+      "bytes": 14101,
+      "sha256": "2b18f550e8165a40ef7a3bfdd1d365dfc2bf0b20b98c1a1186c74d9e27cb99fb",
+      "lines": "39-47 checks exact operation and POST before startSfE13Observation"
+    }
+  ],
+  "reasoning": [
+    {
+      "point": "One installation per selected test",
+      "basis": "wave-four overrides installation with scope:test and calls withDesignInstallation once. The analytics helper aliases that fixture. Under the original two-case selection with repeatEach1 and retries0, at most two fixture installations are selected."
+    },
+    {
+      "point": "The first case owns both preview calls",
+      "basis": "Spec72-74 and89-91 click Preview combinations on the same page/installation. First-case Portuguese navigation at266-281 also reuses that installation."
+    },
+    {
+      "point": "BI uses a disjoint operation family",
+      "basis": "Spec443-814 enters only sf-bi, BI01, BI06 and BI11 routes. It reads options, data and source links; published source links are inspected, not clicked. Catalog preview197-210 calls bi.bi-data. Its typed client executes only bi.bi-data, bi.bi-source, bi.bi-options and bi.bi-decision. The schema operation identities remain in that four-entry BI family."
+    },
+    {
+      "point": "Locale does not create another installation",
+      "basis": "withPortuguese reads cookies and origin from the existing installation and creates only browser context/page. It does not call withDesignInstallation."
+    },
+    {
+      "point": "The observer entry is operation-specific",
+      "basis": "Reviewed HTTP caller138cd8c8 returns before observer setup for unrecognized modes and starts E13 only when mode is decision-portfolio-preview after POST/request guards."
+    },
+    {
+      "point": "One selection attempt per native module lifetime",
+      "basis": "Helper R7 preserves selectionTried, set before admission in startSfE13Observation134-136. Repeated previews in the same module lifetime do not create a second selected frame."
+    }
+  ],
+  "selectionContract": {
+    "specLiteral": true,
+    "originalCases": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "newTestFiltersOrRetries": false,
+    "scope": "The unchanged original Analytics selection supplied by root. This review does not generalize to added cases, changed configuration, restarted native processes or unlisted external requests."
+  },
+  "helperQuota": {
+    "gitBlob": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+    "bytes": 18129,
+    "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+    "support": "fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+    "singleR6ToR7AnchorForwardInverseExact": true,
+    "maxEvents": 511,
+    "maxBytes": 261120,
+    "maxLineBytes": 1024,
+    "selectionLatchAndOtherCodeLiteral": true
+  },
+  "conditionalTotal": {
+    "capturingInstallationsAtMost": 1,
+    "noncapturingBIInstallationsAtMost": 1,
+    "mainEventsAtMost": 511,
+    "mainBytesAtMost": 261120,
+    "additionalDisabledEventsAtMost": 1,
+    "additionalDisabledBytesAtMost": 1024,
+    "aggregateEventsAtMost": 512,
+    "aggregateBytesAtMost": 262144,
+    "bridgePrerequisite": "Final bridges must guarantee at most one launcher-disabled line per installation, each at most1024 bytes, and disabled emission must exclude successful helper capture in that installation. Teams reported this property from its bridge review; those final bridge pins belong to the author package, not an independent bridge review here.",
+    "allDisabledAlternative": "At most two disabled lines if neither installation captures; it also fits the same bound."
+  },
+  "limits": [
+    "The spec's final assertion excluding POSTs other than bi-decision is an oracle, not an emission barrier; it is not used alone to prove the bound.",
+    "No cross-process/global latch is claimed. The budget depends on the original two-journey fixture/configuration and final bridge contract.",
+    "Unexpected extra requests, repeated tests, process restarts or changed BI client mappings require renewed bounds.",
+    "No historical BI PASS, absence of prior markers or prior timeout is used as proof of this static selection bound.",
+    "No new execution, original Actions log, artifact ZIP, observer or product mutation was performed."
+  ],
+  "effects": {
+    "proposalMemoBlobs": 1,
+    "productSourceMutations": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "originalGets": 0,
+    "zipGets": 0
+  }
+}

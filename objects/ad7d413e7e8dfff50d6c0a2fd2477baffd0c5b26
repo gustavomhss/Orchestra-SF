@@ -1,0 +1,979 @@
+{
+  "schema": "sf613-e13-analytics-final-receipt-v1",
+  "status": "NEGATIVE_INSTALLED_ANALYTICS_ORIGINALS_CLOSED",
+  "closedAt": {
+    "current_time": "2026-11-28 00:35:01 UTC"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "run": {
+    "id": 46086157237,
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46086157237"
+  },
+  "jobs": [
+    {
+      "id": 140796091682,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-28T00:07:08Z",
+      "completed_at": "2026-11-28T00:17:03Z"
+    },
+    {
+      "id": 140798957063,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-28T00:17:05Z",
+      "completed_at": "2026-11-28T00:17:08Z"
+    }
+  ],
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "diagnostic": true,
+    "sourceManifest": {
+      "gitBlob": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "endsWithLF": true
+    },
+    "sameAsExecutedSnapshot": true
+  },
+  "authority": {
+    "gitBlob": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+    "bytes": 24118,
+    "sha256": "afb549aa28accb490a85c1d62ac98375b777cd40f25a030ac56a9ecf7c86535c",
+    "lf": 572,
+    "endsWithLF": true
+  },
+  "preflight": {
+    "gitBlob": "9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+    "bytes": 8864,
+    "sha256": "d22820896234cd5f86167532e8450e70223acd8736bc40de3c0f95f1af307e0e",
+    "lf": 222,
+    "endsWithLF": true
+  },
+  "preflightPeer": {
+    "gitBlob": "d479ac686d0e90fd4594247cb62750d519b489a7",
+    "bytes": 1956,
+    "sha256": "40cec63be0d539e77698081c0c932cd6a7b1a29a64eb4f20ca7cadbea35d53bc",
+    "lf": 61,
+    "endsWithLF": true
+  },
+  "focal": {
+    "run": 46085008328,
+    "receipt": {
+      "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+      "bytes": 69479,
+      "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+      "lf": 2105,
+      "endsWithLF": true
+    },
+    "status": "PASS_DIAGNOSTIC_CONTROLS_ONLY"
+  },
+  "raw": {
+    "main": {
+      "schema": "sf613-e13-original-log-preservation-v1",
+      "status": "COMPLETE_LITERAL_READBACK_BEFORE_INTERPRETATION",
+      "prefix": "e13_analytics_main",
+      "acquisition": {
+        "at": {
+          "current_time": "2026-11-28 00:18:23 UTC"
+        },
+        "jobId": 140796091682,
+        "runId": 46086157237,
+        "attempt": 1,
+        "head": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+        "contextKey": "e13_analytics_intake_context"
+      },
+      "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+      "wholeCalculated": {
+        "gitBlob": "1eb15113536676c909a6de4a6294d18688d66bbf",
+        "bytes": 5148177,
+        "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+        "lf": 2986,
+        "endsWithLF": true
+      },
+      "wholeBlobActuallyCreated": false,
+      "wholeBlob": null,
+      "partCount": 18,
+      "partMaxUtf8Bytes": 300000,
+      "parts": [
+        {
+          "ordinal": 1,
+          "gitBlob": "4e6a2b736302101239b76128bb2cb90ae41310ac",
+          "bytes": 300000,
+          "sha256": "dee22bdc581fd025862de4129ab1917475a75eca6ca5736b219df827da904b2c",
+          "lf": 1178,
+          "endsWithLF": false,
+          "byteStart": 0,
+          "byteEnd": 300000,
+          "utf16Start": 0,
+          "utf16End": 297350,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 2,
+          "gitBlob": "29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+          "bytes": 300000,
+          "sha256": "32b8428f430e052e4c0670c9befa204c4e235e486f1948888efc19db30a7593d",
+          "lf": 46,
+          "endsWithLF": false,
+          "byteStart": 300000,
+          "byteEnd": 600000,
+          "utf16Start": 297350,
+          "utf16End": 597350,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 3,
+          "gitBlob": "8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+          "bytes": 300000,
+          "sha256": "ab8b42847327ee05b3c752c14ee6d648aed0f01429045105fd4b2197da9f990d",
+          "lf": 766,
+          "endsWithLF": false,
+          "byteStart": 600000,
+          "byteEnd": 900000,
+          "utf16Start": 597350,
+          "utf16End": 897350,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 4,
+          "gitBlob": "2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+          "bytes": 300000,
+          "sha256": "9ffbe79df94f431a9490776dd0e62d1197795f98e2c6ebb297ade1e7c0f7c116",
+          "lf": 438,
+          "endsWithLF": false,
+          "byteStart": 900000,
+          "byteEnd": 1200000,
+          "utf16Start": 897350,
+          "utf16End": 1195187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 5,
+          "gitBlob": "3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+          "bytes": 300000,
+          "sha256": "e02a698452eceeffa295640f21a3b35cb1f044986805ca527f4be01f352099cf",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 1200000,
+          "byteEnd": 1500000,
+          "utf16Start": 1195187,
+          "utf16End": 1495187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 6,
+          "gitBlob": "168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+          "bytes": 300000,
+          "sha256": "eb877b9554dce98a4288ab7fb722e9769dbd0514f6d6172182afa2ee735fc202",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 1500000,
+          "byteEnd": 1800000,
+          "utf16Start": 1495187,
+          "utf16End": 1795187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 7,
+          "gitBlob": "680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+          "bytes": 300000,
+          "sha256": "761effa119e98d4f5d69f81bd20e2a6af29c97001efc2b1f004bb9cf8d2395a7",
+          "lf": 30,
+          "endsWithLF": false,
+          "byteStart": 1800000,
+          "byteEnd": 2100000,
+          "utf16Start": 1795187,
+          "utf16End": 2095187,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 8,
+          "gitBlob": "3872d581513c4a7721687bfb728cd0fdfbf403ce",
+          "bytes": 300000,
+          "sha256": "87de1ed12ba91144bfb6e9de964dbc7e9d0f816c9ac452d3850772f0a7b6b482",
+          "lf": 40,
+          "endsWithLF": false,
+          "byteStart": 2100000,
+          "byteEnd": 2400000,
+          "utf16Start": 2095187,
+          "utf16End": 2395185,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 9,
+          "gitBlob": "256e98ed81c38a9123ef0bb867c1a704063c15e3",
+          "bytes": 300000,
+          "sha256": "21cc0f6a4e1426fdd9c4fc3c96cebd08011eed3b953f5819bfb040e8a8c3f528",
+          "lf": 28,
+          "endsWithLF": false,
+          "byteStart": 2400000,
+          "byteEnd": 2700000,
+          "utf16Start": 2395185,
+          "utf16End": 2695185,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 10,
+          "gitBlob": "adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+          "bytes": 300000,
+          "sha256": "64230f26437d6e5878e2602173db7e5462273914f75b65e2388ebca147d64524",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 2700000,
+          "byteEnd": 3000000,
+          "utf16Start": 2695185,
+          "utf16End": 2995182,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 11,
+          "gitBlob": "597d921b74943bd51ab9dca0690927e20dca09de",
+          "bytes": 300000,
+          "sha256": "839bf63e710a0acc172f3f408168a1e8e97037806717d4e92ad60dfbc1391bcd",
+          "lf": 50,
+          "endsWithLF": false,
+          "byteStart": 3000000,
+          "byteEnd": 3300000,
+          "utf16Start": 2995182,
+          "utf16End": 3295179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 12,
+          "gitBlob": "3a24f4ee324416facef0d859a57626e1720f86af",
+          "bytes": 300000,
+          "sha256": "d0864d609d7d2d65e56f138dc96c322950a74a6e2296e208e7e3c4c84ac22741",
+          "lf": 30,
+          "endsWithLF": false,
+          "byteStart": 3300000,
+          "byteEnd": 3600000,
+          "utf16Start": 3295179,
+          "utf16End": 3595179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 13,
+          "gitBlob": "bd9e8875502dad8bff2e36224f51489fc4397c9b",
+          "bytes": 300000,
+          "sha256": "e689daa859b1839ee511cd2887be5bc14f1564b466ad184f6d6168c4f2e44a30",
+          "lf": 38,
+          "endsWithLF": false,
+          "byteStart": 3600000,
+          "byteEnd": 3900000,
+          "utf16Start": 3595179,
+          "utf16End": 3895179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 14,
+          "gitBlob": "cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+          "bytes": 300000,
+          "sha256": "f6e100023e42dc9229194ce8cee197e61e37b479dec3538dc9920c58c0e29928",
+          "lf": 32,
+          "endsWithLF": false,
+          "byteStart": 3900000,
+          "byteEnd": 4200000,
+          "utf16Start": 3895179,
+          "utf16End": 4195179,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 15,
+          "gitBlob": "58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+          "bytes": 300000,
+          "sha256": "cfa454ba171a1a0acf10067fa3c5df95f0c9c0471e244707578361e280e118f8",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 4200000,
+          "byteEnd": 4500000,
+          "utf16Start": 4195179,
+          "utf16End": 4495174,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 16,
+          "gitBlob": "053925d54f7876818256fc553d94c9d68a5a6688",
+          "bytes": 300000,
+          "sha256": "7096821e0eec50e8db3d4f5ee9d7be2764bd0bb4bb03dbc4a08242c88d6f557b",
+          "lf": 36,
+          "endsWithLF": false,
+          "byteStart": 4500000,
+          "byteEnd": 4800000,
+          "utf16Start": 4495174,
+          "utf16End": 4795174,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 17,
+          "gitBlob": "8e23978720ee9a98c502639e7842176f68d8c692",
+          "bytes": 300000,
+          "sha256": "63c92ed5164252437407d8437afec736822575e74d5d43a37d718ace5823574a",
+          "lf": 46,
+          "endsWithLF": false,
+          "byteStart": 4800000,
+          "byteEnd": 5100000,
+          "utf16Start": 4795174,
+          "utf16End": 5095174,
+          "literalReadback": true
+        },
+        {
+          "ordinal": 18,
+          "gitBlob": "c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+          "bytes": 48177,
+          "sha256": "496494df3fbb03ea19490a7d9023deab19260f0d2bf99b1a075e711918e11f9d",
+          "lf": 84,
+          "endsWithLF": true,
+          "byteStart": 5100000,
+          "byteEnd": 5148177,
+          "utf16Start": 5095174,
+          "utf16End": 5143347,
+          "literalReadback": true
+        }
+      ],
+      "recomposed": {
+        "gitBlob": "1eb15113536676c909a6de4a6294d18688d66bbf",
+        "bytes": 5148177,
+        "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+        "lf": 2986,
+        "endsWithLF": true
+      },
+      "recomposedLiteral": true,
+      "bomCodeUnitOffsets": [
+        0,
+        2099706,
+        4200806
+      ],
+      "bomByteOffsets": [
+        0,
+        2104519,
+        4205627
+      ],
+      "originalGets": 1,
+      "zipGets": 0,
+      "at": {
+        "current_time": "2026-11-28 00:19:32 UTC"
+      }
+    },
+    "cleanup": {
+      "schema": "sf613-e13-original-log-preservation-v1",
+      "status": "COMPLETE_LITERAL_READBACK_BEFORE_INTERPRETATION",
+      "prefix": "e13_analytics_cleanup",
+      "acquisition": {
+        "at": {
+          "current_time": "2026-11-28 00:18:23 UTC"
+        },
+        "jobId": 140798957063,
+        "runId": 46086157237,
+        "attempt": 1,
+        "head": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+        "contextKey": "e13_analytics_intake_context"
+      },
+      "representation": "Exact decoded original string returned by the GitHub job-log tool, re-encoded to UTF-8 for Git blob and SHA256; no line-ending or BOM normalization.",
+      "wholeCalculated": {
+        "gitBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+        "bytes": 2283,
+        "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "wholeBlobActuallyCreated": true,
+      "wholeBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+      "partCount": 1,
+      "partMaxUtf8Bytes": 300000,
+      "parts": [
+        {
+          "ordinal": 1,
+          "gitBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+          "bytes": 2283,
+          "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+          "lf": 39,
+          "endsWithLF": true,
+          "byteStart": 0,
+          "byteEnd": 2283,
+          "utf16Start": 0,
+          "utf16End": 2281,
+          "literalReadback": true
+        }
+      ],
+      "recomposed": {
+        "gitBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+        "bytes": 2283,
+        "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+        "lf": 39,
+        "endsWithLF": true
+      },
+      "recomposedLiteral": true,
+      "bomCodeUnitOffsets": [
+        0
+      ],
+      "bomByteOffsets": [
+        0
+      ],
+      "originalGets": 1,
+      "zipGets": 0,
+      "at": {
+        "current_time": "2026-11-28 00:19:34 UTC"
+      }
+    },
+    "mainManifest": {
+      "gitBlob": "291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+      "bytes": 8320,
+      "sha256": "99951e8df61a006e52a59974911f3f20d347a855f3dbbfbaedf63bffac64e448",
+      "lf": 286,
+      "endsWithLF": true
+    },
+    "cleanupManifest": {
+      "gitBlob": "70607967c9788428c229e9eca6c12fce29c236ee",
+      "bytes": 1761,
+      "sha256": "befff94a6fa8bf6322d991def6b15dc1afc9086da2be27906bd1c06443807b3f",
+      "lf": 61,
+      "endsWithLF": true
+    },
+    "context": {
+      "gitBlob": "4d55cbecd6d44d835271b96486baab2dd664e968",
+      "bytes": 2642,
+      "sha256": "f8570caa90bcdd4dc3d65471666bf54e8c78e68457d974605910b7ea670b33d8",
+      "lf": 82,
+      "endsWithLF": true
+    }
+  },
+  "originals": {
+    "getsMain": 1,
+    "getsCleanup": 1,
+    "closed": true,
+    "neverReacquire": true,
+    "zipGets": 0,
+    "wholeMainShaRole": "CALCULATED_ONLY_NOT_CREATED_DO_NOT_GET",
+    "parseAfterLiteralReadback": true
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts",
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "firstPreviewMs": 60000,
+    "sensitivityMs": 120000,
+    "mainJobMinutes": 45,
+    "additionalTestFilter": null,
+    "observer": true,
+    "CPUProfiler": false
+  },
+  "outcome": {
+    "failed": 1,
+    "passed": 1,
+    "duration": "8.3m",
+    "first": {
+      "status": "FAIL",
+      "failure": "page.waitForResponse60000ms timeout",
+      "specLocation": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+      "nativePreview": {
+        "operation": "decision-portfolio-preview",
+        "phase": "native-request",
+        "sequence": 3,
+        "method": "POST",
+        "ownerBinding": "exact"
+      },
+      "nativePreviewObservedAt": "2026-11-28T00:13:33.4555119Z",
+      "matchingNativeResponseAmongSources": false,
+      "precedingResults": [
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 1,
+          "ownerBinding": "exact",
+          "elapsedMs": 278,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        },
+        {
+          "operation": "decision-portfolio-results",
+          "phase": "native-response",
+          "sequence": 2,
+          "ownerBinding": "exact",
+          "elapsedMs": 584,
+          "http": 200,
+          "status": "ok",
+          "reason": null,
+          "valueShape": "array"
+        }
+      ],
+      "UI42": {
+        "captures": 6,
+        "list": 4,
+        "configure": 2,
+        "qualified": false
+      },
+      "UI43": "NOT_REACHED",
+      "UI44": "NOT_REACHED",
+      "diagnostics": [
+        {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "native-view",
+          "state": {
+            "discovery": "ready",
+            "provider": "ready",
+            "view": "ready",
+            "text": "Context and access⁨127.0.0.1:36373⁩ · Portfolio scenariosPortfolio scenariosPreview combinationsRunningDesign test data · Compare regional operating plans with explicit cost uncertaintiesCurrencyUSDHorizonJan 1, 2026 — Dec 31, 2026Case version6Choose a caseScenario universeNo client-side feasibility, coverage or cost evaluation is performed.Candidate scenariosDesign test data · Decision baseline plan · v1Design test data · Decision candidate plan · v1Design test data · Regional monthly amount hypothesis · v1ConstraintsCheck each constraint reference before selecting.790d8c37-4a4b-4bc0-8b8f-19ab5ca78449 · v2Priority criteriaKeep the difference in known subtotal at or below 2000 USDExploration limitPreview is not yet available.HistoryNo recorded results for this case."
+          }
+        }
+      ]
+    },
+    "BI": {
+      "status": "PASS",
+      "captures": 40,
+      "UI45": 7,
+      "UI46": 33,
+      "readbacks": [
+        {
+          "operation": "bi-data-readback",
+          "view": "BI01",
+          "http": 200,
+          "rows": 36,
+          "numericValues": 14,
+          "missing": 22
+        },
+        {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        },
+        {
+          "operation": "bi-data-readback",
+          "view": "BI06",
+          "http": 200,
+          "rows": 3,
+          "numericValues": 3,
+          "missing": 1
+        }
+      ],
+      "nativeCompletedRequests": [
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        },
+        {
+          "operation": "bi-data-original-acquisition",
+          "view": "BI06",
+          "acquisition": "native-response-cdp",
+          "phase": "original-request-completed",
+          "http": 200,
+          "sameNativeRequest": true,
+          "nativeRequestFinished": true,
+          "observer": "Network"
+        }
+      ],
+      "sourceResolution": {
+        "http": 200,
+        "negativeHttp": 403,
+        "negative": {
+          "status": "denied",
+          "reason": "bi-source-outside-selected-value"
+        }
+      },
+      "scope": {
+        "surfaces": [
+          "UI45",
+          "UI46"
+        ],
+        "catalogViews": 11,
+        "originalFinancialRead": true,
+        "originalOperationalRead": true,
+        "originalSourceResolution": true,
+        "originalOperationalSourceResolution": true,
+        "originalOperationalSourceNegative": "bi-source-outside-selected-value",
+        "originalSensitivityChoices": 0,
+        "invalidatedOnPeriodChange": true,
+        "fabricatedResult": false
+      },
+      "consolePageErrorRecords": [
+        {
+          "kind": "wave-three-failure",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        },
+        {
+          "kind": "wave-three-page-closed",
+          "consoleErrors": [],
+          "pageErrors": []
+        }
+      ]
+    }
+  },
+  "reports": {
+    "union": {
+      "gitBlob": "d6c235ba488c6f8121845bc184588937972c0b64",
+      "bytes": 34163,
+      "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+      "lf": 96,
+      "endsWithLF": true
+    },
+    "count": 96,
+    "families": {
+      "SF_ANALYTICS_SOURCE": 44,
+      "SF_ANALYTICS_CAPTURE": 46,
+      "SF_DESIGN_DIAGNOSTICS": 5,
+      "SF_ANALYTICS_SCOPE": 1
+    },
+    "reporterPartitionDoesNotProveZipMembership": true
+  },
+  "observation": {
+    "union": {
+      "gitBlob": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+      "bytes": 250708,
+      "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+      "lf": 510,
+      "endsWithLF": true
+    },
+    "analysis": {
+      "gitBlob": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+      "bytes": 82554,
+      "sha256": "787c3a61f8dbfc0f9ae0b770af6742017214f159167d209caa07636ff356f5d9",
+      "lf": 3828,
+      "endsWithLF": true
+    },
+    "binding": {
+      "schema": "sf-preview-causal-e13-event-v1",
+      "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "sourceTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "qualification": false,
+      "snapshot": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+      "runId": "46086157237",
+      "attempt": "1",
+      "nonce": "sf613-e13-event-qmQKRg",
+      "pid": 3778,
+      "parentPid": 3733,
+      "request": 1
+    },
+    "counts": {
+      "events": 510,
+      "bytes": 250708,
+      "maxLineBytes": 507,
+      "units": 27,
+      "compareUnits": 26,
+      "portUnits": 1,
+      "phaseEntries": 227,
+      "phaseCloses": 226,
+      "unitCloses": 25,
+      "requestCloses": 0,
+      "overflow": 1
+    },
+    "prefix": {
+      "firstSequence": 1,
+      "lastSequence": 510,
+      "lastKind": "overflow",
+      "lastElapsedTenthMs": 421839,
+      "eventsBefore": 509,
+      "bytesBefore": 250241,
+      "dropped": 1,
+      "terminalPresent": false,
+      "launcherDisabledMarkers": 0
+    },
+    "graph": {
+      "portUnits": 1,
+      "comparatorUnits": 26,
+      "directComparators": 10,
+      "directReturned": 9,
+      "nestedComparators": 16,
+      "nestedReturned": 16,
+      "unclosedEntries": "port1 and comparator26/unit27; phase3 combination-evaluate lacks emitted close",
+      "meaning": "Unclosed entries describe the received prefix, not runtime state after the dropped triggering event or at60s."
+    },
+    "intervalsInTenthMs": {
+      "combinationStart": 6615,
+      "prefixLength": 415224,
+      "closedDirectSum": 233088,
+      "nestedSumAlreadyContained": 105503,
+      "notCoveredByClosedDirect": 182136,
+      "meaning": "Disjoint direct intervals within the received prefix, instrumented server clock. Nested intervals not added. Residual not exclusive CPU or attribution to a producer."
+    },
+    "rootChecks": [
+      {
+        "name": "510 parsed events",
+        "pass": true
+      },
+      {
+        "name": "binding exact all events",
+        "pass": true
+      },
+      {
+        "name": "contiguous sequence1..510",
+        "pass": true
+      },
+      {
+        "name": "ASCII and original per-line cap",
+        "pass": true
+      },
+      {
+        "name": "monotonic valid tenth-millisecond clock",
+        "pass": true
+      },
+      {
+        "name": "all observed unit/phase/parent lifecycle links coherent",
+        "pass": true
+      },
+      {
+        "name": "27 units and227 phases",
+        "pass": true
+      },
+      {
+        "name": "only returned observed unit/phase closes",
+        "pass": true
+      },
+      {
+        "name": "one port and26 comparators",
+        "pass": true
+      },
+      {
+        "name": "9 direct and16 nested returned",
+        "pass": true
+      },
+      {
+        "name": "all direct under same combination phase3",
+        "pass": true
+      },
+      {
+        "name": "nested compare parents are criteria phases",
+        "pass": true
+      },
+      {
+        "name": "direct closed comparator intervals disjoint",
+        "pass": true
+      },
+      {
+        "name": "nested intervals contained by explicit parents",
+        "pass": true
+      },
+      {
+        "name": "overflow bytes/count exact at prefix end",
+        "pass": true
+      },
+      {
+        "name": "no request-close or launcher marker",
+        "pass": true
+      }
+    ],
+    "independentCausalReview": {
+      "reviewer": "/root/close_pr613",
+      "status": "ACK_CAUSAL_PREFIX_NO_DIVERGENCE",
+      "rawPartsAuthenticated": true,
+      "events": 510,
+      "units": 27,
+      "phases": 227,
+      "closedDirectComparators": 9,
+      "nestedComparators": 16,
+      "directReturnedTenthMs": 233088,
+      "nestedContainedTenthMs": 105503,
+      "combinationPrefixTenthMs": 415224,
+      "notCoveredTenthMs": 182136,
+      "overflowAtTenthMs": 421839,
+      "neverLastMarkerAt60s": true,
+      "originalGets": 0,
+      "zipGets": 0,
+      "codeEdits": false
+    }
+  },
+  "runtime": {
+    "directPrintedVersion": "1.3.14+0d9b296af",
+    "completeRevisionNotPrinted": true
+  },
+  "artifact": {
+    "metadata": {
+      "id": 15239671856,
+      "node_id": "MDg6QXJ0aWZhY3QxNTIzOTY3MTg1Ng==",
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 45860595,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15239671856",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/15239671856/zip",
+      "expired": false,
+      "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+      "created_at": "2026-11-28T00:16:59Z",
+      "updated_at": "2026-11-28T00:16:59Z",
+      "expires_at": "2026-12-05T00:16:56Z",
+      "workflow_run": {
+        "id": 46086157237,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-sf613e13a",
+        "head_sha": "dffc62a08bdba74f1a9322d49cde095e81535f55"
+      }
+    },
+    "metadataOnly": true,
+    "zipGets": 0,
+    "membersInspected": 0,
+    "physicalStreamOrRuntimeJsonRead": false,
+    "uploadFileCountNotMembership": true
+  },
+  "cleanup": {
+    "status": "success",
+    "branch": "ci-run-sf613e13a",
+    "deletedRefObserved": true
+  },
+  "rootChecks": [
+    {
+      "name": "terminal run and exact source",
+      "pass": true
+    },
+    {
+      "name": "one original GET each and full literal reassembly",
+      "pass": true
+    },
+    {
+      "name": "main whole calculated only18parts",
+      "pass": true
+    },
+    {
+      "name": "44 source46captures5diagnostics1scope",
+      "pass": true
+    },
+    {
+      "name": "original two cases and one worker observed",
+      "pass": true
+    },
+    {
+      "name": "actual argv workers1 retries0 repeat1",
+      "pass": true
+    },
+    {
+      "name": "actual result1fail1pass8.3m",
+      "pass": true
+    },
+    {
+      "name": "original preview60000ms timeout at72:32",
+      "pass": true
+    },
+    {
+      "name": "only original preview POST3 no response among SOURCE",
+      "pass": true
+    },
+    {
+      "name": "preceding result calls both200ok",
+      "pass": true
+    },
+    {
+      "name": "UI42 only6list configure",
+      "pass": true
+    },
+    {
+      "name": "UI43 UI44 no capture",
+      "pass": true
+    },
+    {
+      "name": "BI40captures7UI45and33UI46",
+      "pass": true
+    },
+    {
+      "name": "BI06two original native requests finished200",
+      "pass": true
+    },
+    {
+      "name": "BI01andBI06 original row summaries",
+      "pass": true
+    },
+    {
+      "name": "BI source200and bounded negative403",
+      "pass": true
+    },
+    {
+      "name": "four diagnostics empty console/page errors",
+      "pass": true
+    },
+    {
+      "name": "native view ready but preview unavailable",
+      "pass": true
+    },
+    {
+      "name": "BI scope 11views no fabricated result or sensitivity choice",
+      "pass": true
+    },
+    {
+      "name": "branch cleanup observed and single artifact",
+      "pass": true
+    }
+  ],
+  "independentInstalledReception": {
+    "reviewer": "/root/teams_product",
+    "status": "ACK_NO_RECEPTION_DIVERGENCE",
+    "checks": 38,
+    "rawPartsAuthenticated": true,
+    "sourceSelectionVerified": true,
+    "analyticsUnion": {
+      "gitBlob": "d6c235ba488c6f8121845bc184588937972c0b64",
+      "bytes": 34163,
+      "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+      "lf": 96,
+      "endsWithLF": true
+    },
+    "eventUnion": {
+      "gitBlob": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+      "bytes": 250708,
+      "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+      "lf": 510,
+      "endsWithLF": true
+    },
+    "originalGets": 0,
+    "zipGets": 0,
+    "observedResult": "1failed1passed8.3m; first preview60000ms; BIpassed",
+    "scope": "Installed result/identity/selection/captures/errors and prefix integrity; no independent causal assertion."
+  },
+  "qualification": {
+    "historicalAreas": 12,
+    "totalAreas": 15,
+    "newAreas": 0,
+    "UI42": false,
+    "UI43": false,
+    "UI44": false,
+    "cleanC613Candidate": false,
+    "D27": false,
+    "goLive": false,
+    "productionAuthorized": false
+  },
+  "next": "Read the S18 host.evaluate chain and propose the smallest safe product correction. All fresh authorization and rule/metric callbacks remain required; no optimization, new diagnostic, source change or rerun is authorized by this receipt.",
+  "limits": [
+    "The510-event prefix ends at an event-count quota before the browser60s deadline. It demonstrates repeated returned comparators inside the first combination evaluation, not the final stalled call or full Request lifetime.",
+    "No observed returned comparator carries a business result status. A return is not product success.",
+    "The last event/phase does not identify what was running at60s; the dropped event may be a next phase or a close.",
+    "No exclusive CPU, uninstrumented latency or performance improvement is claimed. Instrumented I/O has overhead.",
+    "Artifact bytes are pinned by metadata only. No original ZIP/audit ZIP, physical stream, PNG, trace or runtime JSON contents were acquired.",
+    "The source is diagnostic over clean S18 and cannot be merged as the product fix. Final C613, same-head qualification/review/dev merge, final go-live candidate and explicit production decision remain pending."
+  ]
+}

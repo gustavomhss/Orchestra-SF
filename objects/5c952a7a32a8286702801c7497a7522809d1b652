@@ -1,0 +1,218 @@
+{
+  "schema": "sf613-e13-root-focal-execution-authority-v1",
+  "status": "AUTHORIZED_ONE_ISOLATED_FOCAL_ACTIVATION",
+  "at": {
+    "current_time": "2026-11-27 23:54:05 UTC"
+  },
+  "owner": "/root",
+  "repository": "gustavomhss/Orchestra-SF",
+  "userMandate": "Complete #613 and go-live through reviewed PRs into dev; no production cutover without explicit approval.",
+  "purpose": "Before any original Analytics run, test E13 observational safety and preserved functional controls on the exact reviewed diagnostic source.",
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+    "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+    "delta": "2A5M",
+    "manifest": {
+      "gitBlob": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "endsWithLF": true
+    },
+    "bounds": {
+      "gitBlob": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "endsWithLF": true
+    }
+  },
+  "snapshot": {
+    "commit": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+    "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+    "soleParent": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "delta": "3A1M",
+    "binding": {
+      "gitBlob": "c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+      "bytes": 6803,
+      "sha256": "da1ca7f5cd0e908e7698399a69c86b039308cde92e50713267623dd76d2a2a56",
+      "lf": 205,
+      "endsWithLF": true
+    },
+    "driver": {
+      "gitBlob": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+      "bytes": 14136,
+      "sha256": "5172e0f2db3181a1183efefd3e82a4da95239004e7e1fb7ef329f8d3d68cb22a",
+      "lf": 203,
+      "endsWithLF": true
+    },
+    "request": {
+      "gitBlob": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+      "bytes": 247,
+      "sha256": "3f2761dfb252f9fda15d8ad90ae5da717885ed63c70c8fce9f4a79f5775ecb6e",
+      "lf": 0,
+      "endsWithLF": false
+    }
+  },
+  "reviews": {
+    "root": {
+      "gitBlob": "f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+      "bytes": 27653,
+      "sha256": "7004bb216c84433c5e80bee4dcfff85e0885c6fd2c7fb4dbd1dfae8260786807",
+      "lf": 836,
+      "endsWithLF": true
+    },
+    "independent": {
+      "at": {
+        "current_time": "2026-11-27 23:54:05 UTC"
+      },
+      "reviewer": "/root/teams_product",
+      "status": "ACK_STATIC_NO_FINDING",
+      "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+      "snapshot": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+      "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+      "driver": {
+        "gitBlob": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+        "bytes": 14136,
+        "sha256": "5172e0f2db3181a1183efefd3e82a4da95239004e7e1fb7ef329f8d3d68cb22a",
+        "lf": 203,
+        "endsWithLF": true
+      },
+      "twoReplacementsExact": true,
+      "zeroUnbound": true,
+      "treePairs": 5,
+      "literalSiblings": 149,
+      "delta": "3A1M",
+      "workingPins": 24,
+      "manifest": {
+        "gitBlob": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+        "bytes": 33967,
+        "sha256": "8afaae3ca18b0b5cc11dd07eba8228808b638d7c076cdfa8a3138b5c39d652fd",
+        "lf": 921,
+        "endsWithLF": true
+      },
+      "binding": {
+        "gitBlob": "c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+        "bytes": 6803,
+        "sha256": "da1ca7f5cd0e908e7698399a69c86b039308cde92e50713267623dd76d2a2a56",
+        "lf": 205,
+        "endsWithLF": true
+      },
+      "noExecutionByPeer": true
+    }
+  },
+  "plan": {
+    "branch": "ci-run-sf613e13f",
+    "trigger": "single new branch at the reviewed snapshot for the unchanged test-ci.yml",
+    "maxActivations": 1,
+    "noRerun": true,
+    "expectedGroups": 8,
+    "commands": 14,
+    "falseTruncationFlags": 28,
+    "functionalCases": 40,
+    "reports": 10,
+    "assertions": null,
+    "reportFamilies": {
+      "SF_C13_UNFENCED_CONTROL": 3,
+      "SF_C14_SNAPSHOT_CONTROL": 2,
+      "SF_C15_SELECTION_CONTROL": 2,
+      "SF_C16_SELECTION_CONTROL": 1,
+      "SF_C18_CAPTURE_LAZY": 1,
+      "SF_E13_OBSERVATION_CONTROL": 1
+    },
+    "bounds": {
+      "gitBlob": "0ccdae38ccd7b7392820081b620e625801e5b030",
+      "bytes": 23076,
+      "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+      "lf": 731,
+      "endsWithLF": true
+    },
+    "budgets": {
+      "bounds": {
+        "git": "0ccdae38ccd7b7392820081b620e625801e5b030",
+        "bytes": 23076,
+        "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+        "lf": 731,
+        "finalLF": true
+      },
+      "parentDeadlinesMs": [
+        180000,
+        420000,
+        360000,
+        300000,
+        300000,
+        600000,
+        240000,
+        90000
+      ],
+      "sumParentMs": 2490000,
+      "sumCommandMs": 1890000,
+      "mainJobMs": 2700000,
+      "nominalSharedOverheadMs": 210000,
+      "oldTimeoutChanges": 0,
+      "mainWorkflowChanged": false,
+      "runnerChanged": false,
+      "G8": {
+        "testMs": 35000,
+        "processMs": 60000,
+        "parentMs": 90000,
+        "childrenSequential": 7,
+        "childProcessMs": 3000,
+        "childForceKillAfterMs": 1000
+      },
+      "streamCaps": {
+        "stdoutPerOuterCommandBytes": 1048576,
+        "stderrPerOuterCommandBytes": 1048576,
+        "outerArithmeticCeilingBytes": 29360128,
+        "aggregateOriginalMainCap": null,
+        "newChildPerStreamBytes": 65536,
+        "newParsedChildReceiptBytes": 16384,
+        "newParentReportBytes": 16384
+      },
+      "scope": "Commands and local children are inside parent deadlines. The remaining210s are nominal shared overhead within the unchanged45-minute main, not a separate guarantee or finalizer reservation.",
+      "noGlobalNestedBunTimeout": true,
+      "noLatencyForecast": true
+    }
+  },
+  "preflight": {
+    "at": {
+      "current_time": "2026-11-27 23:53:14 UTC"
+    },
+    "branchAbsent": true,
+    "branchRuns": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52"
+    },
+    "pr613": {
+      "state": "open",
+      "draft": true,
+      "head": "0a1247db9a16f9eead04788a76d25723672c7e6a"
+    }
+  },
+  "intake": {
+    "rootOnly": true,
+    "waitForMainAndCleanupTerminal": true,
+    "originalGetsPerJob": 1,
+    "preserveEntireDecodedOriginalInActualGitBlobs": true,
+    "literalReadbackBeforeInterpretation": true,
+    "largeLogPartsMaxUtf8Bytes": 300000,
+    "recomposeHashAndBom": true,
+    "independentReviewUsesGitCopiesOnly": true,
+    "zipGets": 0,
+    "retainFailures": true
+  },
+  "boundaries": {
+    "noProductRefMove": true,
+    "noAnalyticsActivation": true,
+    "noD27Activation": true,
+    "noFinalCandidateClaim": true,
+    "noGoLiveGateAcceptance": true,
+    "noProductionCutover": true
+  },
+  "next": "Receive both focal originals once, preserve and independently review their actual payloads before deciding whether original Analytics may run."
+}

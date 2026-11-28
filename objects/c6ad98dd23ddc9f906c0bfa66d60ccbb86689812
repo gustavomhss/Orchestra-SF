@@ -1,0 +1,32 @@
+{
+  "schema": "sf613-e13-focal-final-independent-ack-v1",
+  "status": "ACK_NO_FINDING",
+  "at": {
+    "current_time": "2026-11-28 00:05:41 UTC"
+  },
+  "reviewer": "/root/focal_migration",
+  "receipt": {
+    "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+    "bytes": 69479,
+    "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+    "lf": 2105,
+    "endsWithLF": true
+  },
+  "documentaryChecks": 19,
+  "priorIndependentIntakeChecks": 44,
+  "rootChecks": 51,
+  "confirmed": [
+    "14 complete command receipts",
+    "5 current Bun footers",
+    "exact ten-report union and E13 payload",
+    "eight inherited literal reports and C18 pid-only delta",
+    "full guard JSON and40WARN",
+    "actual Omni and identity",
+    "one GET per original; complete preserved Git copies",
+    "artifact/ref queries correctly attributed to root"
+  ],
+  "limitsPreserved": true,
+  "additionalExecution": false,
+  "additionalOriginalGets": 0,
+  "additionalZipGets": 0
+}

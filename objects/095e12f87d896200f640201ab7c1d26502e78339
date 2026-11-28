@@ -1,0 +1,22 @@
+{
+  "kind": "E13-helper-R4-to-R5",
+  "pre": {
+    "gitSha": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+    "bytes": 17964,
+    "sha256": "c41db9ba45684612c7daa2089602687b9174e033562fc71ad65c7364237ed872",
+    "lf": 303
+  },
+  "post": {
+    "gitSha": "85067173418a441977f377175280ba789bec85e3",
+    "bytes": 17996,
+    "sha256": "8dea0a4f99a5b536e96cb6ff1300dcd89c878f01d38bb4786372c13ebd1a1909",
+    "lf": 303
+  },
+  "operations": [
+    {
+      "before": "    if (frame && scope && currentScope() !== scope) { frame.scopeFault = true; frame.scopeDisabled = true }",
+      "after": "    if (frame && (scope ? currentScope() !== scope : currentScope() !== undefined)) { frame.scopeFault = true; frame.scopeDisabled = true }"
+    }
+  ],
+  "reason": "If an observational run calls the neutral thunk without establishing isolation, detect an inherited registered scope before work and irreversibly disable attribution."
+}

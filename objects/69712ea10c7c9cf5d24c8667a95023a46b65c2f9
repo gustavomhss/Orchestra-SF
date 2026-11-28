@@ -1,0 +1,248 @@
+{
+  "schema": "sf613-evidence-r4-root-review-v1",
+  "at": "2026-11-27 23:06:00 UTC",
+  "reviewer": "/root",
+  "author": "/root/focal_migration",
+  "status": "PASS_DOCUMENTARY_PACKAGE_READY_FOR_ROOT_PUBLICATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inputs": {
+    "catalog": {
+      "gitBlob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+      "bytes": 36194,
+      "sha256": "a150a6659a88323fd7f22a6e4646c7d2a9eb9e8abc0863c9eab4930f2910dee2",
+      "lf": 1060,
+      "endsWithLF": true
+    },
+    "index": {
+      "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "bytes": 608937,
+      "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36",
+      "lf": 18074,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "bytes": 24104,
+      "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd",
+      "lf": 206,
+      "endsWithLF": true
+    },
+    "manifest": {
+      "gitBlob": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+      "bytes": 64403,
+      "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd",
+      "lf": 2006,
+      "endsWithLF": true
+    }
+  },
+  "counts": {
+    "objects": 442,
+    "bytes": 49076567,
+    "memberships": 491,
+    "groups": 29,
+    "streams": 41,
+    "partReferences": 153
+  },
+  "review": {
+    "all70IncomingBodiesFreshlyReadFromPreservedGitCopies": true,
+    "gitShaBytesSha256LfChecked": true,
+    "newStreamRecomposition": [
+      {
+        "group": "C18-focal",
+        "role": "main",
+        "parts": 1,
+        "gitBlob": "5caff1d5520ef621278457cdbce32b4a1b20123d",
+        "bytes": 112385,
+        "sha256": "3cef82cf326732040b7b2cd5cf9db0c661bb73d70a974830e547b474265c0f41",
+        "lf": 913,
+        "endsWithLF": true,
+        "wholePersisted": true
+      },
+      {
+        "group": "C18-focal",
+        "role": "cleanup",
+        "parts": 1,
+        "gitBlob": "f94480c34318a510206e89a7b02f2e1da00389b5",
+        "bytes": 2281,
+        "sha256": "ef5e2e2e8d1c5d071cf5a686bb835eaa2af53dfd18744d24b779aa39f4985782",
+        "lf": 39,
+        "endsWithLF": true,
+        "wholePersisted": true
+      },
+      {
+        "group": "C18-focal",
+        "role": "reports",
+        "parts": 1,
+        "gitBlob": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+        "bytes": 11979,
+        "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8",
+        "lf": 9,
+        "endsWithLF": true,
+        "wholePersisted": true
+      },
+      {
+        "group": "C18-analytics",
+        "role": "main",
+        "parts": 17,
+        "gitBlob": "4060971fa1492f50be0fae5089d0ca58eda518f6",
+        "bytes": 4867325,
+        "sha256": "c27f0f52bc3bdff4b250d558a1fcfba075123e44426e0692ebabed3e3c0c0d91",
+        "lf": 1985,
+        "endsWithLF": true,
+        "wholePersisted": false
+      },
+      {
+        "group": "C18-analytics",
+        "role": "cleanup",
+        "parts": 1,
+        "gitBlob": "2dbdf9d6af6921ccc407b0e9e8837f87dae56034",
+        "bytes": 2281,
+        "sha256": "d7ef60e19a9e590f2f0057b37fec30f918853c14d25b0e904f2f9117888f910c",
+        "lf": 39,
+        "endsWithLF": true,
+        "wholePersisted": true
+      },
+      {
+        "group": "C18-analytics",
+        "role": "markers",
+        "parts": 1,
+        "gitBlob": "85954ebc570a1c068be1f046c47ca76d9ab6ec04",
+        "bytes": 34166,
+        "sha256": "7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e",
+        "lf": 96,
+        "endsWithLF": true,
+        "wholePersisted": true
+      }
+    ],
+    "newStreamMetadataAndBoms": [
+      {
+        "id": "C18-focal-main",
+        "exactCatalog": true,
+        "bom": [
+          0
+        ],
+        "wholeGitOnly": false
+      },
+      {
+        "id": "C18-focal-cleanup",
+        "exactCatalog": true,
+        "bom": [
+          0
+        ],
+        "wholeGitOnly": false
+      },
+      {
+        "id": "C18-focal-reports",
+        "exactCatalog": true,
+        "bom": [],
+        "wholeGitOnly": false
+      },
+      {
+        "id": "C18-analytics-main",
+        "exactCatalog": true,
+        "bom": [
+          0,
+          2104784,
+          4224467
+        ],
+        "wholeGitOnly": true
+      },
+      {
+        "id": "C18-analytics-cleanup",
+        "exactCatalog": true,
+        "bom": [
+          0
+        ],
+        "wholeGitOnly": false
+      },
+      {
+        "id": "C18-analytics-markers",
+        "exactCatalog": true,
+        "bom": [],
+        "wholeGitOnly": false
+      }
+    ],
+    "old379MetadataLiteral": true,
+    "old420MembershipPrefixesLiteral": true,
+    "old23GroupsAnd35StreamsLiteral": true,
+    "oldDerivedEvidenceExclusionsRevisionHistoryAndResolvedReferencesPreserved": true,
+    "priorPublishedObjectTreeExactlyMatchesIndex": true,
+    "metadataAssertions": 1351,
+    "manifestAndInheritanceAssertions": 109,
+    "priorReadmeLiteral": true,
+    "author41ChecksReviewed": true,
+    "priorObjectBodiesNotAllReacquired": true
+  },
+  "publication": {
+    "ownTree": true,
+    "expectedArchiveRef": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+        "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+        "role": "previous published archive R3"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "54e99dbebb37030c94c9054a2195baa186e621a9",
+        "tree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+        "role": "C18 executed focal",
+        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
+        "tree": "87540d426b735b692429de2a6fc350a760a56d27",
+        "role": "C18 executed original Analytics",
+        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+      }
+    ],
+    "calculatedObjectsTree": "6a40acdc2a05c8085a275ae1ac9d0686c34854cc",
+    "calculatedRootTree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+    "treeObjectsNotYetCreated": true,
+    "regularFiles": 444,
+    "fileBytes": 49709608,
+    "paths": "README.md,index.json,objects/<sha>",
+    "noWorkflowRoot": true,
+    "sourceLayoutsOnlyInParents": true,
+    "nonforceExpectedShaRequired": true,
+    "archiveRunsBefore": 0,
+    "protectedRefs": {
+      "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+      "public": "0a1247db9a16f9eead04788a76d25723672c7e6a",
+      "private": "aec3efcb92698ffb55ef2af6dddcb2951950c0c2",
+      "ledger": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+      "archive": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0"
+    },
+    "protectedRefsObservedAt": "2026-11-27 23:00:59 UTC"
+  },
+  "limits": {
+    "archiveOnly": true,
+    "finalCandidateNotCreated": true,
+    "qualification": {
+      "C18Focal": "PASS_BOUNDED_FOCAL_ONLY",
+      "C18Analytics": "NEGATIVE_FIRST_PREVIEW_BI_PASS",
+      "D27": "STATIC_FOUR_BINDINGS_UNBOUND",
+      "UI42": "6_partial_captures",
+      "UI43": "NOT_REACHED",
+      "UI44": "NOT_REACHED",
+      "historicalQualified": 12,
+      "total": 15,
+      "new": 0
+    },
+    "C18Artifact": "15235941403_METADATA_ONLY_ZERO_ZIP",
+    "calculatedWholeMainExcluded": "4060971fa1492f50be0fae5089d0ca58eda518f6",
+    "productionAuthorized": false
+  },
+  "effects": {
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0,
+    "refsChanged": 0,
+    "runsStarted": 0
+  }
+}

@@ -2,10 +2,10 @@
   "schema": "sf613-evidence-index-v1",
   "repository": "gustavomhss/Orchestra-SF",
   "state": "PROPOSED_INCREMENT_BLOBS_ONLY_NOT_PUBLISHED",
-  "revision": "FOURTH_C18_CLOSED_AND_D27_STATIC",
-  "preparedAtUtc": "2026-11-27 22:59:55 UTC",
+  "revision": "FIFTH_E13_CLOSED_PREFIX_ONLY",
+  "preparedAtUtc": "2026-11-28 00:48:32 UTC",
   "author": "/root/focal_migration",
-  "authority": "Root authorized only index/README/package proposal blobs for the complete C18 and D27 increment. Root alone reviews and creates the archive tree, commit and nonforce ref update. No original Actions or ZIP acquisition, repository execution or run is authorized.",
+  "authority": "Root authorized only the three proposed index/README/package blobs for the complete E13 catalog. Root alone reviews and creates the archive tree, commit and nonforce ref update. All E13 originals are closed. No original Actions or ZIP acquisition, repository execution, diagnostic, optimization or run is authorized by this package.",
   "archiveProposal": {
     "branch": "sf613-evidence",
     "ref": "refs/heads/sf613-evidence",
@@ -18,65 +18,57 @@
     "commit": null,
     "refUpdated": false,
     "previousPublished": {
-      "commit": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
-      "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
-      "objectsTree": "66a8ef82632894d999368443f93636fbf26b8505",
+      "commit": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+      "tree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+      "objectsTree": "6a40acdc2a05c8085a275ae1ac9d0686c34854cc",
       "index": {
-        "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
-        "bytes": 508677,
-        "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5"
+        "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+        "bytes": 608937,
+        "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36"
       },
       "readme": {
-        "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
-        "bytes": 15563,
-        "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77"
+        "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+        "bytes": 24104,
+        "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd"
       },
       "manifest": {
-        "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
-        "bytes": 53884,
-        "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793"
+        "gitBlob": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+        "bytes": 64403,
+        "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd"
       },
       "rootReview": {
-        "gitBlob": "41fd42fc295bc963ab63469850b77df5cc35c2c7",
-        "bytes": 7063,
-        "sha256": "079088909bbf730c4a65571a3d30cb8813cefeaba2c2e9f86bedf13754bd0be5"
+        "gitBlob": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+        "bytes": 7504,
+        "sha256": "84ba93824baecab233931c5dc745b5da09ef0c531bdd112d5683daca99704d12"
       },
       "publicationReceipt": {
-        "gitBlob": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
-        "bytes": 11371,
-        "sha256": "7666e0b2ada1beb3c77d00809a17cadecdf16de6e3fd870001df65458006dce3"
+        "gitBlob": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+        "bytes": 4619,
+        "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57"
       }
     },
-    "expectedRefBeforeUpdate": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+    "expectedRefBeforeUpdate": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
     "priorPublicationObserved": {
-      "sourceReceipt": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
-      "atUtc": "2026-11-27 21:30:46 UTC",
-      "head": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
-      "scope": "Historical publication observation; root must recheck the ref before any nonforce update."
+      "sourceReceipt": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+      "atUtc": "2026-11-27 23:06:55 UTC",
+      "head": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+      "scope": "Historical publication observation from the authenticated receipt; root must recheck the ref before any nonforce update."
     },
     "orderedParents": [
       {
         "order": 1,
         "type": "commit",
-        "sha": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
-        "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
-        "role": "previous published archive R3"
+        "sha": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+        "tree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+        "role": "previous published archive R4"
       },
       {
         "order": 2,
         "type": "commit",
-        "sha": "54e99dbebb37030c94c9054a2195baa186e621a9",
-        "tree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
-        "role": "C18 executed focal",
-        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
-      },
-      {
-        "order": 3,
-        "type": "commit",
-        "sha": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
-        "tree": "87540d426b735b692429de2a6fc350a760a56d27",
-        "role": "C18 executed original Analytics",
-        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+        "sha": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+        "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+        "role": "E13 executed diagnostic focal",
+        "soleParent": "dffc62a08bdba74f1a9322d49cde095e81535f55"
       }
     ],
     "treeEntryContract": "Exactly root README.md, root index.json, and objects/<sha> for every object below. All files are 100644 blobs; objects is a tree. No executable repository layout or workflow. Current index/README/package manifest do not recursively list themselves; package manifest remains a separate review artifact.",
@@ -95,7 +87,7 @@
       "observedHead": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
       "notUpdated": true
     },
-    "parentReachabilityPurpose": "Three ordered parents retain R3, the executed clean C18 focal and original Analytics. S18 is their shared parent and S17 remains ancestral. Commit/tree metadata are not blob entries. Actual publication and reachability audit remain root's responsibility.",
+    "parentReachabilityPurpose": "Two ordered parents retain published R4 and the executed E13 focal. Its sole parent is the diagnostic source dffc62a0 used directly by original Analytics; clean S18 remains ancestral. No extra product parent or merge qualification is introduced. Commit/tree identities are metadata, not objects/<sha> blob entries. Root alone audits and publishes the resulting archive.",
     "workflowReviewHistorical": {
       "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
       "githubTree": "7663f4b9fe0fdee867137b9e719f29058339317d",
@@ -109,7 +101,7 @@
     "currentRunOrWorkflowRequested": false
   },
   "coverage": {
-    "closedScope": "Literal published R3 corpus plus complete C18 catalog d44e77a4: source and controls, accepted focal, negative original Analytics, static D27 proposal, current reception and bounded next-question basis, and all five R3 archive-control objects. The input catalog itself is also included. This is an enumerated Git corpus, not a ZIP or transitive historical-reference closure.",
+    "closedScope": "Literal published R4 corpus plus the complete final E13 catalog 3aa1b45e: source/control revision history and final pins, accepted diagnostic focal, negative original Analytics, closed original logs, actual derived report/event unions, causal-prefix analysis and final peer/root receipts, control-plane inputs, and all five R4 archive-control objects. The final catalog itself is also included. This enumerated Git corpus is not a ZIP, full native trace, completed Request observation or transitive historical-reference closure.",
     "completeOriginalStreams": [
       "C16 focal main",
       "C16 focal cleanup",
@@ -132,12 +124,16 @@
       "C18-focal-main",
       "C18-focal-cleanup",
       "C18-analytics-main",
-      "C18-analytics-cleanup"
+      "C18-analytics-cleanup",
+      "E13-focal-main",
+      "E13-focal-cleanup",
+      "E13-analytics-main",
+      "E13-analytics-cleanup"
     ],
-    "originalLogStreams": 22,
+    "originalLogStreams": 26,
     "exportStreams": 14,
-    "derivedMarkerUnionStreams": 3,
-    "typedStreams": 41,
+    "derivedMarkerUnionStreams": 4,
+    "typedStreams": 48,
     "currentProofStates": {
       "R5": "draft documentary only",
       "D26": "C17 documentary retarget only; four final bindings UNBOUND",
@@ -162,7 +158,13 @@
       "C18Focal": "CLOSED_PASS_FOCAL_ONLY",
       "C18Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
       "D27": "STATIC_REVIEWED_FOUR_FINAL_BINDINGS_UNBOUND",
-      "C18NextQuestion": "SOURCE_AND_EVIDENCE_BASIS_ONLY_NOT_AN_EXECUTED_DIAGNOSTIC"
+      "C18NextQuestion": "SOURCE_AND_EVIDENCE_BASIS_ONLY_NOT_AN_EXECUTED_DIAGNOSTIC",
+      "E13Source": "REVIEWED_DIAGNOSTIC_SOURCE_NOT_PRODUCT_LINEAGE",
+      "E13Focal": "CLOSED_PASS_DIAGNOSTIC_FOCAL_ONLY",
+      "E13Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+      "E13Observation": "AUTHENTICATED_510_EVENT_PREFIX_OVERFLOW_WITHOUT_TERMINAL",
+      "E13Artifact": "METADATA_ONLY_ZERO_ZIP_GETS",
+      "E13NextAction": "SOURCE_REASONING_ONLY_NO_NEW_RUN_OR_PRODUCT_CHANGE_AUTHORIZED"
     },
     "historicalProofStatesAreExplicit": true,
     "priorC16R5D26Metadata": {
@@ -175,11 +177,11 @@
     "e11UnderlyingCorpusClosed": true,
     "completeArtifactArchive": false,
     "completeRawRuntimeExport": false,
-    "historicalReferencePolicy": "Only enumerated direct inputs are included. Embedded historical references are not recursively turned into archive objects. All 379 R3 objects retain literal metadata and ordered membership prefixes; all 23 prior groups and 35 streams remain literal. The complete R3 index, README, package, root review and publication receipt are actual objects.",
+    "historicalReferencePolicy": "Only enumerated direct inputs are included. Embedded historical references are not recursively turned into archive objects. All 442 R4 objects retain their full literal metadata and 491 ordered memberships; all 29 prior groups and 41 streams remain literal. Complete R4 index, README, package, root review and publication receipt are actual objects. The inherited currentProofStates.R5 label denotes an older documentary status revision, not this fifth archive increment.",
     "noQualificationTransferred": true,
     "productionAuthorized": false,
-    "derivedReportUnionStreams": 2,
-    "derivedUnionStreams": 5,
+    "derivedReportUnionStreams": 3,
+    "derivedUnionStreams": 8,
     "e12UnderlyingEnumeratedCorpusClosed": true,
     "currentProduct": {
       "clean": "455c02a7a05a6dd3262ae15b184419897366fde4",
@@ -194,7 +196,29 @@
       "BI": "passed on clean C18 candidate in run 46075966101/1",
       "productionAuthorized": false
     },
-    "c18UnderlyingEnumeratedCorpusClosed": true
+    "c18UnderlyingEnumeratedCorpusClosed": true,
+    "derivedObservationEventUnionStreams": 1,
+    "e13UnderlyingEnumeratedCorpusClosed": true,
+    "currentDiagnosticObservation": {
+      "run": 46086157237,
+      "attempt": 1,
+      "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+      "sourceTree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+      "cleanBase": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "failed": 1,
+      "passed": 1,
+      "UI42Qualified": false,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "BI": "passed on this diagnostic candidate only",
+      "firstPreviewWaiterMs": 60000,
+      "observedEventPrefix": 510,
+      "lastEventTenthMs": 421839,
+      "terminalPresent": false,
+      "artifactMetadataOnly": true,
+      "newQualifiedAreas": 0,
+      "productionAuthorized": false
+    }
   },
   "groups": [
     {
@@ -3730,6 +3754,877 @@
           }
         }
       ]
+    },
+    {
+      "id": "E13-source",
+      "uniqueBlobs": 28,
+      "items": [
+        {
+          "role": "helper_r1",
+          "sha": "9fc171ad604397032997c0523f9f3deb012b9f78",
+          "prefix": "e13_helper_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[0]"
+          }
+        },
+        {
+          "role": "helper_r2",
+          "sha": "f9099fde19cc3d444da68317f5e2207561c82e06",
+          "prefix": "e13_helper_r2",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[1]"
+          }
+        },
+        {
+          "role": "helper_r3",
+          "sha": "27200494b81e7394ca9034b034a735cea1b08dac",
+          "prefix": "e13_helper_r3",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[2]"
+          }
+        },
+        {
+          "role": "helper_r4",
+          "sha": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+          "prefix": "e13_helper_r4",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[3]"
+          }
+        },
+        {
+          "role": "helper_r5",
+          "sha": "85067173418a441977f377175280ba789bec85e3",
+          "prefix": "e13_helper_r5",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[4]"
+          }
+        },
+        {
+          "role": "helper_r6",
+          "sha": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+          "prefix": "e13_helper_r6",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[5]"
+          }
+        },
+        {
+          "role": "helper_r7",
+          "sha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+          "prefix": "e13_helper_r7",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[6]"
+          }
+        },
+        {
+          "role": "incremental_support",
+          "sha": "b7f6bac96c80922347517434b3ac263009a3f68b",
+          "prefix": "e13_incremental_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[7]"
+          }
+        },
+        {
+          "role": "helper_r2_r3_support",
+          "sha": "658b41be0cf80b1fb7bd9e9ea417ff6aff9173e2",
+          "prefix": "e13_helper_r2_r3_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[8]"
+          }
+        },
+        {
+          "role": "helper_r3_r4_support",
+          "sha": "4fae92cf3541b710259e4dd2b2d21123c8d10e39",
+          "prefix": "e13_helper_r3_r4_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[9]"
+          }
+        },
+        {
+          "role": "helper_r4_r5_support",
+          "sha": "095e12f87d896200f640201ab7c1d26502e78339",
+          "prefix": "e13_helper_r4_r5_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[10]"
+          }
+        },
+        {
+          "role": "helper_r5_r6_support",
+          "sha": "2d5b771c9a0b4b8b753b3c643415f12103497b15",
+          "prefix": "e13_helper_r5_r6_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[11]"
+          }
+        },
+        {
+          "role": "helper_r6_r7_support",
+          "sha": "fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+          "prefix": "e13_helper_r6_r7_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[12]"
+          }
+        },
+        {
+          "role": "http_r1",
+          "sha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+          "prefix": "e13_http_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[13]"
+          }
+        },
+        {
+          "role": "port_r1",
+          "sha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+          "prefix": "e13_port_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[14]"
+          }
+        },
+        {
+          "role": "compare_r1",
+          "sha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+          "prefix": "e13_compare_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[15]"
+          }
+        },
+        {
+          "role": "callers_support",
+          "sha": "c977fb96b97b5c3831c1fc03a2cf655bf5fedf9a",
+          "prefix": "e13_callers_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[16]"
+          }
+        },
+        {
+          "role": "inner_r1",
+          "sha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+          "prefix": "e13_inner_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[17]"
+          }
+        },
+        {
+          "role": "outer_r1",
+          "sha": "47e13f21e5d00fc8689123d7b87175960288b029",
+          "prefix": "e13_outer_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[18]"
+          }
+        },
+        {
+          "role": "bridges_reuse",
+          "sha": "f519247ddd71ecaf5b70d8656785b9e70ef701aa",
+          "prefix": "e13_bridges_reuse",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[19]"
+          }
+        },
+        {
+          "role": "helper_gate_reuse",
+          "sha": "399cb934c5b13976cd8dc82fa6c567d824b3b53f",
+          "prefix": "e13_helper_gate_reuse",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[20]"
+          }
+        },
+        {
+          "role": "source_manifest",
+          "sha": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+          "prefix": "e13_source_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[21]"
+          }
+        },
+        {
+          "role": "source_bounds",
+          "sha": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+          "prefix": "e13_source_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[22]"
+          }
+        },
+        {
+          "role": "source_support",
+          "sha": "674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+          "prefix": "e13_source_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[23]"
+          }
+        },
+        {
+          "role": "source_diff",
+          "sha": "2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+          "prefix": "e13_source_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[24]"
+          }
+        },
+        {
+          "role": "bi_selection_memo",
+          "sha": "30403ed54ead11cf277451474fb383a3c64d9903",
+          "prefix": "e13_bi_selection_memo",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[25]"
+          }
+        },
+        {
+          "role": "root_source_object_authority",
+          "sha": "226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+          "prefix": "e13_root_source_object_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[26]"
+          }
+        },
+        {
+          "role": "root_helper_callers_static_review",
+          "sha": "485a9fccf3bc6fd5ee0139787ebd443736899664",
+          "prefix": "e13_root_helper_callers_static_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[27]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E13-control",
+      "uniqueBlobs": 9,
+      "items": [
+        {
+          "role": "control_fixture_r1",
+          "sha": "d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+          "prefix": "e13_control_fixture_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[28]"
+          }
+        },
+        {
+          "role": "control_fixture_r2",
+          "sha": "d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+          "prefix": "e13_control_fixture_r2",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[29]"
+          }
+        },
+        {
+          "role": "control_fixture_r3",
+          "sha": "ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+          "prefix": "e13_control_fixture_r3",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[30]"
+          }
+        },
+        {
+          "role": "control_fixture_r4",
+          "sha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+          "prefix": "e13_control_fixture_r4",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[31]"
+          }
+        },
+        {
+          "role": "control_test_r1",
+          "sha": "00389741844e45cd1a507a7e07c370edcf891f93",
+          "prefix": "e13_control_test_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[32]"
+          }
+        },
+        {
+          "role": "control_manifest",
+          "sha": "552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+          "prefix": "e13_control_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[33]"
+          }
+        },
+        {
+          "role": "control_bounds",
+          "sha": "50763473ec52deacc01981e18d553c2839d274ff",
+          "prefix": "e13_control_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[34]"
+          }
+        },
+        {
+          "role": "control_support",
+          "sha": "b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+          "prefix": "e13_control_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[35]"
+          }
+        },
+        {
+          "role": "control_diff",
+          "sha": "6013fbed858c5891a87da7e500751c9bb4f320e5",
+          "prefix": "e13_control_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[36]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E13-focal",
+      "uniqueBlobs": 18,
+      "items": [
+        {
+          "role": "focal_template",
+          "sha": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+          "prefix": "e13_focal_template",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[37]"
+          }
+        },
+        {
+          "role": "focal_manifest",
+          "sha": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+          "prefix": "e13_focal_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[38]"
+          }
+        },
+        {
+          "role": "focal_bounds",
+          "sha": "0ccdae38ccd7b7392820081b620e625801e5b030",
+          "prefix": "e13_focal_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[39]"
+          }
+        },
+        {
+          "role": "focal_support",
+          "sha": "ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+          "prefix": "e13_focal_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[40]"
+          }
+        },
+        {
+          "role": "focal_diff",
+          "sha": "cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+          "prefix": "e13_focal_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[41]"
+          }
+        },
+        {
+          "role": "focal_full_diff",
+          "sha": "f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+          "prefix": "e13_focal_full_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[42]"
+          }
+        },
+        {
+          "role": "root_static_focal_review",
+          "sha": "f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+          "prefix": "e13_root_static_focal_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[43]"
+          }
+        },
+        {
+          "role": "focal_bound",
+          "sha": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+          "prefix": "e13_focal_bound",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[44]"
+          }
+        },
+        {
+          "role": "focal_binding",
+          "sha": "c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+          "prefix": "e13_focal_binding",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[45]"
+          }
+        },
+        {
+          "role": "focal_execution_authority",
+          "sha": "5c952a7a32a8286702801c7497a7522809d1b652",
+          "prefix": "e13_focal_execution_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[46]"
+          }
+        },
+        {
+          "role": "focal_intake_context",
+          "sha": "094481bff7a51a113681ba93edd2ea91bc0ce89b",
+          "prefix": "e13_focal_intake_context",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[47]"
+          }
+        },
+        {
+          "role": "focal_main_whole",
+          "sha": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+          "prefix": "e13_focal_main_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[48]"
+          }
+        },
+        {
+          "role": "focal_main_preservation_manifest",
+          "sha": "cfb1ee8b5769c2826d3afd2d58b801a0eb9d3b4d",
+          "prefix": "e13_focal_main_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[49]"
+          }
+        },
+        {
+          "role": "focal_cleanup_whole",
+          "sha": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+          "prefix": "e13_focal_cleanup_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[50]"
+          }
+        },
+        {
+          "role": "focal_cleanup_preservation_manifest",
+          "sha": "8816b977081e7931d90a3f13036c2eeb21a4df17",
+          "prefix": "e13_focal_cleanup_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[51]"
+          }
+        },
+        {
+          "role": "focal_report_union",
+          "sha": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+          "prefix": "e13_focal_report_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[52]"
+          }
+        },
+        {
+          "role": "focal_final_receipt",
+          "sha": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+          "prefix": "e13_focal_final_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[53]"
+          }
+        },
+        {
+          "role": "focal_final_peer_ack",
+          "sha": "c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+          "prefix": "e13_focal_final_peer_ack",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[55]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E13-analytics",
+      "uniqueBlobs": 30,
+      "items": [
+        {
+          "role": "analytics_root_preflight",
+          "sha": "9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+          "prefix": "e13_analytics_root_preflight",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[54]"
+          }
+        },
+        {
+          "role": "analytics_execution_authority",
+          "sha": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+          "prefix": "e13_analytics_execution_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[56]"
+          }
+        },
+        {
+          "role": "analytics_peer_preflight",
+          "sha": "d479ac686d0e90fd4594247cb62750d519b489a7",
+          "prefix": "e13_analytics_peer_preflight",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[57]"
+          }
+        },
+        {
+          "role": "analytics_intake_context",
+          "sha": "4d55cbecd6d44d835271b96486baab2dd664e968",
+          "prefix": "e13_analytics_intake_context",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[58]"
+          }
+        },
+        {
+          "role": "analytics_main_preservation_manifest",
+          "sha": "291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+          "prefix": "e13_analytics_main_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[59]"
+          }
+        },
+        {
+          "role": "analytics_cleanup_whole",
+          "sha": "9677660309a8c4c68de3497079ba444ec84b5835",
+          "prefix": "e13_analytics_cleanup_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[60]"
+          }
+        },
+        {
+          "role": "analytics_cleanup_preservation_manifest",
+          "sha": "70607967c9788428c229e9eca6c12fce29c236ee",
+          "prefix": "e13_analytics_cleanup_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[61]"
+          }
+        },
+        {
+          "role": "analytics_event_union",
+          "sha": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+          "prefix": "e13_analytics_event_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[62]"
+          }
+        },
+        {
+          "role": "analytics_report_union",
+          "sha": "d6c235ba488c6f8121845bc184588937972c0b64",
+          "prefix": "e13_analytics_report_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[63]"
+          }
+        },
+        {
+          "role": "root_causal_analysis",
+          "sha": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+          "prefix": "e13_root_causal_analysis",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[64]"
+          }
+        },
+        {
+          "role": "analytics_final_receipt",
+          "sha": "ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+          "prefix": "e13_analytics_final_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[65]"
+          }
+        },
+        {
+          "role": "analytics_final_peer_ack",
+          "sha": "1541b7542574ed9a522a82c864ba1c58f53e9637",
+          "prefix": "e13_analytics_final_peer_ack",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[66]"
+          }
+        },
+        {
+          "role": "analytics_main_part_001",
+          "sha": "4e6a2b736302101239b76128bb2cb90ae41310ac",
+          "prefix": "e13_analytics_main_part_001",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[74]"
+          }
+        },
+        {
+          "role": "analytics_main_part_002",
+          "sha": "29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+          "prefix": "e13_analytics_main_part_002",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[75]"
+          }
+        },
+        {
+          "role": "analytics_main_part_003",
+          "sha": "8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+          "prefix": "e13_analytics_main_part_003",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[76]"
+          }
+        },
+        {
+          "role": "analytics_main_part_004",
+          "sha": "2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+          "prefix": "e13_analytics_main_part_004",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[77]"
+          }
+        },
+        {
+          "role": "analytics_main_part_005",
+          "sha": "3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+          "prefix": "e13_analytics_main_part_005",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[78]"
+          }
+        },
+        {
+          "role": "analytics_main_part_006",
+          "sha": "168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+          "prefix": "e13_analytics_main_part_006",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[79]"
+          }
+        },
+        {
+          "role": "analytics_main_part_007",
+          "sha": "680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+          "prefix": "e13_analytics_main_part_007",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[80]"
+          }
+        },
+        {
+          "role": "analytics_main_part_008",
+          "sha": "3872d581513c4a7721687bfb728cd0fdfbf403ce",
+          "prefix": "e13_analytics_main_part_008",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[81]"
+          }
+        },
+        {
+          "role": "analytics_main_part_009",
+          "sha": "256e98ed81c38a9123ef0bb867c1a704063c15e3",
+          "prefix": "e13_analytics_main_part_009",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[82]"
+          }
+        },
+        {
+          "role": "analytics_main_part_010",
+          "sha": "adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+          "prefix": "e13_analytics_main_part_010",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[83]"
+          }
+        },
+        {
+          "role": "analytics_main_part_011",
+          "sha": "597d921b74943bd51ab9dca0690927e20dca09de",
+          "prefix": "e13_analytics_main_part_011",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[84]"
+          }
+        },
+        {
+          "role": "analytics_main_part_012",
+          "sha": "3a24f4ee324416facef0d859a57626e1720f86af",
+          "prefix": "e13_analytics_main_part_012",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[85]"
+          }
+        },
+        {
+          "role": "analytics_main_part_013",
+          "sha": "bd9e8875502dad8bff2e36224f51489fc4397c9b",
+          "prefix": "e13_analytics_main_part_013",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[86]"
+          }
+        },
+        {
+          "role": "analytics_main_part_014",
+          "sha": "cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+          "prefix": "e13_analytics_main_part_014",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[87]"
+          }
+        },
+        {
+          "role": "analytics_main_part_015",
+          "sha": "58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+          "prefix": "e13_analytics_main_part_015",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[88]"
+          }
+        },
+        {
+          "role": "analytics_main_part_016",
+          "sha": "053925d54f7876818256fc553d94c9d68a5a6688",
+          "prefix": "e13_analytics_main_part_016",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[89]"
+          }
+        },
+        {
+          "role": "analytics_main_part_017",
+          "sha": "8e23978720ee9a98c502639e7842176f68d8c692",
+          "prefix": "e13_analytics_main_part_017",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[90]"
+          }
+        },
+        {
+          "role": "analytics_main_part_018",
+          "sha": "c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+          "prefix": "e13_analytics_main_part_018",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[91]"
+          }
+        }
+      ]
+    },
+    {
+      "id": "E13-control-plane",
+      "uniqueBlobs": 3,
+      "items": [
+        {
+          "role": "archive_preparation_catalog",
+          "sha": "6465f63fdd5f47dc9edccebd5fd25e5b88f7735a",
+          "prefix": "e13_archive_preparation_catalog",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[67]"
+          }
+        },
+        {
+          "role": "root_recovery_helpers_e13",
+          "sha": "754ad54c07f0d3fbd6d98d7565d036c68380a9a0",
+          "prefix": "root_recovery_helpers_e13",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[68]"
+          }
+        },
+        {
+          "role": "actual-input-catalog",
+          "sha": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+          "from": {
+            "rootSupplied": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "R4-archive-control",
+      "uniqueBlobs": 5,
+      "items": [
+        {
+          "role": "r4_proposed_index",
+          "sha": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+          "prefix": "r4_proposed_index",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[69]"
+          }
+        },
+        {
+          "role": "r4_proposed_readme",
+          "sha": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+          "prefix": "r4_proposed_readme",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[70]"
+          }
+        },
+        {
+          "role": "r4_proposed_manifest",
+          "sha": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+          "prefix": "r4_proposed_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[71]"
+          }
+        },
+        {
+          "role": "r4_root_review",
+          "sha": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+          "prefix": "r4_root_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[72]"
+          }
+        },
+        {
+          "role": "r4_root_publication_receipt",
+          "sha": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+          "prefix": "r4_root_publication_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[73]"
+          }
+        }
+      ]
     }
   ],
   "streams": [
@@ -5975,6 +6870,499 @@
         "wholeGitShaBytesSha256LfMatched": true,
         "noOriginalOrZipAcquisition": true
       }
+    },
+    {
+      "id": "E13-focal-main",
+      "group": "E13-focal",
+      "role": "main",
+      "kind": "original-job-log",
+      "run": 46085008328,
+      "job": 140792420454,
+      "bytes": 122802,
+      "sha256": "7ea69b7788e8db9d903953478480d2d84b00d419c8131c5a5bd913e0fe875ae6",
+      "lf": 922,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+          "bytes": 122802,
+          "sha256": "7ea69b7788e8db9d903953478480d2d84b00d419c8131c5a5bd913e0fe875ae6",
+          "startCodeUnit": 0,
+          "endCodeUnit": 122800,
+          "startByte": 0,
+          "endByte": 122802
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "originalGets": 1,
+      "closed": true,
+      "preservationManifest": {
+        "gitBlob": "cfb1ee8b5769c2826d3afd2d58b801a0eb9d3b4d",
+        "bytes": 1763,
+        "sha256": "57f4f0252d20d006e627b80ae6d73c8088229c9a3b2f0e76841d79255e3097c6",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[0]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-focal-cleanup",
+      "group": "E13-focal",
+      "role": "cleanup",
+      "kind": "original-job-log",
+      "run": 46085008328,
+      "job": 140793052319,
+      "bytes": 2281,
+      "sha256": "f13599b0853dc961ba26edf602f8e62d83f604ea5e89c59255cec76beb6fabca",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+          "bytes": 2281,
+          "sha256": "f13599b0853dc961ba26edf602f8e62d83f604ea5e89c59255cec76beb6fabca",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2279,
+          "startByte": 0,
+          "endByte": 2281
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "originalGets": 1,
+      "closed": true,
+      "preservationManifest": {
+        "gitBlob": "8816b977081e7931d90a3f13036c2eeb21a4df17",
+        "bytes": 1753,
+        "sha256": "dea6071479a38fd38919590c598284e37554f163cbf6700b0a0d5346103bfb7e",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[1]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-focal-reports",
+      "group": "E13-focal",
+      "role": "reports",
+      "kind": "derived-union",
+      "run": 46085008328,
+      "job": 140792420454,
+      "bytes": 19660,
+      "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69",
+      "lf": 10,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+          "bytes": 19660,
+          "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69",
+          "startCodeUnit": 0,
+          "endCodeUnit": 19660
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "derivation": "Only derived marker carrier timestamps/ANSI removed; JSON/prefix payload order preserved. Original job text remains separately literal.",
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[2]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-analytics-main",
+      "group": "E13-analytics",
+      "role": "main",
+      "kind": "original-job-log",
+      "run": 46086157237,
+      "job": 140796091682,
+      "bytes": 5148177,
+      "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+      "lf": 2986,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "1eb15113536676c909a6de4a6294d18688d66bbf",
+      "wholeGitBlobPersisted": false,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "4e6a2b736302101239b76128bb2cb90ae41310ac",
+          "bytes": 300000,
+          "sha256": "dee22bdc581fd025862de4129ab1917475a75eca6ca5736b219df827da904b2c",
+          "startCodeUnit": 0,
+          "endCodeUnit": 297350,
+          "startByte": 0,
+          "endByte": 300000
+        },
+        {
+          "index": 2,
+          "gitBlob": "29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+          "bytes": 300000,
+          "sha256": "32b8428f430e052e4c0670c9befa204c4e235e486f1948888efc19db30a7593d",
+          "startCodeUnit": 297350,
+          "endCodeUnit": 597350,
+          "startByte": 300000,
+          "endByte": 600000
+        },
+        {
+          "index": 3,
+          "gitBlob": "8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+          "bytes": 300000,
+          "sha256": "ab8b42847327ee05b3c752c14ee6d648aed0f01429045105fd4b2197da9f990d",
+          "startCodeUnit": 597350,
+          "endCodeUnit": 897350,
+          "startByte": 600000,
+          "endByte": 900000
+        },
+        {
+          "index": 4,
+          "gitBlob": "2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+          "bytes": 300000,
+          "sha256": "9ffbe79df94f431a9490776dd0e62d1197795f98e2c6ebb297ade1e7c0f7c116",
+          "startCodeUnit": 897350,
+          "endCodeUnit": 1195187,
+          "startByte": 900000,
+          "endByte": 1200000
+        },
+        {
+          "index": 5,
+          "gitBlob": "3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+          "bytes": 300000,
+          "sha256": "e02a698452eceeffa295640f21a3b35cb1f044986805ca527f4be01f352099cf",
+          "startCodeUnit": 1195187,
+          "endCodeUnit": 1495187,
+          "startByte": 1200000,
+          "endByte": 1500000
+        },
+        {
+          "index": 6,
+          "gitBlob": "168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+          "bytes": 300000,
+          "sha256": "eb877b9554dce98a4288ab7fb722e9769dbd0514f6d6172182afa2ee735fc202",
+          "startCodeUnit": 1495187,
+          "endCodeUnit": 1795187,
+          "startByte": 1500000,
+          "endByte": 1800000
+        },
+        {
+          "index": 7,
+          "gitBlob": "680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+          "bytes": 300000,
+          "sha256": "761effa119e98d4f5d69f81bd20e2a6af29c97001efc2b1f004bb9cf8d2395a7",
+          "startCodeUnit": 1795187,
+          "endCodeUnit": 2095187,
+          "startByte": 1800000,
+          "endByte": 2100000
+        },
+        {
+          "index": 8,
+          "gitBlob": "3872d581513c4a7721687bfb728cd0fdfbf403ce",
+          "bytes": 300000,
+          "sha256": "87de1ed12ba91144bfb6e9de964dbc7e9d0f816c9ac452d3850772f0a7b6b482",
+          "startCodeUnit": 2095187,
+          "endCodeUnit": 2395185,
+          "startByte": 2100000,
+          "endByte": 2400000
+        },
+        {
+          "index": 9,
+          "gitBlob": "256e98ed81c38a9123ef0bb867c1a704063c15e3",
+          "bytes": 300000,
+          "sha256": "21cc0f6a4e1426fdd9c4fc3c96cebd08011eed3b953f5819bfb040e8a8c3f528",
+          "startCodeUnit": 2395185,
+          "endCodeUnit": 2695185,
+          "startByte": 2400000,
+          "endByte": 2700000
+        },
+        {
+          "index": 10,
+          "gitBlob": "adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+          "bytes": 300000,
+          "sha256": "64230f26437d6e5878e2602173db7e5462273914f75b65e2388ebca147d64524",
+          "startCodeUnit": 2695185,
+          "endCodeUnit": 2995182,
+          "startByte": 2700000,
+          "endByte": 3000000
+        },
+        {
+          "index": 11,
+          "gitBlob": "597d921b74943bd51ab9dca0690927e20dca09de",
+          "bytes": 300000,
+          "sha256": "839bf63e710a0acc172f3f408168a1e8e97037806717d4e92ad60dfbc1391bcd",
+          "startCodeUnit": 2995182,
+          "endCodeUnit": 3295179,
+          "startByte": 3000000,
+          "endByte": 3300000
+        },
+        {
+          "index": 12,
+          "gitBlob": "3a24f4ee324416facef0d859a57626e1720f86af",
+          "bytes": 300000,
+          "sha256": "d0864d609d7d2d65e56f138dc96c322950a74a6e2296e208e7e3c4c84ac22741",
+          "startCodeUnit": 3295179,
+          "endCodeUnit": 3595179,
+          "startByte": 3300000,
+          "endByte": 3600000
+        },
+        {
+          "index": 13,
+          "gitBlob": "bd9e8875502dad8bff2e36224f51489fc4397c9b",
+          "bytes": 300000,
+          "sha256": "e689daa859b1839ee511cd2887be5bc14f1564b466ad184f6d6168c4f2e44a30",
+          "startCodeUnit": 3595179,
+          "endCodeUnit": 3895179,
+          "startByte": 3600000,
+          "endByte": 3900000
+        },
+        {
+          "index": 14,
+          "gitBlob": "cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+          "bytes": 300000,
+          "sha256": "f6e100023e42dc9229194ce8cee197e61e37b479dec3538dc9920c58c0e29928",
+          "startCodeUnit": 3895179,
+          "endCodeUnit": 4195179,
+          "startByte": 3900000,
+          "endByte": 4200000
+        },
+        {
+          "index": 15,
+          "gitBlob": "58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+          "bytes": 300000,
+          "sha256": "cfa454ba171a1a0acf10067fa3c5df95f0c9c0471e244707578361e280e118f8",
+          "startCodeUnit": 4195179,
+          "endCodeUnit": 4495174,
+          "startByte": 4200000,
+          "endByte": 4500000
+        },
+        {
+          "index": 16,
+          "gitBlob": "053925d54f7876818256fc553d94c9d68a5a6688",
+          "bytes": 300000,
+          "sha256": "7096821e0eec50e8db3d4f5ee9d7be2764bd0bb4bb03dbc4a08242c88d6f557b",
+          "startCodeUnit": 4495174,
+          "endCodeUnit": 4795174,
+          "startByte": 4500000,
+          "endByte": 4800000
+        },
+        {
+          "index": 17,
+          "gitBlob": "8e23978720ee9a98c502639e7842176f68d8c692",
+          "bytes": 300000,
+          "sha256": "63c92ed5164252437407d8437afec736822575e74d5d43a37d718ace5823574a",
+          "startCodeUnit": 4795174,
+          "endCodeUnit": 5095174,
+          "startByte": 4800000,
+          "endByte": 5100000
+        },
+        {
+          "index": 18,
+          "gitBlob": "c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+          "bytes": 48177,
+          "sha256": "496494df3fbb03ea19490a7d9023deab19260f0d2bf99b1a075e711918e11f9d",
+          "startCodeUnit": 5095174,
+          "endCodeUnit": 5143347,
+          "startByte": 5100000,
+          "endByte": 5148177
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0,
+        2104519,
+        4205627
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "originalGets": 1,
+      "closed": true,
+      "preservationManifest": {
+        "gitBlob": "291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+        "bytes": 8320,
+        "sha256": "99951e8df61a006e52a59974911f3f20d347a855f3dbbfbaedf63bffac64e448",
+        "lf": 286,
+        "endsWithLF": true
+      },
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[3]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-analytics-cleanup",
+      "group": "E13-analytics",
+      "role": "cleanup",
+      "kind": "original-job-log",
+      "run": 46086157237,
+      "job": 140798957063,
+      "bytes": 2283,
+      "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "9677660309a8c4c68de3497079ba444ec84b5835",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "9677660309a8c4c68de3497079ba444ec84b5835",
+          "bytes": 2283,
+          "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2281,
+          "startByte": 0,
+          "endByte": 2283
+        }
+      ],
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "originalGets": 1,
+      "closed": true,
+      "preservationManifest": {
+        "gitBlob": "70607967c9788428c229e9eca6c12fce29c236ee",
+        "bytes": 1761,
+        "sha256": "befff94a6fa8bf6322d991def6b15dc1afc9086da2be27906bd1c06443807b3f",
+        "lf": 61,
+        "endsWithLF": true
+      },
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[4]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-analytics-markers",
+      "group": "E13-analytics",
+      "role": "markers",
+      "kind": "derived-union",
+      "run": 46086157237,
+      "job": 140796091682,
+      "bytes": 34163,
+      "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+      "lf": 96,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "d6c235ba488c6f8121845bc184588937972c0b64",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "d6c235ba488c6f8121845bc184588937972c0b64",
+          "bytes": 34163,
+          "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+          "startCodeUnit": 0,
+          "endCodeUnit": 34139
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "derivation": "Only derived marker carrier timestamps/ANSI removed; JSON/prefix payload order preserved. Original job text remains separately literal.",
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[5]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
+    },
+    {
+      "id": "E13-analytics-events",
+      "group": "E13-analytics",
+      "role": "events",
+      "kind": "derived-union",
+      "run": 46086157237,
+      "job": 140796091682,
+      "bytes": 250708,
+      "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+      "lf": 510,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+          "bytes": 250708,
+          "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+          "startCodeUnit": 0,
+          "endCodeUnit": 250708
+        }
+      ],
+      "byteOrderMarkByteOffsets": [],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "derivation": "Only derived marker carrier timestamps/ANSI removed; JSON/prefix payload order preserved. Original job text remains separately literal.",
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "pointer": "streams[6]"
+      },
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "bomByteOffsetsMatched": true,
+        "noOriginalOrZipAcquisition": true
+      }
     }
   ],
   "derivedEvidence": {
@@ -6781,6 +8169,238 @@
         "Historical 12/15 remains unchanged. D27 has four UNBOUND final bindings; no final-candidate execution or production authorization is implied.",
         "Source/test/diagnostic basis documents are preserved at their original cuts, including superseded helper R1."
       ]
+    },
+    "E13": {
+      "catalog": {
+        "gitBlob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+        "bytes": 48822,
+        "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+        "catalogObjects": 92,
+        "catalogMemberships": 92,
+        "catalogObjectBytes": 7526020,
+        "atUtc": "2026-11-28 00:42:05 UTC"
+      },
+      "source": {
+        "sha": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+        "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+        "diagnosticOnly": true
+      },
+      "focal": {
+        "run": 46085008328,
+        "attempt": 1,
+        "status": "PASS",
+        "receipt": {
+          "gitBlob": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+          "bytes": 69479,
+          "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+          "lf": 2105,
+          "endsWithLF": true
+        },
+        "peerAck": {
+          "gitBlob": "c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+          "bytes": 985,
+          "sha256": "ad9207ef6ce0507b596a6fe5f8d07f840c208b62fdd1dca5331d115af7856e17",
+          "lf": 32,
+          "endsWithLF": true
+        },
+        "snapshot": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+        "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f",
+        "functionalCases": 40,
+        "functionalAssertions": 1470,
+        "outer": {
+          "pass": 8,
+          "fail": 0,
+          "assertions": 45
+        },
+        "groups": 8,
+        "commands": 14,
+        "truncationFlagsRequiredFalse": 28,
+        "pins": 24,
+        "reports": 10,
+        "reportUnion": {
+          "gitBlob": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+          "bytes": 19660,
+          "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69"
+        },
+        "syntheticScope": "E13 isolated controls have seven modes and 23 labels. Nineteen named children are 11 loading, one lazy and seven E13, not all subprocesses in the job. Focal success does not qualify the original installed journey."
+      },
+      "analytics": {
+        "run": 46086157237,
+        "attempt": 1,
+        "status": "NEGATIVE_FIRST_PREVIEW60000MS_BI_PASS",
+        "receipt": {
+          "gitBlob": "ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+          "bytes": 30818,
+          "sha256": "9835e4c8217568f3d8838a5eb0b4cc6c7027993758d4f5147910faf2bd712d8e",
+          "lf": 979,
+          "endsWithLF": true
+        },
+        "peerAck": {
+          "gitBlob": "1541b7542574ed9a522a82c864ba1c58f53e9637",
+          "bytes": 1389,
+          "sha256": "2171499abee57614cad79cc34709cafe8ae8e5d4f64c527dc5244e5f1e363bbf",
+          "lf": 43,
+          "endsWithLF": true
+        },
+        "causalAnalysis": {
+          "gitBlob": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+          "bytes": 82554,
+          "sha256": "787c3a61f8dbfc0f9ae0b770af6742017214f159167d209caa07636ff356f5d9",
+          "lf": 3828,
+          "endsWithLF": true
+        },
+        "prefixOnly": true,
+        "failed": 1,
+        "passed": 1,
+        "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+        "firstPreview": {
+          "operation": "decision-portfolio-preview",
+          "sequence": 3,
+          "method": "POST",
+          "waiterMs": 60000,
+          "specLocation": "packages/app-shell/e2e/sucafina/design-wave-five-analytics.spec.ts:72:32",
+          "matchingNativeResponseObserved": false
+        },
+        "precedingResults": [
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 1,
+            "ownerBinding": "exact",
+            "elapsedMs": 278,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          },
+          {
+            "operation": "decision-portfolio-results",
+            "phase": "native-response",
+            "sequence": 2,
+            "ownerBinding": "exact",
+            "elapsedMs": 584,
+            "http": 200,
+            "status": "ok",
+            "reason": null,
+            "valueShape": "array"
+          }
+        ],
+        "UI42": {
+          "captures": 6,
+          "qualified": false
+        },
+        "UI43Reached": false,
+        "UI44Reached": false,
+        "BI": {
+          "passed": true,
+          "scope": "Current diagnostic E13 candidate only.",
+          "UI45Captures": 7,
+          "UI46Captures": 33
+        },
+        "analyticsUnion": {
+          "gitBlob": "d6c235ba488c6f8121845bc184588937972c0b64",
+          "bytes": 34163,
+          "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276"
+        },
+        "artifact": {
+          "id": 15239671856,
+          "bytes": 45860595,
+          "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+          "name": "playwright-ubuntu-24.04-1",
+          "metadataOnly": true,
+          "zipGets": 0,
+          "membersInspected": 0
+        }
+      },
+      "observation": {
+        "union": {
+          "gitBlob": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+          "bytes": 250708,
+          "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7"
+        },
+        "binding": {
+          "schema": "sf-preview-causal-e13-event-v1",
+          "source": "455c02a7a05a6dd3262ae15b184419897366fde4",
+          "sourceTree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+          "qualification": false,
+          "snapshot": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+          "runId": "46086157237",
+          "attempt": "1",
+          "nonce": "sf613-e13-event-qmQKRg",
+          "pid": 3778,
+          "parentPid": 3733,
+          "request": 1
+        },
+        "counts": {
+          "events": 510,
+          "bytes": 250708,
+          "maxLineBytes": 507,
+          "units": 27,
+          "compareUnits": 26,
+          "portUnits": 1,
+          "phaseEntries": 227,
+          "phaseCloses": 226,
+          "unitCloses": 25,
+          "requestCloses": 0,
+          "overflow": 1
+        },
+        "prefix": {
+          "firstSequence": 1,
+          "lastSequence": 510,
+          "lastKind": "overflow",
+          "lastElapsedTenthMs": 421839,
+          "eventsBefore": 509,
+          "bytesBefore": 250241,
+          "dropped": 1,
+          "terminalPresent": false,
+          "launcherDisabledMarkers": 0
+        },
+        "graph": {
+          "portUnits": 1,
+          "comparatorUnits": 26,
+          "directComparators": 10,
+          "directReturned": 9,
+          "nestedComparators": 16,
+          "nestedReturned": 16,
+          "unclosedEntries": "port1 and comparator26/unit27; phase3 combination-evaluate lacks emitted close",
+          "meaning": "Unclosed entries describe the received prefix, not runtime state after the dropped triggering event or at60s."
+        },
+        "intervalsInTenthMs": {
+          "combinationStart": 6615,
+          "prefixLength": 415224,
+          "closedDirectSum": 233088,
+          "nestedSumAlreadyContained": 105503,
+          "notCoveredByClosedDirect": 182136,
+          "meaning": "Disjoint direct intervals within the received prefix, instrumented server clock. Nested intervals not added. Residual not exclusive CPU or attribution to a producer."
+        },
+        "clockScope": "Only the instrumented server's monotonic tenth-ms within this bound Request prefix. No joining Actions/Playwright clocks and no CPU-exclusive duration or full Request lifetime is inferred.",
+        "numericDisplayNote": "The root causal analysis contains one IEEE floating display residual18213.600000000002ms. Canonical integer arithmetic in the final receipt is182136tenth-ms; observations and graph are unchanged."
+      },
+      "qualification": {
+        "historicalAreas": 12,
+        "totalAreas": 15,
+        "newAreas": 0,
+        "UI42": false,
+        "UI43": false,
+        "UI44": false,
+        "cleanC613Candidate": false,
+        "D27": false,
+        "goLive": false,
+        "productionAuthorized": false
+      },
+      "limits": [
+        "The510-event prefix ends at an event-count quota before the browser60s deadline. It demonstrates repeated returned comparators inside the first combination evaluation, not the final stalled call or full Request lifetime.",
+        "No observed returned comparator carries a business result status. A return is not product success.",
+        "The last event/phase does not identify what was running at60s; the dropped event may be a next phase or a close.",
+        "No exclusive CPU, uninstrumented latency or performance improvement is claimed. Instrumented I/O has overhead.",
+        "Artifact bytes are pinned by metadata only. No original ZIP/audit ZIP, physical stream, PNG, trace or runtime JSON contents were acquired.",
+        "The source is diagnostic over clean S18 and cannot be merged as the product fix. Final C613, same-head qualification/review/dev merge, final go-live candidate and explicit production decision remain pending."
+      ],
+      "newRunAuthorized": false,
+      "originalAcquisitionsClosed": true,
+      "archiveAuthorOriginalGets": 0,
+      "archiveAuthorZipGets": 0
     }
   },
   "objects": [
@@ -16218,6 +17838,1957 @@
           }
         }
       ]
+    },
+    {
+      "path": "objects/9fc171ad604397032997c0523f9f3deb012b9f78",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9fc171ad604397032997c0523f9f3deb012b9f78",
+      "bytes": 16743,
+      "sha256": "de04fc30c015958a344ccc013a32facd5c4a82558af45748fd108cc1b07ba0e6",
+      "lf": 287,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r1",
+          "prefix": "e13_helper_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[0]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f9099fde19cc3d444da68317f5e2207561c82e06",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9099fde19cc3d444da68317f5e2207561c82e06",
+      "bytes": 17097,
+      "sha256": "59758e2e2ddf4a203258c6979674f37b44cb92eb41a52184f1ae85c2327ddead",
+      "lf": 289,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r2",
+          "prefix": "e13_helper_r2",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[1]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/27200494b81e7394ca9034b034a735cea1b08dac",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27200494b81e7394ca9034b034a735cea1b08dac",
+      "bytes": 17672,
+      "sha256": "6afe9c125150de5b3ba86f81ef86e3cd3b604c11d9a1af9e40e8698730ae6f06",
+      "lf": 302,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r3",
+          "prefix": "e13_helper_r3",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[2]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f5e9a150b0f2e73e88a0e60c95ade5e35a67973",
+      "bytes": 17964,
+      "sha256": "c41db9ba45684612c7daa2089602687b9174e033562fc71ad65c7364237ed872",
+      "lf": 303,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r4",
+          "prefix": "e13_helper_r4",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[3]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/85067173418a441977f377175280ba789bec85e3",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85067173418a441977f377175280ba789bec85e3",
+      "bytes": 17996,
+      "sha256": "8dea0a4f99a5b536e96cb6ff1300dcd89c878f01d38bb4786372c13ebd1a1909",
+      "lf": 303,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r5",
+          "prefix": "e13_helper_r5",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[4]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6a8c99ba2ae08eec6b7ba317978519fa2d1aada",
+      "bytes": 18129,
+      "sha256": "7b0dc25080ec105ac0383971c1331f748b9641bd08ff3a42b90360d273fb02af",
+      "lf": 307,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r6",
+          "prefix": "e13_helper_r6",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[5]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "470bf3d86370e145ae5b0f54dc8bc5eff01d20d0",
+      "bytes": 18129,
+      "sha256": "e9ff098b32a62da4440c363911082e890a913207ac738db0a1d6bb6f3b7e3f92",
+      "lf": 307,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r7",
+          "prefix": "e13_helper_r7",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[6]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b7f6bac96c80922347517434b3ac263009a3f68b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7f6bac96c80922347517434b3ac263009a3f68b",
+      "bytes": 3109,
+      "sha256": "dab0b66c181a0c23113e56a4863878e31ee8b07540b482c7617bb33fc989dbd2",
+      "lf": 58,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "incremental_support",
+          "prefix": "e13_incremental_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[7]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/658b41be0cf80b1fb7bd9e9ea417ff6aff9173e2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "658b41be0cf80b1fb7bd9e9ea417ff6aff9173e2",
+      "bytes": 5281,
+      "sha256": "439b5a3b5f6016ca4d33131bebcb07215195947eb0310175d377abbd5b6a6fdf",
+      "lf": 50,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r2_r3_support",
+          "prefix": "e13_helper_r2_r3_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[8]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4fae92cf3541b710259e4dd2b2d21123c8d10e39",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fae92cf3541b710259e4dd2b2d21123c8d10e39",
+      "bytes": 3029,
+      "sha256": "6c76eb94ee07f622b232acc7a31da8e178535e439f16463d0ab402ab794d168b",
+      "lf": 66,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r3_r4_support",
+          "prefix": "e13_helper_r3_r4_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[9]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/095e12f87d896200f640201ab7c1d26502e78339",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "095e12f87d896200f640201ab7c1d26502e78339",
+      "bytes": 918,
+      "sha256": "120477c8773a48b6224f4a967b4d239df2e7f0febc8dde4dcad4d105b787c8b7",
+      "lf": 22,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r4_r5_support",
+          "prefix": "e13_helper_r4_r5_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[10]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2d5b771c9a0b4b8b753b3c643415f12103497b15",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d5b771c9a0b4b8b753b3c643415f12103497b15",
+      "bytes": 1035,
+      "sha256": "637e46b02a899735f01b0fe6f102600ee237711f685b43ccc9260b9397a8be89",
+      "lf": 22,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r5_r6_support",
+          "prefix": "e13_helper_r5_r6_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[11]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fee45d1c2883c9850c8ed6be5812e9653d15c0af",
+      "bytes": 985,
+      "sha256": "7cc677c517730541b3826c28020775436fb8a286dcb385ac54c6b23bbfc92a2b",
+      "lf": 22,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_r6_r7_support",
+          "prefix": "e13_helper_r6_r7_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[12]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "138cd8c8a09ac36549ae503f457f81dd0ee95f12",
+      "bytes": 14101,
+      "sha256": "2b18f550e8165a40ef7a3bfdd1d365dfc2bf0b20b98c1a1186c74d9e27cb99fb",
+      "lf": 145,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "http_r1",
+          "prefix": "e13_http_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[13]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/dc0df7519a9a4ab57273e8695398240a13e1d12d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc0df7519a9a4ab57273e8695398240a13e1d12d",
+      "bytes": 18458,
+      "sha256": "f3c90f93f0aeb73f755fe61ee1debf30ab31aae356d9caa61ced7fc99ffb71c2",
+      "lf": 135,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "port_r1",
+          "prefix": "e13_port_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[14]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "729e8d1ac7ad326fa8c2d94871b03e0a28801079",
+      "bytes": 10047,
+      "sha256": "510b1c5f5fa77eb3b79bfefbd62bc2d7d1890bcbbe68b502f7c4d0032770c997",
+      "lf": 91,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "compare_r1",
+          "prefix": "e13_compare_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[15]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c977fb96b97b5c3831c1fc03a2cf655bf5fedf9a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c977fb96b97b5c3831c1fc03a2cf655bf5fedf9a",
+      "bytes": 61580,
+      "sha256": "b98d55de3c59ff4bece0e9814155dd4173cbc21e9908ba64daeb034340ea58d2",
+      "lf": 168,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "callers_support",
+          "prefix": "e13_callers_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[16]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f50466a5a00a6e3e0f781c244ae3df6f72510f8",
+      "bytes": 10356,
+      "sha256": "dee56ea5cd0be05e644ce5b1a152263115c17444c5c237cc23d3edab80fdb7d0",
+      "lf": 184,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "inner_r1",
+          "prefix": "e13_inner_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[17]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/47e13f21e5d00fc8689123d7b87175960288b029",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47e13f21e5d00fc8689123d7b87175960288b029",
+      "bytes": 16468,
+      "sha256": "86a93b56cf5b722d88353d4a46e92d411bbabce87d646a12d835e2cca5779d80",
+      "lf": 267,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "outer_r1",
+          "prefix": "e13_outer_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[18]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f519247ddd71ecaf5b70d8656785b9e70ef701aa",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f519247ddd71ecaf5b70d8656785b9e70ef701aa",
+      "bytes": 6621,
+      "sha256": "d9e28ec0be73ecc483754c1b97a12f7a8c426aa885c204201267943eaab1bdec",
+      "lf": 193,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "bridges_reuse",
+          "prefix": "e13_bridges_reuse",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[19]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/399cb934c5b13976cd8dc82fa6c567d824b3b53f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "399cb934c5b13976cd8dc82fa6c567d824b3b53f",
+      "bytes": 10758,
+      "sha256": "5b5e85b5117b3e3ec4bdcdd801fa72c881c02f5d9d4e4c1ea90f6b45ab0f7e40",
+      "lf": 207,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "helper_gate_reuse",
+          "prefix": "e13_helper_gate_reuse",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[20]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2fb6b12edafd9d123f9bdccde4742087924de55f",
+      "bytes": 12376,
+      "sha256": "5b05edbf1a97ea3ee717c4e17ad819525f1baa3d373829d29658417441ac75c2",
+      "lf": 308,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "source_manifest",
+          "prefix": "e13_source_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[21]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6227ee99248519d4a2cd0e5861526e83339fdfc9",
+      "bytes": 21216,
+      "sha256": "6f19f032b575032adb862476a1ace89f6a33599eefe7261d61ab5a1cccca60d8",
+      "lf": 384,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "source_bounds",
+          "prefix": "e13_source_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[22]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "674b0b36b1d6ebc5d27578e24331e20cb2a529df",
+      "bytes": 97171,
+      "sha256": "b3e6c512a23aa2907752ad1e9f2d7e41a1a9895c0a2d6a62841bba40621576e5",
+      "lf": 381,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "source_support",
+          "prefix": "e13_source_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[23]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e307c3e4015e79f3a2d2c1d66b8c68a07b375cb",
+      "bytes": 84455,
+      "sha256": "47f333d15ba426530d2514daa2e92c446088832a13b7cc49faaec72fc318a7be",
+      "lf": 886,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "source_diff",
+          "prefix": "e13_source_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[24]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/30403ed54ead11cf277451474fb383a3c64d9903",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30403ed54ead11cf277451474fb383a3c64d9903",
+      "bytes": 7700,
+      "sha256": "748ab8eafc3245a9e26242a4b86a62835f9d47471276bb2a606f5cc991ebfd96",
+      "lf": 143,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "bi_selection_memo",
+          "prefix": "e13_bi_selection_memo",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[25]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "226fe19de871b6cdfcfcbcd66be20f57f9506c00",
+      "bytes": 9047,
+      "sha256": "16b951fd31bc2822719aa65d5171dc91e94e14470a73d54505a6d2588de60789",
+      "lf": 288,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "root_source_object_authority",
+          "prefix": "e13_root_source_object_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[26]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/485a9fccf3bc6fd5ee0139787ebd443736899664",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "485a9fccf3bc6fd5ee0139787ebd443736899664",
+      "bytes": 7946,
+      "sha256": "b093ad70aad1f6d32a649058ede72dcc633db9ab03a0b426adb6591330f479b4",
+      "lf": 221,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-source",
+          "role": "root_helper_callers_static_review",
+          "prefix": "e13_root_helper_callers_static_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[27]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3389f21683d2bc7a8d408cdba0f1921eb4fcf40",
+      "bytes": 26559,
+      "sha256": "4d4cbd3dde8b0843aa2ba54d382a23ef0e9b9e9eda31aed05f33b7e76b609df8",
+      "lf": 443,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_fixture_r1",
+          "prefix": "e13_control_fixture_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[28]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d10dbfcbfedafc8c72f0d14fa3102f77233e0ba6",
+      "bytes": 27928,
+      "sha256": "4ef61a9868845016fbe51f096877cf2f8d5e0c95186d258b9d40dcc8f0e0c789",
+      "lf": 440,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_fixture_r2",
+          "prefix": "e13_control_fixture_r2",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[29]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff19e0069ddfc40f6e4de11c8d12f3a6094577c4",
+      "bytes": 27903,
+      "sha256": "1f5bca8f411969dca6f74d23bf2e1a414346d2d55cde59b0a4b0dac6ce09ff74",
+      "lf": 440,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_fixture_r3",
+          "prefix": "e13_control_fixture_r3",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[30]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19d732eb4f2d46f9d769e078489ff09fc6701102",
+      "bytes": 27993,
+      "sha256": "733c3bf485b69f8350849c4cc3b46cac9085ea3d6a51aeba15694d790da8a2fa",
+      "lf": 442,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_fixture_r4",
+          "prefix": "e13_control_fixture_r4",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[31]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/00389741844e45cd1a507a7e07c370edcf891f93",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00389741844e45cd1a507a7e07c370edcf891f93",
+      "bytes": 1102,
+      "sha256": "27bce834c6930df01ecabd93f2e486cb2c9b98cc205316745d6ddc160fa39f6c",
+      "lf": 24,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_test_r1",
+          "prefix": "e13_control_test_r1",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[32]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "552dcc914ca3c35422011b7cc5b4f5ba757f88a4",
+      "bytes": 6453,
+      "sha256": "41899cfaacc5e767511279284979e8f0bba3549e684b1f3678391d4b78e20964",
+      "lf": 149,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_manifest",
+          "prefix": "e13_control_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[33]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/50763473ec52deacc01981e18d553c2839d274ff",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50763473ec52deacc01981e18d553c2839d274ff",
+      "bytes": 20922,
+      "sha256": "f6cefced2a20ce306fce3ef5c62c5cac15a03b901a6ba0c20f8e3dbfc2b02cd2",
+      "lf": 527,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_bounds",
+          "prefix": "e13_control_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[34]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7399bcbc44539d07f6a3d457b3d3444ebb59aef",
+      "bytes": 51031,
+      "sha256": "c888df6c28dc4e0fde1c8728f45e62eb8cb8f785f5c85d530d2140fba4869c00",
+      "lf": 388,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_support",
+          "prefix": "e13_control_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[35]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6013fbed858c5891a87da7e500751c9bb4f320e5",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6013fbed858c5891a87da7e500751c9bb4f320e5",
+      "bytes": 30029,
+      "sha256": "86de01fe01578f1d37e3cf94d60ff51ec42d8698753ce9160203dd43c89cf136",
+      "lf": 476,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control",
+          "role": "control_diff",
+          "prefix": "e13_control_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[36]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e0ab6ccc7916fbe3a9585dd3ef08ffcffe1da89",
+      "bytes": 14109,
+      "sha256": "aa999b2fb6a1fc7cc1e5bca8650431a66a39e9b1f016297bb94e9647ba58572b",
+      "lf": 203,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_template",
+          "prefix": "e13_focal_template",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[37]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/5d09fca6149cb2d3fc37d53167d92fd762145dee",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5d09fca6149cb2d3fc37d53167d92fd762145dee",
+      "bytes": 33967,
+      "sha256": "8afaae3ca18b0b5cc11dd07eba8228808b638d7c076cdfa8a3138b5c39d652fd",
+      "lf": 921,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_manifest",
+          "prefix": "e13_focal_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[38]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0ccdae38ccd7b7392820081b620e625801e5b030",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ccdae38ccd7b7392820081b620e625801e5b030",
+      "bytes": 23076,
+      "sha256": "76bd9f849ff6f849a7fda074696faa82034fd5de0424d1a3009f111ea6d1dae2",
+      "lf": 731,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_bounds",
+          "prefix": "e13_focal_bounds",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[39]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac76d3125c229ec756aed781d8ca3fb4aaa3cfd3",
+      "bytes": 25529,
+      "sha256": "0822120957412f672e178981066f71f5f6588efec6925da2dc0fb0b2431c5ab9",
+      "lf": 523,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_support",
+          "prefix": "e13_focal_support",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[40]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb4ef390ec192779c4b004d1f54e0ef9a94496f6",
+      "bytes": 9875,
+      "sha256": "309fb2f24e5d4e216dd11c5e7fb58619d8d1206521134591d3eb7cbea7f17bb6",
+      "lf": 125,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_diff",
+          "prefix": "e13_focal_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[41]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2184e8b9b0d7c7210f6a43a692add9b7171d9ef",
+      "bytes": 45625,
+      "sha256": "3ade1005084cbeb825c864fe8a394817024180586bc22a89aa7c0f01f321f783",
+      "lf": 696,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_full_diff",
+          "prefix": "e13_focal_full_diff",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[42]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f11df6500f3bf911f5eba8e3e8f47f932ba162bf",
+      "bytes": 27653,
+      "sha256": "7004bb216c84433c5e80bee4dcfff85e0885c6fd2c7fb4dbd1dfae8260786807",
+      "lf": 836,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "root_static_focal_review",
+          "prefix": "e13_root_static_focal_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[43]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/0dd3983758a600772e3177907c1430e0c2c4fc87",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0dd3983758a600772e3177907c1430e0c2c4fc87",
+      "bytes": 14136,
+      "sha256": "5172e0f2db3181a1183efefd3e82a4da95239004e7e1fb7ef329f8d3d68cb22a",
+      "lf": 203,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_bound",
+          "prefix": "e13_focal_bound",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[44]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c61802c339d9cefa46934e4c289c1b05b1bcb76e",
+      "bytes": 6803,
+      "sha256": "da1ca7f5cd0e908e7698399a69c86b039308cde92e50713267623dd76d2a2a56",
+      "lf": 205,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_binding",
+          "prefix": "e13_focal_binding",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[45]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/5c952a7a32a8286702801c7497a7522809d1b652",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5c952a7a32a8286702801c7497a7522809d1b652",
+      "bytes": 7306,
+      "sha256": "2ec259f160bf32d696d6230da35ce95de436a269f0f1e93c601afe63a92acaad",
+      "lf": 218,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_execution_authority",
+          "prefix": "e13_focal_execution_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[46]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/094481bff7a51a113681ba93edd2ea91bc0ce89b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "094481bff7a51a113681ba93edd2ea91bc0ce89b",
+      "bytes": 1378,
+      "sha256": "8e61d916bf2816029d9a98d73ab886a020a4cfd3839172ae225861c05d1e7c93",
+      "lf": 48,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_intake_context",
+          "prefix": "e13_focal_intake_context",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[47]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/b9d0a8d504e342682dc6ea80c091d40431a8e057",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9d0a8d504e342682dc6ea80c091d40431a8e057",
+      "bytes": 122802,
+      "sha256": "7ea69b7788e8db9d903953478480d2d84b00d419c8131c5a5bd913e0fe875ae6",
+      "lf": 922,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_main_whole",
+          "prefix": "e13_focal_main_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[48]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/cfb1ee8b5769c2826d3afd2d58b801a0eb9d3b4d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfb1ee8b5769c2826d3afd2d58b801a0eb9d3b4d",
+      "bytes": 1763,
+      "sha256": "57f4f0252d20d006e627b80ae6d73c8088229c9a3b2f0e76841d79255e3097c6",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_main_preservation_manifest",
+          "prefix": "e13_focal_main_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[49]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c54c1a8f5f4c1655c1b6a5cb2f4d09cbe04ec525",
+      "bytes": 2281,
+      "sha256": "f13599b0853dc961ba26edf602f8e62d83f604ea5e89c59255cec76beb6fabca",
+      "lf": 39,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_cleanup_whole",
+          "prefix": "e13_focal_cleanup_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[50]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8816b977081e7931d90a3f13036c2eeb21a4df17",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8816b977081e7931d90a3f13036c2eeb21a4df17",
+      "bytes": 1753,
+      "sha256": "dea6071479a38fd38919590c598284e37554f163cbf6700b0a0d5346103bfb7e",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_cleanup_preservation_manifest",
+          "prefix": "e13_focal_cleanup_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[51]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/72fa69b47e05f494a644c2f1e00c18dd8a533786",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72fa69b47e05f494a644c2f1e00c18dd8a533786",
+      "bytes": 19660,
+      "sha256": "08116bd5697c29d18167335ad181a792938ab25885d4c33ad355d89e83585c69",
+      "lf": 10,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_report_union",
+          "prefix": "e13_focal_report_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[52]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d7c88e186e3469cb57f7673b227b4fba4cadb55c",
+      "bytes": 69479,
+      "sha256": "715c05be4d93b12a8d298975a2ef1c565a47a263a2d191b502322dfc6f0b7b08",
+      "lf": 2105,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_final_receipt",
+          "prefix": "e13_focal_final_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[53]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+      "bytes": 8864,
+      "sha256": "d22820896234cd5f86167532e8450e70223acd8736bc40de3c0f95f1af307e0e",
+      "lf": 222,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_root_preflight",
+          "prefix": "e13_analytics_root_preflight",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[54]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6ad98dd23ddc9f906c0bfa66d60ccbb86689812",
+      "bytes": 985,
+      "sha256": "ad9207ef6ce0507b596a6fe5f8d07f840c208b62fdd1dca5331d115af7856e17",
+      "lf": 32,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-focal",
+          "role": "focal_final_peer_ack",
+          "prefix": "e13_focal_final_peer_ack",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[55]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c66060d1213c6e8bcc99015abbcf806f5050649f",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+      "bytes": 24118,
+      "sha256": "afb549aa28accb490a85c1d62ac98375b777cd40f25a030ac56a9ecf7c86535c",
+      "lf": 572,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_execution_authority",
+          "prefix": "e13_analytics_execution_authority",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[56]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d479ac686d0e90fd4594247cb62750d519b489a7",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d479ac686d0e90fd4594247cb62750d519b489a7",
+      "bytes": 1956,
+      "sha256": "40cec63be0d539e77698081c0c932cd6a7b1a29a64eb4f20ca7cadbea35d53bc",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_peer_preflight",
+          "prefix": "e13_analytics_peer_preflight",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[57]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4d55cbecd6d44d835271b96486baab2dd664e968",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d55cbecd6d44d835271b96486baab2dd664e968",
+      "bytes": 2642,
+      "sha256": "f8570caa90bcdd4dc3d65471666bf54e8c78e68457d974605910b7ea670b33d8",
+      "lf": 82,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_intake_context",
+          "prefix": "e13_analytics_intake_context",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[58]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "291aaa73276fd3554cdff3f9dfb7c001d5ce4de1",
+      "bytes": 8320,
+      "sha256": "99951e8df61a006e52a59974911f3f20d347a855f3dbbfbaedf63bffac64e448",
+      "lf": 286,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_preservation_manifest",
+          "prefix": "e13_analytics_main_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[59]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/9677660309a8c4c68de3497079ba444ec84b5835",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9677660309a8c4c68de3497079ba444ec84b5835",
+      "bytes": 2283,
+      "sha256": "d6effe37901a663eea6e9e8b5a2aa112a02af10b8fdaa00cb6291ac132817344",
+      "lf": 39,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_cleanup_whole",
+          "prefix": "e13_analytics_cleanup_whole",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[60]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/70607967c9788428c229e9eca6c12fce29c236ee",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70607967c9788428c229e9eca6c12fce29c236ee",
+      "bytes": 1761,
+      "sha256": "befff94a6fa8bf6322d991def6b15dc1afc9086da2be27906bd1c06443807b3f",
+      "lf": 61,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_cleanup_preservation_manifest",
+          "prefix": "e13_analytics_cleanup_preservation_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[61]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88c30a2f090ce2aeae07883eb6cf44d26e271ac0",
+      "bytes": 250708,
+      "sha256": "726e64fc6a5a7c681267d2a203894be1d9db317bdeb79f4289427cdfc3b79dd7",
+      "lf": 510,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_event_union",
+          "prefix": "e13_analytics_event_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[62]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/d6c235ba488c6f8121845bc184588937972c0b64",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6c235ba488c6f8121845bc184588937972c0b64",
+      "bytes": 34163,
+      "sha256": "8d456363369314fd78873d1cbe541c9f0df1d1e94b399edccc56e17ca7169276",
+      "lf": 96,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_report_union",
+          "prefix": "e13_analytics_report_union",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[63]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f236afc6ff2d30c03816314dd3f20ec3734b6ff",
+      "bytes": 82554,
+      "sha256": "787c3a61f8dbfc0f9ae0b770af6742017214f159167d209caa07636ff356f5d9",
+      "lf": 3828,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "root_causal_analysis",
+          "prefix": "e13_root_causal_analysis",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[64]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad7d413e7e8dfff50d6c0a2fd2477baffd0c5b26",
+      "bytes": 30818,
+      "sha256": "9835e4c8217568f3d8838a5eb0b4cc6c7027993758d4f5147910faf2bd712d8e",
+      "lf": 979,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_final_receipt",
+          "prefix": "e13_analytics_final_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[65]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/1541b7542574ed9a522a82c864ba1c58f53e9637",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1541b7542574ed9a522a82c864ba1c58f53e9637",
+      "bytes": 1389,
+      "sha256": "2171499abee57614cad79cc34709cafe8ae8e5d4f64c527dc5244e5f1e363bbf",
+      "lf": 43,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_final_peer_ack",
+          "prefix": "e13_analytics_final_peer_ack",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[66]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/6465f63fdd5f47dc9edccebd5fd25e5b88f7735a",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6465f63fdd5f47dc9edccebd5fd25e5b88f7735a",
+      "bytes": 24369,
+      "sha256": "46a7154d0cc71c50f6d964b89c340f1296cd21d3944915de55d241dd417e3985",
+      "lf": 745,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control-plane",
+          "role": "archive_preparation_catalog",
+          "prefix": "e13_archive_preparation_catalog",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[67]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/754ad54c07f0d3fbd6d98d7565d036c68380a9a0",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "754ad54c07f0d3fbd6d98d7565d036c68380a9a0",
+      "bytes": 19844,
+      "sha256": "d70a14d0167b48936f07e8716c6ae94ff4f4781d97c016a16b3e205521896dd6",
+      "lf": 80,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control-plane",
+          "role": "root_recovery_helpers_e13",
+          "prefix": "root_recovery_helpers_e13",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[68]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "bytes": 608937,
+      "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36",
+      "lf": 18074,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R4-archive-control",
+          "role": "r4_proposed_index",
+          "prefix": "r4_proposed_index",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[69]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "bytes": 24104,
+      "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd",
+      "lf": 206,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R4-archive-control",
+          "role": "r4_proposed_readme",
+          "prefix": "r4_proposed_readme",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[70]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+      "bytes": 64403,
+      "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd",
+      "lf": 2006,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R4-archive-control",
+          "role": "r4_proposed_manifest",
+          "prefix": "r4_proposed_manifest",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[71]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+      "bytes": 7504,
+      "sha256": "84ba93824baecab233931c5dc745b5da09ef0c531bdd112d5683daca99704d12",
+      "lf": 248,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R4-archive-control",
+          "role": "r4_root_review",
+          "prefix": "r4_root_review",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[72]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3658ae015be3c1dc96535e61d444122057d4f3a6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+      "bytes": 4619,
+      "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57",
+      "lf": 137,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "R4-archive-control",
+          "role": "r4_root_publication_receipt",
+          "prefix": "r4_root_publication_receipt",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[73]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/4e6a2b736302101239b76128bb2cb90ae41310ac",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e6a2b736302101239b76128bb2cb90ae41310ac",
+      "bytes": 300000,
+      "sha256": "dee22bdc581fd025862de4129ab1917475a75eca6ca5736b219df827da904b2c",
+      "lf": 1178,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_001",
+          "prefix": "e13_analytics_main_part_001",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[74]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29c54ef713146076c8bdfcf39e8cb2a87819bec2",
+      "bytes": 300000,
+      "sha256": "32b8428f430e052e4c0670c9befa204c4e235e486f1948888efc19db30a7593d",
+      "lf": 46,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_002",
+          "prefix": "e13_analytics_main_part_002",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[75]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d863804b6adab4fa37f755e894e3cfbc69b83ed",
+      "bytes": 300000,
+      "sha256": "ab8b42847327ee05b3c752c14ee6d648aed0f01429045105fd4b2197da9f990d",
+      "lf": 766,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_003",
+          "prefix": "e13_analytics_main_part_003",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[76]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d1370e3c70ddecc122ce1d700dc3a10f8e5752e",
+      "bytes": 300000,
+      "sha256": "9ffbe79df94f431a9490776dd0e62d1197795f98e2c6ebb297ade1e7c0f7c116",
+      "lf": 438,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_004",
+          "prefix": "e13_analytics_main_part_004",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[77]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d7998e1334e20eb8a82bafb75701015f2ca62ef",
+      "bytes": 300000,
+      "sha256": "e02a698452eceeffa295640f21a3b35cb1f044986805ca527f4be01f352099cf",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_005",
+          "prefix": "e13_analytics_main_part_005",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[78]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "168bb7ff29fa5747acc80549c0b3c9de20f0a8fc",
+      "bytes": 300000,
+      "sha256": "eb877b9554dce98a4288ab7fb722e9769dbd0514f6d6172182afa2ee735fc202",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_006",
+          "prefix": "e13_analytics_main_part_006",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[79]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "680505f2b01e4cd62c0131c3c0c54d306cd059d2",
+      "bytes": 300000,
+      "sha256": "761effa119e98d4f5d69f81bd20e2a6af29c97001efc2b1f004bb9cf8d2395a7",
+      "lf": 30,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_007",
+          "prefix": "e13_analytics_main_part_007",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[80]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3872d581513c4a7721687bfb728cd0fdfbf403ce",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3872d581513c4a7721687bfb728cd0fdfbf403ce",
+      "bytes": 300000,
+      "sha256": "87de1ed12ba91144bfb6e9de964dbc7e9d0f816c9ac452d3850772f0a7b6b482",
+      "lf": 40,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_008",
+          "prefix": "e13_analytics_main_part_008",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[81]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/256e98ed81c38a9123ef0bb867c1a704063c15e3",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "256e98ed81c38a9123ef0bb867c1a704063c15e3",
+      "bytes": 300000,
+      "sha256": "21cc0f6a4e1426fdd9c4fc3c96cebd08011eed3b953f5819bfb040e8a8c3f528",
+      "lf": 28,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_009",
+          "prefix": "e13_analytics_main_part_009",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[82]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adc4225854db546f74e67b2ca82b7b12c0e04d7d",
+      "bytes": 300000,
+      "sha256": "64230f26437d6e5878e2602173db7e5462273914f75b65e2388ebca147d64524",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_010",
+          "prefix": "e13_analytics_main_part_010",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[83]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/597d921b74943bd51ab9dca0690927e20dca09de",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "597d921b74943bd51ab9dca0690927e20dca09de",
+      "bytes": 300000,
+      "sha256": "839bf63e710a0acc172f3f408168a1e8e97037806717d4e92ad60dfbc1391bcd",
+      "lf": 50,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_011",
+          "prefix": "e13_analytics_main_part_011",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[84]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3a24f4ee324416facef0d859a57626e1720f86af",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a24f4ee324416facef0d859a57626e1720f86af",
+      "bytes": 300000,
+      "sha256": "d0864d609d7d2d65e56f138dc96c322950a74a6e2296e208e7e3c4c84ac22741",
+      "lf": 30,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_012",
+          "prefix": "e13_analytics_main_part_012",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[85]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/bd9e8875502dad8bff2e36224f51489fc4397c9b",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd9e8875502dad8bff2e36224f51489fc4397c9b",
+      "bytes": 300000,
+      "sha256": "e689daa859b1839ee511cd2887be5bc14f1564b466ad184f6d6168c4f2e44a30",
+      "lf": 38,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_013",
+          "prefix": "e13_analytics_main_part_013",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[86]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfe10cc0b9d63210462cf6e5237c9205eda85eda",
+      "bytes": 300000,
+      "sha256": "f6e100023e42dc9229194ce8cee197e61e37b479dec3538dc9920c58c0e29928",
+      "lf": 32,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_014",
+          "prefix": "e13_analytics_main_part_014",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[87]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58c6f627a9fa6244e0fdc55065fba6b898bf14a1",
+      "bytes": 300000,
+      "sha256": "cfa454ba171a1a0acf10067fa3c5df95f0c9c0471e244707578361e280e118f8",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_015",
+          "prefix": "e13_analytics_main_part_015",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[88]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/053925d54f7876818256fc553d94c9d68a5a6688",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "053925d54f7876818256fc553d94c9d68a5a6688",
+      "bytes": 300000,
+      "sha256": "7096821e0eec50e8db3d4f5ee9d7be2764bd0bb4bb03dbc4a08242c88d6f557b",
+      "lf": 36,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_016",
+          "prefix": "e13_analytics_main_part_016",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[89]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/8e23978720ee9a98c502639e7842176f68d8c692",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e23978720ee9a98c502639e7842176f68d8c692",
+      "bytes": 300000,
+      "sha256": "63c92ed5164252437407d8437afec736822575e74d5d43a37d718ace5823574a",
+      "lf": 46,
+      "endsWithLF": false,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_017",
+          "prefix": "e13_analytics_main_part_017",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[90]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c752a62eb3a9b060532c2ad58e7b21a350ccd6ff",
+      "bytes": 48177,
+      "sha256": "496494df3fbb03ea19490a7d9023deab19260f0d2bf99b1a075e711918e11f9d",
+      "lf": 84,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-analytics",
+          "role": "analytics_main_part_018",
+          "prefix": "e13_analytics_main_part_018",
+          "from": {
+            "blob": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+            "pointer": "objects[91]"
+          }
+        }
+      ]
+    },
+    {
+      "path": "objects/3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3aa1b45e76cc1341095d65beb1b25c6e295da1b6",
+      "bytes": 48822,
+      "sha256": "3a299f217b7ee295d23f39c7bfe3245fada548777fc73d081293e70ca5c1e0b5",
+      "lf": 1452,
+      "endsWithLF": true,
+      "memberships": [
+        {
+          "group": "E13-control-plane",
+          "role": "actual-input-catalog",
+          "from": {
+            "rootSupplied": true
+          }
+        }
+      ]
     }
   ],
   "excluded": {
@@ -16692,6 +20263,39 @@
       "noReaderOrArtifactContentClaim": true,
       "commitAndTreeIdentifiersAreMetadataOnly": true,
       "currentIndexReadmeAndPackageSelfReferencesExcluded": true
+    },
+    "E13": {
+      "calculatedOnlyWholeMain": {
+        "gitBlobCalculated": "1eb15113536676c909a6de4a6294d18688d66bbf",
+        "bytes": 5148177,
+        "sha256": "89d650f98b82fa753696eb78b6b0ed270443b3652f839b926aeb605d6fc75381",
+        "wholePersisted": false,
+        "inObjects": false,
+        "actualParts": 18,
+        "stream": "E13-analytics-main"
+      },
+      "originalArtifact": {
+        "id": 15239671856,
+        "bytes": 45860595,
+        "digest": "sha256:a4894ff8d28a7c6977b739af2449513d6ac89d75a63d7c98d9ab755cd1ddcbc7",
+        "metadataOnly": true,
+        "zipGets": 0,
+        "inObjects": false
+      },
+      "physicalRuntimeFiles": {
+        "acquired": false,
+        "includes": [
+          "native JSONL event file",
+          "runtime JSON",
+          "PNG",
+          "trace",
+          "ZIP members"
+        ],
+        "claim": "The event union is a derived original-log prefix, not a separately acquired complete native file."
+      },
+      "commitsTreesAndRefs": "Metadata only; not objects/<sha> blob entries.",
+      "qualification": false,
+      "newRunAuthorized": false
     }
   },
   "unresolvedReferences": [
@@ -16713,33 +20317,33 @@
     {
       "id": "ARCHIVE-ANCHOR",
       "status": "ROOT_REVIEW_AND_PUBLICATION_PENDING",
-      "description": "Root must audit the current README/index/objects tree and three ordered parents, recheck the expected R3 ref and publish by nonforce update. This author creates only the three package blobs."
+      "description": "Root must audit the proposed README/index/objects tree and two ordered parents, recheck the expected R4 ref, and publish by nonforce update. This author creates only the three package blobs."
     }
   ],
   "verification": {
-    "uniqueBlobCount": 442,
-    "logicalMembershipCount": 491,
-    "totalBlobBytes": 49076567,
-    "previousObjects": 379,
-    "previousMemberships": 420,
+    "uniqueBlobCount": 535,
+    "logicalMembershipCount": 584,
+    "totalBlobBytes": 56651409,
+    "previousObjects": 442,
+    "previousMemberships": 491,
     "previousMetadataPreserved": true,
     "previousMembershipPrefixesPreserved": true,
     "previousObjectOrderPreserved": true,
     "previousGroupsPreserved": true,
     "previousStreamsPreserved": true,
     "previousDocumentarySnapshotsPreserved": true,
-    "newObjectsRelativeToPreviousIndex": 63,
-    "newMemberships": 71,
+    "newObjectsRelativeToPreviousIndex": 93,
+    "newMemberships": 93,
     "E12CatalogBlobsAuthenticated": 106,
     "E12CatalogItselfAuthenticated": true,
     "previousIndexReadmeManifestPublicationAuthenticated": true,
     "byteOrHashMismatches": 0,
     "allNewCatalogObjectsAuthenticated": true,
     "allNewPartsAndConcatenationsVerified": true,
-    "newStreamsVerifiedThisIncrement": 6,
-    "newPartReferencesVerified": 22,
-    "totalTypedStreams": 41,
-    "totalPartReferences": 153,
+    "newStreamsVerifiedThisIncrement": 7,
+    "newPartReferencesVerified": 24,
+    "totalTypedStreams": 48,
+    "totalPartReferences": 177,
     "E12SevenExportHashesRecomputed": true,
     "E12TransportAndCaptureSemanticReviewsPreserved": true,
     "E12TransportSemanticReviewOwners": [
@@ -16753,16 +20357,27 @@
     "repositoryCodeExecuted": false,
     "originalActionsGets": 0,
     "zipGets": 0,
-    "previousPublishedObjectAudit": "The 379 R3 objects and all previous memberships are retained. R3 published objects tree was read and matched to every index entry. Its publication receipt retains completed prior object/stream checks. This increment does not claim a fresh GET/rehash of every inherited body; all 70 incoming catalog bodies and the catalog were rehashed.",
-    "inheritedStreamAudit": "Thirty-five inherited streams and 131 part references remain literal. Six added streams and 22 part references were recomposed and rehashed now without normalization. No original Actions or ZIP acquisition.",
-    "parentContract": "Three Git commit metadata objects were read: published R3, executed C18 focal, executed C18 original Analytics. Both executed C18 parents point directly to S18. Root will independently audit and publish the resulting archive commit.",
+    "previousPublishedObjectAudit": "All 442 R4 objects and 491 memberships are retained literally, with the authenticated R4 publication receipt preserving the completed historical corpus audit. No fresh GET/rehash of all inherited bodies is claimed. All 92 incoming catalog bodies, the catalog and the five R4 control documents included among them were rehashed now.",
+    "inheritedStreamAudit": "Forty-one inherited streams and 153 part references remain literal. Seven added streams and 24 part references were recomposed and rehashed now, including BOM offsets, without normalization. No original Actions or ZIP acquisition.",
+    "parentContract": "Two root-specified parent commits were read through Git metadata: R4 f0e031d8/treeaaaac991 and E13 focal43f73297/tree6508c42, whose sole parent is diagnostic sourcedffc62a0. Root alone performs resulting archive object/ref audit.",
     "retentionClaim": "All listed objects are actual readable Git blobs. This proposal does not itself create a retaining ref; root publication is still required.",
     "plannedParentsExcludedFromBlobEntries": true,
     "C18CatalogBlobsAuthenticated": 70,
     "C18CatalogItselfAuthenticated": true,
     "previousIndexReadmeManifestRootReviewPublicationAuthenticated": true,
     "C18ArtifactContentsAcquired": false,
-    "inheritedVerificationKeysScope": "E12-prefixed verification fields are preserved historical audit facts from R3. Current increment-specific fields use C18 prefixes and the generic totals above."
+    "inheritedVerificationKeysScope": "E12- and C18-prefixed verification fields are historical audit facts retained literally from R3/R4. This increment-specific authentication is recorded under E13 prefixes and current generic totals.",
+    "E13CatalogBlobsAuthenticated": 92,
+    "E13CatalogItselfAuthenticated": true,
+    "E13ArtifactContentsAcquired": false,
+    "E13CurrentPrefixAnalysisExecutedForThisArchive": false,
+    "E13RootAndPeerIntakeReceiptsPreserved": true,
+    "E13CalculatedOnlyWholeExcluded": true,
+    "E13ArchiveAuthorOriginalGets": 0,
+    "E13ArchiveAuthorZipGets": 0,
+    "oldGroupsPreservedCount": 29,
+    "oldStreamsPreservedCount": 41,
+    "oldPartReferencesPreservedCount": 153
   },
   "authorEffects": {
     "plannedPackageBlobs": 3,
@@ -16775,7 +20390,7 @@
     "repositoryExecutions": 0,
     "originalGets": 0,
     "zipGets": 0,
-    "scope": "Only textual JSON/Markdown proposal blobs, reconstructed from existing authenticated Git copies after runtime replacement; root owns publication."
+    "scope": "Only three proposed JSON/Markdown blobs derived from authenticated existing Git copies. No source/tree/commit/ref/run, original Actions acquisition, ZIP acquisition, repository execution or new observation. Root owns publication."
   },
   "revisionHistory": [
     {
@@ -17790,6 +21405,308 @@
         ]
       },
       "fullPreviousIndexPreservedAsObject": true
+    },
+    {
+      "revision": "FOURTH_C18_CLOSED_AND_D27_STATIC",
+      "index": {
+        "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+        "bytes": 608937,
+        "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36"
+      },
+      "readme": {
+        "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+        "bytes": 24104,
+        "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd"
+      },
+      "manifest": {
+        "gitBlob": "f0cc6f2712fa7298f6a4b8a385c5204e9989362c",
+        "bytes": 64403,
+        "sha256": "db7c0aa8a9a05637fbdb0989d8d88399ce672cb37417c5640e59a90e28bff9bd"
+      },
+      "rootReview": {
+        "gitBlob": "69712ea10c7c9cf5d24c8667a95023a46b65c2f9",
+        "bytes": 7504,
+        "sha256": "84ba93824baecab233931c5dc745b5da09ef0c531bdd112d5683daca99704d12"
+      },
+      "publicationReceipt": {
+        "gitBlob": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+        "bytes": 4619,
+        "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57"
+      },
+      "publishedCommit": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52",
+      "publishedTree": "aaaac991b98c22035ef4d6b2749a5c8acfc96bce",
+      "previousObjects": 442,
+      "previousMemberships": 491,
+      "previousGroups": 29,
+      "previousStreams": 41,
+      "previousPartReferences": 153,
+      "originalPreparation": {
+        "state": "PROPOSED_INCREMENT_BLOBS_ONLY_NOT_PUBLISHED",
+        "revision": "FOURTH_C18_CLOSED_AND_D27_STATIC",
+        "preparedAtUtc": "2026-11-27 22:59:55 UTC",
+        "authority": "Root authorized only index/README/package proposal blobs for the complete C18 and D27 increment. Root alone reviews and creates the archive tree, commit and nonforce ref update. No original Actions or ZIP acquisition, repository execution or run is authorized.",
+        "archiveProposal": {
+          "branch": "sf613-evidence",
+          "ref": "refs/heads/sf613-evidence",
+          "ownTree": true,
+          "baseTree": null,
+          "indexPath": "index.json",
+          "readmePath": "README.md",
+          "objectsDirectory": "objects",
+          "tree": null,
+          "commit": null,
+          "refUpdated": false,
+          "previousPublished": {
+            "commit": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+            "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+            "objectsTree": "66a8ef82632894d999368443f93636fbf26b8505",
+            "index": {
+              "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+              "bytes": 508677,
+              "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5"
+            },
+            "readme": {
+              "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+              "bytes": 15563,
+              "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77"
+            },
+            "manifest": {
+              "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
+              "bytes": 53884,
+              "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793"
+            },
+            "rootReview": {
+              "gitBlob": "41fd42fc295bc963ab63469850b77df5cc35c2c7",
+              "bytes": 7063,
+              "sha256": "079088909bbf730c4a65571a3d30cb8813cefeaba2c2e9f86bedf13754bd0be5"
+            },
+            "publicationReceipt": {
+              "gitBlob": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
+              "bytes": 11371,
+              "sha256": "7666e0b2ada1beb3c77d00809a17cadecdf16de6e3fd870001df65458006dce3"
+            }
+          },
+          "expectedRefBeforeUpdate": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+          "priorPublicationObserved": {
+            "sourceReceipt": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
+            "atUtc": "2026-11-27 21:30:46 UTC",
+            "head": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+            "scope": "Historical publication observation; root must recheck the ref before any nonforce update."
+          },
+          "orderedParents": [
+            {
+              "order": 1,
+              "type": "commit",
+              "sha": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+              "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+              "role": "previous published archive R3"
+            },
+            {
+              "order": 2,
+              "type": "commit",
+              "sha": "54e99dbebb37030c94c9054a2195baa186e621a9",
+              "tree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+              "role": "C18 executed focal",
+              "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+            },
+            {
+              "order": 3,
+              "type": "commit",
+              "sha": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
+              "tree": "87540d426b735b692429de2a6fc350a760a56d27",
+              "role": "C18 executed original Analytics",
+              "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+            }
+          ],
+          "treeEntryContract": "Exactly root README.md, root index.json, and objects/<sha> for every object below. All files are 100644 blobs; objects is a tree. No executable repository layout or workflow. Current index/README/package manifest do not recursively list themselves; package manifest remains a separate review artifact.",
+          "modeForAllFiles": "100644",
+          "reservedRootPathsAbsent": [
+            ".github",
+            ".ci-run.json",
+            "apps",
+            "modules",
+            "packages"
+          ],
+          "originalSourcePathsAreMetadataOnly": true,
+          "sourceFocalAndAnalyticsRefsUnchanged": true,
+          "historicalLedgerPreserved": {
+            "ref": "refs/heads/sf613-ledger",
+            "observedHead": "b6278bcd02c544a5583d978a8b48583798bf6ebe",
+            "notUpdated": true
+          },
+          "parentReachabilityPurpose": "Three ordered parents retain R3, the executed clean C18 focal and original Analytics. S18 is their shared parent and S17 remains ancestral. Commit/tree metadata are not blob entries. Actual publication and reachability audit remain root's responsibility.",
+          "workflowReviewHistorical": {
+            "dev": "c0bc0f22a4f2f5a2bdfa64407cd35769fd877886",
+            "githubTree": "7663f4b9fe0fdee867137b9e719f29058339317d",
+            "workflowsTree": "052820e53c9bcd1e2b5f4ade6f3965e7654d31a7",
+            "files": 18,
+            "createEventMatches": 0,
+            "deleteEventMatches": 0,
+            "proposedBranchPushPatternMatches": 0,
+            "source": "Complete YAMLs authenticated and read during prior read-only audit; cached bodies rechecked. No new workflow execution."
+          },
+          "currentRunOrWorkflowRequested": false
+        },
+        "coverage": {
+          "closedScope": "Literal published R3 corpus plus complete C18 catalog d44e77a4: source and controls, accepted focal, negative original Analytics, static D27 proposal, current reception and bounded next-question basis, and all five R3 archive-control objects. The input catalog itself is also included. This is an enumerated Git corpus, not a ZIP or transitive historical-reference closure.",
+          "completeOriginalStreams": [
+            "C16 focal main",
+            "C16 focal cleanup",
+            "C16 Analytics main, 17 parts",
+            "C16 Analytics cleanup",
+            "E11-focal-main",
+            "E11-focal-cleanup",
+            "E11-Analytics-main",
+            "E11-Analytics-cleanup",
+            "E11-reader-main",
+            "C17-focal-main",
+            "C17-focal-cleanup",
+            "C17-Analytics-main",
+            "C17-Analytics-cleanup",
+            "E12-focal-main",
+            "E12-focal-cleanup",
+            "E12-Analytics-main",
+            "E12-Analytics-cleanup",
+            "E12-reader-main",
+            "C18-focal-main",
+            "C18-focal-cleanup",
+            "C18-analytics-main",
+            "C18-analytics-cleanup"
+          ],
+          "originalLogStreams": 22,
+          "exportStreams": 14,
+          "derivedMarkerUnionStreams": 3,
+          "typedStreams": 41,
+          "currentProofStates": {
+            "R5": "draft documentary only",
+            "D26": "C17 documentary retarget only; four final bindings UNBOUND",
+            "C16Source": "reviewed source package",
+            "C16Focal": "FOCAL_PASS_ONLY",
+            "C16Analytics": "CLOSED_NEGATIVE; first preview timeout and BI pass",
+            "E11Focal": "PASS_INSTRUMENTED_DIAGNOSTIC_FOCAL_ONLY",
+            "E11Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+            "E11Reader": "TRANSPORT_AND_CAPTURE_COMPLETE_PENDING_ZERO",
+            "C17Source": "REVIEWED_SOURCE_OBJECT",
+            "C17Focal": "CLOSED_PASS_FOCAL_ONLY",
+            "C17Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+            "R6": "reviewed documentary snapshot",
+            "R7": "ROOT_REVIEWED_DOCUMENTARY_ONLY_NOT_READY",
+            "E12Source": "REVIEWED_DIAGNOSTIC_SOURCE_NOT_PRODUCT_LINEAGE",
+            "E12Focal": "CLOSED_PASS_DIAGNOSTIC_FOCAL_ONLY",
+            "E12Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+            "E12Reader": "TRANSPORT_AND_CAPTURE_COMPLETE_PENDING_ZERO",
+            "E12Analysis": "AUTHENTICATED_PROFILE_DESCRIPTIVE_ANALYSIS_ONLY",
+            "C18Source": "REVIEWED_CLEAN_SOURCE_R2_OBJECT",
+            "C18HelperR1": "SUPERSEDED_UNEXECUTED_PROPOSAL",
+            "C18Focal": "CLOSED_PASS_FOCAL_ONLY",
+            "C18Analytics": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+            "D27": "STATIC_REVIEWED_FOUR_FINAL_BINDINGS_UNBOUND",
+            "C18NextQuestion": "SOURCE_AND_EVIDENCE_BASIS_ONLY_NOT_AN_EXECUTED_DIAGNOSTIC"
+          },
+          "historicalProofStatesAreExplicit": true,
+          "priorC16R5D26Metadata": {
+            "R5": "draft documentary only",
+            "D26": "parametric, four final bindings UNBOUND",
+            "C16Source": "reviewed source package",
+            "C16Focal": "FOCAL_PASS_ONLY",
+            "C16Analytics": "CLOSED_NEGATIVE; first preview timeout and BI pass"
+          },
+          "e11UnderlyingCorpusClosed": true,
+          "completeArtifactArchive": false,
+          "completeRawRuntimeExport": false,
+          "historicalReferencePolicy": "Only enumerated direct inputs are included. Embedded historical references are not recursively turned into archive objects. All 379 R3 objects retain literal metadata and ordered membership prefixes; all 23 prior groups and 35 streams remain literal. The complete R3 index, README, package, root review and publication receipt are actual objects.",
+          "noQualificationTransferred": true,
+          "productionAuthorized": false,
+          "derivedReportUnionStreams": 2,
+          "derivedUnionStreams": 5,
+          "e12UnderlyingEnumeratedCorpusClosed": true,
+          "currentProduct": {
+            "clean": "455c02a7a05a6dd3262ae15b184419897366fde4",
+            "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+            "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+            "historicalQualified": 12,
+            "totalAreas": 15,
+            "newAreasAccepted": 0,
+            "UI42": "partial; first preview timeout at original 60000 ms waiter",
+            "UI43": "not reached",
+            "UI44": "not reached",
+            "BI": "passed on clean C18 candidate in run 46075966101/1",
+            "productionAuthorized": false
+          },
+          "c18UnderlyingEnumeratedCorpusClosed": true
+        },
+        "verification": {
+          "uniqueBlobCount": 442,
+          "logicalMembershipCount": 491,
+          "totalBlobBytes": 49076567,
+          "previousObjects": 379,
+          "previousMemberships": 420,
+          "previousMetadataPreserved": true,
+          "previousMembershipPrefixesPreserved": true,
+          "previousObjectOrderPreserved": true,
+          "previousGroupsPreserved": true,
+          "previousStreamsPreserved": true,
+          "previousDocumentarySnapshotsPreserved": true,
+          "newObjectsRelativeToPreviousIndex": 63,
+          "newMemberships": 71,
+          "E12CatalogBlobsAuthenticated": 106,
+          "E12CatalogItselfAuthenticated": true,
+          "previousIndexReadmeManifestPublicationAuthenticated": true,
+          "byteOrHashMismatches": 0,
+          "allNewCatalogObjectsAuthenticated": true,
+          "allNewPartsAndConcatenationsVerified": true,
+          "newStreamsVerifiedThisIncrement": 6,
+          "newPartReferencesVerified": 22,
+          "totalTypedStreams": 41,
+          "totalPartReferences": 153,
+          "E12SevenExportHashesRecomputed": true,
+          "E12TransportAndCaptureSemanticReviewsPreserved": true,
+          "E12TransportSemanticReviewOwners": [
+            "root",
+            "teams_product"
+          ],
+          "E12CurrentProfileNotExecutedForThisArchive": true,
+          "allPathsExactObjectsSha": true,
+          "deduplicatedByGitBlob": true,
+          "validationIsPureDataOnly": true,
+          "repositoryCodeExecuted": false,
+          "originalActionsGets": 0,
+          "zipGets": 0,
+          "previousPublishedObjectAudit": "The 379 R3 objects and all previous memberships are retained. R3 published objects tree was read and matched to every index entry. Its publication receipt retains completed prior object/stream checks. This increment does not claim a fresh GET/rehash of every inherited body; all 70 incoming catalog bodies and the catalog were rehashed.",
+          "inheritedStreamAudit": "Thirty-five inherited streams and 131 part references remain literal. Six added streams and 22 part references were recomposed and rehashed now without normalization. No original Actions or ZIP acquisition.",
+          "parentContract": "Three Git commit metadata objects were read: published R3, executed C18 focal, executed C18 original Analytics. Both executed C18 parents point directly to S18. Root will independently audit and publish the resulting archive commit.",
+          "retentionClaim": "All listed objects are actual readable Git blobs. This proposal does not itself create a retaining ref; root publication is still required.",
+          "plannedParentsExcludedFromBlobEntries": true,
+          "C18CatalogBlobsAuthenticated": 70,
+          "C18CatalogItselfAuthenticated": true,
+          "previousIndexReadmeManifestRootReviewPublicationAuthenticated": true,
+          "C18ArtifactContentsAcquired": false,
+          "inheritedVerificationKeysScope": "E12-prefixed verification fields are preserved historical audit facts from R3. Current increment-specific fields use C18 prefixes and the generic totals above."
+        },
+        "unresolvedReferences": [
+          {
+            "id": "HISTORICAL-REFERENCE-CLOSURE",
+            "status": "OUTSIDE_ENUMERATED_DIRECT_INPUTS",
+            "description": "Embedded historical SHA references are not a transitive-closure claim; absence from the enumerated archive does not assert absence from Git."
+          },
+          {
+            "id": "FINAL-D26-C613",
+            "status": "INTENTIONALLY_UNBOUND",
+            "description": "The four final D26 bindings remain UNBOUND; D26 has not been executed on the future composition and final C613 is not qualified by this archive."
+          },
+          {
+            "id": "FINAL-D27-C613",
+            "status": "INTENTIONALLY_UNBOUND",
+            "description": "D27 is a reviewed parametric revision with four final bindings UNBOUND. No final composition, D27 execution, migration acceptance or release qualification is implied."
+          },
+          {
+            "id": "ARCHIVE-ANCHOR",
+            "status": "ROOT_REVIEW_AND_PUBLICATION_PENDING",
+            "description": "Root must audit the current README/index/objects tree and three ordered parents, recheck the expected R3 ref and publish by nonforce update. This author creates only the three package blobs."
+          }
+        ]
+      },
+      "fullPreviousIndexPreservedAsObject": true
     }
   ],
   "resolvedReferences": [
@@ -18012,6 +21929,21 @@
         "sha256": "7666e0b2ada1beb3c77d00809a17cadecdf16de6e3fd870001df65458006dce3"
       },
       "publishedCommit": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0"
+    },
+    {
+      "id": "FOURTH-ARCHIVE-ANCHOR",
+      "historicalRecord": {
+        "id": "ARCHIVE-ANCHOR",
+        "status": "ROOT_REVIEW_AND_PUBLICATION_PENDING",
+        "description": "Root must audit the current README/index/objects tree and three ordered parents, recheck the expected R3 ref and publish by nonforce update. This author creates only the three package blobs."
+      },
+      "currentStatus": "PUBLISHED_NONFORCE_AND_READBACK_BY_ROOT",
+      "receipt": {
+        "gitBlob": "3658ae015be3c1dc96535e61d444122057d4f3a6",
+        "bytes": 4619,
+        "sha256": "54aadf63ea66e5fd0b7e4757681fbfdbabfba795abae39c365767fa2bc321e57"
+      },
+      "publishedCommit": "f0e031d8667f6b80dc417dbaddd39c3123b2ae52"
     }
   ],
   "documentarySnapshots": {

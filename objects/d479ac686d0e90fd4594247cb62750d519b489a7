@@ -1,0 +1,61 @@
+{
+  "schema": "sf613-e13-analytics-independent-preflight-ack-v1",
+  "status": "ACK_STATIC_SELECTION_NO_FINDING",
+  "at": {
+    "current_time": "2026-11-28 00:07:02 UTC"
+  },
+  "reviewer": "/root/teams_product",
+  "checks": 20,
+  "source": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+  "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849",
+  "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4",
+  "request": {
+    "gitBlob": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+    "bytes": 295,
+    "sha256": "57ce93b730ddf4535548d255126b5bdd665c2a8e9cac62fdd01fcbc36add0a1e",
+    "lf": 0,
+    "endsWithLF": false
+  },
+  "confirmedPins": [
+    "f8a62baf167a1a4374122552a770f1ec49f56313",
+    "5f4e4ec23187f2b8eaa4a3796372d4c3ce4fdb5e",
+    "6dfd2ddffb73d3efc8cfe4b492aef25418c7930c",
+    "8cdc9485b3c26b75b6157981ca5c3300b1847151",
+    "5007e48270b80c83eb719d35cec9e6343206a195"
+  ],
+  "selection": {
+    "tests": 2,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "firstPreviewMs": 60000,
+    "sensitivityMs": 120000,
+    "caseTimeoutMs": [
+      780000,
+      660000
+    ],
+    "mainJobMinutes": 45,
+    "totalInstallations": 2,
+    "installationsPerTest": 1,
+    "portugueseContextReusesBIInstallation": true
+  },
+  "clarification": "The earlier peer phrase two installations per test was corrected by the peer before activation: two total, one per test.",
+  "preflight": {
+    "gitBlob": "9a63d110eeaed7e9b34596f58aaee5ce8e136133",
+    "bytes": 8864,
+    "sha256": "d22820896234cd5f86167532e8450e70223acd8736bc40de3c0f95f1af307e0e",
+    "lf": 222,
+    "endsWithLF": true
+  },
+  "authority": {
+    "gitBlob": "c66060d1213c6e8bcc99015abbcf806f5050649f",
+    "bytes": 24118,
+    "sha256": "afb549aa28accb490a85c1d62ac98375b777cd40f25a030ac56a9ecf7c86535c",
+    "lf": 572,
+    "endsWithLF": true
+  },
+  "resolvesAuthorityField": "additionalSourceSelectionReadOnlyReview; no finding",
+  "originalGets": 0,
+  "zipGets": 0,
+  "refOrRunByPeer": false
+}

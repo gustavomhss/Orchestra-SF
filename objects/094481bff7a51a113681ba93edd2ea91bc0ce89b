@@ -1,0 +1,48 @@
+{
+  "schema": "sf613-e13-focal-terminal-intake-context-v1",
+  "status": "TERMINAL_NEW_RUN_READY_FOR_ORIGINALS",
+  "at": {
+    "current_time": "2026-11-27 23:57:14 UTC"
+  },
+  "authority": {
+    "gitBlob": "5c952a7a32a8286702801c7497a7522809d1b652",
+    "bytes": 7306,
+    "sha256": "2ec259f160bf32d696d6230da35ce95de436a269f0f1e93c601afe63a92acaad",
+    "lf": 218,
+    "endsWithLF": true
+  },
+  "run": {
+    "id": 46085008328,
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/46085008328"
+  },
+  "jobs": [
+    {
+      "id": 140792420454,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-27T23:54:13Z",
+      "completed_at": "2026-11-27T23:56:26Z"
+    },
+    {
+      "id": 140793052319,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-27T23:56:29Z",
+      "completed_at": "2026-11-27T23:56:35Z"
+    }
+  ],
+  "source": {
+    "commit": "dffc62a08bdba74f1a9322d49cde095e81535f55",
+    "tree": "0da48e0d15de780d981a5bce3e49e382a6e61849"
+  },
+  "snapshot": {
+    "commit": "43f73297c2082ed4ea3a016bb1fd7bd970a53201",
+    "tree": "6508c42f4957adefcd2de55fb9b51ceef6fe318f"
+  }
+}

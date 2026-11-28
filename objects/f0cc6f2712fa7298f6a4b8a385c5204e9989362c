@@ -1,0 +1,2006 @@
+{
+  "schema": "sf613-evidence-increment-r4-package-v1",
+  "status": "PROPOSAL_BLOBS_CREATED_READBACK_ROOT_REVIEW_AND_PUBLICATION_PENDING",
+  "preparedAtUtc": "2026-11-27 23:03:24 UTC",
+  "author": "/root/focal_migration",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Fourth append-only evidence archive increment from actual preserved Git blobs. Root alone creates and publishes the documentary tree/commit/ref.",
+  "base": {
+    "revision": "R3",
+    "commit": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+    "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+    "objectsTree": "66a8ef82632894d999368443f93636fbf26b8505",
+    "index": {
+      "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+      "bytes": 508677,
+      "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5",
+      "lf": 15136,
+      "endsWithLF": true
+    },
+    "readme": {
+      "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+      "bytes": 15563,
+      "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77",
+      "lf": 138,
+      "endsWithLF": true
+    },
+    "package": {
+      "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
+      "bytes": 53884,
+      "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793",
+      "lf": 1491,
+      "endsWithLF": true
+    },
+    "rootReview": {
+      "gitBlob": "41fd42fc295bc963ab63469850b77df5cc35c2c7",
+      "bytes": 7063,
+      "sha256": "079088909bbf730c4a65571a3d30cb8813cefeaba2c2e9f86bedf13754bd0be5",
+      "lf": 251,
+      "endsWithLF": true
+    },
+    "publicationReceipt": {
+      "gitBlob": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
+      "bytes": 11371,
+      "sha256": "7666e0b2ada1beb3c77d00809a17cadecdf16de6e3fd870001df65458006dce3",
+      "lf": 371,
+      "endsWithLF": true
+    },
+    "counts": {
+      "objects": 379,
+      "bytes": 42875582,
+      "memberships": 420,
+      "groups": 23,
+      "streams": 35,
+      "partReferences": 131
+    },
+    "publicationObservedAtUtc": "2026-11-27 21:30:46 UTC",
+    "freshRefLeaseStillRequired": true
+  },
+  "inputCatalog": {
+    "gitBlob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+    "bytes": 6383979,
+    "sha256": "a150a6659a88323fd7f22a6e4646c7d2a9eb9e8abc0863c9eab4930f2910dee2",
+    "lf": 1060,
+    "endsWithLF": true,
+    "schema": "sf613-c18-r4-actual-input-catalog-v1",
+    "status": "ACTUAL_OBJECTS_HASHED_AND_READBACK_CLOSED",
+    "cutAtUtc": "2026-11-27 22:49:55 UTC",
+    "actualObjects": 70,
+    "memberships": 70,
+    "streams": 6,
+    "partReferences": 22,
+    "allActualObjectsAuthenticated": true,
+    "catalogItselfIncluded": {
+      "group": "C18-reception-and-next-question",
+      "role": "actual-input-catalog"
+    }
+  },
+  "outputs": {
+    "index": {
+      "path": "index.json",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71",
+      "bytes": 608937,
+      "sha256": "a6f1faef5762033255c7c5518d75db3817d80aa9dff9c882675c9a8d91f18f36",
+      "lf": 18074,
+      "endsWithLF": true,
+      "createdAndLiteralReadback": true
+    },
+    "readme": {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "gitBlob": "05c3f2ddd758d1f6e122324620081e4594af65e2",
+      "bytes": 24104,
+      "sha256": "35580dfe21e642d628281c8b5f52e39c38a7512987e438faf9855ce826a7e8dd",
+      "lf": 206,
+      "endsWithLF": true,
+      "createdAndLiteralReadback": true
+    }
+  },
+  "derivation": {
+    "method": "JSON data clone of the authenticated R3 index, preservation of every old object field other than append-only memberships, then ordered catalog merge by Git blob identity. Current scope/count/publication fields are advanced; their complete previous values and unresolved anchor are preserved in revisionHistory and the actual R3 index object.",
+    "objectIdentity": "Git blob SHA with bytes/SHA256/LF/endLF equality required for shared objects",
+    "oldObjectMetadataPreserved": 379,
+    "oldMembershipPrefixesPreserved": 420,
+    "oldObjectOrderPreserved": true,
+    "oldGroupsPreserved": 23,
+    "oldStreamsPreserved": 35,
+    "oldPartReferencesPreserved": 131,
+    "oldDerivedEvidenceKeysPreserved": true,
+    "oldExclusionsPreserved": true,
+    "oldRevisionHistoryPrefixPreserved": true,
+    "oldResolvedReferencePrefixPreserved": true,
+    "oldDocumentarySnapshotsPreserved": true,
+    "archiveAnchorResolution": "The R3 pending publication record is preserved as historicalRecord of THIRD-ARCHIVE-ANCHOR and linked to its actual publication receipt. A new R4 ARCHIVE-ANCHOR remains pending root review and publication.",
+    "readme": {
+      "construction": "new R4 prefix + entire exact published R3 README + details closing suffix",
+      "prefixBytes": 8529,
+      "previousBytes": 15563,
+      "suffixBytes": 12,
+      "previousGitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+      "previousReadmeLiteral": true,
+      "nestedHistoricDetailsUntouched": true
+    },
+    "sharedCatalogObjects": [
+      {
+        "sha": "1d1af1f73dace7c7603f4e41323919c892b781a7",
+        "group": "C18-focal",
+        "role": "c17_focal_driver"
+      },
+      {
+        "sha": "4a7b64a8392138f1b79d386557e48ac4453617f5",
+        "group": "C18-focal",
+        "role": "focal_actual_request"
+      },
+      {
+        "sha": "eda49a023c07599de00f5af9642ee92b9d9adf3b",
+        "group": "C18-analytics",
+        "role": "analytics_request"
+      },
+      {
+        "sha": "2b660b737a80526b14f9406a5934ba23681968d8",
+        "group": "D27-final-qualification",
+        "role": "final_d26_manifest"
+      },
+      {
+        "sha": "f295e83f70b5aeeaf96292ad15b43672c212a389",
+        "group": "D27-final-qualification",
+        "role": "final_d26_wrapper"
+      },
+      {
+        "sha": "26fe67808cf872c611127a7f46838074604fe690",
+        "group": "D27-final-qualification",
+        "role": "final_d27_envelope"
+      },
+      {
+        "sha": "9e423560670f8452eb95ebff92630f202df06a8f",
+        "group": "D27-final-qualification",
+        "role": "final_d27_finalizer"
+      },
+      {
+        "sha": "40d2b2739f755a8865e990eef4b811d66a1e2125",
+        "group": "D27-final-qualification",
+        "role": "final_d27_workflow"
+      }
+    ],
+    "catalogUniqueNotInBase": 62,
+    "catalogAsAdditionalObject": 1,
+    "totalNewObjects": 63,
+    "totalNewMemberships": 71,
+    "totalNewObjectBytes": 6200985,
+    "newGroups": [
+      {
+        "id": "C18-source",
+        "uniqueBlobs": 13,
+        "memberships": 13
+      },
+      {
+        "id": "C18-focal",
+        "uniqueBlobs": 16,
+        "memberships": 16
+      },
+      {
+        "id": "C18-analytics",
+        "uniqueBlobs": 23,
+        "memberships": 23
+      },
+      {
+        "id": "D27-final-qualification",
+        "uniqueBlobs": 11,
+        "memberships": 11
+      },
+      {
+        "id": "C18-reception-and-next-question",
+        "uniqueBlobs": 3,
+        "memberships": 3
+      },
+      {
+        "id": "R3-archive-control",
+        "uniqueBlobs": 5,
+        "memberships": 5
+      }
+    ],
+    "newObjectInventory": [
+      {
+        "gitBlob": "69ff8e1b2118d4a105dc436f506b12c3cd94e5ed",
+        "bytes": 7653,
+        "sha256": "c521bc4d0c0586a40d566e77e8c0248d54513f31314e0ff9e8ee7b4c0c0a31d1",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "helper_r1",
+            "prefix": "c18_root_helper_r1",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[0]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+        "bytes": 8386,
+        "sha256": "9ad815ef5024a4dc4a0385003d758d4209d30b419fac338dda05bef0962293aa",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "helper_r2",
+            "prefix": "c18_root_helper_r2",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[1]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "d1589afbeae46b465883f610bae1d2ddd0aaf8c2",
+        "bytes": 3779,
+        "sha256": "86bc2963b6ae82cdbeb070cc12e65f415ce53e8afcef5a1a449a92deb8cda628",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "pre_captured_context",
+            "prefix": "c18_root_pre_captured_context",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[2]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "15abbb9618b5e4a424a9a1a4e209751100d56f1f",
+        "bytes": 21220,
+        "sha256": "4de7625bb3122a3514e0a1387ce7c3e72fa7fcd650d4071ffb9ce402d1700ab9",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "test_pre",
+            "prefix": "c18_root_test_pre",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[3]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "0b9b7b786ab1c327104f25b9945aa79e9b857c03",
+        "bytes": 23870,
+        "sha256": "4e11020e2f25a5e0add378953335a080408ee4c63de9e69e0e529f5edf0fbb3d",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "test_r1",
+            "prefix": "c18_root_test_r1",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[4]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "ecd3af6b2d0b5a41a58959855e7e93bc09522c39",
+        "bytes": 10087,
+        "sha256": "65d27049c422b388b91a6030440725e2b8e8e4e3f4dd2a7cbd49eddd16b687bc",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "loading_pre",
+            "prefix": "c18_root_loading_pre",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[5]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "b82b6f8471d9c7a6aa8dc776cec38d82fe27fc56",
+        "bytes": 13598,
+        "sha256": "305b496e1c9d06710bf657abcb3f9f995e8e558d07f9522a489d498e3f7c278f",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "fixture_r1",
+            "prefix": "c18_root_fixture_r1",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[6]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "4db2a037f06ec8542003f208fa1e195b6cc39869",
+        "bytes": 40736,
+        "sha256": "12ceaa7936bc75dd9d0089671876640cb5359c8f7457d41e6ed2d844a9e6f485",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "source_support",
+            "prefix": "c18_root_source_support",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[7]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "ba4c7b40eb2fa145067eb0f56bf978336f6da4fe",
+        "bytes": 26857,
+        "sha256": "90edb5b9631ac923d96e0faf2e34a98cbf7d7e6ac80bb0dc33d0e22a6a8633b1",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "source_full_diff",
+            "prefix": "c18_root_source_full_diff",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[8]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "c208552d0801fae41fb4aca8336d042a16124d51",
+        "bytes": 7503,
+        "sha256": "093208d3514f642b37ccca823c7111d444ccfebaef1823d3572466d05ada103d",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "source_bounds",
+            "prefix": "c18_root_source_bounds",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[9]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "4744d16a0cf65d664fd9df6fbd693a6d32af32fa",
+        "bytes": 13996,
+        "sha256": "2005755ace761265de05aa66d6708fd44c119be9d7de707bf32e3999aea3415d",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "source_manifest",
+            "prefix": "c18_root_source_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[10]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "b24001d0cb5acbe7fdeaae9d394662afdfa91f97",
+        "bytes": 7203,
+        "sha256": "e23af0cc279265fb43cb23e5fc5259aff4e0e6c77caf426b85deeb2662053c2c",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "static_review",
+            "prefix": "c18_root_static_review",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[11]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "768bd77768d59a8eae6964a105f092086ca6a45b",
+        "bytes": 9045,
+        "sha256": "a90ffe2e60208fe101b92176066aba92140a7bce23fb8aa749fd4a548b483e7f",
+        "memberships": [
+          {
+            "group": "C18-source",
+            "role": "source_binding",
+            "prefix": "c18_root_source_binding",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[12]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "042b4a3020f1395dddbf5ef7598cd00e2b0956a3",
+        "bytes": 11981,
+        "sha256": "be433f43995816cfda4a59aaa3fc92fc7268b9a728af5806d8e7b27aee3d256a",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_template",
+            "prefix": "c18_root_focal_template",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[14]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "b76ff37ca62b7e45a98041ff8a2dd50ec534392c",
+        "bytes": 15013,
+        "sha256": "0f4564584d598739d6d0edb1fe49b199c8d18b200fabf85e18df12f21c7ca861",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_support",
+            "prefix": "c18_root_focal_support",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[15]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "d818de080a1a1fb9ec3267bc403faa13a3be3526",
+        "bytes": 7160,
+        "sha256": "0ab07b06fa9a907103689eabfea22595e81dbdec50d607ec3bdae8a17bc56cbe",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_retarget_diff",
+            "prefix": "c18_root_focal_retarget_diff",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[16]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "0bc4a392a1b4567628daf93eb6c7de0210957028",
+        "bytes": 12773,
+        "sha256": "2c1e1935f48508f1005969f859288cce10c4b38de959cbb52acf24f05c86628c",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_full_addition",
+            "prefix": "c18_root_focal_full_addition",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[17]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "7c8f78f2cae4b09a01690b3eb364242c8fb58df9",
+        "bytes": 22701,
+        "sha256": "edfb2faa9317eec915cfe61651c2b76da1eb858c47061f2de690b3495a7c62ac",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_bounds",
+            "prefix": "c18_root_focal_bounds",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[18]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "eb9b5ee7e5189e2c1a98337347cbde3e9588a8e8",
+        "bytes": 31420,
+        "sha256": "27ac9efc12d353a96e293fb623d0d517f97250f40b4a12dd3cfb42f9d8e472ed",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_manifest",
+            "prefix": "c18_root_focal_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[19]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "42328bbaacf845d959d7ea54eef74fdca3b8b4b0",
+        "bytes": 12024,
+        "sha256": "0d1888bd1d384700d484b3f77ee61cdca5e72bd5d8eb9fe32113a29b876bbef8",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_bound_driver",
+            "prefix": "c18_root_focal_bound_driver",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[21]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "ddc5455657e09b0b4e30f13559b71f7e6d584d63",
+        "bytes": 9182,
+        "sha256": "b7217fbd7e6266bd54a52f5868d931f31f6ecc432590dbe9896882283b93deab",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_binding",
+            "prefix": "c18_root_focal_binding",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[22]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "91bb3d4812c65cd0734918845d02d5d1d20a6c47",
+        "bytes": 30559,
+        "sha256": "103327d46c0a933bafb377b511ff9d54a2e9f3f5da32e068aede18f49721af45",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_authority",
+            "prefix": "c18_root_focal_authority",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[23]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "5caff1d5520ef621278457cdbce32b4a1b20123d",
+        "bytes": 112385,
+        "sha256": "3cef82cf326732040b7b2cd5cf9db0c661bb73d70a974830e547b474265c0f41",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_main",
+            "prefix": "c18_root_focal_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[24]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "f94480c34318a510206e89a7b02f2e1da00389b5",
+        "bytes": 2281,
+        "sha256": "ef5e2e2e8d1c5d071cf5a686bb835eaa2af53dfd18744d24b779aa39f4985782",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_cleanup",
+            "prefix": "c18_root_focal_cleanup",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[25]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+        "bytes": 11979,
+        "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_report_union",
+            "prefix": "c18_root_focal_report_union",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[26]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "0ca6904886452b70c4576cb3f23db330c49cdc7f",
+        "bytes": 2228,
+        "sha256": "2beaae287515d3df7933495a980b5b29b0af3ae10bde5341cbde73f87c7a4b33",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_raw_manifest",
+            "prefix": "c18_root_focal_raw_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[27]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+        "bytes": 48035,
+        "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4",
+        "memberships": [
+          {
+            "group": "C18-focal",
+            "role": "focal_final_receipt",
+            "prefix": "c18_root_focal_final_receipt",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[28]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "11b5a287c5502021a59808624734c7e7ffb1d905",
+        "bytes": 17133,
+        "sha256": "1a5910fc060910e364a69ffcdbdd74a8414dae642560d90448be15a617accf84",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "analytics_authority",
+            "prefix": "c18_root_analytics_authority",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[30]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "2dbdf9d6af6921ccc407b0e9e8837f87dae56034",
+        "bytes": 2281,
+        "sha256": "d7ef60e19a9e590f2f0057b37fec30f918853c14d25b0e904f2f9117888f910c",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "analytics_cleanup",
+            "prefix": "c18_root_analytics_cleanup",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[31]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "59537c68f8aa02c3d1a9646201b6f2282be4625f",
+        "bytes": 7881,
+        "sha256": "c4e3126e9b2fae3fe63fbdf4de48db609e367ee404329571492ebba0e1096dbc",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "analytics_raw_manifest",
+            "prefix": "c18_root_analytics_raw_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[32]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "85954ebc570a1c068be1f046c47ca76d9ab6ec04",
+        "bytes": 34166,
+        "sha256": "7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "analytics_marker_union",
+            "prefix": "c18_root_analytics_marker_union",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[33]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "bba2ff1e6015b6ec877240d4a4f4e524b630bc39",
+        "bytes": 26424,
+        "sha256": "e4e1fd13c6e6f72ed135025053c0ceeff2fc86efe309d4fcf76fdeae2cb5f066",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "analytics_final_receipt",
+            "prefix": "c18_root_analytics_final_receipt",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[34]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "d6a00f1f74c0f7d89a747ab6fb88c609a2d5d2ae",
+        "bytes": 300000,
+        "sha256": "812f0c17913fcad077170628bbe1fa47ac4c12e5e1c843be8cac8cfb1927acdf",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-001",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[35]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "8b0dbee9f78fc92d722773a5565997a9909376af",
+        "bytes": 300000,
+        "sha256": "756096f87659b2b683efb63671486376e3ac2ec51b3a9b4815c453b1f9acd77b",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-002",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[36]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "669309a924c39a3b44c5271b6c869bd71ed9627a",
+        "bytes": 300000,
+        "sha256": "a54698502a1c7df5595cbc02491c2c9826ffceffa8ec2640a30a2d82d31e06e3",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-003",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[37]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "79272b13cf5d3bcb23772f4e31d0730f43fd278d",
+        "bytes": 300000,
+        "sha256": "e6584215ee0a22f159e0b3bfa23a6b973c556c3fb98af4bdb914381c3fed006a",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-004",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[38]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "fb77a5cffae441a81c2b2af460599a316f19d40f",
+        "bytes": 300000,
+        "sha256": "2f92cf062a5e7c808e1b9010aa6bc7ffa85c268293b9389bceb67c2cc6b03f24",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-005",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[39]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "4d64d1a177fe9c27684fa234135707bf70c702b8",
+        "bytes": 300000,
+        "sha256": "3ad862683f043546a50352b67d42101b997b5bc8d4beecf560bc7fbf22de86a0",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-006",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[40]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "73677be57903ea5096efe8cfce8dc047f7c1f085",
+        "bytes": 300000,
+        "sha256": "6f63d9c8ec990eee3063058dc6a6978917f07aa96a927ed7bd7e382b387b6a11",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-007",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[41]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "5dffa9d3c4d7d742dfb5b95cb9dbf9a236b8be38",
+        "bytes": 300000,
+        "sha256": "4fdbc4786813525fb4dbc63fd26402b122341a08aacbd0bf11d3354b9cf5fbdc",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-008",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[42]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "56239b294d20f1f6616dd76423631d317cb3810c",
+        "bytes": 300000,
+        "sha256": "51ac4e0a03617ae6216c4a06609c570761b4190a74631eed42b059288ef88ee4",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-009",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[43]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "c67b43275d3d82508ead214ebc364fcfb64f2d3d",
+        "bytes": 300000,
+        "sha256": "c3d8b7d9ac6bc936cc95dc5fb4cb0fbe6b113913de280485aa4550a94b3b9578",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-010",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[44]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "cd78aad4b48e62ca7e54b56f2d1bea064e8ace8b",
+        "bytes": 300000,
+        "sha256": "46158f454e1dda6853e681c145c3a8f6c21c1979b89df44f38d4638f7050b8ef",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-011",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[45]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "2a5c49bfaab7701ceb89fc2293b94f3f0b5fbbc6",
+        "bytes": 300000,
+        "sha256": "d5370a28598a12eb9d382673b3632beaece739ccdfb59076e0362b01251c9ee8",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-012",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[46]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "865f76798a2aaf10511c3a2cdd3337a8f2f568e8",
+        "bytes": 300000,
+        "sha256": "2bb8e458c71e0aa5ba4efd58d88680141084b851ac962fc566666ac62045b432",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-013",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[47]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "a9ed087af0d7be093d9c1fb4721acaa6b4a9c7ed",
+        "bytes": 300000,
+        "sha256": "b4212a99a0d90fd0e020d3ee7372d9d5feddeea96dd4c110c8de1b0a07b401a9",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-014",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[48]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "dbd6b25cc9c6141f2ad81ef56a3b7667b9b20bd6",
+        "bytes": 300000,
+        "sha256": "9f1736d0c1c02ce18a8583750e3042058143c3bb7faaaaaa614ce283573d42fa",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-015",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[49]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "aac657da42b5db85f79e4fde2cddfb670d15cb83",
+        "bytes": 300000,
+        "sha256": "ed2625200e0347ba1a5bccf36d8c8094adc82d581f1f377ccce342efb264878c",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-016",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[50]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "dfdb65232ccfe20dc2e519797f959ef351da59f0",
+        "bytes": 67325,
+        "sha256": "6c12feff057dff4dfd065f03beae1f4e946698c1f64d3b6eb6270b5feded2cf4",
+        "memberships": [
+          {
+            "group": "C18-analytics",
+            "role": "main-part-017",
+            "prefix": "c18_root_analytics_main",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[51]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "c2d665753877a6ddff7aeff91b0dffd8296ca00c",
+        "bytes": 18381,
+        "sha256": "817da0057378d5b47264a9691185d4d917731df404d12a59c2a8428b3024c232",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_wrapper",
+            "prefix": "c18_root_final_d27_wrapper",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[54]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+        "bytes": 18729,
+        "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_manifest",
+            "prefix": "c18_root_final_d27_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[55]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+        "bytes": 13126,
+        "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_bounds",
+            "prefix": "c18_root_final_d27_bounds",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[56]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "47556eb9858b70ceddb4467f71ae5e489e647864",
+        "bytes": 17079,
+        "sha256": "eaa1fe7404f52c780c3b5d4f3512ac4c3dedd06bfda8d8f7f63dacf78d14fb4d",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_derivation",
+            "prefix": "c18_root_final_d27_derivation",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[57]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "6ec0e57314ae488dff083262bfce7fdaa4b853f7",
+        "bytes": 3223,
+        "sha256": "f0480bd3ec1f70e00e51fe09cf757da2534221572c0446cf781ca5112d803c7e",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_diff",
+            "prefix": "c18_root_final_d27_diff",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[58]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "02e39f88126bef9ed7f70f3a09eb7ee2005b752a",
+        "bytes": 7486,
+        "sha256": "4c1b3fdbcb832f0ad49ff457d89624372bb5257e4041bd8bc521a0ed802b0001",
+        "memberships": [
+          {
+            "group": "D27-final-qualification",
+            "role": "final_d27_review",
+            "prefix": "c18_root_final_d27_review",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[62]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "7fd8051cf0d9233645ba60e380f24c3ec7ce5fca",
+        "bytes": 1990,
+        "sha256": "ecc35d9ee3e4b4820b78e25e0809a2e6cfdda4e3770d06fc68b982b79b2cd37d",
+        "memberships": [
+          {
+            "group": "C18-reception-and-next-question",
+            "role": "post_reception_ack",
+            "prefix": "c18_root_post_reception_ack",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[63]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "5723337efebc6761d256ad80f5202d6509947dbd",
+        "bytes": 9355,
+        "sha256": "23b557a6bf55849a8d98a4f9c819682ac4e366c04ab3c69173a7289035ab94c4",
+        "memberships": [
+          {
+            "group": "C18-reception-and-next-question",
+            "role": "diagnostic_basis",
+            "prefix": "c18_root_diagnostic_basis",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[64]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "5cb3f23d64dcc7c8b3dfb4d718955d33d8fec2b0",
+        "bytes": 508677,
+        "sha256": "86be69056937c8da79361f778cf1ef57fe01a293801d61e151ac0cecfac7b4c5",
+        "memberships": [
+          {
+            "group": "R3-archive-control",
+            "role": "index",
+            "prefix": "e12_archive_r3_index",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[65]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "d99de8ea7152a68b51a4f6c66eb8d50ef0514931",
+        "bytes": 15563,
+        "sha256": "dcfabebe178a18db36db661d7dd138f26fa44f2c47f7168a6a2fff8cd6a41b77",
+        "memberships": [
+          {
+            "group": "R3-archive-control",
+            "role": "readme",
+            "prefix": "e12_archive_r3_readme",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[66]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "db8864acbf3f0e6d736138a00e8494af1b33f137",
+        "bytes": 53884,
+        "sha256": "eb81fb48ba8859d5e105d34fcc8789ecde6bb82ce685e9861eafb953d9dce793",
+        "memberships": [
+          {
+            "group": "R3-archive-control",
+            "role": "manifest",
+            "prefix": "e12_archive_r3_manifest",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[67]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "41fd42fc295bc963ab63469850b77df5cc35c2c7",
+        "bytes": 7063,
+        "sha256": "079088909bbf730c4a65571a3d30cb8813cefeaba2c2e9f86bedf13754bd0be5",
+        "memberships": [
+          {
+            "group": "R3-archive-control",
+            "role": "root_review",
+            "prefix": "e12_archive_r3_root_review",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[68]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "52de10c866adf1cb00aba9daa7381109d2dc1e0d",
+        "bytes": 11371,
+        "sha256": "7666e0b2ada1beb3c77d00809a17cadecdf16de6e3fd870001df65458006dce3",
+        "memberships": [
+          {
+            "group": "R3-archive-control",
+            "role": "publication_receipt",
+            "prefix": "e12_archive_r3_publication_receipt",
+            "from": {
+              "blob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+              "pointer": "objects[69]"
+            }
+          }
+        ]
+      },
+      {
+        "gitBlob": "d44e77a41e70fd6c20de23f963249a5e4121a227",
+        "bytes": 36194,
+        "sha256": "a150a6659a88323fd7f22a6e4646c7d2a9eb9e8abc0863c9eab4930f2910dee2",
+        "memberships": [
+          {
+            "group": "C18-reception-and-next-question",
+            "role": "actual-input-catalog",
+            "from": {
+              "rootSupplied": true
+            }
+          }
+        ]
+      }
+    ],
+    "currentSelfReferencesExcluded": true
+  },
+  "corpus": {
+    "objects": 442,
+    "bytes": 49076567,
+    "memberships": 491,
+    "groups": 29,
+    "streams": 41,
+    "partReferences": 153,
+    "objectMode": "100644",
+    "objectPathPattern": "objects/<40-lowercase-hex-Git-blob-SHA>",
+    "allActualBlobsReadable": true,
+    "shaDeduplication": true,
+    "calculatedWholesNotPromoted": true,
+    "completeArtifactArchive": false,
+    "transitiveHistoricalReferenceClosure": false
+  },
+  "newStreams": [
+    {
+      "id": "C18-focal-main",
+      "group": "C18-focal",
+      "role": "main",
+      "bytes": 112385,
+      "sha256": "3cef82cf326732040b7b2cd5cf9db0c661bb73d70a974830e547b474265c0f41",
+      "lf": 913,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "5caff1d5520ef621278457cdbce32b4a1b20123d",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "5caff1d5520ef621278457cdbce32b4a1b20123d",
+          "bytes": 112385,
+          "sha256": "3cef82cf326732040b7b2cd5cf9db0c661bb73d70a974830e547b474265c0f41",
+          "startCodeUnit": 0,
+          "endCodeUnit": 112383
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    },
+    {
+      "id": "C18-focal-cleanup",
+      "group": "C18-focal",
+      "role": "cleanup",
+      "bytes": 2281,
+      "sha256": "ef5e2e2e8d1c5d071cf5a686bb835eaa2af53dfd18744d24b779aa39f4985782",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "f94480c34318a510206e89a7b02f2e1da00389b5",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "f94480c34318a510206e89a7b02f2e1da00389b5",
+          "bytes": 2281,
+          "sha256": "ef5e2e2e8d1c5d071cf5a686bb835eaa2af53dfd18744d24b779aa39f4985782",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2279
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    },
+    {
+      "id": "C18-focal-reports",
+      "group": "C18-focal",
+      "role": "reports",
+      "bytes": 11979,
+      "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8",
+      "lf": 9,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "89d79a30e13f46df8cb481536a9e41862eda07e5",
+          "bytes": 11979,
+          "sha256": "dd54073cf792519f6c13c9775103feb0b751449110873aac300af1896f9f09c8",
+          "startCodeUnit": 0,
+          "endCodeUnit": 11979
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    },
+    {
+      "id": "C18-analytics-main",
+      "group": "C18-analytics",
+      "role": "main",
+      "bytes": 4867325,
+      "sha256": "c27f0f52bc3bdff4b250d558a1fcfba075123e44426e0692ebabed3e3c0c0d91",
+      "lf": 1985,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "4060971fa1492f50be0fae5089d0ca58eda518f6",
+      "wholeGitBlobPersisted": false,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "d6a00f1f74c0f7d89a747ab6fb88c609a2d5d2ae",
+          "bytes": 300000,
+          "sha256": "812f0c17913fcad077170628bbe1fa47ac4c12e5e1c843be8cac8cfb1927acdf",
+          "startCodeUnit": 0,
+          "endCodeUnit": 297350
+        },
+        {
+          "index": 2,
+          "gitBlob": "8b0dbee9f78fc92d722773a5565997a9909376af",
+          "bytes": 300000,
+          "sha256": "756096f87659b2b683efb63671486376e3ac2ec51b3a9b4815c453b1f9acd77b",
+          "startCodeUnit": 297350,
+          "endCodeUnit": 597350
+        },
+        {
+          "index": 3,
+          "gitBlob": "669309a924c39a3b44c5271b6c869bd71ed9627a",
+          "bytes": 300000,
+          "sha256": "a54698502a1c7df5595cbc02491c2c9826ffceffa8ec2640a30a2d82d31e06e3",
+          "startCodeUnit": 597350,
+          "endCodeUnit": 895187
+        },
+        {
+          "index": 4,
+          "gitBlob": "79272b13cf5d3bcb23772f4e31d0730f43fd278d",
+          "bytes": 300000,
+          "sha256": "e6584215ee0a22f159e0b3bfa23a6b973c556c3fb98af4bdb914381c3fed006a",
+          "startCodeUnit": 895187,
+          "endCodeUnit": 1195187
+        },
+        {
+          "index": 5,
+          "gitBlob": "fb77a5cffae441a81c2b2af460599a316f19d40f",
+          "bytes": 300000,
+          "sha256": "2f92cf062a5e7c808e1b9010aa6bc7ffa85c268293b9389bceb67c2cc6b03f24",
+          "startCodeUnit": 1195187,
+          "endCodeUnit": 1495187
+        },
+        {
+          "index": 6,
+          "gitBlob": "4d64d1a177fe9c27684fa234135707bf70c702b8",
+          "bytes": 300000,
+          "sha256": "3ad862683f043546a50352b67d42101b997b5bc8d4beecf560bc7fbf22de86a0",
+          "startCodeUnit": 1495187,
+          "endCodeUnit": 1795187
+        },
+        {
+          "index": 7,
+          "gitBlob": "73677be57903ea5096efe8cfce8dc047f7c1f085",
+          "bytes": 300000,
+          "sha256": "6f63d9c8ec990eee3063058dc6a6978917f07aa96a927ed7bd7e382b387b6a11",
+          "startCodeUnit": 1795187,
+          "endCodeUnit": 2095187
+        },
+        {
+          "index": 8,
+          "gitBlob": "5dffa9d3c4d7d742dfb5b95cb9dbf9a236b8be38",
+          "bytes": 300000,
+          "sha256": "4fdbc4786813525fb4dbc63fd26402b122341a08aacbd0bf11d3354b9cf5fbdc",
+          "startCodeUnit": 2095187,
+          "endCodeUnit": 2395185
+        },
+        {
+          "index": 9,
+          "gitBlob": "56239b294d20f1f6616dd76423631d317cb3810c",
+          "bytes": 300000,
+          "sha256": "51ac4e0a03617ae6216c4a06609c570761b4190a74631eed42b059288ef88ee4",
+          "startCodeUnit": 2395185,
+          "endCodeUnit": 2695182
+        },
+        {
+          "index": 10,
+          "gitBlob": "c67b43275d3d82508ead214ebc364fcfb64f2d3d",
+          "bytes": 300000,
+          "sha256": "c3d8b7d9ac6bc936cc95dc5fb4cb0fbe6b113913de280485aa4550a94b3b9578",
+          "startCodeUnit": 2695182,
+          "endCodeUnit": 2995179
+        },
+        {
+          "index": 11,
+          "gitBlob": "cd78aad4b48e62ca7e54b56f2d1bea064e8ace8b",
+          "bytes": 300000,
+          "sha256": "46158f454e1dda6853e681c145c3a8f6c21c1979b89df44f38d4638f7050b8ef",
+          "startCodeUnit": 2995179,
+          "endCodeUnit": 3295179
+        },
+        {
+          "index": 12,
+          "gitBlob": "2a5c49bfaab7701ceb89fc2293b94f3f0b5fbbc6",
+          "bytes": 300000,
+          "sha256": "d5370a28598a12eb9d382673b3632beaece739ccdfb59076e0362b01251c9ee8",
+          "startCodeUnit": 3295179,
+          "endCodeUnit": 3595179
+        },
+        {
+          "index": 13,
+          "gitBlob": "865f76798a2aaf10511c3a2cdd3337a8f2f568e8",
+          "bytes": 300000,
+          "sha256": "2bb8e458c71e0aa5ba4efd58d88680141084b851ac962fc566666ac62045b432",
+          "startCodeUnit": 3595179,
+          "endCodeUnit": 3895179
+        },
+        {
+          "index": 14,
+          "gitBlob": "a9ed087af0d7be093d9c1fb4721acaa6b4a9c7ed",
+          "bytes": 300000,
+          "sha256": "b4212a99a0d90fd0e020d3ee7372d9d5feddeea96dd4c110c8de1b0a07b401a9",
+          "startCodeUnit": 3895179,
+          "endCodeUnit": 4195176
+        },
+        {
+          "index": 15,
+          "gitBlob": "dbd6b25cc9c6141f2ad81ef56a3b7667b9b20bd6",
+          "bytes": 300000,
+          "sha256": "9f1736d0c1c02ce18a8583750e3042058143c3bb7faaaaaa614ce283573d42fa",
+          "startCodeUnit": 4195176,
+          "endCodeUnit": 4495174
+        },
+        {
+          "index": 16,
+          "gitBlob": "aac657da42b5db85f79e4fde2cddfb670d15cb83",
+          "bytes": 300000,
+          "sha256": "ed2625200e0347ba1a5bccf36d8c8094adc82d581f1f377ccce342efb264878c",
+          "startCodeUnit": 4495174,
+          "endCodeUnit": 4795174
+        },
+        {
+          "index": 17,
+          "gitBlob": "dfdb65232ccfe20dc2e519797f959ef351da59f0",
+          "bytes": 67325,
+          "sha256": "6c12feff057dff4dfd065f03beae1f4e946698c1f64d3b6eb6270b5feded2cf4",
+          "startCodeUnit": 4795174,
+          "endCodeUnit": 4862495
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [
+        0,
+        2104784,
+        4224467
+      ],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    },
+    {
+      "id": "C18-analytics-cleanup",
+      "group": "C18-analytics",
+      "role": "cleanup",
+      "bytes": 2281,
+      "sha256": "d7ef60e19a9e590f2f0057b37fec30f918853c14d25b0e904f2f9117888f910c",
+      "lf": 39,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "2dbdf9d6af6921ccc407b0e9e8837f87dae56034",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "2dbdf9d6af6921ccc407b0e9e8837f87dae56034",
+          "bytes": 2281,
+          "sha256": "d7ef60e19a9e590f2f0057b37fec30f918853c14d25b0e904f2f9117888f910c",
+          "startCodeUnit": 0,
+          "endCodeUnit": 2279
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [
+        0
+      ],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    },
+    {
+      "id": "C18-analytics-markers",
+      "group": "C18-analytics",
+      "role": "markers",
+      "bytes": 34166,
+      "sha256": "7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e",
+      "lf": 96,
+      "endsWithLF": true,
+      "wholeGitBlobCalculated": "85954ebc570a1c068be1f046c47ca76d9ab6ec04",
+      "wholeGitBlobPersisted": true,
+      "parts": [
+        {
+          "index": 1,
+          "gitBlob": "85954ebc570a1c068be1f046c47ca76d9ab6ec04",
+          "bytes": 34166,
+          "sha256": "7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e",
+          "startCodeUnit": 0,
+          "endCodeUnit": 34142
+        }
+      ],
+      "concatenation": "UTF-8 literal ordered parts; no separators or BOM/LF normalization.",
+      "byteOrderMarkByteOffsets": [],
+      "verification": {
+        "allActualPartsAuthenticated": true,
+        "codeUnitRangesContiguous": true,
+        "exactOrderedConcatenation": true,
+        "wholeGitShaBytesSha256LfMatched": true,
+        "noNormalization": true
+      }
+    }
+  ],
+  "newStreamAudit": {
+    "streams": 6,
+    "partReferences": 22,
+    "originalLogStreams": 4,
+    "derivedUnions": 2,
+    "bytesAndLfAndGitAndSha256Matched": true,
+    "literalCodeUnitRangesMatched": true,
+    "inheritedStreams35NotReacquired": true,
+    "previousAuditRetainedByPublicationReceipt": "52de10c866adf1cb00aba9daa7381109d2dc1e0d"
+  },
+  "currentEvidence": {
+    "source": {
+      "commit": "455c02a7a05a6dd3262ae15b184419897366fde4",
+      "tree": "ae1c0977057e45853f3dc240140e5f221057f49d",
+      "soleParent": "7cbf68a88a5ee18127e0ca254ef78f2347a33598",
+      "helper": "11661b32f4dc782558b39902c0f396145cbe8a4a",
+      "helperR1SupersededUnexecuted": "69ff8e1b2118d4a105dc436f506b12c3cd94e5ed",
+      "manifest": {
+        "gitBlob": "4744d16a0cf65d664fd9df6fbd693a6d32af32fa",
+        "bytes": 13996,
+        "sha256": "2005755ace761265de05aa66d6708fd44c119be9d7de707bf32e3999aea3415d",
+        "lf": 264,
+        "endsWithLF": true
+      },
+      "binding": {
+        "gitBlob": "768bd77768d59a8eae6964a105f092086ca6a45b",
+        "bytes": 9045,
+        "sha256": "a90ffe2e60208fe101b92176066aba92140a7bce23fb8aa749fd4a548b483e7f",
+        "lf": 254,
+        "endsWithLF": true
+      }
+    },
+    "focal": {
+      "run": 46074917314,
+      "attempt": 1,
+      "snapshot": "54e99dbebb37030c94c9054a2195baa186e621a9",
+      "status": "CLOSED_PASS_FOCAL_ONLY",
+      "receipt": {
+        "gitBlob": "08e8d47abb38d6e1dc96e497e54b8dd8e160b37e",
+        "bytes": 48035,
+        "sha256": "b18eadd3c9ae5144965e0c239aed9c4e95558c35514ffb2c61e916fc428a38c4"
+      },
+      "cases": 39,
+      "assertions": 1432,
+      "outer": {
+        "pass": 7,
+        "fail": 0,
+        "assertions": 35
+      },
+      "commands": 13,
+      "truncationFlagsFalse": 26,
+      "reports": 9,
+      "lazyOracles": 8,
+      "syntheticBootstrap": true,
+      "noPerformanceQualification": true,
+      "children": {
+        "oldLoading": 11,
+        "newLazy": 1,
+        "separateFromReports": true
+      }
+    },
+    "analytics": {
+      "run": 46075966101,
+      "attempt": 1,
+      "snapshot": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
+      "status": "CLOSED_NEGATIVE_ONE_FAILED_ONE_PASSED",
+      "receipt": {
+        "gitBlob": "bba2ff1e6015b6ec877240d4a4f4e524b630bc39",
+        "bytes": 26424,
+        "sha256": "e4e1fd13c6e6f72ed135025053c0ceeff2fc86efe309d4fcf76fdeae2cb5f066"
+      },
+      "firstFailure": "design-wave-five-analytics.spec.ts:72:32",
+      "operation": "decision-portfolio-preview",
+      "nativeSequence": 3,
+      "waiterMs": 60000,
+      "precedingResultsBoth200Ok": true,
+      "UI42PartialCaptures": 6,
+      "UI43Reached": false,
+      "UI44Reached": false,
+      "BI": "PASS_ON_THIS_CANDIDATE_ONLY",
+      "markerUnion": {
+        "gitBlob": "85954ebc570a1c068be1f046c47ca76d9ab6ec04",
+        "bytes": 34166,
+        "sha256": "7f40497ecc99180abe34a125f1fb7d395d36123f34c536315d4be6131e85aa6e",
+        "lines": 96,
+        "actualObject": true
+      },
+      "noInternalCauseEstablished": true,
+      "originalAcquisition": {
+        "main": 1,
+        "cleanup": 1,
+        "operator": "/root",
+        "beforeParseAndLiteralReadback": true,
+        "closedNeverReacquire": true
+      }
+    },
+    "D27": {
+      "manifest": {
+        "gitBlob": "38f6868e1a5c45f2596bc643bc24969922041b0f",
+        "bytes": 18729,
+        "sha256": "aef1a557350afc1acd444e3c5b76e24324b31df3ee25c751ad67fd0300613da1",
+        "lf": 492,
+        "endsWithLF": true
+      },
+      "bounds": {
+        "gitBlob": "07ef3a4865e97fff68292b07aabdb5f22d6ef1c2",
+        "bytes": 13126,
+        "sha256": "0a702a7892864f66dce60117ccfd5b5d45b63a05df28ee18ea25f48c6612fc56",
+        "lf": 395,
+        "endsWithLF": true
+      },
+      "review": {
+        "gitBlob": "02e39f88126bef9ed7f70f3a09eb7ee2005b752a",
+        "bytes": 7486,
+        "sha256": "4c1b3fdbcb832f0ad49ff457d89624372bb5257e4041bd8bc521a0ed802b0001"
+      },
+      "status": "STATIC_UNBOUND_NOT_EXECUTED",
+      "finalBindingsUnbound": 4,
+      "groups": 26,
+      "commandSites": 32,
+      "effectiveCommands": 37,
+      "truncationFlags": 74,
+      "proofChildren": 6,
+      "G2CasesReferenceS18": 48,
+      "totalFunctionalCount": null,
+      "noGroup27Added": true
+    },
+    "nextQuestion": {
+      "basis": {
+        "gitBlob": "5723337efebc6761d256ad80f5202d6509947dbd",
+        "bytes": 9355,
+        "sha256": "23b557a6bf55849a8d98a4f9c819682ac4e366c04ab3c69173a7289035ab94c4",
+        "lf": 543,
+        "endsWithLF": true
+      },
+      "postReceptionAck": {
+        "gitBlob": "7fd8051cf0d9233645ba60e380f24c3ec7ce5fca",
+        "bytes": 1990,
+        "sha256": "ecc35d9ee3e4b4820b78e25e0809a2e6cfdda4e3770d06fc68b982b79b2cd37d"
+      },
+      "scope": "Read-only causal-discrimination basis; not an executed E13 observer, campaign or accepted diagnosis."
+    },
+    "historicalQualifiedAreas": 12,
+    "totalAreas": 15,
+    "newAreasAccepted": 0,
+    "productionAuthorized": false
+  },
+  "exclusions": {
+    "calculatedWholeAnalytics": {
+      "gitBlobCalculated": "4060971fa1492f50be0fae5089d0ca58eda518f6",
+      "bytes": 4867325,
+      "sha256": "c27f0f52bc3bdff4b250d558a1fcfba075123e44426e0692ebabed3e3c0c0d91",
+      "actualParts": 17,
+      "inObjects": false,
+      "created": false,
+      "scope": "Calculated from complete actual preserved parts; not a universal assertion that this hash cannot exist elsewhere."
+    },
+    "artifact": {
+      "id": 15235941403,
+      "bytes": 45839284,
+      "digest": "sha256:bf45432ad9c72fc8fd754b71fd01ac081817667ce13a1ea4e591cdcaa331ce46",
+      "metadataOnly": true,
+      "zipGets": 0,
+      "inObjects": false,
+      "contentsUnknownForThisArchive": true
+    },
+    "commitsTreesAndRefs": "Identifiers and parent metadata only, not blob-file entries.",
+    "currentPackage": "Current index/README/package are not recursively inserted in objects; package is a separate review blob.",
+    "historicalReferences": "Embedded references are preserved but not recursively required or acquired.",
+    "noCurrentCpuTraceOrPngAcquisition": true
+  },
+  "publicationProposal": {
+    "ref": "refs/heads/sf613-evidence",
+    "expectedRefBeforeUpdate": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+    "orderedParents": [
+      {
+        "order": 1,
+        "type": "commit",
+        "sha": "e35ef28919b7be00d1fd6e37bf547ad649c07bf0",
+        "tree": "fe12065f837446596f28c8a21eb6483f98f2931c",
+        "role": "previous published archive R3"
+      },
+      {
+        "order": 2,
+        "type": "commit",
+        "sha": "54e99dbebb37030c94c9054a2195baa186e621a9",
+        "tree": "b25b19d442332eeceac4cabeecc77e47d1bef2d0",
+        "role": "C18 executed focal",
+        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+      },
+      {
+        "order": 3,
+        "type": "commit",
+        "sha": "9124afd5a28cd93bc6568973d8bda5bb5afb2ccf",
+        "tree": "87540d426b735b692429de2a6fc350a760a56d27",
+        "role": "C18 executed original Analytics",
+        "soleParent": "455c02a7a05a6dd3262ae15b184419897366fde4"
+      }
+    ],
+    "commitMessageProposal": "docs(sucafina): preserve C18 evidence and D27 proposal",
+    "ownTree": true,
+    "rootEntries": [
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "05c3f2ddd758d1f6e122324620081e4594af65e2"
+      },
+      {
+        "path": "index.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f4e3dfedb78c119d03a2acd4d8406a1175e7ab71"
+      },
+      {
+        "path": "objects",
+        "mode": "040000",
+        "type": "tree",
+        "sha": null
+      }
+    ],
+    "objectEntriesTakenExactlyFrom": "index.objects",
+    "allFilesRegular100644": true,
+    "objectFiles": 442,
+    "totalFiles": 444,
+    "totalFileBytes": 49709608,
+    "expectedDeltaFromR3": {
+      "objectAdds": 63,
+      "objectDeletes": 0,
+      "objectModifications": 0,
+      "rootModifiedFiles": [
+        "README.md",
+        "index.json"
+      ],
+      "rootAddedDirectories": 0
+    },
+    "reservedRootPathsAbsent": [
+      ".github",
+      ".ci-run.json",
+      "apps",
+      "modules",
+      "packages"
+    ],
+    "sourceLayoutsOnlyInParentHistory": true,
+    "tree": null,
+    "commit": null,
+    "refUpdated": false,
+    "rootFreshExpectedRefLeaseRequired": true,
+    "rootMustAuditActualTreeAndParentOrder": true,
+    "noWorkflowActivationRequested": true
+  },
+  "checks": [
+    {
+      "id": "input-catalog-hash",
+      "pass": true
+    },
+    {
+      "id": "70-actual-input-objects",
+      "pass": true
+    },
+    {
+      "id": "70-body-hashes-and-byte-metadata",
+      "pass": true
+    },
+    {
+      "id": "base-379-object-order",
+      "pass": true
+    },
+    {
+      "id": "base-379-literal-metadata",
+      "pass": true
+    },
+    {
+      "id": "base-420-membership-prefixes",
+      "pass": true
+    },
+    {
+      "id": "base-23-groups-literal",
+      "pass": true
+    },
+    {
+      "id": "base-35-streams-literal",
+      "pass": true
+    },
+    {
+      "id": "base-documentary-snapshots-literal",
+      "pass": true
+    },
+    {
+      "id": "base-derived-evidence-keys-literal",
+      "pass": true
+    },
+    {
+      "id": "base-exclusions-literal",
+      "pass": true
+    },
+    {
+      "id": "base-revision-history-prefix",
+      "pass": true
+    },
+    {
+      "id": "base-resolved-reference-prefix",
+      "pass": true
+    },
+    {
+      "id": "base-active-state-preserved-as-history",
+      "pass": true
+    },
+    {
+      "id": "base-readme-complete-literal",
+      "pass": true
+    },
+    {
+      "id": "442-objects-and-49076567-bytes",
+      "pass": true
+    },
+    {
+      "id": "491-memberships",
+      "pass": true
+    },
+    {
+      "id": "29-groups-41-streams-153-parts",
+      "pass": true
+    },
+    {
+      "id": "63-new-objects-eight-shared",
+      "pass": true
+    },
+    {
+      "id": "exact-catalog-union",
+      "pass": true
+    },
+    {
+      "id": "all-object-paths-and-mode",
+      "pass": true
+    },
+    {
+      "id": "actual-catalog-membership-exact",
+      "pass": true
+    },
+    {
+      "id": "catalog70-memberships-linked",
+      "pass": true
+    },
+    {
+      "id": "six-streams-22-parts-recomposed",
+      "pass": true
+    },
+    {
+      "id": "six-stream-input-records-literal",
+      "pass": true
+    },
+    {
+      "id": "calculated-analytics-whole-excluded",
+      "pass": true
+    },
+    {
+      "id": "persisted-report-and-marker-unions-actual",
+      "pass": true
+    },
+    {
+      "id": "three-parents-exact",
+      "pass": true
+    },
+    {
+      "id": "two-C18-parents-source-identity",
+      "pass": true
+    },
+    {
+      "id": "379-base-objects-tree-metadata",
+      "pass": true
+    },
+    {
+      "id": "base-root-tree-exact-three",
+      "pass": true
+    },
+    {
+      "id": "five-R3-controls-included",
+      "pass": true
+    },
+    {
+      "id": "C18-focal-current-limits",
+      "pass": true
+    },
+    {
+      "id": "C18-negative-and-BI-scope",
+      "pass": true
+    },
+    {
+      "id": "current-results-not-historical-E12-error",
+      "pass": true
+    },
+    {
+      "id": "D27-static-four-UNBOUND",
+      "pass": true
+    },
+    {
+      "id": "artifact-metadata-zero-ZIP",
+      "pass": true
+    },
+    {
+      "id": "historical-12-of15-no-production",
+      "pass": true
+    },
+    {
+      "id": "author-blobs-only-no-publication",
+      "pass": true
+    },
+    {
+      "id": "index-json-roundtrip",
+      "pass": true
+    },
+    {
+      "id": "current-self-references-not-recursive",
+      "pass": true
+    }
+  ],
+  "verificationSummary": {
+    "checks": 41,
+    "pass": 41,
+    "fail": 0,
+    "allInputCatalogBodiesRehashedAfterRuntimeRecovery": true,
+    "baseIndexReadmeAndControlsRehashed": true,
+    "baseObjectsTree379EntriesMatched": true,
+    "allPreviousObjectBodiesFreshlyRehashed": false,
+    "previousFullCorpusChecksInheritedFromPublishedReceipt": true,
+    "gitParentsReadIndependently": true,
+    "indexReadbackLiteral": true,
+    "readmeReadbackLiteral": true,
+    "hashingHelpers": {
+      "bundle": "be05b69709f73522f2ee47ef1f910b44415a1500",
+      "typedUtf8": "a981134ec81248a861d281910cb24e4b8d71a84d",
+      "knownVectorsChecked": true,
+      "purpose": "pure data hashing/encoding only, no repository code execution"
+    }
+  },
+  "authorEffects": {
+    "createdPackageBlobs": 3,
+    "originalActionsGets": 0,
+    "zipGets": 0,
+    "repositoryExecutions": 0,
+    "trees": 0,
+    "commits": 0,
+    "refs": 0,
+    "runs": 0,
+    "comments": 0
+  },
+  "limits": [
+    "This proposal is not the publication receipt; no R4 commit/ref is asserted yet.",
+    "All prior object metadata and ordered membership prefixes are preserved. Updated active scope/count fields retain their original values in revisionHistory and the actual previous index object.",
+    "R3 controls and all incoming bodies were read from actual Git blobs; no original Actions or ZIP endpoint was used.",
+    "CPU, timing and owner identities from prior E11/E12 captures remain historical. No causal or performance transfer to C18 is made.",
+    "Current focal PASS, original Analytics NEGATIVE and D27 STATIC_UNBOUND remain separate outcomes.",
+    "Additional histories referenced by documents are not a transitive completeness obligation.",
+    "The archive does not qualify Migration, QA reservations, final release or production."
+  ]
+}
