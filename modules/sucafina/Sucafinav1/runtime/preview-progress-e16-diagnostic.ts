@@ -813,9 +813,9 @@ function verifierFor(handle: unknown): Verifier | undefined {
   const birth = currentScope()
   if (!birth) return undefined
   for (let method = birth.frame.validationState.methods; method; method = method.next) {
-    const value = method.prewrite?.verifier?.handle === handle ? method.prewrite.verifier :
-      method.initial?.verifier?.handle === handle ? method.initial.verifier :
-      method.final?.verifier?.handle === handle ? method.final.verifier : undefined
+    const value = method.prewrite && method.prewrite.verifier?.handle === handle ? method.prewrite.verifier :
+      method.initial && method.initial.verifier?.handle === handle ? method.initial.verifier :
+      method.final && method.final.verifier?.handle === handle ? method.final.verifier : undefined
     if (value && !value.closed && !value.validation.closed && !method.call.closed && value.frame === birth.frame) return value
   }
 }
