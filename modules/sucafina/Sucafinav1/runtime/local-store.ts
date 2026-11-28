@@ -1,3 +1,4 @@
+import { enterSfE15Layer, linkSfE15Work, markSfE15Route, returnedSfE15Route, tapSfE15Gate } from "./preview-progress-e15-diagnostic.ts"
 import { Database } from "bun:sqlite"
 import { createSnapshotSqlReader } from "./snapshot-sql-read.ts"
 import { AsyncLocalStorage } from "node:async_hooks"
@@ -357,6 +358,7 @@ export async function openLocalStore(directory: string, options: {
   }
   const abortRoots = new WeakMap<Database, LocalTransactionAbort>()
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
+    const e15Operation = enterSfE15Layer("operation", work)
     if (lifecycle.closed) {
       const scope = (retainOwnerPrivacy(), context).getStore()
       // An admitted readonly root may drain during disposal, but a rejected
@@ -383,14 +385,18 @@ export async function openLocalStore(directory: string, options: {
       // Serialize writers within this instance instead of making maintenance
       // contend with its own business transaction in WAL. Credential reads
       // remain independent because authentication awaits them inside that transaction.
+      markSfE15Route(e15Operation, "queue-enter", !!previous)
       if (previous) await waitForAdmission(previous, Math.max(0, deadline - performance.now()), signal)
+      markSfE15Route(e15Operation, "queue-returned")
       signal?.throwIfAborted()
       const db = write ? acquireWriter() : acquireAuthReader()
       const status = { completed: false }
       const failure: { failed: boolean; error?: unknown } = { failed: false }
       try {
         if (write) {
+          markSfE15Route(e15Operation, "begin-enter")
           await retryLock(() => db.exec("BEGIN IMMEDIATE"), Math.max(0, deadline - performance.now()), signal)
+          markSfE15Route(e15Operation, "begin-returned")
           requireDatabaseFile()
         }
         signal?.throwIfAborted()
@@ -399,8 +405,10 @@ export async function openLocalStore(directory: string, options: {
         if (inherited) requireScope(inherited)
         requireDatabaseFile()
         status.completed = true
+        markSfE15Route(e15Operation, "operation-returned", "returned")
         return value
       } catch (error) {
+        markSfE15Route(e15Operation, "operation-returned", "threw")
         failure.failed = true
         failure.error = error
         throw error
@@ -612,7 +620,9 @@ export async function openLocalStore(directory: string, options: {
       return copyCurrentSnapshot(scope, surface)
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+      const e15Local = enterSfE15Layer("local", work)
       const parent = (retainOwnerPrivacy(), context).getStore()
+      markSfE15Route(e15Local, "local-enter", parent ? "child" : "top-level")
       if (parent) return (async () => {
         if (lifecycle.closed) {
           // No callback can be admitted after disposal to establish read-only
@@ -635,9 +645,10 @@ export async function openLocalStore(directory: string, options: {
         const selection: "cases" | "preferences" | "case-identities" | "decisionResults" | undefined = selected && productSnapshotView.own(selected, "value") &&
           (selected.value === "cases" || selected.value === "preferences" || selected.value === "case-identities" || selected.value === "decisionResults") ? selected.value : undefined
         // CurrentChoice's wrapped route changes work and retains the full path.
-        const productRoot = !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
-          callback && productSnapshotView.own(callback, "value") && callback.value === work &&
-          sameStore() && productSnapshotView.current() ? identity.value as object : undefined
+        const productRoot = tapSfE15Gate(e15Local, "product-condition", !sourceRoot && !aclRoot && identity && productSnapshotView.own(identity, "value") &&
+          callback && productSnapshotView.own(callback, "value") && tapSfE15Gate(e15Local, "callback-equal", callback.value === work) &&
+          tapSfE15Gate(e15Local, "store-current", sameStore()) && tapSfE15Gate(e15Local, "view-current", productSnapshotView.current())) ? identity!.value as object : undefined
+        markSfE15Route(e15Local, "native-gates", selection)
         if ((sourceRoot || aclRoot || productRoot) && surface !== "dashboard") throw new Error("Local Dashboard source surface changed")
         const materialize = sourceRoot || aclRoot || productRoot ? undefined : currentCopy(parent, surface)
         const staged = sourceRoot || aclRoot || productRoot || materialize ? undefined : parent.root.snapshots[surface]
@@ -645,13 +656,18 @@ export async function openLocalStore(directory: string, options: {
         if (aclRoot && (parent.root.poisoned || !parent.root.readOnly || (retainOwnerPrivacy(), rootIdentities).get(parent.root) !== aclRoot))
           throw new Error("Local Dashboard ACL root changed")
         // The callback obtains ACL fields separately via observeAuthority.
+        markSfE15Route(e15Local, "copy-enter", productRoot ? "projected" : "full")
+        let e15CopyReturned = false
+        try {
         const projected = productRoot ? dashboardProductSnapshot(parent, productRoot, selection) : undefined
         const snapshot: Snapshot = aclRoot ? { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
           : sourceRoot ? dashboardSourceSnapshot(parent, sourceRoot)
           : projected ? projected.snapshot
           : materialize ? materialize() : staged ? cloneSnapshot(staged) : loadSnapshot(surface, row?.payload)
+        e15CopyReturned = true
+        if (!productRoot) markSfE15Route(e15Local, "copy-close", "full")
         if (productRoot) productReadApply(productReadSet, localProductReads, [snapshot, Object.freeze({
-          selection: projected?.selection,
+          selection: returnedSfE15Route(e15Local, "copy-close", projected?.selection),
           current: () => {
             requireScope(scope)
             if ((retainOwnerPrivacy(), context).getStore() !== scope || !sameStore() || !productSnapshotView.current() ||
@@ -692,8 +708,15 @@ export async function openLocalStore(directory: string, options: {
           scope.open = false
           scope.root.readers--
         }
+        } finally {
+          if (!e15CopyReturned) markSfE15Route(e15Local, "copy-close", "threw")
+        }
       })()
-      return operation(true, async (db) => {
+      return operation(true, linkSfE15Work(e15Local, "local-operation", async (db: Database) => {
+        let e15Materializing = false, e15CopyStarted = false, e15Materialized = false
+        try {
+        e15Materializing = true
+        markSfE15Route(e15Local, "materialize-enter")
         const copies: SnapshotCopies = {}
         const aclCopies: AclCopies = {}
         const byteKeys: Partial<Record<Surface, object>> = {}
@@ -739,6 +762,8 @@ export async function openLocalStore(directory: string, options: {
           get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
           get procurement() { return observed.procurement() },
         }
+        e15CopyStarted = true
+        markSfE15Route(e15Local, "copy-enter", "full")
         const snapshot = snapshots[surface]
         // If no byte plan is available, capture a private preimage before
         // handing the writable snapshot to its owner.
@@ -752,6 +777,9 @@ export async function openLocalStore(directory: string, options: {
           copies[surface] = () => cloneSnapshot(held)
           return () => held
         })()
+        e15Materialized = true
+        markSfE15Route(e15Local, "copy-close", "full")
+        markSfE15Route(e15Local, "materialize-returned", "returned")
         const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
         const checkGenerations = () => {
           if (!Bun.deepEquals(snapshot.sfBlobGenerations ?? {}, Object.fromEntries(generations))) throw new Error("Private blob generations changed outside storage")
@@ -817,6 +845,7 @@ export async function openLocalStore(directory: string, options: {
             delete scope.root.copies
             delete scope.root.preimage
             delete scope.root.aclCopies
+            markSfE15Route(e15Local, "local-scope-closed")
           }
         })()
         transactionOptions?.signal?.throwIfAborted()
@@ -827,16 +856,29 @@ export async function openLocalStore(directory: string, options: {
           requireDatabaseFile()
           if (transactionOptions?.sealedRead) throw new Error("Local sealed read attempted a write")
           if (currentPreimage?.()) throw new Error("Local target preimage must be released before publication")
+          markSfE15Route(e15Local, "encode-enter")
           const payload = encodeSnapshot(snapshot)
+          markSfE15Route(e15Local, "encode-returned")
           decodeSnapshot(payload)
+          markSfE15Route(e15Local, "decode-returned")
           requireDatabaseFile()
           db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
+          markSfE15Route(e15Local, "sql-returned")
           transactionOptions?.signal?.throwIfAborted()
           requireDatabaseFile()
+          markSfE15Route(e15Local, "commit-enter")
           db.exec("COMMIT")
+          markSfE15Route(e15Local, "commit-returned")
         }
+        markSfE15Route(e15Local, "local-returning")
         return result.value
-      }, transactionOptions?.signal)
+        } finally {
+          if (e15Materializing && !e15Materialized) {
+            if (e15CopyStarted) markSfE15Route(e15Local, "copy-close", "threw")
+            markSfE15Route(e15Local, "materialize-returned", "threw")
+          }
+        }
+      }), transactionOptions?.signal)
     },
     transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
       operation(true, async (db) => {

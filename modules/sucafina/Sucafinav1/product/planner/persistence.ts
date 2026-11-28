@@ -1,3 +1,4 @@
+import { enterSfE15Route, currentSfE15Route, runSfE15Route, returnedSfE15Route, markSfE15Route, finishSfE15Route } from "../../runtime/preview-progress-e15-diagnostic.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ScenarioComparison, ScenarioResult } from "../contracts/decisions.ts"
@@ -99,23 +100,29 @@ export function createPlannerResultPersistence(input: {
     if (current.status !== "ok") return current
     const refs: BusinessEvidenceRef[] = records.flatMap((record) => record.status === "ok" ? record.value.sourceRefs : [])
     const sourceRefs = refs.filter((ref, index) => refs.findIndex((item) => item.refDigest === ref.refDigest) === index)
-    const saved = await input.store.write({ kind: "comparison", result: value.result, caseRef: selected.value, requestDigest, sourceRefs, idempotencyKey: callId }, context)
+    const e15Persistence = currentSfE15Route()
+    const saved = returnedSfE15Route(e15Persistence, "store-write-returned", await runSfE15Route(e15Persistence, "store-write", () => input.store.write({ kind: "comparison", result: value.result, caseRef: selected.value, requestDigest, sourceRefs, idempotencyKey: callId }, context)))
     if (saved.status !== "ok") return saved
     if (rules?.status === "ok" && bindings) {
-      const bound = await bindings.bind({ caseRef: selected.value, resultRef: saved.value.resultRef, request: value.request, expectedRules: rules.value }, context)
+      markSfE15Route(e15Persistence, "binding-enter")
+      const bound = returnedSfE15Route(e15Persistence, "binding-returned", await bindings.bind({ caseRef: selected.value, resultRef: saved.value.resultRef, request: value.request, expectedRules: rules.value }, context))
       if (bound.status !== "ok") return { status: bound.status, reason: "comparison-persisted-but-binding-unavailable" }
     }
-    const latest = await validate()
+    markSfE15Route(e15Persistence, "validation-enter")
+    const latest = returnedSfE15Route(e15Persistence, "validation-returned", await validate())
     if (latest.status !== "ok") return latest
     if (rules?.status === "ok" && bindings) {
-      const checked = await bindings.read({ caseRef: selected.value, resultRef: saved.value.resultRef }, context)
+      const checked = returnedSfE15Route(e15Persistence, "binding-read-returned", await bindings.read({ caseRef: selected.value, resultRef: saved.value.resultRef }, context))
       if (checked.status !== "ok") return checked
     }
     return { status: "ok", value: { resultRef: saved.value.resultRef } }
   }
   return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Replay,
     observeScenario?: ObserveScenarioWrite): Promise<PortResult<{ resultRef: string }>> => {
-    try { return await persist(incoming, callId, context, replay ?? input.replay, observeScenario) }
-    catch { return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
+    const e15Persistence = enterSfE15Route("persistence")
+    let e15Threw = false
+    try { return await runSfE15Route(e15Persistence, "persist-body", () => persist(incoming, callId, context, replay ?? input.replay, observeScenario)) }
+    catch { e15Threw = true; return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
+    finally { finishSfE15Route(e15Persistence, e15Threw) }
   }
 }

@@ -1,3 +1,4 @@
+import { enterSfE15Unit, runSfE15Phase, returnedSfE15Await, finishSfE15Unit } from "../../runtime/preview-progress-e15-diagnostic.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DecisionCasePort, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
@@ -78,37 +79,47 @@ export function createProductionPortfolio(input: {
         return { status: "ok", value: { baseRef: first.scenario.baseRef, operations, assumptions: assumptions.filter((item, index) => assumptions.findIndex((other) => digestSfValue(other) === digestSfValue(item)) === index) } }
       },
       assess: async (request, candidates, scenario, context, scenarioRequest) => {
-        if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
-        const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
-        if (result.status !== "ok") return result
-        const candidatesResult = await candidateCoverage(candidates, context)
-        if (candidatesResult.status !== "ok") return candidatesResult
-        const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
-        if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
-        if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
-        const analysis = await input.analysis.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)
-        if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
-        if (analysis.status !== "ok") return analysis
-        const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
-        if (stored.status !== "ok") return stored
-        if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
-        const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.value.analysis.comparisonRef }, context)
-        if (compared.status !== "ok") return compared
-        if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
-        return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
+        const e15Assess = enterSfE15Unit("production-assess")
+        let e15Rejected = false
+        try {
+          if (!await fresh(evidenceRefs(scenario), context)) return { status: "stale", reason: "portfolio-sources-unavailable" }
+          const result = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+          if (result.status !== "ok") return result
+          const candidatesResult = await candidateCoverage(candidates, context)
+          if (candidatesResult.status !== "ok") return candidatesResult
+          const costCoverageRefs = [...new Set([...result.value, ...candidatesResult.value])]
+          if (!input.analysis) return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+          if (!input.candidateCoverageRefFor) return { status: "unavailable", reason: "candidate-coverage-references-unavailable" }
+          const analysis = returnedSfE15Await(e15Assess, await runSfE15Phase(e15Assess, "production-analysis", () => input.analysis!.evaluate({ portfolio: request, candidates, scenario: scenarioRequest, result: scenario, costCoverageRefs }, context)))
+          if (analysis.status === "unavailable" && analysis.reason === "portfolio-analysis-not-yet-persisted") return { status: "ok", value: { costCoverageRefs, constraints: request.constraints.map((ref) => ({ ref, state: "unknown" as const, reason: "criterion-rule-unavailable" })) } }
+          if (analysis.status !== "ok") return analysis
+          const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.value.analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.value.analysis.scenarioResultRef }, context)
+          if (stored.status !== "ok") return stored
+          if (stored.value.kind !== "scenario" || stored.value.requestDigest !== digestSfValue(scenarioRequest) || digestSfValue(stored.value.result) !== digestSfValue(analysis.value.analysis.scenario)) return { status: "stale", reason: "portfolio-scenario-changed" }
+          const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.value.analysis.comparisonRef }, context)
+          if (compared.status !== "ok") return compared
+          if (compared.value.kind !== "comparison" || (compared.value.caseRef.id !== stored.value.caseRef.id || compared.value.caseRef.incarnation !== stored.value.caseRef.incarnation || compared.value.caseRef.version < stored.value.caseRef.version) || digestSfValue(compared.value.result) !== digestSfValue(analysis.value.analysis.comparison) || compared.value.result.alternativeResultRef !== stored.value.resultRef) return { status: "stale", reason: "portfolio-comparison-changed" }
+          return { status: "ok", value: { scenario: stored.value.result, costCoverageRefs: [...new Set([...costCoverageRefs, ...analysis.value.analysis.comparison.costCoverageRefs])], ...analysis.value } }
+        } catch (e15Error) { e15Rejected = true; throw e15Error }
+        finally { finishSfE15Unit(e15Assess, e15Rejected) }
       },
       revalidateEvaluation: async (scenario, refs, analysis, context, candidates) => {
-        if (!await fresh(evidenceRefs(scenario), context)) return false
-        const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
-        const candidatesResult = await candidateCoverage(candidates, context)
-        if (current.status !== "ok" || candidatesResult.status !== "ok") return false
-        const known = [...new Set([...current.value, ...candidatesResult.value])]
-        if (analysis) {
-          const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
-          const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
-          return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && await input.analysis.revalidate(analysis, context)
-        }
-        return digestSfValue(known) === digestSfValue(refs)
+        const e15EvaluationRevalidation = enterSfE15Unit("production-revalidation")
+        let e15Rejected = false
+        try {
+          if (!await fresh(evidenceRefs(scenario), context)) return false
+          const current = await coverage(scenario.sourceRefs, scenario.costCoverage, context)
+          const candidatesResult = await candidateCoverage(candidates, context)
+          if (current.status !== "ok" || candidatesResult.status !== "ok") return false
+          const known = [...new Set([...current.value, ...candidatesResult.value])]
+          if (analysis) {
+            const stored = input.persistence.results.readHistoricalScenario ? await input.persistence.results.readHistoricalScenario({ resultRef: analysis.scenarioResultRef }, context) : await input.persistence.results.read({ kind: "scenario", resultRef: analysis.scenarioResultRef }, context)
+            const compared = await input.persistence.results.read({ kind: "comparison", resultRef: analysis.comparisonRef }, context)
+            return !!input.analysis && stored.status === "ok" && stored.value.kind === "scenario" && compared.status === "ok" && compared.value.kind === "comparison" && stored.value.caseRef.id === compared.value.caseRef.id && stored.value.caseRef.incarnation === compared.value.caseRef.incarnation && stored.value.caseRef.version <= compared.value.caseRef.version && digestSfValue(stored.value.result) === digestSfValue(analysis.scenario) && digestSfValue(compared.value.result) === digestSfValue(analysis.comparison) && known.every((ref) => refs.includes(ref)) && returnedSfE15Await(e15EvaluationRevalidation, await runSfE15Phase(e15EvaluationRevalidation, "production-analysis-revalidate", () => input.analysis!.revalidate(analysis, context)))
+          }
+          return digestSfValue(known) === digestSfValue(refs)
+        } catch (e15Error) { e15Rejected = true; throw e15Error }
+        finally { finishSfE15Unit(e15EvaluationRevalidation, e15Rejected) }
       },
     },
   })

@@ -1,3 +1,4 @@
+import { enterSfE15Route, runSfE15Route } from "../../../../modules/sucafina/Sucafinav1/runtime/preview-progress-e15-diagnostic.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
@@ -147,7 +148,11 @@ export function createSfPortfolioAuthority(input: {
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
     } } }, request, call)) : business.planner.compareScenarios }
   const originalCompare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
-  const compareCanonical: typeof originalCompare = (request, call) => observation.alternatives(request, call, () => originalCompare(request, call))
+  const compareCanonical: typeof originalCompare = (request, call) => {
+    const e15Canonical = enterSfE15Route("canonical")
+    return runSfE15Route(e15Canonical, "preparation", () => observation.alternatives(request, call,
+      () => runSfE15Route(e15Canonical, "comparator", () => originalCompare(request, call))))
+  }
   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios, rules })
   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
